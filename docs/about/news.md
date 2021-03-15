@@ -7,6 +7,44 @@ sidebar: auto
 
 # 大史记
 
+## 2021.3.14
+
+### [v1.4.0](https://github.com/XTLS/Xray-core/releases/tag/v1.4.0)
+
+- Happy Pi-Day!
+- 这次是个大更新：
+  - 为链式代理引入了传输层支持。
+  - 为 Dialer 引入了 Domain Strategy，解决奇妙的 DNS 问题。
+  - 添加了 gRPC 传输方式，与更快一点的 Multi Mode。
+  - 添加了 WebSocket Early-Data 功能，减少了 WebSocket 的延迟。
+  - 添加了 FakeDNS。
+  - 还修复了系列的问题，添加了各类功能，详情请见更新日志。
+- 还是 VuePress 比较爽啊（
+
+## 2021.3.3
+
+### [v1.3.1](https://github.com/XTLS/Xray-core/releases/tag/v1.3.1)
+
+- 这个版本使用了 Golang 1.16，正式原生支持 Apple Silicon。
+- 同时修复了一个会导致 Panic 的 bug。~~Holmium_认为这是在骗、在偷袭。~~
+- 修复了几个遗留问题。
+
+## 2021.2.14
+
+### [v1.3.0](https://github.com/XTLS/Xray-core/releases/tag/v1.3.0)
+
+- Happy 🐮 Year 🎉！
+- v1.3.0 通过非常巧妙的机制实现了 V 系协议全部 FullCone，同时保证了一定的兼容性。
+- OHHHHHHHHHHHH！
+
+## 2021.01.31
+
+### [v1.2.4](https://github.com/XTLS/Xray-core/releases/tag/v1.2.4)
+- 解决两个“连接至标准 Socks 服务端时可能出错”的历史遗留问题。
+- 似乎这个版本没有什么改变，但这只是暴风雨前的宁静。
+- （没错我就是先知）
+> 你个傻子，你拿的是 UNO 牌。
+
 ## 2021.01.25
 - 全互联网最好最详细的秘籍入门篇同学们练熟了吗? 🍉老师开始连载[秘籍第一层](../../documents/level-1/)咯...
 - [英文版文档网站](/en)逐渐增加内容ing, 感谢各位大佬的辛苦付出~!
