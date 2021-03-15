@@ -48,7 +48,7 @@ footer: Licensed under CC-BY-SA 4.0 | Copyleft 2020-Present Project X Community
 
   > “配置兼容，整体更好” 
 
-  - Xray-flutter 是一个优雅的跨平台图形界面工具. <Badge text="WIP"  type="warning"/>
+  - Xray-flutter 是一个优雅的跨平台图形界面工具. <Badge text="WIP" type="warning"/>
 
 ### 我们是谁？
 

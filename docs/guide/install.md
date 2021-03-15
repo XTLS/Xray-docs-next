@@ -42,7 +42,7 @@ Xray 提供两种验证方式：
 ## macOS 安装方式
 
 - 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 macOS 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray`，然后[通过命令行带参数运行](./command) 即可
-- 通过 [Homebrew](https://brew.sh) 包管理器安装：<Badge text="WIP"  type="warning"/>
+- 通过 [Homebrew](https://brew.sh) 包管理器安装：<Badge text="WIP" type="warning"/>
 
 ## Linux 安装方式
 
@@ -66,10 +66,10 @@ Xray 提供两种验证方式：
 
 Linux 发行版 Xray 包（可通过发行版相应的包管理器安装）：
 
-- Debian <Badge text="WIP"  type="warning"/>
-- Arch Linux <Badge text="WIP"  type="warning"/>
+- Debian <Badge text="WIP" type="warning"/>
+- Arch Linux <Badge text="WIP" type="warning"/>
 
-### Linuxbrew 包管理器 <Badge text="WIP"  type="warning"/>
+### Linuxbrew 包管理器 <Badge text="WIP" type="warning"/>
 
 ## Docker 安装方式
 
@@ -88,4 +88,4 @@ Linux 发行版 Xray 包（可通过发行版相应的包管理器安装）：
 
 您可以点击 [传送至众多大佬集结区的任意门](../links) 获取更多资源
 
-## FAQ <Badge text="WIP"  type="warning"/>
+## FAQ <Badge text="WIP" type="warning"/>

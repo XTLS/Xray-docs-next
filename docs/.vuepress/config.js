@@ -11,18 +11,19 @@ module.exports = {
         }
     },
     themeConfig: {
-        displayAllHeaders: true,
         smoothScroll: true,
         repo: 'xtls/xray-core',
         repoLabel: '查看源码',
-        docsRepo: 'xtls/xtls.github.io',
+        docsRepo: 'xtls/Xray-docs-next',
+        docsBranch: 'main',
         editLinks: true,
         editLinkText: '帮助我们改善此页面！',
         nav: [
             { text: '首页', link: '/' },
             { text: '大史记', link: '/about/news' },
-            { text: '经典文档', link: 'https://xtls.github.io' },
-            { text: '下载核心', link: 'https://github.com/XTLS/Xray-core/releases' },
+            { text: '配置指南', link: '/config/' },
+            { text: '开发指南', link: '/development/' },
+            { text: '使用指南', link: '/usage/' },
             {
                 text: '多语言',
                 ariaLabel: 'Language Menu',
@@ -33,6 +34,22 @@ module.exports = {
             },
 
         ],
+        sidebar: {
+            '/config/': [
+                {
+                    title: '示例配置',
+                    collapsable: false,
+                    children: [
+                        'examples/vless',
+                        'examples/xtls',
+                        'examples/fallback',
+                        'examples/env',
+                        'examples/multiple'
+                    ]
+                },
+            ],
+            '/': 'auto',
+        }
     },
     markdown: {
         toc: {

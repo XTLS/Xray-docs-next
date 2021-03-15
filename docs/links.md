@@ -10,7 +10,7 @@ title: 链接
   - [Xray-script](https://github.com/kirin10000/Xray-script)  感谢[@kirin](https://github.com/kirin10000)
 - Docker
   - [teddysun/xray](https://hub.docker.com/r/teddysun/xray)   感谢[@秋水逸冰](https://hub.docker.com/u/teddysun)
-  - Xray-docker <Badge text="WIP"  type="warning"/>
+  - Xray-docker <Badge text="WIP" type="warning"/>
 - One Click
   - [ProxySU](https://github.com/proxysu/ProxySU)   感谢[@ProxySu](https://github.com/proxysu)
   - [Xray-agent](https://github.com/mack-a/Xray-agent)    感谢[@mack-a](https://github.com/mack-a)
