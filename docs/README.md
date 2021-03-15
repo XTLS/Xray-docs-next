@@ -1,12 +1,11 @@
 ---
 home: true
 heroImage: /LogoX2.png
-heroText: Project X
-tagline: 不 畏 浮 云 遮 望 眼 · 金 睛 如 炬 耀 苍 穹
+heroText: 不畏浮云遮望眼 · 金睛如炬耀苍穹
+tagline: Keep Riding / Never Look Back
 actionText: 由此开始 →
 actionLink: /guide/
 features:
-
 - title: 极速协议
   details: 
     原创 VLESS 与 XTLS 协议，摆脱冗余加密，释放CPU算力
@@ -62,7 +61,7 @@ footer: Licensed under CC-BY-SA 4.0 | Copyleft 2020-Present Project X Community
 - 📩 在 [GitHub Issues](https://github.com/XTLS/Xray-core/issues) 或[讨论区](https://github.com/XTLS/Xray-core/discussions)发起建设性或有意义的 issue/讨论.
 - 📝 写下您的使用心得并提交至 Xray 的[文档网站](https://github.com/XTLS/XTLS.github.io).
 - 💬 在 Telegram 群帮助群友/灌水.
-- **...事实上,每一份给予 Xray 的正能量都会让 Xray 变得更强大**
+- **...事实上,每一份对 Xray 的支持都会让 Xray 变得更强大**
 
 ### Telegram
 
@@ -85,8 +84,8 @@ footer: Licensed under CC-BY-SA 4.0 | Copyleft 2020-Present Project X Community
 
 ### 更多关于 project X
 
-- 如果你想知道更多关于 project X 的理念与密闻, 请点击[这里](../faq/about/)
-- 如果你想知道更多关于 project X 的足迹与成长, 请点击[这里](./new/)
+- 如果你想知道更多关于 project X 的理念与密闻, 请点击[这里](./faq/about/)
+- 如果你想知道更多关于 project X 的足迹与成长, 请点击[这里](./about/news)
 
 
 ### License
