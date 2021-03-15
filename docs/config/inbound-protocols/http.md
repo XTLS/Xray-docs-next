@@ -1,33 +1,25 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: HTTP
-weight: 3
----
-
+# HTTP
 HTTP 协议。
 
-::: danger
+::: warning
 **http 协议没有对传输加密，不适宜经公网中传输，更容易成为被人用作攻击的肉鸡。**
+:::
 
 `http inbound` 更有意义的用法是在局域网或本机环境下监听，为其他程序提供本地服务。
 
 
-::: tip
-**TIP 1**\
+::: tip TIP 1
  `http proxy` 只能代理 tcp 协议，udp 系的协议均不能通过。
+:::
 
-
-::: tip
-**TIP 2**\
+::: tip TIP 2
 在 Linux 中使用以下环境变量即可在当前 session 使用全局 HTTP 代理（很多软件都支持这一设置，也有不支持的）。
 
 - `export http_proxy=http://127.0.0.1:8080/` (地址须改成你配置的 HTTP 入站代理地址)
 - `export https_proxy=$http_proxy`
-
+:::
 
 ## InboundConfigurationObject
----
 
 ```json
 {
@@ -61,7 +53,7 @@ HTTP 协议。
 
 ::: tip
 若配置不当，开启此选项会导致死循环。
-
+:::
 
 > `userLevel`: number
 
@@ -69,10 +61,8 @@ HTTP 协议。
 
 userLevel 的值, 对应 [policy](../../base/policy#policyobject) 中 level 的值. 如不指定, 默认为 0.
 
-
-
 ### AccountObject
----
+
 ```json
 {
   "user": "my-username",

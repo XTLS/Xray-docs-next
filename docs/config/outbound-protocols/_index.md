@@ -10,7 +10,7 @@ title: Outbounds 可用协议列表
 weight: 6
 ---
 
-{{% alert theme="warning" %}}**这个章节包含了目前所有可用于 Outbounds 的协议及具体配置细节.**{{% /alert %}}
+::: warning**这个章节包含了目前所有可用于 Outbounds 的协议及具体配置细节.**{{% /alert %}}
 
 ## 协议列表
 ---

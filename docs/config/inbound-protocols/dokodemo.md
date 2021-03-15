@@ -1,15 +1,8 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: Dokodemo door
-weight: 2
----
+# Dokodemo door
 
 Dokodemo door（任意门）可以监听一个本地端口，并把所有进入此端口的数据发送至指定服务器的一个端口，从而达到端口映射的效果。
 
 ## InboundConfigurationObject
-
----
 
 ```json
 {
@@ -52,10 +45,6 @@ Dokodemo door（任意门）可以监听一个本地端口，并把所有进入�
 
 userLevel 的值, 对应 [policy](../../base/policy#policyobject) 中 level 的值. 如不指定, 默认为 0.
 
-
-
 ## 透明代理配置样例
-
----
 
 此部分请参考[透明代理（TProxy）配置教程](../../../documents/level-2/tproxy)。

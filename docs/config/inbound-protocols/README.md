@@ -1,18 +1,9 @@
----
-alwaysopen: false
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-# head: <hr/>
-hide:
-- toc
-# post: "&nbsp;\U0001F44B"
-title: Inbounds 可用协议列表
-weight: 5
----
-{{% alert theme="warning" %}}**这个章节包含了目前所有可用于 Inbounds 的协议及具体配置细节.**{{% /alert %}}
+# Inbounds 协议
+
+> 这个章节包含了目前所有可用于 Inbounds 的协议及具体配置细节.
 
 ## 协议列表
----
+
 >[Dokodemo-door](./dokodemo)
 Dokodemo door（任意门）可以监听一个本地端口，并把所有进入此端口的数据发送至指定服务器的一个端口，从而达到端口映射的效果。
 >[HTTP](./http)

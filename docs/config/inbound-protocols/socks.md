@@ -1,14 +1,10 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: Socks
-weight: 4
----
+# Socks
 
 标准 Socks 协议实现，兼容 [Socks 4](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)、Socks 4a 和 [Socks 5](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)。
 
 ::: danger
 **socks 协议没有对传输加密，不适宜经公网中传输**
+:::
 
 `socks inbound` 更有意义的用法是在局域网或本机环境下监听，为其他程序提供本地服务。
 
@@ -64,7 +60,6 @@ userLevel 的值, 对应 [policy](../../base/policy#policyobject) 中 level 的�
 
 
 ### AccountObject
----
 
 ```json
 {

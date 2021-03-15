@@ -1,9 +1,4 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: Shadowsocks
-weight: 8
----
+# Shadowsocks
 
 [Shadowsocks](https://zh.wikipedia.org/wiki/Shadowsocks) 协议，兼容大部分其它版本的实现。
 
@@ -24,7 +19,7 @@ weight: 8
 
 ::: danger
 "none" 不加密方式下，服务器端不会验证 "password" 中的密码。为确保安全性, 一般需要加上 TLS 并在传输层使用安全配置，例如 WebSocket 配置较长的 path
-
+:::
 
 ## InboundConfigurationObject
 
