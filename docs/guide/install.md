@@ -35,13 +35,13 @@ Xray 提供两种验证方式：
 
 ## Windows 安装方式
 
-- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 Windows 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray.exe`，然后[通过命令行带参数运行](../command) 即可
+- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 Windows 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray.exe`，然后[通过命令行带参数运行](./command) 即可
 - 通过 [Scoop](https://scoop.sh) 包管理器安装：Xray 已经被添加到 [Mochi](https://github.com/Qv2ray/mochi)。
 - 通过 [Chocolatey](https://chocolatey.org) 包管理器安装：[Xray](https://chocolatey.org/packages/xray/1.3.1)，感谢 [Markson](https://chocolatey.org/profiles/markson_ho)
 
 ## macOS 安装方式
 
-- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 macOS 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray`，然后[通过命令行带参数运行](../command) 即可
+- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 macOS 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray`，然后[通过命令行带参数运行](./command) 即可
 - 通过 [Homebrew](https://brew.sh) 包管理器安装：<Badge text="WIP"  type="warning"/>
 
 ## Linux 安装方式
@@ -86,6 +86,6 @@ Linux 发行版 Xray 包（可通过发行版相应的包管理器安装）：
 
 ## 更多更多...
 
-您可以点击 [传送至众多大佬集结区的任意门](../../links) 获取更多资源
+您可以点击 [传送至众多大佬集结区的任意门](../links) 获取更多资源
 
 ## FAQ <Badge text="WIP"  type="warning"/>
