@@ -31,7 +31,7 @@ features:
     活跃的社区讨论及贡献，MPL 2.0 开源许可协议
 
 
-footer: Licensed under CC-BY-SA 4.0 | Copyleft 2020-Present Project X Community
+footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 ---
 
 ## XTLS ? Xray ? V2Ray ?
