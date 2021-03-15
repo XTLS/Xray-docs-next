@@ -60,7 +60,7 @@ $env:GOARCH="amd64"
 
 go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 ```
-上传到服务器后，记得在服务器终端内执行 chmod +x v2ray 和 chmod +x v2ctl
+上传到服务器后，记得在服务器终端内执行 `chmod +x xray`
 
 ::: tip
 执行 `go tool dist list` 查看所有支持的系统与架构。
@@ -68,8 +68,8 @@ go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 
 ## 可复现构建：
 
-按照上述步骤，能够编译出与 Release 中相同的二进制文件。
+按照上述步骤，能够编译出与 Release 中完全相同的二进制文件。
 
 ::: warning
-请先确认您使用的 Golang 与编译 Release 一致。
+请先确认您使用的 Golang 版本与编译 Release 的一致。
 :::
