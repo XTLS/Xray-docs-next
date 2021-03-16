@@ -15,6 +15,7 @@ module.exports = {
         repo: 'xtls/xray-core',
         repoLabel: '查看源码',
         docsRepo: 'xtls/Xray-docs-next',
+        docsDir: 'docs',
         docsBranch: 'main',
         editLinks: true,
         editLinkText: '帮助我们改善此页面！',
