@@ -4,7 +4,7 @@
   "main": "index.js",
   "repository": "https://github.com/XTLS/Xray-docs-next.git",
   "author": "Project X",
-  "license": "CC-BY-SA-4.0",
+  "license": "CC BY-SA 4.0",
   "devDependencies": {
     "@vuepress/plugin-back-to-top": "^1.8.2",
     "vuepress": "^1.8.2"
