@@ -1,17 +1,10 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: TCP
-weight: 1
----
+# TCP
 
 TCP 传输模式是目前推荐使用的传输模式之一.
 
 可以和各种协议有多种组合模式.
 
 ## TcpObject
-
----
 
 `TcpObject` 对应传输配置的 `tcpSettings` 项。
 
@@ -27,7 +20,9 @@ TCP 传输模式是目前推荐使用的传输模式之一.
 > `acceptProxyProtocol`: true | false
 
 仅用于 inbound，指示是否接收 PROXY protocol。
+
 [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) 专用于传递请求的真实来源 IP 和端口，**若你不了解它，请先忽略该项**。
+
 常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
 
 填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
@@ -38,16 +33,11 @@ TCP 传输模式是目前推荐使用的传输模式之一.
 
 数据包头部伪装设置，默认值为 `NoneHeaderObject`。
 
-
 ::: tip
 HTTP 伪装无法被其它 HTTP 服务器（如 Nginx）分流，但可以被 VLESS fallbacks path 分流。
- 
-
-
+:::
 
 ### NoneHeaderObject
-
----
 
 不进行伪装
 
@@ -61,11 +51,7 @@ HTTP 伪装无法被其它 HTTP 服务器（如 Nginx）分流，但可以被 VL
 
 指定不进行伪装
 
-
-
 ### HttpHeaderObject
-
----
 
 HTTP 伪装配置必须在对应的入站出站连接上同时配置，且内容必须一致。
 
@@ -89,11 +75,7 @@ HTTP 请求
 
 HTTP 响应
 
-
-
 #### HTTPRequestObject
-
----
 
 ```json
 {
@@ -131,11 +113,7 @@ HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的
 
 每次请求会附上所有的键，并随机选择一个对应的值。默认值见上方示例。
 
-
-
 #### HTTPResponseObject
-
----
 
 ```json
 {

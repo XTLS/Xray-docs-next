@@ -1,9 +1,4 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: Shadowsocks
-weight: 9
----
+# Shadowsocks
 
 [Shadowsocks](https://zh.wikipedia.org/wiki/Shadowsocks) 协议，兼容大部分其它版本的实现。
 
@@ -26,11 +21,9 @@ weight: 9
 
 ::: danger
 "none" 不加密方式下，服务器端不会验证 "password" 中的密码。为确保安全性, 一般需要加上 TLS 并在传输层使用安全配置，例如 WebSocket 配置较长的 path
-
+:::
 
 ## OutboundConfigurationObject
-
----
 
 ```json
 {
@@ -51,11 +44,7 @@ weight: 9
 
 一个数组，代表一组 Shadowsocks 服务端设置, 其中每一项是一个 [ServerObject](#serverobject)。
 
-
-
 ### ServerObject
-
----
 
 ```json
 {

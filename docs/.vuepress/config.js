@@ -47,6 +47,49 @@ module.exports = {
                         'examples/multiple'
                     ]
                 },
+                {
+                    title: '入站代理',
+                    collapsable: false,
+                    path: '/config/inbounds/',
+                    children: [
+                        'inbounds/dokodemo',
+                        'inbounds/http',
+                        'inbounds/shadowsocks',
+                        'inbounds/socks',
+                        'inbounds/trojan',
+                        'inbounds/vless',
+                        'inbounds/vmess'
+                    ]
+                },
+                {
+                    title: '出站代理',
+                    collapsable: false,
+                    path: '/config/outbounds/',
+                    children: [
+                        'outbounds/blackhole',
+                        'outbounds/dns',
+                        'outbounds/freedom',
+                        'outbounds/http',
+                        'outbounds/shadowsocks',
+                        'outbounds/socks',
+                        'outbounds/trojan',
+                        'outbounds/vless',
+                        'outbounds/vmess'
+                    ]
+                },
+                {
+                    title: '底层传输',
+                    collapsable: false,
+                    path: '/config/transports/',
+                    children: [
+                        'transports/grpc',
+                        'transports/h2',
+                        'transports/mkcp',
+                        'transports/quic',
+                        'transports/tcp',
+                        'transports/websocket'
+                    ]
+                },
             ],
             '/': 'auto',
         }

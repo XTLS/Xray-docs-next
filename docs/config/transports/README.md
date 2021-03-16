@@ -1,16 +1,6 @@
----
-alwaysopen: false
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-# head: <hr/>
-hide:
-  - toc
-# post: "&nbsp;\U0001F44B"
-title: 传输方式列表
-weight: 7
----
+# 传输方式列表
 
-::: warning**这个章节包含了目前所有的传输方式及相关的具体配置.**{{% /alert %}}
+这个章节包含了目前所有的传输方式及相关的具体配置.
 
 ## 传输方式列表
 

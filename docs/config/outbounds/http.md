@@ -1,25 +1,19 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: HTTP
-weight: 4
----
+# HTTP
 
 HTTP 协议。
 
 ::: danger
 **http 协议没有对传输加密，不适宜经公网中传输，更容易成为被人用作攻击的肉鸡。**
+:::
 
 `http inbound` 更有意义的用法是在局域网或本机环境下监听，为其他程序提供本地服务。
 
 
 ::: tip
  `http proxy` 只能代理 tcp 协议，udp 系的协议均不能通过。
-
+:::
 
 ## OutboundConfigurationObject
-
----
 
 ```json
 {
@@ -40,17 +34,13 @@ HTTP 协议。
 
 ::: tip
 目前 HTTP 协议 outbound 中 `streamSettings` 设置 `security` 和 `tlsSettings` 是生效的。
-
+:::
 
 > `servers`: \[ [ServerObject](#serverobject) \]
 
 HTTP 服务器列表，其中每一项是一个服务器配置，若配置多个，循环使用 (RoundRobin)。
 
-
-
 ### ServerObject
-
----
 
 ```json
 {
@@ -77,11 +67,7 @@ HTTP 代理服务器端口，必填。
 
 一个数组，数组中每个元素为一个用户帐号。默认值为空。
 
-
-
 #### AccountObject
-
----
 
 ```json
 {

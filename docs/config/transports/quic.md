@@ -1,9 +1,4 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: QUIC
-weight: 6
----
+# QUIC
 
 QUIC 全称 Quick UDP Internet Connection，是由 Google 提出的使用 UDP 进行多路并发传输的协议。其主要优势是:
 
@@ -19,14 +14,12 @@ QUIC 目前处于实验期，使用了正在标准化过程中的 IETF 实现，
 
 ## QuicObject
 
----
-
 `QuicObject` 对应传输配置的 `quicSettings` 项。
 
 ::: danger
 对接的两端的配置必须完全一致，否则连接失败。
 QUIC 强制要求开启 TLS，在传输配置中没有开启 TLS 时，Xray 会自行签发一个证书进行 TLS 通讯。
-
+:::
 
 ```json
 {
@@ -56,11 +49,7 @@ QUIC 强制要求开启 TLS，在传输配置中没有开启 TLS 时，Xray 会�
 
 数据包头部伪装设置
 
-
-
 ### HeaderObject
-
----
 
 ```json
 {
@@ -82,4 +71,4 @@ QUIC 强制要求开启 TLS，在传输配置中没有开启 TLS 时，Xray 会�
 ::: tip
 当加密和伪装都不启用时，数据包即为原始的 QUIC 数据包，可以与其它的 QUIC 工具对接。
 为了避免被探测，建议加密或伪装至少开启一项。
-
+:::

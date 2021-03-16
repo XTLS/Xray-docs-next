@@ -1,21 +1,14 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: Socks
-weight: 5
----
+# Socks
 
 标准 Socks 协议实现，兼容 [Socks 4](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)、Socks 4a 和 [Socks 5](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)。
 
 ::: danger
 **socks 协议没有对传输加密，不适宜经公网中传输**
+:::
 
 `socks inbound` 更有意义的用法是在局域网或本机环境下监听，为其他程序提供本地服务。
 
-
 ## OutboundConfigurationObject
-
----
 
 ```json
 {
@@ -61,7 +54,7 @@ Socks 服务器列表，其中每一项是一个服务器配置。
 
 ::: tip
 仅支持连接到 Socks 5 服务器。
-
+:::
 
 > `port`: number
 
@@ -75,10 +68,7 @@ Socks 服务器列表，其中每一项是一个服务器配置。
 
 默认值为空。
 
-
-
 #### UserObject
----
 
 ```json
 {

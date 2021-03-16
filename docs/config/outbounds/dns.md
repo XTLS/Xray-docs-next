@@ -1,9 +1,4 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: DNS
-weight: 2
----
+# DNS
 
 DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 
@@ -12,8 +7,6 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 在处理 DNS 查询时，此出站协议会将 IP 查询（即 A 和 AAAA）转发给内置的 [DNS 服务器](../../dns)。其它类型的查询流量将被转发至它们原本的目标地址。
 
 ## OutboundConfigurationObject
-
----
 
 ```json
 {
@@ -35,9 +28,4 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 
 修改 DNS 服务器端口。当不指定时，保持来源中指定的端口不变。
 
-
-
-## DNS配置实例
----
-
-{{% badge warning %}}In progress{{% /badge %}}
+## DNS配置实例 <Badge text="WIP" type="warning"/>
