@@ -2,31 +2,31 @@
 
 ## DNS 服务器
 
+Xray 内置的 DNS 模块，主要有两大用途：
 
-如果为 Xray 配置了 DNS 服务器模块，主要有两大用途：
-
-- 在路由阶段, 解析域名为 IP, 并且根据域名解析得到的 IP 进行规则匹配以分流. 是否解析域名及分流和路由配置模块中"domainStrategy"的值有关, 只有在设置以下两种值时,才会使用内置 DNS 服务器进行 DNS 查询:
+- 在路由阶段, 解析域名为 IP, 并且根据域名解析得到的 IP 进行规则匹配以分流. 是否解析域名及分流和路由配置模块中 `domainStrategy` 的值有关, 只有在设置以下两种值时,才会使用内置 DNS 服务器进行 DNS 查询:
 
   - "IPIfNonMatch", 请求一个域名时，进行路由里面的 domain 进行匹配，若无法匹配到结果，则对这个域名使用内置 DNS 服务器进行 DNS 查询，并且使用查询返回的 IP 地址再重新进行 IP 路由匹配。
   - "IPOnDemand", 当匹配时碰到任何基于 IP 的规则，将域名立即解析为 IP 进行匹配。
 
 - 解析目标地址进行连接。
-  - 如 在 `freedom` 协议的 `outbound` 中，将`domainStrategy` 设置为 `UseIP`, 由此 outbound 发出的请求, 会先将域名通过内置服务器解析成 IP, 然后进行连接
+  - 如 在 `freedom` 出站中，将 `domainStrategy` 设置为 `UseIP`, 由此出站发出的请求, 会先将域名通过内置服务器解析成 IP, 然后进行连接。
+  - 如 在 `sockopt` 中，将 `domainStrategy` 设置为 `UseIP`, 此出站发起的系统连接，将先由内置服务器解析为 IP, 然后进行连接。
 
 ::: tip TIP 1
 内置 DNS 服务器所发出的 DNS 查询请求，会自动根据路由配置进行转发。
 :::
 
 ::: tip TIP 2
-只支持最基本的 IP 查询（A 和 AAAA 记录）。
+只支持最基本的 IP 查询（A 和 AAAA 记录）。其他查询不会进入内置 DNS 服务器。
 :::
 
 
 ## DNS 处理流程
 DNS 服务器配置模块可以配置多个DNS服务器, 并且指定优先匹配列表.
 
-1. 查询的域名与某个 DNS 服务器指定的域名列表匹配时，Xray 会优先使用这个 DNS 服务器进行查询
-2. 无匹配时, 按从上往下的顺序进行查询
+1. 查询的域名与某个 DNS 服务器指定的域名列表匹配时，Xray 会优先使用这个 DNS 服务器进行查询。
+2. 无匹配时, 按从上往下的顺序进行查询，并且会跳过 1 步骤中使用的最后一个服务器。
 3. 只返回匹配 expectIPs 的 IP 列表。
 
 DNS 服务器的处理流程示意图如下：
@@ -73,7 +73,7 @@ DNS 服务器的处理流程示意图如下：
 - 正则表达式：由 `"regexp:"` 开始，余下部分是一个正则表达式。当此正则表达式匹配目标域名时，该规则生效。例如 "regexp:\\\\.goo.\*\\\\.com$" 匹配"www.google.com"或 "fonts.googleapis.com"，但不匹配 "google.com"。
 - 子域名 (推荐)：由 `"domain:"` 开始，余下部分是一个域名。当此域名是目标域名或其子域名时，该规则生效。例如 “domain:xray.com” 匹配"www.xray.com"、“xray.com”，但不匹配 “wxray.com”。
 - 子串：由 `"keyword:"` 开始，余下部分是一个字符串。当此字符串匹配目标域名中任意部分，该规则生效。比如 "keyword:sina.com" 可以匹配"sina.com"、"sina.com.cn" 和"www.sina.com"，但不匹配 "sina.cn"。
-- 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](../routing/#预定义域名列表)。
+- 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](./routing/#预定义域名列表)。
 
 >`servers`: \[string | [ServerObject](#serverobject) \]
 
@@ -95,6 +95,10 @@ DNS 服务器的处理流程示意图如下：
 
 ::: tip TIP 2
 不同规则初始化得到的 DNS 客户端会在 Xray 启动日志中以 `info` 级别体现，比如 `local DOH`、`remote DOH` 和 `udp` 等模式。
+:::
+
+::: tip TIP 3
+(v1.4.0+) 可以在 [日志](./log) 中打开 DNS 查询日志。
 :::
 
 >`clientIp`: string
@@ -139,11 +143,11 @@ DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH �
 
 >`domains`: \[string\]
 
-一个域名列表，此列表包含的域名，将优先使用此服务器进行查询。域名格式和 [路由配置](../routing#ruleobject) 中相同。
+一个域名列表，此列表包含的域名，将优先使用此服务器进行查询。域名格式和 [路由配置](./routing#ruleobject) 中相同。
 
 >`expectIPs`:\[string\]
 
-一个 IP 范围列表，格式和 [路由配置](../routing#ruleobject) 中相同。
+一个 IP 范围列表，格式和 [路由配置](./routing#ruleobject) 中相同。
 
 当配置此项时，Xray DNS 会对返回的 IP 的进行校验，只返回包含 expectIPs 列表中的地址。
 
