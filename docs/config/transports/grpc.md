@@ -5,8 +5,10 @@
 它基于 HTTP/2 协议，理论上可以通过其它支持 HTTP/2 的服务器（如 Nginx）进行中转。
 gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 mux.cool。
 
-::: warning
-目前，gRPC 不支持指定 serverName (即 Websocket 与 HTTP/2 的 host).请在出站代理地址中填写 **正确的域名** 否则无法连接。
+::: warning ⚠⚠⚠
+- 目前，gRPC 不支持指定 serverName (即 Websocket 与 HTTP/2 的 host).请在出站代理地址中填写 **正确的域名** ，或在 `(x)tlsSettings` 中填写 `ServerName` 否则无法连接。
+- gRPC 不支持回落到其他服务。
+- gRPC 服务有明显特征，无法抵抗主动探测。建议使用 Caddy 或 Nginx，通过 Path 前置分流。
 :::
 
 ::: tip
@@ -19,7 +21,8 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 ::: tip
 如果你正在使用回落，请注意下列事项：
 - 请确认 (x)tlsSettings.alpn 中 h2 位于第一顺位，否则 gRPC（HTTP/2）可能无法完成 TLS 握手。
-- gRPC 无法通过进行 Path 分流，建议使用 SNI 分流。
+- gRPC 无法通过进行 Path 分流。
+- 不建议回落到 gRPC，存在主动探测的风险。
 :::
 
 ## GRPCObject
