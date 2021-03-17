@@ -8,7 +8,10 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 目前，gRPC不支持指定 serverName。请在出站代理地址中填写 **正确的域名** 否则无法连接。
 
 ::: tip
-如果您使用 Caddy 或 Nginx 等反向代理，请务必使用 HTTP/2 或 h2c 连接到 Xray。
+如果您使用 Caddy 或 Nginx 等反向代理，请注意下列事项：
+- 请确定反向代理服务器开启了 HTTP/2
+- 请使用 HTTP/2 或 h2c (Caddy)，grpc_pass (Nginx) 连接到 Xray。
+- 普通模式的 Path 为 `/{serviceName}/Tun`, Multi 模式为 `/{serviceName}/TunMulti`
 :::
 
 ::: warning
@@ -30,8 +33,7 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 > `serviceName`: string 
 
-一个字符串，指定服务路径，相当于 HTTP/2 与 WebSocket 中的 Path。
-
+一个字符串，指定服务路径，**类似于** HTTP/2 与 WebSocket 中的 Path。
 客户端会使用此名称进行通信，服务器会验证服务名称是否匹配。
 
 > `multiMode`: bool <Badge text="BETA" type="warning"/>
