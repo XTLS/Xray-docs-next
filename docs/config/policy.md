@@ -93,7 +93,7 @@ Xray系统级别的策略
 * 在其它平台上，默认值为 `512`。
 
 ::: tip
-`bufferSize` 选项会覆盖 [环境变量](env.md#每个连接的缓存大小)中 `Xray.ray.buffer.size` 的设定。
+`bufferSize` 选项会覆盖 [环境变量](./examples/env#每个连接的缓存大小)中 `Xray.ray.buffer.size` 的设定。
 :::
 
 
