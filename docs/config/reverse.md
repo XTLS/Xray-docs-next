@@ -11,7 +11,7 @@
 * `bridge` 会根据流量的大小进行动态的负载均衡。
 
 ::: tip
-反向代理默认已开启 [Mux](/develop/protocols/muxcool/)，请不要在其用到的outbound上再次开启 Mux。
+反向代理默认已开启 [Mux](../development/protocols/muxcool/)，请不要在其用到的outbound上再次开启 Mux。
 :::
 
 ::: warning
@@ -65,7 +65,7 @@
 > `tag`: string
 
 
-所有由 `bridge` 发出的连接，都会带有这个标识。可以在 [路由配置](../routing) 中使用 `inboundTag` 进行识别。
+所有由 `bridge` 发出的连接，都会带有这个标识。可以在 [路由配置](./routing) 中使用 `inboundTag` 进行识别。
 
 > `domain`: string
 
@@ -86,7 +86,7 @@
 > `tag`: string
 
 
-`portal` 的标识。在  [路由配置](../routing) 中使用 `outboundTag` 将流量转发到这个 `portal`。
+`portal` 的标识。在  [路由配置](./routing) 中使用 `outboundTag` 将流量转发到这个 `portal`。
 
 > `domain`: string
 
