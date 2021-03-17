@@ -3,8 +3,9 @@
 基于 gRPC 的传输方式。
 
 它基于 HTTP/2 协议，理论上可以通过其它支持 HTTP/2 的服务器（如 Nginx）进行中转。
-
 gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 mux.cool。
+
+目前，gRPC不支持指定 serverName。请在出站代理地址中填写 **正确的域名** 否则无法连接。
 
 ::: tip
 如果您使用 Caddy 或 Nginx 等反向代理，请务必使用 HTTP/2 或 h2c 连接到 Xray。
