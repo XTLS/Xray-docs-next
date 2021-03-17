@@ -16,7 +16,7 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 ::: warning
 ⚠️ 如果你正在使用回落，请注意下列事项：
-- 请确认 (x)tlsSettings.alpn 中包含 h2，否则 gRPC（HTTP/2）无法完成 TLS 握手。
+- 请确认 (x)tlsSettings.alpn 中 h2 位于第一顺位，否则 gRPC（HTTP/2）可能无法完成 TLS 握手。
 - gRPC 无法通过进行 Path 分流，建议使用 SNI 分流。
 :::
 
