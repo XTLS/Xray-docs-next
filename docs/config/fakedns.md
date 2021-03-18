@@ -27,7 +27,7 @@ FakeDNS 将使用此选项指定的 IP 块分配地址。
 
 ### 如何使用？
 
-FakeDNS 本质上是一个 [DNS 服务器](./dns#serverobject)，能够与任意 DNS 规则配合使用。
+FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任意 DNS 规则配合使用。
 
 ::: tip
 只有将 DNS 查询路由到 FakeDNS，才能使其发挥作用。

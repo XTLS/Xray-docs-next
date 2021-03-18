@@ -1,6 +1,6 @@
 # 出站代理
 
-出站连接用于发送数据，可用的协议请见[outbound 可用协议列表](../outbounds/)。
+出站连接用于发送数据，可用的协议请见[outbound 可用协议列表](./outbounds/)。
 
 ## OutboundObject
 
@@ -46,7 +46,7 @@
 当其不为空时，其值必须在所有 `tag` 中 **唯一**。
 :::
 
->`streamSettings`: [StreamSettingsObject](./transport#streamsettingsobject)
+>`streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
 
 底层传输方式（transport）是当前 Xray 节点和其它节点对接的方式
 
@@ -71,7 +71,7 @@ Mux 相关的具体配置。
 当指定另一个outbound的标识时，此outbound发出的数据，将被转发至所指定的outbound发出。
 
 ::: danger
-这种转发方式**不经过**底层传输方式。如果需要使用支持底层传输方式的转发，请使用 [SockOpt.dialerProxy](./transport#sockoptobject)。
+这种转发方式**不经过**底层传输方式。如果需要使用支持底层传输方式的转发，请使用 [SockOpt.dialerProxy](./transport.md#sockoptobject)。
 :::
 
 ::: danger

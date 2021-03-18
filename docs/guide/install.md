@@ -1,9 +1,4 @@
----
-date: "2020-12-23T00:00:00.000Z"
-description: Project X 的文档.
-title: 下载安装
-weight: 1
----
+# 下载安装
 
 ## 平台支持
 

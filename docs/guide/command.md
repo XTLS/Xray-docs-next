@@ -1,7 +1,4 @@
----
-lang: zh-CN
-title: 命令参数
----
+# 命令参数
 
 ::: tip
 Xray 使用 go 风格的命令及参数
@@ -112,6 +109,6 @@ xray uuid
 ::: tip
 当`-config`没有指定时，Xray 将先后尝试从以下路径加载`config.json`:
 - 工作目录（Working Directory）
-- [环境变量](../config/env)中`Xray.location.asset`所指定的路径
+- [环境变量](../config/features/env.md#资源文件路径)中`Xray.location.asset`所指定的路径
 :::
 

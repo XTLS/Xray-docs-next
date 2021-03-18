@@ -1,6 +1,6 @@
 # 入站代理
 
-入站连接用于接收发来的数据，可用的协议请见[inbound 可用协议列表](./inbounds)。
+入站连接用于接收发来的数据，可用的协议请见[inbound 可用协议列表](./inbounds/)。
 
 ## InboundObject
 
@@ -52,13 +52,13 @@
 
 >`protocol`: string
 
-连接协议名称，可选的协议类型见[inbound 可用协议列表](./inbounds)。
+连接协议名称，可选的协议类型见[inbound 可用协议列表](./inbounds/)。
 
 >`settings`: InboundConfigurationObject
 
 具体的配置内容，视协议不同而不同。详见每个协议中的 `InboundConfigurationObject`。
 
->`streamSettings`: [StreamSettingsObject](./transport#streamsettingsobject)
+>`streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
 
 底层传输方式（transport）是当前 Xray 节点和其它节点对接的方式
 

@@ -73,7 +73,7 @@ DNS 服务器的处理流程示意图如下：
 - 正则表达式：由 `"regexp:"` 开始，余下部分是一个正则表达式。当此正则表达式匹配目标域名时，该规则生效。例如 "regexp:\\\\.goo.\*\\\\.com$" 匹配"www.google.com"或 "fonts.googleapis.com"，但不匹配 "google.com"。
 - 子域名 (推荐)：由 `"domain:"` 开始，余下部分是一个域名。当此域名是目标域名或其子域名时，该规则生效。例如 “domain:xray.com” 匹配"www.xray.com"、“xray.com”，但不匹配 “wxray.com”。
 - 子串：由 `"keyword:"` 开始，余下部分是一个字符串。当此字符串匹配目标域名中任意部分，该规则生效。比如 "keyword:sina.com" 可以匹配"sina.com"、"sina.com.cn" 和"www.sina.com"，但不匹配 "sina.cn"。
-- 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](./routing/#预定义域名列表)。
+- 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](./routing.md#预定义域名列表)。
 
 >`servers`: \[string | [ServerObject](#serverobject) \]
 
@@ -98,7 +98,7 @@ DNS 服务器的处理流程示意图如下：
 :::
 
 ::: tip TIP 3
-(v1.4.0+) 可以在 [日志](./log) 中打开 DNS 查询日志。
+(v1.4.0+) 可以在 [日志](./log.md) 中打开 DNS 查询日志。
 :::
 
 >`clientIp`: string
@@ -143,11 +143,11 @@ DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH �
 
 >`domains`: \[string\]
 
-一个域名列表，此列表包含的域名，将优先使用此服务器进行查询。域名格式和 [路由配置](./routing#ruleobject) 中相同。
+一个域名列表，此列表包含的域名，将优先使用此服务器进行查询。域名格式和 [路由配置](./routing.md#ruleobject) 中相同。
 
 >`expectIPs`:\[string\]
 
-一个 IP 范围列表，格式和 [路由配置](./routing#ruleobject) 中相同。
+一个 IP 范围列表，格式和 [路由配置](./routing.md#ruleobject) 中相同。
 
 当配置此项时，Xray DNS 会对返回的 IP 的进行校验，只返回包含 expectIPs 列表中的地址。
 

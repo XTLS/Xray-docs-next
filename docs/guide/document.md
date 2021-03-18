@@ -1,9 +1,4 @@
----
-title: 使用文档
-lang: zh-CN
----
-
-## 改进文档
+# 改进文档
 
 Project X 的文档托管在[github](https://github.com/XTLS/XTLS.github.io)上.
 
