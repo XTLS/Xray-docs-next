@@ -38,14 +38,14 @@ module.exports = {
         sidebar: {
             '/config/': [
                 {
-                    title: '示例配置',
+                    title: '特性详解',
                     collapsable: false,
                     children: [
-                        'examples/vless',
-                        'examples/xtls',
-                        'examples/fallback',
-                        'examples/env',
-                        'examples/multiple'
+                        'features/vless',
+                        'features/xtls',
+                        'features/fallback',
+                        'features/env',
+                        'features/multiple'
                     ]
                 },
                 {

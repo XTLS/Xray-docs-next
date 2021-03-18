@@ -7,7 +7,7 @@
 
 VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部分，可以作为 Xray 客户端和服务器之间的桥梁。
 
-与 [VMess](../vmess) 不同，VLESS 不依赖于系统时间，认证方式同样为 UUID，但不需要 alterId。
+与 [VMess](./vmess.md) 不同，VLESS 不依赖于系统时间，认证方式同样为 UUID，但不需要 alterId。
 
 ## OutboundConfigurationObject
 
@@ -107,7 +107,7 @@ VLESS 的用户 ID，可以是任意小于30字节的字符串, 也可以是一�
 - `xtls-rprx-splice-udp443`：同 `xtls-rprx-splice`, 但是放行了目标为 443 端口的 UDP 流量
 
 ::: warning 注意
-当 `flow` 被指定时，还需要将该出站协议的 `streamSettings.security` 一项指定为 `xtls`，`tlsSettings` 改为 `xtlsSettings`。详情请参考 [streamSettings](../../base/transport#streamsettingsobject)。
+当 `flow` 被指定时，还需要将该出站协议的 `streamSettings.security` 一项指定为 `xtls`，`tlsSettings` 改为 `xtlsSettings`。详情请参考 [streamSettings](../transport.md#streamsettingsobject)。
 
 此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
 :::
@@ -135,8 +135,8 @@ Splice 模式的的使用限制：
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的[本地策略](../../base/policy#levelpolicyobject)。
+用户等级，连接会使用这个用户等级对应的[本地策略](../policy.md#levelpolicyobject)。
 
-level 的值, 对应 [policy](../../base/policy#policyobject) 中 level 的值. 如不指定, 默认为 0.
+level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如不指定, 默认为 0.
 
 

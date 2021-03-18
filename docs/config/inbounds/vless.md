@@ -7,7 +7,7 @@
 
 VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部分，可以作为 Xray 客户端和服务器之间的桥梁。
 
-与 [VMess](../vmess) 不同，VLESS 不依赖于系统时间，认证方式同样为 UUID，但不需要 alterId。
+与 [VMess](./vmess.md) 不同，VLESS 不依赖于系统时间，认证方式同样为 UUID，但不需要 alterId。
 
 ## InboundConfigurationObject
 
@@ -44,10 +44,10 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 注意这里是 decryption，和 clients 同级。
 decryption 和 vmess 协议的 encryption 的位置不同，是因为若套一层约定加密，服务端需要先解密才能知道是哪个用户。
 
-> `fallbacks`: \[ [FallbackObject](../../fallback) \]
+> `fallbacks`: \[ [FallbackObject](../examples/fallback.md) \]
 
 一个数组，包含一系列强大的回落分流配置（可选）。
-fallbacks 的具体配置请点击[FallbackObject](../../fallback/#fallbacks-配置)
+fallbacks 的具体配置请点击[FallbackObject](../examples/fallback.md#fallbacks-配置)
 
 ### ClientObject
 
@@ -75,9 +75,9 @@ VLESS 的用户 ID，可以是任意小于30字节的字符串, 也可以是一�
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的[本地策略](../../base/policy#levelpolicyobject)。
+用户等级，连接会使用这个用户等级对应的[本地策略](../policy.md#levelpolicyobject)。
 
-level 的值, 对应 [policy](../../base/policy#policyobject) 中 level 的值. 如不指定, 默认为 0.
+level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如不指定, 默认为 0.
 
 > `email`: string
 
@@ -93,7 +93,7 @@ level 的值, 对应 [policy](../../base/policy#policyobject) 中 level 的值. 
 - `xtls-rprx-direct`：**推荐**，所有平台皆可使用的典型流控方式，此时客户端可选择任何流控模式
 
 ::: warning 注意
-当 `flow` 被指定时，还需要将该入站协议的 `streamSettings.security` 一项指定为 `xtls`，`tlsSettings` 改为 `xtlsSettings`。详情请参考 [streamSettings](../../base/transport#streamsettingsobject)。
+当 `flow` 被指定时，还需要将该入站协议的 `streamSettings.security` 一项指定为 `xtls`，`tlsSettings` 改为 `xtlsSettings`。详情请参考 [streamSettings](../transport.md#streamsettingsobject)。
 :::
 
 此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
