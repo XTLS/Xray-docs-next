@@ -407,13 +407,13 @@ ocspStapling 检查更新时间间隔。 单位：秒
 > Tony: 先有鸡还是先有蛋?
 
 详细解释：
-1. 触发条件：代理服务器（proxy.com）。内置 DNS 服务器，非 Local 模式（上游服务器为 dns.com）。
+1. 触发条件：代理服务器（proxy.com）。内置 DNS 服务器，非 Local 模式。
 2. Xray 尝试向 proxy.com 建立 TCP 连接 **前** ，通过内置 DNS 服务器查询 proxy.com。
 3. 内置 DNS 服务器向 dns.com 建立连接，并发送查询，以获取 proxy.com 的 IP。
 4. **不当的** 的路由规则，导致 proxy.com 代理了步骤 3 中发出的查询。
 5. Xray 尝试向 proxy.com 建立另一个 TCP 连接。
 6. 在建立连接前，通过内置 DNS 服务器查询 proxy.com。
-7. 内置 DNS 服务器复用步骤 3 中的连接，向 dns.com 发出查询。
+7. 内置 DNS 服务器复用步骤 3 中的连接，发出查询。
 8. 问题出现。步骤 3 中连接的建立，需要等待步骤 7 中的查询结果；步骤 7 完成查询，需要等待步骤 3 中的连接完全建立。
 9. Good Game！
 
