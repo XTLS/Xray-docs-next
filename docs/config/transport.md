@@ -401,7 +401,9 @@ ocspStapling 检查更新时间间隔。 单位：秒
 
 ::: danger
 启用了此功能后，不当的配置可能会导致死循环。
+
 一句话版本：连接到服务器，需要等待 DNS 查询结果；完成 DNS 查询，需要连接到服务器。
+
 详细解释：
 1. 触发条件：代理服务器（proxy.com）。内置 DNS 服务器，非 Local 模式（上游服务器为 dns.com）。
 2. Xray 尝试向 proxy.com 建立 TCP 连接 **前** ，通过内置 DNS 服务器查询 proxy.com。
