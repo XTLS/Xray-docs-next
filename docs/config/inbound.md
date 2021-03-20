@@ -36,7 +36,7 @@
 
 可以指定一个系统可用的 IP 地址。
 
-支持填写 Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `"@"` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`"@@"` 则代表带 padding 的 abstract。
+支持填写 Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `@` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`@@` 则代表带 padding 的 abstract。
 
 填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，传输方式可选 TCP、WebSocket、HTTP/2。
 
@@ -52,7 +52,7 @@
 
 >`protocol`: string
 
-连接协议名称，可选的协议类型见[inbound 可用协议列表](./inbounds/)。
+连接协议名称，可选的协议类型见 [inbound 可用协议列表](./inbounds/)。
 
 >`settings`: InboundConfigurationObject
 
@@ -66,7 +66,7 @@
 此入站连接的标识，用于在其它的配置中定位此连接。
 
 ::: danger
-当其不为空时，其值必须在所有 `tag` 中 **唯一**。
+当其不为空时，其值必须在所有 `tag` 中**唯一**。
 :::
 
 >`sniffing`: [SniffingObject](#sniffingobject)

@@ -6,11 +6,8 @@ HTTP 协议。
 **http 协议没有对传输加密，不适宜经公网中传输，更容易成为被人用作攻击的肉鸡。**
 :::
 
-`http inbound` 更有意义的用法是在局域网或本机环境下监听，为其他程序提供本地服务。
-
-
 ::: tip
- `http proxy` 只能代理 tcp 协议，udp 系的协议均不能通过。
+ `http` 只能代理 tcp 协议，udp 系的协议均不能通过。
 :::
 
 ## OutboundConfigurationObject

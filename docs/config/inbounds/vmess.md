@@ -71,21 +71,21 @@ Vmess 的用户 ID，可以是任意小于30字节的字符串, 也可以是一�
 
 ::: tip
 自定义字符串和其映射的 UUID 是等价的, 这意味着你将可以这样在配置文件中写id来标识同一用户,即
-  - 写    "id": "我爱🍉老师1314",
-  - 或写    "id": "5783a3e7-e373-51cd-8642-c83782b807c5" (此UUID是 `我爱🍉老师1314` 的 UUID 映射)  
+  - 写 `"id": "我爱🍉老师1314"`,
+  - 或写 `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (此UUID是 `我爱🍉老师1314` 的 UUID 映射)  
 :::
 
-其映射标准在[VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
+其映射标准在 [VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
 
-你可以使用命令 `xray uuid -map "自定义字符串"` 生成自定义字符串所映射的的 UUID.
+你可以使用命令 `xray uuid -map "自定义字符串"` 生成自定义字符串所映射的的 UUID。
  
 > 也可以使用命令 `xray uuid` 生成随机的UUID. 
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的[本地策略](../policy.md#levelpolicyobject)。
+用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
-level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如不指定, 默认为 0.
+level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
 
 > `alterId`: number
 
@@ -96,7 +96,7 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如�
 
 ::: tip
 客户端 AlterID 设置为 0 代表启用 VMessAEAD ；服务端为自动适配，可同时兼容启用和未开启 VMessAEAD 的客户端。
-客户端可通过设置环境变量 Xray_VMESS_AEAD_DISABLED=true 强行禁用 VMessAEAD
+客户端可通过设置环境变量 `Xray_VMESS_AEAD_DISABLED=true` 强行禁用 VMessAEAD
 :::
 
 > `email`: string
@@ -126,9 +126,9 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如�
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的[本地策略](../policy.md#levelpolicyobject)。
+用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
-level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如不指定, 默认为 0.
+level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
 
 > `alterId`: number
 
@@ -138,7 +138,7 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如�
 
 为了进一步对抗可能的探测和封锁，每个 VMess 认证数据的服务端结构都会包含一个一次写入的玷污状态标记，初始状态为无瑕状态，当服务器检测到重放探测时或者因为其他原因入站连接出错以致校验数据不正确时，该连接所对应的请求认证数据会被玷污。
 
-被玷污的认证数据无法被用于建立连接，当攻击者或客户端使用被玷污的认证数据建立连接时，服务器会输出包含 "invalid user" "ErrTainted" 的错误信息，并阻止该连接。
+被玷污的认证数据无法被用于建立连接，当攻击者或客户端使用被玷污的认证数据建立连接时，服务器会输出包含 `invalid user` `ErrTainted` 的错误信息，并阻止该连接。
 
 当服务器没有受到重放攻击时，该机制对正常连接的客户端没有影响。
 

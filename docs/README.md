@@ -39,16 +39,16 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 
 **XTLS are brilliant ideas for TLS we study, while Xray is the best practice we maintain.**
 
-  - Xray-core 是 v2ray-core 的超集，含更好的整体性能和 XTLS 等一系列增强，且完全兼容 v2ray-core 的功能及配置。
-    - 只有一个可执行文件，含 ctl 的功能，run 为默认指令
-    - 配置上完全兼容，环境变量和 API 对应要改为以 XRAY_ 开头
-    - 全平台开放了裸协议的 ReadV
-    - 提供完整的 VLESS & Trojan XTLS 支持，均有 ReadV
-    - 提供了 XTLS 多种流控模式, 性能一骑绝尘!
+- Xray-core 是 v2ray-core 的超集，含更好的整体性能和 XTLS 等一系列增强，且完全兼容 v2ray-core 的功能及配置。
+  - 只有一个可执行文件，含 ctl 的功能，run 为默认指令
+  - 配置上完全兼容，环境变量和 API 对应要改为以 XRAY_ 开头
+  - 全平台开放了裸协议的 ReadV
+  - 提供完整的 VLESS & Trojan XTLS 支持，均有 ReadV
+  - 提供了 XTLS 多种流控模式, 性能一骑绝尘!
 
-  > “配置兼容，整体更好” 
+> “配置兼容，整体更好” 
 
-  - Xray-flutter 是一个优雅的跨平台图形界面工具. <Badge text="WIP" type="warning"/>
+- Xray-flutter 是一个优雅的跨平台图形界面工具. <Badge text="WIP" type="warning"/>
 
 ### 我们是谁？
 
@@ -58,8 +58,8 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 
 欢迎帮助Xray变得更强！
 - 🖥️ 帮助开发和测试 Xray, 提交高质量的 Pull request.
-- 📩 在 [GitHub Issues](https://github.com/XTLS/Xray-core/issues) 或[讨论区](https://github.com/XTLS/Xray-core/discussions)发起建设性或有意义的 issue/讨论.
-- 📝 写下您的使用心得并提交至 Xray 的[文档网站](https://github.com/XTLS/XTLS.github.io).
+- 📩 在 [GitHub Issues](https://github.com/XTLS/Xray-core/issues) 或 [讨论区](https://github.com/XTLS/Xray-core/discussions)发起建设性或有意义的 issue 与 discussion.
+- 📝 写下您的使用心得并提交至 Xray 的 [文档网站](https://github.com/XTLS/XTLS.github.io).
 - 💬 在 Telegram 群帮助群友/灌水.
 - **...事实上,每一份对 Xray 的支持都会让 Xray 变得更强大**
 
@@ -68,10 +68,10 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 - [Project X 交流群](https://t.me/projectXray)
   - 交流群可在底线之上随便水，不要撕逼，没有滥权。
   - 有问题尽管随便问，知道的尽量回答。
-  - 禁政治，禁NSFW
+  - 禁政治，禁 NSFW
 
 - [Project X 频道](https://t.me/projectXtls)
-  - 发布Project X的最新资讯
+  - 发布 Project X 的最新资讯
 
 ### 致谢
 

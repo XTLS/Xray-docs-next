@@ -44,5 +44,4 @@ error 日志的级别, 指示 error 日志需要记录的信息.
 
 > `dnsLog`: bool 
 
-是否启用 DNS 查询日志，例如：
-`DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`
+是否启用 DNS 查询日志，例如：`DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`

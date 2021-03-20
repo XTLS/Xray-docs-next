@@ -1,7 +1,7 @@
 # Domain Socket
 
 ::: danger
-推荐写到 [inbounds](../../base/inbounds) 的 `listen` 处，传输方式可选 TCP、WebSocket、HTTP/2.
+推荐写到 [inbounds](../inbound.md) 的 `listen` 处，传输方式可选 TCP、WebSocket、HTTP/2.
 未来这里的 DomainSocket 可能会被弃用。
 :::
 

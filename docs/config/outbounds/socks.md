@@ -6,8 +6,6 @@
 **socks 协议没有对传输加密，不适宜经公网中传输**
 :::
 
-`socks inbound` 更有意义的用法是在局域网或本机环境下监听，为其他程序提供本地服务。
-
 ## OutboundConfigurationObject
 
 ```json
@@ -88,6 +86,6 @@ Socks 服务器列表，其中每一项是一个服务器配置。
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的[本地策略](../policy.md#levelpolicyobject)。
+用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
-userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如不指定, 默认为 0
+userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。

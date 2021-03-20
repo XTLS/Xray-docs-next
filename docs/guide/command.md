@@ -6,7 +6,7 @@ Xray 使用 go 风格的命令及参数
 
 ## 获取基本命令
 
-您可以运行 xray help 来获得所有 xray 最基础的用法, 以及可用的命令及说明.
+您可以运行 `xray help` 来获得所有 xray 最基础的用法, 以及可用的命令及说明.
 
 ```
 Xray is a platform for building proxies.
@@ -59,8 +59,6 @@ without launching the server
  xray version
 ```
 
-
-
 ### xray api
 
 调用 Xray 的 gRPC API，需要在配置文件中开启。
@@ -103,8 +101,6 @@ xray tls <command> [arguments]
 ```
 xray uuid
 ```
-
-
 
 ::: tip
 当`-config`没有指定时，Xray 将先后尝试从以下路径加载`config.json`:

@@ -41,6 +41,6 @@ Fallbacks 是 Xray 独创的新型协议回落模式解析, 可有效防止主�
 
 
 ## VLESS 分享链接标准
-感谢<img src="https://avatars2.githubusercontent.com/u/7822648?s=32" width="32px" height="32px" alt="a"/> [@DuckSoft](https://github.com/DuckSoft) 的提案!
+感谢 <img src="https://avatars2.githubusercontent.com/u/7822648?s=32" width="32px" height="32px" alt="a"/> [@DuckSoft](https://github.com/DuckSoft) 的提案!
 
-目前为初步提案, 详情请见[VMessAEAD / VLESS 分享链接标准提案](https://github.com/XTLS/Xray-core/issues/91)
+目前为初步提案, 详情请见 [VMessAEAD / VLESS 分享链接标准提案](https://github.com/XTLS/Xray-core/issues/91)

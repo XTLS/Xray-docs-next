@@ -59,14 +59,14 @@ VLESS 会把 TLS 解密后首包长度 < 18 或协议版本无效、身份认证
 注意：fallbacks alpn 存在 `"h2"` 时，[Inbound TLS](../transport.md#tlsobject) 需设置 `"alpn":["h2","http/1.1"]`，以支持 h2 访问。
 
 ::: tip
-Fallback 内设置的 "alpn" 是匹配实际协商出的 ALPN，而 Inbound TLS 设置的 "alpn" 是握手时可选的 ALPN 列表，两者含义不同。
+Fallback 内设置的 `alpn` 是匹配实际协商出的 ALPN，而 Inbound TLS 设置的 `alpn` 是握手时可选的 ALPN 列表，两者含义不同。
 :::
 
 > `path`: string
 
-尝试匹配首包 HTTP PATH，空为任意，默认为空，非空则必须以 `"/"` 开头，不支持 h2c。
+尝试匹配首包 HTTP PATH，空为任意，默认为空，非空则必须以 `/` 开头，不支持 h2c。
 
-智能：有需要时，VLESS 才会尝试看一眼 PATH（不超过 55 个字节；最快算法，并不完整解析 HTTP），若成功，输出 info `realPath =` 到日志。
+智能：有需要时，VLESS 才会尝试看一眼 PATH（不超过 55 个字节；最快算法，并不完整解析 HTTP），若成功，输出 INFO 日志 `realPath =`。
 用途：分流其它 inbound 的 WebSocket 流量或 HTTP 伪装流量，没有多余处理、纯粹转发流量，理论性能比 Nginx 更强。
 
 注意：**fallbacks 所在入站本身必须是 TCP+TLS**，这是分流至其它 WS 入站用的，被分流的入站则无需配置 TLS。
@@ -76,7 +76,7 @@ Fallback 内设置的 "alpn" 是匹配实际协商出的 ALPN，而 Inbound TLS 
 决定 TLS 解密后 TCP 流量的去向，目前支持两类地址：（该项必填，否则无法启动）
 
 1. TCP，格式为 `"addr:port"`，其中 addr 支持 IPv4、域名、IPv6，若填写域名，也将直接发起 TCP 连接（而不走内置的 DNS）。
-2. Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `"@"` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`"@@"` 则代表带 padding 的 abstract。
+2. Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `@` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`@@` 则代表带 padding 的 abstract。
 
 若只填 port，数字或字符串均可，形如 `80`、`"80"`，通常指向一个明文 http 服务（addr 会被补为 `"127.0.0.1"`）。
 

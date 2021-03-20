@@ -47,7 +47,7 @@ decryption 和 vmess 协议的 encryption 的位置不同，是因为若套一�
 > `fallbacks`: \[ [FallbackObject](../examples/fallback.md) \]
 
 一个数组，包含一系列强大的回落分流配置（可选）。
-fallbacks 的具体配置请点击[FallbackObject](../examples/fallback.md#fallbacks-配置)
+fallbacks 的具体配置请点击 [FallbackObject](../examples/fallback.md#fallbacks-配置)
 
 ### ClientObject
 
@@ -64,10 +64,10 @@ fallbacks 的具体配置请点击[FallbackObject](../examples/fallback.md#fallb
 
 VLESS 的用户 ID，可以是任意小于30字节的字符串, 也可以是一个合法的UUID. 
 自定义字符串和其映射的 UUID 是等价的, 这意味着你将可以这样在配置文件中写id来标识同一用户,即
-  - 写    "id": "我爱🍉老师1314",
-  - 或写    "id": "5783a3e7-e373-51cd-8642-c83782b807c5" (此UUID是 `我爱🍉老师1314` 的 UUID 映射)  
+  - 写 `"id": "我爱🍉老师1314"`,
+  - 或写 `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (此UUID是 `我爱🍉老师1314` 的 UUID 映射)  
  
-其映射标准在[VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
+其映射标准在 [VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
 
 你可以使用命令 `xray uuid -map "自定义字符串"` 生成自定义字符串所映射的的 UUID. 
 
@@ -75,9 +75,9 @@ VLESS 的用户 ID，可以是任意小于30字节的字符串, 也可以是一�
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的[本地策略](../policy.md#levelpolicyobject)。
+用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
-level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如不指定, 默认为 0.
+level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
 
 > `email`: string
 
@@ -89,7 +89,7 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 level 的值. 如�
 
 目前入站协议中有以下流控模式可选：
 
-- `xtls-rprx-origin`：最初的流控模式，此时客户端仅可选择 `xtls-rprx-origin` 和 `xtls-rprx-origin-udp443` 这两种流控模式。该模式纪念价值大于实际使用价值
+- `xtls-rprx-origin`：最初的流控模式，此时客户端仅可选择 `xtls-rprx-origin` 和 `xtls-rprx-origin-udp443` 这两种流控模式。该模式纪念价值大于实际使用价值。
 - `xtls-rprx-direct`：**推荐**，所有平台皆可使用的典型流控方式，此时客户端可选择任何流控模式
 
 ::: warning 注意
