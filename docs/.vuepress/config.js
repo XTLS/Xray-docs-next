@@ -98,6 +98,19 @@ module.exports = {
     markdown: {
         toc: {
             includeLevel: [2]
+        },
+        extendMarkdown: md => {
+            md.use(require('markdown-it-footnote'))
         }
+    },
+    chainWebpack: (config) => {
+        config.module
+	    .rule('webp')
+	        .test(/\.(webp)(\?.*)?$/)
+	        .use('file-loader')
+	            .loader('file-loader')
+	            .options({
+                        name: `assets/img/[name].[hash:8].[ext]`
+                    })
     }
 }
