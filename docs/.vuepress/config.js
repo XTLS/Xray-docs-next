@@ -24,7 +24,7 @@ module.exports = {
             { text: '大史记', link: '/about/news' },
             { text: '配置指南', link: '/config/' },
             { text: '开发指南', link: '/development/' },
-            { text: '使用指南', link: '/usage/' },
+            { text: '使用指南', link: '/document/' },
             {
                 text: '多语言',
                 ariaLabel: 'Language Menu',
@@ -36,6 +36,37 @@ module.exports = {
 
         ],
         sidebar: {
+            '/config/basis/': [
+                {
+                    title: '基础配置',
+                    collapsable: false,
+                    children: [
+                        'api',
+                        'dns',
+                        'fakedns',
+                        'inbound',
+                        'outbound',
+                        'policy',
+                        'reverse',
+                        'routing',
+                        'stats',
+                        'transport'
+                    ]
+                },
+                {
+                    title: '入站代理',
+                    path: '/config/inbounds/',
+                },
+                {
+                    title: '出站代理',
+                    path: '/config/outbounds/',
+                },
+                {
+                    title: '底层传输',
+                    path: '/config/transports/',
+                },
+
+            ],
             '/config/': [
                 {
                     title: '特性详解',
@@ -47,6 +78,10 @@ module.exports = {
                         'features/env',
                         'features/multiple'
                     ]
+                },
+                {
+                    title: '基础配置',
+                    path: '/config/',
                 },
                 {
                     title: '入站代理',
@@ -91,6 +126,17 @@ module.exports = {
                         'transports/websocket'
                     ]
                 },
+            ],
+            '/document/level-0/': [
+                'ch01-preface',
+                'ch02-preparation',
+                'ch03-ssh',
+                'ch04-security',
+                'ch05-webpage',
+                'ch06-certificates',
+                'ch07-xray-server',
+                'ch08-xray-clients',
+                'ch09-appendix',
             ],
             '/': 'auto',
         }

@@ -29,31 +29,31 @@
 }
 ```
 
-> `tcpSettings`: [TcpObject](./transports/tcp.md)
+> `tcpSettings`: [TcpObject](../transports/tcp.md)
 
 针对 TCP 连接的配置。
 
-> `kcpSettings`: [KcpObject](./transports/mkcp.md)
+> `kcpSettings`: [KcpObject](../transports/mkcp.md)
 
 针对 mKCP 连接的配置。
 
-> `wsSettings`: [WebSocketObject](./transports/websocket).md
+> `wsSettings`: [WebSocketObject](../transports/websocket.md)
 
 针对 WebSocket 连接的配置。
 
-> `httpSettings`: [HttpObject](./transports/h2.md)
+> `httpSettings`: [HttpObject](../transports/h2.md)
 
 针对 HTTP/2 连接的配置。
 
-> `quicSettings`: [QuicObject](./transports/quic.md)
+> `quicSettings`: [QuicObject](../transports/quic.md)
 
 针对 QUIC 连接的配置。
 
-> `grpcSettings`: [GRPCObject](./transports/grpc.md)
+> `grpcSettings`: [GRPCObject](../transports/grpc.md)
 
 针对 gRPC 连接的配置。
 
-> `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
+> `dsSettings`: [DomainSocketObject](../transports/domainsocket.md)
 
 针对 Domain Socket 连接的配置。
 
@@ -94,7 +94,7 @@
 是否启用传输层加密，支持的选项有 
 - `"none"` 表示不加密（默认值）
 - `"tls"` 表示使用 [TLS](https://en.wikipedia.org/wiki/base/transport_Layer_Security)。
-- `"xtls"` 表示使用 [XTLS](./features/xtls.md)。
+- `"xtls"` 表示使用 [XTLS](../features/xtls.md)。
 
 >  `tlsSettings`: [TLSObject](#tlsobject)
 
@@ -103,7 +103,7 @@ TLS 配置。TLS 由 Golang 提供，通常情况下TLS协商的结果为使用 
 >  `xtlsSettings`: [XTLSObject](#tlsobject)
 
 XTLS 配置。XTLS 是 Xray 的原创黑科技, 也是使 Xray 性能一骑绝尘的核心动力。
-XTLS 与 TLS 有相同的安全性, 配置方式也和TLS一致. 点击此处查看 [XTLS的技术细节剖析](./features/xtls.md)
+XTLS 与 TLS 有相同的安全性, 配置方式也和TLS一致. 点击此处查看 [XTLS的技术细节剖析](../features/xtls.md)
 
 ::: danger
 TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型和正常上网具有一致性。
@@ -111,31 +111,31 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
 当 `security` 的值从 `tls` 改为 `xtls` 时, 只需将 `tlsSettings` 修改成为 `xtlsSettings`
 :::
 
->  `tcpSettings`: [TcpObject](./transports/tcp.md)
+>  `tcpSettings`: [TcpObject](../transports/tcp.md)
 
 当前连接的 TCP 配置，仅当此连接使用 TCP 时有效。配置内容与上面的全局配置相同。
 
->  `kcpSettings`: [KcpObject](./transports/mkcp.md)
+>  `kcpSettings`: [KcpObject](../transports/mkcp.md)
 
 当前连接的 mKCP 配置，仅当此连接使用 mKCP 时有效。配置内容与上面的全局配置相同。
 
->  `wsSettings`: [WebSocketObject](./transports/websocket.md)
+>  `wsSettings`: [WebSocketObject](../transports/websocket.md)
 
 当前连接的 WebSocket 配置，仅当此连接使用 WebSocket 时有效。配置内容与上面的全局配置相同。
 
->  `httpSettings`: [HttpObject](./transports/h2.md)
+>  `httpSettings`: [HttpObject](../transports/h2.md)
 
 当前连接的 HTTP/2 配置，仅当此连接使用 HTTP/2 时有效。配置内容与上面的全局配置相同。
 
->  `quicSettings`: [QUICObject](./transports/quic.md)
+>  `quicSettings`: [QUICObject](../transports/quic.md)
 
 当前连接的 QUIC 配置，仅当此连接使用 QUIC 时有效。配置内容与上面的全局配置相同。
 
->  `grpcSettings`: [GRPCObject](./transports/grpc.md)
+>  `grpcSettings`: [GRPCObject](../transports/grpc.md)
 
 当前连接的 gRPC 配置，仅当此连接使用 gRPC 时有效。配置内容与上面的全局配置相同。
 
->  `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
+>  `dsSettings`: [DomainSocketObject](../transports/domainsocket.md)
 
 当前连接的 Domain socket 配置，仅当此连接使用 Domain socket 时有效。配置内容与上面的全局配置相同。
 
@@ -384,7 +384,7 @@ ocspStapling 检查更新时间间隔。 单位：秒
 透明代理需要 Root 或 `CAP\_NET\_ADMIN` 权限。
 
 ::: danger
-当 [Dokodemo-door](./inbounds/dokodemo.md) 中指定了 `followRedirect`为`true`，且 Sockopt设置中的`tproxy` 为空时，Sockopt设置中的`tproxy` 的值会被设为 `"redirect"`。
+当 [Dokodemo-door](../inbounds/dokodemo.md) 中指定了 `followRedirect`为`true`，且 Sockopt设置中的`tproxy` 为空时，Sockopt设置中的`tproxy` 的值会被设为 `"redirect"`。
 :::
 
 >  `domainStrategy`: "AsIs" | "UseIP" | "UseIPv4" | "UseIPv6"

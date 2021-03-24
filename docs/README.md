@@ -4,7 +4,7 @@ heroImage: /LogoX2.png
 heroText: 不畏浮云遮望眼 · 金睛如炬耀苍穹
 tagline: Keep Riding / Never Look Back
 actionText: 由此开始 →
-actionLink: /guide/
+actionLink: /document/
 features:
 - title: 极速协议
   details: 

@@ -1,6 +1,6 @@
 # 出站代理
 
-出站连接用于发送数据，可用的协议请见 [outbound 可用协议列表](./outbounds/)。
+出站连接用于发送数据，可用的协议请见 [outbound 可用协议列表](../outbounds/)。
 
 ## OutboundObject
 
@@ -34,7 +34,7 @@
 用于发送数据的 IP 地址，当主机有多个 IP 地址时有效，默认值为 `"0.0.0.0"`。
 >`protocol`: string
 
-连接协议名称，可选的协议类型见 [outbound 可用协议列表](./outbounds/)。
+连接协议名称，可选的协议类型见 [outbound 可用协议列表](../outbounds/)。
 >`settings`: OutboundConfigurationObject
 
 具体的配置内容，视协议不同而不同。详见每个协议中的 `OutboundConfigurationObject`。
@@ -83,7 +83,7 @@ Mux 相关的具体配置。
 :::
 
 ### MuxObject
-Mux 功能是在一条 TCP 连接上分发多个 TCP 连接的数据。实现细节详见 [Mux.Cool](../development/protocols/muxcool)。Mux 是为了减少 TCP 的握手延迟而设计，而非提高连接的吞吐量。使用 Mux 看视频、下载或者测速通常都有反效果。Mux 只需要在客户端启用，服务器端自动适配。
+Mux 功能是在一条 TCP 连接上分发多个 TCP 连接的数据。实现细节详见 [Mux.Cool](../../development/protocols/muxcool)。Mux 是为了减少 TCP 的握手延迟而设计，而非提高连接的吞吐量。使用 Mux 看视频、下载或者测速通常都有反效果。Mux 只需要在客户端启用，服务器端自动适配。
 
 `MuxObject` 对应 `OutboundObject` 中的 `mux` 项。
 
