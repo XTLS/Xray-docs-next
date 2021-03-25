@@ -6,7 +6,12 @@
   "author": "Arthur Morgan, Project X Community",
   "license": "CC-BY-SA-4.0",
   "devDependencies": {
+    "@types/bootstrap": "^5.0.11",
+    "@types/jquery": "^3.5.5",
     "@vuepress/plugin-back-to-top": "^1.8.2",
+    "sass": "^1.32.8",
+    "sass-loader": "^8.0.2",
+    "vue-property-decorator": "^9.1.2",
     "vuepress": "^1.8.2"
   },
   "scripts": {
@@ -14,6 +19,10 @@
     "docs:build": "vuepress build docs"
   },
   "dependencies": {
-    "markdown-it-footnote": "^3.0.2"
+    "@popperjs/core": "^2.9.1",
+    "bootstrap": "^5.0.0-beta3",
+    "jquery": "^3.6.0",
+    "markdown-it-footnote": "^3.0.2",
+    "vuepress-plugin-mermaidjs": "^1.8.1"
   }
 }

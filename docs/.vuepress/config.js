@@ -1,6 +1,7 @@
 module.exports = {
     plugins: [
-        '@vuepress/back-to-top'
+        '@vuepress/back-to-top',
+        'vuepress-plugin-mermaidjs'
     ],
     base: '/Xray-docs-next/',
     locales: {
@@ -36,10 +37,21 @@ module.exports = {
 
         ],
         sidebar: {
-            '/config/basis/': [
+            '/config/': [
+                {
+                    title: '特性详解',
+                    children: [
+                        'features/vless',
+                        'features/xtls',
+                        'features/fallback',
+                        'features/env',
+                        'features/multiple'
+                    ]
+                },
                 {
                     title: '基础配置',
                     collapsable: false,
+                    path: '/config/',
                     children: [
                         'api',
                         'dns',
@@ -52,36 +64,6 @@ module.exports = {
                         'stats',
                         'transport'
                     ]
-                },
-                {
-                    title: '入站代理',
-                    path: '/config/inbounds/',
-                },
-                {
-                    title: '出站代理',
-                    path: '/config/outbounds/',
-                },
-                {
-                    title: '底层传输',
-                    path: '/config/transports/',
-                },
-
-            ],
-            '/config/': [
-                {
-                    title: '特性详解',
-                    collapsable: false,
-                    children: [
-                        'features/vless',
-                        'features/xtls',
-                        'features/fallback',
-                        'features/env',
-                        'features/multiple'
-                    ]
-                },
-                {
-                    title: '基础配置',
-                    path: '/config/',
                 },
                 {
                     title: '入站代理',
@@ -138,6 +120,18 @@ module.exports = {
                 'ch08-xray-clients',
                 'ch09-appendix',
             ],
+            '/document/level-1/': [
+                'fallbacks-lv1',
+                'routing-lv1-part1',
+                'routing-lv1-part2',
+                'work',
+                'fallbacks-with-sni',
+            ],
+            '/document/level-2/': [
+                'transparent_proxy/transparent_proxy',
+                'tproxy',
+                'iptables_gid',
+            ],
             '/': 'auto',
         }
     },
@@ -151,12 +145,12 @@ module.exports = {
     },
     chainWebpack: (config) => {
         config.module
-	    .rule('webp')
-	        .test(/\.(webp)(\?.*)?$/)
-	        .use('file-loader')
-	            .loader('file-loader')
-	            .options({
-                        name: `assets/img/[name].[hash:8].[ext]`
-                    })
+            .rule('webp')
+            .test(/\.(webp)(\?.*)?$/)
+            .use('file-loader')
+            .loader('file-loader')
+            .options({
+                name: `assets/img/[name].[hash:8].[ext]`
+            })
     }
 }

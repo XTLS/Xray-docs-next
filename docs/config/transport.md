@@ -29,31 +29,31 @@
 }
 ```
 
-> `tcpSettings`: [TcpObject](../transports/tcp.md)
+> `tcpSettings`: [TcpObject](./transports/tcp.md)
 
 针对 TCP 连接的配置。
 
-> `kcpSettings`: [KcpObject](../transports/mkcp.md)
+> `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
 针对 mKCP 连接的配置。
 
-> `wsSettings`: [WebSocketObject](../transports/websocket.md)
+> `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
 针对 WebSocket 连接的配置。
 
-> `httpSettings`: [HttpObject](../transports/h2.md)
+> `httpSettings`: [HttpObject](./transports/h2.md)
 
 针对 HTTP/2 连接的配置。
 
-> `quicSettings`: [QuicObject](../transports/quic.md)
+> `quicSettings`: [QuicObject](./transports/quic.md)
 
 针对 QUIC 连接的配置。
 
-> `grpcSettings`: [GRPCObject](../transports/grpc.md)
+> `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
 针对 gRPC 连接的配置。
 
-> `dsSettings`: [DomainSocketObject](../transports/domainsocket.md)
+> `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
 针对 Domain Socket 连接的配置。
 
@@ -111,31 +111,31 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
 当 `security` 的值从 `tls` 改为 `xtls` 时, 只需将 `tlsSettings` 修改成为 `xtlsSettings`
 :::
 
->  `tcpSettings`: [TcpObject](../transports/tcp.md)
+>  `tcpSettings`: [TcpObject](./transports/tcp.md)
 
 当前连接的 TCP 配置，仅当此连接使用 TCP 时有效。配置内容与上面的全局配置相同。
 
->  `kcpSettings`: [KcpObject](../transports/mkcp.md)
+>  `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
 当前连接的 mKCP 配置，仅当此连接使用 mKCP 时有效。配置内容与上面的全局配置相同。
 
->  `wsSettings`: [WebSocketObject](../transports/websocket.md)
+>  `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
 当前连接的 WebSocket 配置，仅当此连接使用 WebSocket 时有效。配置内容与上面的全局配置相同。
 
->  `httpSettings`: [HttpObject](../transports/h2.md)
+>  `httpSettings`: [HttpObject](./transports/h2.md)
 
 当前连接的 HTTP/2 配置，仅当此连接使用 HTTP/2 时有效。配置内容与上面的全局配置相同。
 
->  `quicSettings`: [QUICObject](../transports/quic.md)
+>  `quicSettings`: [QUICObject](./transports/quic.md)
 
 当前连接的 QUIC 配置，仅当此连接使用 QUIC 时有效。配置内容与上面的全局配置相同。
 
->  `grpcSettings`: [GRPCObject](../transports/grpc.md)
+>  `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
 当前连接的 gRPC 配置，仅当此连接使用 gRPC 时有效。配置内容与上面的全局配置相同。
 
->  `dsSettings`: [DomainSocketObject](../transports/domainsocket.md)
+>  `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
 当前连接的 Domain socket 配置，仅当此连接使用 Domain socket 时有效。配置内容与上面的全局配置相同。
 

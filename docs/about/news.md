@@ -1,6 +1,4 @@
 ---
-title: 大史记
-lang: zh-CN
 sidebar: auto
 ---
 
@@ -130,7 +128,7 @@ sidebar: auto
 
 ## 2021.01.03
 
-- 文档仓库第一个PR。🎉<br>
+- 文档仓库第一个PR。🎉
 [透明代理（TProxy）配置教程 ](../../documents/level-2/tproxy) ，感谢<img src="https://avatars2.githubusercontent.com/u/41363844?s=32" width="32px" height="32px" alt="a"/> [@BioniCosmos](https://github.com/BioniCosmos)
 - tg群突破2500。
 
@@ -175,16 +173,16 @@ sidebar: auto
 
 ## 2020.12.24
 
-因为某些不可描述的原因，Xray 的文档网站已在发布日前偷跑上线。<br>
+因为某些不可描述的原因，Xray 的文档网站已在发布日前偷跑上线。
 网址为：[没错你正在看的就是](https://xtls.github.io)
 
 大家可以查阅各种内容也欢迎纠错/提出建议（可发往文档github仓库的issue区）
 
-文档网站需要不断完善和增加内容，以及完善设计。<br>
-因此更欢迎大家一起为文档建设添砖加瓦。<br>
+文档网站需要不断完善和增加内容，以及完善设计。
+因此更欢迎大家一起为文档建设添砖加瓦。
 [文档的仓库](https://github.com/XTLS/XTLS.github.io)
 
-仓库的readme中有简略教程说明如何帮助xray改进文档网站.<br>
+仓库的readme中有简略教程说明如何帮助xray改进文档网站.
 欢迎大家查看，纠错，修改，增加心得。
 
 ## 2020.12.23

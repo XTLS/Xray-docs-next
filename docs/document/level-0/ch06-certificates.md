@@ -48,14 +48,14 @@
     $ acme.sh --issue --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
     ```
 
-::: warning 说明
-`ECC`证书的主要优势在于它的Keysize更小，意味着同等大小下安全性的提升和加密解密速度的加快。如 ECC-256bit 的强度大约相当于 RSA-3072bit，何乐而不为呢？当然，有人说ECC证书握手会明显更快，这我觉得就有些夸张了，因为RSA握手也没有太慢，就算有差别应该也是毫秒级，很难直接感知。
+    ::: warning 说明
+    `ECC`证书的主要优势在于它的Keysize更小，意味着同等大小下安全性的提升和加密解密速度的加快。如 ECC-256bit 的强度大约相当于 RSA-3072bit，何乐而不为呢？当然，有人说ECC证书握手会明显更快，这我觉得就有些夸张了，因为RSA握手也没有太慢，就算有差别应该也是毫秒级，很难直接感知。
 
-另外，如果有些网站确实需要兼容某些古老设备的，那也还是请按需选择`RSA`证书。
-:::
+    另外，如果有些网站确实需要兼容某些古老设备的，那也还是请按需选择`RSA`证书。
+    :::
 
 2. 你最终应该看到类似这样的提示：
-    ```
+    ``` log
     [Wed 30 Dec 2022 04:25:12 AM EST] Using ACME_DIRECTORY: https://acme-staging-v02.api.letsencrypt.org/directory
     [Wed 30 Dec 2022 04:25:13 AM EST] Using CA: https://acme-staging-v02.api.letsencrypt.org/directory
     [Wed 30 Dec 2022 04:25:13 AM EST] Create account key ok.
@@ -76,7 +76,7 @@
     [Wed 30 Dec 2022 04:25:25 AM EST] Downloading cert.
     [Wed 30 Dec 2022 04:25:25 AM EST] Le_LinkCert='https://acme-staging-v02.api.letsencrypt.org/acme/cert/xujss5xt8i38waubafz2xujss5xt8i38waubz2'
     [Wed 30 Dec 2022 15:21:52 AM EST] Cert success.
---BEGIN CERTIFICAT--
+    --BEGIN CERTIFICAT--
     sxlYqPvWreKgD5b8JyOQX0Yg2MLoRUoDyqVkd31PthIiwzdckoh5eD3JU7ysYBtN
     cTFK4LGOfjqi8Ks87EVJdK9IaSAu7ZC6h5to0eqpJ5PLhaM3e6yJBbHmYA8w1Smp
     wAb3tdoHZ9ttUIm9CrSzvDBt6BBT6GqYdDamMyCYBLooMyDEM4CUFsOzCRrEqqvC
@@ -101,7 +101,7 @@
     NZFQWYJLNVf2M9CCJfbEImPYgvctrxl39H6KVYPCw1SAdaj9NneUqmREOQkKoEB0
     x6PmNirbMscHhQPSC0JQaqUgaQFgba1ALmzRYAnYhNb0twkTxWbY7DBkAarxqMIp
     yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPIjw9AKH=
---END CERTIFICAT--
+    --END CERTIFICAT--
     [Wed 30 Dec 2022 15:21:52 AM EST] Your cert is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.cer
     [Wed 30 Dec 2022 15:21:52 AM EST] Your cert key is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.key
     [Wed 30 Dec 2022 15:21:52 AM EST] The intermediate CA cert is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/ca.cer
@@ -111,6 +111,7 @@
 3. 注意：这里申请的是测试证书，没办法直接用的，只是用来证明你的域名、配置全都正确。仔细观察，你会发现给你发证书的域名是 `https://acme-staging-v02.api.letsencrypt.org`，这个 `staging` 你就理解成【测试服】吧！
 
 4. 如果这一步出错的话，你可以运行下面的命令，来查看详细的申请过程和具体的错误。（看不懂就隐藏掉敏感信息后，去Xray群里问吧）
+
     ```
     $ acme.sh --issue --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
     ```
@@ -128,12 +129,12 @@
     $ acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
     ```
 
-::: warning 说明
-`--force` 参数的意思就是，在现有证书到期前，手动（强行）更新证书。上一步我们从“测试服”申请的证书虽然不能直接用，但是它本身是尚未过期的，所以需要用到这个参数。
-:::
+    ::: warning 说明
+    `--force` 参数的意思就是，在现有证书到期前，手动（强行）更新证书。上一步我们从“测试服”申请的证书虽然不能直接用，但是它本身是尚未过期的，所以需要用到这个参数。
+    :::
 
 2. 你最终应该看到跟上面很像的提示：
-    ```
+    ``` log
     vpsadmin@vps-server:~$ acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
     [Wed 30 Dec 2022 15:22:51 AM EST] Using CA: https://acme-v02.api.letsencrypt.org/directory
     [Wed 30 Dec 2022 15:22:51 AM EST] Creating domain key
@@ -150,7 +151,7 @@
     [Wed 30 Dec 2022 15:22:51 AM EST] Downloading cert.
     [Wed 30 Dec 2022 15:22:51 AM EST] Le_LinkCert='https://acme-v02.api.letsencrypt.org/acme/cert/vsxvk0oldnuobe51ayxz4dms62sk2dwmw9zhuw'
     [Wed 30 Dec 2022 15:22:51 AM EST] Cert success.
---BEGIN CERTIFICAT--
+    --BEGIN CERTIFICAT--
     sxlYqPvWreKgD5b8JyOQX0Yg2MLoRUoDyqVkd31PthIiwzdckoh5eD3JU7ysYBtN
     cTFK4LGOfjqi8Ks87EVJdK9IaSAu7ZC6h5to0eqpJ5PLhaM3e6yJBbHmYA8w1Smp
     wAb3tdoHZ9ttUIm9CrSzvDBt6BBT6GqYdDamMyCYBLooMyDEM4CUFsOzCRrEqqvC
@@ -175,7 +176,7 @@
     NZFQWYJLNVf2M9CCJfbEImPYgvctrxl39H6KVYPCw1SAdaj9NneUqmREOQkKoEB0
     x6PmNirbMscHhQPSC0JQaqUgaQFgba1ALmzRYAnYhNb0twkTxWbY7DBkAarxqMIp
     yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPM=
---END CERTIFICAT--
+    --END CERTIFICAT--
     [Wed 30 Dec 2022 15:22:52 AM EST] Your cert is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.cer
     [Wed 30 Dec 2022 15:22:52 AM EST] Your cert key is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.key
     [Wed 30 Dec 2022 15:22:52 AM EST] The intermediate CA cert is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/ca.cer
@@ -191,4 +192,4 @@
 至此，Xray所需要的两个基础设施终于全部就位！千呼万唤始出来的Xray马上就要揭开面纱，我们终于要进入最激动人心章节啦！
 
 
-> `⬛⬛⬛⬛⬛⬛⬜⬜ 75%` :::
+> ⬛⬛⬛⬛⬛⬛⬜⬜ 75% 

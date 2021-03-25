@@ -1,6 +1,6 @@
 # 出站代理
 
-出站连接用于发送数据，可用的协议请见 [outbound 可用协议列表](../outbounds/)。
+出站连接用于发送数据，可用的协议请见 [outbound 可用协议列表](./outbounds/)。
 
 ## OutboundObject
 
@@ -34,7 +34,7 @@
 用于发送数据的 IP 地址，当主机有多个 IP 地址时有效，默认值为 `"0.0.0.0"`。
 >`protocol`: string
 
-连接协议名称，可选的协议类型见 [outbound 可用协议列表](../outbounds/)。
+连接协议名称，可选的协议类型见 [outbound 可用协议列表](./outbounds/)。
 >`settings`: OutboundConfigurationObject
 
 具体的配置内容，视协议不同而不同。详见每个协议中的 `OutboundConfigurationObject`。
