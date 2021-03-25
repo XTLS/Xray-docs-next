@@ -25,7 +25,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Tab } from "bootstrap";
 
 export default Vue.extend({
   props: {
@@ -43,8 +42,9 @@ export default Vue.extend({
   },
   mounted() {
     this.$nextTick(function() {
+      const bootstrap = require("bootstrap");
       let triggerEl = document.getElementById(this.children["0"].$data.labelID);
-      new Tab(triggerEl).show();
+      new bootstrap.Tab(triggerEl).show();
     });
   },
   computed: {
