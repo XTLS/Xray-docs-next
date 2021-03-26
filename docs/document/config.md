@@ -90,11 +90,10 @@
 
 ## 运行
 
-
 - 在 Windows 和 macOS 中，配置文件通常是 Xray 同目录下的 `config.json` 文件。
-    - 直接运行 `Xray` 或 `Xray.exe` 即可。
+  - 直接运行 `Xray` 或 `Xray.exe` 即可。
 - 在 Linux 中，配置文件通常位于 `/etc/xray/` 或 `/usr/local/etc/xray/` 目录下。
-    - 运行 `xray run -c /etc/xray/config.json`
-    - 或使用 systemd 等工具将 Xray 作为服务在后台运行。
+  - 运行 `xray run -c /etc/xray/config.json`
+  - 或使用 systemd 等工具将 Xray 作为服务在后台运行。
 
 更多详细的说明可以参考 [配置文档](../config/) 和 [使用心得](../documents/)。

@@ -12,12 +12,12 @@ FakeDNS 有可能会污染本地 DNS，导致 Xray 关闭后“无法访问网�
 
 ```json
 {
-    "ipPool": "198.18.0.0/16",
-    "poolSize": 65535
+  "ipPool": "198.18.0.0/16",
+  "poolSize": 65535
 }
 ```
 
-> `ipPool`: CIDR 
+> `ipPool`: CIDR
 
 FakeDNS 将使用此选项指定的 IP 块分配地址。
 

@@ -57,6 +57,7 @@ $env:GOARCH="amd64"
 
 go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 ```
+
 上传到服务器后，记得在服务器终端内执行 `chmod +x xray`
 
 ::: tip

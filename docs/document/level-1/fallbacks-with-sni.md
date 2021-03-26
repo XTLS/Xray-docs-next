@@ -72,92 +72,89 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
 
 ```json
 {
-    "log": {
-        "loglevel": "warning"
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "UUID",
+            "flow": "xtls-rprx-direct"
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "name": "example.com",
+            "path": "/vmessws",
+            "dest": 5000,
+            "xver": 1
+          },
+          {
+            "dest": 5001,
+            "xver": 1
+          },
+          {
+            "alpn": "h2",
+            "dest": 5002,
+            "xver": 1
+          },
+          {
+            "name": "blog.example.com",
+            "dest": 5003,
+            "xver": 1
+          },
+          {
+            "name": "blog.example.com",
+            "alpn": "h2",
+            "dest": 5004,
+            "xver": 1
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+          "alpn": ["h2", "http/1.1"],
+          "certificates": [
+            {
+              "certificateFile": "/etc/ssl/xray/cert.pem",
+              "keyFile": "/etc/ssl/xray/privkey.key"
+            }
+          ]
+        }
+      }
     },
-    "inbounds": [
-        {
-            "port": 443,
-            "protocol": "vless",
-            "settings": {
-                "clients": [
-                    {
-                        "id": "UUID",
-                        "flow": "xtls-rprx-direct"
-                    }
-                ],
-                "decryption": "none",
-                "fallbacks": [
-                    {
-                        "name": "example.com",
-                        "path": "/vmessws",
-                        "dest": 5000,
-                        "xver": 1
-                    },
-                    {
-                        "dest": 5001,
-                        "xver": 1
-                    },
-                    {
-                        "alpn": "h2",
-                        "dest": 5002,
-                        "xver": 1
-                    },
-                    {
-                        "name": "blog.example.com",
-                        "dest": 5003,
-                        "xver": 1
-                    },
-                    {
-                        "name": "blog.example.com",
-                        "alpn": "h2",
-                        "dest": 5004,
-                        "xver": 1
-                    }
-                ]
-            },
-            "streamSettings": {
-                "network": "tcp",
-                "security": "xtls",
-                "xtlsSettings": {
-                    "alpn": [
-                        "h2",
-                        "http/1.1"
-                    ],
-                    "certificates": [
-                        {
-                            "certificateFile": "/etc/ssl/xray/cert.pem",
-                            "keyFile": "/etc/ssl/xray/privkey.key"
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "listen": "127.0.0.1",
-            "port": 5000,
-            "protocol": "vmess",
-            "settings": {
-                "clients": [
-                    {
-                        "id": "UUID"
-                    }
-                ]
-            },
-            "streamSettings": {
-                "network": "ws",
-                "wsSettings": {
-                    "acceptProxyProtocol": true,
-                    "path": "/vmessws"
-                }
-            }
+    {
+      "listen": "127.0.0.1",
+      "port": 5000,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "UUID"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/vmessws"
         }
-    ],
-    "outbounds": [
-        {
-            "protocol": "freedom"
-        }
-    ]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    }
+  ]
 }
 ```
 
@@ -223,6 +220,7 @@ curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
 sudo apt update
 sudo apt install nginx
 ```
+
 删除 `/etc/nginx/conf.d/default.conf` 并创建 `/etc/nginx/conf.d/fallbacks.conf`，内容如下：
 
 ```nginx
@@ -297,7 +295,7 @@ sudo chmod +x /usr/bin/caddy
 :5001 {
     root * /srv/http/default
     file_server
-    log 
+    log
     bind 127.0.0.1
 }
 
@@ -321,10 +319,7 @@ http://blog.example.com:5002 {
 
 ## 引用
 
-[^1]: [常见问题 -  Let's Encrypt - 免费的SSL/TLS证书](https://letsencrypt.org/zh-cn/docs/faq/)
-
+[^1]: [常见问题 - Let's Encrypt - 免费的 SSL/TLS 证书](https://letsencrypt.org/zh-cn/docs/faq/)
 [^2]: [Proxy Protocol - HAProxy Technologies](https://www.haproxy.com/blog/haproxy/proxy-protocol/)
-
-[^3]: [proxy protocol介绍及nginx配置 - 简书](https://www.jianshu.com/p/cc8d592582c9)
-
+[^3]: [proxy protocol 介绍及 nginx 配置 - 简书](https://www.jianshu.com/p/cc8d592582c9)
 [^4]: [v2fly-github-io/vless.md at master · rprx/v2fly-github-io](https://github.com/rprx/v2fly-github-io/blob/master/docs/config/protocols/vless.md)

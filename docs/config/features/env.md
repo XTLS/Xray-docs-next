@@ -26,7 +26,6 @@ Xray 提供以下环境变量以供修改 Xray 的一些底层配置。
 可打开此环境变量并根据是否有输出 XTLS 相关信息, 来确定 XTLS 是否成功被应用.
 :::
 
-
 ## 资源文件路径
 
 - 名称：`xray.location.asset` 或 `XRAY_LOCATION_ASSET`。

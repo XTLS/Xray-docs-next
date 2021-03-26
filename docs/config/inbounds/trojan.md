@@ -39,7 +39,7 @@ fallbacks 的具体配置请点击[FallbackObject](../examples/fallback.md#fallb
 
 ::: tip
 Xray 的 Trojan 有完整的 fallbacks 支持，配置方式完全一致。
-触发回落的条件也与VLESS类似：首包长度 < 58 或第 57 个字节不为 `\r`（因为 Trojan 没有协议版本）或身份认证失败。
+触发回落的条件也与 VLESS 类似：首包长度 < 58 或第 57 个字节不为 `\r`（因为 Trojan 没有协议版本）或身份认证失败。
 :::
 
 ### ClientObject

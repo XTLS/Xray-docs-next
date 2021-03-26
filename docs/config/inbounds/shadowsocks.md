@@ -4,18 +4,20 @@
 
 目前兼容性如下：
 
-* 支持 TCP 和 UDP 数据包转发，其中 UDP 可选择性关闭；
-* 推荐的加密方式：
-  * AES-256-GCM
-  * AES-128-GCM
-  * ChaCha20-Poly1305 或称 ChaCha20-IETF-Poly1305
-  * none 或 plain
-  
+- 支持 TCP 和 UDP 数据包转发，其中 UDP 可选择性关闭；
+- 推荐的加密方式：
+
+  - AES-256-GCM
+  - AES-128-GCM
+  - ChaCha20-Poly1305 或称 ChaCha20-IETF-Poly1305
+  - none 或 plain
+
   不推荐的加密方式:
-  * AES-256-CFB
-  * AES-128-CFB
-  * ChaCha20
-  * ChaCha20-IETF
+
+  - AES-256-CFB
+  - AES-128-CFB
+  - ChaCha20
+  - ChaCha20-IETF
 
 ::: danger
 "none" 不加密方式下，服务器端不会验证 "password" 中的密码。为确保安全性, 一般需要加上 TLS 并在传输层使用安全配置，例如 WebSocket 配置较长的 path
@@ -25,11 +27,11 @@
 
 ```json
 {
-    "email": "love@xray.com",
-    "method": "aes-256-gcm",
-    "password": "密码",
-    "level": 0,
-    "network": "tcp"
+  "email": "love@xray.com",
+  "method": "aes-256-gcm",
+  "password": "密码",
+  "level": 0,
+  "network": "tcp"
 }
 ```
 
@@ -40,11 +42,12 @@
 > `method`: string
 
 必填。
-* 推荐的加密方式：
-  * AES-256-GCM
-  * AES-128-GCM
-  * ChaCha20-Poly1305 或称 ChaCha20-IETF-Poly1305
-  * none 或 plain
+
+- 推荐的加密方式：
+  - AES-256-GCM
+  - AES-128-GCM
+  - ChaCha20-Poly1305 或称 ChaCha20-IETF-Poly1305
+  - none 或 plain
 
 > `password`: string
 

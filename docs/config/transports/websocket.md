@@ -14,15 +14,15 @@ Websocket 会识别 HTTP 请求的 X-Forwarded-For 头来覆写流量的源地�
 
 ```json
 {
-    "acceptProxyProtocol": false,
-    "path": "/",
-    "headers": {
-        "Host": "xray.com"
-    }
+  "acceptProxyProtocol": false,
+  "path": "/",
+  "headers": {
+    "Host": "xray.com"
+  }
 }
 ```
 
-> `acceptProxyProtocol`: true | false 
+> `acceptProxyProtocol`: true | false
 
 仅用于 inbound，指示是否接收 PROXY protocol。
 
@@ -32,7 +32,7 @@ Websocket 会识别 HTTP 请求的 X-Forwarded-For 头来覆写流量的源地�
 
 填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
 
-> `path` string 
+> `path` string
 
 WebSocket 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
@@ -42,7 +42,7 @@ WebSocket 所使用的 HTTP 协议路径，默认值为 `"/"`。
 `Early Data` 使用 `Sec-WebSocket-Protocol` 头承载数据。如果你遇到兼容性问题，可以尝试调低阈值。
 :::
 
-> `headers`: map \{string: string\} 
+> `headers`: map \{string: string\}
 
 自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
 

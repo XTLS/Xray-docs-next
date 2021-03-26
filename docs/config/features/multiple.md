@@ -28,26 +28,26 @@ $ xray run -confdir /etc/xray/confs
 
 比如：
 
-* base.json
+- base.json
 
 ```json
 {
-    "log": {},
-    "api": {},
-    "dns": {},
-    "stats": {},
-    "policy": {},
-    "transport": {},
-    "routing": {},
-    "inbounds": []
+  "log": {},
+  "api": {},
+  "dns": {},
+  "stats": {},
+  "policy": {},
+  "transport": {},
+  "routing": {},
+  "inbounds": []
 }
 ```
 
-* outbounds.json
+- outbounds.json
 
 ```json
 {
-    "outbounds": []
+  "outbounds": []
 }
 ```
 
@@ -61,13 +61,13 @@ $ xray run -confdir /etc/xray/confs
 
 如果需要改编日志 log 的级别，也不需要改 `base.json`，只需后续增加一个配置：
 
-* debuglog.json
+- debuglog.json
 
 ```json
 {
-    "log": {
-        "loglevel": "debug"
-    }
+  "log": {
+    "loglevel": "debug"
+  }
 }
 ```
 
@@ -77,8 +77,8 @@ $ xray run -confdir /etc/xray/confs
 
 在 json 配置中的`inbounds`和`outbounds`是数组结构，他们有特殊的规则：
 
-* 当配置中的数组元素有 2 或以上，覆盖前者的 inbounds/oubounds；
-* 当配置中的数组元素只有 1 个时，查找原有`tag`相同的元素进行覆盖；若无法找到：
+- 当配置中的数组元素有 2 或以上，覆盖前者的 inbounds/oubounds；
+- 当配置中的数组元素只有 1 个时，查找原有`tag`相同的元素进行覆盖；若无法找到：
   - 对于 inbounds，添加至最后（inbounds 内元素顺序无关）
   - 对于 outbounds，添加至最前（outbounds 默认首选出口）；但如果文件名含有 tail（大小写均可），添加至最后。
 
@@ -86,44 +86,44 @@ $ xray run -confdir /etc/xray/confs
 
 以下例子不是有效配置，只为展示上述规则。
 
-* 000.json
+- 000.json
 
 ```json
 {
-    "inbounds": [
-        {
-            "protocol": "socks",
-            "tag":"socks",
-            "port": 1234
-        }
-    ]
+  "inbounds": [
+    {
+      "protocol": "socks",
+      "tag": "socks",
+      "port": 1234
+    }
+  ]
 }
 ```
 
-* 001.json
+- 001.json
 
 ```json
 {
-    "inbounds": [
-        {
-            "protocol": "http",
-            "tag":"http"
-        }
-    ]
+  "inbounds": [
+    {
+      "protocol": "http",
+      "tag": "http"
+    }
+  ]
 }
 ```
 
-* 002.json
+- 002.json
 
 ```json
 {
-    "inbounds": [
-        {
-            "protocol": "socks",
-            "tag":"socks",
-            "port": 4321
-        }
-    ]
+  "inbounds": [
+    {
+      "protocol": "socks",
+      "tag": "socks",
+      "port": 4321
+    }
+  ]
 }
 ```
 
@@ -131,21 +131,19 @@ $ xray run -confdir /etc/xray/confs
 
 ```json
 {
-    "inbounds": [
-        {
-            "protocol": "socks",
-            "tag":"socks",
-            "port": 4321 // < 002顺序在000后，因此覆盖tag为socks的inbound端口为4321
-        },
-        {
-            "protocol": "http",
-            "tag":"http"
-        }
-    ]
+  "inbounds": [
+    {
+      "protocol": "socks",
+      "tag": "socks",
+      "port": 4321 // < 002顺序在000后，因此覆盖tag为socks的inbound端口为4321
+    },
+    {
+      "protocol": "http",
+      "tag": "http"
+    }
+  ]
 }
 ```
-
-
 
 ## 推荐的多文件列表
 

@@ -29,18 +29,18 @@
 - iOS / Mac
   - [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)
 
-
 ## Fallbacks
 
 Fallbacks 是 Xray 独创的新型协议回落模式解析, 可有效防止主动探测, 自由配置常用端口多服务共享.
 
-目前 Xray 中的 VLESS 和 trojan 协议支持Fallbacks.
+目前 Xray 中的 VLESS 和 trojan 协议支持 Fallbacks.
+
 - [Fallbacks 配置说明](../fallback/#fallbacks-配置)
 - [Fallbacks 功能简析]()
 - [Fallbacks 设计理论](../fallback/#fallbacks-设计理论)
 
-
 ## VLESS 分享链接标准
+
 感谢 <img src="https://avatars2.githubusercontent.com/u/7822648?s=32" width="32px" height="32px" alt="a"/> [@DuckSoft](https://github.com/DuckSoft) 的提案!
 
 目前为初步提案, 详情请见 [VMessAEAD / VLESS 分享链接标准提案](https://github.com/XTLS/Xray-core/issues/91)

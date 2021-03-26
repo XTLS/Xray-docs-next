@@ -6,8 +6,7 @@ fallback 为 Xray 提供了高强度的防主动探测性, 并且具有独创的
 
 fallback 也可以将不同类型的流量根据 path 进行分流, 从而实现一个端口, 多种服务共享.
 
-目前您可以在使用 VLESS 或者 trojan 协议时, 通过配置 fallbacks 来使用回落这一特性,  并且创造出非常丰富的组合玩法.
-
+目前您可以在使用 VLESS 或者 trojan 协议时, 通过配置 fallbacks 来使用回落这一特性, 并且创造出非常丰富的组合玩法.
 
 ## fallbacks 配置
 
@@ -48,6 +47,7 @@ VLESS 会把 TLS 解密后首包长度 < 18 或协议版本无效、身份认证
 其它传输组合必须删掉 `fallbacks` 项或所有子元素，此时也不会开启 Fallback，VLESS 会等待读够所需长度，协议版本无效或身份认证失败时，将直接断开连接。
 
 > `name`: string
+
 尝试匹配 TLS SNI(Server Name Indication)，空为任意，默认为 ""
 
 > `alpn`: string
@@ -86,11 +86,9 @@ Fallback 内设置的 `alpn` 是匹配实际协商出的 ALPN，而 Inbound TLS 
 
 目前填 1 或 2，功能完全相同，只是结构不同，且前者可打印，后者为二进制。Xray 的 TCP 和 WS 入站均已支持接收 PROXY protocol。
 
-
 ::: warning
 若你正在 [配置 Nginx 接收 PROXY protocol](https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/#configuring-nginx-to-accept-the-proxy-protocol)，除了设置 proxy_protocol 外，还需设置 set_real_ip_from，否则可能会出问题。
 :::
-
 
 ### 补充说明
 
@@ -99,6 +97,4 @@ Fallback 内设置的 `alpn` 是匹配实际协商出的 ALPN，而 Inbound TLS 
 - 您可以查看更多的关于 Fallbacks 的使用技巧和心得
   - [Fallbacks 功能简析](../documents/level-1/fallbacks-lv1)
 
-
 ## Fallbacks 设计理论 <Badge text="WIP" type="warning"/>
-

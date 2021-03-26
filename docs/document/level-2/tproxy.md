@@ -23,170 +23,148 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
 
 ```json
 {
-    "log": {
-        "loglevel": "warning",
-        "error": "/var/log/xray/error.log",
-        "access": "/var/log/xray/access.log"
-    },
-    "inbounds": [
-        {
-            "tag": "all-in",
-            "port": 12345,
-            "protocol": "dokodemo-door",
-            "settings": {
-                "network": "tcp,udp",
-                "followRedirect": true
-            },
-            "sniffing": {
-                "enabled": true,
-                "destOverride": [
-                    "http",
-                    "tls"
-                ]
-            },
-            "streamSettings": {
-                "sockopt": {
-                    "tproxy": "tproxy"
-                }
-            }
+  "log": {
+    "loglevel": "warning",
+    "error": "/var/log/xray/error.log",
+    "access": "/var/log/xray/access.log"
+  },
+  "inbounds": [
+    {
+      "tag": "all-in",
+      "port": 12345,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tproxy": "tproxy"
         }
-    ],
-    "outbounds": [
-        {
-            "tag": "direct",
-            "protocol": "freedom",
-            "settings": {
-                "domainStrategy": "UseIPv4"
-            },
-            "streamSettings": {
-                "sockopt": {
-                    "mark": 2
-                }
-            }
-        },
-        {
-            "tag": "proxy",
-            "protocol": "vless",
-            "settings": {
-                "vnext": [
-                    {
-                        "address": "服务端域名",
-                        "port": 443,
-                        "users": [
-                            {
-                                "id": "UUID",
-                                "flow": "xtls-rprx-splice",
-                                "encryption": "none"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "streamSettings": {
-                "network": "tcp",
-                "security": "xtls",
-                "sockopt": {
-                    "mark": 2
-                }
-            }
-        },
-        {
-            "tag": "block",
-            "protocol": "blackhole",
-            "settings": {
-                "response": {
-                    "type": "http"
-                }
-            }
-        },
-        {
-            "tag": "dns-out",
-            "protocol": "dns",
-            "settings": {
-                "address": "8.8.8.8"
-            },
-            "proxySettings": {
-                "tag": "proxy"
-            },
-            "streamSettings": {
-                "sockopt": {
-                    "mark": 2
-                }
-            }
-        }
-    ],
-    "dns": {
-        "hosts": {
-            "服务端域名": "服务端 IP"
-        },
-        "servers": [
-            {
-                "address": "119.29.29.29",
-                "port": 53,
-                "domains": [
-                    "geosite:cn"
-                ],
-                "expectIPs": [
-                    "geoip:cn"
-                ]
-            },
-            {
-                "address": "223.5.5.5",
-                "port": 53,
-                "domains": [
-                    "geosite:cn"
-                ],
-                "expectIPs": [
-                    "geoip:cn"
-                ]
-            },
-            "8.8.8.8",
-            "1.1.1.1",
-            "https+local://doh.dns.sb/dns-query"
-        ]
-    },
-    "routing": {
-        "domainStrategy": "IPIfNonMatch",
-        "rules": [
-            {
-                "type": "field",
-                "inboundTag": [
-                    "all-in"
-                ],
-                "port": 53,
-                "outboundTag": "dns-out"
-            },
-            {
-                "type": "field",
-                "ip": [
-                    "8.8.8.8",
-                    "1.1.1.1"
-                ],
-                "outboundTag": "proxy"
-            },
-            {
-                "type": "field",
-                "domain": [
-                    "geosite:category-ads-all"
-                ],
-                "outboundTag": "block"
-            },
-            {
-                "type": "field",
-                "domain": [
-                    "geosite:geolocation-!cn"
-                ],
-                "outboundTag": "proxy"
-            },
-            {
-                "type": "field",
-                "ip": [
-                    "geoip:telegram"
-                ],
-                "outboundTag": "proxy"
-            }
-        ]
+      }
     }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 2
+        }
+      }
+    },
+    {
+      "tag": "proxy",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "服务端域名",
+            "port": 443,
+            "users": [
+              {
+                "id": "UUID",
+                "flow": "xtls-rprx-splice",
+                "encryption": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "sockopt": {
+          "mark": 2
+        }
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns",
+      "settings": {
+        "address": "8.8.8.8"
+      },
+      "proxySettings": {
+        "tag": "proxy"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 2
+        }
+      }
+    }
+  ],
+  "dns": {
+    "hosts": {
+      "服务端域名": "服务端 IP"
+    },
+    "servers": [
+      {
+        "address": "119.29.29.29",
+        "port": 53,
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      {
+        "address": "223.5.5.5",
+        "port": 53,
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      "8.8.8.8",
+      "1.1.1.1",
+      "https+local://doh.dns.sb/dns-query"
+    ]
+  },
+  "routing": {
+    "domainStrategy": "IPIfNonMatch",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": ["all-in"],
+        "port": 53,
+        "outboundTag": "dns-out"
+      },
+      {
+        "type": "field",
+        "ip": ["8.8.8.8", "1.1.1.1"],
+        "outboundTag": "proxy"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:geolocation-!cn"],
+        "outboundTag": "proxy"
+      },
+      {
+        "type": "field",
+        "ip": ["geoip:telegram"],
+        "outboundTag": "proxy"
+      }
+    ]
+  }
 }
 ```
 
@@ -248,6 +226,7 @@ table ip xray {
         }
 }
 ```
+
 ::: tip
 **使用方法**
 
@@ -297,7 +276,6 @@ iptables -t mangle -A OUTPUT -j XRAY_SELF
 
 </Tabs>
 
-
 配置完成后，将局域网内其它设备的默认网关改为该设备 IP，就可以直接翻墙了。在其它主机和本机皆测试成功后，可进行下一步配置。
 
 ## 配置永久化与开机自启
@@ -308,10 +286,9 @@ iptables -t mangle -A OUTPUT -j XRAY_SELF
 
 <Tab title="nftables">
 
-
 首先将已经编辑好的 nftables 配置文件移动到 `/etc` 目录下，并重命名为 `nftables.conf`。然后编辑 `/lib/systemd/system/nftables.service`。
 
-``` ini
+```ini
 [Unit]
 Description=nftables
 Documentation=man:nft(8) http://wiki.nftables.org
@@ -346,7 +323,7 @@ WantedBy=sysinit.target
 
 之后编辑 `/lib/systemd/system/netfilter-persistent.service`。
 
-``` ini
+```ini
 [Unit]
 Description=netfilter persistent configuration
 DefaultDependencies=no

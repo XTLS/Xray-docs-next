@@ -29,7 +29,7 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 > `vnext`：\[ [ServerObject](#serverobject) \]
 
-一个数组，包含一组的服务端配置. 
+一个数组，包含一组的服务端配置.
 
 其中每一项是一个服务端配置[ServerObject](#serverobject)。
 
@@ -57,8 +57,6 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 其中每一项是一个用户[UserObject](#userobject)。
 
-
-
 #### UserObject
 
 ```json
@@ -72,15 +70,16 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 > `id`：string
 
-Vmess 的用户 ID，可以是任意小于30字节的字符串, 也可以是一个合法的UUID. 
+Vmess 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是一个合法的 UUID.
 
-自定义字符串和其映射的 UUID 是等价的, 这意味着你将可以这样在配置文件中写id来标识同一用户,即
-  - 写 `"id": "我爱🍉老师1314"`,
-  - 或写 `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (此UUID是 `我爱🍉老师1314` 的 UUID 映射)  
- 
+自定义字符串和其映射的 UUID 是等价的, 这意味着你将可以这样在配置文件中写 id 来标识同一用户,即
+
+- 写 `"id": "我爱🍉老师1314"`,
+- 或写 `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (此 UUID 是 `我爱🍉老师1314` 的 UUID 映射)
+
 其映射标准在 [VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
 
-你可以使用命令 `xray uuid -i "自定义字符串"` 生成自定义字符串所映射的的 UUID, 也可以使用命令 `xray uuid` 生成随机的UUID。
+你可以使用命令 `xray uuid -i "自定义字符串"` 生成自定义字符串所映射的的 UUID, 也可以使用命令 `xray uuid` 生成随机的 UUID。
 
 > `alterId`：number
 
@@ -100,7 +99,7 @@ Vmess 的用户 ID，可以是任意小于30字节的字符串, 也可以是一�
 
 level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
 
-> `security`: "aes-128-gcm" | "chacha20-poly1305" | "auto" | "none" | "zero" 
+> `security`: "aes-128-gcm" | "chacha20-poly1305" | "auto" | "none" | "zero"
 
 加密方式，客户端将使用配置的加密方式发送数据，服务器端自动识别，无需配置。
 
@@ -108,6 +107,7 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 - `"chacha20-poly1305"`：推荐在手机端使用
 - `"auto"`：默认值，自动选择（运行框架为 AMD64、ARM64 或 s390x 时为 aes-128-gcm 加密方式，其他情况则为 Chacha20-Poly1305 加密方式）
 - `"none"`：不加密
+
 * `"zero"`：不加密，也不进行消息认证 (v1.4.0+)
 
 ::: tip

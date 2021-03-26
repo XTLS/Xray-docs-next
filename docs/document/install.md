@@ -2,7 +2,6 @@
 
 ## 平台支持
 
-
 Xray 在以下平台中可用：
 
 - Windows 7 及之后版本（x86 / amd64 / arm32）；
@@ -15,13 +14,11 @@ Xray 在以下平台中可用：
 
 ## 下载 Xray
 
-
 预编译的二进制 ZIP 格式压缩包可在 [Github Releases](https://github.com/xtls/Xray-core/releases) 中找到。
 
 下载对应平台的压缩包，解压后即可使用。
 
 ## 验证安装包
-
 
 Xray 提供两种验证方式：
 
@@ -44,10 +41,12 @@ Xray 提供两种验证方式：
 ### 安装脚本
 
 - Linux Script
+
   - [Xray-install](https://github.com/XTLS/Xray-install)
   - [Xray-script](https://github.com/kirin10000/Xray-script)
 
 - One Click
+
   - [ProxySU](https://github.com/proxysu/ProxySU)
   - [Xray-agent](https://github.com/mack-a/Xray-agent)
 
@@ -55,9 +54,7 @@ Xray 提供两种验证方式：
   - [Xray4Magisk](https://github.com/CerteKim/Xray4Magisk)
   - [Xray_For_Magisk](https://github.com/E7KMbb/Xray_For_Magisk)
 
-
 ### Linux 发行版包管理器
-
 
 Linux 发行版 Xray 包（可通过发行版相应的包管理器安装）：
 
@@ -72,7 +69,6 @@ Linux 发行版 Xray 包（可通过发行版相应的包管理器安装）：
 - Xray-docker
 
 ### Docker image 的文件结构
-
 
 - `/etc/xray/config.json`：配置文件
 - `/usr/bin/xray`：Xray 主程序

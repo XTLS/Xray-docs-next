@@ -1,6 +1,6 @@
 # 日志配置
 
-日志配置，控制 Xray输出日志的方式.
+日志配置，控制 Xray 输出日志的方式.
 
 Xray 有两种日志, 访问日志和错误日志, 你可以分别配置两种日志的输出方式.
 
@@ -42,6 +42,6 @@ error 日志的级别, 指示 error 日志需要记录的信息.
 - `"error"`：Xray 遇到了无法正常运行的问题，需要立即解决。
 - `"none"`：不记录任何内容。
 
-> `dnsLog`: bool 
+> `dnsLog`: bool
 
 是否启用 DNS 查询日志，例如：`DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`

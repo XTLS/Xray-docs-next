@@ -72,11 +72,12 @@ Shadowsocks 服务端端口。必填。
 > `method`: string
 
 必填。
-* 推荐的加密方式：
-  * AES-256-GCM
-  * AES-128-GCM
-  * ChaCha20-Poly1305 或称 ChaCha20-IETF-Poly1305
-  * none 或 plain
+
+- 推荐的加密方式：
+  - AES-256-GCM
+  - AES-128-GCM
+  - ChaCha20-Poly1305 或称 ChaCha20-IETF-Poly1305
+  - none 或 plain
 
 > `password`: string
 

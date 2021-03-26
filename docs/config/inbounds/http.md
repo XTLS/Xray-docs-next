@@ -1,4 +1,5 @@
 # HTTP
+
 HTTP 协议。
 
 ::: warning
@@ -7,9 +8,8 @@ HTTP 协议。
 
 `http` 入站更有意义的用法是在局域网或本机环境下监听，为其他程序提供本地服务。
 
-
 ::: tip TIP 1
- `http proxy` 只能代理 tcp 协议，udp 系的协议均不能通过。
+`http proxy` 只能代理 tcp 协议，udp 系的协议均不能通过。
 :::
 
 ::: tip TIP 2
@@ -17,7 +17,7 @@ HTTP 协议。
 
 - `export http_proxy=http://127.0.0.1:8080/` (地址须改成你配置的 HTTP 入站代理地址)
 - `export https_proxy=$http_proxy`
-:::
+  :::
 
 ## InboundConfigurationObject
 
@@ -77,4 +77,3 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值�
 > `pass`: string
 
 密码，字符串类型。必填。
-

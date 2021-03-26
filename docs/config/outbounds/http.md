@@ -7,7 +7,7 @@ HTTP 协议。
 :::
 
 ::: tip
- `http` 只能代理 tcp 协议，udp 系的协议均不能通过。
+`http` 只能代理 tcp 协议，udp 系的协议均不能通过。
 :::
 
 ## OutboundConfigurationObject

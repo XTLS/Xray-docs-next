@@ -31,5 +31,3 @@
 > `grpcSettings`: [GRPCObject](./grpc)
 
 针对 gRPC 连接的配置。
-
-

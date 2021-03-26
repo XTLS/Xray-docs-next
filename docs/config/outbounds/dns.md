@@ -28,4 +28,4 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 
 修改 DNS 服务器端口。当不指定时，保持来源中指定的端口不变。
 
-## DNS配置实例 <Badge text="WIP" type="warning"/>
+## DNS 配置实例 <Badge text="WIP" type="warning"/>

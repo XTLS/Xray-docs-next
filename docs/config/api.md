@@ -1,8 +1,8 @@
-# API接口
+# API 接口
 
-API接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供远程调用。  
+API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供远程调用。
 
-可以通过api配置模块开启接口. 当api配置开启时，Xray 会自建一个出站代理，须手动将所有的 API 入站连接通过 [路由规则配置](./routing.md) 指向这一出站代理。  
+可以通过 api 配置模块开启接口. 当 api 配置开启时，Xray 会自建一个出站代理，须手动将所有的 API 入站连接通过 [路由规则配置](./routing.md) 指向这一出站代理。
 
 请参考本节中的 [相关配置](#相关配置)
 
@@ -18,11 +18,7 @@ API接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 {
   "api": {
     "tag": "api",
-    "services": [
-      "HandlerService",
-      "LoggerService",
-      "StatsService"
-    ]
+    "services": ["HandlerService", "LoggerService", "StatsService"]
   }
 }
 ```
@@ -34,7 +30,6 @@ API接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 > `services`: \[string\]
 
 开启的 API 列表，可选的值见 [API 列表](#支持的-api-列表)。
-
 
 ## 相关配置
 
@@ -54,7 +49,7 @@ API接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 ]
 ```
 
-在路由配置中增加针对api inbound的路由规则
+在路由配置中增加针对 api inbound 的路由规则
 
 ```json
 "routing": {
@@ -72,7 +67,6 @@ API接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
   "strategy": "rules"
 }
 ```
-
 
 ## 支持的 API 列表
 

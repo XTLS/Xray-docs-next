@@ -31,6 +31,7 @@ Use "xray help <command>" for more information about a command.
 指定一个或多个配置文件，并运行。
 
 使用方法:
+
 ```
  xray run [-c config.json] [-confdir dir]
 ```
@@ -55,6 +56,7 @@ without launching the server
 输出 Xray 版本、 Golang 版本等信息。
 
 使用方法:
+
 ```
  xray version
 ```
@@ -64,6 +66,7 @@ without launching the server
 调用 Xray 的 gRPC API，需要在配置文件中开启。
 
 使用方法:
+
 ```
 xray api <command> [arguments]
 ```
@@ -84,6 +87,7 @@ xray api <command> [arguments]
 一些与 TLS 相关的工具。
 
 使用方法:
+
 ```
 xray tls <command> [arguments]
 ```
@@ -98,13 +102,14 @@ xray tls <command> [arguments]
 生成 UUID。
 
 使用方法:
+
 ```
 xray uuid
 ```
 
 ::: tip
 当`-config`没有指定时，Xray 将先后尝试从以下路径加载`config.json`:
+
 - 工作目录（Working Directory）
 - [环境变量](../config/features/env.md#资源文件路径)中`Xray.location.asset`所指定的路径
-:::
-
+  :::
