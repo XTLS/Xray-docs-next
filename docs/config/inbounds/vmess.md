@@ -77,7 +77,7 @@ Vmess 的用户 ID，可以是任意小于30字节的字符串, 也可以是一�
 
 其映射标准在 [VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
 
-你可以使用命令 `xray uuid -map "自定义字符串"` 生成自定义字符串所映射的的 UUID。
+你可以使用命令 `xray uuid -i "自定义字符串"` 生成自定义字符串所映射的的 UUID。
  
 > 也可以使用命令 `xray uuid` 生成随机的UUID. 
 
