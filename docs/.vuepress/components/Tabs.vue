@@ -17,7 +17,7 @@
         </button>
       </div>
     </nav>
-    <div :id="tag + '-context'" class="tab-content">
+    <div :id="contentTag" class="tab-content">
       <slot />
     </div>
   </div>
@@ -50,6 +50,9 @@ export default Vue.extend({
   computed: {
     tag: function() {
       return "tabs-" + this.title;
+    },
+    contentTag: function() {
+      return "tabs-" + this.title + "-content";
     }
   }
 });
