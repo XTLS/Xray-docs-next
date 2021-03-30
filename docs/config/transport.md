@@ -80,7 +80,8 @@
     "tcpFastOpen": false,
     "tproxy": "off",
     "domainStrategy": "AsIs",
-    "dialerProxy": ""
+    "dialerProxy": "",
+    "acceptProxyProtocol": false
   }
 }
 ```
@@ -346,7 +347,8 @@ ocspStapling 检查更新时间间隔。 单位：秒
   "tcpFastOpen": false,
   "tproxy": "off",
   "domainStrategy": "AsIs",
-  "dialerProxy": ""
+  "dialerProxy": "",
+  "acceptProxyProtocol": false
 }
 ```
 
@@ -430,3 +432,14 @@ ocspStapling 检查更新时间间隔。 单位：秒
 ::: danger
 此选项与 PorxySettingsObject.Tag 不兼容
 :::
+
+> `acceptProxyProtocol`: true | false
+
+仅用于 inbound，指示是否接收 PROXY protocol。
+
+[PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) 专用于传递请求的真实来源 IP 和端口，**若你不了解它，请先忽略该项**。
+
+常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
+
+填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
+
