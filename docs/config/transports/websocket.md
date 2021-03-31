@@ -48,7 +48,7 @@ WebSocket 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
 默认值为空。
 
-## Browser Dialer <Badge text="BETA" type="warning"/> <Badge text="v1.4.1"/>
+## Browser Dialer <Badge text="BETA" type="warning"/>
 
 ### Background
 
