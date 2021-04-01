@@ -52,7 +52,7 @@ WebSocket 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
 ### Background
 
-[v2ray/discussion#754](https://github.com/v2ray/discussion/issues/754#issuecomment-647934994) 基于一年前的想法，原生 JS 实现了简洁的 WSS Browser Dialer，真实浏览器的 TLS 指纹。
+[v2ray/discussion#754](https://github.com/v2ray/discussion/issues/754#issuecomment-647934994) 基于一年前的想法，原生 JS 实现了简洁的 WSS Browser Dialer，真实浏览器的 TLS 指纹、行为。
 
 不过 WSS 仍存在 ALPN 明显的问题，所以下一步是浏览器转发 HTTP/2、QUIC。
 
