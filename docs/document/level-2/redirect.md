@@ -327,7 +327,6 @@ lsmod | grep wireguard
 
 ```bash
 wg-quick up wg0
-
 ```
 
 开机自启
