@@ -27,14 +27,17 @@ Xray 提供两种验证方式：
 
 ## Windows 安装方式
 
-- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 Windows 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray.exe`，然后[通过命令行带参数运行](./command) 即可
+- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 Windows 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray.exe`
+  ，然后[通过命令行带参数运行](./command) 即可
 - 通过 [Scoop](https://scoop.sh) 包管理器安装：Xray 已经被添加到 [Mochi](https://github.com/Qv2ray/mochi)。
-- 通过 [Chocolatey](https://chocolatey.org) 包管理器安装：[Xray](https://chocolatey.org/packages/xray/1.3.1)，感谢 [Markson](https://chocolatey.org/profiles/markson_ho)
+- 通过 [Chocolatey](https://chocolatey.org)
+  包管理器安装：[Xray](https://chocolatey.org/packages/xray/1.3.1)，感谢 [Markson](https://chocolatey.org/profiles/markson_ho)
 
 ## macOS 安装方式
 
-- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 macOS 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray`，然后[通过命令行带参数运行](./command) 即可
-- 通过 [Homebrew](https://brew.sh) 包管理器安装：<Badge text="WIP" type="warning"/>
+- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 macOS 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray`
+  ，然后[通过命令行带参数运行](./command.md) 即可
+- 通过 [Homebrew](https://brew.sh) 包管理器安装：`brew install xray`
 
 ## Linux 安装方式
 
@@ -43,25 +46,33 @@ Xray 提供两种验证方式：
 - Linux Script
 
   - [Xray-install](https://github.com/XTLS/Xray-install)
+
+* One Click
+
   - [Xray-script](https://github.com/kirin10000/Xray-script)
-
-- One Click
-
   - [ProxySU](https://github.com/proxysu/ProxySU)
   - [Xray-agent](https://github.com/mack-a/Xray-agent)
 
-- Magisk
+* Magisk
   - [Xray4Magisk](https://github.com/CerteKim/Xray4Magisk)
   - [Xray_For_Magisk](https://github.com/E7KMbb/Xray_For_Magisk)
 
-### Linux 发行版包管理器
+### Arch Linux
 
-Linux 发行版 Xray 包（可通过发行版相应的包管理器安装）：
+#### Arch User Repository
 
-- Debian <Badge text="WIP" type="warning"/>
-- Arch Linux <Badge text="WIP" type="warning"/>
+需要使用 [AUR helpers](https://wiki.archlinux.org/index.php/AUR_helpers)，以 [yay](https://github.com/Jguer/yay)
+为例，可通过 `yay -S xray` 安装。
 
-### Linuxbrew 包管理器 <Badge text="WIP" type="warning"/>
+#### Arch Linux CN
+
+首先添加 [Arch Linux CN 仓库](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/)，然后在 root 用户下使用 `pacman -S xray` 安装。
+
+### Linuxbrew
+
+Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
+
+### Debian <Badge text="WIP" type="warning"/>
 
 ## Docker 安装方式
 
@@ -77,6 +88,6 @@ Linux 发行版 Xray 包（可通过发行版相应的包管理器安装）：
 
 ## 更多更多...
 
-您可以点击 [传送至众多大佬集结区的任意门](../links) 获取更多资源
+您可以点击 [传送至众多大佬集结区的任意门](../links.md) 获取更多资源
 
 ## FAQ <Badge text="WIP" type="warning"/>
