@@ -96,7 +96,7 @@
 
 - `"none"` 表示不加密（默认值）
 - `"tls"` 表示使用 [TLS](https://en.wikipedia.org/wiki/base/transport_Layer_Security)。
-- `"xtls"` 表示使用 [XTLS](../features/xtls.md)。
+- `"xtls"` 表示使用 [XTLS](./features/xtls.md)。
 
 > `tlsSettings`: [TLSObject](#tlsobject)
 
@@ -104,13 +104,11 @@ TLS 配置。TLS 由 Golang 提供，通常情况下 TLS 协商的结果为使�
 
 > `xtlsSettings`: [XTLSObject](#tlsobject)
 
-XTLS 配置。XTLS 是 Xray 的原创黑科技, 也是使 Xray 性能一骑绝尘的核心动力。
-XTLS 与 TLS 有相同的安全性, 配置方式也和 TLS 一致. 点击此处查看 [XTLS 的技术细节剖析](../features/xtls.md)
+XTLS 配置。XTLS 是 Xray 的原创黑科技, 也是使 Xray 性能一骑绝尘的核心动力。 XTLS 与 TLS 有相同的安全性, 配置方式也和 TLS 一致.
+点击此处查看 [XTLS 的技术细节剖析](./features/xtls.md)
 
-::: danger
-TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型和正常上网具有一致性。
-启用 XTLS 并且配置合适的 XTLS 流控模式, 可以在保持和 TLS 相同的安全性的前提下, 性能达到数倍甚至十几倍的提升。
-当 `security` 的值从 `tls` 改为 `xtls` 时, 只需将 `tlsSettings` 修改成为 `xtlsSettings`
+::: danger TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型和正常上网具有一致性。 启用 XTLS 并且配置合适的 XTLS 流控模式, 可以在保持和 TLS 相同的安全性的前提下,
+性能达到数倍甚至十几倍的提升。 当 `security` 的值从 `tls` 改为 `xtls` 时, 只需将 `tlsSettings` 修改成为 `xtlsSettings`
 :::
 
 > `tcpSettings`: [TcpObject](./transports/tcp.md)
@@ -158,7 +156,8 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
   "cipherSuites": "此处填写你需要的加密套件名称,每个套件名称之间用:进行分隔",
   "certificates": [],
   "disableSystemRoot": false,
-  "enableSessionResumption": false
+  "enableSessionResumption": false,
+  "fingerprint": ""
 }
 ```
 
@@ -190,12 +189,10 @@ maxVersion 为可接受的最大 SSL/TLS 版本。
 
 CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之间用:进行分隔.
 
-你可以在 [这里](https://golang.org/src/crypto/tls/cipher_suites.go#L500)或 [这里](https://golang.org/src/crypto/tls/cipher_suites.go#L44) 找到 golang 加密套件的名词和说明
+你可以在 [这里](https://golang.org/src/crypto/tls/cipher_suites.go#L500)或 [这里](https://golang.org/src/crypto/tls/cipher_suites.go#L44)
+找到 golang 加密套件的名词和说明
 
-::: danger
-以上两项配置为非必要选项，正常情况下不影响安全性
-在未配置的情况下 golang 根据设备自动选择.
-若不熟悉, 请勿配置此选项, 填写不当引起的问题自行负责
+::: danger 以上两项配置为非必要选项，正常情况下不影响安全性 在未配置的情况下 golang 根据设备自动选择. 若不熟悉, 请勿配置此选项, 填写不当引起的问题自行负责
 :::
 
 > `allowInsecure`: true | false
@@ -204,8 +201,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 当值为 `true` 时，Xray 不会检查远端主机所提供的 TLS 证书的有效性。
 
-::: danger
-出于安全性考虑，这个选项不应该在实际场景中选择 true，否则可能遭受中间人攻击。
+::: danger 出于安全性考虑，这个选项不应该在实际场景中选择 true，否则可能遭受中间人攻击。
 :::
 
 > `disableSystemRoot`: true | false
@@ -216,16 +212,25 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `enableSessionResumption`: true | false
 
-此参数的设置为 false 时, ClientHello 里没有 session_ticket 这个扩展。
-通常来讲 go 语言程序的 ClientHello 里并没有用到这个扩展, 因此建议保持默认值。
-默认值为 `false`。
+此参数的设置为 false 时, ClientHello 里没有 session_ticket 这个扩展。 通常来讲 go 语言程序的 ClientHello 里并没有用到这个扩展, 因此建议保持默认值。 默认值为 `false`。
+
+> `fingerprint` : "" | "chrome" | "firefox" | "safari" | "randomized"
+
+此参数用于配置指定 `TLS Client Hello` 的指纹。当其值为空时，表示不启用此功能。启用后，Xray 将通过 uTLS 库 **模拟** `TLS` 指纹，或随机生成。
+
+::: tip 此功能仅 **模拟** `TLS Client Hello` 的指纹，行为、其他指纹与 Golang 相同。如果你希望更加完整地模拟浏览器 `TLS`
+指纹与行为，可以使用 [Browser Dialer](./transports/websocket.md#browser-dialer)。
+:::
+
+- `"chrome" | "firefox" | "safari"`: 模拟 Chrome / Firefox / Safari 的 TLS 指纹
+- `"randomized"`: 使用随机指纹
 
 > `certificates`: \[ [CertificateObject](#certificateobject) \]
 
 证书列表，其中每一项表示一个证书（建议 fullchain）。
 
-::: tip
-如果要在 ssllibs 或者 myssl 获得 A/A+ 等级的评价, 请参考 [这里](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
+::: tip 如果要在 ssllibs 或者 myssl 获得 A/A+ 等级的评价,
+请参考 [这里](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
 :::
 
 #### CertificateObject
@@ -299,28 +304,23 @@ ocspStapling 检查更新时间间隔。 单位：秒
 - `"verify"`：证书用于验证远端 TLS 的证书。当使用此项时，当前证书必须为 CA 证书。
 - `"issue"`：证书用于签发其它证书。当使用此项时，当前证书必须为 CA 证书。
 
-::: tip TIP 1
-在 Windows 平台上可以将自签名的 CA 证书安装到系统中，即可验证远端 TLS 的证书。
+::: tip TIP 1 在 Windows 平台上可以将自签名的 CA 证书安装到系统中，即可验证远端 TLS 的证书。
 :::
 
-::: tip TIP 2
-当有新的客户端请求时，假设所指定的 `serverName` 为 `"xray.com"`，Xray 会先从证书列表中寻找可用于 `"xray.com"` 的证书，如果没有找到，则使用任一 `usage` 为 `"issue"` 的证书签发一个适用于 `"xray.com"` 的证书，有效期为一小时。并将新的证书加入证书列表，以供后续使用。
+::: tip TIP 2 当有新的客户端请求时，假设所指定的 `serverName` 为 `"xray.com"`，Xray 会先从证书列表中寻找可用于 `"xray.com"` 的证书，如果没有找到，则使用任一 `usage`
+为 `"issue"` 的证书签发一个适用于 `"xray.com"` 的证书，有效期为一小时。并将新的证书加入证书列表，以供后续使用。
 :::
 
-::: tip TIP 3
-当 `certificateFile` 和 `certificate` 同时指定时，Xray 优先使用 `certificateFile`。`keyFile` 和 `key` 也一样。
+::: tip TIP 3 当 `certificateFile` 和 `certificate` 同时指定时，Xray 优先使用 `certificateFile`。`keyFile` 和 `key` 也一样。
 :::
 
-::: tip TIP 4
-当 `usage` 为 `"verify"` 时，`keyFile` 和 `key` 可均为空。
+::: tip TIP 4 当 `usage` 为 `"verify"` 时，`keyFile` 和 `key` 可均为空。
 :::
 
-::: tip TIP 5
-使用 `xray tls cert` 可以生成自签名的 CA 证书。
+::: tip TIP 5 使用 `xray tls cert` 可以生成自签名的 CA 证书。
 :::
 
-::: tip TIP 6
-如已经拥有一个域名, 可以使用工具便捷的获取免费第三方证书,如[acme.sh](https://github.com/acmesh-official/acme.sh)
+::: tip TIP 6 如已经拥有一个域名, 可以使用工具便捷的获取免费第三方证书,如[acme.sh](https://github.com/acmesh-official/acme.sh)
 :::
 
 > `certificateFile`: string
@@ -363,8 +363,7 @@ ocspStapling 检查更新时间间隔。 单位：秒
 
 是否启用 [TCP Fast Open](https://zh.wikipedia.org/wiki/TCP%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80)。
 
-当其值为 `true` 时，强制开启 TFO；当其值为 `false` 时，强制关闭 TFO；当此项不存在时，使用系统默认设置。
-可用于 inbound/ountbound。
+当其值为 `true` 时，强制开启 TFO；当其值为 `false` 时，强制关闭 TFO；当此项不存在时，使用系统默认设置。 可用于 inbound/ountbound。
 
 - 仅在以下版本（或更新版本）的操作系统中可用:
   - Windows 10 (1604)
@@ -381,23 +380,24 @@ ocspStapling 检查更新时间间隔。 单位：秒
 
 透明代理需要 Root 或 `CAP\_NET\_ADMIN` 权限。
 
-::: danger
-当 [Dokodemo-door](../inbounds/dokodemo.md) 中指定了 `followRedirect`为`true`，且 Sockopt 设置中的`tproxy` 为空时，Sockopt 设置中的`tproxy` 的值会被设为 `"redirect"`。
+::: danger 当 [Dokodemo-door](./inbounds/dokodemo.md) 中指定了 `followRedirect`为`true`，且 Sockopt 设置中的`tproxy` 为空时，Sockopt
+设置中的`tproxy` 的值会被设为 `"redirect"`。
 :::
 
 > `domainStrategy`: "AsIs" | "UseIP" | "UseIPv4" | "UseIPv6"
 
-在之前的版本中，当 Xray 尝试使用域名建立系统连接时，域名的解析由系统完成，不受 Xray 控制。这导致了在 [非标准 Linux 环境中无法解析域名](https://github.com/v2ray/v2ray-core/issues/1909) 等问题。为此，Xray 1.3.1 为 Sockopt 引入了 Freedom 中的 domainStrategy，解决了此问题。
+在之前的版本中，当 Xray 尝试使用域名建立系统连接时，域名的解析由系统完成，不受 Xray
+控制。这导致了在 [非标准 Linux 环境中无法解析域名](https://github.com/v2ray/v2ray-core/issues/1909) 等问题。为此，Xray 1.3.1 为 Sockopt 引入了 Freedom
+中的 domainStrategy，解决了此问题。
 
-在目标地址为域名时, 配置相应的值, SysteDailer 的行为模式如下:
+在目标地址为域名时, 配置相应的值, SystemDialer 的行为模式如下:
 
 - `"AsIs"`: 通过系统 DNS 服务器解析获取 IP, 向此域名发出连接。
 - `"UseIP"`、`"UseIPv4"` 和 `"UseIPv6"`: 使用[内置 DNS 服务器](./dns.md)解析获取 IP 后, 直接向此 IP 发出连接。
 
 默认值为 `"AsIs"`。
 
-::: danger
-启用了此功能后，不当的配置可能会导致死循环。
+::: danger 启用了此功能后，不当的配置可能会导致死循环。
 
 一句话版本：连接到服务器，需要等待 DNS 查询结果；完成 DNS 查询，需要连接到服务器。
 
@@ -426,11 +426,9 @@ ocspStapling 检查更新时间间隔。 单位：秒
 
 > `dialerProxy`: ""
 
-一个出站代理的标识。当值不为空时，将使用指定的 outbound 发出连接。
-此选项可用于支持底层传输方式的链式转发。
+一个出站代理的标识。当值不为空时，将使用指定的 outbound 发出连接。 此选项可用于支持底层传输方式的链式转发。
 
-::: danger
-此选项与 PorxySettingsObject.Tag 不兼容
+::: danger 此选项与 PorxySettingsObject.Tag 不兼容
 :::
 
 > `acceptProxyProtocol`: true | false
@@ -442,4 +440,3 @@ ocspStapling 检查更新时间间隔。 单位：秒
 常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
 
 填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
-
