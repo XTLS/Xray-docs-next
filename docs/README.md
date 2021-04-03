@@ -1,8 +1,8 @@
 ---
 home: true
 heroImage: /LogoX2.png
-heroText: 不畏浮云遮望眼 · 金睛如炬耀苍穹
-tagline: Keep Riding / Never Look Back
+heroText: Project X
+tagline: 不畏浮云遮望眼 · 金睛如炬耀苍穹
 actionText: 由此开始 →
 actionLink: /document/
 features:
