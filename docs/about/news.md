@@ -4,6 +4,21 @@ sidebar: auto
 
 # 大史记
 
+## 2021.4.4
+
+- 本文档迎来的新的首页。
+- 本文档迎来了暗黑模式。
+- ~~当然，暗黑模式还有各种各样的问题。具体的内容还需要慢慢调整。~~
+- 另：Telegram 群聊突破了 5000 人！还加入了 Anti-Spam 机器人！
+- 🎉🎉🎉
+
+## 2021.4.1 <Badge>[v1.4.2](https://github.com/XTLS/Xray-core/releases/tag/v1.4.2)</Badge>
+
+- 不是愚人节玩笑，今天更新。
+- 加入 Browser Dialer，用与改变 TLS 指纹与行为。
+- 加入 uTLS，用与改变 TLS Client Hello 的指纹。
+- 顺便修复了一大堆奇妙的问题，具体的内容见更新日志。
+
 ## 2021.3.25
 
 没错还在变。 -_-
