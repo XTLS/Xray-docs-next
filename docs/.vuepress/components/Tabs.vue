@@ -1,17 +1,17 @@
 <template>
   <div class="container">
     <nav>
-      <div class="nav nav-tabs" :id="tag" role="tablist">
+      <div :id="tag" class="nav nav-pills" role="tablist">
         <button
           v-for="tab of children"
-          class="nav-link"
           :id="tab.labelID"
-          data-bs-toggle="tab"
-          :data-bs-target="'#' + tab.tabID"
-          type="button"
-          role="tab"
           :aria-controls="tab.tabID"
+          :data-bs-target="'#' + tab.tabID"
           aria-selected="false"
+          class="nav-link"
+          data-bs-toggle="tab"
+          role="tab"
+          type="button"
         >
           {{ tab.title }}
         </button>
@@ -60,4 +60,19 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 @import "~bootstrap/scss/bootstrap";
+
+button.nav-link {
+  @media (prefers-color-scheme: light) {
+    color: #2c3e50;
+  }
+  @media (prefers-color-scheme: dark) {
+    color: #e2e2e2;
+  }
+}
+html[theme="light"] button.nav-link {
+  color: #2c3e50;
+}
+html[theme="dark"] button.nav-link {
+  color: #e2e2e2;
+}
 </style>

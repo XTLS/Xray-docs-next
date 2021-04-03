@@ -24,7 +24,7 @@ export default Vue.extend({
       labelID: ""
     };
   },
-  created() {
+  beforeMount() {
     let tag =
       "tab-" +
       Math.random()

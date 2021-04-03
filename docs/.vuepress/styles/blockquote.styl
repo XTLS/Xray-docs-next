@@ -1,0 +1,19 @@
+
+:root
+  --bq-background-color: #f3f5f7;
+  @media (prefers-color-scheme dark)
+    --bq-background-color: #373a3f;
+
+html[theme='light'] {
+  --bq-background-color: #f3f5f7;
+}
+
+html[theme='dark'] {
+  --bq-background-color: #373a3f;
+}
+
+
+blockquote
+  color var(--textColor)
+  background-color var(--bq-background-color)
+  border-left 4px solid #17a2b8

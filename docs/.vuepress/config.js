@@ -1,4 +1,5 @@
 module.exports = {
+  theme: "default-prefers-color-scheme",
   plugins: ["@vuepress/back-to-top", "vuepress-plugin-mermaidjs"],
   base: "/Xray-docs-next/",
   locales: {
@@ -149,5 +150,6 @@ module.exports = {
       .options({
         name: `assets/img/[name].[hash:8].[ext]`
       });
-  }
+  },
+  postcss: { plugins: [require("autoprefixer")] }
 };
