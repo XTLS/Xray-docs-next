@@ -23,7 +23,6 @@
     "bootstrap": "^5.0.0-beta3",
     "jquery": "^3.6.0",
     "markdown-it-footnote": "^3.0.2",
-    "vuepress-plugin-mermaidjs": "^1.8.1",
-    "vuepress-theme-default-prefers-color-scheme": "^2.0.0"
+    "vuepress-plugin-mermaidjs": "^1.8.1"
   }
 }

@@ -1,5 +1,4 @@
 module.exports = {
-  theme: "default-prefers-color-scheme",
   plugins: ["@vuepress/back-to-top", "vuepress-plugin-mermaidjs"],
   base: "/Xray-docs-next/",
   locales: {
