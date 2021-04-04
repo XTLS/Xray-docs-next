@@ -40,7 +40,7 @@
 
 5. 到这一步的完整流程如下图：
 
-   <img src="./ch06-img01-acme-install.gif"  alt="acme.sh安装演示"/>
+   ![acme.sh安装演示](./ch06-img01-acme-install.gif)
 
 ## 6.3 测试证书申请
 

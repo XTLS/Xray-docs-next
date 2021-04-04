@@ -69,7 +69,7 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
 
 4. 文件打开后，你就进入了`nano`的界面，稍微观察一下，你会发现，它把重要的快捷键都显示在屏幕下方了（下图红框内），直接开卷考试、不用死记硬背，是不是很贴心呢？
 
-   <img src="./ch04-img01-nano-ui.png"  alt="nano的界面"/>
+   ![nano的界面](./ch04-img01-nano-ui.png)
 
 5) 我们要做的第二件事，是【在打开的文件中找到`Port`这一项，并修改它的端口】。Port 后面的数字就是 SSH 的端口，一般建议把它改成一个大于`1024`小于`65535`的整数（本文以`9753`为例）。请结合`nano`的快捷键，想一下该怎么操作呢？果然，你又说对了！就是：
 
@@ -95,7 +95,7 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
 
 8. 完整流程演示如下：
 
-   <img src="./ch04-img02-sshd-conf-full.gif"  alt="修改非22端口演示"/>
+   ![修改非22端口演示](./ch04-img02-sshd-conf-full.gif)
 
 9. 修改 PuTTY 配置
 
@@ -121,18 +121,17 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
    # adduser vpsadmin
    ```
 
-
     执行命令后，根据提示操作即可。请务必设置一个用户密码（别忘记设置密码时你时看不到 `******` 的）。之后系统会询问你一些用户的附加信息，这些就可以无视，一路回车即可。
 
-    <img src="./ch04-img03-adduser.png"  alt="建立新用户"/>
+    ![建立新用户](./ch04-img03-adduser.png)
 
 ::: warning 注意
 本文以`vpsadmin`为例，就意味着随着本文的发布，这个用户名也会变成一个不大不小的特征，也许会被攻击者优先尝试。所以和端口一样，我强烈建议你用一个自己想到的其他用户名。
 :::
 
 4. 完整流程演示如下：
-
-   <img src="./ch04-img04-adduser-full.gif"  alt="建立新用户"/>
+   
+   ![建立新用户](./ch04-img04-adduser-full.gif)
 
 5. 我们要做的第二件事，是【安装`sudo`功能】（`sudo` 就是在关键时刻，让普通账户临时获得 `root` 的神力，战力全开拯救世界）
 
@@ -158,8 +157,8 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
     :::
 
 7. 完整流程演示如下：
-
-   <img src="./ch04-img05-sudo-full.gif"  alt="建立新用户"/>
+   
+   ![建立新用户](./ch04-img05-sudo-full.gif)
 
 ## 4.6 禁用 root 用户 SSH 远程登录
 
@@ -186,12 +185,12 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
    ```
 
 5. 完整流程演示如下：
-
-   <img src="./ch04-img06-ssh-no-root-full.gif"  alt="禁用root用户SSH远程登录"/>
+  
+   ![禁用root用户SSH远程登录](./ch04-img06-ssh-no-root-full.gif)
 
 6. 下次通过 PuTTY 远程 SSH 登录的时候，`root`用户已无法连接，用户名就要换成`vpsadmin`了！方便起见，我们可以在 PuTTY 中把`vpsadmin`设置成默认登录用户名。（啰嗦君：别忘了保存 Session）
 
-   <img src="./ch04-img07-putty-default-user.png"  alt="PuTTY设置默认用户名"/>
+   ![PuTTY设置默认用户名](./ch04-img07-putty-default-user.png)
 
 ## 4.7 使用 RSA 密钥登录并禁用密码登录
 
@@ -220,7 +219,8 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
 1. 运行`PuTTYgen` (PuTTY 密钥生成器)。位置是 `开始菜单` --> `所有程序` --> `PuTTY (64-bit)` --> `PuTTYgen`
 
    1. 点击`Generate`开始生成（在界面空白处乱晃鼠标增加随机数）
-      <img src="./ch04-img08-puttygen-save.png"  alt="生成密钥"/>
+
+      ![生成密钥](./ch04-img08-puttygen-save.png)
 
    ::: warning 注意
    本图中是以 `2048` 位的 `RSA` 密钥为例的。但实际上，如果要获得与 `EDCSA/Ed25519` 的 `256` 位密钥相同的安全性，你需要使用 `3072` 位的 `RSA` 密钥。（即右下角的数字改成 `3072`）
@@ -230,33 +230,41 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
    3. 点击 `Save public key` 保存公钥，文件名为 `id_rsa.pub`
    4. 点击 `Save private key` 保存私钥，文件名为 `id_rsa` (PuTTY 私钥自带`.ppk`后缀)
    5. 最重要的，将上方红框内的内容，向下滚动全部复制出来并保存，文件名为 `authorized_keys`。（用 vscode 保存，默认会变成带`txt`后缀的文本文件，这没关系，之后上传 VPS 时我们会把后缀名去掉）
-      <img src="./ch04-img09-puttygen-save-keys.png"  alt="保存密钥"/>
+
+      ![保存密钥](./ch04-img09-puttygen-save-keys.png)
 
 2. 将公钥上传至 VPS 的`vpsadmin`用户下
 
    1. 这一步就需要用到之前准备的`WinSCP`了。
    2. 去[官网](https://winscp.net/eng/index.php)下载并安装，会提示你导入 PuTTY 的设置，当然一键导入啦！
-      <img src="./ch04-img10-winscp-import-session.png"  alt="一键导入Session"/>
+
+      ![一键导入Session](./ch04-img10-winscp-import-session.png)
 
    3. 如果没有提示导入或者你已经提前安装好了，那按照下图进行配置即可
-      <img src="./ch04-img11-winscp-ui.png"  alt="WinSCP登录设置"/>
+
+      ![WinSCP登录设置](./ch04-img11-winscp-ui.png)
 
    4. WinSCP 左边的目录就是本地电脑上的文件夹和文件，请定位到密钥所在的文件夹
 
    5. WinSCP 右边的目录则是 VPS 服务器上的文件夹和文件，默认就在 `/home/vpsadmin/` 文件夹，此时在请点击右下角 `X hidden` 来显示隐藏文件
-      <img src="./ch04-img12-winscp-locations.png"  alt="本地和远程文件夹"/>
+
+      ![本地和远程文件夹](./ch04-img12-winscp-locations.png)
 
    6. 在右边（VPS 中）点击右键并新建文件夹，起名`.ssh` （注意有一个`.`）
-      <img src="./ch04-img13-winscp-newfolder-key.png"  alt="在VPS中建立放置公钥的文件夹"/>
+      
+      ![在VPS中建立放置公钥的文件夹](./ch04-img13-winscp-newfolder-key.png)
 
    7. 将【公钥】`authorized_keys`上传到`.ssh`文件夹内
-      <img src="./ch04-img14-winscp-upload-key.png"  alt="上传authorized_keys"/>
+
+      ![上传authorized_keys](./ch04-img14-winscp-upload-key.png)
 
    8. 在上传时，将【公钥】从 `authorized_keys.txt` 改名为 `authorized_keys`（去掉`.txt`这个后缀名）
-      <img src="./ch04-img15-winscp-rename-key.png"  alt="确保没有任何后缀"/>
+
+      ![确保没有任何后缀](./ch04-img15-winscp-rename-key.png)
 
    9. 完整流程演示如下：
-      <img src="./ch04-img16-winscp-full.gif"  alt="WinSCP操作完整演示"/>
+
+      ![WinSCP操作完整演示](./ch04-img16-winscp-full.gif)
 
 3. 在 VPS 端设置 SSH 启用 RSA 密钥验证登录、同时禁用密码验证登录
 
@@ -290,24 +298,24 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
       $ sudo systemctl restart ssh
       ```
 
-   8. 完整流程如下：
-
-      <img src="./ch04-img17-rsa-login-full.gif"  alt="SSH开启密钥验证并禁用密码验证"/>
+   8. 完整流程如下:
+      
+      ![SSH开启密钥验证并禁用密码验证](./ch04-img17-rsa-login-full.gif)
 
 4. VPS 端已经设置好了公钥，现在要给 PuTTY 指定私钥位置供登录时使用（啰嗦君：别忘了保存 Session）
 
-   <img src="./ch04-img18-putty-privatekey-location.png"  alt="PuTTY指定私钥位置"/>
+   ![PuTTY指定私钥位置](./ch04-img18-putty-privatekey-location.png)
 
 
 5. 至此，【密钥登录】已成功开启、【密码验证】已成功关闭、并且还给 PuTTY 保存了默认的登录用户名和私钥。未来使用 PuTTY 登录时，载入`VPS-SERVER`配置后，点击`Open`就可以一键登录了。
 
    如果你给私钥设置了密码保护，登录时当然还需要输入这个密码才能使用密钥，如下图：
 
-   <img src="./ch04-img19-putty-privatekey-passphrase.png"  alt="输入私钥密码"/>
+   ![输入私钥密码](./ch04-img19-putty-privatekey-passphrase.png)
 
 6. 别忘了给`WinSCP`也做对应的密钥设置，否则之后想要传输文件时就无法登录了：
 
-   <img src="./ch04-img20-winscp-privatekey-location.png"  alt="WinSCP指定私钥位置"/>
+   ![WinSCP指定私钥位置](./ch04-img20-winscp-privatekey-location.png)
 
 ::: warning 注意
 任何需要借助 SSH 进行登录的软件都需要密钥验证了，软件过多，无法逐一展示，请根据你的需要自行设置好哦

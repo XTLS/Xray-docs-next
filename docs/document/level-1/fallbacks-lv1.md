@@ -4,7 +4,7 @@
 
 ## 1. 回顾《小小白白话文》中的回落
 
-如果你用了《小小白白话文》中的[Xray 配置](../level-0/ch07-xray-server#_7-4-配置xray)，并完成了[HTTP 自动跳转 HTTPS 优化](../level-0/ch07-xray-server#_7-8-服务器优化之二-开启http自动跳转https)，那么你已经有了基于 `VLESS` 协议的简易回落：
+如果你用了《小小白白话文》中的[Xray 配置](../level-0/ch07-xray-server.md#_7-4-配置xray)，并完成了[HTTP 自动跳转 HTTPS 优化](../level-0/ch07-xray-server.md#_7-8-服务器优化之二-开启http自动跳转https)，那么你已经有了基于 `VLESS` 协议的简易回落：
 
 ```
 "inbounds": [

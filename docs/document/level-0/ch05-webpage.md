@@ -26,7 +26,7 @@
 
 2. 完成后，Nginx 已经自动运行。此时打开 Windows 上的浏览器并输入 `http://100.200.300.400:80`，若看到下图的界面就说明 Nginx 已经正常在运行了。
 
-   <img src="./ch05-img01-nginx-default-running.png"  alt="Nginx默认界面"/>
+   ![Nginx默认界面](./ch05-img01-nginx-default-running.png)
 
 ## 5.3 创建一个最简单的网页
 
@@ -118,11 +118,11 @@
 
    4. 完整的设置流程如下：
 
-      <img src="./ch05-img02-nginx-conf-full.gif"  alt="网页设置演示"/>
+      ![网页设置演示](./ch05-img02-nginx-conf-full.gif)
 
    5. 此时如果你访问 `http://二级域名.你的域名.com`，你看到这样的页面则说明成功：
 
-      <img src="./ch05-img03-nginx-http-running.png"  alt="http网页成功"/>
+      ![http网页成功](./ch05-img03-nginx-http-running.png)
 
 ## 5.4 常见错误的说明
 

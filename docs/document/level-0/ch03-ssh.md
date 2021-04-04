@@ -10,15 +10,15 @@
 
 1. 进入 PuTTY 的[官网](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)，选择适合你操作系统的版本下载。（本文以 64 位版本为例）
 
-   <img src="./ch03-img01-putty-download.png"  alt="下载PuTTY"/>
+   ![下载PuTTY](./ch03-img01-putty-download.png)
 
-2. 安装运行后，将会看到 PuTTY 的主界面。现在请拿出你上一章记东西的[小本本](../ch02-preparation/#21-%E8%8E%B7%E5%8F%96%E4%B8%80%E5%8F%B0vps)，在下图的对应位置填入你 VPS 的**IP 地址(VPS IP)**和**端口(VPS PORT)**。为了方便以后使用时不用重复输入，我们可以保存会话 (Saved Sessions)，未来使用时只要按 Load 即可一键载入设置。
+2. 安装运行后，将会看到 PuTTY 的主界面。现在请拿出你上一章记东西的[小本本](./ch02-preparation.md#21-%E8%8E%B7%E5%8F%96%E4%B8%80%E5%8F%B0vps)，在下图的对应位置填入你 VPS 的**IP 地址(VPS IP)**和**端口(VPS PORT)**。为了方便以后使用时不用重复输入，我们可以保存会话 (Saved Sessions)，未来使用时只要按 Load 即可一键载入设置。
 
-   <img src="./ch03-img02-putty-settings.png"  alt="设置PuTTY"/>
+   ![设置PuTTY](./ch03-img02-putty-settings.png)
 
 3. 我建议将 `Connection` 中的 `keepalive` 设置为 `60` 秒，防止你一段时间没有操作之后 SSH 自动断线。另外务必再次保存设置。
 
-   <img src="./ch03-img03-putty-keepalive.png"  alt="防止频繁断线"/>
+   ![防止频繁断线](./ch03-img03-putty-keepalive.png)
 
 ::: warning 注意
 对 PuTTY 的任何设置更新都要再次手动保存 Session，不然关闭后就会丢失
@@ -26,13 +26,13 @@
 
 4. 点击 Open 就会进入 SSH 连接窗口，对应下图输入用户名与密码，与你的 VPS 远程主机建立连接。（本文假设默认用户名是 `root`，另外，在 Linux 系统输入密码的时候，是不会出现 `******` 这种提示符的，这样可以避免密码长度泄漏，不是你的键盘坏掉了哦！）
 
-   <img src="./ch03-img04-ssh-login.png"  alt="SSH远程登录"/>
+   ![SSH远程登录](./ch03-img04-ssh-login.png)
 
 ## 3.2 成功登录 SSH！初识命令行界面！
 
 1. 如果你的信息都填写正确，你将会看到类似下图的界面，说明已登录成功：
 
-   <img src="./ch03-img05-ssh-login-success.png"  alt="初次登录VPS"/>
+   ![初次登录VPS](./ch03-img05-ssh-login-success.png)
 
    这个界面，就等于远程服务器的【桌面】，但它没有你熟悉的图标和鼠标，没有绚丽的色彩，有的只是简单文字，这就是【**命令行界面**】- `Command Line Interface`，或者缩写为 `CLI`。
 
@@ -76,7 +76,7 @@
 
 6. 完整流程演示如下：
 
-   <img src="./ch03-img06-apt-upgrade-full.gif"  alt="初次软件更新流程演示"/>
+   ![初次软件更新流程演示](./ch03-img06-apt-upgrade-full.gif)
 
 ## 3.4 你的进度
 

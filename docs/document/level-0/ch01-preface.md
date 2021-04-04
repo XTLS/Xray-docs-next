@@ -75,7 +75,7 @@
 
 现在，你已经看到了机场的优势和风险，要用什么，就请各位充分思考并自行决定。毕竟，最适合你的方案才是最好的方案。
 
- <img src="./ch01-img01-choice.png"  alt="It's Your Choice!" />
+![It's Your Choice!](./ch01-img01-choice.png)
 
 1. 如果决定使用机场的话，现在，你可以关闭本文了。
 

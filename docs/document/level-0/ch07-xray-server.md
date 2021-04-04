@@ -7,7 +7,9 @@
 其实这样的结构是我多番思考之后的决定，毕竟只有打好基础，才能在后面事半功倍快速反超。我在群里看到许多新人连`nano`都无法正确使用，也不会用`WinSCP`，远程手写编辑出来的`config.json`自然错误百出，连查错也变得举步维艰。
 
 ::: warning
-经过了前 6 章的准备，各位已经跟我一起翻越了 Linux 基本操作、VPS 远程管理、网页搭建、域名管理、证书申请等等几座大山。是不是回头看看，觉得其实非常简单呢？现在我们有了如此扎实的准备，接下来安装和配置 Xray 时会有一种【水到渠成】的轻快感觉。
+
+经过了前 6 章的准备，各位已经跟我一起翻越了 Linux 基本操作、VPS 远程管理、网页搭建、域名管理、证书申请等等几座大山。是不是回头看看，觉得其实非常简单呢？现在我们有了如此扎实的准备，接下来安装和配置 Xray
+时会有一种【水到渠成】的轻快感觉。
 :::
 
 后面要做的事情非常简单：
@@ -19,16 +21,15 @@
 
 ## 7.2 安装 Xray
 
-首先，Xray 的官方载体，就是 [xray-core](https://github.com/XTLS/Xray-core) 开源项目（基于 `MPL 2.0` 开源协议）生成的二进制程序。你把这个二进制放在服务器运行，它就是服务器端；你把它下载到本地电脑运行，它就是客户端。主要区别来源于【配置】。
+首先，Xray 的官方载体，就是 [xray-core](https://github.com/XTLS/Xray-core) 开源项目（基于 `MPL 2.0`
+开源协议）生成的二进制程序。你把这个二进制放在服务器运行，它就是服务器端；你把它下载到本地电脑运行，它就是客户端。主要区别来源于【配置】。
 
-安装时，直接使用官方安装脚本就很简单直接。它提供了多种安装选项，有兴趣的可以去官方的[安装脚本仓库](https://github.com/XTLS/Xray-install)中看看脚本的说明，**本文使用的是【非 root 用户】安装模式**。
+安装时，直接使用官方安装脚本就很简单直接。它提供了多种安装选项，有兴趣的可以去官方的[安装脚本仓库](https://github.com/XTLS/Xray-install)中看看脚本的说明，**本文使用的是【非 root
+用户】安装模式**。
 
 写本文时，安装脚本在使用非 root 账户时有一些小 bug，所以我决定正好把这几步分开操作，可以顺便说明一下 Linux 下的删除命令。
 
-1. 小小白白 Linux 基础命令：
-   | 编号 | 命令名称 | 命令说明 |
-   |:--:|:--:|:--:|
-   | `cmd-14` | `rm` | 删除命令 |
+1. 小小白白 Linux 基础命令： | 编号 | 命令名称 | 命令说明 | |:--:|:--:|:--:| | `cmd-14` | `rm` | 删除命令 |
 
 2. 将安装脚本下载至本地：
 
@@ -49,16 +50,20 @@
    ```
 
    ::: warning 注意
-   使用 `rm` 命令删除文件的时候，默认其实就是删除现在所在的文件夹下的文件。但是，**我依然写了完整的路径**： `~/install-release.sh`，这是我使用 `rm` 时的一个安全习惯、也是我把安装分成几步之后想强调一下的内容。如果你听过一些“程序员从删库到跑路”之类的段子，大概就知道为什么了。
+
+   使用 `rm` 命令删除文件的时候，默认其实就是删除现在所在的文件夹下的文件。但是，**我依然写了完整的路径**： `~/install-release.sh`，这是我使用 `rm`
+   时的一个安全习惯、也是我把安装分成几步之后想强调一下的内容。如果你听过一些“程序员从删库到跑路”之类的段子，大概就知道为什么了。
    :::
 
 5. 完整流程演示如下：
 
-   <img src="./ch07-img01-xray-install.gif"  alt="Xray服务器端安装流程演示"/>
+   ![Xray服务器端安装流程演示](./ch07-img01-xray-install.gif)
 
 ## 7.3 给 Xray 配置 TLS 证书
 
-虽然我们前面已经申请好了 TLS 证书，但是按照 [`acme.sh`的官方说明](https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E#3-copy%E5%AE%89%E8%A3%85-%E8%AF%81%E4%B9%A6)，申请后的证书不建议直接使用。正确的方法是使用 `--install-cert` 命令安装给需要的程序。我们现在就来把证书安装给 `xray-core` 使用。
+虽然我们前面已经申请好了 TLS
+证书，但是按照 [`acme.sh`的官方说明](https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E#3-copy%E5%AE%89%E8%A3%85-%E8%AF%81%E4%B9%A6)，申请后的证书不建议直接使用。正确的方法是使用 `--install-cert`
+命令安装给需要的程序。我们现在就来把证书安装给 `xray-core` 使用。
 
 1. 为了规避非 root 账户的各种潜在的权限困扰，我们在 vpsadmin 账户下建立一个证书文件夹
 
@@ -82,68 +87,71 @@
 
 4. 过程比较简单就不放动图了：
 
-   <img src="./ch07-img02-xray-cert-install.png"  alt="Xray证书安装"/>
+   ![Xray服务器端安装流程演示](./ch07-img02-xray-cert-install.png)
 
 5. `acme.sh` 会每 60 天检查一次证书并自动更新临期证书。但据我所知是它并不会自动将新证书安装给 `xray-core`，所以我们需要新增一个系统的自动周期任务来完成这一步。
 
-   1. 小小白白 Linux 基础命令：
-      | 编号 | 命令名称 | 命令说明 |
-      |:--:|:--:|:--:|
-      | `cmd-15` | `crontab -e` | 编辑当前用户的定时任务 |
+    1. 小小白白 Linux 基础命令： | 编号 | 命令名称 | 命令说明 | |:--:|:--:|:--:| | `cmd-15` | `crontab -e` | 编辑当前用户的定时任务 |
 
-   2. 建立一个脚本文件（`xray-cert-renew.sh`）
+    2. 建立一个脚本文件（`xray-cert-renew.sh`）
 
-      ```
-      $ nano ~/xray_cert/xray-cert-renew.sh
-      ```
+       ```
+       $ nano ~/xray_cert/xray-cert-renew.sh
+       ```
 
-   3. 把下面的内容复制进去，记得替换你的真实域名，然后保存退出
+    3. 把下面的内容复制进去，记得替换你的真实域名，然后保存退出
 
-      ```
-      #!/bin/bash
+       ```
+       #!/bin/bash
+ 
+       /home/vpsadmin/.acme.sh/acme.sh --install-cert -d a-name.yourdomain.com --ecc --fullchain-file /home/vpsadmin/xray_cert/xray.crt --key-file /home/vpsadmin/xray_cert/xray.key
+       echo "Xray Certificates Renewed"
+ 
+       chmod +r /home/vpsadmin/xray_cert/xray.key
+       echo "Read Permission Granted for Private Key"
+ 
+       sudo systemctl restart xray
+       echo "Xray Restarted"
+       ```
 
-      /home/vpsadmin/.acme.sh/acme.sh --install-cert -d a-name.yourdomain.com --ecc --fullchain-file /home/vpsadmin/xray_cert/xray.crt --key-file /home/vpsadmin/xray_cert/xray.key
-      echo "Xray Certificates Renewed"
+       ::: warning 注意
 
-      chmod +r /home/vpsadmin/xray_cert/xray.key
-      echo "Read Permission Granted for Private Key"
+       经大家提醒，`acme.sh` 有一个 `reloadcmd` 命令，可以在证书更新时自动执行特定命令，那么就可以指定自动给 `Xray` 安装证书，但因为 `crontab` 是 Linux
+       系统中一个非常有用、非常常用的功能，所以本文保留 `crontab` 的方式来更新 `Xray` 证书。（对 `reloadcmd` 感兴趣的同学可以查看 `acme.sh`
+       的[官方文档](https://github.com/acmesh-official/acme.sh)）
 
-      sudo systemctl restart xray
-      echo "Xray Restarted"
-      ```
+       另外，录制动图时，脚本中没有加入重启 `Xray` 的命令，是因为 `Xray` 计划支持【证书热更新】功能，即 `Xray` 会自动识别证书更新并重载证书、无需手动重启。待功能加入后，我将适当修改 `config.json`
+       开启此设置，并删除脚本中的重启命令。
+       :::
 
-      ::: warning 注意
-      经大家提醒，`acme.sh` 有一个 `reloadcmd` 命令，可以在证书更新时自动执行特定命令，那么就可以指定自动给 `Xray` 安装证书，但因为 `crontab` 是 Linux 系统中一个非常有用、非常常用的功能，所以本文保留 `crontab` 的方式来更新 `Xray` 证书。（对 `reloadcmd` 感兴趣的同学可以查看 `acme.sh` 的[官方文档](https://github.com/acmesh-official/acme.sh)）
+    4. 给这个文件增加【可执行】权限
 
-      另外，录制动图时，脚本中没有加入重启 `Xray` 的命令，是因为 `Xray` 计划支持【证书热更新】功能，即 `Xray` 会自动识别证书更新并重载证书、无需手动重启。待功能加入后，我将适当修改 `config.json` 开启此设置，并删除脚本中的重启命令。
-      :::
+       ```
+       $ chmod +x ~/xray_cert/xray-cert-renew.sh
+       ```
 
-   4. 给这个文件增加【可执行】权限
+    5. 运行 `crontab -e`，添加一个自动任务【每月自动运行一次`xray-cert-renew.sh`】 (注意不要加`sudo`，因为我们增加的是`vpsadmin`
+       账户的自动任务。初次运行时会让你选择编辑器，当然是选择熟悉的`nano`啦！)
 
-      ```
-      $ chmod +x ~/xray_cert/xray-cert-renew.sh
-      ```
+       ```
+       $ crontab -e
+       ```
 
-   5. 运行 `crontab -e`，添加一个自动任务【每月自动运行一次`xray-cert-renew.sh`】 (注意不要加`sudo`，因为我们增加的是`vpsadmin`账户的自动任务。初次运行时会让你选择编辑器，当然是选择熟悉的`nano`啦！)
+    6. 把下面的内容增加在文件最后，保存退出即可。
 
-      ```
-      $ crontab -e
-      ```
+       ```
+       # 1:00am, 1st day each month, run `xray-cert-renew.sh`
+       0 1 1 * *   bash /home/vpsadmin/xray_cert/xray-cert-renew.sh
+       ```
 
-   6. 把下面的内容增加在文件最后，保存退出即可。
+    7. 完整流程演示如下：
 
-      ```
-      # 1:00am, 1st day each month, run `xray-cert-renew.sh`
-      0 1 1 * *   bash /home/vpsadmin/xray_cert/xray-cert-renew.sh
-      ```
-
-   7. 完整流程演示如下：
-
-      <img src="./ch07-img03-crontab-cert-renew.gif"  alt="每月自动给Xray安装证书"/>
+       ![每月自动给Xray安装证书](./ch07-img03-crontab-cert-renew.gif)
 
 ## 7.4 配置 Xray
 
-首先，各种配置都可以参考[官方 VLESS 配置示例](https://github.com/XTLS/Xray-examples)。本文会基于官方示例，配置一个最精简的方式：【单 `VLESS` 协议入站 + `80` 端口回落】，满足大多数场景的最大速度及必要安全。
+首先，各种配置都可以参考[官方 VLESS 配置示例](https://github.com/XTLS/Xray-examples)。本文会基于官方示例，配置一个最精简的方式：【单 `VLESS` 协议入站 + `80`
+端口回落】，满足大多数场景的最大速度及必要安全。
 
 1. 生成一个合法的 `UUID` 并保存备用（`UUID`可以简单粗暴的理解为像指纹一样几乎不会重复的 ID）
 
@@ -153,31 +161,30 @@
 
 2. 建立日志文件及文件夹备用
 
-   1. 小小白白 Linux 基础命令：
-      | 编号 | 命令名称 | 命令说明 |
-      |:--:|:--:|:--:|
-      | `cmd-16` | `touch` | 建立空白文件 |
+    1. 小小白白 Linux 基础命令： | 编号 | 命令名称 | 命令说明 | |:--:|:--:|:--:| | `cmd-16` | `touch` | 建立空白文件 |
 
-   2. 在`vpsadmin`的文件夹内建立一个【日志专用文件夹】
+    2. 在`vpsadmin`的文件夹内建立一个【日志专用文件夹】
 
-      ```
-      $ mkdir ~/xray_log
-      ```
+       ```
+       $ mkdir ~/xray_log
+       ```
 
-   3. 生成所需的两个日志文件（访问日志、错误日志）
+    3. 生成所需的两个日志文件（访问日志、错误日志）
 
-      ```
-      $ touch ~/xray_log/access.log && touch ~/xray_log/error.log
-      ```
+       ```
+       $ touch ~/xray_log/access.log && touch ~/xray_log/error.log
+       ```
 
-      ::: warning 注意
-      这个位置不是`Xray`标准的日志文件位置，放在这里是避免权限问题对新人的操作带来困扰。当你熟悉之后，建议回归默认位置： `/var/log/xray/access.log` 和 `/var/log/xray/error.log` 。
-      :::
+       ::: warning 注意
 
-   4. 因为 Xray 默认是 nobody 用户使用，所以我们需要让其他用户也有“写”的权限（`*.log` 就是所有文件后缀是`log`的文件，此时`CLI`界面的效率优势就逐渐出现了）
-      ```
-      $ chmod a+w ~/xray_log/*.log
-      ```
+       这个位置不是`Xray`标准的日志文件位置，放在这里是避免权限问题对新人的操作带来困扰。当你熟悉之后，建议回归默认位置： `/var/log/xray/access.log`
+       和 `/var/log/xray/error.log` 。
+       :::
+
+    4. 因为 Xray 默认是 nobody 用户使用，所以我们需要让其他用户也有“写”的权限（`*.log` 就是所有文件后缀是`log`的文件，此时`CLI`界面的效率优势就逐渐出现了）
+       ```
+       $ chmod a+w ~/xray_log/*.log
+       ```
 
 3. 使用`nano`创建`Xray`的配置文件
 
@@ -185,7 +192,8 @@
    $ sudo nano /usr/local/etc/xray/config.json
    ```
 
-4. 将下面的文件全部复制进去，并将之前生成的`UUID`填入第 61 行 `"id": "",` 之中。（填好之后的样子是 `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`），本文的这个配置文件中增加了我的各种啰嗦注解，以方便你理解每一个配置模块的功能是什么。
+4. 将下面的文件全部复制进去，并将之前生成的`UUID`填入第 61 行 `"id": "",` 之中。（填好之后的样子是 `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
+   ），本文的这个配置文件中增加了我的各种啰嗦注解，以方便你理解每一个配置模块的功能是什么。
 
    ```
    // REFERENCE:
@@ -299,7 +307,7 @@
 
 5. 完整流程演示如下：
 
-   <img src="./ch07-img04-xray-log-and-config.gif"  alt="创建日志文件及`config.json`配置文件"/>
+   ![创建日志文件及`config.json`配置文件](./ch07-img04-xray-log-and-config.gif)
 
 ## 7.5 启动 Xray 服务！！（并查看服务状态）
 
@@ -321,11 +329,12 @@
 
 3. 完整流程演示如下：
 
-   <img src="./ch07-img05-xray-start-and-status.gif"  alt="启动并查看Xray运行状态"/>
+   ![启动并查看Xray运行状态](./ch07-img05-xray-start-and-status.gif)
 
 ## 7.6 回顾 `systemd` 进行基本的服务管理
 
-到现在为止，我们已经使用过了`systemctl`相关的`start`, `status`, `reload` 等命令，这些都是基于`systmed`管理模块对 Linux 系统中各种服务进行管理的通用命令。现在正好熟悉一下相关的其他几个命令。
+到现在为止，我们已经使用过了`systemctl`相关的`start`, `status`, `reload` 等命令，这些都是基于`systmed`管理模块对 Linux
+系统中各种服务进行管理的通用命令。现在正好熟悉一下相关的其他几个命令。
 
 1. 若你需要暂时关闭 `Xray` 的服务，那就用`stop`命令
 
@@ -360,7 +369,8 @@
 
 2. 实际的`BBR`
 
-   **BBR** = **B**ottleneck **B**andwidth and **R**ound-trip propagation time，是一种 TCP 的**拥塞控制算法**。简单粗暴的理解就是**数据流量的交通管理**：当公路不再塞车的时候，每辆车自然就能保持较快的车速了。
+   **BBR** = **B**ottleneck **B**andwidth and **R**ound-trip propagation time，是一种 TCP 的**拥塞控制算法**。简单粗暴的理解就是**数据流量的交通管理**
+   ：当公路不再塞车的时候，每辆车自然就能保持较快的车速了。
 
    那么它有没有用呢？一般而言，`有BBR` 和 `没有BBR` 会有可以感知的差别（速度、稳定性、延迟方面都会有一些改善），所以 **【非常建议开启 `BBR`】**。
 
@@ -376,10 +386,9 @@
 
    内核的稳定是一台服务器稳定运行的基石。**【BBR 测试版带来的细微性能差异绝对不值得更换不稳定的内核。】** 请选择你所在的 Linux 发行版所支持的最新内核，这样可以最大限度的保持服务器的长期稳定和兼容。
 
-
-    ::: warning 注意
-    所谓魔改`bbr`的【领先】是有非常强的时效性的。比如很多 `bbrplus` 脚本，因为几年来都没有更新，到现在还会把你的内核换成 `4.19`，要知道现在稳定如 Debian 已经是 `5.9` 的时代了，那么这个脚本放在2018年1月也许领先了一点，到2018年10月4.19正发布时就已经失去了意义，放在现在甚至可以说是完完全全的【降级】和【劣化】
-    :::
+   ::: warning 注意 所谓魔改`bbr`的【领先】是有非常强的时效性的。比如很多 `bbrplus` 脚本，因为几年来都没有更新，到现在还会把你的内核换成 `4.19`，要知道现在稳定如 Debian 已经是 `5.9`
+   的时代了，那么这个脚本放在2018年1月也许领先了一点，到2018年10月4.19正发布时就已经失去了意义，放在现在甚至可以说是完完全全的【降级】和【劣化】
+   :::
 
 4. `fq`, `fq_codel`, `fq_pie`, `cake`和其他算法哪个好？
 
@@ -389,57 +398,64 @@
 
    一句话：**不要用这些！把他们丢进历史的垃圾桶吧！**
 
-   它能解决的也只有丢包率的问题。不太准确的比喻，就是本来你用一辆车送你的货，有时候车半路就坏了（丢包），用了这些以后，你直接派出 3 份一样的货，让三辆车同时送，只要有一辆没坏就能送到。马路上都是你的车，自然就能把别人挤下去。但可想而知，你挤别人的时候，别人也会来挤你，而整个机房的出口道路一共就那么宽，最终势必就变成集体大堵车了。
+   它能解决的也只有丢包率的问题。不太准确的比喻，就是本来你用一辆车送你的货，有时候车半路就坏了（丢包），用了这些以后，你直接派出 3
+   份一样的货，让三辆车同时送，只要有一辆没坏就能送到。马路上都是你的车，自然就能把别人挤下去。但可想而知，你挤别人的时候，别人也会来挤你，而整个机房的出口道路一共就那么宽，最终势必就变成集体大堵车了。
 
-   ::: warning 说明
-   它们的原理不是算法优化、不是提速、大多数是简单粗暴的**多倍发包**。对于【丢包率非常高】的差线路可能有一点作用，但【对丢包率低的好线路没有任何优化作用，反而会成倍的消耗你的流量】，进而造成服务器和你的邻居不必要的压力。
+   ::: warning 说明 它们的原理不是算法优化、不是提速、大多数是简单粗暴的**多倍发包**
+   。对于【丢包率非常高】的差线路可能有一点作用，但【对丢包率低的好线路没有任何优化作用，反而会成倍的消耗你的流量】，进而造成服务器和你的邻居不必要的压力。
 
    如果你的线路真的丢包率奇高，真正靠谱的解决方案是【换线路】。
    :::
 
 6. 啰嗦了这么多，就是因为围绕 `BBR` 忽悠小白的错误概念和坑人脚本实在是太多了。我希望你们现在对 `BBR` 有了相对清晰的理解。接下来，我们就动手安装最新的 Debian 内核并开启`BBR` 吧！（真的很简单）
 
-   1. 给 Debian 10 添加官方 `backports` 源，获取更新的软件库
+    1. 给 Debian 10 添加官方 `backports` 源，获取更新的软件库
 
-      ```
-      $ sudo nano /etc/apt/sources.list
-      ```
+       ```
+       $ sudo nano /etc/apt/sources.list
+       ```
 
-      ::: warning 说明
-      本文以 Debian 10 为例，所以使用 `/etc/apt/sources.list` 仍无问题，但如果你并不是根据本文从头开始，或者使用了其他 Linux 发行版，那么建议你建立 `/etc/apt/sources.list.d/` 文件夹，并在这个文件夹内建立自己的配置文件，形如 `/etc/apt/sources.list.d/vpsadmin.list`，以此保证兼容性，也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
-      :::
+       ::: warning 说明
 
-   2) 然后把下面这一条加在最后，并保存退出。
+       本文以 Debian 10 为例，所以使用 `/etc/apt/sources.list` 仍无问题，但如果你并不是根据本文从头开始，或者使用了其他 Linux
+       发行版，那么建议你建立 `/etc/apt/sources.list.d/` 文件夹，并在这个文件夹内建立自己的配置文件，形如 `/etc/apt/sources.list.d/vpsadmin.list`
+       ，以此保证兼容性，也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
+       :::
 
-      ```
-      deb http://deb.debian.org/debian buster-backports main
-      ```
+    2) 然后把下面这一条加在最后，并保存退出。
 
-   3) 刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
+       ```
+       deb http://deb.debian.org/debian buster-backports main
+       ```
 
-      ```
-      $ sudo apt update && sudo apt -t buster-backports install linux-image-amd64
-      ```
+    3) 刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
 
-      ::: warning 注意
-      如果你的 VPS 支持，可以尝试【云服务器专用内核】`linux-image-cloud-amd64`，优点就是精简、资源占用低，缺点嘛是有同学反馈不支持的系统强行安装会导致无法开机（Kernel 无法识别）。
+       ```
+       $ sudo apt update && sudo apt -t buster-backports install linux-image-amd64
+       ```
 
-      为了避免无法识别的悲剧，请确保：
+       ::: warning 注意
 
-      - 尝试前做一个系统快照，或者
-      - 你有 `vnc` 可以救场（并且你知道怎么用）
-        :::
+       如果你的 VPS 支持，可以尝试【云服务器专用内核】`linux-image-cloud-amd64`，优点就是精简、资源占用低，缺点嘛是有同学反馈不支持的系统强行安装会导致无法开机（Kernel 无法识别）。
 
-   4) 修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
+       为了避免无法识别的悲剧，请确保：
 
-      ```
-      $ sudo nano /etc/sysctl.conf
-      ```
+        - 尝试前做一个系统快照，或者
+        - 你有 `vnc` 可以救场（并且你知道怎么用）
+          :::
 
-      ::: warning 说明
-      本文以 Debian 10 为例，所以使用 `/etc/sysctl.conf` 仍无问题，但如果你并不是跟着本文从头开始，或者使用了其他 Linux 发行版，那么建议你建立 `/etc/sysctl.d/` 文件夹，并在这个文件夹内建立自己的配置文件，形如 `/etc/sysctl.d/vpsadmin.conf`，以此保证兼容性，因为部分发行版在 `systemd` 207 版本之后便不再从 `/etc/sysctl.conf` 读取参数。使用自定义配置文件也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
-      :::
+    4) 修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
 
+       ```
+       $ sudo nano /etc/sysctl.conf
+       ```
+
+       ::: warning 说明
+
+       本文以 Debian 10 为例，所以使用 `/etc/sysctl.conf` 仍无问题，但如果你并不是跟着本文从头开始，或者使用了其他 Linux 发行版，那么建议你建立 `/etc/sysctl.d/`
+       文件夹，并在这个文件夹内建立自己的配置文件，形如 `/etc/sysctl.d/vpsadmin.conf`，以此保证兼容性，因为部分发行版在 `systemd`
+       207 版本之后便不再从 `/etc/sysctl.conf` 读取参数。使用自定义配置文件也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
+       :::
 
     5. 把下面的内容添加进去
         ```
@@ -454,34 +470,35 @@
 
     7. 完整流程演示如下：
 
-        ::: tip 啰嗦君
-        因为我做展示的VPS支持云服务器专用内核，所以动图中我用了 `linux-image-cloud-amd64` 。如果你不确定你的VPS是否支持，那请务必按照第3步的命令，使用常规内核 `linux-image-amd64`。
-        :::
+       ::: tip 啰嗦君
 
-        <img src="./ch07-img06-bbr-proper.gif"  alt="更新Debian内核并开启`BBR`"/>
+       因为我做展示的VPS支持云服务器专用内核，所以动图中我用了 `linux-image-cloud-amd64`
+       。如果你不确定你的VPS是否支持，那请务必按照第3步的命令，使用常规内核 `linux-image-amd64`。
+       :::
 
+       ![更新Debian内核并开启`BBR`](./ch07-img06-bbr-proper.gif)
 
     8. 确认`BBR`开启
 
-        如果你想确认 `BBR` 是否正确开启，可以使用下面的命令：
+       如果你想确认 `BBR` 是否正确开启，可以使用下面的命令：
 
         ```
         $ lsmod | grep bbr
         ```
 
-        此时应该返回这样的结果：
+       此时应该返回这样的结果：
 
         ```
         tcp_bbr
         ```
 
-        如果你想确认 `fq` 算法是否正确开启，可以使用下面的命令：
+       如果你想确认 `fq` 算法是否正确开启，可以使用下面的命令：
 
         ```
         $ lsmod | grep fq
         ```
 
-        此时应该返回这样的结果：
+       此时应该返回这样的结果：
 
         ```
         sch_fq
@@ -491,7 +508,8 @@
 
 1. 之前我们已经搭建了 `80` 端口的 `http` 网页，并以此申请了 TLS 证书。
 
-   但如果你尝试过用浏览器访问我们的这个界面，就会发现 `http` 访问并不会像大多数网站一样自动升级为 `https` 访问。换言之，我们现在的设置下，`http(80)` 和 `https(443)`之间完全是独立的。如果要解决这个问题，就需要做一些修改。
+   但如果你尝试过用浏览器访问我们的这个界面，就会发现 `http` 访问并不会像大多数网站一样自动升级为 `https` 访问。换言之，我们现在的设置下，`http(80)` 和 `https(443)`
+   之间完全是独立的。如果要解决这个问题，就需要做一些修改。
 
 2. 编辑 Nginx 的配置文件
 
@@ -536,11 +554,11 @@
 
 8. 完整流程演示如下：
 
-   <img src="./ch07-img07-http-to-https.gif"  alt="http自动跳转https"/>
+   ![http自动跳转https](./ch07-img07-http-to-https.gif)
 
 9. 当你输入 `http://a-name.yourdomain.com`的时候，它应该已经会自动跳转 https 了
 
-   <img src="./ch07-img08-http-to-https-check.png"  alt="http自动跳转https生效"/>
+   ![http自动跳转https生效](./ch07-img08-http-to-https-check.png)
 
 ## 7.9 服务器优化之三：更丰富的回落
 
@@ -556,19 +574,19 @@
 
 1. 初版中`Xray`配置文件`config.json`文件夹位置错误。若你已经根据之前的位置进行了操作，`Xray`会无法正确启动。故勘误说明于此，请自查，造成不便十分抱歉！
 
-   - 正确位置：`/usr/local/etc/xray/config.json`
-   - 错误位置：`/usr/local/etc/config.json`
+    - 正确位置：`/usr/local/etc/xray/config.json`
+    - 错误位置：`/usr/local/etc/config.json`
 
    受影响章节：
 
-   - 7.4 配置`Xray` - 3. 使用`nano`创建`Xray`的配置文件
-   - 7.8 服务器优化之二 - 6. 修改`Xray`的回落设置
+    - 7.4 配置`Xray` - 3. 使用`nano`创建`Xray`的配置文件
+    - 7.8 服务器优化之二 - 6. 修改`Xray`的回落设置
 
 2) 初版中修改`Nginx`配置文件`nginx.conf`时内容错误（网页文件夹位置错误），若你已经根据之前的位置进行了操作，`Nginx`会无法找到正确的网站。请自查，造成不便十分抱歉！
 
-   - 正确文件夹位置：`root /home/vpsadmin/www/webpage;`
-   - 错误文件夹位置：`root /var/www/website/html`
+    - 正确文件夹位置：`root /home/vpsadmin/www/webpage;`
+    - 错误文件夹位置：`root /var/www/website/html`
 
    受影响章节：
 
-   - 7.8 服务器优化之二 - 4. 在与 `80` 端口同级的位置增加一个本地端口监听来提供网页展示
+    - 7.8 服务器优化之二 - 4. 在与 `80` 端口同级的位置增加一个本地端口监听来提供网页展示
