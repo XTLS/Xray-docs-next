@@ -18,6 +18,8 @@ module.exports = {
     docsBranch: "main",
     editLinks: true,
     editLinkText: "帮助我们改善此页面！",
+    themeChange: true,
+    themeChangeText: "切换主题",
     nav: [
       { text: "首页", link: "/" },
       { text: "大史记", link: "/about/news" },
