@@ -47,4 +47,4 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 ## 透明代理配置样例
 
-此部分请参考[透明代理（TProxy）配置教程](../../documents/level-2/tproxy)。
+此部分请参考[透明代理（TProxy）配置教程](../../document/level-2/tproxy)。
