@@ -91,75 +91,75 @@
 
 5. `acme.sh` 会每 60 天检查一次证书并自动更新临期证书。但据我所知是它并不会自动将新证书安装给 `xray-core`，所以我们需要新增一个系统的自动周期任务来完成这一步。
 
-    1. 小小白白 Linux 基础命令： | 编号 | 命令名称 | 命令说明 | |:--:|:--:|:--:| | `cmd-15` | `crontab -e` | 编辑当前用户的定时任务 |
+   1. 小小白白 Linux 基础命令： | 编号 | 命令名称 | 命令说明 | |:--:|:--:|:--:| | `cmd-15` | `crontab -e` | 编辑当前用户的定时任务 |
 
-    2. 建立一个脚本文件（`xray-cert-renew.sh`）
+   2. 建立一个脚本文件（`xray-cert-renew.sh`）
 
-       ```
-       $ nano ~/xray_cert/xray-cert-renew.sh
-       ```
+      ```
+      $ nano ~/xray_cert/xray-cert-renew.sh
+      ```
 
-    3. 把下面的内容复制进去，记得替换你的真实域名，然后保存退出
+   3. 把下面的内容复制进去，记得替换你的真实域名，然后保存退出
 
-       ```
-       #!/bin/bash
- 
-       /home/vpsadmin/.acme.sh/acme.sh --install-cert -d a-name.yourdomain.com --ecc --fullchain-file /home/vpsadmin/xray_cert/xray.crt --key-file /home/vpsadmin/xray_cert/xray.key
-       echo "Xray Certificates Renewed"
- 
-       chmod +r /home/vpsadmin/xray_cert/xray.key
-       echo "Read Permission Granted for Private Key"
- 
-       sudo systemctl restart xray
-       echo "Xray Restarted"
-       ```
+      ```
+      #!/bin/bash
 
-       ::: warning 注意
+      /home/vpsadmin/.acme.sh/acme.sh --install-cert -d a-name.yourdomain.com --ecc --fullchain-file /home/vpsadmin/xray_cert/xray.crt --key-file /home/vpsadmin/xray_cert/xray.key
+      echo "Xray Certificates Renewed"
 
-       经大家提醒，`acme.sh` 有一个 `reloadcmd` 命令，可以在证书更新时自动执行特定命令，那么就可以指定自动给 `Xray` 安装证书，但因为 `crontab` 是 Linux
-       系统中一个非常有用、非常常用的功能，所以本文保留 `crontab` 的方式来更新 `Xray` 证书。（对 `reloadcmd` 感兴趣的同学可以查看 `acme.sh`
-       的[官方文档](https://github.com/acmesh-official/acme.sh)）
+      chmod +r /home/vpsadmin/xray_cert/xray.key
+      echo "Read Permission Granted for Private Key"
 
-       另外，录制动图时，脚本中没有加入重启 `Xray` 的命令，是因为 `Xray` 计划支持【证书热更新】功能，即 `Xray` 会自动识别证书更新并重载证书、无需手动重启。待功能加入后，我将适当修改 `config.json`
-       开启此设置，并删除脚本中的重启命令。
-       :::
+      sudo systemctl restart xray
+      echo "Xray Restarted"
+      ```
 
-    4. 给这个文件增加【可执行】权限
+      ::: warning 注意
 
-       ```
-       $ chmod +x ~/xray_cert/xray-cert-renew.sh
-       ```
+      经大家提醒，`acme.sh` 有一个 `reloadcmd` 命令，可以在证书更新时自动执行特定命令，那么就可以指定自动给 `Xray` 安装证书，但因为 `crontab` 是 Linux
+      系统中一个非常有用、非常常用的功能，所以本文保留 `crontab` 的方式来更新 `Xray` 证书。（对 `reloadcmd` 感兴趣的同学可以查看 `acme.sh`
+      的[官方文档](https://github.com/acmesh-official/acme.sh)）
 
-    5. 运行 `crontab -e`，添加一个自动任务【每月自动运行一次`xray-cert-renew.sh`】 (注意不要加`sudo`，因为我们增加的是`vpsadmin`
-       账户的自动任务。初次运行时会让你选择编辑器，当然是选择熟悉的`nano`啦！)
+      另外，录制动图时，脚本中没有加入重启 `Xray` 的命令，是因为 `Xray` 计划支持【证书热更新】功能，即 `Xray` 会自动识别证书更新并重载证书、无需手动重启。待功能加入后，我将适当修改 `config.json`
+      开启此设置，并删除脚本中的重启命令。
+      :::
 
-       ```
-       $ crontab -e
-       ```
+   4. 给这个文件增加【可执行】权限
 
-    6. 把下面的内容增加在文件最后，保存退出即可。
+      ```
+      $ chmod +x ~/xray_cert/xray-cert-renew.sh
+      ```
 
-       ```
-       # 1:00am, 1st day each month, run `xray-cert-renew.sh`
-       0 1 1 * *   bash /home/vpsadmin/xray_cert/xray-cert-renew.sh
-       ```
+   5. 运行 `crontab -e`，添加一个自动任务【每月自动运行一次`xray-cert-renew.sh`】 (注意不要加`sudo`，因为我们增加的是`vpsadmin`
+      账户的自动任务。初次运行时会让你选择编辑器，当然是选择熟悉的`nano`啦！)
 
-    7. 完整流程演示如下：
+      ```
+      $ crontab -e
+      ```
 
-       ![每月自动给Xray安装证书](./ch07-img03-crontab-cert-renew.gif)
+   6. 把下面的内容增加在文件最后，保存退出即可。
+
+      ```
+      # 1:00am, 1st day each month, run `xray-cert-renew.sh`
+      0 1 1 * *   bash /home/vpsadmin/xray_cert/xray-cert-renew.sh
+      ```
+
+   7. 完整流程演示如下：
+
+      ![每月自动给Xray安装证书](./ch07-img03-crontab-cert-renew.gif)
 
 ## 7.4 配置 Xray
 
 首先，各种配置都可以参考[官方 VLESS 配置示例](https://github.com/XTLS/Xray-examples)。本文会基于官方示例，配置一个最精简的方式：【单 `VLESS` 协议入站 + `80`
 端口回落】，满足大多数场景的最大速度及必要安全。
 
-1. 生成一个合法的 `UUID` 并保存备用（`UUID`可以简单粗暴的理解为像指纹一样几乎不会重复的 ID）
+1.  生成一个合法的 `UUID` 并保存备用（`UUID`可以简单粗暴的理解为像指纹一样几乎不会重复的 ID）
 
-   ```
-   $ xray uuid
-   ```
+    ```
+    $ xray uuid
+    ```
 
-2. 建立日志文件及文件夹备用
+2.  建立日志文件及文件夹备用
 
     1. 小小白白 Linux 基础命令： | 编号 | 命令名称 | 命令说明 | |:--:|:--:|:--:| | `cmd-16` | `touch` | 建立空白文件 |
 
@@ -176,7 +176,6 @@
        ```
 
        ::: warning 注意
-
        这个位置不是`Xray`标准的日志文件位置，放在这里是避免权限问题对新人的操作带来困扰。当你熟悉之后，建议回归默认位置： `/var/log/xray/access.log`
        和 `/var/log/xray/error.log` 。
        :::
@@ -186,127 +185,117 @@
        $ chmod a+w ~/xray_log/*.log
        ```
 
-3. 使用`nano`创建`Xray`的配置文件
+3.  使用`nano`创建`Xray`的配置文件
 
-   ```
-   $ sudo nano /usr/local/etc/xray/config.json
-   ```
+    ```
+    $ sudo nano /usr/local/etc/xray/config.json
+    ```
 
-4. 将下面的文件全部复制进去，并将之前生成的`UUID`填入第 61 行 `"id": "",` 之中。（填好之后的样子是 `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
-   ），本文的这个配置文件中增加了我的各种啰嗦注解，以方便你理解每一个配置模块的功能是什么。
+4.  将下面的文件全部复制进去，并将之前生成的`UUID`填入第 61 行 `"id": "",` 之中。（填好之后的样子是 `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
+    ），本文的这个配置文件中增加了我的各种啰嗦注解，以方便你理解每一个配置模块的功能是什么。
 
-   ```
-   // REFERENCE:
-   // https://github.com/XTLS/Xray-examples
-   // https://xtls.github.io/config/
+    ```json
+    // REFERENCE:
+    // https://github.com/XTLS/Xray-examples
+    // https://xtls.github.io/config/
+    // 常用的 config 文件，不论服务器端还是客户端，都有 5 个部分。外加小小白解读：
+    // ┌─ 1*log 日志设置 - 日志写什么，写哪里（出错时有据可查）
+    // ├─ 2_dns DNS-设置 - DNS 怎么查（防 DNS 污染、防偷窥、避免国内外站匹配到国外服务器等）
+    // ├─ 3_routing 分流设置 - 流量怎么分类处理（是否过滤广告、是否国内外分流）
+    // ├─ 4_inbounds 入站设置 - 什么流量可以流入 Xray
+    // └─ 5_outbounds 出站设置 - 流出 Xray 的流量往哪里去
+    {
+      // 1\_日志设置
+      "log": {
+        "loglevel": "warning", // 内容从少到多: "none", "error", "warning", "info", "debug"
+        "access": "/home/vpsadmin/xray_log/access.log", // 访问记录
+        "error": "/home/vpsadmin/xray_log/error.log" // 错误记录
+      },
+      // 2_DNS 设置
+      "dns": {
+        "servers": [
+          "https+local://1.1.1.1/dns-query", // 首选 1.1.1.1 的 DoH 查询，牺牲速度但可防止 ISP 偷窥
+          "localhost"
+        ]
+      },
+      // 3*分流设置
+      "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [
+          // 3.1 防止服务器本地流转问题：如内网被攻击或滥用、错误的本地回环等
+          {
+            "type": "field",
+            "ip": [
+              "geoip:private" // 分流条件：geoip 文件内，名为"private"的规则（本地）
+            ],
+            "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
+          },
+          // 3.2 屏蔽广告
+          {
+            "type": "field",
+            "domain": [
+              "geosite:category-ads-all" // 分流条件：geosite 文件内，名为"category-ads-all"的规则（各种广告域名）
+            ],
+            "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
+          }
+        ]
+      },
+      // 4*入站设置
+      // 4.1 这里只写了一个最简单的 vless+xtls 的入站，因为这是 Xray 最强大的模式。如有其他需要，请根据模版自行添加。
+      "inbounds": [
+        {
+          "port": 443,
+          "protocol": "vless",
+          "settings": {
+            "clients": [
+              {
+                "id": "", // 填写你的 UUID
+                "flow": "xtls-rprx-direct",
+                "level": 0,
+                "email": "vpsadmin@yourdomain.com"
+              }
+            ],
+            "decryption": "none",
+            "fallbacks": [
+              {
+                "dest": 80 // 默认回落到防探测的代理
+              }
+            ]
+          },
+          "streamSettings": {
+            "network": "tcp",
+            "security": "xtls",
+            "xtlsSettings": {
+              "allowInsecure": false, // 正常使用应确保关闭
+              "minVersion": "1.2", // TLS 最低版本设置
+              "alpn": ["http/1.1"],
+              "certificates": [
+                {
+                  "certificateFile": "/home/vpsadmin/xray_cert/xray.crt",
+                  "keyFile": "/home/vpsadmin/xray_cert/xray.key"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      // 5*出站设置
+      "outbounds": [
+        // 5.1 第一个出站是默认规则，freedom 就是对外直连（vps 已经是外网，所以直连）
+        {
+          "tag": "direct",
+          "protocol": "freedom"
+        },
+        // 5.2 屏蔽规则，blackhole 协议就是把流量导入到黑洞里（屏蔽）
+        {
+          "tag": "block",
+          "protocol": "blackhole"
+        }
+      ]
+    }
+    ```
 
-   // 常用的config文件，不论服务器端还是客户端，都有5个部分。外加小小白解读：
-   // ┌─ 1_log          日志设置 - 日志写什么，写哪里（出错时有据可查）
-   // ├─ 2_dns          DNS-设置 - DNS怎么查（防DNS污染、防偷窥、避免国内外站匹配到国外服务器等）
-   // ├─ 3_routing      分流设置 - 流量怎么分类处理（是否过滤广告、是否国内外分流）
-   // ├─ 4_inbounds     入站设置 - 什么流量可以流入Xray
-   // └─ 5_outbounds    出站设置 - 流出Xray的流量往哪里去
-
-
-   {
-       // 1_日志设置
-       "log": {
-           "loglevel": "warning",    // 内容从少到多: "none", "error", "warning", "info", "debug"
-           "access": "/home/vpsadmin/xray_log/access.log",    // 访问记录
-           "error": "/home/vpsadmin/xray_log/error.log"    // 错误记录
-       },
-
-       // 2_DNS设置
-       "dns": {
-           "servers": [
-               "https+local://1.1.1.1/dns-query",    // 首选1.1.1.1的DoH查询，牺牲速度但可防止ISP偷窥
-               "localhost"
-           ]
-       },
-
-       // 3_分流设置
-       "routing": {
-           "domainStrategy": "AsIs",
-           "rules": [
-               // 3.1 防止服务器本地流转问题：如内网被攻击或滥用、错误的本地回环等
-               {
-                   "type": "field",
-                   "ip": [
-                       "geoip:private"    // 分流条件：geoip文件内，名为"private"的规则（本地）
-                   ],
-                   "outboundTag": "block"    // 分流策略：交给出站"block"处理（黑洞屏蔽）
-               },
-               // 3.2 屏蔽广告
-               {
-                   "type": "field",
-                   "domain": [
-                       "geosite:category-ads-all"    // 分流条件：geosite文件内，名为"category-ads-all"的规则（各种广告域名）
-                   ],
-                   "outboundTag": "block"    // 分流策略：交给出站"block"处理（黑洞屏蔽）
-               }
-           ]
-       },
-
-       // 4_入站设置
-       // 4.1 这里只写了一个最简单的vless+xtls的入站，因为这是Xray最强大的模式。如有其他需要，请根据模版自行添加。
-       "inbounds": [
-           {
-               "port": 443,
-               "protocol": "vless",
-               "settings": {
-                   "clients": [
-                       {
-                           "id": "", // 填写你的 UUID
-                           "flow": "xtls-rprx-direct",
-                           "level": 0,
-                           "email": "vpsadmin@yourdomain.com"
-                       }
-                   ],
-                   "decryption": "none",
-                   "fallbacks": [
-                       {
-                           "dest": 80 // 默认回落到防探测的代理
-                       }
-                   ]
-               },
-               "streamSettings": {
-                   "network": "tcp",
-                   "security": "xtls",
-                   "xtlsSettings": {
-                       "allowInsecure": false,    // 正常使用应确保关闭
-                       "minVersion": "1.2",       // TLS最低版本设置
-                       "alpn": [
-                           "http/1.1"
-                       ],
-                       "certificates": [
-                           {
-                               "certificateFile": "/home/vpsadmin/xray_cert/xray.crt",
-                               "keyFile": "/home/vpsadmin/xray_cert/xray.key"
-                           }
-                       ]
-                   }
-               }
-           }
-       ],
-
-       // 5_出站设置
-       "outbounds": [
-           // 5.1 第一个出站是默认规则，freedom就是对外直连（vps已经是外网，所以直连）
-           {
-               "tag": "direct",
-               "protocol": "freedom"
-           },
-           // 5.2 屏蔽规则，blackhole协议就是把流量导入到黑洞里（屏蔽）
-           {
-               "tag": "block",
-               "protocol": "blackhole"
-           }
-       ]
-   }
-   ```
-
-5. 完整流程演示如下：
-
+5) 完整流程演示如下：
    ![创建日志文件及`config.json`配置文件](./ch07-img04-xray-log-and-config.gif)
 
 ## 7.5 启动 Xray 服务！！（并查看服务状态）
@@ -315,21 +304,25 @@
 
 1. 输入下面的命令，享受启动`Xray`的历史性时刻吧！！！
 
-   ```
-   $ sudo systemctl start xray
-   ```
+```
+
+\$ sudo systemctl start xray
+
+```
 
 2. 仅仅`start`我们并不能确定是否成功的开启了 Xray 的服务，要确定它的状态，就要用到下面的命令。
 
-   ```
-   $ sudo systemctl status xray
-   ```
+```
 
-   看到那个绿色的、令人愉悦的 `active (running)` 了吗？它就是说 `Xray` 已经在正确的运行了
+\$ sudo systemctl status xray
+
+```
+
+看到那个绿色的、令人愉悦的 `active (running)` 了吗？它就是说 `Xray` 已经在正确的运行了
 
 3. 完整流程演示如下：
 
-   ![启动并查看Xray运行状态](./ch07-img05-xray-start-and-status.gif)
+![启动并查看Xray运行状态](./ch07-img05-xray-start-and-status.gif)
 
 ## 7.6 回顾 `systemd` 进行基本的服务管理
 
@@ -338,227 +331,251 @@
 
 1. 若你需要暂时关闭 `Xray` 的服务，那就用`stop`命令
 
-   ```
-   $ sudo systemctl stop xray
-   ```
+```
+
+\$ sudo systemctl stop xray
+
+```
 
 2. 若你需要重启`Xray`的服务，那就用`restart`命令
 
-   ```
-   $ sudo systemctl restart xray
-   ```
+```
+
+\$ sudo systemctl restart xray
+
+```
 
 3. 若你需要禁用`Xray`的服务（电脑重启后禁止 Xray 自动运行），那就用`disable`命令
 
-   ```
-   $ sudo systemctl disable xray
-   ```
+```
+
+\$ sudo systemctl disable xray
+
+```
 
 4. 若你需要启用`Xray`的服务（电脑重启后确保 Xray 自动运行），那就用`enable`命令
-   ```
-   $ sudo systemctl enable xray
-   ```
+
+```
+
+\$ sudo systemctl enable xray
+
+```
 
 ## 7.7 服务器优化之一：开启 BBR
 
 1. 传说中的`BBR`
 
-   我相信，你在搜索各种科学上网技术的时候，肯定不止一次的听过`bbr`这个东西，在各种博客添油加醋之下，让人觉得它神乎其神。更有`bbrplus`, `bbr2`, `魔改bbr` 等一大堆衍生品。仿佛神油一般，用了就能野鸡线路变专线。
+我相信，你在搜索各种科学上网技术的时候，肯定不止一次的听过`bbr`这个东西，在各种博客添油加醋之下，让人觉得它神乎其神。更有`bbrplus`, `bbr2`, `魔改bbr` 等一大堆衍生品。仿佛神油一般，用了就能野鸡线路变专线。
 
-   那么，这东西究竟是什么？它有没有用？又该用哪一个版本呢？
+那么，这东西究竟是什么？它有没有用？又该用哪一个版本呢？
 
 2. 实际的`BBR`
 
-   **BBR** = **B**ottleneck **B**andwidth and **R**ound-trip propagation time，是一种 TCP 的**拥塞控制算法**。简单粗暴的理解就是**数据流量的交通管理**
-   ：当公路不再塞车的时候，每辆车自然就能保持较快的车速了。
+**BBR** = **B**ottleneck **B**andwidth and **R**ound-trip propagation time，是一种 TCP 的**拥塞控制算法**。简单粗暴的理解就是**数据流量的交通管理**
+：当公路不再塞车的时候，每辆车自然就能保持较快的车速了。
 
-   那么它有没有用呢？一般而言，`有BBR` 和 `没有BBR` 会有可以感知的差别（速度、稳定性、延迟方面都会有一些改善），所以 **【非常建议开启 `BBR`】**。
+那么它有没有用呢？一般而言，`有BBR` 和 `没有BBR` 会有可以感知的差别（速度、稳定性、延迟方面都会有一些改善），所以 **【非常建议开启 `BBR`】**。
 
-   但开启之后，`BBR` 在 `4.x` 和 `5.x` 之间的差异往往比较微妙、见仁见智，造成体验差别的决定性因素仍然是线路质量。所以 **【不必纠结版本、不必盲目追新、跟随你的发行版更新内核即可】**
+但开启之后，`BBR` 在 `4.x` 和 `5.x` 之间的差异往往比较微妙、见仁见智，造成体验差别的决定性因素仍然是线路质量。所以 **【不必纠结版本、不必盲目追新、跟随你的发行版更新内核即可】**
 
 3. `bbrplus`, `bbr2`, `魔改bbr` 和其他各种听起来就酷炫的版本是不是更好？
 
-   一句话：**不是！不要用这些！这些都为了吸引眼球乱起的名字！**
+一句话：**不是！不要用这些！这些都为了吸引眼球乱起的名字！**
 
-   `BBR` 的更新和发布，都是跟随 Linux 的内核（`Kernel`）进行的。换言之，只要你用的是比较新的内核，就自然会使用到新版`BBR`。
+`BBR` 的更新和发布，都是跟随 Linux 的内核（`Kernel`）进行的。换言之，只要你用的是比较新的内核，就自然会使用到新版`BBR`。
 
-   而这些名字看起来很酷炫的东西，说白了就是仍未正式发布的、尚在测试阶段的内核及其对应的`BBR`版本。这些脚本也仅仅就是通过下载预览版的内核（甚至第三方魔改内核）来率先开启而已。
+而这些名字看起来很酷炫的东西，说白了就是仍未正式发布的、尚在测试阶段的内核及其对应的`BBR`版本。这些脚本也仅仅就是通过下载预览版的内核（甚至第三方魔改内核）来率先开启而已。
 
-   内核的稳定是一台服务器稳定运行的基石。**【BBR 测试版带来的细微性能差异绝对不值得更换不稳定的内核。】** 请选择你所在的 Linux 发行版所支持的最新内核，这样可以最大限度的保持服务器的长期稳定和兼容。
+内核的稳定是一台服务器稳定运行的基石。**【BBR 测试版带来的细微性能差异绝对不值得更换不稳定的内核。】** 请选择你所在的 Linux 发行版所支持的最新内核，这样可以最大限度的保持服务器的长期稳定和兼容。
 
-   ::: warning 注意 所谓魔改`bbr`的【领先】是有非常强的时效性的。比如很多 `bbrplus` 脚本，因为几年来都没有更新，到现在还会把你的内核换成 `4.19`，要知道现在稳定如 Debian 已经是 `5.9`
-   的时代了，那么这个脚本放在2018年1月也许领先了一点，到2018年10月4.19正发布时就已经失去了意义，放在现在甚至可以说是完完全全的【降级】和【劣化】
-   :::
+::: warning 注意
+所谓魔改`bbr`的【领先】是有非常强的时效性的。比如很多 `bbrplus` 脚本，因为几年来都没有更新，到现在还会把你的内核换成 `4.19`，要知道现在稳定如 Debian 已经是 `5.9`
+的时代了，那么这个脚本放在 2018 年 1 月也许领先了一点，到 2018 年 10 月 4.19 正发布时就已经失去了意义，放在现在甚至可以说是完完全全的【降级】和【劣化】
+:::
 
 4. `fq`, `fq_codel`, `fq_pie`, `cake`和其他算法哪个好？
 
-   一句话：**看不懂的话，请保持`fq`，足够、且不会劣化你的线路**
+一句话：**看不懂的话，请保持`fq`，足够、且不会劣化你的线路**
 
 5. 锐速、Finalspeed、LotServer 和其他“加速工具”
 
-   一句话：**不要用这些！把他们丢进历史的垃圾桶吧！**
+一句话：**不要用这些！把他们丢进历史的垃圾桶吧！**
 
-   它能解决的也只有丢包率的问题。不太准确的比喻，就是本来你用一辆车送你的货，有时候车半路就坏了（丢包），用了这些以后，你直接派出 3
-   份一样的货，让三辆车同时送，只要有一辆没坏就能送到。马路上都是你的车，自然就能把别人挤下去。但可想而知，你挤别人的时候，别人也会来挤你，而整个机房的出口道路一共就那么宽，最终势必就变成集体大堵车了。
+它能解决的也只有丢包率的问题。不太准确的比喻，就是本来你用一辆车送你的货，有时候车半路就坏了（丢包），用了这些以后，你直接派出 3
+份一样的货，让三辆车同时送，只要有一辆没坏就能送到。马路上都是你的车，自然就能把别人挤下去。但可想而知，你挤别人的时候，别人也会来挤你，而整个机房的出口道路一共就那么宽，最终势必就变成集体大堵车了。
 
-   ::: warning 说明 它们的原理不是算法优化、不是提速、大多数是简单粗暴的**多倍发包**
-   。对于【丢包率非常高】的差线路可能有一点作用，但【对丢包率低的好线路没有任何优化作用，反而会成倍的消耗你的流量】，进而造成服务器和你的邻居不必要的压力。
+::: warning 说明
+它们的原理不是算法优化、不是提速、大多数是简单粗暴的**多倍发包**。对于【丢包率非常高】的差线路可能有一点作用，但【对丢包率低的好线路没有任何优化作用，反而会成倍的消耗你的流量】，进而造成服务器和你的邻居不必要的压力。
 
-   如果你的线路真的丢包率奇高，真正靠谱的解决方案是【换线路】。
-   :::
+如果你的线路真的丢包率奇高，真正靠谱的解决方案是【换线路】。
+:::
 
 6. 啰嗦了这么多，就是因为围绕 `BBR` 忽悠小白的错误概念和坑人脚本实在是太多了。我希望你们现在对 `BBR` 有了相对清晰的理解。接下来，我们就动手安装最新的 Debian 内核并开启`BBR` 吧！（真的很简单）
 
-    1. 给 Debian 10 添加官方 `backports` 源，获取更新的软件库
+1. 给 Debian 10 添加官方 `backports` 源，获取更新的软件库
 
-       ```
-       $ sudo nano /etc/apt/sources.list
-       ```
+```
 
-       ::: warning 说明
+\$ sudo nano /etc/apt/sources.list
 
-       本文以 Debian 10 为例，所以使用 `/etc/apt/sources.list` 仍无问题，但如果你并不是根据本文从头开始，或者使用了其他 Linux
-       发行版，那么建议你建立 `/etc/apt/sources.list.d/` 文件夹，并在这个文件夹内建立自己的配置文件，形如 `/etc/apt/sources.list.d/vpsadmin.list`
-       ，以此保证兼容性，也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
-       :::
+```
 
-    2) 然后把下面这一条加在最后，并保存退出。
+::: warning 说明
+本文以 Debian 10 为例，所以使用 `/etc/apt/sources.list` 仍无问题，但如果你并不是根据本文从头开始，或者使用了其他 Linux
+发行版，那么建议你建立 `/etc/apt/sources.list.d/` 文件夹，并在这个文件夹内建立自己的配置文件，形如 `/etc/apt/sources.list.d/vpsadmin.list`
+，以此保证兼容性，也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
+:::
 
-       ```
-       deb http://deb.debian.org/debian buster-backports main
-       ```
+2.  然后把下面这一条加在最后，并保存退出。
 
-    3) 刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
+```
+deb http://deb.debian.org/debian buster-backports main
+```
 
-       ```
-       $ sudo apt update && sudo apt -t buster-backports install linux-image-amd64
-       ```
+3.  刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
 
-       ::: warning 注意
+```
+$ sudo apt update && sudo apt -t buster-backports install linux-image-amd64
+```
 
-       如果你的 VPS 支持，可以尝试【云服务器专用内核】`linux-image-cloud-amd64`，优点就是精简、资源占用低，缺点嘛是有同学反馈不支持的系统强行安装会导致无法开机（Kernel 无法识别）。
+::: warning 注意
 
-       为了避免无法识别的悲剧，请确保：
+如果你的 VPS 支持，可以尝试【云服务器专用内核】`linux-image-cloud-amd64`，优点就是精简、资源占用低，缺点嘛是有同学反馈不支持的系统强行安装会导致无法开机（Kernel 无法识别）。
 
-        - 尝试前做一个系统快照，或者
-        - 你有 `vnc` 可以救场（并且你知道怎么用）
-          :::
+为了避免无法识别的悲剧，请确保：
 
-    4) 修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
+- 尝试前做一个系统快照，或者
+- 你有 `vnc` 可以救场（并且你知道怎么用）
 
-       ```
-       $ sudo nano /etc/sysctl.conf
-       ```
+:::
 
-       ::: warning 说明
+4.  修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
 
-       本文以 Debian 10 为例，所以使用 `/etc/sysctl.conf` 仍无问题，但如果你并不是跟着本文从头开始，或者使用了其他 Linux 发行版，那么建议你建立 `/etc/sysctl.d/`
-       文件夹，并在这个文件夹内建立自己的配置文件，形如 `/etc/sysctl.d/vpsadmin.conf`，以此保证兼容性，因为部分发行版在 `systemd`
-       207 版本之后便不再从 `/etc/sysctl.conf` 读取参数。使用自定义配置文件也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
-       :::
+```
+$ sudo nano /etc/sysctl.conf
+```
 
-    5. 把下面的内容添加进去
-        ```
-        net.core.default_qdisc=fq
-        net.ipv4.tcp_congestion_control=bbr
-        ```
+::: warning 说明
+本文以 Debian 10 为例，所以使用 `/etc/sysctl.conf` 仍无问题，但如果你并不是跟着本文从头开始，或者使用了其他 Linux 发行版，那么建议你建立 `/etc/sysctl.d/`
+文件夹，并在这个文件夹内建立自己的配置文件，形如 `/etc/sysctl.d/vpsadmin.conf`，以此保证兼容性，因为部分发行版在 `systemd`
+207 版本之后便不再从 `/etc/sysctl.conf` 读取参数。使用自定义配置文件也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
+:::
 
-    6. 重启VPS、使内核更新和`BBR`设置都生效
-        ```
-        $ sudo reboot
-        ```
+5.  把下面的内容添加进去
 
-    7. 完整流程演示如下：
+```
+net.core.default_qdisc=fq
+net.ipv4.tcp_congestion_control=bbr
+```
 
-       ::: tip 啰嗦君
+6.  重启 VPS、使内核更新和`BBR`设置都生效
 
-       因为我做展示的VPS支持云服务器专用内核，所以动图中我用了 `linux-image-cloud-amd64`
-       。如果你不确定你的VPS是否支持，那请务必按照第3步的命令，使用常规内核 `linux-image-amd64`。
-       :::
+```
+$ sudo reboot
+```
 
-       ![更新Debian内核并开启`BBR`](./ch07-img06-bbr-proper.gif)
+7.  完整流程演示如下：
 
-    8. 确认`BBR`开启
+::: tip 啰嗦君
+因为我做展示的 VPS 支持云服务器专用内核，所以动图中我用了 `linux-image-cloud-amd64`
+。如果你不确定你的 VPS 是否支持，那请务必按照第 3 步的命令，使用常规内核 `linux-image-amd64`。
+:::
 
-       如果你想确认 `BBR` 是否正确开启，可以使用下面的命令：
+![更新Debian内核并开启`BBR`](./ch07-img06-bbr-proper.gif)
 
-        ```
-        $ lsmod | grep bbr
-        ```
+8.  确认`BBR`开启
 
-       此时应该返回这样的结果：
+如果你想确认 `BBR` 是否正确开启，可以使用下面的命令：
 
-        ```
-        tcp_bbr
-        ```
+```
+$ lsmod | grep bbr
+```
 
-       如果你想确认 `fq` 算法是否正确开启，可以使用下面的命令：
+此时应该返回这样的结果：
 
-        ```
-        $ lsmod | grep fq
-        ```
+```
+tcp_bbr
+```
 
-       此时应该返回这样的结果：
+如果你想确认 `fq` 算法是否正确开启，可以使用下面的命令：
 
-        ```
-        sch_fq
-        ```
+```
+$ lsmod | grep fq
+```
+
+此时应该返回这样的结果：
+
+```
+sch_fq
+```
 
 ## 7.8 服务器优化之二：开启 HTTP 自动跳转 HTTPS
 
 1. 之前我们已经搭建了 `80` 端口的 `http` 网页，并以此申请了 TLS 证书。
 
-   但如果你尝试过用浏览器访问我们的这个界面，就会发现 `http` 访问并不会像大多数网站一样自动升级为 `https` 访问。换言之，我们现在的设置下，`http(80)` 和 `https(443)`
-   之间完全是独立的。如果要解决这个问题，就需要做一些修改。
+但如果你尝试过用浏览器访问我们的这个界面，就会发现 `http` 访问并不会像大多数网站一样自动升级为 `https` 访问。换言之，我们现在的设置下，`http(80)` 和 `https(443)`
+之间完全是独立的。如果要解决这个问题，就需要做一些修改。
 
 2. 编辑 Nginx 的配置文件
 
-   ```
-   $ sudo nano /etc/nginx/nginx.conf
-   ```
+```
+
+\$ sudo nano /etc/nginx/nginx.conf
+
+```
 
 3. 在我们设置过的 80 端口 Server 中加入下面的语句，并保存退出（可同时删除`root`和`index`两行）
 
-   ```
-   return 301 https://$http_host$request_uri;
-   ```
+```
+
+return 301 https://$http_host$request_uri;
+
+```
 
 4. 在与 `80` 端口同级的位置增加一个本地端口监听来提供网页展示。本文以 `8080` 端口做演示。（可以是任意端口）
 
-   ```
-   server {
-           listen 127.0.0.1:8080;
-           root /home/vpsadmin/www/webpage;
-           index index.html;
-           add_header Strict-Transport-Security "max-age=63072000" always;
-   }
-   ```
+```
+
+server {
+listen 127.0.0.1:8080;
+root /home/vpsadmin/www/webpage;
+index index.html;
+add_header Strict-Transport-Security "max-age=63072000" always;
+}
+
+```
 
 5. 重启 Nginx 服务
 
-   ```
-   $ sudo systemctl restart nginx
-   ```
+```
+
+\$ sudo systemctl restart nginx
+
+```
 
 6. 修改 Xray 的回落设置，将回落从 `80` 端口改为 `8080` 端口。（找到 `"dest": 80`, 并改成 `"dest": 8080`）
 
-   ```
-   $ sudo nano /usr/local/etc/xray/config.json
-   ```
+```
+
+\$ sudo nano /usr/local/etc/xray/config.json
+
+```
 
 7. 重启 `Xray` 服务，即完成了设置
 
-   ```
-   $ sudo systemctl restart xray
-   ```
+```
+
+\$ sudo systemctl restart xray
+
+```
 
 8. 完整流程演示如下：
 
-   ![http自动跳转https](./ch07-img07-http-to-https.gif)
+![http自动跳转https](./ch07-img07-http-to-https.gif)
 
 9. 当你输入 `http://a-name.yourdomain.com`的时候，它应该已经会自动跳转 https 了
 
-   ![http自动跳转https生效](./ch07-img08-http-to-https-check.png)
+![http自动跳转https生效](./ch07-img08-http-to-https-check.png)
 
 ## 7.9 服务器优化之三：更丰富的回落
 
@@ -574,19 +591,19 @@
 
 1. 初版中`Xray`配置文件`config.json`文件夹位置错误。若你已经根据之前的位置进行了操作，`Xray`会无法正确启动。故勘误说明于此，请自查，造成不便十分抱歉！
 
-    - 正确位置：`/usr/local/etc/xray/config.json`
-    - 错误位置：`/usr/local/etc/config.json`
+- 正确位置：`/usr/local/etc/xray/config.json`
+- 错误位置：`/usr/local/etc/config.json`
 
-   受影响章节：
+受影响章节：
 
-    - 7.4 配置`Xray` - 3. 使用`nano`创建`Xray`的配置文件
-    - 7.8 服务器优化之二 - 6. 修改`Xray`的回落设置
+- 7.4 配置`Xray` - 3. 使用`nano`创建`Xray`的配置文件
+- 7.8 服务器优化之二 - 6. 修改`Xray`的回落设置
 
-2) 初版中修改`Nginx`配置文件`nginx.conf`时内容错误（网页文件夹位置错误），若你已经根据之前的位置进行了操作，`Nginx`会无法找到正确的网站。请自查，造成不便十分抱歉！
+2. 初版中修改`Nginx`配置文件`nginx.conf`时内容错误（网页文件夹位置错误），若你已经根据之前的位置进行了操作，`Nginx`会无法找到正确的网站。请自查，造成不便十分抱歉！
 
-    - 正确文件夹位置：`root /home/vpsadmin/www/webpage;`
-    - 错误文件夹位置：`root /var/www/website/html`
+- 正确文件夹位置：`root /home/vpsadmin/www/webpage;`
+- 错误文件夹位置：`root /var/www/website/html`
 
-   受影响章节：
+受影响章节：
 
-    - 7.8 服务器优化之二 - 4. 在与 `80` 端口同级的位置增加一个本地端口监听来提供网页展示
+- 7.8 服务器优化之二 - 4. 在与 `80` 端口同级的位置增加一个本地端口监听来提供网页展示
