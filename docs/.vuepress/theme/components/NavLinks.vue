@@ -2,9 +2,11 @@
   <div>
     <ParentNavLinks />
     <nav class="nav-links">
-      <a v-if="enable" class="nav-link" @click.prevent="toggleTheme">{{
-        text
-      }}</a>
+      <div class="nav-item">
+        <a v-if="enable" class="nav-link" @click.prevent="toggleTheme">{{
+          text
+        }}</a>
+      </div>
     </nav>
   </div>
 </template>
@@ -23,7 +25,6 @@ export default Vue.extend({
     };
   },
   mounted() {
-    console.log("m");
     this.enable = this.$themeConfig.themeChange;
     this.text = this.$themeConfig.themeChangeText;
   },
