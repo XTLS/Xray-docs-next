@@ -15,23 +15,23 @@ import Vue from "vue";
 export default Vue.extend({
   props: {
     title: {
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {
       tabID: "",
-      labelID: ""
+      labelID: "",
     };
   },
   beforeMount() {
-    let tag =
-      "tab-" +
-      Math.random()
-        .toString(36)
-        .substring(2);
+    let tag = "tab-" + Math.random().toString(36).substring(2);
     this.tabID = tag;
     this.labelID = tag + "-" + "label";
-  }
+
+    // Since Vue 3.0, we have no access to $children.
+    // So we need another approach to register our child components.
+    this.$parent.$data.children.push(this);
+  },
 });
 </script>

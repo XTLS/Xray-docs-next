@@ -29,32 +29,32 @@ import Vue from "vue";
 export default Vue.extend({
   props: {
     title: {
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {
-      children: []
+      children: [],
     };
   },
   created() {
-    this.children = this.$children;
+    this.children = [];
   },
   mounted() {
-    this.$nextTick(function() {
+    this.$nextTick(function () {
       const bootstrap = require("bootstrap");
       let triggerEl = document.getElementById(this.children["0"].$data.labelID);
       new bootstrap.Tab(triggerEl).show();
     });
   },
   computed: {
-    tag: function() {
+    tag: function () {
       return "tabs-" + this.title;
     },
-    contentTag: function() {
+    contentTag: function () {
       return "tabs-" + this.title + "-content";
-    }
-  }
+    },
+  },
 });
 </script>
 
