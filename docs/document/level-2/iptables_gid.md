@@ -1,3 +1,7 @@
+---
+title: GID 透明代理
+---
+
 # 透明代理通过 gid 规避 Xray 流量
 
 在现有的 iptables 透明代理白话文(**[新 V2Ray 白话文指南-透明代理](https://guide.v2fly.org/app/transparent_proxy.html)** 、 **[新 V2Ray 白话文指南-透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html)** 、 **[透明代理（TProxy）配置教程](./tproxy)**)教程中，对 Xray 流量的规避处理是打 mark 实现的。即对 Xray 出站流量打 mark，通过设置 iptables 规则对对应 mark 的流量直连，来规避 Xray 流量，防止回环。

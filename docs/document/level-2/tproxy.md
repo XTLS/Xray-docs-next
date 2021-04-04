@@ -1,3 +1,7 @@
+---
+title: TProxy 透明代理
+---
+
 # 透明代理（TProxy）配置教程
 
 本配置基于[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)，加入了 Xray 的新特性，使用 VLESS + XTLS Splice 方案，并将旧教程中默认出站代理的分流方式改为默认出站直连，使用者请按照实际情况进行修改。
