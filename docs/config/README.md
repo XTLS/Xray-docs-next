@@ -74,4 +74,4 @@ Xray 的配置文件为 json 格式, 客户端和服务端的配置格式没有�
 
 > fakedns: [FakeDnsObject](./fakedns.md)
 
-FakeDNS. 可配合透明代理使用，以获取实际域名。
+FakeDNS 配置。可配合透明代理使用，以获取实际域名。
