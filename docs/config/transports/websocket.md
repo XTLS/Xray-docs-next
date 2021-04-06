@@ -83,5 +83,3 @@ WebSocket 所使用的 HTTP 协议路径，默认值为 `"/"`。
 - 设置环境变量指定要监听的地址端口，比如 `XRAY_BROWSER_DIALER = 127.0.0.1:8080`。
 - 先运行 Xray-core，再用任一浏览器访问上面指定的地址端口，还可以 `F12` 看 `Console` 和 `Network`。
 - 浏览器会限制 WebSocket 连接数，所以建议开启 `Mux.Cool`。
-
-

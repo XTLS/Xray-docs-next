@@ -113,9 +113,8 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
 :::
 
-<!-- prettier-ignore-start -->
+<!-- prettier-ignore -->
 ::: tip 关于 xtls-rprx-*-udp443 流控模式
-<!-- prettier-ignore-end -->
 
 启用了 Xray-core 的 XTLS 时，通往 UDP 443 端口的流量默认会被拦截（一般情况下为 QUIC），这样应用就不会使用 QUIC 而会使用 TLS，XTLS 才会真正生效。实际上，QUIC 本身也不适合被代理，因为 QUIC 自带了 TCP 的功能，它作为 UDP 流量在通过 VLESS 协议传输时，底层协议为 TCP，就相当于两层 TCP 了。
 

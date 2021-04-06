@@ -114,13 +114,16 @@
 outbound:
 
 ```json
-({
+{
   "tag": "out",
   "protocol": "freedom",
   "settings": {
     "redirect": "127.0.0.1:80" // 将所有流量转发到网页服务器
   }
-},
+}
+```
+
+```json
 {
   "protocol": "vmess",
   "settings": {
@@ -137,32 +140,26 @@ outbound:
     ]
   },
   "tag": "interconn"
-})
+}
 ```
 
 路由配置:
 
 ```json
-"routing": {
-    "rules": [
-        {
-            "type": "field",
-            "inboundTag": [
-                "bridge"
-            ],
-            "domain": [
-                "full:test.xray.com"
-            ],
-            "outboundTag": "interconn"
-        },
-        {
-            "type": "field",
-            "inboundTag": [
-                "bridge"
-            ],
-            "outboundTag": "out"
-        }
-    ]
+{
+  "rules": [
+    {
+      "type": "field",
+      "inboundTag": ["bridge"],
+      "domain": ["full:test.xray.com"],
+      "outboundTag": "interconn"
+    },
+    {
+      "type": "field",
+      "inboundTag": ["bridge"],
+      "outboundTag": "out"
+    }
+  ]
 }
 ```
 
@@ -186,18 +183,21 @@ outbound:
 inbound:
 
 ```json
-({
+{
   "tag": "external",
-  "port": 80, // 开放 80 端口，用于接收外部的 HTTP 访问
+  "port": 80,
   "protocol": "dokodemo-door",
   "settings": {
     "address": "127.0.0.1",
     "port": 80,
     "network": "tcp"
   }
-},
+}
+```
+
+```json
 {
-  "port": 1024, // 用于接收 bridge 的连接
+  "port": 1024,
   "tag": "interconn",
   "protocol": "vmess",
   "settings": {
@@ -207,28 +207,24 @@ inbound:
       }
     ]
   }
-})
+}
 ```
 
 路由配置:
 
 ```json
-"routing": {
-    "rules": [
-        {
-            "type": "field",
-            "inboundTag": [
-                "external"
-            ],
-            "outboundTag": "portal"
-        },
-        {
-            "type": "field",
-            "inboundTag": [
-                "interconn"
-            ],
-            "outboundTag": "portal"
-        }
-    ]
+{
+  "rules": [
+    {
+      "type": "field",
+      "inboundTag": ["external"],
+      "outboundTag": "portal"
+    },
+    {
+      "type": "field",
+      "inboundTag": ["interconn"],
+      "outboundTag": "portal"
+    }
+  ]
 }
 ```

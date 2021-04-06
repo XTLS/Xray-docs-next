@@ -9,6 +9,7 @@
     "@types/bootstrap": "^5.0.11",
     "@types/jquery": "^3.5.5",
     "@vuepress/plugin-back-to-top": "^1.8.2",
+    "prettier": "^2.2.1",
     "sass": "^1.32.8",
     "sass-loader": "^8.0.2",
     "vue-property-decorator": "^9.1.2",
@@ -16,7 +17,8 @@
   },
   "scripts": {
     "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "docs:build": "vuepress build docs",
+    "lint": "prettier --write ."
   },
   "dependencies": {
     "@popperjs/core": "^2.9.1",

@@ -7,8 +7,8 @@ import ParentLayout from "@parent-theme/layouts/Layout.vue";
 import Vue from "vue";
 export default Vue.extend({
   components: {
-    ParentLayout
-  }
+    ParentLayout,
+  },
 });
 </script>
 

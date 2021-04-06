@@ -21,7 +21,7 @@ export default Vue.extend({
   data() {
     return {
       enable: false,
-      text: ""
+      text: "",
     };
   },
   mounted() {
@@ -40,7 +40,7 @@ export default Vue.extend({
       } else {
         html.setAttribute("theme", "light");
       }
-    }
-  }
+    },
+  },
 });
 </script>

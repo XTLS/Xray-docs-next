@@ -5,8 +5,8 @@ module.exports = {
     "/": {
       lang: "zh-CN",
       title: "Project X",
-      description: "Xray 官方文档"
-    }
+      description: "Xray 官方文档",
+    },
   },
   themeConfig: {
     smoothScroll: true,
@@ -30,9 +30,9 @@ module.exports = {
         ariaLabel: "Language Menu",
         items: [
           { text: "简体中文", link: "/" },
-          { text: "English", link: "/en" }
-        ]
-      }
+          { text: "English", link: "/en" },
+        ],
+      },
     ],
     sidebar: {
       "/config/": [
@@ -43,8 +43,8 @@ module.exports = {
             "features/xtls",
             "features/fallback",
             "features/env",
-            "features/multiple"
-          ]
+            "features/multiple",
+          ],
         },
         {
           title: "基础配置",
@@ -60,8 +60,8 @@ module.exports = {
             "reverse",
             "routing",
             "stats",
-            "transport"
-          ]
+            "transport",
+          ],
         },
         {
           title: "入站代理",
@@ -74,8 +74,8 @@ module.exports = {
             "inbounds/socks",
             "inbounds/trojan",
             "inbounds/vless",
-            "inbounds/vmess"
-          ]
+            "inbounds/vmess",
+          ],
         },
         {
           title: "出站代理",
@@ -90,8 +90,8 @@ module.exports = {
             "outbounds/socks",
             "outbounds/trojan",
             "outbounds/vless",
-            "outbounds/vmess"
-          ]
+            "outbounds/vmess",
+          ],
         },
         {
           title: "底层传输",
@@ -103,9 +103,9 @@ module.exports = {
             "transports/mkcp",
             "transports/quic",
             "transports/tcp",
-            "transports/websocket"
-          ]
-        }
+            "transports/websocket",
+          ],
+        },
       ],
       "/document/level-0/": [
         "ch01-preface",
@@ -116,41 +116,41 @@ module.exports = {
         "ch06-certificates",
         "ch07-xray-server",
         "ch08-xray-clients",
-        "ch09-appendix"
+        "ch09-appendix",
       ],
       "/document/level-1/": [
         "fallbacks-lv1",
         "routing-lv1-part1",
         "routing-lv1-part2",
         "work",
-        "fallbacks-with-sni"
+        "fallbacks-with-sni",
       ],
       "/document/level-2/": [
         "transparent_proxy/transparent_proxy",
         "tproxy",
         "iptables_gid",
-        "redirect"
+        "redirect",
       ],
-      "/": "auto"
-    }
+      "/": "auto",
+    },
   },
   markdown: {
     toc: {
-      includeLevel: [2]
+      includeLevel: [2],
     },
-    extendMarkdown: md => {
+    extendMarkdown: (md) => {
       md.use(require("markdown-it-footnote"));
-    }
+    },
   },
-  chainWebpack: config => {
+  chainWebpack: (config) => {
     config.module
       .rule("webp")
       .test(/\.(webp)(\?.*)?$/)
       .use("file-loader")
       .loader("file-loader")
       .options({
-        name: `assets/img/[name].[hash:8].[ext]`
+        name: `assets/img/[name].[hash:8].[ext]`,
       });
   },
-  postcss: { plugins: [require("autoprefixer")] }
+  postcss: { plugins: [require("autoprefixer")] },
 };
