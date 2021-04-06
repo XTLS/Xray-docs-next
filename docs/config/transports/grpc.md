@@ -17,7 +17,7 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 - 请确定反向代理服务器开启了 HTTP/2
 - 请使用 HTTP/2 或 h2c (Caddy)，grpc_pass (Nginx) 连接到 Xray。
-- 普通模式的 Path 为 `/{serviceName}/Tun`, Multi 模式为 `/{serviceName}/TunMulti`
+- 普通模式的 Path 为 `/${serviceName}/Tun`, Multi 模式为 `/${serviceName}/TunMulti`
   :::
 
 ::: tip
@@ -41,8 +41,8 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 > `serviceName`: string
 
-一个字符串，指定服务路径，**类似于** HTTP/2 与 WebSocket 中的 Path。
-客户端会使用此名称进行通信，服务器会验证服务名称是否匹配。
+一个字符串，指定服务名称，**类似于** HTTP/2 中的 Path。
+客户端会使用此名称进行通信，服务端会验证服务名称是否匹配。
 
 > `multiMode`: bool <Badge text="BETA" type="warning"/>
 
