@@ -1,0 +1,26 @@
+@use 'sass:color';
+
+@import "_variables";
+
+#{$contentClass} {
+  code {
+    color: var(--textColorLighten25);
+    background-color: var(--miniCodeBgColor);
+  }
+}
+
+#{$contentClass} {
+  pre {
+    background-color: var(--codeBgColor);
+
+    code {
+      color: var(--textColorLighten25);
+      background-color: transparent;
+    }
+  }
+
+  .line-number {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+      monospace;
+  }
+}

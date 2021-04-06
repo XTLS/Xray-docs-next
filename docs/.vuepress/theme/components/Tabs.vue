@@ -24,9 +24,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     title: {
       type: String,
@@ -37,7 +37,7 @@ export default Vue.extend({
       children: [],
     };
   },
-  created() {
+  beforeMount() {
     this.children = [];
   },
   mounted() {
@@ -62,17 +62,6 @@ export default Vue.extend({
 @import "~bootstrap/scss/bootstrap";
 
 button.nav-link {
-  @media (prefers-color-scheme: light) {
-    color: #2c3e50;
-  }
-  @media (prefers-color-scheme: dark) {
-    color: #e2e2e2;
-  }
-}
-html[theme="light"] button.nav-link {
-  color: #2c3e50;
-}
-html[theme="dark"] button.nav-link {
-  color: #e2e2e2;
+  color: var(--textColor);
 }
 </style>

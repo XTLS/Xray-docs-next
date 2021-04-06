@@ -1,0 +1,27 @@
+@import "_variables";
+
+.arrow {
+  &.up {
+    border: {
+      bottom: 6px solid var(--arrowBgColor);
+    }
+  }
+
+  &.down {
+    border: {
+      top: 6px solid var(--arrowBgColor);
+    }
+  }
+
+  &.right {
+    border: {
+      left: 6px solid var(--arrowBgColor);
+    }
+  }
+
+  &.left {
+    border: {
+      right: 6px solid var(--arrowBgColor);
+    }
+  }
+}

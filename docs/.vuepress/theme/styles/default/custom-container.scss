@@ -1,0 +1,42 @@
+@use 'sass:color';
+
+@import "_variables";
+
+.custom-container {
+  &.tip {
+    background-color: var(--tipBackgroundColor);
+    border-color: var(--tipColor);
+  }
+
+  &.warning {
+    background-color: var(--warningBgDarkColor);
+    border-color: var(--warningColor);
+    color: var(--textColor);
+
+    .custom-container-title {
+      color: var(--warningColor);
+    }
+
+    a {
+      color: var(--textColor);
+    }
+  }
+
+  &.danger {
+    background-color: var(--dangerBgDarkColor);
+    border-color: var(--dangerColor);
+    color: var(--textColor);
+
+    .custom-container-title {
+      color: var(--dangerColor);
+    }
+
+    a {
+      color: var(--textColor);
+    }
+  }
+
+  &.details {
+    background-color: var(--backgroundColor);
+  }
+}

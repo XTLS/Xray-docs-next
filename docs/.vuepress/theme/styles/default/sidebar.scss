@@ -1,0 +1,27 @@
+@import "_variables";
+
+.sidebar {
+  .navbar-links {
+    border-bottom: 1px solid var(--borderColor);
+  }
+}
+
+.sidebar-heading {
+  color: var(--textColor);
+}
+
+.sidebar-link {
+  color: var(--textColor);
+}
+
+a.sidebar-heading,
+a.sidebar-link {
+  &.active {
+    color: var(--accentColor);
+    border-left-color: var(--accentColor);
+  }
+
+  &:hover {
+    color: var(--accentColor);
+  }
+}

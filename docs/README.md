@@ -3,8 +3,11 @@ home: true
 heroImage: /LogoX2.png
 heroText: Project X
 tagline: 不畏浮云遮望眼 · 金睛如炬耀苍穹
-actionText: 由此开始 →
-actionLink: /document/
+actions:
+  - text: 由此开始 →
+    link: /document/
+    type: primary
+
 features:
   - title: 极速协议
     details: 原创 VLESS 与 XTLS 协议，摆脱冗余加密，释放CPU算力

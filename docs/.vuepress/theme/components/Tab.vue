@@ -10,9 +10,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 
-export default Vue.extend({
+export default defineComponent({
   props: {
     title: {
       type: String,
@@ -35,3 +35,7 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+@import "~bootstrap/scss/bootstrap";
+</style>

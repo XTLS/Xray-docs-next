@@ -1,0 +1,23 @@
+@use '_normalize';
+
+@use 'arrow';
+@use 'badge';
+@use 'custom-container';
+@use 'dropdown';
+@use 'home';
+@use 'layout';
+@use 'navbar';
+@use 'page';
+@use 'plugins';
+@use 'sidebar';
+@use 'code';
+
+@use '@vuepress/plugin-palette/style';
+
+* {
+  scroll-behavior: smooth;
+  transition: background-color 0.1s ease;
+  @media screen and (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
+}

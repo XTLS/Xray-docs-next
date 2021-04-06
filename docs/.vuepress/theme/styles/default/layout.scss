@@ -1,0 +1,18 @@
+@import "_variables";
+
+.navbar {
+  background-color: var(--backgroundColor);
+  border-bottom: 1px solid var(--borderColor);
+}
+
+.sidebar {
+  background-color: var(--backgroundColor);
+  border-right: 1px solid var(--borderColor);
+  scrollbar-color: var(--accentColor) var(--borderColor);
+  &::-webkit-scrollbar-track {
+    background-color: var(--borderColor);
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--accentColor);
+  }
+}

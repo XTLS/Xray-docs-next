@@ -1,0 +1,21 @@
+@use 'sass:color';
+
+@import "_variables";
+
+.page-meta {
+  .meta-item {
+    .meta-item-label {
+      color: var(--textColorLighten25);
+    }
+
+    .meta-item-info {
+      color: var(--metaItemColor);
+    }
+  }
+}
+
+.page-nav {
+  .inner {
+    border-top: 1px solid var(--borderColor);
+  }
+}

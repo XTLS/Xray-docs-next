@@ -1,0 +1,34 @@
+@use 'sass:color';
+
+@import "_variables";
+
+.navbar {
+  .site-name {
+    color: var(--textColor);
+  }
+
+  .navbar-links-wrapper {
+    background-color: var(--backgroundColor);
+  }
+}
+
+/**
+ * navbar-links
+ */
+.navbar-links {
+  a {
+    &:hover,
+    &.router-link-active {
+      color: var(--accentColor);
+    }
+  }
+}
+
+@media (min-width: $MQMobile) {
+  .navbar-links-item > a:not(.external) {
+    &:hover,
+    &.router-link-active {
+      border-bottom: 2px solid var(--accentColorLighten8);
+    }
+  }
+}

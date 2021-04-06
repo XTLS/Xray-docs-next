@@ -1,0 +1,47 @@
+@import "_variables";
+
+.dropdown-wrapper {
+  .dropdown-title {
+    color: var(--textColor);
+  }
+
+  .mobile-dropdown-title {
+    font-size inherit {
+      &:hover {
+        color: var(--accentColor);
+      }
+    }
+  }
+
+  .nav-dropdown {
+    .dropdown-item {
+      .dropdown-subtitle {
+        border-top: 1px solid var(--kbdBackgroundColor);
+      }
+
+      a {
+        &:hover {
+          color: var(--accentColor);
+        }
+
+        &.router-link-active {
+          color: var(--accentColor);
+
+          &::after {
+            border-left: 5px solid var(--accentColor);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: $MQMobile) {
+  .dropdown-wrapper {
+    .nav-dropdown {
+      background-color: var(--backgroundColor);
+      border: 1px solid var(--kbdBorderColor);
+      border-bottom-color: var(--kbdBorderColor);
+    }
+  }
+}

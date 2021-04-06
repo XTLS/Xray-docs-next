@@ -1,0 +1,17 @@
+@import "_variables";
+
+.badge {
+  color: var(--backgroundColor);
+  background-color: var(--badgeTipColor);
+  &.tip {
+    background-color: var(--badgeTipColor);
+  }
+
+  &.warning {
+    background-color: var(--badgeWarningColor);
+  }
+
+  &.danger {
+    background-color: var(--badgeDangerColor);
+  }
+}

@@ -1,0 +1,51 @@
+@import "_variables";
+
+html,
+body {
+  background-color: var(--backgroundColor);
+}
+
+body {
+  color: var(--textColor);
+}
+
+a {
+  color: var(--accentColor);
+}
+
+p a code {
+  color: var(--accentColor);
+}
+
+kbd {
+  background: var(--kbdBackgroundColor);
+  border: solid 0.15rem var(--kbdBorderColor);
+  border-bottom: solid 0.25rem var(--kbdBorderColor);
+}
+
+blockquote {
+  color: var(--textColor);
+  background-color: var(--kbdBackgroundColor);
+  border-left: 4px solid #17a2b8;
+}
+
+h2 {
+  border-bottom: 1px solid var(--borderColor);
+}
+
+hr {
+  border-top: 1px solid var(--borderColor);
+}
+
+tr {
+  border-top: 1px solid var(--tableBorderColor);
+
+  &:nth-child(2n) {
+    background-color: var(--tableBackgroundColor);
+  }
+}
+
+th,
+td {
+  border: 1px solid var(--tableBorderColor);
+}
