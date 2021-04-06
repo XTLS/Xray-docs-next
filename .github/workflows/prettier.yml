@@ -11,9 +11,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
-        fetch-depth: 0
 
     - name: Prettify code
       uses: creyD/prettier_action@v3.1
