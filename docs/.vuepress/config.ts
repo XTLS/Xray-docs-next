@@ -23,7 +23,6 @@ export default defineUserConfig<DefaultThemeOptions>({
     editLinks: true,
     editLinkText: "帮助我们改善此页面！",
     enableToggle: true,
-    ToggleText: "切换主题",
     navbar: [
       { text: "首页", link: "/" },
       { text: "大史记", link: "/about/news.md" },
@@ -158,6 +157,11 @@ export default defineUserConfig<DefaultThemeOptions>({
     },
     themePlugins: {
       git: process.env.NODE_ENV === "production",
+    },
+    locales: {
+      "/": {
+        ToggleText: "切换主题",
+      },
     },
   },
   markdown: {

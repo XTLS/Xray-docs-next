@@ -10,8 +10,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ThemeOptions } from "../index";
-declare const __LAYOUT__OPTIONS__: ThemeOptions;
+import { useThemeLocaleData } from "@vuepress/plugin-theme-data/lib/composables";
+import { ToggleOptions } from "../types";
 
 export default defineComponent({
   data() {
@@ -21,8 +21,9 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.enable = __LAYOUT__OPTIONS__.enableToggle;
-    this.text = __LAYOUT__OPTIONS__.ToggleText;
+    const option = useThemeLocaleData<ToggleOptions>();
+    this.enable = option.value.enableToggle;
+    this.text = option.value.ToggleText;
   },
   methods: {
     toggleTheme() {

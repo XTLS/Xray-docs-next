@@ -29,7 +29,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="sass">
-//@import "../styles/default/index.scss"
-</style>
