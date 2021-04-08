@@ -58,9 +58,9 @@ html {
   --miniCodeBgColor: #{$miniCodeBgLightColor};
 
   --textColorLighten10: #{lighten($textLightColor, 10%)};
-  --textColorLighten25: #{lighten($textLightColor, 23%)};
-  --textColorLighten40: #{lighten($textLightColor, 40%)};
+  --textColorLighten25: #{lighten($textLightColor, 20%)};
+  --textColorLighten40: #{lighten($textLightColor, 30%)};
   --accentColorLighten8: #{lighten($accentLightColor, 8%)};
-  --accentColorLighten10: #{lighten($accentLightColor, 10%)};
+  --accentColorLighten10: #{lighten($accentLightColor, 12%)};
   --accentColorLighten30: #{lighten($accentLightColor, 30%)};
 }
