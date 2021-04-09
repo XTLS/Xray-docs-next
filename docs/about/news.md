@@ -4,6 +4,11 @@ sidebar: auto
 
 # 大史记
 
+## 2021.4.6
+
+- VuePress Next.
+- With Dark Mode.
+
 ## 2021.4.4
 
 - 本文档迎来的新的首页。
