@@ -62,6 +62,7 @@ export default defineUserConfig<DefaultThemeOptions>({
       },
     },
   },
+  head: [["link", { rel: "icon", href: `/logo.png` }]],
   markdown: {
     toc: {
       level: [2],
