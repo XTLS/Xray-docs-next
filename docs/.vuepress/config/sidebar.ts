@@ -143,4 +143,30 @@ export function getDocumentLv2Sidebar(
   ];
 }
 
-export const a = "";
+export function getDevelopmentSidebar(
+  title: string,
+  protocols: string,
+  path: string
+): SidebarConfigArray {
+  return [
+    {
+      text: title,
+      isGroup: true,
+      children: [
+        path + "intro/compile.md",
+        path + "intro/design.md",
+        path + "intro/guide.md",
+        {
+          text: protocols,
+          isGroup: true,
+          children: [
+            path + "protocols/vless.md",
+            path + "protocols/vmess.md",
+            path + "protocols/muxcool.md",
+            path + "protocols/mkcp.md",
+          ],
+        },
+      ],
+    },
+  ];
+}

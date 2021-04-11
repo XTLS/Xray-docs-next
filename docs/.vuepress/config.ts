@@ -52,6 +52,11 @@ export default defineUserConfig<DefaultThemeOptions>({
             "进阶技巧",
             "/document/level-2/"
           ),
+          "/development/": sidebar.getDevelopmentSidebar(
+            "开发指南",
+            "协议详解",
+            "/development/"
+          ),
         },
         navbar: navbar.hans,
       },

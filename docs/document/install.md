@@ -23,7 +23,7 @@ Xray 在以下平台中可用：
 Xray 提供两种验证方式：
 
 - ZIP 压缩包的 SHA1 / SHA256 摘要
-- 可复现构建：请参照 [编译 Xray](../development/build.html)
+- 可复现构建：请参照 [编译 Xray](../development/intro/compile.md)
 
 ## Windows 安装方式
 
