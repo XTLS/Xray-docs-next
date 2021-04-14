@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import ParentLayout from "@vuepress/theme-default/lib/layouts/Layout.vue";
+import ParentLayout from "@vuepress/theme-default/lib/client/layouts/Layout.vue";
 import ThemeToggle from "../components/ThemeToggle.vue";
 import { defineComponent } from "vue";
 

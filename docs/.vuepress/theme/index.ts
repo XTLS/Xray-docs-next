@@ -9,7 +9,6 @@ export const docsPlugin: Theme = (options, app) => {
       Layout: path.resolve(__dirname, "layouts/Layout.vue"),
     },
     clientAppEnhanceFiles: path.resolve(__dirname, "clientAppEnhance.ts"),
-    plugins: [["@vuepress/plugin-palette", { preset: "sass" }]],
   };
 };
 
