@@ -396,6 +396,15 @@
     vue "^3.0.11"
     vue-router "^4.0.6"
 
+"@vuepress/client@2.0.0-beta.9":
+  version "2.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@vuepress/client/-/client-2.0.0-beta.9.tgz#ca2e0974a9c2fda96af4ccda6642c94a2c39fdbd"
+  integrity sha512-lVFe8O+M1RuE5PXE7YlhZG92YiueoHF0f+HyZdCu1HPlAVYOHwS4KTTr4q3URbc/uXe5E4M445JqzPtMSvT11w==
+  dependencies:
+    "@vuepress/shared" "2.0.0-beta.7"
+    vue "^3.0.11"
+    vue-router "^4.0.6"
+
 "@vuepress/core@2.0.0-beta.8":
   version "2.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@vuepress/core/-/core-2.0.0-beta.8.tgz#d78e56d216589fdffcc861c25df06d26efc8a569"
@@ -408,10 +417,34 @@
     gray-matter "^4.0.2"
     toml "^3.0.0"
 
+"@vuepress/core@2.0.0-beta.9":
+  version "2.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@vuepress/core/-/core-2.0.0-beta.9.tgz#59166a0d0af27c4f5459d8485a35dac499d8b3cc"
+  integrity sha512-ZznLYdJBF+jCxIEqQEgHshbDaZVp2neR8TfkOrD0Y/jDCDVMv9i6GiamPaIPE+NywbHxQ/9yFtxtykQ/u0Nf3A==
+  dependencies:
+    "@vuepress/client" "2.0.0-beta.9"
+    "@vuepress/markdown" "2.0.0-beta.9"
+    "@vuepress/shared" "2.0.0-beta.7"
+    "@vuepress/utils" "2.0.0-beta.8"
+    gray-matter "^4.0.2"
+    toml "^3.0.0"
+
 "@vuepress/markdown@2.0.0-beta.8":
   version "2.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@vuepress/markdown/-/markdown-2.0.0-beta.8.tgz#c9bcfbdcb0808801c312620510a1364997850dd7"
   integrity sha512-hf5xdchaUSosARuxTpD8Xk+GcJDWZmWRf6jUUkT49nn1V370JKgRfamD43b9HeK5W6uXQcWhzVWADlvmzcbwhQ==
+  dependencies:
+    "@types/markdown-it" "^12.0.1"
+    "@vuepress/shared" "2.0.0-beta.7"
+    "@vuepress/utils" "2.0.0-beta.8"
+    markdown-it "^12.0.4"
+    markdown-it-anchor "^7.1.0"
+    markdown-it-emoji "^2.0.0"
+
+"@vuepress/markdown@2.0.0-beta.9":
+  version "2.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@vuepress/markdown/-/markdown-2.0.0-beta.9.tgz#6ed8641278b4237db03c37ba20f39371d518253f"
+  integrity sha512-aCzb3g0UlTsp5HCTh+BOD5c52Z6kumA/WE7vGD5qxBkeaBjj9wdMZppLoWDppLFnK0lRdkzDbxuHYgEtOVmOkw==
   dependencies:
     "@types/markdown-it" "^12.0.1"
     "@vuepress/shared" "2.0.0-beta.7"
@@ -432,12 +465,22 @@
     vue "^3.0.11"
     vue-router "^4.0.6"
 
-"@vuepress/plugin-back-to-top@2.0.0-beta.8", "@vuepress/plugin-back-to-top@^2.0.0-beta.8":
+"@vuepress/plugin-back-to-top@2.0.0-beta.8":
   version "2.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.8.tgz#1c261c92a2cca62ec7d7777d28be5fed5a54460a"
   integrity sha512-7pjd+fMTzF91ZnAK4oBdRnvScpCtUTBSB8/Ma1g+nEf2aA/ekNXozdUQNZOb8B9ShUz+tc6QqbLiUNn/U4scrg==
   dependencies:
     "@vuepress/core" "2.0.0-beta.8"
+    "@vuepress/utils" "2.0.0-beta.8"
+    ts-debounce "^3.0.0"
+    vue "^3.0.11"
+
+"@vuepress/plugin-back-to-top@^2.0.0-beta.9":
+  version "2.0.0-beta.9"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.9.tgz#230c019b9484b7b1c73144748b8ea8ab80aefef0"
+  integrity sha512-epNUSYQSSfiQQaLSAElWr9FrcaPk4FfE4cKGUAOG3Woo732Des9wNwuJYPVGnfPwy2aYdOeK34qNZJEUknUSyw==
+  dependencies:
+    "@vuepress/core" "2.0.0-beta.9"
     "@vuepress/utils" "2.0.0-beta.8"
     ts-debounce "^3.0.0"
     vue "^3.0.11"
