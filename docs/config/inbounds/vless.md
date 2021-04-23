@@ -44,10 +44,10 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 注意这里是 decryption，和 clients 同级。
 decryption 和 vmess 协议的 encryption 的位置不同，是因为若套一层约定加密，服务端需要先解密才能知道是哪个用户。
 
-> `fallbacks`: \[ [FallbackObject](../examples/fallback.md) \]
+> `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
 一个数组，包含一系列强大的回落分流配置（可选）。
-fallbacks 的具体配置请点击 [FallbackObject](../examples/fallback.md#fallbacks-配置)
+fallbacks 的具体配置请点击 [FallbackObject](../features/fallback.md#fallbacks-配置)
 
 ### ClientObject
 
