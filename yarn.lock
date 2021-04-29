@@ -146,7 +146,7 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/fs-extra@^9.0.9":
+"@types/fs-extra@^9.0.11", "@types/fs-extra@^9.0.9":
   version "9.0.11"
   resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-9.0.11.tgz#8cc99e103499eab9f347dbc6ca4e99fb8d2c2b87"
   integrity sha512-mZsifGG4QeQ7hlkhO56u7zt/ycBgGxSVsFI/6lGTU34VtwkiqrrSDgw0+ygs8kFGWcXnFQWMrzF2h7TtDFNixA==
@@ -387,6 +387,15 @@
     envinfo "^7.7.4"
     esbuild "^0.9.6"
 
+"@vuepress/client@2.0.0-beta.10":
+  version "2.0.0-beta.10"
+  resolved "https://registry.yarnpkg.com/@vuepress/client/-/client-2.0.0-beta.10.tgz#84931e9c31a41a75c5b4e94967c379c663b44570"
+  integrity sha512-eKjGn8dATOddgfHNgdTSayzmVnMYiakUE4RpZO9+CdX890juI3qTY43VVdnWCVgTvKuvnNex5x0MOaycm4CPwQ==
+  dependencies:
+    "@vuepress/shared" "2.0.0-beta.7"
+    vue "^3.0.11"
+    vue-router "^4.0.6"
+
 "@vuepress/client@2.0.0-beta.8":
   version "2.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@vuepress/client/-/client-2.0.0-beta.8.tgz#4caf6b3e9adc9bde8a86b6544e84fc857e809597"
@@ -395,6 +404,18 @@
     "@vuepress/shared" "2.0.0-beta.7"
     vue "^3.0.11"
     vue-router "^4.0.6"
+
+"@vuepress/core@2.0.0-beta.11":
+  version "2.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@vuepress/core/-/core-2.0.0-beta.11.tgz#f21d6f8fcaa2b585af63901346ef9c9ca2c2b427"
+  integrity sha512-aSh5i8RHfdT7e/w/sEGEOE8TGWMiN/s7hCPgVweNcK+NHKxNpAz6TlVYC4Bs42CMkqs2LyvtsNbGmWsZxwK34A==
+  dependencies:
+    "@vuepress/client" "2.0.0-beta.10"
+    "@vuepress/markdown" "2.0.0-beta.11"
+    "@vuepress/shared" "2.0.0-beta.7"
+    "@vuepress/utils" "2.0.0-beta.11"
+    gray-matter "^4.0.3"
+    toml "^3.0.0"
 
 "@vuepress/core@2.0.0-beta.8":
   version "2.0.0-beta.8"
@@ -407,6 +428,18 @@
     "@vuepress/utils" "2.0.0-beta.8"
     gray-matter "^4.0.2"
     toml "^3.0.0"
+
+"@vuepress/markdown@2.0.0-beta.11":
+  version "2.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@vuepress/markdown/-/markdown-2.0.0-beta.11.tgz#ef6380c84bebcf209a1cd1e55fe857a7154f06b7"
+  integrity sha512-68WdqbihFIyRioNNlDlzDFnSMUJ+BZjORgvIjOUJRIaKzTSj3ooSgWeIqVEZaCrSdMPZU8aw0fA8fEw8kKeswQ==
+  dependencies:
+    "@types/markdown-it" "^12.0.1"
+    "@vuepress/shared" "2.0.0-beta.7"
+    "@vuepress/utils" "2.0.0-beta.11"
+    markdown-it "^12.0.6"
+    markdown-it-anchor "^7.1.0"
+    markdown-it-emoji "^2.0.0"
 
 "@vuepress/markdown@2.0.0-beta.8":
   version "2.0.0-beta.8"
@@ -432,13 +465,23 @@
     vue "^3.0.11"
     vue-router "^4.0.6"
 
-"@vuepress/plugin-back-to-top@2.0.0-beta.8", "@vuepress/plugin-back-to-top@^2.0.0-beta.8":
+"@vuepress/plugin-back-to-top@2.0.0-beta.8":
   version "2.0.0-beta.8"
   resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.8.tgz#1c261c92a2cca62ec7d7777d28be5fed5a54460a"
   integrity sha512-7pjd+fMTzF91ZnAK4oBdRnvScpCtUTBSB8/Ma1g+nEf2aA/ekNXozdUQNZOb8B9ShUz+tc6QqbLiUNn/U4scrg==
   dependencies:
     "@vuepress/core" "2.0.0-beta.8"
     "@vuepress/utils" "2.0.0-beta.8"
+    ts-debounce "^3.0.0"
+    vue "^3.0.11"
+
+"@vuepress/plugin-back-to-top@^2.0.0-beta.11":
+  version "2.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.11.tgz#5c3be1bb094d09a276dbe32fbce9028bbaad2296"
+  integrity sha512-XXh/Q+/Lo4HU9CpytIcFnMM4yQntb6FTjA5+VWd12U+Fka8bfXydDmtIXvfixJZJcYQo5s5g5CxizT91Z9DtpA==
+  dependencies:
+    "@vuepress/core" "2.0.0-beta.11"
+    "@vuepress/utils" "2.0.0-beta.11"
     ts-debounce "^3.0.0"
     vue "^3.0.11"
 
@@ -541,6 +584,23 @@
     sass-loader "^11.0.1"
     vue "^3.0.11"
     vue-router "^4.0.6"
+
+"@vuepress/utils@2.0.0-beta.11":
+  version "2.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@vuepress/utils/-/utils-2.0.0-beta.11.tgz#a44b6a664a515fcf9f7b494697bb555a4a742beb"
+  integrity sha512-ci+wjxWcNbtnX/0gN9LH/6uDmO1lhzZJzqoGTaJQxg/94anrgd8bGFIdTZ0aSCfJvbLWZXMCrNYVAmAq8W2EaQ==
+  dependencies:
+    "@types/debug" "^4.1.5"
+    "@types/fs-extra" "^9.0.11"
+    "@types/hash-sum" "^1.0.0"
+    "@vuepress/shared" "2.0.0-beta.7"
+    chalk "^4.1.1"
+    debug "^4.3.1"
+    fs-extra "^9.1.0"
+    globby "^11.0.3"
+    hash-sum "^2.0.0"
+    ora "^5.4.0"
+    upath "^2.0.1"
 
 "@vuepress/utils@2.0.0-beta.8":
   version "2.0.0-beta.8"
@@ -1002,6 +1062,14 @@ chalk@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.0.tgz#4e14870a618d9e2edd97dd8345fd9d9dc315646a"
   integrity sha512-qwx12AxXe2Q5xQ43Ac//I6v5aXTipYrSESdOgzrN+9XjgEpyjpKuvSGaN4qE93f7TQTlerQQ8S+EQ0EyDoVL1A==
+  dependencies:
+    ansi-styles "^4.1.0"
+    supports-color "^7.1.0"
+
+chalk@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.1.tgz#c80b3fab28bf6371e6863325eee67e618b77e6ad"
+  integrity sha512-diHzdDKxcU+bAsUboHLPEDQiw0qEe0qd7SYUn3HgcFlWgbDcfLGswOHYeGrHKzG9z6UYf01d9VFMfZxPM1xZSg==
   dependencies:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
@@ -2137,6 +2205,16 @@ gray-matter@^4.0.2:
     section-matter "^1.0.0"
     strip-bom-string "^1.0.0"
 
+gray-matter@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/gray-matter/-/gray-matter-4.0.3.tgz#e893c064825de73ea1f5f7d88c7a9f7274288798"
+  integrity sha512-5v6yZd4JK3eMI3FqqCouswVqwugaA9r4dNZB1wwcmrD02QkV5H0y7XBQW8QwQqEaZY1pM9aqORSORhJRdNK44Q==
+  dependencies:
+    js-yaml "^3.13.1"
+    kind-of "^6.0.2"
+    section-matter "^1.0.0"
+    strip-bom-string "^1.0.0"
+
 handle-thing@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
@@ -2557,7 +2635,7 @@ js-tokens@^4.0.0:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
   integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
-js-yaml@^3.11.0:
+js-yaml@^3.11.0, js-yaml@^3.13.1:
   version "3.14.1"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.14.1.tgz#dae812fdb3825fa306609a8717383c50c36a0537"
   integrity sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==
@@ -2754,6 +2832,17 @@ markdown-it@^12.0.4:
   version "12.0.4"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-12.0.4.tgz#eec8247d296327eac3ba9746bdeec9cfcc751e33"
   integrity sha512-34RwOXZT8kyuOJy25oJNJoulO8L0bTHYWXcdZBYZqFnjIy3NgjeoM3FmPXIOFQ26/lSHYMr8oc62B6adxXcb3Q==
+  dependencies:
+    argparse "^2.0.1"
+    entities "~2.1.0"
+    linkify-it "^3.0.1"
+    mdurl "^1.0.1"
+    uc.micro "^1.0.5"
+
+markdown-it@^12.0.6:
+  version "12.0.6"
+  resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-12.0.6.tgz#adcc8e5fe020af292ccbdf161fe84f1961516138"
+  integrity sha512-qv3sVLl4lMT96LLtR7xeRJX11OUFjsaD5oVat2/SNBIb21bJXwal2+SklcRbTwGwqWpWH/HRtYavOoJE+seL8w==
   dependencies:
     argparse "^2.0.1"
     entities "~2.1.0"
