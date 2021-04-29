@@ -3,9 +3,27 @@ import * as sidebar from "./config/sidebar";
 import * as navbar from "./config/navbar";
 import * as path from "path";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export default defineUserConfig<DefaultThemeOptions>({
   theme: path.join(__dirname, "./theme"),
-  plugins: ["@vuepress/back-to-top", "vuepress-plugin-mermaidjs"],
+  plugins: [
+    ["@vuepress/back-to-top"],
+    ["vuepress-plugin-mermaidjs"],
+    [
+      "@vuepress/plugin-search",
+      {
+        locales: {
+          "/": {
+            placeholder: "Search",
+          },
+          "/zh/": {
+            placeholder: "搜索",
+          },
+        },
+      },
+    ],
+  ],
   base: "/Xray-docs-next/",
   locales: {
     "/": {
@@ -71,6 +89,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   extendsMarkdown: (md) => {
     md.use(require("markdown-it-footnote"));
   },
+  //bundler: isProduction ? "@vuepress/webpack" : "@vuepress/vite",
   bundlerConfig: {
     chainWebpack: (config) => {
       config.module

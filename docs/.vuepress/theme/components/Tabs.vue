@@ -59,7 +59,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "~bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 button.nav-link {
   color: var(--textColor);

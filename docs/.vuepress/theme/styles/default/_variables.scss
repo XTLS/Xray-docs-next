@@ -25,6 +25,10 @@ html[theme="dark"] {
   --dangerBgDarkColor: #{$dangerBgDarkColor};
   --warningBgDarkColor: #{$warningBgDarkColor};
   --miniCodeBgColor: #{$miniCodeBgDarkColor};
+  --search-border-color: #{$miniCodeBgDarkColor};
+  --search-item-focus-bg-color: #{$kbdBackgroundDarkColor};
+  --search-accent-color: #{$accentDarkColor};
+  --search-text-color: #{$textDarkColor};
 
   --textColorLighten10: #{lighten($textDarkColor, 7%)};
   --textColorLighten25: #{lighten($textDarkColor, 10%)};
@@ -34,7 +38,7 @@ html[theme="dark"] {
   --accentColorLighten30: #{lighten($accentDarkColor, 30%)};
 }
 
-html {
+html[theme="light"] {
   --accentColor: #{$accentLightColor};
   --textColor: #{$textLightColor};
   --borderColor: #{$borderLightColor};
@@ -56,6 +60,7 @@ html {
   --dangerBgDarkColor: #{$dangerBgLightColor};
   --warningBgDarkColor: #{$warningBgLightColor};
   --miniCodeBgColor: #{$miniCodeBgLightColor};
+  --search-accent-color: #{$accentLightColor};
 
   --textColorLighten10: #{lighten($textLightColor, 10%)};
   --textColorLighten25: #{lighten($textLightColor, 20%)};
