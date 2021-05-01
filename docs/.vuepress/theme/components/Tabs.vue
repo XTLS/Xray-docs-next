@@ -42,9 +42,12 @@ export default defineComponent({
   },
   mounted() {
     this.$nextTick(function () {
-      const bootstrap = require("bootstrap");
-      let triggerEl = document.getElementById(this.children["0"].$data.labelID);
-      new bootstrap.Tab(triggerEl).show();
+      import("bootstrap").then((b) => {
+        let triggerEl = document.getElementById(
+          this.children["0"].$data.labelID
+        );
+        new b.Tab(triggerEl).show();
+      });
     });
   },
   computed: {

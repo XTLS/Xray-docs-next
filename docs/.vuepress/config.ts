@@ -1,4 +1,5 @@
-import { defineUserConfig, DefaultThemeOptions } from "vuepress";
+import { defineUserConfig } from "@vuepress/cli";
+import type { DefaultThemeOptions } from "@vuepress/theme-default";
 import * as sidebar from "./config/sidebar";
 import * as navbar from "./config/navbar";
 import * as path from "path";
@@ -8,23 +9,20 @@ const isProduction = process.env.NODE_ENV === "production";
 export default defineUserConfig<DefaultThemeOptions>({
   theme: path.join(__dirname, "./theme"),
   plugins: [
-    ["@vuepress/back-to-top"],
     ["vuepress-plugin-mermaidjs"],
     [
       "@vuepress/plugin-search",
       {
         locales: {
           "/": {
-            placeholder: "Search",
-          },
-          "/zh/": {
             placeholder: "搜索",
           },
         },
       },
     ],
+    ["@vuepress/plugin-debug", !isProduction],
   ],
-  base: "/Xray-docs-next/",
+  base: isProduction ? "/Xray-docs-next/" : "",
   locales: {
     "/": {
       lang: "zh-CN",
@@ -42,7 +40,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     enableToggle: true,
 
     themePlugins: {
-      git: process.env.NODE_ENV === "production",
+      git: isProduction,
     },
     locales: {
       "/": {
@@ -89,7 +87,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   extendsMarkdown: (md) => {
     md.use(require("markdown-it-footnote"));
   },
-  //bundler: isProduction ? "@vuepress/webpack" : "@vuepress/vite",
+  bundler: isProduction ? "@vuepress/webpack" : "@vuepress/vite",
   bundlerConfig: {
     chainWebpack: (config) => {
       config.module
@@ -100,6 +98,9 @@ export default defineUserConfig<DefaultThemeOptions>({
         .options({
           name: `assets/img/[name].[hash:8].[ext]`,
         });
+    },
+    viteOptions: {
+      base: "/Xray-docs-next/",
     },
   },
   //postcss: { plugins: [require("autoprefixer")] }
