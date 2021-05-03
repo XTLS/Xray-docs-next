@@ -21,3 +21,24 @@
     scroll-behavior: auto;
   }
 }
+html[theme="dark"] {
+  .search-box {
+    input {
+      background-color: var(--backgroundColor);
+    }
+    .suggestions {
+      background: var(--backgroundColor);
+    }
+  }
+}
+
+html[theme="light"] {
+  .search-box {
+    input {
+      background-color: var(--backgroundColor);
+    }
+    .suggestions {
+      background: var(--backgroundColor);
+    }
+  }
+}
