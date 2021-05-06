@@ -1,4 +1,4 @@
-import { SidebarConfigArray } from "@vuepress/theme-default/lib/types/nav";
+import { SidebarConfigArray } from "@vuepress/theme-default";
 
 export function getConfigSidebar(
   feature: string,
@@ -25,6 +25,7 @@ export function getConfigSidebar(
       isGroup: true,
       children: [
         path + "",
+        path + "log.md",
         path + "api.md",
         path + "dns.md",
         path + "fakedns.md",

@@ -1,4 +1,4 @@
-import { NavbarConfig } from "@vuepress/theme-default/lib/types/nav";
+import { NavbarConfig } from "@vuepress/theme-default";
 
 export const hans: NavbarConfig = [
   { text: "首页", link: "/" },
