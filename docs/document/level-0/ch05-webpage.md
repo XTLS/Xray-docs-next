@@ -20,8 +20,8 @@
 
 1. 这里用到的，都是之前已经详解过的命令，所以就不重复讲解了。看不懂的同学可以看看前面的章节哦。
 
-   ```
-   $ sudo apt update && sudo apt install nginx
+   ```shell
+   sudo apt update && sudo apt install nginx
    ```
 
 2. 完成后，Nginx 已经自动运行。此时打开 Windows 上的浏览器并输入 `http://100.200.300.400:80`，若看到下图的界面就说明 Nginx 已经正常在运行了。
@@ -42,11 +42,11 @@
    | `conf-02` | `/etc/nginx/nginx.conf` | Nginx 程序设置 |
 
 3. 创建一个网站专用的文件夹`/home/vpsadmin/www/webpage/`并建立网页文件`index.html`
-   ```
-   $ mkdir -p ~/www/webpage/ && nano ~/www/webpage/index.html
+   ```shell
+   mkdir -p ~/www/webpage/ && nano ~/www/webpage/index.html
    ```
 
-::: warning 注意
+::: warning
 如果你用的不是 `vpsadmin` 这个用户名，请务必理解这条命令中 `“~”` 符号的意义（这关系到【第 5 步】你要写的内容）：
 
 - 如果是 【非 `root` 用户】，`“~”` 就等价于 `/home/用户名`
@@ -55,35 +55,42 @@
 
 4. 把下面的内容完整的复制进去，然后保存(`ctrl+o`)退出(`ctrl+x`)
 
-   ```
-   <html>
-       <!-- Text between angle brackets is an HTML tag and is not displayed.
+   ```html
+   <html lang="">
+     <!-- Text between angle brackets is an HTML tag and is not displayed.
            Most tags, such as the HTML and /HTML tags that surround the contents of
            a page, come in pairs; some tags, like HR, for a horizontal rule, stand
            alone. Comments, such as the text you're reading, are not displayed when
            the Web page is shown. The information between the HEAD and /HEAD tags is
            not displayed. The information between the BODY and /BODY tags is displayed.-->
-       <head>
-           <title>Enter a title, displayed at the top of the window.</title>
-       </head>
-       <!-- The information between the BODY and /BODY tags is displayed.-->
-       <body>
-           <h1>Enter the main heading, usually the same as the title.</h1>
-           <p>Be <b>bold</b> in stating your key points. Put them in a list: </p>
-           <ul>
-               <li>The first item in your list</li>
-               <li>The second item; <i>italicize</i> key words</li>
-           </ul>
-           <p>Improve your image by including an image. </p>
-           <p><img src="https://i.imgur.com/SEBww.jpg" alt="A Great HTML Resource"></p>
-           <p>Add a link to your favorite <a href="https://www.dummies.com/">Web site</a>.
-               Break up your page with a horizontal rule or two.
-           </p>
-           <hr>
-           <p>Finally, link to <a href="page2.html">another page</a> in your own Web site.</p>
-           <!-- And add a copyright notice.-->
-           <p>&#169; Wiley Publishing, 2011</p>
-       </body>
+     <head>
+       <title>Enter a title, displayed at the top of the window.</title>
+     </head>
+     <!-- The information between the BODY and /BODY tags is displayed.-->
+     <body>
+       <h1>Enter the main heading, usually the same as the title.</h1>
+       <p>Be <b>bold</b> in stating your key points. Put them in a list:</p>
+       <ul>
+         <li>The first item in your list</li>
+         <li>The second item; <i>italicize</i> key words</li>
+       </ul>
+       <p>Improve your image by including an image.</p>
+       <p>
+         <img src="https://i.imgur.com/SEBww.jpg" alt="A Great HTML Resource" />
+       </p>
+       <p>
+         Add a link to your favorite
+         <a href="https://www.dummies.com/">Web site</a>. Break up your page
+         with a horizontal rule or two.
+       </p>
+       <hr />
+       <p>
+         Finally, link to <a href="page2.html">another page</a> in your own Web
+         site.
+       </p>
+       <!-- And add a copyright notice.-->
+       <p>&#169; Wiley Publishing, 2011</p>
+     </body>
    </html>
    ```
 
@@ -91,8 +98,8 @@
 
    1. 修改 `nginx.conf` 。
 
-      ```
-      $ sudo nano /etc/nginx/nginx.conf
+      ```shell
+      sudo nano /etc/nginx/nginx.conf
       ```
 
    2. 将下面一段，添加在 `http{}` 内，然后保存(`ctrl+o`)退出(`ctrl+x`)。（记得将域名替换为之前准备好的、包含二级域名的真实域名）
@@ -112,8 +119,8 @@
 
    3. 让 `nginx` 重新载入配置使其生效
 
-      ```
-      $ sudo systemctl reload nginx
+      ```shell
+      sudo systemctl reload nginx
       ```
 
    4. 完整的设置流程如下：

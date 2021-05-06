@@ -47,6 +47,9 @@ export default defineUserConfig<DefaultThemeOptions>({
         ToggleText: "切换主题",
         repoLabel: "查看源码",
         editLinkText: "帮助我们改善此页面！",
+        tip: "提示",
+        warning: "注意",
+        danger: "警告",
         sidebar: {
           "/config/": sidebar.getConfigSidebar(
             "特性详解",

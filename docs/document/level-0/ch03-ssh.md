@@ -64,14 +64,14 @@
 
 4. 现在请输入第一条命令，获取更新信息
 
-   ```
-   # apt update
+   ```shell
+   apt update
    ```
 
 5. 然后请输入第二条命令，并在询问是否继续安装 `(Y/n)` 时输入 `y` 并回车确认，开始安装
 
-   ```
-   # apt upgrade
+   ```shell
+   apt upgrade
    ```
 
 6. 完整流程演示如下：

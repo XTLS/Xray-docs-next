@@ -7,7 +7,6 @@
 其实这样的结构是我多番思考之后的决定，毕竟只有打好基础，才能在后面事半功倍快速反超。我在群里看到许多新人连`nano`都无法正确使用，也不会用`WinSCP`，远程手写编辑出来的`config.json`自然错误百出，连查错也变得举步维艰。
 
 ::: warning
-
 经过了前 6 章的准备，各位已经跟我一起翻越了 Linux 基本操作、VPS 远程管理、网页搭建、域名管理、证书申请等等几座大山。是不是回头看看，觉得其实非常简单呢？现在我们有了如此扎实的准备，接下来安装和配置 Xray
 时会有一种【水到渠成】的轻快感觉。
 :::
@@ -33,26 +32,24 @@
 
 2. 将安装脚本下载至本地：
 
-   ```
-   $ wget https://github.com/XTLS/Xray-install/raw/main/install-release.sh
+   ```shell
+   wget https://github.com/XTLS/Xray-install/raw/main/install-release.sh
    ```
 
 3. 执行安装命令
 
-   ```
-   $ sudo bash install-release.sh
+   ```shell
+   sudo bash install-release.sh
    ```
 
 4. 使用完成之后可以删除该脚本
 
-   ```
-   $ rm ~/install-release.sh
+   ```shell
+   rm ~/install-release.sh
    ```
 
-   ::: warning 注意
-
-   使用 `rm` 命令删除文件的时候，默认其实就是删除现在所在的文件夹下的文件。但是，**我依然写了完整的路径**： `~/install-release.sh`，这是我使用 `rm`
-   时的一个安全习惯、也是我把安装分成几步之后想强调一下的内容。如果你听过一些“程序员从删库到跑路”之类的段子，大概就知道为什么了。
+   ::: warning
+   使用 `rm` 命令删除文件的时候，默认其实就是删除现在所在的文件夹下的文件。但是，**我依然写了完整的路径**： `~/install-release.sh`，这是我使用 `rm` 时的一个安全习惯、也是我把安装分成几步之后想强调一下的内容。如果你听过一些“程序员从删库到跑路”之类的段子，大概就知道为什么了。
    :::
 
 5. 完整流程演示如下：
@@ -67,22 +64,22 @@
 
 1. 为了规避非 root 账户的各种潜在的权限困扰，我们在 vpsadmin 账户下建立一个证书文件夹
 
-   ```
-   $ mkdir ~/xray_cert
+   ```shell
+   mkdir ~/xray_cert
    ```
 
 2. 使用`acme.sh`的`--install-cert`正确安装（拷贝）证书文件
 
-   ```
-   $ acme.sh --install-cert -d 二级域名.你的域名.com --ecc \
+   ```shell
+   acme.sh --install-cert -d 二级域名.你的域名.com --ecc \
                --fullchain-file ~/xray_cert/xray.crt \
                --key-file ~/xray_cert/xray.key
    ```
 
 3. `xray.key`文件默认对其他用户不可读，所以需要赋予其可读性权限
 
-   ```
-   $ chmod +r ~/xray_cert/xray.key
+   ```shell
+   chmod +r ~/xray_cert/xray.key
    ```
 
 4. 过程比较简单就不放动图了：
@@ -95,13 +92,13 @@
 
    2. 建立一个脚本文件（`xray-cert-renew.sh`）
 
-      ```
-      $ nano ~/xray_cert/xray-cert-renew.sh
+      ```shell
+      nano ~/xray_cert/xray-cert-renew.sh
       ```
 
    3. 把下面的内容复制进去，记得替换你的真实域名，然后保存退出
 
-      ```
+      ```bash
       #!/bin/bash
 
       /home/vpsadmin/.acme.sh/acme.sh --install-cert -d a-name.yourdomain.com --ecc --fullchain-file /home/vpsadmin/xray_cert/xray.crt --key-file /home/vpsadmin/xray_cert/xray.key
@@ -114,8 +111,7 @@
       echo "Xray Restarted"
       ```
 
-      ::: warning 注意
-
+      ::: warning
       经大家提醒，`acme.sh` 有一个 `reloadcmd` 命令，可以在证书更新时自动执行特定命令，那么就可以指定自动给 `Xray` 安装证书，但因为 `crontab` 是 Linux
       系统中一个非常有用、非常常用的功能，所以本文保留 `crontab` 的方式来更新 `Xray` 证书。（对 `reloadcmd` 感兴趣的同学可以查看 `acme.sh`
       的[官方文档](https://github.com/acmesh-official/acme.sh)）
@@ -127,14 +123,14 @@
    4. 给这个文件增加【可执行】权限
 
       ```
-      $ chmod +x ~/xray_cert/xray-cert-renew.sh
+      chmod +x ~/xray_cert/xray-cert-renew.sh
       ```
 
    5. 运行 `crontab -e`，添加一个自动任务【每月自动运行一次`xray-cert-renew.sh`】 (注意不要加`sudo`，因为我们增加的是`vpsadmin`
       账户的自动任务。初次运行时会让你选择编辑器，当然是选择熟悉的`nano`啦！)
 
-      ```
-      $ crontab -e
+      ```shell
+      crontab -e
       ```
 
    6. 把下面的内容增加在文件最后，保存退出即可。
@@ -155,8 +151,8 @@
 
 1.  生成一个合法的 `UUID` 并保存备用（`UUID`可以简单粗暴的理解为像指纹一样几乎不会重复的 ID）
 
-    ```
-    $ xray uuid
+    ```shell
+    xray uuid
     ```
 
 2.  建立日志文件及文件夹备用
@@ -165,36 +161,36 @@
 
     2. 在`vpsadmin`的文件夹内建立一个【日志专用文件夹】
 
-       ```
-       $ mkdir ~/xray_log
+       ```shell
+       mkdir ~/xray_log
        ```
 
     3. 生成所需的两个日志文件（访问日志、错误日志）
 
-       ```
-       $ touch ~/xray_log/access.log && touch ~/xray_log/error.log
+       ```shell
+       touch ~/xray_log/access.log && touch ~/xray_log/error.log
        ```
 
-       ::: warning 注意
+       ::: warning
        这个位置不是`Xray`标准的日志文件位置，放在这里是避免权限问题对新人的操作带来困扰。当你熟悉之后，建议回归默认位置： `/var/log/xray/access.log`
        和 `/var/log/xray/error.log` 。
        :::
 
     4. 因为 Xray 默认是 nobody 用户使用，所以我们需要让其他用户也有“写”的权限（`*.log` 就是所有文件后缀是`log`的文件，此时`CLI`界面的效率优势就逐渐出现了）
-       ```
-       $ chmod a+w ~/xray_log/*.log
+       ```shell
+       chmod a+w ~/xray_log/*.log
        ```
 
 3.  使用`nano`创建`Xray`的配置文件
 
-    ```
-    $ sudo nano /usr/local/etc/xray/config.json
+    ```shell
+    sudo nano /usr/local/etc/xray/config.json
     ```
 
 4.  将下面的文件全部复制进去，并将之前生成的`UUID`填入第 61 行 `"id": "",` 之中。（填好之后的样子是 `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
     ），本文的这个配置文件中增加了我的各种啰嗦注解，以方便你理解每一个配置模块的功能是什么。
 
-    ```json
+    ```json5
     // REFERENCE:
     // https://github.com/XTLS/Xray-examples
     // https://xtls.github.io/config/
@@ -206,92 +202,92 @@
     // └─ 5_outbounds 出站设置 - 流出 Xray 的流量往哪里去
     {
       // 1\_日志设置
-      "log": {
-        "loglevel": "warning", // 内容从少到多: "none", "error", "warning", "info", "debug"
-        "access": "/home/vpsadmin/xray_log/access.log", // 访问记录
-        "error": "/home/vpsadmin/xray_log/error.log" // 错误记录
+      log: {
+        loglevel: "warning", // 内容从少到多: "none", "error", "warning", "info", "debug"
+        access: "/home/vpsadmin/xray_log/access.log", // 访问记录
+        error: "/home/vpsadmin/xray_log/error.log", // 错误记录
       },
       // 2_DNS 设置
-      "dns": {
-        "servers": [
+      dns: {
+        servers: [
           "https+local://1.1.1.1/dns-query", // 首选 1.1.1.1 的 DoH 查询，牺牲速度但可防止 ISP 偷窥
-          "localhost"
-        ]
+          "localhost",
+        ],
       },
       // 3*分流设置
-      "routing": {
-        "domainStrategy": "AsIs",
-        "rules": [
+      routing: {
+        domainStrategy: "AsIs",
+        rules: [
           // 3.1 防止服务器本地流转问题：如内网被攻击或滥用、错误的本地回环等
           {
-            "type": "field",
-            "ip": [
-              "geoip:private" // 分流条件：geoip 文件内，名为"private"的规则（本地）
+            type: "field",
+            ip: [
+              "geoip:private", // 分流条件：geoip 文件内，名为"private"的规则（本地）
             ],
-            "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
+            outboundTag: "block", // 分流策略：交给出站"block"处理（黑洞屏蔽）
           },
           // 3.2 屏蔽广告
           {
-            "type": "field",
-            "domain": [
-              "geosite:category-ads-all" // 分流条件：geosite 文件内，名为"category-ads-all"的规则（各种广告域名）
+            type: "field",
+            domain: [
+              "geosite:category-ads-all", // 分流条件：geosite 文件内，名为"category-ads-all"的规则（各种广告域名）
             ],
-            "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
-          }
-        ]
+            outboundTag: "block", // 分流策略：交给出站"block"处理（黑洞屏蔽）
+          },
+        ],
       },
       // 4*入站设置
       // 4.1 这里只写了一个最简单的 vless+xtls 的入站，因为这是 Xray 最强大的模式。如有其他需要，请根据模版自行添加。
-      "inbounds": [
+      inbounds: [
         {
-          "port": 443,
-          "protocol": "vless",
-          "settings": {
-            "clients": [
+          port: 443,
+          protocol: "vless",
+          settings: {
+            clients: [
               {
-                "id": "", // 填写你的 UUID
-                "flow": "xtls-rprx-direct",
-                "level": 0,
-                "email": "vpsadmin@yourdomain.com"
-              }
+                id: "", // 填写你的 UUID
+                flow: "xtls-rprx-direct",
+                level: 0,
+                email: "vpsadmin@yourdomain.com",
+              },
             ],
-            "decryption": "none",
-            "fallbacks": [
+            decryption: "none",
+            fallbacks: [
               {
-                "dest": 80 // 默认回落到防探测的代理
-              }
-            ]
+                dest: 80, // 默认回落到防探测的代理
+              },
+            ],
           },
-          "streamSettings": {
-            "network": "tcp",
-            "security": "xtls",
-            "xtlsSettings": {
-              "allowInsecure": false, // 正常使用应确保关闭
-              "minVersion": "1.2", // TLS 最低版本设置
-              "alpn": ["http/1.1"],
-              "certificates": [
+          streamSettings: {
+            network: "tcp",
+            security: "xtls",
+            xtlsSettings: {
+              allowInsecure: false, // 正常使用应确保关闭
+              minVersion: "1.2", // TLS 最低版本设置
+              alpn: ["http/1.1"],
+              certificates: [
                 {
-                  "certificateFile": "/home/vpsadmin/xray_cert/xray.crt",
-                  "keyFile": "/home/vpsadmin/xray_cert/xray.key"
-                }
-              ]
-            }
-          }
-        }
+                  certificateFile: "/home/vpsadmin/xray_cert/xray.crt",
+                  keyFile: "/home/vpsadmin/xray_cert/xray.key",
+                },
+              ],
+            },
+          },
+        },
       ],
       // 5*出站设置
-      "outbounds": [
+      outbounds: [
         // 5.1 第一个出站是默认规则，freedom 就是对外直连（vps 已经是外网，所以直连）
         {
-          "tag": "direct",
-          "protocol": "freedom"
+          tag: "direct",
+          protocol: "freedom",
         },
         // 5.2 屏蔽规则，blackhole 协议就是把流量导入到黑洞里（屏蔽）
         {
-          "tag": "block",
-          "protocol": "blackhole"
-        }
-      ]
+          tag: "block",
+          protocol: "blackhole",
+        },
+      ],
     }
     ```
 
@@ -304,17 +300,14 @@
 
 1. 输入下面的命令，享受启动`Xray`的历史性时刻吧！！！
 
-```
-
-\$ sudo systemctl start xray
-
+```shell
+sudo systemctl start xray
 ```
 
 2. 仅仅`start`我们并不能确定是否成功的开启了 Xray 的服务，要确定它的状态，就要用到下面的命令。
 
-```
-
-\$ sudo systemctl status xray
+```shell
+sudo systemctl status xray
 
 ```
 
@@ -331,34 +324,26 @@
 
 1. 若你需要暂时关闭 `Xray` 的服务，那就用`stop`命令
 
-```
-
-\$ sudo systemctl stop xray
-
+```shell
+sudo systemctl stop xray
 ```
 
 2. 若你需要重启`Xray`的服务，那就用`restart`命令
 
-```
-
-\$ sudo systemctl restart xray
-
+```shell
+sudo systemctl restart xray
 ```
 
 3. 若你需要禁用`Xray`的服务（电脑重启后禁止 Xray 自动运行），那就用`disable`命令
 
-```
-
-\$ sudo systemctl disable xray
-
+```shell
+sudo systemctl disable xray
 ```
 
 4. 若你需要启用`Xray`的服务（电脑重启后确保 Xray 自动运行），那就用`enable`命令
 
-```
-
-\$ sudo systemctl enable xray
-
+```shell
+sudo systemctl enable xray
 ```
 
 ## 7.7 服务器优化之一：开启 BBR
@@ -388,7 +373,7 @@
 
 内核的稳定是一台服务器稳定运行的基石。**【BBR 测试版带来的细微性能差异绝对不值得更换不稳定的内核。】** 请选择你所在的 Linux 发行版所支持的最新内核，这样可以最大限度的保持服务器的长期稳定和兼容。
 
-::: warning 注意
+::: warning
 所谓魔改`bbr`的【领先】是有非常强的时效性的。比如很多 `bbrplus` 脚本，因为几年来都没有更新，到现在还会把你的内核换成 `4.19`，要知道现在稳定如 Debian 已经是 `5.9`
 的时代了，那么这个脚本放在 2018 年 1 月也许领先了一点，到 2018 年 10 月 4.19 正发布时就已经失去了意义，放在现在甚至可以说是完完全全的【降级】和【劣化】
 :::
@@ -414,10 +399,8 @@
 
 1. 给 Debian 10 添加官方 `backports` 源，获取更新的软件库
 
-```
-
-\$ sudo nano /etc/apt/sources.list
-
+```shell
+sudo nano /etc/apt/sources.list
 ```
 
 ::: warning 说明
@@ -434,8 +417,8 @@ deb http://deb.debian.org/debian buster-backports main
 
 3.  刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
 
-```
-$ sudo apt update && sudo apt -t buster-backports install linux-image-amd64
+```shell
+sudo apt update && sudo apt -t buster-backports install linux-image-amd64
 ```
 
 ::: warning 注意
@@ -451,8 +434,8 @@ $ sudo apt update && sudo apt -t buster-backports install linux-image-amd64
 
 4.  修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
 
-```
-$ sudo nano /etc/sysctl.conf
+```shell
+sudo nano /etc/sysctl.conf
 ```
 
 ::: warning 说明
@@ -470,8 +453,8 @@ net.ipv4.tcp_congestion_control=bbr
 
 6.  重启 VPS、使内核更新和`BBR`设置都生效
 
-```
-$ sudo reboot
+```shell
+sudo reboot
 ```
 
 7.  完整流程演示如下：
@@ -487,8 +470,8 @@ $ sudo reboot
 
 如果你想确认 `BBR` 是否正确开启，可以使用下面的命令：
 
-```
-$ lsmod | grep bbr
+```shell
+lsmod | grep bbr
 ```
 
 此时应该返回这样的结果：
@@ -499,8 +482,8 @@ tcp_bbr
 
 如果你想确认 `fq` 算法是否正确开启，可以使用下面的命令：
 
-```
-$ lsmod | grep fq
+```shell
+lsmod | grep fq
 ```
 
 此时应该返回这样的结果：
@@ -518,55 +501,43 @@ sch_fq
 
 2. 编辑 Nginx 的配置文件
 
-```
-
-\$ sudo nano /etc/nginx/nginx.conf
-
+```shell
+sudo nano /etc/nginx/nginx.conf
 ```
 
 3. 在我们设置过的 80 端口 Server 中加入下面的语句，并保存退出（可同时删除`root`和`index`两行）
 
 ```
-
 return 301 https://$http_host$request_uri;
-
 ```
 
 4. 在与 `80` 端口同级的位置增加一个本地端口监听来提供网页展示。本文以 `8080` 端口做演示。（可以是任意端口）
 
 ```
-
 server {
-listen 127.0.0.1:8080;
-root /home/vpsadmin/www/webpage;
-index index.html;
-add_header Strict-Transport-Security "max-age=63072000" always;
+   listen 127.0.0.1:8080;
+   root /home/vpsadmin/www/webpage;
+   index index.html;
+   add_header Strict-Transport-Security "max-age=63072000" always;
 }
-
 ```
 
 5. 重启 Nginx 服务
 
-```
-
-\$ sudo systemctl restart nginx
-
+```shell
+sudo systemctl restart nginx
 ```
 
 6. 修改 Xray 的回落设置，将回落从 `80` 端口改为 `8080` 端口。（找到 `"dest": 80`, 并改成 `"dest": 8080`）
 
-```
-
-\$ sudo nano /usr/local/etc/xray/config.json
-
+```shell
+sudo nano /usr/local/etc/xray/config.json
 ```
 
 7. 重启 `Xray` 服务，即完成了设置
 
-```
-
-\$ sudo systemctl restart xray
-
+```shell
+sudo systemctl restart xray
 ```
 
 8. 完整流程演示如下：

@@ -20,7 +20,7 @@
 
       &.secondary {
         color: var(--accentColor);
-        background-color: #fff;
+        background-color: var(--kbdBackgroundDarkColor);
         border-color: var(--accentColor);
         &:hover {
           color: #fff;

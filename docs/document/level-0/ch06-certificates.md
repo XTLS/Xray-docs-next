@@ -4,7 +4,7 @@
 
 接下来我们要做的，是为我们的域名申请一个真实的 TLS 证书，使网站具备标准 TLS 加密的能力及 HTTPS 访问的能力。这就是 Xray 等现阶段安全代理工具确保流量充分加密最重要的工具。
 
-::: warning 注意
+::: warning
 请不要轻易使用自签证书。它并没有让操作简单太多，但增加了无谓的风险（如中间人攻击）。
 :::
 
@@ -22,20 +22,20 @@
 
 2. 运行安装脚本
 
-   ```
-   $ wget -O -  https://get.acme.sh | sh
+   ```shell
+   wget -O -  https://get.acme.sh | sh
    ```
 
 3. 让 `acme.sh` 命令生效
 
-   ```
-   $ . .bashrc
+   ```shell
+   . .bashrc
    ```
 
 4. 开启 `acme.sh` 的自动升级
 
-   ```
-   $ acme.sh --upgrade --auto-upgrade
+   ```shell
+   acme.sh --upgrade --auto-upgrade
    ```
 
 5. 到这一步的完整流程如下图：
@@ -48,8 +48,8 @@
 
 1. 测试证书申请的命令如下（本文均以 `ECC` 证书为例，因为时至今日，实在没什么理由不用它）：
 
-   ```
-   $ acme.sh --issue --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
+   ```shell
+   acme.sh --issue --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
    ```
 
    ::: warning 说明
@@ -117,8 +117,8 @@
 
 4. 如果这一步出错的话，你可以运行下面的命令，来查看详细的申请过程和具体的错误。（看不懂就隐藏掉敏感信息后，去 Xray 群里问吧）
 
-   ```
-   $ acme.sh --issue --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
+   ```shell
+   acme.sh --issue --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
    ```
 
    嗯没错，就是在命令的最后加了一个 `--debug` 参数
@@ -129,8 +129,8 @@
 
 1. 申请正式证书的命令如下（即删掉 `--test` 参数，并在最后加入 `--force`参数）：
 
-   ```
-   $ acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
+   ```shell
+   acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
    ```
 
    ::: warning 说明

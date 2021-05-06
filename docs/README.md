@@ -7,7 +7,9 @@ actions:
   - text: 由此开始 →
     link: /document/
     type: primary
-
+  - text: 配置指南 →
+    link: /config/
+    type: secondary
 features:
   - title: 极速协议
     details: 原创 VLESS 与 XTLS 协议，摆脱冗余加密，释放CPU算力

@@ -50,7 +50,7 @@
 
 上述配置如下：
 
-```
+```json5
 "routing": {
     "domainStrategy": "AsIs",
     "rules": [
@@ -92,7 +92,7 @@
 
 上述配置如下：
 
-```
+```json5
 "routing": {
     "domainStrategy": "AsIs",
     "rules": [
@@ -125,7 +125,7 @@
 
 上述配置如下：
 
-```
+```json5
 "routing": {
     "domainStrategy": "AsIs",
     "rules": [
@@ -157,7 +157,7 @@
 你需要打开入站代理中的 `sniffing` 才能使用此种方式分流。
 :::
 
-```
+```json5
 "routing": {
     "domainStrategy": "AsIs",
     "rules": [
@@ -205,7 +205,7 @@
 `[1-block] --> [2-direct] --> [3-proxy] --> [4-first-outbound]`
 :::
 
-```
+```json5
 "routing": {
     "domainStrategy": "AsIs",
     "rules": [
@@ -325,7 +325,7 @@
 
 为了实现上面的目标，他写出了以下路由规则：
 
-```
+```json5
 "routing": {
     "domainStrategy": "AsIs",
     "rules": [
@@ -357,7 +357,7 @@
 
 正确示范，自然就是将不同的匹配依据独立出来：
 
-```
+```json5
 "routing": {
     "domainStrategy": "AsIs",
     "rules": [
