@@ -26,7 +26,7 @@
   "dependencies": {
     "@popperjs/core": "^2.9.1",
     "@vuepress/plugin-debug": "^2.0.0-beta.12",
-    "bootstrap": "^5.0.0-beta3",
+    "bootstrap": "^5.0.0",
     "jquery": "^3.6.0",
     "markdown-it-footnote": "^3.0.2",
     "vuepress-plugin-mermaidjs": "^1.8.1"
