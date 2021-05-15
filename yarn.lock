@@ -485,7 +485,7 @@
     vue "^3.0.11"
     vue-router "^4.0.6"
 
-"@vuepress/plugin-back-to-top@2.0.0-beta.13", "@vuepress/plugin-back-to-top@^2.0.0-beta.13":
+"@vuepress/plugin-back-to-top@2.0.0-beta.13":
   version "2.0.0-beta.13"
   resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.13.tgz#de982688e740bcc7e9fb4eec8d780192c665986c"
   integrity sha512-eT+R0PqxGwyc1FA/m1m37jOfYPbjit3YYjRwisW1fYDpges9K6suhlOMsOnROCsiJohyXhK2FuiB/uFHpZYAAw==
@@ -495,7 +495,7 @@
     ts-debounce "^3.0.0"
     vue "^3.0.11"
 
-"@vuepress/plugin-back-to-top@2.0.0-beta.14":
+"@vuepress/plugin-back-to-top@2.0.0-beta.14", "@vuepress/plugin-back-to-top@^2.0.0-beta.14":
   version "2.0.0-beta.14"
   resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.14.tgz#c7099d30c88cad49d71c856f4899dcfdd13e974e"
   integrity sha512-+qP6K62R+wVrAtYUBfL9n6lbG3UqEFA8wlM0TRIkj3V0RBWmQGbQQ2JGL4ObYcXIZBuvhOkozWQhl6b59iQDzg==
