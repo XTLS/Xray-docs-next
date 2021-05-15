@@ -22,7 +22,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     ],
     ["@vuepress/plugin-debug", !isProduction],
   ],
-  base: isProduction ? "/Xray-docs-next/" : "",
+  base: "/Xray-docs-next/",
   locales: {
     "/": {
       lang: "zh-CN",
@@ -90,7 +90,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   extendsMarkdown: (md) => {
     md.use(require("markdown-it-footnote"));
   },
-  bundler: isProduction ? "@vuepress/webpack" : "@vuepress/vite",
+  bundler: "@vuepress/webpack",
   bundlerConfig: {
     chainWebpack: (config) => {
       config.module
@@ -101,9 +101,6 @@ export default defineUserConfig<DefaultThemeOptions>({
         .options({
           name: `assets/img/[name].[hash:8].[ext]`,
         });
-    },
-    viteOptions: {
-      base: "/Xray-docs-next/",
     },
   },
   //postcss: { plugins: [require("autoprefixer")] }
