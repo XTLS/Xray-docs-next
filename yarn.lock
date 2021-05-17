@@ -76,10 +76,10 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/bootstrap@^5.0.14":
-  version "5.0.14"
-  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.0.14.tgz#718db60a8850f0b1716a7838038da818360bbec3"
-  integrity sha512-ENqS4wPcWG1LBNHwrWt9pIe8mNW86iM1tu7qd1b2KPtMcD6zgrdfuWfTfPzxkc/MgL0UFKiR0WP8hVy9SzSuKw==
+"@types/bootstrap@^5.0.15":
+  version "5.0.15"
+  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.0.15.tgz#d20ef52f025d4af75dbe36cc0b3287241ff947e0"
+  integrity sha512-ETmmPf2DvCfNvemlgbX/dCbxVufCU0PrGT0YQ8gjOCgKYR5AfV9lVjBmWdA7L6mJIGvKFFJr0ZmZKP4Dp1k+5g==
   dependencies:
     "@popperjs/core" "^2.9.2"
     "@types/jquery" "*"
