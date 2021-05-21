@@ -90,7 +90,7 @@ export default defineUserConfig<DefaultThemeOptions>({
   extendsMarkdown: (md) => {
     md.use(require("markdown-it-footnote"));
   },
-  bundler: "@vuepress/webpack",
+  bundler: isProduction ? "@vuepress/webpack" : "@vuepress/vite",
   bundlerConfig: {
     chainWebpack: (config) => {
       config.module
