@@ -19,18 +19,13 @@ export default defineComponent({
     },
   },
   data() {
+    let tag = this.title;
     return {
-      tabID: "",
-      labelID: "",
+      tabID: tag,
+      labelID: tag + "-" + "label",
     };
   },
   beforeMount() {
-    let tag = "tab-" + Math.random().toString(36).substring(2);
-    this.tabID = tag;
-    this.labelID = tag + "-" + "label";
-
-    // Since Vue 3.0, we have no access to $children.
-    // So we need another approach to register our child components.
     this.$parent.$data.children.push(this);
   },
 });

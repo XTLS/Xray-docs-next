@@ -191,7 +191,7 @@ nftables 配置与 iptables 配置二选一，不可同时使用。
 
 <Tabs title="netfilter">
 
-<Tab title="nftables">
+<Tab title="nftables1">
 
 ```nftables
 #!/usr/sbin/nft -f
@@ -239,7 +239,7 @@ table ip xray {
 
 </Tab>
 
-<Tab title="iptables">
+<Tab title="iptables1">
 
 ```bash
 iptables -t mangle -N XRAY
@@ -286,9 +286,9 @@ iptables -t mangle -A OUTPUT -j XRAY_SELF
 
 <br/>
 
-<Tabs title="netfilter">
+<Tabs title="netfilter2">
 
-<Tab title="nftables">
+<Tab title="nftables2">
 
 首先将已经编辑好的 nftables 配置文件移动到 `/etc` 目录下，并重命名为 `nftables.conf`。然后编辑 `/lib/systemd/system/nftables.service`。
 
@@ -319,7 +319,7 @@ WantedBy=sysinit.target
 
 </Tab>
 
-<Tab title="iptables">
+<Tab title="iptables2">
 
 关于 iptables 的永久化，建议直接安装 `iptables-persistent`。
 

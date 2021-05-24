@@ -28,7 +28,7 @@ title: 出站流量重定向
 
 <Tabs title="if-config">
 
-<Tab title="fwmark">
+<Tab title="fwmark1">
 
 ```ini
 [Interface]
@@ -71,7 +71,7 @@ PostDown = ip -6 rule delete table main suppress_prefixlength 0
 
 </Tab>
 
-<Tab title="sendThrough">
+<Tab title="sendThrough1">
 
 ```ini
 [Interface]
@@ -140,7 +140,7 @@ lsmod | grep wireguard
 
 <Tabs title="xray-config">
 
-<Tab title="fwmark">
+<Tab title="fwmark2">
 
 ```json
 {
@@ -228,7 +228,7 @@ lsmod | grep wireguard
 
 </Tab>
 
-<Tab title="sendThrough">
+<Tab title="sendThrough2">
 
 ```json
 {
