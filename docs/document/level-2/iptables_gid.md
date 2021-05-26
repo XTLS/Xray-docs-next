@@ -87,7 +87,7 @@ iptables -t mangle -A OUTPUT -j XRAY_SELF
 iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF
 ```
 
-3. 修改运行 Xray 的方式，使其运行在 uid 为 0，gid 为 23333 的用户上，参考[这里](#3-配置最大文件大开数运行xray客户端)。
+3. 修改运行 Xray 的方式，使其运行在 uid 为 0，gid 为 23333 的用户上，参考[这里](#3-配置最大文件打开数运行xray客户端)。
 
 ## 下面提供一个实现 tproxy 全局代理的完整配置过程
 
@@ -122,11 +122,11 @@ iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF
 }
 ```
 
-### 3. 配置最大文件大开数&运行 Xray 客户端
+### 3. 配置最大文件打开数&运行 Xray 客户端
 
-关于最大文件大开数问题见： **[too many open files 问题](https://guide.v2fly.org/app/tproxy.html#解决-too-many-open-files-问题)**
+关于最大文件打开数问题见： **[too many open files 问题](https://guide.v2fly.org/app/tproxy.html#解决-too-many-open-files-问题)**
 
-目前 Xray 服务端使用官方脚本安装的已经自动配置了最大文件大开数，无需再修改。
+目前 Xray 服务端使用官方脚本安装的已经自动配置了最大文件打开数，无需再修改。
 
 **安卓系统**
 
@@ -142,15 +142,22 @@ ulimit -SHn 1000000
 sudo -u xray_tproxy "运行Xray的命令"&
 ```
 
+例如：
+
+```bash
+ulimit -SHn 1000000
+sudo -u xray_tproxy xray -c /etc/xray/config.json &
+```
+
 _第一条命令：_
 
-改变最大打开文件数，只对当前终端有效，每次启动 Xray 前都要运行，该命令是设置客户端的最大文件大开数
+改变最大打开文件数，只对当前终端有效，每次启动 Xray 前都要运行，该命令是设置客户端的最大文件打开数
 
 _第二条命令：_
 
 以 uid 为 0，gid 不为 0 的用户来运行 Xray 客户端，后面加&代表放在后台运行
 
-**检查最大文件大开数是否设置成功**
+**检查最大文件打开数是否设置成功**
 
 ```bash
 cat /proc/Xray的pid/limits
