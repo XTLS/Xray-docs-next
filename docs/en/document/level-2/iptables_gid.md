@@ -1,11 +1,10 @@
 ---
-date: "2020-12-23T00:00:00.000Z"
-description: Project X Documentation.
-title: Transparent proxy to circumvent Xray traffic via gid
-weight: 3
+title: Transparent proxy via GID
 ---
 
-In the existing transparent proxy configuration(**[New V2Ray vernacular tutorial on transparent proxy](https://guide.v2fly.org/app/transparent_proxy.html)** 、 **[New V2Ray vernacular tutorial on transparent proxy (TProxy)](https://guide.v2fly.org/app/tproxy.html)** 、 **[Transparent proxy（TProxy）configuration tutorial](../tproxy)**)tutorials, the circumvention of Xray traffic is achieved by using mark. That is, mark the Xray outbound traffic and circumvent the Xray traffic by setting up iptables rules for direct connection of the traffic corresponding to the mark to prevent loopback.
+# Transparent proxy to circumvent Xray traffic via GID
+
+In the existing transparent proxy configuration(**[New V2Ray vernacular tutorial on transparent proxy](https://guide.v2fly.org/app/transparent_proxy.html)** 、 **[New V2Ray vernacular tutorial on transparent proxy (TProxy)](https://guide.v2fly.org/app/tproxy.html)** 、 **[Transparent proxy（TProxy）configuration tutorial](./tproxy.md)**)tutorials, the circumvention of Xray traffic is achieved by using mark. That is, mark outbound traffics and set up iptables rules which directly connect traffics corresponding to the mark, to circumvent the Xray traffic and prevent loop back.
 
 There are several problems with this method:
 
@@ -14,14 +13,18 @@ There are several problems with this method:
 2. Android has its own mark mechanism and this solution is not available on Android
 
 The solution in this tutorial does not require a mark setting and has a higher theoretical performance, as well as not having the problems mentioned above.
+
 ## Ideas
+
 TProxy traffic can only be received by users with root privileges (uid==0) or other users with CAP_NET_ADMIN privileges.
 
 The iptables rules can separate network traffic by uid (user id) and gid (user group id).
 Let Xray run on a user with uid==0 but gid!=0. Set the iptables rule to not proxy traffic for that gid to circumvent Xray traffic.
 
 ## Configuration Procedure
+
 ### 1. Preliminary preparation
+
 **Android**
 
 1. System has root privilege.
@@ -35,30 +38,41 @@ Let Xray run on a user with uid==0 but gid!=0. Set the iptables rule to not prox
 Need sudo, iptables-tproxy module and iptables-extra module。
 
 Usually the system comes with these functions. If you are using openwrt, you will need to run the following command:
+
 ```bash
 opkg install sudo iptables-mod-tproxy iptables-mod-extra
 ```
+
 Also attached are some common dependencies for openwrt, the lack of which may prevent Xray from running
+
 ```bash
 opkg install libopenssl ca-certificates
 ```
+
 ### 2. Add user (Android users please ignore this section)
+
 Android does not support managing users by modifying the /etc/passwd file, please ignore it and go straight to the next step.
+
 ```bash
 grep -qw xray_tproxy /etc/passwd || echo "xray_tproxy:x:0:23333:::" >> /etc/passwd
 ```
+
 where xray_tproxy is the username, 0 is the uid and 23333 is the gid, the username and gid can be set by yourself, the uid must be 0.
 To check if the user was added successfully, run
+
 ```bash
 sudo -u xray_tproxy id
 ```
+
 The result displayed should be uid 0 and gid 23333.
+
 ### 3. Configure and run Xray, and configure iptables rules
+
 In the existing transparent proxy configuration(**[New V2Ray vernacular tutorial on transparent proxy](https://guide.v2fly.org/app/transparent_proxy.html)** 、 **[New V2Ray vernacular tutorial on transparent proxy (TProxy)](https://guide.v2fly.org/app/tproxy.html)** 、 **[Transparent proxy（TProxy）configuration tutorial](../tproxy)**)tutorials, modify:
 
 1. Modify the json configuration file: remove mark-related content
 
-2. Modify the iptables rule to remove the mark-related content and add the option at the OUTPUT chain application rule: "-m owner ! --gid-owner 23333"
+2. Modify the iptables rule to remove the mark-related content and add the option at the OUTPUT chain application rule: `-m owner ! --gid-owner 23333`
 
 e.g.:
 
@@ -68,11 +82,16 @@ Change to
 
 `iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF`
 
-1. Modify the way you run Xray so that it runs on a user with uid 0 and gid 23333, refer to [here](#3-the_maximum_number_of_file_wide_openings).
+1. Modify the way you run Xray so that it runs on a user with uid 0 and gid 23333, refer to [here](#_3-configure-and-run-xray-and-configure-iptables-rules).
+
 ## The following provides a complete configuration process for implementing the tproxy global proxy
-### 1. Finish **[Preliminary preparation](#1-Preliminary_preparation)** 和 **[Add user](#2-Add_user)**
+
+### 1. Finish **[Preliminary preparation](#_1-preliminary-preparation)** 和 **[Add user](#_2-add-user-android-users-please-ignore-this-section)**
+
 ### 2. Preparing Xray profiles
+
 Configure Xray to listen to 12345 at dokodemo-door, turn on followRedirect and tproxy, no sniffing required:
+
 ```json
 {
   "inbounds": [
@@ -92,49 +111,61 @@ Configure Xray to listen to 12345 at dokodemo-door, turn on followRedirect and t
   ],
   "outbounds": [
     {
-        # Your server configuration
+      // Your server configuration
     }
   ]
 }
 ```
+
 ### 3. Configuring the maximum number of open files and run the Xray client
+
 About the maximum number of open files, see: **[too many open files issues](https://guide.v2fly.org/app/tproxy.html#解决-too-many-open-files-问题)**
 
 The current Xray server installed with the official script has the maximum number of open files automatically configured, so no further changes are required.
 
 **Android**
+
 ```bash
 ulimit -SHn 1000000
 setuidgid 0:23333 "Command to run Xray"&
 ```
+
 **Other Linux system**
+
 ```bash
 ulimit -SHn 1000000
 sudo -u xray_tproxy "Command to run Xray"&
 ```
+
 e.g.:
+
 ```bash
 ulimit -SHn 1000000
 sudo -u xray_tproxy xray -c /etc/xray/config.json &
 ```
-*The first command:*
+
+_The first command:_
 
 Change the maximum number of open files, valid only for the current terminal and to be run every time before starting Xray, this command is to set the maximum number of open files for the client.
 
-*The second command:*
+_The second command:_
 
 Run the Xray client as a user with uid 0 and gid not 0, followed by & for running in the background.
 
-**Check that the maximum number of open files is set successfully**
+**Check if the maximum number of open files is set successfully**
+
 ```bash
 cat /proc/"Xray's pid"/limits
 ```
+
 Find max open files, which should be the value you set. Xray's pid can be obtained by running `ps` or `ps -aux` or `ps -a`
 
 Both the server and client side should be checked.
 
 ### 4. Setting up iptables rules
+
 **Proxy ipv4**
+
 ```bash
 ip rule add fwmark 1 table 100
 ip route add local 0.0.0.0/0 dev lo table 100
@@ -166,6 +197,7 @@ iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 ! -p icmp -j XRAY_MASK
 ```
 
 **Proxy ipv6 (optional)**
+
 ```bash
 ip -6 rule add fwmark 1 table 106
 ip -6 route add local ::/0 dev lo table 106
@@ -185,7 +217,7 @@ ip6tables -t mangle -A XRAY6 -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
 ip6tables -t mangle -A PREROUTING -j XRAY6
 
 # Proxy gateway itself
-ip6tables -t mangle -N XRAY6_MASK 
+ip6tables -t mangle -N XRAY6_MASK
 ip6tables -t mangle -A XRAY6_MASK -d "the first ipv6 segment where the gateway is located" -j RETURN
 ip6tables -t mangle -A XRAY6_MASK -d "the second ipv6 segment where the gateway is located" -j RETURN
 
