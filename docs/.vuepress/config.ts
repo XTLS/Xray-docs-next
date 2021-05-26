@@ -29,7 +29,7 @@ export default defineUserConfig<DefaultThemeOptions>({
       title: "Project X",
       description: "Xray 官方文档",
     },
-    "/en": {
+    "/en/": {
       lang: "en-US",
       title: "Project X",
       description: "Official document of Xray",
@@ -88,7 +88,7 @@ export default defineUserConfig<DefaultThemeOptions>({
         },
         navbar: navbar.hans,
       },
-      "/en": {
+      "/en/": {
         ToggleText: "Toggle Theme",
         repoLabel: "Source",
         selectLanguageName: "English (WIP)",

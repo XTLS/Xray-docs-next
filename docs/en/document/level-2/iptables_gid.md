@@ -84,9 +84,11 @@ Change to
 
 1. Modify the way you run Xray so that it runs on a user with uid 0 and gid 23333, refer to [here](#_3-configure-and-run-xray-and-configure-iptables-rules).
 
-## The following provides a complete configuration process for implementing the tproxy global proxy
+## Steps
 
-### 1. Finish **[Preliminary preparation](#_1-preliminary-preparation)** 和 **[Add user](#_2-add-user-android-users-please-ignore-this-section)**
+The following provides a complete configuration process for implementing the tproxy global proxy
+
+### 1. Finish **[Preliminary preparation](#_1-preliminary-preparation)** and **[Add user](#_2-add-user-android-users-please-ignore-this-section)**
 
 ### 2. Preparing Xray profiles
 
