@@ -29,12 +29,11 @@ export default defineUserConfig<DefaultThemeOptions>({
       title: "Project X",
       description: "Xray 官方文档",
     },
-    /*
     "/en": {
       lang: "en-US",
       title: "Project X",
       description: "Official document of Xray",
-    },*/
+    },
   },
   themeConfig: {
     smoothScroll: true,
@@ -92,7 +91,7 @@ export default defineUserConfig<DefaultThemeOptions>({
       "/en": {
         ToggleText: "Toggle Theme",
         repoLabel: "Source",
-        selectLanguageName: "English",
+        selectLanguageName: "English (WIP)",
         // TODO: translation
         sidebar: {
           "/en/config/": sidebar.getConfigSidebar(
