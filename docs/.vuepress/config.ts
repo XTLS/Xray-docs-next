@@ -29,6 +29,12 @@ export default defineUserConfig<DefaultThemeOptions>({
       title: "Project X",
       description: "Xray 官方文档",
     },
+    /*
+    "/en": {
+      lang: "en-US",
+      title: "Project X",
+      description: "Official document of Xray",
+    },*/
   },
   themeConfig: {
     smoothScroll: true,
@@ -50,6 +56,10 @@ export default defineUserConfig<DefaultThemeOptions>({
         tip: "提示",
         warning: "注意",
         danger: "警告",
+        lastUpdatedText: "最近更改",
+        selectLanguageName: "简体中文",
+        selectLanguageText: "多语言",
+        selectLanguageAriaLabel: "多语言",
         sidebar: {
           "/config/": sidebar.getConfigSidebar(
             "特性详解",
@@ -78,6 +88,40 @@ export default defineUserConfig<DefaultThemeOptions>({
           ),
         },
         navbar: navbar.hans,
+      },
+      "/en": {
+        ToggleText: "Toggle Theme",
+        repoLabel: "Source",
+        selectLanguageName: "English",
+        // TODO: translation
+        sidebar: {
+          "/en/config/": sidebar.getConfigSidebar(
+            "特性详解",
+            "基础配置",
+            "入站代理",
+            "出站代理",
+            "底层传输",
+            "/en/config/"
+          ),
+          "/en/document/level-0/": sidebar.getDocumentLv0Sidebar(
+            "小小白白话文",
+            "/en/document/level-0/"
+          ),
+          "/en/document/level-1/": sidebar.getDocumentLv1Sidebar(
+            "入门技巧",
+            "/en/document/level-1/"
+          ),
+          "/en/document/level-2/": sidebar.getDocumentLv2Sidebar(
+            "进阶技巧",
+            "/en/document/level-2/"
+          ),
+          "/en/development/": sidebar.getDevelopmentSidebar(
+            "开发指南",
+            "协议详解",
+            "/en/development/"
+          ),
+        },
+        navbar: navbar.en,
       },
     },
   },

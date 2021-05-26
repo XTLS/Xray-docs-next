@@ -6,12 +6,13 @@ export const hans: NavbarConfig = [
   { text: "配置指南", link: "/config/" },
   { text: "开发指南", link: "/development/" },
   { text: "使用指南", link: "/document/" },
-  {
-    text: "多语言",
-    ariaLabel: "Language Menu",
-    children: [
-      { text: "简体中文", link: "/" },
-      { text: "English", link: "/en" },
-    ],
-  },
+];
+
+// TODO: translation
+export const en: NavbarConfig = [
+  { text: "首页", link: "/en" },
+  { text: "大史记", link: "/en/about/news.md" },
+  { text: "配置指南", link: "/en/config/" },
+  { text: "开发指南", link: "/en/development/" },
+  { text: "使用指南", link: "/en/document/" },
 ];

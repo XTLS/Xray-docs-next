@@ -1,9 +1,7 @@
 <template>
-  <nav class="navbar-links toggle-bar">
+  <nav v-if="enable" class="navbar-links toggle-bar">
     <div class="navbar-links-item">
-      <a v-if="enable" class="nav-link" @click.prevent="toggleTheme">{{
-        text
-      }}</a>
+      <a class="nav-link" @click.prevent="toggleTheme">{{ text }}</a>
     </div>
   </nav>
 </template>
@@ -14,16 +12,15 @@ import { useThemeLocaleData } from "@vuepress/plugin-theme-data/lib/client";
 import { ToggleOptions } from "../types";
 
 export default defineComponent({
-  data() {
-    return {
-      enable: false,
-      text: "",
-    };
-  },
-  mounted() {
-    const option = useThemeLocaleData<ToggleOptions>();
-    this.enable = option.value.enableToggle;
-    this.text = option.value.ToggleText;
+  computed: {
+    enable: function (): Boolean {
+      const option = useThemeLocaleData<ToggleOptions>();
+      return option.value.enableToggle;
+    },
+    text: function (): String {
+      const option = useThemeLocaleData<ToggleOptions>();
+      return option.value.ToggleText;
+    },
   },
   methods: {
     toggleTheme() {
