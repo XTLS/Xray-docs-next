@@ -1,0 +1,32 @@
+:root {
+  --c-brand: #407ce8;
+  --c-brand-light: #2e73ea;
+}
+
+html.dark {
+  --c-brand: #407ce8;
+  --c-brand-light: #2e73ea;
+  --c-warning-bg: rgba(185, 174, 119, 0.3);
+  --c-warning-text: #c0bebe;
+  --c-warning-text-accent: var(--c-text-accent);
+
+  --c-danger-title: #b40505;
+  --c-danger-bg: rgba(72, 56, 57, 0.3);
+  --c-danger-text: #c0bebe;
+
+  --c-bg-light: rgba(255, 255, 255, 0.1);
+}
+
+blockquote {
+  color: var(--c-text);
+  background-color: var(--c-bg-lighter);
+  border-left: 4px solid #17a2b8;
+}
+
+* {
+  scroll-behavior: smooth;
+  transition: background-color 0.1s ease;
+  @media screen and (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
+}

@@ -22,11 +22,16 @@ export default defineComponent({
     let tag = this.title;
     return {
       tabID: tag,
-      labelID: tag + "-" + "label",
     };
   },
-  beforeMount() {
-    this.$parent.$data.children.push(this);
+  mounted() {
+    this.tabID = "tab-" + Math.random().toString(36).substring(2);
+    this.$parent.$data.children.push({ id: this.tabID, title: this.title });
+  },
+  computed: {
+    labelID(): String {
+      return this.tabID + "-label";
+    },
   },
 });
 </script>
