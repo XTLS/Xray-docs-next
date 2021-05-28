@@ -62,6 +62,18 @@ export default defineComponent({
 @import "node_modules/bootstrap/scss/bootstrap";
 
 button.nav-link {
-  color: var(--textColor);
+  color: var(--c-text-accent);
+  &:hover,
+  &:focus {
+    color: var(--x-nav-text-hover);
+  }
+}
+
+nav {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--c-border);
+}
+div.tab-content {
+  border-bottom: 1px solid var(--c-border);
 }
 </style>

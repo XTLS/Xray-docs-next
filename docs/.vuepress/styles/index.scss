@@ -1,6 +1,8 @@
 :root {
   --c-brand: #407ce8;
   --c-brand-light: #2e73ea;
+
+  --x-nav-text-hover: #0a51bd;
 }
 
 html.dark {
@@ -15,6 +17,8 @@ html.dark {
   --c-danger-text: #c0bebe;
 
   --c-bg-light: rgba(255, 255, 255, 0.1);
+
+  --x-nav-text-hover: #7ca6f2;
 }
 
 blockquote {
