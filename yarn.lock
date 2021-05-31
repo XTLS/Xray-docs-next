@@ -339,10 +339,10 @@
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.0.11.tgz#20d22dd0da7d358bb21c17f9bde8628152642c77"
   integrity sha512-b+zB8A2so8eCE0JsxjL24J7vdGl8rzPQ09hZNhystm+KqSbKcAej1A+Hbva1rCMmTTqA+hFnUSDc5kouEo0JzA==
 
-"@vuepress/bundler-vite@^2.0.0-beta.15":
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@vuepress/bundler-vite/-/bundler-vite-2.0.0-beta.15.tgz#8cf0742bdb7d8fb1990c338579a94e5fe3c61ca6"
-  integrity sha512-kdISsV1Gm6AnlQc4RATXeuh+aruJTHj0MbKFTMlwLM2mbpWiNidgYS8HsrnZebR5MAhU7KIc+816KafOm9Mauw==
+"@vuepress/bundler-vite@^2.0.0-beta.16":
+  version "2.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@vuepress/bundler-vite/-/bundler-vite-2.0.0-beta.16.tgz#2baff5848bd5d89b313dcaf32b40b6df4d50fb9f"
+  integrity sha512-G2QF9MgNUIJTCREcLQi+2llSSf3a0aXOkZG+iBprNR3tWcKpA6qxWwOeuTwDUyGkWNxmOb19bwwhuO72Y1hiSw==
   dependencies:
     "@vitejs/plugin-vue" "^1.2.2"
     "@vue/compiler-sfc" "^3.0.11"
@@ -351,6 +351,9 @@
     "@vuepress/core" "2.0.0-beta.15"
     "@vuepress/shared" "2.0.0-beta.7"
     "@vuepress/utils" "2.0.0-beta.15"
+    autoprefixer "^10.2.5"
+    postcss "^8.3.0"
+    postcss-csso "^5.0.1"
     rollup "^2.50.1"
     vite "^2.3.4"
     vue "^3.0.11"
@@ -3550,14 +3553,7 @@ rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-rollup@^2.38.5:
-  version "2.48.0"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.48.0.tgz#fceb01ed771f991f29f7bd2ff7838146e55acb74"
-  integrity sha512-wl9ZSSSsi5579oscSDYSzGn092tCS076YB+TQrzsGuSfYyJeep8eEWj0eaRjuC5McuMNmcnR8icBqiE/FWNB1A==
-  optionalDependencies:
-    fsevents "~2.3.1"
-
-rollup@^2.50.1:
+rollup@^2.38.5, rollup@^2.50.1:
   version "2.50.3"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.50.3.tgz#71021dedf2e3423bee28e795860783feea2be63e"
   integrity sha512-58KiHnaCzZn6F5yRMjHe7WTZuFj6r4iJVJz5UwvKD6f/xfTy2IdtbR2AVHN6cyfK1tBy//hJ66ebXy6Y1h7HlQ==
