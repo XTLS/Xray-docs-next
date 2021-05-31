@@ -531,10 +531,10 @@
     "@vuepress/core" "2.0.0-beta.15"
     prismjs "^1.23.0"
 
-"@vuepress/plugin-search@^2.0.0-beta.15":
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@vuepress/plugin-search/-/plugin-search-2.0.0-beta.15.tgz#039cd5763771a720bba857a4cdc974204d0e8fac"
-  integrity sha512-5v4S5rWetimkC25aZc3bRKJPJVRz/YRqvIAZNHDez6st2WuZC+6Kw6phv8l0nSSnl6N8XuphQBDDfOVlK4do9A==
+"@vuepress/plugin-search@^2.0.0-beta.16":
+  version "2.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-search/-/plugin-search-2.0.0-beta.16.tgz#1e5ae70da3ea82dd9509265df12a9b8cfcb6fd8d"
+  integrity sha512-WJu6VqE/Y89zjoWkT7hmfXDPLV4cRTkuF56lnaaFq/SkiE77hfF+ZcDpdlpZEengiOgljHSqOSPkAfFbFh2igw==
   dependencies:
     "@vuepress/client" "2.0.0-beta.15"
     "@vuepress/core" "2.0.0-beta.15"
