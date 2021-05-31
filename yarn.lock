@@ -449,7 +449,17 @@
     vue "^3.0.11"
     vue-router "^4.0.8"
 
-"@vuepress/plugin-back-to-top@2.0.0-beta.15", "@vuepress/plugin-back-to-top@^2.0.0-beta.15":
+"@vuepress/plugin-back-to-top@2.0.0-beta.16":
+  version "2.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.16.tgz#3340d39522be9bf1c002f68b162fd070dc43d4fa"
+  integrity sha512-pMHKe8Wj6ebg15Y5aLj+Re3ambT4ZW5mB8pf8MXnJaLxfgJfsPdeRLAlM37vQIPvXD8MjG3PsLO2uaGZ3KXZ5Q==
+  dependencies:
+    "@vuepress/core" "2.0.0-beta.15"
+    "@vuepress/utils" "2.0.0-beta.15"
+    ts-debounce "^3.0.0"
+    vue "^3.0.11"
+
+"@vuepress/plugin-back-to-top@^2.0.0-beta.15":
   version "2.0.0-beta.15"
   resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.15.tgz#c381488ffe4a64d301183dd3f7ec70fe067c6c6b"
   integrity sha512-ZcOCNxlWd/yVGuNOvY341rbXQOmFhef4m63Q+78MeaIZNkljahli29rmS9yleM34r/2QcAhU7j0Kt0bCasRpoA==
@@ -491,10 +501,10 @@
     "@vuepress/core" "2.0.0-beta.15"
     execa "^5.0.0"
 
-"@vuepress/plugin-medium-zoom@2.0.0-beta.15":
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@vuepress/plugin-medium-zoom/-/plugin-medium-zoom-2.0.0-beta.15.tgz#62f82b9f448e2a83b25703cbddcba88521dbb066"
-  integrity sha512-LqXKCS4YIq3195SgqCZzgbBIMG2Va6oOK19iCNkf5p97Ks9983qkSN04WXKIsoszlYlsh9A+4lhuj4dS24h6AQ==
+"@vuepress/plugin-medium-zoom@2.0.0-beta.16":
+  version "2.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-medium-zoom/-/plugin-medium-zoom-2.0.0-beta.16.tgz#3727925386147fe727ace2fee3effb8fdc6845c2"
+  integrity sha512-CVxRSvLUSSM4GDrBv3vB3+QZDLhudY65ZWqUnhpqoXe67+t0lvqcbGWqj3vihSUMKVrs+QFCyWg7t01K9UPC8Q==
   dependencies:
     "@vuepress/client" "2.0.0-beta.15"
     "@vuepress/core" "2.0.0-beta.15"
@@ -502,10 +512,10 @@
     medium-zoom "^1.0.6"
     vue "^3.0.11"
 
-"@vuepress/plugin-nprogress@2.0.0-beta.15":
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@vuepress/plugin-nprogress/-/plugin-nprogress-2.0.0-beta.15.tgz#ae6f4efd396331d2f60c66a770cc036474b37cd0"
-  integrity sha512-dX6LEmiN13IuCWQwvP22fSxPHnkoJNXduQafrKIwF1B4xUxBaw5/rXTmVqCd5a9N1/q3stwiNaYkeABXEew5kw==
+"@vuepress/plugin-nprogress@2.0.0-beta.16":
+  version "2.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-nprogress/-/plugin-nprogress-2.0.0-beta.16.tgz#5bcce20763bc8cc9a1ba4d13f25d6c5a89614de0"
+  integrity sha512-pE3b462gb2xX6zGkR0317G//QuVGix/FM5vIB4ICZp2SCkt7KHdG3UMkimtRMNMHnE2iArItPrYqWJpBKSLewQ==
   dependencies:
     "@vuepress/client" "2.0.0-beta.15"
     "@vuepress/core" "2.0.0-beta.15"
@@ -562,19 +572,19 @@
   dependencies:
     "@vue/shared" "^3.0.11"
 
-"@vuepress/theme-default@2.0.0-beta.15":
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/@vuepress/theme-default/-/theme-default-2.0.0-beta.15.tgz#f1aea69d0e047a39914b5fb110e35d3722397377"
-  integrity sha512-MEBBuRCTlevitk27aNko3sJ10YdaLuVbCfSMiIp4uu6awLcaCZqyR6ZFZVAFsW0POkp7N/CB8/kWq0mP+kUrGw==
+"@vuepress/theme-default@2.0.0-beta.16":
+  version "2.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/@vuepress/theme-default/-/theme-default-2.0.0-beta.16.tgz#8f95693b473d66756f8fa2e96356c4d56329f889"
+  integrity sha512-WBiKLVvRSaL3y+xASjQOlGnZSab3NHjhMBNmY+dN5hgcf9mhKZqTWrytjevGEzRhl/uCfuDOLnX4Oi7AZvEUeg==
   dependencies:
     "@vuepress/client" "2.0.0-beta.15"
     "@vuepress/core" "2.0.0-beta.15"
     "@vuepress/plugin-active-header-links" "2.0.0-beta.15"
-    "@vuepress/plugin-back-to-top" "2.0.0-beta.15"
+    "@vuepress/plugin-back-to-top" "2.0.0-beta.16"
     "@vuepress/plugin-container" "2.0.0-beta.15"
     "@vuepress/plugin-git" "2.0.0-beta.15"
-    "@vuepress/plugin-medium-zoom" "2.0.0-beta.15"
-    "@vuepress/plugin-nprogress" "2.0.0-beta.15"
+    "@vuepress/plugin-medium-zoom" "2.0.0-beta.16"
+    "@vuepress/plugin-nprogress" "2.0.0-beta.16"
     "@vuepress/plugin-palette" "2.0.0-beta.15"
     "@vuepress/plugin-prismjs" "2.0.0-beta.15"
     "@vuepress/plugin-theme-data" "2.0.0-beta.15"
@@ -4120,15 +4130,15 @@ vuepress-plugin-mermaidjs@^1.8.1:
   dependencies:
     mermaid "^8.8.3"
 
-vuepress@^2.0.0-beta.15:
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/vuepress/-/vuepress-2.0.0-beta.15.tgz#933659c080f320d9c9cbd9e7252394ecda434045"
-  integrity sha512-DDQ1763GSu4iiUggqtMMZqa9k4mzbB3TAPAKwd4AMo/nwfs3GS7mFY+/NpOIi541wNU7uBgmKTmLrEfmmmH4Rw==
+vuepress@^2.0.0-beta.16:
+  version "2.0.0-beta.16"
+  resolved "https://registry.yarnpkg.com/vuepress/-/vuepress-2.0.0-beta.16.tgz#65ae914ab37aac84cdb58da140ef20af9f1e69f9"
+  integrity sha512-B1/N/8MBvjrdVMjIhVb0AptTJK9S30C9dUkhOMCv/R7R6D/a7kYPsdBmXipe560SRGPllb+2rtYtdNbx63AX2w==
   dependencies:
     "@vuepress/bundler-webpack" "2.0.0-beta.15"
     "@vuepress/cli" "2.0.0-beta.15"
     "@vuepress/core" "2.0.0-beta.15"
-    "@vuepress/theme-default" "2.0.0-beta.15"
+    "@vuepress/theme-default" "2.0.0-beta.16"
 
 watchpack@^2.2.0:
   version "2.2.0"
