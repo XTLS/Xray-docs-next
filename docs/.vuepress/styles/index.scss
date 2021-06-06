@@ -55,3 +55,7 @@ blockquote {
     scroll-behavior: auto;
   }
 }
+
+.meta-item.edit-link > a.meta-item-label {
+  color: var(--c-text-accent);
+}
