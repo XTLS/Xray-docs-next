@@ -243,6 +243,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 ```json
 {
   "ocspStapling": 3600,
+  "oneTimeLoading": false,
   "usage": "encipherment",
   "certificateFile": "/path/to/certificate.crt",
   "keyFile": "/path/to/key.key",
@@ -299,7 +300,14 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `ocspStapling`: number
 
-ocspStapling 检查更新时间间隔。 单位：秒
+OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认值为 `3600`，即一小时。
+
+> `oneTimeLoading`: true | false
+
+仅加载一次。值为 `true` 时将关闭证书热重载功能与 ocspStapling 功能。
+::: warning
+当值为 `true` 时，将会关闭 OCSP 装订。
+:::
 
 > `usage`: "encipherment" | "verify" | "issue"
 
