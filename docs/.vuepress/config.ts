@@ -3,6 +3,11 @@ import type { DefaultThemeOptions } from "@vuepress/theme-default";
 import * as sidebar from "./config/sidebar";
 import * as navbar from "./config/navbar";
 import * as path from "path";
+import { ThemeConfig } from "@vuepress/core";
+import {
+  DefaultThemeLocaleOptions,
+  DefaultThemePluginsOptions,
+} from "@vuepress/theme-default/lib/shared";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -49,7 +54,6 @@ export default defineUserConfig<DefaultThemeOptions>({
     },
     locales: {
       "/": {
-        ToggleText: "切换主题",
         repoLabel: "查看源码",
         editLinkText: "帮助我们改善此页面！",
         tip: "提示",
@@ -89,7 +93,6 @@ export default defineUserConfig<DefaultThemeOptions>({
         navbar: navbar.hans,
       },
       "/en/": {
-        ToggleText: "Toggle Theme",
         repoLabel: "Source",
         selectLanguageName: "English (WIP)",
         // TODO: translation
@@ -148,3 +151,5 @@ export default defineUserConfig<DefaultThemeOptions>({
   },
   //postcss: { plugins: [require("autoprefixer")] }
 });
+
+interface DocsThemeConfig extends ThemeConfig, DefaultThemeLocaleOptions {}
