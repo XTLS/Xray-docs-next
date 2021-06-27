@@ -96,6 +96,6 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 
 ### Stargazers over time
 
-> Project X 的 GitHub 主仓库 Xray-core 已获 2000 stars；Project X 群人数近 3000，频道订阅数 1000+
+> Project X 的 GitHub 主仓库 Xray-core 已获 5000+ stars；Project X 群人数近 6000，频道订阅数 3000+
 
 [![Stargazers over time](https://starchart.cc/XTLS/Xray-core.svg)](https://starchart.cc/XTLS/Xray-core)
