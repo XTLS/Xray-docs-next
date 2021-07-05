@@ -15,6 +15,7 @@ export function getConfigSidebar(
         path + "features/vless.md",
         path + "features/xtls.md",
         path + "features/fallback.md",
+        path + "features/browser_dialer.md",
         path + "features/env.md",
         path + "features/multiple.md",
       ],
