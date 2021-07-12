@@ -345,19 +345,20 @@
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.1.4.tgz#c14c461ec42ea2c1556e86f60b0354341d91adc3"
   integrity sha512-6O45kZAmkLvzGLToBxEz4lR2W6kXohCtebV2UxjH9GXjd8X9AhEn68FN9eNanFtWNzvgw1hqd6HkPRVQalqf7Q==
 
-"@vuepress/bundler-vite@^2.0.0-beta.20":
-  version "2.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/@vuepress/bundler-vite/-/bundler-vite-2.0.0-beta.21.tgz#b1decafeda47aebf47d0308097090d67311837b5"
-  integrity sha512-homtn1rvHcRIN+zbI5spc3QIHgJQIrHnX7EI1xJcAVbp8KsgovS1jeiK4q4yljpnlYYNGTSVmV0pPIZRx9bckg==
+"@vuepress/bundler-vite@^2.0.0-beta.21":
+  version "2.0.0-beta.22"
+  resolved "https://registry.yarnpkg.com/@vuepress/bundler-vite/-/bundler-vite-2.0.0-beta.22.tgz#a9905a3559db7f8513716211a005e030de73f9e9"
+  integrity sha512-w0Zpsy3bOm+4vYY8qo3mwHg2E5xS+toGDoooHRhRUPnsaRVzaM8sSGE5ZRAtpo1OEj5IgkgJyLRm9xS1L9YTEQ==
   dependencies:
     "@vitejs/plugin-vue" "^1.2.4"
     "@vue/compiler-sfc" "^3.1.4"
     "@vue/server-renderer" "^3.1.4"
     "@vuepress/client" "2.0.0-beta.21"
-    "@vuepress/core" "2.0.0-beta.21"
+    "@vuepress/core" "2.0.0-beta.22"
     "@vuepress/shared" "2.0.0-beta.21"
     "@vuepress/utils" "2.0.0-beta.21"
     autoprefixer "^10.2.6"
+    connect-history-api-fallback "^1.6.0"
     postcss "^8.3.5"
     postcss-csso "^5.0.1"
     rollup "^2.52.7"
@@ -434,10 +435,35 @@
     gray-matter "^4.0.3"
     toml "^3.0.0"
 
+"@vuepress/core@2.0.0-beta.22":
+  version "2.0.0-beta.22"
+  resolved "https://registry.yarnpkg.com/@vuepress/core/-/core-2.0.0-beta.22.tgz#5eac3d7050137b97a94a2eb3aabf85274fe6ffe0"
+  integrity sha512-22kwkGIbJxgMevj+byXfKvPVzXQsHvUguftBiBQEMFly09lz4g3bJNa3M6RD4JjciLWWavHKeyt8Rr21OX7R/w==
+  dependencies:
+    "@vuepress/client" "2.0.0-beta.21"
+    "@vuepress/markdown" "2.0.0-beta.22"
+    "@vuepress/shared" "2.0.0-beta.21"
+    "@vuepress/utils" "2.0.0-beta.21"
+    gray-matter "^4.0.3"
+    toml "^3.0.0"
+
 "@vuepress/markdown@2.0.0-beta.21":
   version "2.0.0-beta.21"
   resolved "https://registry.yarnpkg.com/@vuepress/markdown/-/markdown-2.0.0-beta.21.tgz#2f38a55b529131b8552e2e7963ca28bf540ac23d"
   integrity sha512-m6KLntaBIUMUtGLz4z60J315sDoSFui7NoMZSktktnpFYs9WeoMh6002MeOQ0+9cxeK6KRfUgCR/zTMrGmyNkw==
+  dependencies:
+    "@types/markdown-it" "^12.0.2"
+    "@vuepress/shared" "2.0.0-beta.21"
+    "@vuepress/utils" "2.0.0-beta.21"
+    markdown-it "^12.1.0"
+    markdown-it-anchor "^8.1.0"
+    markdown-it-emoji "^2.0.0"
+    mdurl "^1.0.1"
+
+"@vuepress/markdown@2.0.0-beta.22":
+  version "2.0.0-beta.22"
+  resolved "https://registry.yarnpkg.com/@vuepress/markdown/-/markdown-2.0.0-beta.22.tgz#d2f8648e7d78124f782f14af32dd1c4c827348b0"
+  integrity sha512-QQQmmbSuIN/Up4ne4PIsLfgXdE2rGTZwWTrR4hT8aFxv18v9gnz/PqUCsprIcm7UAWzSp5EQZg6RexPqHbzIpQ==
   dependencies:
     "@types/markdown-it" "^12.0.2"
     "@vuepress/shared" "2.0.0-beta.21"
@@ -459,12 +485,22 @@
     vue "^3.1.4"
     vue-router "^4.0.10"
 
-"@vuepress/plugin-back-to-top@2.0.0-beta.21", "@vuepress/plugin-back-to-top@^2.0.0-beta.20":
+"@vuepress/plugin-back-to-top@2.0.0-beta.21":
   version "2.0.0-beta.21"
   resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.21.tgz#a766496c720b55eeb52352038613dcb9eadc65bf"
   integrity sha512-GAaE0CBVVRfcooEB/2fg1lSfVL8Aoscb58GG0Lq8ZE4C231P79LoHXJEfZaKdmhXWG/CjmD793AcYYKKJ/jWGg==
   dependencies:
     "@vuepress/core" "2.0.0-beta.21"
+    "@vuepress/utils" "2.0.0-beta.21"
+    ts-debounce "^3.0.0"
+    vue "^3.1.4"
+
+"@vuepress/plugin-back-to-top@^2.0.0-beta.22":
+  version "2.0.0-beta.22"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-back-to-top/-/plugin-back-to-top-2.0.0-beta.22.tgz#81e846d711af05a9e9d8dd37b379c5b3c1b3ee3f"
+  integrity sha512-T4jp8NCvEfKI6tOJp1ZcuSyhBY8l43/2ZB2b6RQawU9nRmcMaGTUPyy0KZF2mZQdo5LHQPOm88Qgoh+nMyg4mw==
+  dependencies:
+    "@vuepress/core" "2.0.0-beta.22"
     "@vuepress/utils" "2.0.0-beta.21"
     ts-debounce "^3.0.0"
     vue "^3.1.4"
@@ -482,13 +518,13 @@
     markdown-it "^12.1.0"
     markdown-it-container "^3.0.0"
 
-"@vuepress/plugin-debug@^2.0.0-beta.20":
-  version "2.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/@vuepress/plugin-debug/-/plugin-debug-2.0.0-beta.21.tgz#a3c66693165cd1559819d248385a3d7f6cb18111"
-  integrity sha512-Gyc/xdyboXxa6cPN6g+Wf6fk53HI5huXrgBfO3CkUYsbrndpcgi4Kr9EwF6iLEkR5oe3aP8vH8K6Dv3LcR62uw==
+"@vuepress/plugin-debug@^2.0.0-beta.21":
+  version "2.0.0-beta.22"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-debug/-/plugin-debug-2.0.0-beta.22.tgz#2e52b791b447b369e319ea50872cd0610059c352"
+  integrity sha512-M32k/fzedXaeVia88qhtJdbD0s6xTFSPpnjaPIb7S2HZeDdDHxUSFkekJsxzpg7IF8+PICe6dukl17cgqze3iQ==
   dependencies:
     "@vuepress/client" "2.0.0-beta.21"
-    "@vuepress/core" "2.0.0-beta.21"
+    "@vuepress/core" "2.0.0-beta.22"
     "@vuepress/utils" "2.0.0-beta.21"
     vue "^3.1.4"
     vue-router "^4.0.10"
@@ -541,13 +577,13 @@
     "@vuepress/core" "2.0.0-beta.21"
     prismjs "^1.24.1"
 
-"@vuepress/plugin-search@^2.0.0-beta.20":
-  version "2.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/@vuepress/plugin-search/-/plugin-search-2.0.0-beta.21.tgz#bd299587f09b94f1e7fccbb9d6f4acc478be31f9"
-  integrity sha512-U1P26IDSEK/eAgJwjn5iM7o742hDW+UEXW3JfUz5yIupvjVWtfGBzCKHZ62woy1P8xbcqUUSyTRhONwDO+qnwQ==
+"@vuepress/plugin-search@^2.0.0-beta.21":
+  version "2.0.0-beta.22"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-search/-/plugin-search-2.0.0-beta.22.tgz#643eb68b0fabbdff40700404a07401973a38bce3"
+  integrity sha512-QwMns4aBFS3kuQgQgtPd4RbcYIoNlux+hx6Tb3ze9Z7xTk7yh0U5GIR96vT3bJ4jQ7axVp72HucZBK+XjIJhTQ==
   dependencies:
     "@vuepress/client" "2.0.0-beta.21"
-    "@vuepress/core" "2.0.0-beta.21"
+    "@vuepress/core" "2.0.0-beta.22"
     "@vuepress/shared" "2.0.0-beta.21"
     "@vuepress/utils" "2.0.0-beta.21"
     chokidar "^3.5.2"
@@ -3283,7 +3319,7 @@ postcss-csso@^5.0.1:
   dependencies:
     csso "^4.0.2"
 
-postcss-loader@^6.1.0, postcss-loader@^6.1.1:
+postcss-loader@^6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/postcss-loader/-/postcss-loader-6.1.1.tgz#58dd0a3accd9bc87cc52eff75244db578d11301a"
   integrity sha512-lBmJMvRh1D40dqpWKr9Rpygwxn8M74U9uaCSeYGNKLGInbk9mXBt1ultHf2dH9Ghk6Ue4UXlXWwGMH9QdUJ5ug==
