@@ -6,27 +6,29 @@
 
 如果你用了《小小白白话文》中的[Xray 配置](../level-0/ch07-xray-server.md#_7-4-配置xray)，并完成了[HTTP 自动跳转 HTTPS 优化](../level-0/ch07-xray-server.md#_7-8-服务器优化之二-开启http自动跳转https)，那么你已经有了基于 `VLESS` 协议的简易回落：
 
-```json5
-"inbounds": [
+```json
+{
+  "inbounds": [
     {
-        "port": 443,
-        "protocol": "vless",
-        "settings": {
-            "clients": [
-                ...
-            ],
-            "decryption": "none",
-            "fallbacks": [
-                {
-                    "dest": 8080 // 默认回落到防探测的代理
-                }
-            ]
-        },
-        "streamSettings": {
-            ...
-        }
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          // ... ...
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": 8080 // 默认回落到防探测的代理
+          }
+        ]
+      },
+      "streamSettings": {
+        // ... ...
+      }
     }
-]
+  ]
+}
 ```
 
 这一段配置用人话要怎么解释呢？
@@ -133,55 +135,55 @@
 
 ### 5.1 首先，我将服务器端配置的 443 监听段摘抄如下：
 
-```json5
+```json
 {
-  port: 443,
-  protocol: "vless",
-  settings: {
-    clients: [
+  "port": 443,
+  "protocol": "vless",
+  "settings": {
+    "clients": [
       {
-        id: "", // 填写你的 UUID
-        flow: "xtls-rprx-direct",
-        level: 0,
-        email: "love@example.com",
-      },
+        "id": "", // 填写你的 UUID
+        "flow": "xtls-rprx-direct",
+        "level": 0,
+        "email": "love@example.com"
+      }
     ],
-    decryption: "none",
-    fallbacks: [
+    "decryption": "none",
+    "fallbacks": [
       {
-        dest: 1310, // 默认回落到 Xray 的 Trojan 协议
-        xver: 1,
+        "dest": 1310, // 默认回落到 Xray 的 Trojan 协议
+        "xver": 1
       },
       {
-        path: "/websocket", // 必须换成自定义的 PATH
-        dest: 1234,
-        xver: 1,
+        "path": "/websocket", // 必须换成自定义的 PATH
+        "dest": 1234,
+        "xver": 1
       },
       {
-        path: "/vmesstcp", // 必须换成自定义的 PATH
-        dest: 2345,
-        xver: 1,
+        "path": "/vmesstcp", // 必须换成自定义的 PATH
+        "dest": 2345,
+        "xver": 1
       },
       {
-        path: "/vmessws", // 必须换成自定义的 PATH
-        dest: 3456,
-        xver: 1,
-      },
-    ],
+        "path": "/vmessws", // 必须换成自定义的 PATH
+        "dest": 3456,
+        "xver": 1
+      }
+    ]
   },
-  streamSettings: {
-    network: "tcp",
-    security: "xtls",
-    xtlsSettings: {
-      alpn: ["http/1.1"],
-      certificates: [
+  "streamSettings": {
+    "network": "tcp",
+    "security": "xtls",
+    "xtlsSettings": {
+      "alpn": ["http/1.1"],
+      "certificates": [
         {
-          certificateFile: "/path/to/fullchain.crt", // 换成你的证书，绝对路径
-          keyFile: "/path/to/private.key", // 换成你的私钥，绝对路径
-        },
-      ],
-    },
-  },
+          "certificateFile": "/path/to/fullchain.crt", // 换成你的证书，绝对路径
+          "keyFile": "/path/to/private.key" // 换成你的私钥，绝对路径
+        }
+      ]
+    }
+  }
 }
 ```
 
@@ -228,32 +230,32 @@
 
 1. 后续处理回落至 `1310` 端口的流量，按照下面的配置验证、处理：
 
-   ```json5
+   ```json
    {
-     port: 1310,
-     listen: "127.0.0.1",
-     protocol: "trojan",
-     settings: {
-       clients: [
+     "port": 1310,
+     "listen": "127.0.0.1",
+     "protocol": "trojan",
+     "settings": {
+       "clients": [
          {
-           password: "", // 填写你的密码
-           level: 0,
-           email: "love@example.com",
-         },
+           "password": "", // 填写你的密码
+           "level": 0,
+           "email": "love@example.com"
+         }
        ],
-       fallbacks: [
+       "fallbacks": [
          {
-           dest: 80, // 或者回落到其它也防探测的代理
-         },
-       ],
+           "dest": 80 // 或者回落到其它也防探测的代理
+         }
+       ]
      },
-     streamSettings: {
-       network: "tcp",
-       security: "none",
-       tcpSettings: {
-         acceptProxyProtocol: true,
-       },
-     },
+     "streamSettings": {
+       "network": "tcp",
+       "security": "none",
+       "tcpSettings": {
+         "acceptProxyProtocol": true
+       }
+     }
    }
    ```
 
@@ -264,94 +266,94 @@
 
 2. 后续处理回落至 `1234` 端口的流量，仔细看！它其实是 `vless+ws`：
 
-   ```json5
+   ```json
    {
-     port: 1234,
-     listen: "127.0.0.1",
-     protocol: "vless",
-     settings: {
-       clients: [
+     "port": 1234,
+     "listen": "127.0.0.1",
+     "protocol": "vless",
+     "settings": {
+       "clients": [
          {
-           id: "", // 填写你的 UUID
-           level: 0,
-           email: "love@example.com",
-         },
+           "id": "", // 填写你的 UUID
+           "level": 0,
+           "email": "love@example.com"
+         }
        ],
-       decryption: "none",
+       "decryption": "none"
      },
-     streamSettings: {
-       network: "ws",
-       security: "none",
-       wsSettings: {
-         acceptProxyProtocol: true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
-         path: "/websocket", // 必须换成自定义的 PATH，需要和分流的一致
-       },
-     },
+     "streamSettings": {
+       "network": "ws",
+       "security": "none",
+       "wsSettings": {
+         "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
+         "path": "/websocket" // 必须换成自定义的 PATH，需要和分流的一致
+       }
+     }
    }
    ```
 
 3. 后续处理回落至 `2345` 端口的流量，仔细看！它其实是 `vmess直连`：
 
-   ```json5
+   ```json
    {
-     port: 2345,
-     listen: "127.0.0.1",
-     protocol: "vmess",
-     settings: {
-       clients: [
+     "port": 2345,
+     "listen": "127.0.0.1",
+     "protocol": "vmess",
+     "settings": {
+       "clients": [
          {
-           id: "", // 填写你的 UUID
-           level: 0,
-           email: "love@example.com",
-         },
-       ],
+           "id": "", // 填写你的 UUID
+           "level": 0,
+           "email": "love@example.com"
+         }
+       ]
      },
-     streamSettings: {
-       network: "tcp",
-       security: "none",
-       tcpSettings: {
-         acceptProxyProtocol: true,
-         header: {
-           type: "http",
-           request: {
-             path: [
-               "/vmesstcp", // 必须换成自定义的 PATH，需要和分流的一致
-             ],
-           },
-         },
-       },
-     },
+     "streamSettings": {
+       "network": "tcp",
+       "security": "none",
+       "tcpSettings": {
+         "acceptProxyProtocol": true,
+         "header": {
+           "type": "http",
+           "request": {
+             "path": [
+               "/vmesstcp" // 必须换成自定义的 PATH，需要和分流的一致
+             ]
+           }
+         }
+       }
+     }
    }
    ```
 
 4. 后续处理回落至 `3456` 端口的流量，再仔细看！它其实是是 `vmess+ws(+cdn)`。
 
    ::: warning 说明
-   你没看错，这就是 v2fly 曾经的推荐组合之一，并可完整支持 `CDN`。现已加入完美回落套餐哦！
+   你没看错，这就是 v2fly 曾经推荐的组合之一，并可完整支持 `CDN`。现已加入完美回落套餐哦！
    :::
 
-   ```json5
+   ```json
    {
-     port: 3456,
-     listen: "127.0.0.1",
-     protocol: "vmess",
-     settings: {
-       clients: [
+     "port": 3456,
+     "listen": "127.0.0.1",
+     "protocol": "vmess",
+     "settings": {
+       "clients": [
          {
-           id: "", // 填写你的 UUID
-           level: 0,
-           email: "love@example.com",
-         },
-       ],
+           "id": "", // 填写你的 UUID
+           "level": 0,
+           "email": "love@example.com"
+         }
+       ]
      },
-     streamSettings: {
-       network: "ws",
-       security: "none",
-       wsSettings: {
-         acceptProxyProtocol: true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
-         path: "/vmessws", // 必须换成自定义的 PATH，需要和分流的一致
-       },
-     },
+     "streamSettings": {
+       "network": "ws",
+       "security": "none",
+       "wsSettings": {
+         "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
+         "path": "/vmessws" // 必须换成自定义的 PATH，需要和分流的一致
+       }
+     }
    }
    ```
 

@@ -74,91 +74,91 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
 
 ## Xray 配置
 
-```json5
+```json
 {
-  log: {
-    loglevel: "warning",
+  "log": {
+    "loglevel": "warning"
   },
-  inbounds: [
+  "inbounds": [
     {
-      port: 443,
-      protocol: "vless",
-      settings: {
-        clients: [
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
           {
-            id: "UUID",
-            flow: "xtls-rprx-direct",
-          },
+            "id": "UUID",
+            "flow": "xtls-rprx-direct"
+          }
         ],
-        decryption: "none",
-        fallbacks: [
+        "decryption": "none",
+        "fallbacks": [
           {
-            name: "example.com",
-            path: "/vmessws",
-            dest: 5000,
-            xver: 1,
+            "name": "example.com",
+            "path": "/vmessws",
+            "dest": 5000,
+            "xver": 1
           },
           {
-            dest: 5001,
-            xver: 1,
+            "dest": 5001,
+            "xver": 1
           },
           {
-            alpn: "h2",
-            dest: 5002,
-            xver: 1,
+            "alpn": "h2",
+            "dest": 5002,
+            "xver": 1
           },
           {
-            name: "blog.example.com",
-            dest: 5003,
-            xver: 1,
+            "name": "blog.example.com",
+            "dest": 5003,
+            "xver": 1
           },
           {
-            name: "blog.example.com",
-            alpn: "h2",
-            dest: 5004,
-            xver: 1,
-          },
-        ],
+            "name": "blog.example.com",
+            "alpn": "h2",
+            "dest": 5004,
+            "xver": 1
+          }
+        ]
       },
-      streamSettings: {
-        network: "tcp",
-        security: "xtls",
-        xtlsSettings: {
-          alpn: ["h2", "http/1.1"],
-          certificates: [
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+          "alpn": ["h2", "http/1.1"],
+          "certificates": [
             {
-              certificateFile: "/etc/ssl/xray/cert.pem",
-              keyFile: "/etc/ssl/xray/privkey.key",
-            },
-          ],
-        },
-      },
+              "certificateFile": "/etc/ssl/xray/cert.pem",
+              "keyFile": "/etc/ssl/xray/privkey.key"
+            }
+          ]
+        }
+      }
     },
     {
-      listen: "127.0.0.1",
-      port: 5000,
-      protocol: "vmess",
-      settings: {
-        clients: [
+      "listen": "127.0.0.1",
+      "port": 5000,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
           {
-            id: "UUID",
-          },
-        ],
+            "id": "UUID"
+          }
+        ]
       },
-      streamSettings: {
-        network: "ws",
-        wsSettings: {
-          acceptProxyProtocol: true,
-          path: "/vmessws",
-        },
-      },
-    },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/vmessws"
+        }
+      }
+    }
   ],
-  outbounds: [
+  "outbounds": [
     {
-      protocol: "freedom",
-    },
-  ],
+      "protocol": "freedom"
+    }
+  ]
 }
 ```
 
@@ -192,24 +192,26 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
 
   如果使用 Caddy 就大可不必如此繁杂了，因为它**可以**在同一端口上同时监听 HTTP/1.1 和 h2c，配置改动如下：
 
-  ```json5
-  "fallbacks": [
+  ```json
+  {
+    "fallbacks": [
       {
-          "name": "example.com",
-          "path": "/vmessws",
-          "dest": 5000,
-          "xver": 1
+        "name": "example.com",
+        "path": "/vmessws",
+        "dest": 5000,
+        "xver": 1
       },
       {
-          "dest": 5001,
-          "xver": 1
+        "dest": 5001,
+        "xver": 1
       },
       {
-          "name": "blog.example.com",
-          "dest": 5002,
-          "xver": 1
+        "name": "blog.example.com",
+        "dest": 5002,
+        "xver": 1
       }
-  ]
+    ]
+  }
   ```
 
 ## Nginx 配置
