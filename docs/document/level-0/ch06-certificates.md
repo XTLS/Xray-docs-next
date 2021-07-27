@@ -127,7 +127,12 @@
 
 ## 6.4 正式证书申请
 
-1. 申请正式证书的命令如下（即删掉 `--test` 参数，并在最后加入 `--force`参数）：
+1. 首先将acme.sh的默认证书类型设置为CA
+   ```shell
+   acme.sh --set-default-ca  --server  letsencrypt
+   ```
+
+2. 申请正式证书的命令如下（即删掉 `--test` 参数，并在最后加入 `--force`参数）：
 
    ```shell
    acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
@@ -137,7 +142,7 @@
    `--force` 参数的意思就是，在现有证书到期前，手动（强行）更新证书。上一步我们从“测试服”申请的证书虽然不能直接用，但是它本身是尚未过期的，所以需要用到这个参数。
    :::
 
-2. 你最终应该看到跟上面很像的提示：
+3. 你最终应该看到跟上面很像的提示：
 
    ```log
    vpsadmin@vps-server:~$ acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
@@ -188,7 +193,7 @@
    [Wed 30 Dec 2022 15:22:52 AM EST] And the full chain certs is there:  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/fullchain.cer
    ```
 
-3. 仔细观察，你会发现这次给你发证书的域名是 `https://acme-v02.api.letsencrypt.org`，少了 `staging`，自然就是【正式服】了！
+4. 仔细观察，你会发现这次给你发证书的域名是 `https://acme-v02.api.letsencrypt.org`，少了 `staging`，自然就是【正式服】了！
 
 ## 6.5 你的进度
 
