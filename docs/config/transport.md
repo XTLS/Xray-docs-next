@@ -86,7 +86,7 @@
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "domainsocket" | "quic"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "domainsocket" | "quic" | "grpc"
 
 连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
 
