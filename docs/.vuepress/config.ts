@@ -3,11 +3,6 @@ import type { DefaultThemeOptions } from "@vuepress/theme-default";
 import * as sidebar from "./config/sidebar";
 import * as navbar from "./config/navbar";
 import * as path from "path";
-import { ThemeConfig } from "@vuepress/core";
-import {
-  DefaultThemeLocaleOptions,
-  DefaultThemePluginsOptions,
-} from "@vuepress/theme-default/lib/shared";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -149,7 +144,4 @@ export default defineUserConfig<DefaultThemeOptions>({
         });
     },
   },
-  //postcss: { plugins: [require("autoprefixer")] }
 });
-
-interface DocsThemeConfig extends ThemeConfig, DefaultThemeLocaleOptions {}
