@@ -9,7 +9,6 @@ const isProduction = process.env.NODE_ENV === "production";
 export default defineUserConfig<DefaultThemeOptions>({
   theme: path.join(__dirname, "./theme"),
   plugins: [
-    ["vuepress-plugin-mermaidjs"],
     [
       "@vuepress/plugin-search",
       {
