@@ -8,13 +8,14 @@ const MermaidPlugin: PluginSimple = function (md) {
   md.renderer.rules.fence = (...args) => {
     const [tokens, idx] = args;
     const { info } = tokens[idx];
-    if (info.trim(" ") === "mermaid") {
+    if (info.trim() === "mermaid") {
       const token = tokens[idx];
       const key = `mermaid_${hash(idx)}`;
       let { content } = token;
       content = content.replaceAll(";\n", ";");
       content = content.replaceAll("\n\n", ";");
       content = content.replaceAll("\n", ";");
+      content = content.replaceAll('"', "'");
       return `<Mermaid identifier="${key}" graph="${content}"></Mermaid>`;
     }
     const rawCode = fence(...args);

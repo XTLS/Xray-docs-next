@@ -131,16 +131,4 @@ export default defineUserConfig<DefaultThemeOptions>({
     md.use(require("markdown-it-footnote"));
   },
   bundler: isProduction ? "@vuepress/webpack" : "@vuepress/vite",
-  bundlerConfig: {
-    chainWebpack: (config) => {
-      config.module
-        .rule("webp")
-        .test(/\.(webp)(\?.*)?$/)
-        .use("file-loader")
-        .loader("file-loader")
-        .options({
-          name: `assets/img/[name].[hash:8].[ext]`,
-        });
-    },
-  },
 });
