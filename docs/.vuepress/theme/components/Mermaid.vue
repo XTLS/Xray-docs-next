@@ -25,7 +25,6 @@ export default defineComponent({
     const html = reactive({ innerHtml: "" });
     onMounted(() => {
       nextTick(async function () {
-        console.log(chartID, rawGraph);
         const mermaid = await import("mermaid");
         mermaid.default.initialize({
           startOnLoad: false,
@@ -33,7 +32,7 @@ export default defineComponent({
         });
         mermaid.default.render(
           chartID.value,
-          rawGraph.value,
+          decodeURI(rawGraph.value),
           (svgCode, bindFunc) => {
             html.innerHtml = svgCode;
           }
@@ -49,7 +48,7 @@ export default defineComponent({
       });
       mermaid.default.render(
         chartID.value,
-        rawGraph.value,
+        decodeURI(rawGraph.value),
         (svgCode, bindFunc) => {
           html.innerHtml = svgCode;
         }

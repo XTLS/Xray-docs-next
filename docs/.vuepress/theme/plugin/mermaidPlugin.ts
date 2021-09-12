@@ -12,11 +12,9 @@ const MermaidPlugin: PluginSimple = function (md) {
       const token = tokens[idx];
       const key = `mermaid_${hash(idx)}`;
       let { content } = token;
-      content = content.replaceAll(";\n", ";");
-      content = content.replaceAll("\n\n", ";");
-      content = content.replaceAll("\n", ";");
-      content = content.replaceAll('"', "'");
-      return `<Mermaid identifier="${key}" graph="${content}"></Mermaid>`;
+      return `<Mermaid identifier="${key}" graph="${encodeURI(
+        content
+      )}"></Mermaid>`;
     }
     const rawCode = fence(...args);
     return `${rawCode}`;
