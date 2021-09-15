@@ -8,7 +8,6 @@ const isProduction = process.env.NODE_ENV === "production";
 const forMainRepo = process.env.XRAY_DOCS_MAIN_REPO === "true";
 const useVite = process.env.XRAY_DOCS_USE_VITE === "true";
 
-console.log("environment: \n", process.env);
 console.log("base:", forMainRepo ? "/" : "/Xray-docs-next/");
 console.log(
   "bundler:",

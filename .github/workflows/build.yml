@@ -43,7 +43,7 @@ jobs:
       - name: Deploy to main Repository
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.ACTION_PERSONAL_TOKEN }}
           publish_dir: docs/.vuepress/dist
           external_repository: XTLS/XTLS.github.io
           publish_branch: gh-pages-next
