@@ -3,7 +3,7 @@
 标准 Socks 协议实现，兼容 [Socks 4](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)、Socks 4a 和 [Socks 5](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)。
 
 ::: danger
-**socks 协议没有对传输加密，不适宜经公网中传输**
+**Socks 协议没有对传输加密，不适宜经公网中传输**
 :::
 
 ## OutboundConfigurationObject
