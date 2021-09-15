@@ -25,6 +25,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - name: Install and Build
+        env:
+          XRAY_DOCS_USE_VITE: "true"
         run: |
           yarn install
           yarn docs:build
@@ -33,3 +35,15 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/.vuepress/dist
+      - name: Build for Main Repository
+        env:
+          XRAY_DOCS_MAIN_REPO: "true"
+        run: |
+          yarn docs:build
+      - name: Deploy to main Repository
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/.vuepress/dist
+          external_repository: XTLS/XTLS.github.io
+          publish_branch: gh-pages-next

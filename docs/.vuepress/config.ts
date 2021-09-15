@@ -5,6 +5,15 @@ import * as navbar from "./config/navbar";
 import * as path from "path";
 
 const isProduction = process.env.NODE_ENV === "production";
+const forMainRepo = process.env.XRAY_DOCS_MAIN_REPO === "true";
+const useVite = process.env.XRAY_DOCS_USE_VITE === "true";
+
+console.log("environment: \n", process.env);
+console.log("base:", forMainRepo ? "/" : "/Xray-docs-next/");
+console.log(
+  "bundler:",
+  isProduction && !useVite ? "@vuepress/webpack" : "@vuepress/vite"
+);
 
 export default defineUserConfig<DefaultThemeOptions>({
   theme: path.join(__dirname, "./theme"),
@@ -21,7 +30,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     ],
     ["@vuepress/plugin-debug", !isProduction],
   ],
-  base: "/Xray-docs-next/",
+  base: forMainRepo ? "/" : "/Xray-docs-next/",
   locales: {
     "/": {
       lang: "zh-CN",
@@ -130,5 +139,5 @@ export default defineUserConfig<DefaultThemeOptions>({
   extendsMarkdown: (md) => {
     md.use(require("markdown-it-footnote"));
   },
-  bundler: isProduction ? "@vuepress/webpack" : "@vuepress/vite",
+  bundler: isProduction && !useVite ? "@vuepress/webpack" : "@vuepress/vite",
 });
