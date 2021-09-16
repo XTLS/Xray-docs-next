@@ -1,4 +1,4 @@
-import { SidebarConfigArray } from "@vuepress/theme-default/lib/types/nav";
+import { SidebarConfigArray } from "@vuepress/theme-default";
 
 export function getConfigSidebar(
   feature: string,
@@ -11,20 +11,20 @@ export function getConfigSidebar(
   return [
     {
       text: feature,
-      isGroup: true,
       children: [
         path + "features/vless.md",
         path + "features/xtls.md",
         path + "features/fallback.md",
+        path + "features/browser_dialer.md",
         path + "features/env.md",
         path + "features/multiple.md",
       ],
     },
     {
       text: config,
-      isGroup: true,
       children: [
         path + "",
+        path + "log.md",
         path + "api.md",
         path + "dns.md",
         path + "fakedns.md",
@@ -39,7 +39,6 @@ export function getConfigSidebar(
     },
     {
       text: inbound,
-      isGroup: true,
       children: [
         path + "inbounds/",
         path + "inbounds/dokodemo.md",
@@ -53,7 +52,6 @@ export function getConfigSidebar(
     },
     {
       text: outbound,
-      isGroup: true,
       children: [
         path + "outbounds/",
         path + "outbounds/blackhole.md",
@@ -69,7 +67,6 @@ export function getConfigSidebar(
     },
     {
       text: transport,
-      isGroup: true,
       children: [
         path + "transports/",
         path + "transports/grpc.md",
@@ -90,7 +87,6 @@ export function getDocumentLv0Sidebar(
   return [
     {
       text: title,
-      isGroup: true,
       children: [
         path + "ch01-preface.md",
         path + "ch02-preparation.md",
@@ -113,7 +109,6 @@ export function getDocumentLv1Sidebar(
   return [
     {
       text: title,
-      isGroup: true,
       children: [
         path + "fallbacks-lv1.md",
         path + "routing-lv1-part1.md",
@@ -132,7 +127,6 @@ export function getDocumentLv2Sidebar(
   return [
     {
       text: title,
-      isGroup: true,
       children: [
         path + "transparent_proxy/transparent_proxy.md",
         path + "tproxy.md",
@@ -151,14 +145,12 @@ export function getDevelopmentSidebar(
   return [
     {
       text: title,
-      isGroup: true,
       children: [
         path + "intro/compile.md",
         path + "intro/design.md",
         path + "intro/guide.md",
         {
           text: protocols,
-          isGroup: true,
           children: [
             path + "protocols/vless.md",
             path + "protocols/vmess.md",

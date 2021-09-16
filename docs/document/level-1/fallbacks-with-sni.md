@@ -1,3 +1,7 @@
+---
+title: SNI 回落
+---
+
 # 通过 SNI 回落功能实现伪装与按域名分流
 
 VLESS 是一种很轻的协议，和 Trojan 一样，不对流量进行复杂的加密和混淆，而是大隐隐于市，通过 TLS 协议加密，混杂在其他 HTTPS 流量中，在墙内外穿进穿出。为了更好的伪装以应对主动探测，Fallbacks 回落功能随 VLESS 同时出现。这篇教程将演示如何使用 Xray 中 VLESS 入站协议的回落功能配合 Nginx 或 Caddy 在保证伪装完全的前提下实现按域名分流。
@@ -189,23 +193,25 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
   如果使用 Caddy 就大可不必如此繁杂了，因为它**可以**在同一端口上同时监听 HTTP/1.1 和 h2c，配置改动如下：
 
   ```json
-  "fallbacks": [
+  {
+    "fallbacks": [
       {
-          "name": "example.com",
-          "path": "/vmessws",
-          "dest": 5000,
-          "xver": 1
+        "name": "example.com",
+        "path": "/vmessws",
+        "dest": 5000,
+        "xver": 1
       },
       {
-          "dest": 5001,
-          "xver": 1
+        "dest": 5001,
+        "xver": 1
       },
       {
-          "name": "blog.example.com",
-          "dest": 5002,
-          "xver": 1
+        "name": "blog.example.com",
+        "dest": 5002,
+        "xver": 1
       }
-  ]
+    ]
+  }
   ```
 
 ## Nginx 配置

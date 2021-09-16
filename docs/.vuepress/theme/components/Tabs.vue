@@ -4,9 +4,9 @@
       <div :id="tag" class="nav nav-pills" role="tablist">
         <button
           v-for="tab of children"
-          :id="tab.labelID"
-          :aria-controls="tab.tabID"
-          :data-bs-target="'#' + tab.tabID"
+          :id="tab.id + '-label'"
+          :aria-controls="tab.id"
+          :data-bs-target="'#' + tab.id"
           aria-selected="false"
           class="nav-link"
           data-bs-toggle="tab"
@@ -41,9 +41,9 @@ export default defineComponent({
     this.children = [];
   },
   mounted() {
-    this.$nextTick(function () {
-      const bootstrap = require("bootstrap");
-      let triggerEl = document.getElementById(this.children["0"].$data.labelID);
+    this.$nextTick(async function () {
+      const bootstrap = await import("bootstrap");
+      let triggerEl = document.getElementById(this.children["0"].id + "-label");
       new bootstrap.Tab(triggerEl).show();
     });
   },
@@ -59,9 +59,21 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "~bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 
 button.nav-link {
-  color: var(--textColor);
+  color: var(--c-text-accent);
+  &:hover,
+  &:focus {
+    color: var(--x-nav-text-hover);
+  }
+}
+
+nav {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--c-border);
+}
+div.tab-content {
+  border-bottom: 1px solid var(--c-border);
 }
 </style>

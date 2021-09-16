@@ -19,23 +19,23 @@ export default defineComponent({
     },
   },
   data() {
+    let tag = this.title;
     return {
-      tabID: "",
-      labelID: "",
+      tabID: tag,
     };
   },
-  beforeMount() {
-    let tag = "tab-" + Math.random().toString(36).substring(2);
-    this.tabID = tag;
-    this.labelID = tag + "-" + "label";
-
-    // Since Vue 3.0, we have no access to $children.
-    // So we need another approach to register our child components.
-    this.$parent.$data.children.push(this);
+  mounted() {
+    this.tabID = "tab-" + Math.random().toString(36).substring(2);
+    this.$parent.$data.children.push({ id: this.tabID, title: this.title });
+  },
+  computed: {
+    labelID(): String {
+      return this.tabID + "-label";
+    },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-@import "~bootstrap/scss/bootstrap";
+@import "node_modules/bootstrap/scss/bootstrap";
 </style>

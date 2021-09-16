@@ -38,7 +38,7 @@
 
 支持填写 Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `@` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`@@` 则代表带 padding 的 abstract。
 
-填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，传输方式可选 TCP、WebSocket、HTTP/2。
+填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，传输方式可选 TCP、WebSocket、HTTP/2、gRPC。
 
 > `port`: number | "env:variable" | string
 
@@ -93,7 +93,8 @@
 {
   "enabled": true,
   "destOverride": ["http", "tls", "fakedns"],
-  "metadataOnly": false
+  "metadataOnly": false,
+  "domainsExcluded": []
 }
 ```
 
@@ -108,6 +109,14 @@
 > `metadataOnly`: true | false
 
 当启用时，将仅使用连接的元数据嗅探目标地址。此时，`http` 与 `tls` 将不能使用。
+
+> `domainsExcluded`: [string] <Badge text="WIP" type="warning"/>
+
+一个域名列表，如果流量探测结果在这个列表中时，将 **不会** 重置目标地址。
+
+::: warning
+目前，`domainsExcluded` 不支持类似路由中的域名匹配方式。此选项未来可能会改变，不保证跨版本兼容。
+:::
 
 ### AllocateObject
 

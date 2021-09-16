@@ -1,0 +1,70 @@
+:root {
+  --c-brand: #407ce8;
+  --c-brand-light: #2e73ea;
+  --c-text-accent: #2e73ea;
+  --c-brand-lighter: rgba(46, 115, 234, 0.75);
+  --c-bg-light: rgba(95, 101, 106, 0.1);
+  --c-badge-tip: #44c98d;
+  --c-warning-text-accent: var(--c-text-accent);
+  --c-danger-text-accent: var(--c-text-accent);
+
+  --x-nav-text-hover: #0a51bd;
+}
+
+html.dark {
+  --c-bg: #262a31;
+  --c-bg-light: #31353e;
+  --c-bg-lighter: #3a4049;
+
+  --c-brand: #407ce8;
+  --c-brand-light: #2e73ea;
+  --c-brand-lighter: rgba(46, 115, 234, 0.8);
+  --c-warning-bg: rgba(185, 174, 119, 0.3);
+  --c-warning-text: #c0bebe;
+  --c-warning-text-accent: var(--c-text-accent);
+
+  --c-danger-title: #b40505;
+  --c-danger-bg: rgba(72, 56, 57, 0.4);
+  --c-danger-text: #c0bebe;
+  --c-danger-text-accent: var(--c-text-accent);
+
+  --c-bg-light: rgba(255, 255, 255, 0.1);
+
+  --x-nav-text-hover: #7ca6f2;
+
+  .badge.tip > a {
+    color: #305bac;
+    & > span > svg.icon.outbound {
+      color: #7d57b0;
+    }
+  }
+}
+
+.badge.tip > a {
+  color: #3c71c0;
+  & > span > svg.icon.outbound {
+    color: #ad74e1;
+  }
+}
+
+blockquote {
+  color: var(--c-text);
+  background-color: var(--c-bg-lighter);
+  border-left: 4px solid #17a2b8;
+}
+
+* {
+  scroll-behavior: smooth;
+  transition: background-color 0.1s ease;
+  @media screen and (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
+}
+
+.meta-item.edit-link > a.meta-item-label {
+  color: var(--c-text-accent);
+}
+
+.sidebar {
+  scrollbar-color: var(--c-brand-lighter) var(--c-border);
+}
