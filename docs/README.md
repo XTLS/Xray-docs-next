@@ -41,9 +41,9 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 
 **XTLS are brilliant ideas for TLS we study, while Xray is the best practice we maintain.**
 
-- Xray-core 是 v2ray-core 的超集，含更好的整体性能和 XTLS 等一系列增强，且完全兼容 v2ray-core 的功能及配置。
+- Xray-core 是 v2ray-core 的超集，含更好的整体性能和 XTLS 等一系列增强，且~~完全~~兼容 v2ray-core 的功能及配置。
   - 只有一个可执行文件，含 ctl 的功能，run 为默认指令
-  - 配置上完全兼容，环境变量和 API 对应要改为以 XRAY\_ 开头
+  - 配置上~~完全~~兼容，环境变量和 API 对应要改为以 XRAY\_ 开头
   - 全平台开放了裸协议的 ReadV
   - 提供完整的 VLESS & Trojan XTLS 支持，均有 ReadV
   - 提供了 XTLS 多种流控模式, 性能一骑绝尘!
