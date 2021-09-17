@@ -49,7 +49,7 @@
 1. 测试证书申请的命令如下（本文均以 `ECC` 证书为例，因为时至今日，实在没什么理由不用它）：
 
    ```shell
-   acme.sh --issue --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
+   acme.sh --issue --server letsencrypt --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
    ```
 
    ::: warning 说明
@@ -118,7 +118,7 @@
 4. 如果这一步出错的话，你可以运行下面的命令，来查看详细的申请过程和具体的错误。（看不懂就隐藏掉敏感信息后，去 Xray 群里问吧）
 
    ```shell
-   acme.sh --issue --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
+   acme.sh --issue --server letsencrypt --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
    ```
 
    嗯没错，就是在命令的最后加了一个 `--debug` 参数
@@ -130,7 +130,7 @@
 1. 申请正式证书的命令如下（即删掉 `--test` 参数，并在最后加入 `--force`参数）：
 
    ```shell
-   acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
+   acme.sh --issue --set-default-ca --server letsencrypt -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
    ```
 
    ::: warning 说明
