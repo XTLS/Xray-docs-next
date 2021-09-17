@@ -1,4 +1,4 @@
-# Outbounds 协议
+# Outbound Protocols
 
 > **这个章节包含了目前所有可用于 Outbounds 的协议及具体配置细节.**
 

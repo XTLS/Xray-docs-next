@@ -1,4 +1,4 @@
-# Inbounds 协议
+# Inbounds Protocols
 
 > 这个章节包含了目前所有可用于 Inbounds 的协议及具体配置细节.
 
