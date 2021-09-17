@@ -80,6 +80,26 @@ export function getConfigSidebar(
   ];
 }
 
+export function getDocumentSidebar(
+  title: string,
+  path: string
+): SidebarConfigArray {
+  return [
+    {
+      text: title,
+      children: [
+        path + "install.md",
+        path + "config.md",
+        path + "command.md",
+        path + "document.md",
+        path + "level-0",
+        path + "level-1",
+        path + "level-2",
+      ],
+    },
+  ];
+}
+
 export function getDocumentLv0Sidebar(
   title: string,
   path: string

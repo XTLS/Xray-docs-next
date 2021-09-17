@@ -74,6 +74,10 @@ export default defineUserConfig<DefaultThemeOptions>({
             "底层传输",
             "/config/"
           ),
+          "/document/": sidebar.getDocumentSidebar(
+            "快速入门文档",
+            "/document/"
+          ),
           "/document/level-0/": sidebar.getDocumentLv0Sidebar(
             "小小白白话文",
             "/document/level-0/"
