@@ -54,7 +54,7 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 
 ### 我们是谁？
 
-> **It doesn't matter who we are. What matters is that we will keep riding and not look back.**
+> **It doesn't matter who we are. What matters is that we will keep riding and never look back.**
 
 ### 帮助 Xray 变得更强
 
