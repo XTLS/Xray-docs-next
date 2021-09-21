@@ -95,6 +95,6 @@ Fallback 内设置的 `alpn` 是匹配实际协商出的 ALPN，而 Inbound TLS 
 - 将匹配到最精确的子元素，与子元素的排列顺序无关。若配置了几个 alpn 和 path 均相同的子元素，则会以最后的为准。
 - 回落分流均是解密后 TCP 层的转发，而不是 HTTP 层，只在必要时检查首包 PATH。
 - 您可以查看更多的关于 Fallbacks 的使用技巧和心得
-  - [Fallbacks 功能简析](../documents/level-1/fallbacks-lv1)
+  - [Fallbacks 功能简析](../../documents/level-1/fallbacks-lv1)
 
 ## Fallbacks 设计理论 <Badge text="WIP" type="warning"/>
