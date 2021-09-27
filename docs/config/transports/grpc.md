@@ -35,7 +35,10 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 ```json
 {
   "serviceName": "name",
-  "multiMode": false
+  "multiMode": false,
+  "idle_timeout": 10,
+  "health_check_timeout": 20,
+  "permit_without_stream": false
 }
 ```
 
@@ -49,3 +52,17 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 一个布尔值。表示是否启用 `multiMode`。
 
 这是一个 **实验性** 选项，可能不会被长期保留，也不保证跨版本兼容。此模式在 **测试环境中** 能够带来约 20% 的性能提升，实际效果因传输速率不同而不同。
+
+> `idle_timeout`: number
+
+单位秒，当这段时间内没有数据传输时，将会进行健康检查。如果此值设置为 `10` 以下，将会使用 `10`，即最小值。
+
+健康检查默认**不启用**。
+
+> `health_check_timeout`: number
+
+单位秒，健康检查的超时时间。如果在这段时间内没有完成健康检查，且仍然没有数据传输时，即认为健康检查失败。默认值为 `20`。
+
+> `permit_without_stream`: bool
+
+设置为 `true` 时，将允许在没有子连接时进行健康检查。默认值为 `false`。
