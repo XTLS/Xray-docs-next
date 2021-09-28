@@ -154,7 +154,6 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
   "alpn": ["h2", "http/1.1"],
   "minVersion": "1.2",
   "maxVersion": "1.3",
-  "preferServerCipherSuites": true,
   "cipherSuites": "此处填写你需要的加密套件名称,每个套件名称之间用:进行分隔",
   "certificates": [],
   "disableSystemRoot": false,
@@ -184,12 +183,6 @@ minVersion 为可接受的最小 SSL/TLS 版本。
 > `maxVersion`: \[ string \]
 
 maxVersion 为可接受的最大 SSL/TLS 版本。
-
-> `preferServerCipherSuites`: true | false
-
-指示服务器选择客户端最喜欢的密码套件 或 服务器最优选的密码套件。
-
-如果为 true 则为使用服务器的最优选的密码套件
 
 > `cipherSuites`: \[ string \]
 
