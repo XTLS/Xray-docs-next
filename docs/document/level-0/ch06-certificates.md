@@ -129,10 +129,11 @@
 
 1. 申请正式证书的命令如下（即删掉 `--test` 参数，并在最后加入 `--force`参数）：
 
+   设置默认服务器
    ```shell
    acme.sh --set-default-ca --server letsencrypt
    ```
-
+   申请正式证书
    ```shell
    acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
    ```
