@@ -132,7 +132,6 @@
    ```shell
    acme.sh --set-default-ca --server letsencrypt
    ```
-   
    ```shell
    acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
    ```
