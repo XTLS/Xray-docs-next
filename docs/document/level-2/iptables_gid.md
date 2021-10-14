@@ -163,7 +163,7 @@ _第二条命令：_
 cat /proc/Xray的pid/limits
 ```
 
-找到 max open files 一项，应该是你设置的数值。pid 的获取方法为运行`ps`或`ps -aux`或`ps -a`
+找到 max open files 一项，应该是你设置的数值。pid 的获取方法为运行`ps`或`ps -aux`或`ps -a`或`pidof xray`
 
 服务端和客户端都要检查
 
