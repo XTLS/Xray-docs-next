@@ -34,11 +34,9 @@ Xray 提供以下环境变量以供修改 Xray 的一些底层配置。
 这个环境变量指定了一个文件夹位置，这个文件夹应当包含 geoip.dat 和 geosite.dat 文件。
 若无指定变量值，程序将会按以下顺序寻找资源文件：
 ```
-/usr/share/xray
-/usr/local/share/xray
-/usr/share/v2ray
-/usr/local/share/v2ray
 ./
+/usr/local/share/xray
+/usr/share/xray
 ```
 
 ## 配置文件位置
