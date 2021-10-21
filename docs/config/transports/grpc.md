@@ -47,9 +47,9 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 一个字符串，指定服务名称，**类似于** HTTP/2 中的 Path。
 客户端会使用此名称进行通信，服务端会验证服务名称是否匹配。
 
-> `multiMode`: bool <Badge text="BETA" type="warning"/>
+> `multiMode`: true | false <Badge text="BETA" type="warning"/>
 
-一个布尔值。表示是否启用 `multiMode`。
+`true` 启用 `multiMode`，默认值为： `false`。
 
 这是一个 **实验性** 选项，可能不会被长期保留，也不保证跨版本兼容。此模式在 **测试环境中** 能够带来约 20% 的性能提升，实际效果因传输速率不同而不同。
 
@@ -65,6 +65,6 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 单位秒，健康检查的超时时间。如果在这段时间内没有完成健康检查，且仍然没有数据传输时，即认为健康检查失败。默认值为 `20`。
 
-> `permit_without_stream`: bool
+> `permit_without_stream`: true | false
 
-设置为 `true` 时，将允许在没有子连接时进行健康检查。默认值为 `false`。
+`true` 允许在没有子连接时进行健康检查。默认值为 `false`。
