@@ -21,6 +21,19 @@ Xray 内置的 DNS 模块，主要有两大用途：
 只支持最基本的 IP 查询（A 和 AAAA 记录）。其他查询不会进入内置 DNS 服务器。
 :::
 
+## DNS 处理流程
+
+若当前要查询的域名：
+
+- 命中了 `hosts` 中的「域名 - IP」、「域名 - IP 数组」映射，则将该 IP 或 IP 数组作为 DNS 解析结果返回。
+- 命中了 `hosts` 中的「域名 - 域名」映射，则该映射的值（另一个域名）将作为当前要查询的域名，进入 DNS 处理流程，直到解析出 IP 后返回，或返回空解析。
+- 没有命中 `hosts`，但命中了某（几）个 DNS 服务器中的 `domains` 域名列表，则按照命中的规则的优先级，依次使用该规则对应的 DNS 服务器进行查询。若命中的 DNS 服务器查询失败或 `expectIPs` 不匹配，则使用下一个命中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有命中的 DNS 服务器均查询失败或 `expectIPs` 不匹配，此时 DNS 组件：
+  - 默认会进行 「DNS 回退（fallback）查询」：使用「上一轮失败查询中未被使用的、且 `skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若查询失败或 `expectIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
+  - 若 `disableFallback` 设置为 `true`，则不会进行「DNS 回退（fallback）查询」。
+- 既没有命中 `hosts`，又没有命中 DNS 服务器中的 `domains` 域名列表，则：
+  - 默认使用「`skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若第一个被选中的 DNS 服务器查询失败或 `expectIPs` 不匹配，则使用下一个被选中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有被选中的 DNS 服务器均查询失败或 `expectIPs` 不匹配，返回空解析。
+  - 若「`skipFallback` 为默认值 `false` 的 DNS 服务器」数量为 0 或 `disableFallback` 设置为 `true`，则使用 DNS 配置中的第一个 DNS 服务器进行查询。查询失败或 `expectIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
+
 ## DnsObject
 
 `DnsObject` 对应配置文件的 `dns` 项。
