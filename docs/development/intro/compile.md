@@ -38,6 +38,13 @@ $env:CGO_ENABLED=0
 go build -o xray.exe -trimpath -ldflags "-s -w -buildid=" ./main
 ```
 
+你也可以通过这个命令生成一个没有界面的 wxray.exe :  
+
+```powershell
+$env:CGO_ENABLED=0
+go build -o wxray.exe -trimpath -ldflags "-s -w -H windowsgui -buildid=" ./main
+```
+
 ### macOS, Linux:
 
 ```bash
