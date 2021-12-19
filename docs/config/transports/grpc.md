@@ -38,7 +38,8 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
   "multiMode": false,
   "idle_timeout": 10,
   "health_check_timeout": 20,
-  "permit_without_stream": false
+  "permit_without_stream": false,
+  "initial_windows_size": 0
 }
 ```
 
@@ -59,12 +60,28 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 健康检查默认**不启用**。
 
-仅需在**客户端**配置。
+注：仅需在**出站**配置。
+
+::: tip
+可能会解决一些“断流”问题。
+:::
 
 > `health_check_timeout`: number
 
 单位秒，健康检查的超时时间。如果在这段时间内没有完成健康检查，且仍然没有数据传输时，即认为健康检查失败。默认值为 `20`。
 
+注：仅需在**出站**配置。
+
 > `permit_without_stream`: true | false
 
 `true` 允许在没有子连接时进行健康检查。默认值为 `false`。
+
+> `initial_windows_size`: number
+
+当值小于等于 `0` 时，此功能不生效。当值大于等于 `65535` 时，动态窗口机制（Dynamic Window）会被禁用。默认值为 `0`，即不生效。
+
+注：仅需在**出站**配置。
+
+::: tip
+通过 Cloudflare CDN 时，可将值设为 `65535`，即禁用动态窗口机制（Dynamic Window）,可防止 Cloudflare CDN 发送意外的 h2 GOAWAY 帧以关闭现有连接。
+:::
