@@ -78,10 +78,10 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 > `initial_windows_size`: number
 
-h2 Stream 初始窗口大小。当值小于等于 `0` 时，此功能不生效。当值大于等于 `65535` 时，动态窗口机制（Dynamic Window）会被禁用。默认值为 `0`，即不生效。
+h2 Stream 初始窗口大小。当值小于等于 `0` 时，此功能不生效。当值大于 `65535` 时，动态窗口机制（Dynamic Window）会被禁用。默认值为 `0`，即不生效。
 
 注：仅需在**出站**配置。
 
 ::: tip
-通过 Cloudflare CDN 时，可将值设为 `65535`，即禁用动态窗口机制（Dynamic Window）,可防止 Cloudflare CDN 发送意外的 h2 GOAWAY 帧以关闭现有连接。
+通过 Cloudflare CDN 时，可将值设为 `524288`，即禁用动态窗口机制（Dynamic Window）,可防止 Cloudflare CDN 发送意外的 h2 GOAWAY 帧以关闭现有连接。
 :::
