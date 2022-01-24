@@ -147,7 +147,7 @@
      // 3_分流设置
      // 所谓分流，就是将符合否个条件的流量，用指定`tag`的出站协议去处理（对应配置的5.x内容）
      "routing": {
-       "domainStrategy": "AsIs",
+       "domainStrategy": "IPIfNonMatch",
        "rules": [
          // 3.1 广告域名屏蔽
          {
@@ -172,9 +172,17 @@
            "type": "field",
            "domain": ["geosite:geolocation-!cn"],
            "outboundTag": "proxy"
-         }
+         },
          // 3.5 默认规则
          // 在Xray中，任何不符合上述路由规则的流量，都会默认使用【第一个outbound（5.1）】的设置，所以一定要把转发VPS的outbound放第一个
+         // 3.6 走国内"223.5.5.5"的DNS查询流量分流走direct出站
+         {
+            "type": "field",
+            "ip": [
+                "223.5.5.5"
+            ],
+            "outboundTag": "direct"
+         } 
        ]
      },
 
