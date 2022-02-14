@@ -205,7 +205,6 @@
    [Mon 14 Feb 2022 03:00:25 PM CST] Installing full chain to: /etc/xray/cert/fullchain.crt
    ```
 
-   
 
 ## 6.6 你的进度
 

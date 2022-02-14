@@ -190,7 +190,19 @@
 
 3. 仔细观察，你会发现这次给你发证书的域名是 `https://acme-v02.api.letsencrypt.org`，少了 `staging`，自然就是【正式服】了！
 
-## 6.5 你的进度
+## 6.5 证书安装
+
+1. 证书申请完成后，需要安装，安装到指定位置，并在配置文件中引用即可：
+
+   ```shell
+   vpsadmin@vps-server:~$ acme.sh --installcert -d 二级域名.你的域名.com --cert-file /你要安装到的位置/cert.crt --key-file /你要安装到的位置/cert.key --fullchain-file /你要安装到的位置/fullchain.pem --ecc
+   [Mon 14 Feb 2022 03:00:25 PM CST] Installing cert to: /etc/xray/cert/cert.crt
+   [Mon 14 Feb 2022 03:00:25 PM CST] Installing key to: /etc/xray/cert/cert.key
+   [Mon 14 Feb 2022 03:00:25 PM CST] Installing full chain to: /etc/xray/cert/fullchain.crt
+   ```
+
+
+## 6.6 你的进度
 
 至此，Xray 所需要的两个基础设施终于全部就位！千呼万唤始出来的 Xray 马上就要揭开面纱，我们终于要进入最激动人心章节啦！
 
