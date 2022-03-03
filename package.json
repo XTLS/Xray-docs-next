@@ -29,7 +29,7 @@
   "dependencies": {
     "@popperjs/core": "^2.10.1",
     "bootstrap": "^5.1.1",
-    "esbuild": "^0.12.26",
+    "esbuild": "^0.14.24",
     "jquery": "^3.6.0",
     "markdown-it-footnote": "^3.0.3",
     "mermaid": "^8.12.1",
