@@ -72,6 +72,11 @@
   - 请从它的[项目主页](https://qv2ray.net/)学习文档
   - 请根据该客户端的说明进行设置
 
+- **V2RayXS - 基于 V2RayX 开发的一款使用 xray-core 的 macOS 客户端**
+  - 请从它的 [GitHub 仓库 Release 页面](https://github.com/tzmax/v2rayXS/releases) 获取最新版
+  - 支持一键导入 [VMessAEAD / VLESS 分享链接标准提案](https://github.com/XTLS/Xray-core/issues/91) 为标准的分享链接 
+  - 请根据该客户端的说明进行设置
+
 到这一步，你的全套配置就已经可以正常使用啦！
 
 ## 8.3 附加题 1：在 PC 端手工配置 `xray-core`
