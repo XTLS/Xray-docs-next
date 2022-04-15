@@ -32,10 +32,10 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 其中每一项是一个用户 [ClientObject](#clientobject)。
 
-> `fallbacks`: \[ [FallbackObject](../examples/fallback.md) \]
+> `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
 一个数组，包含一系列强大的回落分流配置（可选）。
-fallbacks 的具体配置请点击[FallbackObject](../examples/fallback.md#fallbacks-配置)
+fallbacks 的具体配置请点击[FallbackObject](../features/fallback.md#fallbacks-配置)
 
 ::: tip
 Xray 的 Trojan 有完整的 fallbacks 支持，配置方式完全一致。
