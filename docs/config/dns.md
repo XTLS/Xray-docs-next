@@ -117,6 +117,7 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 ::: tip TIP 2
 可以在 [DnsObject](#dnsobject) 为所有 DNS 服务器指定 clientIp, 也可在每个 DNS 服务器配置的 [ServerObject](#serverobject) 为此 DNS 服务器指定 clientIp （优先级高于 [DnsObject](#dnsobject) 的配置）。
+:::
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6"
 
