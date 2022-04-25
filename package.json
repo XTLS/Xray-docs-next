@@ -11,7 +11,7 @@
     "@types/mermaid": "^8.2.7",
     "@types/node": "^16.9.1",
     "@vuepress/bundler-vite": "^2.0.0-beta.39",
-    "@vuepress/plugin-back-to-top": "^2.0.0-beta.25",
+    "@vuepress/plugin-back-to-top": "^2.0.0-beta.38",
     "@vuepress/plugin-debug": "^2.0.0-beta.25",
     "@vuepress/plugin-search": "^2.0.0-beta.38",
     "postcss-loader": "^6.1.1",
