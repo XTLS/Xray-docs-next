@@ -484,18 +484,18 @@
     "@vuepress/core" "2.0.0-beta.38"
     prismjs "^1.27.0"
 
-"@vuepress/plugin-search@^2.0.0-beta.38":
-  version "2.0.0-beta.38"
-  resolved "https://registry.yarnpkg.com/@vuepress/plugin-search/-/plugin-search-2.0.0-beta.38.tgz#aecbd09cf228f6f0552c1ee94d9abebb238dd6a8"
-  integrity sha512-bv5rDpXFjssYiP6wDdskObcKm9cEevKXVThx/F+0rwN0mVACqbEET0RvLeoU3uE5PYWJYB6lmh7xdn/74fPkWg==
+"@vuepress/plugin-search@^2.0.0-beta.25":
+  version "2.0.0-beta.25"
+  resolved "https://registry.yarnpkg.com/@vuepress/plugin-search/-/plugin-search-2.0.0-beta.25.tgz#9c222d6ff5ed21e0ceecf3f0d230f3c806205388"
+  integrity sha512-iB1IEwVhGozRo/9LHQpCnHiYNXygO+jBE4Xhc4eqXPO10btRbZKa0L8qAyBgxvkH4CVuZ/JuDLoRx6yhIK7yEw==
   dependencies:
-    "@vuepress/client" "2.0.0-beta.38"
-    "@vuepress/core" "2.0.0-beta.38"
-    "@vuepress/shared" "2.0.0-beta.38"
-    "@vuepress/utils" "2.0.0-beta.38"
-    chokidar "^3.5.3"
-    vue "^3.2.31"
-    vue-router "^4.0.14"
+    "@vuepress/client" "2.0.0-beta.25"
+    "@vuepress/core" "2.0.0-beta.25"
+    "@vuepress/shared" "2.0.0-beta.25"
+    "@vuepress/utils" "2.0.0-beta.25"
+    chokidar "^3.5.2"
+    vue "^3.2.3"
+    vue-router "^4.0.10"
 
 "@vuepress/plugin-theme-data@2.0.0-beta.38":
   version "2.0.0-beta.38"
@@ -762,7 +762,22 @@ chalk@^4.1.2:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.3:
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.2.tgz#dba3976fcadb016f66fd365021d91600d01c1e75"
+  integrity sha512-ekGhOnNVPgT77r4K/U3GDhu+FQ2S8TnK/s2KbIGXi0SZWuwkZ2QNyfWdZW+TVfn84DpEP7rLeCt2UI6bJ8GwbQ==
+  dependencies:
+    anymatch "~3.1.2"
+    braces "~3.0.2"
+    glob-parent "~5.1.2"
+    is-binary-path "~2.1.0"
+    is-glob "~4.0.1"
+    normalize-path "~3.0.0"
+    readdirp "~3.6.0"
+  optionalDependencies:
+    fsevents "~2.3.2"
+
+chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
