@@ -28,6 +28,7 @@
   - [Kitsunebi](https://github.com/rurirei/Kitsunebi/tree/release_xtls)
 - iOS / Mac
   - [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)
+  - [V2RayXS](https://github.com/tzmax/V2RayXS)
 
 ## Fallbacks
 
