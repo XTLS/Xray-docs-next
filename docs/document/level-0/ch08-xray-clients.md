@@ -68,13 +68,14 @@
   - 请根据该客户端的说明进行设置
 
 - **Qv2ray - 跨平台图形界面，适用于 Linux, Windows, macOS**
+
   - 请从它的[GitHub 仓库 Release 页面](https://github.com/Qv2ray/Qv2ray/releases)获取最新版（还可以从它的[GitHub 自动构建仓库](https://github.com/Qv2ray/Qv2ray/actions)寻找更新的版本）
   - 请从它的[项目主页](https://qv2ray.net/)学习文档
   - 请根据该客户端的说明进行设置
 
 - **V2RayXS - 基于 V2RayX 开发的一款使用 xray-core 的 macOS 客户端**
   - 请从它的 [GitHub 仓库 Release 页面](https://github.com/tzmax/v2rayXS/releases) 获取最新版
-  - 支持一键导入 [VMessAEAD / VLESS 分享链接标准提案](https://github.com/XTLS/Xray-core/issues/91) 为标准的分享链接 
+  - 支持一键导入 [VMessAEAD / VLESS 分享链接标准提案](https://github.com/XTLS/Xray-core/issues/91) 为标准的分享链接
   - 请根据该客户端的说明进行设置
 
 到这一步，你的全套配置就已经可以正常使用啦！
@@ -182,12 +183,10 @@
          // 在Xray中，任何不符合上述路由规则的流量，都会默认使用【第一个outbound（5.1）】的设置，所以一定要把转发VPS的outbound放第一个
          // 3.6 走国内"223.5.5.5"的DNS查询流量分流走direct出站
          {
-            "type": "field",
-            "ip": [
-                "223.5.5.5"
-            ],
-            "outboundTag": "direct"
-         } 
+           "type": "field",
+           "ip": ["223.5.5.5"],
+           "outboundTag": "direct"
+         }
        ]
      },
 
