@@ -11,3 +11,5 @@ updates:
       interval: "daily"
     ignore:
       - dependency-name: "*vuepress*"
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
