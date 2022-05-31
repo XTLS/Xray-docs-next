@@ -13,6 +13,7 @@
   - aes-256-gcm
   - aes-128-gcm
   - chacha20-poly1305 或称 chacha20-ietf-poly1305
+  - xchacha20-poly1305 或称 xchacha20-ietf-poly1305
   - none 或 plain
 
 Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，解决了旧协议的以下安全问题：
