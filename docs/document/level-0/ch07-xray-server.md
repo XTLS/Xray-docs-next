@@ -330,7 +330,7 @@ sudo systemctl status xray
 
 ## 7.6 回顾 `systemd` 进行基本的服务管理
 
-到现在为止，我们已经使用过了`systemctl`相关的`start`, `status`, `reload` 等命令，这些都是基于`systmed`管理模块对 Linux
+到现在为止，我们已经使用过了`systemctl`相关的`start`, `status`, `reload` 等命令，这些都是基于`systemd`管理模块对 Linux
 系统中各种服务进行管理的通用命令。现在正好熟悉一下相关的其他几个命令。
 
 1. 若你需要暂时关闭 `Xray` 的服务，那就用`stop`命令
