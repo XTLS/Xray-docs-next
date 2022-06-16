@@ -35,8 +35,8 @@
   - [luci-app-xray](https://github.com/yichya/luci-app-xray) ([openwrt-xray](https://github.com/yichya/openwrt-xray))
 - Windows
   - [v2rayN](https://github.com/2dust/v2rayN)
-  - [Qv2ray](https://github.com/Qv2ray/Qv2ray)（该项目已冻结存档）
-  - [Netch (NetFilter & TUN/TAP)](https://github.com/NetchX/Netch)（该项目已冻结存档）
+  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
+  - [Netch (NetFilter & TUN/TAP)](https://github.com/NetchX/Netch) （该项目已冻结存档）
 - Android
   - [v2rayNG](https://github.com/2dust/v2rayNG)
   - [Kitsunebi](https://github.com/rurirei/Kitsunebi/tree/release_xtls)
@@ -44,7 +44,7 @@
   - [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)
   - [Stash](https://apps.apple.com/app/stash/id1596063349)
 - macOS（Intel 芯片 / M1 芯片）
-  - [Qv2ray](https://github.com/Qv2ray/Qv2ray)（该项目已冻结存档）
+  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
   - [V2RayXS](https://github.com/tzmax/V2RayXS)
 
 ## UUID 生成器
