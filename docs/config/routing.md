@@ -12,6 +12,7 @@
 {
   "routing": {
     "domainStrategy": "AsIs",
+    "domainMatcher": "hybrid",
     "rules": [],
     "balancers": []
   }
@@ -27,6 +28,13 @@
   - 当一个域名有多个 A 记录时，会尝试匹配所有的 A 记录，直到其中一个与某个规则匹配为止；
   - 解析后的 IP 仅在路由选择时起作用，转发的数据包中依然使用原始域名；
 - `"IPOnDemand"`：当匹配时碰到任何基于 IP 的规则，将域名立即解析为 IP 进行匹配；
+
+> `domainMatcher`: "hybrid" | "linear"
+
+域名匹配算法，根据不同的设置使用不同的算法。此处选项会影响所有未单独指定匹配算法的 `RuleObject`。
+
+- `"hybrid"`：使用新的域名匹配算法，速度更快且占用更少。默认值。
+- `"linear"`：使用原来的域名匹配算法。
 
 > `rules`: \[[RuleObject](#ruleobject)\]
 
@@ -48,6 +56,7 @@
 
 ```json
 {
+  "domainMatcher": "hybrid",
   "type": "field",
   "domain": ["baidu.com", "qq.com", "geosite:cn"],
   "ip": ["0.0.0.0/8", "10.0.0.0/8", "fc00::/7", "fe80::/10", "geoip:cn"],
@@ -67,6 +76,13 @@
 ::: danger
 当多个属性同时指定时，这些属性需要**同时**满足，才可以使当前规则生效。
 :::
+
+> `domainMatcher`: "hybrid" | "linear"
+
+域名匹配算法，根据不同的设置使用不同的算法。此处选项优先级高于 `RoutingObject` 中配置的 `domainMatcher`。
+
+- `"hybrid"`：使用新的域名匹配算法，速度更快且占用更少。默认值。
+- `"linear"`：使用原来的域名匹配算法。
 
 > `type`: "field"
 
