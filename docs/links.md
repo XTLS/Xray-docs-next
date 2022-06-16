@@ -11,7 +11,7 @@
 - One Click
   - [ProxySU](https://github.com/proxysu/ProxySU) 感谢[@ProxySu](https://github.com/proxysu)
   - [v2ray-agent](https://github.com/mack-a/v2ray-agent) 感谢[@mack-a](https://github.com/mack-a)
-  - [Xray-yes](https://github.com/jiuqi9997/Xray-yes) 感谢[@玖柒Min](https://github.com/jiuqi9997)
+  - [Xray-yes](https://github.com/jiuqi9997/Xray-yes) 感谢[@玖柒 Min](https://github.com/jiuqi9997)
   - [Xray-onekey](https://github.com/wulabing/Xray_onekey) 感谢[@wulabing](https://github.com/wulabing)
 - Magisk
   - [Xray4Magisk](https://github.com/CerteKim/Xray4Magisk) 感谢[@子曦曦](https://github.com/CerteKim)
