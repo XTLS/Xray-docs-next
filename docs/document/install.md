@@ -51,7 +51,9 @@ Xray 提供两种验证方式：
 
   - [Xray-script](https://github.com/kirin10000/Xray-script)
   - [ProxySU](https://github.com/proxysu/ProxySU)
-  - [Xray-agent](https://github.com/mack-a/Xray-agent)
+  - [v2ray-agent](https://github.com/mack-a/v2ray-agent)
+  - [Xray-yes](https://github.com/jiuqi9997/Xray-yes)
+  - [Xray-onekey](https://github.com/wulabing/Xray_onekey)
 
 * Magisk
   - [Xray4Magisk](https://github.com/CerteKim/Xray4Magisk)
