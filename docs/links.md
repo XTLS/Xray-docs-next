@@ -43,7 +43,7 @@
 - iOS / macOS （使用 M1 芯片）
   - [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)
   - [Stash](https://apps.apple.com/app/stash/id1596063349)
-- macOS （Intel 芯片/M1 芯片）
+- macOS （Intel 芯片 / M1 芯片）
   - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
   - [V2RayXS](https://github.com/tzmax/V2RayXS)
 
