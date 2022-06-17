@@ -4,7 +4,7 @@
 
 Xray 在以下平台中可用：
 
-- Windows 7 及之后版本（x86 / amd64 / arm32）；
+- Windows 7 及之后版本（x86 / amd64 / arm32 / arm64）；
 - macOS 10.10 Yosemite 及之后版本（amd64 / arm64）；
 - Linux 2.6.23 及之后版本（x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64）；
   - 包括但不限于 Debian 7 / 8、Ubuntu 12.04 / 14.04 及后续版本、CentOS 7 / 8、Arch Linux 等；
@@ -51,7 +51,9 @@ Xray 提供两种验证方式：
 
   - [Xray-script](https://github.com/kirin10000/Xray-script)
   - [ProxySU](https://github.com/proxysu/ProxySU)
-  - [Xray-agent](https://github.com/mack-a/Xray-agent)
+  - [v2ray-agent](https://github.com/mack-a/v2ray-agent)
+  - [Xray-yes](https://github.com/jiuqi9997/Xray-yes)
+  - [Xray-onekey](https://github.com/wulabing/Xray_onekey)
 
 * Magisk
   - [Xray4Magisk](https://github.com/CerteKim/Xray4Magisk)
