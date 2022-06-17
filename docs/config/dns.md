@@ -145,7 +145,7 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 > `tag`: string
 
-由内置 DNS 发出的查询流量，除 `localhost` 和 `DOHL_` 模式外，都可以用此标识在路由使用 `inboundTag` 进行匹配。
+由内置 DNS 发出的查询流量，除 `localhost` 、 `fakedns` 、 `tcp+local` 、 `DOHL_` 和 `DOQL_` 模式外，都可以用此标识在路由使用 `inboundTag` 进行匹配。
 
 ### ServerObject
 
@@ -164,11 +164,11 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 当值为 `"localhost"` 时，表示使用本机预设的 DNS 配置。
 
-当它的值是一个 DNS `"IP:Port"` 地址时，如 `"8.8.8.8:53"`，Xray 会使用此地址的指定 UDP 端口进行 DNS 查询。该查询遵循路由规则。不指定端口时，默认使用 53 端口。
+当它的值是一个 DNS `"IP"` 地址时，如 `"8.8.8.8"`，Xray 会使用此地址的指定 UDP 端口进行 DNS 查询。该查询遵循路由规则。默认使用 53 端口。
 
-当值是 `"tcp://host:port"` 的形式，如 `"tcp://8.8.8.8:53"`，Xray 会使用 `DNS over TCP` 进行查询。该查询遵循路由规则。不指定端口时，默认使用 53 端口。
+当值是 `"tcp://host"` 的形式，如 `"tcp://8.8.8.8"`，Xray 会使用 `DNS over TCP` 进行查询。该查询遵循路由规则。默认使用 53 端口。
 
-当值是 `"tcp+local://host:port"` 的形式，如 `"tcp+local://8.8.8.8:53"`，Xray 会使用 `DNS over TCP 本地模式` 进行查询。即 DNS 请求不会经过路由组件，直接通过 Freedom outbound 对外请求，以降低耗时。不指定端口时，默认使用 53 端口。
+当值是 `"tcp+local://host"` 的形式，如 `"tcp+local://8.8.8.8"`，Xray 会使用 `DNS over TCP 本地模式` 进行查询。即 DNS 请求不会经过路由组件，直接通过 Freedom outbound 对外请求，以降低耗时。不指定端口时，默认使用 53 端口。
 
 当值是 `"https://host:port/dns-query"` 的形式，如 `"https://dns.google/dns-query"`，Xray 会使用 `DNS over HTTPS` (RFC8484, 简称 DOH) 进行查询。有些服务商拥有 IP 别名的证书，可以直接写 IP 形式，比如 `https://1.1.1.1/dns-query`。也可使用非标准端口和路径，如 `"https://a.b.c.d:8443/my-dns-query"`
 
