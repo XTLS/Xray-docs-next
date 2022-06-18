@@ -81,7 +81,8 @@
     "tproxy": "off",
     "domainStrategy": "AsIs",
     "dialerProxy": "",
-    "acceptProxyProtocol": false
+    "acceptProxyProtocol": false,
+    "tcpKeepAliveInterval": 0
   }
 }
 ```
@@ -365,7 +366,8 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "tproxy": "off",
   "domainStrategy": "AsIs",
   "dialerProxy": "",
-  "acceptProxyProtocol": false
+  "acceptProxyProtocol": false,
+  "tcpKeepAliveInterval": 0
 }
 ```
 
@@ -474,3 +476,9 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
 
 填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
+
+> `tcpKeepAliveInterval`: number
+
+TCP 保持活跃的数据包发送间隔，单位为秒。该设置仅适用于 Linux 下。
+
+不配置此项或配置为 0 表示使用 Go 默认值。
