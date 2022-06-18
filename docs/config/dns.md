@@ -53,7 +53,8 @@ Xray 内置的 DNS 模块，主要有两大用途：
         "port": 5353,
         "domains": ["domain:xray.com"],
         "expectIPs": ["geoip:cn"],
-        "skipFallback": false
+        "skipFallback": false,
+        "clientIP": "1.2.3.4"
       },
       "localhost"
     ],
@@ -154,7 +155,9 @@ Xray 内置的 DNS 模块，主要有两大用途：
   "address": "1.2.3.4",
   "port": 5353,
   "domains": ["domain:xray.com"],
-  "expectIPs": ["geoip:cn"]
+  "expectIPs": ["geoip:cn"],
+  "skipFallback": false,
+  "clientIP": "1.2.3.4"
 }
 ```
 
