@@ -160,7 +160,7 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
   "disableSystemRoot": false,
   "enableSessionResumption": false,
   "fingerprint": "",
-  "pinnedPeerCertificateChainSha256": ""
+  "pinnedPeerCertificateChainSha256": [""]
 }
 ```
 
