@@ -231,7 +231,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `pinnedPeerCertificateChainSha256`: \[string\]
 
-用于指定远程服务器的证书链 SHA256 散列值，使用标准编码格式。
+用于指定远程服务器的证书链 SHA256 散列值，使用标准编码格式。仅有当服务器端证书链散列值符合设置项中之一时才能成功建立 TLS 连接。
 
 在连接因为此配置失败时，会展示远程服务器证书散列值。
 
@@ -240,7 +240,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 :::
 
 ::: tip
-如果需要获得证书的散列值，应在命令行中运行 `xray tls certChainHash --cert <cert.pem>` 来获取， `<cert.pem>` 应替换为实际证书文件路径。
+如果需要获得证书的散列值，应在命令行中运行 `xray tls certChainHash --cert <cert.pem>` 来获取，`<cert.pem>` 应替换为实际证书文件路径。
 :::
 
 > `certificates`: \[ [CertificateObject](#certificateobject) \]
