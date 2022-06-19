@@ -109,11 +109,11 @@
 
 当流量为指定类型时，按其中包括的目标地址重置当前连接的目标。
 
-其中 `["fakedns+others"]` 相当于 `["http", "tls", "quic", "fakedns"]` ，当 IP 地址处于 FakeIP 区间内但没有命中域名记录时会使用 `http` 、 `tls` 和 `quic` 进行匹配。此项仅在 `metadataOnly` 为 `false` 时有效。
+其中 `["fakedns+others"]` 相当于 `["http", "tls", "quic", "fakedns"]`，当 IP 地址处于 FakeIP 区间内但没有命中域名记录时会使用 `http`、`tls` 和 `quic` 进行匹配。此项仅在 `metadataOnly` 为 `false` 时有效。
 
 > `metadataOnly`: true | false
 
-当启用时，将仅使用连接的元数据嗅探目标地址。此时，除 `fakedns` 以外的 sniffer 将不能激活（包括 `fakedns+others` ）。
+当启用时，将仅使用连接的元数据嗅探目标地址。此时，除 `fakedns` 以外的 sniffer 将不能激活（包括 `fakedns+others`）。
 
 > `domainsExcluded`: [string] <Badge text="WIP" type="warning"/>
 
@@ -125,7 +125,7 @@
 
 > `routeOnly`: true | false
 
-将嗅探得到的域名仅用于路由，代理目标地址仍为 IP。默认值为 `false` 。
+将嗅探得到的域名仅用于路由，代理目标地址仍为 IP。默认值为 `false`。
 
 此项需要开启 `destOverride` 使用。
 
