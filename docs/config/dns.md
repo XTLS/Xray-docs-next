@@ -146,7 +146,7 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 > `tag`: string
 
-由内置 DNS 发出的查询流量，除 `localhost` 、 `fakedns` 、 `TCPL` 、 `DOHL` 和 `DOQL` 模式外，都可以用此标识在路由使用 `inboundTag` 进行匹配。
+由内置 DNS 发出的查询流量，除 `localhost`、`fakedns`、`TCPL`、`DOHL` 和 `DOQL` 模式外，都可以用此标识在路由使用 `inboundTag` 进行匹配。
 
 ### ServerObject
 
