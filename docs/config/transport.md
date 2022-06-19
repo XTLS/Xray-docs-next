@@ -159,7 +159,8 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
   "certificates": [],
   "disableSystemRoot": false,
   "enableSessionResumption": false,
-  "fingerprint": ""
+  "fingerprint": "",
+  "pinnedPeerCertificateChainSha256": ""
 }
 ```
 
@@ -227,6 +228,16 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 - `"chrome" | "firefox" | "safari"`: 模拟 Chrome / Firefox / Safari 的 TLS 指纹
 - `"randomized"`: 使用随机指纹
+
+> `pinnedPeerCertificateChainSha256`: \[string\]
+
+用于指定远程服务器的证书链 SHA256 散列值，使用标准编码格式。
+
+在连接因为此配置失败时，会展示远程服务器证书散列值。
+
+::: danger
+不建议使用这种方式获得证书链散列值，因为在这种情况下将没有机会验证此时服务器提供的证书是否为真实证书。
+:::
 
 > `certificates`: \[ [CertificateObject](#certificateobject) \]
 
