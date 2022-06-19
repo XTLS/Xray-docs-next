@@ -113,8 +113,8 @@ xray uuid [-i "example"]
 ```
 
 ::: tip
-当`-config`没有指定时，Xray 将先后尝试从以下路径加载`config.json`:
+当 `-config` 没有指定时，Xray 将先后尝试从以下路径加载 `config.json` :
 
 - 工作目录（Working Directory）
-- [环境变量](../config/features/env.md#资源文件路径)中`Xray.location.asset`所指定的路径
-:::
+- [环境变量](../config/features/env.md#资源文件路径)中 `Xray.location.asset` 所指定的路径
+  :::
