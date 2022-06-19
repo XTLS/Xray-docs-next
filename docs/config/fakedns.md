@@ -114,7 +114,7 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
 
 当外部 DNS 请求进入 FakeDNS 组件时，它会返回位于自己 `ipPool` 内的 IP 地址作为域名的虚构解析结果，并记录该域名与虚构解析结果之间的映射关系。
 
-另外，你需要在**客户端**接收需代理流量的入站中开启 `Sniffing`，并使用 `fakedns` 目标地址重置。
+另外，你需要在 **客户端** 接收需代理流量的入站中开启 `Sniffing`，并使用 `fakedns` 目标地址重置。
 
 ``` json
 "sniffing": {
