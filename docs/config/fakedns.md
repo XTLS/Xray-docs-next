@@ -45,7 +45,7 @@ FakeDNS 将使用此选项指定的 IP 块分配地址。
 :::
 
 ::: tip
-若配置文件中 `dns` 项设置了 `fakedns` 但配置文件没有设置 `FakeDnsObject` ，Xray 会根据 DNS 组件的 `queryStrategy` 来初始化 `FakeDnsObject` 。
+若配置文件中 `dns` 项设置了 `fakedns` 但配置文件没有设置 `FakeDnsObject`，Xray 会根据 DNS 组件的 `queryStrategy` 来初始化 `FakeDnsObject`。
 
 `queryStrategy` 为 `UseIP` 时，初始化的 FakeIP Pool 相当于
 ``` json
@@ -114,12 +114,12 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
 
 当外部 DNS 请求进入 FakeDNS 组件时，它会返回位于自己 `ipPool` 内的 IP 地址作为域名的虚构解析结果，并记录该域名与虚构解析结果之间的映射关系。
 
-另外，你需要在**客户端**接收需代理流量的入站中开启 `Sniffing` ，并使用 `fakedns` 目标地址重置。
+另外，你需要在**客户端**接收需代理流量的入站中开启 `Sniffing`，并使用 `fakedns` 目标地址重置。
 
 ``` json
 "sniffing": {
   "enabled": true,
-  "destOverride": ["fakedns"], // 使用 "fakedns" ，或与其它 sniffer 搭配使用，或直接使用 "fakedns+others"
+  "destOverride": ["fakedns"], // 使用 "fakedns"，或与其它 sniffer 搭配使用，或直接使用 "fakedns+others"
   "metadataOnly": false        // 此项为 true 时 destOverride 仅可使用 fakedns
 },
 ```
@@ -132,15 +132,14 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
 
 #### 与 DNS 分流共存
 
-使用 DNS 分流时，为了使 `fakedns` 拥有高优先级，需要对其增加与其他类型 DNS 相同的 `domains` 。
+使用 DNS 分流时，为了使 `fakedns` 拥有高优先级，需要对其增加与其他类型 DNS 相同的 `domains`。
 
 ``` json
 {
   "servers": [
     {
       "address": "fakedns",
-      "domains": [
-        // 与下方分流所用的内容一致
+      "domains": [            // 与下方分流所用的内容一致
         "geosite:cn",
         "domain:example.com"
       ]
@@ -173,7 +172,6 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
     }
   ]
 }
-
 ```
 
 #### FakeDNS 白名单
@@ -190,5 +188,4 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
     }
   ]
 }
-
 ```
