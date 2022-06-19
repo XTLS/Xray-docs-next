@@ -130,7 +130,7 @@
 此项需要开启 `destOverride` 使用。
 
 ::: tip
-在能保证**被代理连接能得到正确的 DNS 解析**时，使用 `routeOnly` 且开启 `destOverride` 的同时，将路由匹配策略 `domainStrategy` 设置为 `AsIs` 即可实现全程无 DNS 解析进行域名及 IP 分流。此时遇到 IP 规则匹配时使用的 IP 为域名原始 IP。
+在能保证 **被代理连接能得到正确的 DNS 解析** 时，使用 `routeOnly` 且开启 `destOverride` 的同时，将路由匹配策略 `domainStrategy` 设置为 `AsIs` 即可实现全程无 DNS 解析进行域名及 IP 分流。此时遇到 IP 规则匹配时使用的 IP 为域名原始 IP。
 :::
 
 ### AllocateObject
