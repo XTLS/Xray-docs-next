@@ -18,6 +18,7 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 - 请确定反向代理服务器开启了 HTTP/2
 - 请使用 HTTP/2 或 h2c (Caddy)，grpc_pass (Nginx) 连接到 Xray。
 - 普通模式的 Path 为 `/${serviceName}/Tun`, Multi 模式为 `/${serviceName}/TunMulti`
+- 如果需要接收客户端 IP，可以通过由 Caddy / Nginx 发送 `X-Real-IP` header 来传递客户端 IP。
   :::
 
 ::: tip

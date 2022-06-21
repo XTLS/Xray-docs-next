@@ -81,7 +81,8 @@
     "tproxy": "off",
     "domainStrategy": "AsIs",
     "dialerProxy": "",
-    "acceptProxyProtocol": false
+    "acceptProxyProtocol": false,
+    "tcpKeepAliveInterval": 0
   }
 }
 ```
@@ -158,7 +159,8 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
   "certificates": [],
   "disableSystemRoot": false,
   "enableSessionResumption": false,
-  "fingerprint": ""
+  "fingerprint": "",
+  "pinnedPeerCertificateChainSha256": [""]
 }
 ```
 
@@ -226,6 +228,20 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 - `"chrome" | "firefox" | "safari"`: 模拟 Chrome / Firefox / Safari 的 TLS 指纹
 - `"randomized"`: 使用随机指纹
+
+> `pinnedPeerCertificateChainSha256`: \[string\]
+
+用于指定远程服务器的证书链 SHA256 散列值，使用标准编码格式。仅有当服务器端证书链散列值符合设置项中之一时才能成功建立 TLS 连接。
+
+在连接因为此配置失败时，会展示远程服务器证书散列值。
+
+::: danger
+不建议使用这种方式获得证书链散列值，因为在这种情况下将没有机会验证此时服务器提供的证书是否为真实证书，进而不保证获得的证书散列值为期望的散列值。
+:::
+
+::: tip
+如果需要获得证书的散列值，应在命令行中运行 `xray tls certChainHash --cert <cert.pem>` 来获取，`<cert.pem>` 应替换为实际证书文件路径。
+:::
 
 > `certificates`: \[ [CertificateObject](#certificateobject) \]
 
@@ -365,7 +381,8 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "tproxy": "off",
   "domainStrategy": "AsIs",
   "dialerProxy": "",
-  "acceptProxyProtocol": false
+  "acceptProxyProtocol": false,
+  "tcpKeepAliveInterval": 0
 }
 ```
 
@@ -474,3 +491,9 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
 
 填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
+
+> `tcpKeepAliveInterval`: number
+
+TCP 保持活跃的数据包发送间隔，单位为秒。该设置仅适用于 Linux 下。
+
+不配置此项或配置为 0 表示使用 Go 默认值。

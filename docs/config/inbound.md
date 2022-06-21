@@ -40,13 +40,15 @@
 
 填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，传输方式可选 TCP、WebSocket、HTTP/2、gRPC。
 
+填写 Unix domain socket 时，填写为形如 `"/dev/shm/domain.socket,0666"` 的形式，即 socket 后加逗号及访问权限指示符，即可指定 socket 的访问权限，可用于解决默认情况下出现的 socket 访问权限问题。
+
 > `port`: number | "env:variable" | string
 
 端口。接受的格式如下:
 
 - 整型数值：实际的端口号。
 - 环境变量：以 `"env:"` 开头，后面是一个环境变量的名称，如 `"env:PORT"`。Xray 会以字符串形式解析这个环境变量。
-- 字符串：可以是一个数值类型的字符串，如 `"1234"`；或者一个数值范围，如 `"5-10"` 表示端口 5 到端口 10，这 6 个端口。
+- 字符串：可以是一个数值类型的字符串，如 `"1234"`；或者一个数值范围，如 `"5-10"` 表示端口 5 到端口 10，这 6 个端口。可以使用逗号进行分段，如 `11,13,15-17` 表示端口 11、端口 13、端口 15 到端口 17 这 5 个端口。
 
 当只有一个端口时，Xray 会在此端口监听入站连接。当指定了一个端口范围时，取决于 `allocate` 设置。
 
@@ -94,7 +96,8 @@
   "enabled": true,
   "destOverride": ["http", "tls", "fakedns"],
   "metadataOnly": false,
-  "domainsExcluded": []
+  "domainsExcluded": [],
+  "routeOnly": false
 }
 ```
 
@@ -102,13 +105,17 @@
 
 是否开启流量探测。
 
-> `destOverride`: \["http" | "tls" | "fakedns" \]
+> `destOverride`: \["http" | "tls" | "quic" | "fakedns" | "fakedns+others" \]
 
 当流量为指定类型时，按其中包括的目标地址重置当前连接的目标。
 
+其中 `["fakedns+others"]` 相当于 `["http", "tls", "quic", "fakedns"]`，当 IP 地址处于 FakeIP 区间内但没有命中域名记录时会使用 `http`、`tls` 和 `quic` 进行匹配。此项仅在 `metadataOnly` 为 `false` 时有效。
+
 > `metadataOnly`: true | false
 
-当启用时，将仅使用连接的元数据嗅探目标地址。此时，`http` 与 `tls` 将不能使用。
+当启用时，将仅使用连接的元数据嗅探目标地址。此时，除 `fakedns` 以外的 sniffer 将不能激活（包括 `fakedns+others`）。
+
+如果关闭仅使用元数据推断目标地址，此时客户端必须先发送数据，代理服务器才会实际建立连接。此行为与需要服务器首先发起第一个消息的协议不兼容，如 SMTP 协议。
 
 > `domainsExcluded`: [string] <Badge text="WIP" type="warning"/>
 
@@ -116,6 +123,16 @@
 
 ::: warning
 目前，`domainsExcluded` 不支持类似路由中的域名匹配方式。此选项未来可能会改变，不保证跨版本兼容。
+:::
+
+> `routeOnly`: true | false
+
+将嗅探得到的域名仅用于路由，代理目标地址仍为 IP。默认值为 `false`。
+
+此项需要开启 `destOverride` 使用。
+
+::: tip
+在能保证 **被代理连接能得到正确的 DNS 解析** 时，使用 `routeOnly` 且开启 `destOverride` 的同时，将路由匹配策略 `domainStrategy` 设置为 `AsIs` 即可实现全程无 DNS 解析进行域名及 IP 分流。此时遇到 IP 规则匹配时使用的 IP 为域名原始 IP。
 :::
 
 ### AllocateObject

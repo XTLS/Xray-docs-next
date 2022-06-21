@@ -45,11 +45,15 @@ Xray. Multiple assign is accepted.
 The -confdir=dir flag sets a dir with multiple json config
 
 The -format=json flag sets the format of config files.
-Default "json".
+Default "auto".
 
 The -test flag tells Xray to test config files only,
 without launching the server
 ```
+
+::: tip
+配置文件除了默认的 JSON 格式外，也可以使用 TOML 和 YAML。在不指定格式的前提下会通过文件扩展名识别。
+:::
 
 ### xray version
 
@@ -93,8 +97,9 @@ xray tls <command> [arguments]
 ```
 
 ```
-        cert         Generate TLS certificates
-        ping         Ping the domain with TLS handshake
+        cert          Generate TLS certificates
+        ping          Ping the domain with TLS handshake
+        certChainHash Calculate TLS certificates hash.
 ```
 
 ### xray uuid
@@ -104,12 +109,12 @@ xray tls <command> [arguments]
 使用方法:
 
 ```
-xray uuid
+xray uuid [-i "example"]
 ```
 
 ::: tip
-当`-config`没有指定时，Xray 将先后尝试从以下路径加载`config.json`:
+当 `-config` 没有指定时，Xray 将先后尝试从以下路径加载 `config.json` :
 
 - 工作目录（Working Directory）
-- [环境变量](../config/features/env.md#资源文件路径)中`Xray.location.asset`所指定的路径
+- [环境变量](../config/features/env.md#资源文件路径)中 `Xray.location.asset` 所指定的路径
   :::
