@@ -340,7 +340,7 @@ Documentation=man:netfilter-persistent(8)
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/usr/sbin/netfilter-persistent start ; /usr/sbin/ip route add local default dev lo table 100 ; /usr/sbin/ip rule add fwmark 1 table 100
-ExecStop=/usr/sbin/netfilter-persistent stop ; /usr/sbin/ip route del local default dev lo table 100 ; /usr/sbin/ip rule del table 100
+ExecStop=/usr/sbin/netfilter-persistent stop ; /usr/sbin/ip route flush dev lo table 100; /usr/sbin/ip rule del table 100
 
 [Install]
 WantedBy=multi-user.target
