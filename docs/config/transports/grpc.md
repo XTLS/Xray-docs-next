@@ -37,7 +37,7 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 {
   "serviceName": "name",
   "multiMode": false,
-  "idle_timeout": 10,
+  "idle_timeout": 60,
   "health_check_timeout": 20,
   "permit_without_stream": false,
   "initial_windows_size": 0
