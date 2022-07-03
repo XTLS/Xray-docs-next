@@ -76,6 +76,19 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 
 ### Debian <Badge text="WIP" type="warning"/>
 
+### Gentoo
+
+需要使用第三方Overlay，以[JuanCldCmt/Xray-Overlay](https://github.com/JuanCldCmt/Xray-Overlay)为例，在root用户下运行：
+```bash
+# 1. 将Xray overlay 加入到系统中：(注意：该overlay非官方，由个人维护）
+eselect repository add Xray git 'https://github.com/JuanCldCmt/Xray-Overlay'
+# 2. 更新portage本地数据库
+emaint sync --auto
+# 3. 用emerge安装软件
+emerge --ask Xray-bin
+```
+更多信息请查阅：https://github.com/JuanCldCmt/Xray-Overlay
+
 ## Docker 安装方式
 
 - [teddysun/xray](https://hub.docker.com/r/teddysun/xray)
