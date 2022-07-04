@@ -76,6 +76,16 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 
 ### Debian <Badge text="WIP" type="warning"/>
 
+### Gentoo
+
+目前有三个第三方 Overlay 提供 Portage 安装脚本:
+
+- [CHN-beta/touchfish-os](https://github.com/gentoo-mirror/touchfish-os/tree/master/net-proxy/Xray): 个人维护，适用于 systemD 系统
+- [Gentoo-zh](https://github.com/microcai/gentoo-zh): 社区维护，适用于 systemD 系统
+- [JuanCldCmt/Xray-Overlay](https://github.com/JuanCldCmt/Xray-Overlay)：个人维护，适用于 openRC 系统，同时使用 xray 用户组运行以提高安全性
+
+使用 layman 或 eselect-repository 添加 Overlay 至本地，然后即可安装。
+
 ## Docker 安装方式
 
 - [teddysun/xray](https://hub.docker.com/r/teddysun/xray)
