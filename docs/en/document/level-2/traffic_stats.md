@@ -8,55 +8,55 @@ title: 流量统计
 
 ## 查看流量信息
 
-  配置方法与 v2fly 一致。
-  查看流量信息是 xray 命令行的其中一个功能。配置内设置的 api dokodemo-door 端口，即为 `--server` 参数的端口。
+配置方法与 v2fly 一致。
+查看流量信息是 xray 命令行的其中一个功能。配置内设置的 api dokodemo-door 端口，即为 `--server` 参数的端口。
 
-  ```bash
-  xray api statsquery --server=127.0.0.1:10085 #查看所有流量
-  xray help api statsquery #statsquery 查询匹配的记录
-  xray help api stats #stats 查询一个记录
-  ```
+```bash
+xray api statsquery --server=127.0.0.1:10085 #查看所有流量
+xray help api statsquery #statsquery 查询匹配的记录
+xray help api stats #stats 查询一个记录
+```
 
-  输出例子：
+输出例子：
 
-  ```json
+```json
 {
-    "stat": [
-        {
-            "name": "inbound>>>vmess-quic>>>traffic>>>downlink",
-            "value": "1176"
-        },
-        {
-            "name": "user>>>love@example.com>>>traffic>>>downlink",
-            "value": "2040"
-        },
-        {
-            "name": "inbound>>>api>>>traffic>>>uplink",
-            "value": "14247"
-        },
-        {
-            "name": "user>>>love@example.com>>>traffic>>>uplink",
-            "value": "2520"
-        },
-        {
-            "name": "inbound>>>api>>>traffic>>>downlink",
-            "value": "87618"
-        },
-        {
-            "name": "outbound>>>direct>>>traffic>>>downlink",
-            "value": "0"
-        },
-        {
-            "name": "inbound>>>vmess-quic>>>traffic>>>uplink",
-            "value": "1691"
-        },
-        {
-            "name": "outbound>>>direct>>>traffic>>>uplink",
-            "value": "0"
-        }
-    ]
+  "stat": [
+    {
+      "name": "inbound>>>vmess-quic>>>traffic>>>downlink",
+      "value": "1176"
+    },
+    {
+      "name": "user>>>love@example.com>>>traffic>>>downlink",
+      "value": "2040"
+    },
+    {
+      "name": "inbound>>>api>>>traffic>>>uplink",
+      "value": "14247"
+    },
+    {
+      "name": "user>>>love@example.com>>>traffic>>>uplink",
+      "value": "2520"
+    },
+    {
+      "name": "inbound>>>api>>>traffic>>>downlink",
+      "value": "87618"
+    },
+    {
+      "name": "outbound>>>direct>>>traffic>>>downlink",
+      "value": "0"
+    },
+    {
+      "name": "inbound>>>vmess-quic>>>traffic>>>uplink",
+      "value": "1691"
+    },
+    {
+      "name": "outbound>>>direct>>>traffic>>>uplink",
+      "value": "0"
+    }
+  ]
 }
-  ```
+```
 
 ## 流量信息的处理
 
@@ -80,10 +80,10 @@ apidata () {
             split($2, p,  ">>>");
             printf "%s:%s->%s\t", p[1],p[2],p[4];
         }
-        else if (match($1, /"value":/) && f){ 
+        else if (match($1, /"value":/) && f){
           f = 0;
           gsub(/"/, "", $2);
-          printf "%.0f\n", $2; 
+          printf "%.0f\n", $2;
         }
         else if (match($0, /}/) && f) { f = 0; print 0; }
     }'
