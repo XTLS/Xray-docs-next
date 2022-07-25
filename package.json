@@ -9,7 +9,7 @@
     "@types/bootstrap": "^5.2.0",
     "@types/jquery": "^3.5.14",
     "@types/mermaid": "^8.2.9",
-    "@types/node": "^18.0.0",
+    "@types/node": "^18.6.1",
     "@vuepress/bundler-vite": "^2.0.0-beta.25",
     "@vuepress/plugin-back-to-top": "^2.0.0-beta.25",
     "@vuepress/plugin-debug": "^2.0.0-beta.25",
