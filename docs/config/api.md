@@ -53,18 +53,15 @@ API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 
 ```json
 "routing": {
-  "settings": {
-    "rules": [
-      {
-        "inboundTag": [
-          "api"
-        ],
-        "outboundTag": "api",
-        "type": "field"
-      }
-    ]
-  },
-  "strategy": "rules"
+  "rules": [
+    {
+      "inboundTag": [
+        "api"
+      ],
+      "outboundTag": "api",
+      "type": "field"
+    }
+  ]
 }
 ```
 
