@@ -13,25 +13,24 @@ project X 的代码被托管在 github 上:
 - 配置模板 [Xray-examples](https://github.com/XTLS/Xray-examples)
 - xray 文档 [XTLS.github.io](https://github.com/XTLS/XTLS.github.io)
 
-您可以使用 [Git](https://git-scm.com/) 来获取代码.
+您可以使用 [Git](https://git-scm.com/) 来获取代码。
 
 ### 分支（Branch）
 
-本项目的主干分支为 main, main 分支也是发布时所使用的代码分支, 因此需要确保 master 在任一时刻都是可编译可使用的。
-
-如果需要开发新的功能
-
-- 请新开分支进行开发, 在开发完成并且经过充分测试后, 合并回主干分支.
-- 新开分支如没有必要再存在时, 可以去除.
+- 本项目的主干分支为 main，
+- 本项目的发布主分支同为 main，
+- 需要确保 main 在任一时刻都是可编译，且可正常使用的。
+- 如果需要开发新的功能，请新建分支进行开发，在开发完成并且经过充分测试后，合并回主干分支。
+- 已经合并入主干且没有必要存在的分支，请删除。
 
 ### 发布（Release）
 
 <Badge text="WIP" type="warning"/>
 
 - 建立尝鲜版本和稳定版本两个发布通道
-  - 临时版本, 主要用于特定情况的测试(比如从分支 build 的), 于 TG 群内/issue 回复等渠道 发布特定版本
-  - 尝鲜版本可以为 daily build , 用于尝鲜和获得即时反馈和再改进.
-  - 稳定版本为定时更新(比如周更), 合并稳定的修改并发布.
+  - 临时版本，主要用于特定情况的测试(比如从分支 build 的)，于 TG 群内/issue 回复等渠道 发布特定版本。
+  - 尝鲜版本，可以为 daily build，用于尝鲜和获得即时反馈和再改进。
+  - 稳定版本，为定时更新(比如周更)，合并稳定的修改并发布。
 
 ### 引用其它项目
 
@@ -45,7 +44,7 @@ project X 的代码被托管在 github 上:
 
 ### 写代码之前
 
-发现任何问题，或对项目有任何想法，请创建 Issue 讨论以减少重复劳动和消耗在代码上的时间。
+发现任何问题，或对项目有任何想法，请创建 [issue](https://github.com/XTLS/Xray-core/issues) 讨论以减少重复劳动和消耗在代码上的时间。
 
 ### 修改代码
 
@@ -61,11 +60,11 @@ project X 的代码被托管在 github 上:
 
 - 提交 PR 之前，请先运行 `git pull https://github.com/xray/xray-core.git` 以确保 merge 可顺利进行；
 - 一个 PR 只做一件事，如有对多个 bug 的修复，请对每一个 bug 提交一个 PR；
-- 由于 Golang 的特殊需求（Package path），Go 项目的 PR 流程和其它项目有所不同 ,建议流程如下：
-  1. 先 Fork 本项目，创建自己的 `github.com/your/Xray-core` 仓库；
-  2. 克隆自己的 Xray 仓库到本地：`git clone https://github.com/your/Xray-core.git`；
-  3. 基于 `main` 分支创建新的分支；
-  4. 在自行创建的分支上作修改并提交修改(commit)；
+- 由于 Golang 的特殊需求（Package path），Go 项目的 PR 流程和其它项目有所不同，建议流程如下：
+  1. 先 Fork 本项目，创建你自己的 `github.com/<your_name>/Xray-core.git` 仓库；
+  2. 克隆你自己的 Xray 仓库到本地：`git clone https://github.com/<your_name>/Xray-core.git`；
+  3. 基于 `main` 分支创建新的分支，例如 `git branch issue24 main`；
+  4. 在新创建的分支上作修改并提交修改(commit)；
   5. 在推送(push)修改完成的分支到自己的仓库前，先切换到 `main` 分支，运行 `git pull https://github.com/v2fly/Xray-core.git` 拉取最新的远端代码；
   6. 如果上一步拉取得到了新的远端代码，则切换到之前自己创建的分支，运行 `git rebase main` 执行分支合并操作。如遇到文件冲突，则需要解决冲突；
   7. 上一步处理完毕后，就可以把自己创建的分支推送到自己的仓库：`git push -u origin your-branch`
