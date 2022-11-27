@@ -18,6 +18,10 @@
 
 将 Xray 玩出花:基于 fwmark 或 sendThrough 方式实现“分流”。
 
+[通过 Cloudflare Warp 增强代理安全性](./warp.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
+
+Xray v1.6.5 新增 WireGuard 出站的使用介绍。
+
 [Xray 流量统计](./traffic_stats.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
 
 适配 Xray 的流量统计和脚本。

@@ -152,6 +152,7 @@ export function getDocumentLv2Sidebar(
         path + "tproxy.md",
         path + "iptables_gid.md",
         path + "redirect.md",
+        path + "warp.md",
         path + "traffic_stats.md",
       ],
     },
