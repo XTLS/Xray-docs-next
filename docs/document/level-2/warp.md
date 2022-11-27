@@ -5,10 +5,11 @@ title: 通过 Cloudflare Warp 增强代理安全性
 # 通过 Cloudflare Warp 增强代理安全性
 
 Xray（1.6.5+）新加入了 WireGuard 出站，虽然增加的代码和依赖会增大 core 体积，但是我们认为这是一个很有必要的新功能，原因有三：
+
 1. 通过近期的一些讨论和[实验](https://github.com/net4people/bbs/issues/129#issuecomment-1308102504)，我们知道代理回国流量是不安全的。一种应对方式是将回国流量路由至黑洞，它的缺点是由于 geosite 和 geoip 更新的不及时或者新手不知道如何在客户端适当分流，结果流量进入黑洞，影响使用体验。
-这时我们只需要将回国流量导入 Cloudflare Warp，可以在不影响使用体验的情况下达到同样的安全性。
+   这时我们只需要将回国流量导入 Cloudflare Warp，可以在不影响使用体验的情况下达到同样的安全性。
 2. 众所周知，大部分机场会记录用户访问域名的日志，某些机场还会审计和阻断一些用户流量。保护用户私密性的一个方法，就是在客户端使用链式代理。
-Warp 使用的 WireGuard 轻量级 VPN 协议会在代理层内增加一层加密。对于机场而言，用户所有流量的目标都是 Wrap，从而最大程度保护自己的隐私。
+   Warp 使用的 WireGuard 轻量级 VPN 协议会在代理层内增加一层加密。对于机场而言，用户所有流量的目标都是 Wrap，从而最大程度保护自己的隐私。
 3. 方便使用，只需要一个 core 即可完成分流，Wireguard Tun，链式代理的设置。
 
 ## 申请 Wrap 账户
@@ -31,6 +32,7 @@ AllowedIPs = 0.0.0.0/0
 AllowedIPs = ::/0
 Endpoint = engage.cloudflareclient.com:2408
 ```
+
 ## 在服务端分流回国流量至 warp
 
 在现有出站中新增一个 WireGurad 出站
