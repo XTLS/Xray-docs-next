@@ -53,6 +53,8 @@ Endpoint = engage.cloudflareclient.com:2408
 }
 ```
 
+路由策略推荐`IPIfNonMatch`
+
 在现有路由中新增以下
 
 ```json
