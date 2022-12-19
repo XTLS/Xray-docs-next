@@ -150,6 +150,7 @@ export function getDocumentLv2Sidebar(
       children: [
         path + "transparent_proxy/transparent_proxy.md",
         path + "tproxy.md",
+        path + "tproxy_ipv4_and_ipv6.md",
         path + "iptables_gid.md",
         path + "redirect.md",
         path + "warp.md",
