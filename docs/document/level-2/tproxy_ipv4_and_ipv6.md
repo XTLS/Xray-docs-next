@@ -330,6 +330,7 @@ ip6tables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
 
 # 直连从主路由发出
 ip route add default via 192.168.31.1 #写主路由ip, 采用下述方法一可不写此命令
+ip -6 route add default via fd00:6868:6868::1 #写主路由ipv6, 采用下述方法一可不写此命令
 ```
 
 </Tab>
