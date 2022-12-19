@@ -334,13 +334,13 @@ ip6tables -t mangle -A DIVERT -j ACCEPT
 ip6tables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
 
 # 直连从主路由发出
-ip route add default via 192.168.31.1 #写主路由 ip, 采用下述方法一可不写此命令
+ip route add default via 192.168.31.1 #写主路由 ipv4, 采用下述方法一可不写此命令
 ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用下述方法一可不写此命令
 ```
 
 ::: tip 使用方法
 
-将上述配置写入一个文件（如 `tproxy.rules`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./tpoxy.rules`）。
+将上述配置写入一个文件（如 `tproxy.rules`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./tproxy.rules`）。
 
 或直接`source tproxy.rules`
 :::
