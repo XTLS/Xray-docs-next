@@ -4,11 +4,11 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 # TProxy 透明代理（ipv4 and ipv6）配置教程
 
-本配置参考了[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)以及[透明代理通过 gid 规避 Xray 流量](https://xtls.github.io/document/level-2/iptables_gid.html)，加入了透明代理对 ipv6 的支持，并且使用 VLESS-TCP-XTLS-RPRX-Vision 方案对抗封锁。
+本配置参考了[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)，[透明代理（TProxy）配置教程](https://xtls.github.io/document/level-2/tproxy.html#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D)以及[透明代理通过 gid 规避 Xray 流量](https://xtls.github.io/document/level-2/iptables_gid.html)，加入了透明代理对 ipv6 的支持，并且使用 VLESS-TCP-XTLS-RPRX-Vision 方案对抗封锁。
 
-关于 Xray 的配置并不是本文重点，使用者可依实际情况进行修改，具体可以参考[官方文档示例](https://github.com/XTLS/Xray-examples)或其他优秀示例 比如[chika0801](https://github.com/chika0801/Xray-examples) 又如[lxhao61](https://github.com/lxhao61/integrated-examples)。
+关于 Xray 的配置并不是本文重点，使用者可依实际情况进行修改，具体可以参考[官方文档示例](https://github.com/XTLS/Xray-examples)或其他优秀示例 比如[@chika0801](https://github.com/chika0801/Xray-examples) 又如[@lxhao61](https://github.com/lxhao61/integrated-examples)。
 
-此配置意在解决 Netflix 等默认使用 ipv6 连接的网站无法通过旁路由进行代理的问题，或对 ipv6 代理有需要。
+此配置意在解决例如 Netflix 等默认使用 ipv6 连接的网站无法通过旁路由进行代理的问题，或对 ipv6 代理有需要。
 
 本文网络结构为单臂旁路由
 
@@ -16,9 +16,9 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 ## Xray 配置
 
-</Tab>
 <Tabs title="config.json">
-	<Tab title="client">
+
+<Tab title="client">
 
 ```json
 {
@@ -197,7 +197,8 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 ```
 
 </Tab>
-	<Tab title="sever_json">
+
+<Tab title="sever_json">
 
 ```json
 {
@@ -260,13 +261,14 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 ```
 
 </Tab>
+
 </Tabs>
 
 ## iptables 配置
 
 此处配置将 ipv4 与 ipv6 写在同一文件中。
 
-<Tab title="nftables1">
+<Tab title="iptales">
 
 ```
 # 设置策略路由v4
@@ -327,14 +329,21 @@ ip6tables -t mangle -A DIVERT -j ACCEPT
 ip6tables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
 
 # 直连从主路由发出
-ip route add default via 192.168.31.1 #写主路由ip
+ip route add default via 192.168.31.1 #写主路由ip, 采用下述方法一可不写此命令
 ```
 
 </Tab>
 
 ::: tip 使用方法
+
 将上述配置写入一个文件（如 `tproxy.rules`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./tpoxy.rules`）。
+
 或直接`source tproxy.rules`
+:::
+
+::: tip 关于最后一行命令
+
+在旁路由使用命令`ip route show`，如果使用下属方法一，则`default via`后应是主路由 ip，无需更改；如使用下述方法二，则`default via`后应是旁路由 ip，此时直连网站 DNS 解析会回环，造成直连网站无法访问，因此需指定为主路由 ip。
 :::
 
 其中，网关地址`192.168.0.0/16`, `fd00::/8`等可由`ip address | grep -w inet | awk '{print $2}'`以及`ip address | grep -w inet6 | awk '{print $2}'`[获得](https://xtls.github.io/document/level-2/iptables_gid.html#_4-%E8%AE%BE%E7%BD%AE-iptables-%E8%A7%84%E5%88%99)
@@ -343,26 +352,32 @@ ip route add default via 192.168.31.1 #写主路由ip
 
 又或者在路由器“上网设置”中查看。
 
-如果前缀`192.168`, `fd00:`相同可不更改，不同则更改为相应值。
+如果前缀`192.168`, `fd00:`相同可不更改，不同则更改为相应值，写法可通过 Goolge 搜索得到。
 
-# 局域网设备上网设置
+## 局域网设备上网设置
 
-局域网设备上网有两种方式，一种就是在使用设备上进行静态 IP 的配置，将网关指向旁路由 IP，旁路由的 ipv4, ipv6 地址可由`ip add`获得。但注意绝大部分手机不支持 ipv6 的静态 ipv6 配置，除非 root 后进行相关设置。
+此处假定旁路由 ipv4, ipv6 地址分别为`192.168.31.100`, `fd00:6868:6868::8866`, 旁路由的 ipv4, ipv6 地址可由命令`ip add`获得。
+
+### 方法一
+
+局域网设备上网有两种方式，第一种就是在使用设备上进行静态 IP 的配置，将网关指向旁路由 IP。但注意绝大部分手机不支持 ipv6 的静态 ipv6 配置，除非 root 后进行相关设置。
 
 以 windows 设备为例，可以先开启 DHCP 记录自动分配的 IP 以参考，然后手写静态配置。
 
 ::: tip DNS 设置
+
 此配置劫持 DNS 流量，DNS 可以随便写
 :::
 
-<img width="231" alt="image" src="https://user-images.githubusercontent.com/110686480/208310266-632e36b9-a23b-4b90-aa28-583b50e87c66.png">
-	<img width="238" alt="image" src="https://user-images.githubusercontent.com/110686480/208309659-e3172218-ef27-4a94-a017-225f8e05b611.png">
+<img width="231" alt="image" src="https://user-images.githubusercontent.com/110686480/208310266-632e36b9-a23b-4b90-aa28-583b50e87c66.png"> <img width="238" alt="image" src="https://user-images.githubusercontent.com/110686480/208309659-e3172218-ef27-4a94-a017-225f8e05b611.png">
 
-局域网设备上网的第二种方式，是在路由器上进行网关设置，这种方法对于连接到此路由器的设备无需做任何设置即可科学上网，但注意有些路由器不支持 ipv6 的网关设置，有 ipv6 需求的设备仍需在所需设备上单独手动配置 ipv6 相关设置如方法一。
+### 方法二
 
-<img width="882" alt="image" src="https://user-images.githubusercontent.com/110686480/208310174-2245a890-eb6b-4341-899f-81c6ac8255ff.png">
+局域网设备上网的第二种方式，是在路由器上进行网关设置，这种方法对于连接到此路由器的设备无需做任何设置即可科学上网，但注意有些路由器不支持 ipv6 的网关设置，有 ipv6 需求的设备仍需在所需设备上单独手动配置 ipv6 相关设置参考方法一。
 
-# 写在最后
+<img width="600" alt="image" src="https://user-images.githubusercontent.com/110686480/208310174-2245a890-eb6b-4341-899f-81c6ac8255ff.png">
+
+## 写在最后
 
 如今 ipv6 并未完全普及，我们日常访问的流量 99%仍为 ipv4 流量；很多 VPS 商家虽然提供 ipv6 地址，但线路优化非常垃圾，甚至处于不可用状态，为何要加入 ipV6 的设置？
 
