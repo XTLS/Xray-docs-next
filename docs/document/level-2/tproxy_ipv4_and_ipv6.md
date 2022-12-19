@@ -198,7 +198,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 </Tab>
 
-<Tab title="sever_json">
+<Tab title="sever">
 
 ```json
 {
@@ -268,13 +268,12 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 此处配置将 ipv4 与 ipv6 写在同一文件中。
 
-<Tab title="iptales">
-
-```
-# 设置策略路由v4
+```bash
+# 设置策略路由 v4
 ip rule add fwmark 1 table 100
 ip route add local 0.0.0.0/0 dev lo table 100
-# 代理局域网设备v4
+
+# 代理局域网设备 v4
 iptables -t mangle -N XRAY
 iptables -t mangle -A XRAY -d 127.0.0.1/32 -j RETURN
 iptables -t mangle -A XRAY -d 224.0.0.0/4 -j RETURN
@@ -285,7 +284,8 @@ iptables -t mangle -A XRAY -j RETURN -m mark --mark 0xff
 iptables -t mangle -A XRAY -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
 iptables -t mangle -A XRAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
 iptables -t mangle -A PREROUTING -j XRAY
-# 代理网关本机v4
+
+# 代理网关本机 v4
 iptables -t mangle -N XRAY_MASK
 iptables -t mangle -A XRAY_MASK -d 224.0.0.0/4 -j RETURN
 iptables -t mangle -A XRAY_MASK -d 255.255.255.255/32 -j RETURN
@@ -295,15 +295,18 @@ iptables -t mangle -A XRAY_MASK -j RETURN -m mark --mark 0xff
 iptables -t mangle -A XRAY_MASK -p udp -j MARK --set-mark 1
 iptables -t mangle -A XRAY_MASK -p tcp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j XRAY_MASK
-# 新建 DIVERT 规则，避免已有连接的包二次通过 TPROXY，理论上有一定的性能提升v4
+
+# 新建 DIVERT 规则，避免已有连接的包二次通过 TPROXY，理论上有一定的性能提升 v4
 iptables -t mangle -N DIVERT
 iptables -t mangle -A DIVERT -j MARK --set-mark 1
 iptables -t mangle -A DIVERT -j ACCEPT
 iptables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
-# 设置策略路由v6
+
+# 设置策略路由 v6
 ip -6 rule add fwmark 1 table 106
 ip -6 route add local ::/0 dev lo table 106
-# 代理局域网设备v6
+
+# 代理局域网设备 v6
 ip6tables -t mangle -N XRAY6
 ip6tables -t mangle -A XRAY6 -d ::1/128 -j RETURN
 ip6tables -t mangle -A XRAY6 -d fe80::/10 -j RETURN
@@ -313,7 +316,8 @@ ip6tables -t mangle -A XRAY6 -j RETURN -m mark --mark 0xff
 ip6tables -t mangle -A XRAY6 -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
 ip6tables -t mangle -A XRAY6 -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
 ip6tables -t mangle -A PREROUTING -j XRAY6
-# 代理网关本机v6
+
+# 代理网关本机 v6
 ip6tables -t mangle -N XRAY6_MASK
 ip6tables -t mangle -A XRAY6_MASK -d fe80::/10 -j RETURN
 ip6tables -t mangle -A XRAY6_MASK -d fd00::/8 -p tcp -j RETURN
@@ -322,22 +326,21 @@ ip6tables -t mangle -A XRAY6_MASK -j RETURN -m mark --mark 0xff
 ip6tables -t mangle -A XRAY6_MASK -p udp -j MARK --set-mark 1
 ip6tables -t mangle -A XRAY6_MASK -p tcp -j MARK --set-mark 1
 ip6tables -t mangle -A OUTPUT -j XRAY6_MASK
-# 新建 DIVERT 规则，避免已有连接的包二次通过 TPROXY，理论上有一定的性能提升v6
+
+# 新建 DIVERT 规则，避免已有连接的包二次通过 TPROXY，理论上有一定的性能提升 v6
 ip6tables -t mangle -N DIVERT
 ip6tables -t mangle -A DIVERT -j MARK --set-mark 1
 ip6tables -t mangle -A DIVERT -j ACCEPT
 ip6tables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
 
 # 直连从主路由发出
-ip route add default via 192.168.31.1 #写主路由ip, 采用下述方法一可不写此命令
-ip -6 route add default via fd00:6868:6868::1 #写主路由ipv6, 采用下述方法一可不写此命令
+ip route add default via 192.168.31.1 #写主路由 ipv4, 采用下述方法一可不写此命令
+ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用下述方法一可不写此命令
 ```
-
-</Tab>
 
 ::: tip 使用方法
 
-将上述配置写入一个文件（如 `tproxy.rules`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./tpoxy.rules`）。
+将上述配置写入一个文件（如 `tproxy.rules`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./tproxy.rules`）。
 
 或直接`source tproxy.rules`
 :::
