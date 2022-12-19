@@ -10,7 +10,7 @@
 
 基于 Xray 的透明代理（TProxy）配置完整教程。
 
-[TProxy 透明代理（ipv4 and ipv6）配置教程](./tproxy_ipv4_and_ipv6.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=40&v=4" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
+[TProxy 透明代理（ipv4 and ipv6）配置教程](./tproxy_ipv4_and_ipv6.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
 
 基于 Xray 的 TProxy 透明代理（ipv4 and ipv6）配置教程
 
