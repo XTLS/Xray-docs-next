@@ -36,7 +36,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 关于 `fakedns` 相关内容可参阅[官方文档](https://xtls.github.io/config/fakedns.html)
 :::
 
-<Tabs title="config.json">
+<Tabs title="客户端配置">
 
 <Tab title="客户端使用 fakedns">
 
