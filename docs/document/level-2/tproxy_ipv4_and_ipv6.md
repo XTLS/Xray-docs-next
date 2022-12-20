@@ -543,9 +543,7 @@ ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用局域�
 
 ::: tip 使用方法
 
-将上述配置写入一个文件（如 `settables.rules`），之后将该文件赋予可执行权限`# chmod 700 ./settables.rules`
-
-最后使用 root 权限执行该文件即可：`# ./settables.rules`或`# source settables.rules`。
+直接将命令复制到旁路由终端
 :::
 
 然后配置 nftables
@@ -602,6 +600,11 @@ table inet xray {
 ::: tip 关于直连从主路由发出
 
 在旁路由使用命令`ip route show`，如果使用下属方法一，则`default via`后应是主路由 ip，无需更改；如使用下述方法二，则`default via`后应是旁路由 ip，此时直连网站 DNS 解析会回环，造成直连网站无法访问，因此需指定为主路由 ip。
+:::
+
+::: tip 使用方法
+
+若需要开机启动请参考 [TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html) 以及 [透明代理（TProxy）配置教程](https://xtls.github.io/document/level-2/tproxy.html#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D)
 :::
 
 其中，网关地址`192.168.0.0/16`, `fd00::/8`等可由`ip address | grep -w inet | awk '{print $2}'`以及`ip address | grep -w inet6 | awk '{print $2}'`[获得](https://xtls.github.io/document/level-2/iptables_gid.html#_4-%E8%AE%BE%E7%BD%AE-iptables-%E8%A7%84%E5%88%99)
