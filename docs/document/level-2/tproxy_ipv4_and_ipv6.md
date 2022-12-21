@@ -8,17 +8,188 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 关于 Xray 的配置并不是本文重点，使用者可依实际情况进行修改，具体可以参考[官方文档示例](https://github.com/XTLS/Xray-examples)或其他优秀示例 比如[@chika0801](https://github.com/chika0801/Xray-examples) 又如[@lxhao61](https://github.com/lxhao61/integrated-examples)。
 
+::: warning 注意
+
+若使用其他配置，你需要着重注意客户端配置中 `outbound` 中`tag` 为 `proxy` 的部分，其他部分不变
+
+服务端配置也要同时改变
+:::
+
 此配置意在解决例如 Netflix 等默认使用 ipv6 连接的网站无法通过旁路由进行代理的问题，或对 ipv6 代理有需要。
 
 本文网络结构为单臂旁路由
 
-本文中所有配置已在 Arch Linux (Kernel: 6.0.10) 环境下测试成功，如在其它环境中使用 iptables 同理。
+本文中所有配置已在 Arch Linux (Kernel: 6.0.10) 环境下测试成功，如在其它环境中同理
+
+注意安装相应程序 `# sudo apt install iptables ip6tables` 或 `# sudo apt install nftables`。
 
 ## Xray 配置
 
-<Tabs title="config.json">
+### 客户端配置
 
-<Tab title="client">
+客户端配置可选则使用 fakedns，也可以选择不使用 fakedns 配置，二选一
+
+::: tip 透明代理中的 fakedns
+
+在旁路由的透明代理中，使用 `fakedns` 配合 `routeOnly` 以及 `domainSrategy` 为 `AsIs` 时，可最大程度降低访问延迟，详见文档[入站代理](https://xtls.github.io/config/inbound.html#sniffingobject)
+
+关于 `fakedns` 相关内容可参阅[官方文档](https://xtls.github.io/config/fakedns.html)
+:::
+
+<Tabs title="客户端配置">
+
+<Tab title="客户端使用 fakedns">
+
+```json
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "tag": "all-in",
+      "port": 12345,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["fakedns", "http", "tls"],
+        "metadataOnly": false,
+        "routeOnly": true
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tproxy": "tproxy",
+          "mark": 255
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      //此为默认outbound，路由(routing)模块若未匹配到任何规则，则默认走此 proxy 出口，如果你希望直连国内优先请将下面 direct 出口放到 outbound 第一，看不懂可忽略
+      "tag": "proxy",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "yourdomain.domain", //改为你自己的域名，直接填写ipv4或ipv6地址也可以
+            "port": 443,
+            "users": [
+              {
+                "id": "uuid", //填写uuid，可通过在终端中输入 xray uuid 生成；此处也支持任意字符串（https://xtls.github.io/config/inbounds/vless.html#clientobject）
+                "encryption": "none",
+                "flow": "xtls-rprx-vision"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        },
+        "network": "tcp",
+        "security": "tls", //注意使用 xtls-rprx-vision 流控此处需为 tls
+        "tlsSettings": {
+          //注意使用 xtls-rprx-vision 流控此处需为 tlsSettings
+          "allowInsecure": false,
+          "serverName": "yourdomain.domain", //改为你自己的域名
+          "fingerprint": "chrome" //模拟TLS Client Hello指纹，可选 chrome, firefox, safari, randomized, 具体参考 https://xtls.github.io/config/transport.html#tlsobject
+        }
+      }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIP"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns",
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      }
+    }
+  ],
+  "dns": {
+    "hosts": {
+      "填你VPS的域名": "填你VPS的ipv4或ipv6"
+    },
+    "servers": ["fakedns"]
+  },
+  "routing": {
+    "domainMatcher": "mph",
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": ["all-in"],
+        "port": 53,
+        "network": "udp",
+        "outboundTag": "dns-out"
+      },
+      {
+        "type": "field",
+        "inboundTag": ["all-in"],
+        "port": 123,
+        "network": "udp",
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:cn"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:geolocation-!cn"],
+        "outboundTag": "proxy"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "protocol": ["bittorrent"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": ["geoip:private", "geoip:cn"],
+        "outboundTag": "direct"
+      }
+    ]
+  }
+}
+```
+
+</Tab>
+
+<Tab title="客户端不使用 fakedns">
 
 ```json
 {
@@ -198,7 +369,9 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 </Tab>
 
-<Tab title="sever">
+</Tabs>
+
+### 服务端配置
 
 ```json
 {
@@ -260,11 +433,14 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 }
 ```
 
-</Tab>
+## Netfilter 配置
 
-</Tabs>
+::: warning 注意
 
-## iptables 配置
+nftables 配置与 iptables 配置二选一，不可同时使用。
+:::
+
+### 使用 iptables
 
 此处配置将 ipv4 与 ipv6 写在同一文件中。
 
@@ -272,6 +448,14 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 # 设置策略路由 v4
 ip rule add fwmark 1 table 100
 ip route add local 0.0.0.0/0 dev lo table 100
+
+# 设置策略路由 v6
+ip -6 rule add fwmark 1 table 106
+ip -6 route add local ::/0 dev lo table 106
+
+# 直连从主路由发出
+ip route add default via 192.168.31.1 #写主路由 ipv4, 采用局域网设备上网设置方法一可不写此命令
+ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用局域网设备上网设置方法一可不写此命令
 
 # 代理局域网设备 v4
 iptables -t mangle -N XRAY
@@ -285,27 +469,6 @@ iptables -t mangle -A XRAY -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
 iptables -t mangle -A XRAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
 iptables -t mangle -A PREROUTING -j XRAY
 
-# 代理网关本机 v4
-iptables -t mangle -N XRAY_MASK
-iptables -t mangle -A XRAY_MASK -d 224.0.0.0/4 -j RETURN
-iptables -t mangle -A XRAY_MASK -d 255.255.255.255/32 -j RETURN
-iptables -t mangle -A XRAY_MASK -d 192.168.0.0/16 -p tcp -j RETURN
-iptables -t mangle -A XRAY_MASK -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
-iptables -t mangle -A XRAY_MASK -j RETURN -m mark --mark 0xff
-iptables -t mangle -A XRAY_MASK -p udp -j MARK --set-mark 1
-iptables -t mangle -A XRAY_MASK -p tcp -j MARK --set-mark 1
-iptables -t mangle -A OUTPUT -j XRAY_MASK
-
-# 新建 DIVERT 规则，避免已有连接的包二次通过 TPROXY，理论上有一定的性能提升 v4
-iptables -t mangle -N DIVERT
-iptables -t mangle -A DIVERT -j MARK --set-mark 1
-iptables -t mangle -A DIVERT -j ACCEPT
-iptables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
-
-# 设置策略路由 v6
-ip -6 rule add fwmark 1 table 106
-ip -6 route add local ::/0 dev lo table 106
-
 # 代理局域网设备 v6
 ip6tables -t mangle -N XRAY6
 ip6tables -t mangle -A XRAY6 -d ::1/128 -j RETURN
@@ -317,6 +480,17 @@ ip6tables -t mangle -A XRAY6 -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
 ip6tables -t mangle -A XRAY6 -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
 ip6tables -t mangle -A PREROUTING -j XRAY6
 
+# 代理网关本机 v4
+iptables -t mangle -N XRAY_MASK
+iptables -t mangle -A XRAY_MASK -d 224.0.0.0/4 -j RETURN
+iptables -t mangle -A XRAY_MASK -d 255.255.255.255/32 -j RETURN
+iptables -t mangle -A XRAY_MASK -d 192.168.0.0/16 -p tcp -j RETURN
+iptables -t mangle -A XRAY_MASK -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
+iptables -t mangle -A XRAY_MASK -j RETURN -m mark --mark 0xff
+iptables -t mangle -A XRAY_MASK -p udp -j MARK --set-mark 1
+iptables -t mangle -A XRAY_MASK -p tcp -j MARK --set-mark 1
+iptables -t mangle -A OUTPUT -j XRAY_MASK
+
 # 代理网关本机 v6
 ip6tables -t mangle -N XRAY6_MASK
 ip6tables -t mangle -A XRAY6_MASK -d fe80::/10 -j RETURN
@@ -327,27 +501,110 @@ ip6tables -t mangle -A XRAY6_MASK -p udp -j MARK --set-mark 1
 ip6tables -t mangle -A XRAY6_MASK -p tcp -j MARK --set-mark 1
 ip6tables -t mangle -A OUTPUT -j XRAY6_MASK
 
+# 新建 DIVERT 规则，避免已有连接的包二次通过 TPROXY，理论上有一定的性能提升 v4
+iptables -t mangle -N DIVERT
+iptables -t mangle -A DIVERT -j MARK --set-mark 1
+iptables -t mangle -A DIVERT -j ACCEPT
+iptables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
+
 # 新建 DIVERT 规则，避免已有连接的包二次通过 TPROXY，理论上有一定的性能提升 v6
 ip6tables -t mangle -N DIVERT
 ip6tables -t mangle -A DIVERT -j MARK --set-mark 1
 ip6tables -t mangle -A DIVERT -j ACCEPT
 ip6tables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
 
-# 直连从主路由发出
-ip route add default via 192.168.31.1 #写主路由 ipv4, 采用下述方法一可不写此命令
-ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用下述方法一可不写此命令
 ```
 
 ::: tip 使用方法
 
-将上述配置写入一个文件（如 `tproxy.rules`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./tproxy.rules`）。
+将上述配置写入一个文件（如 `iptables.rules`），之后将该文件赋予可执行权限`# chmod 700 ./iptables.rules`
 
-或直接`source tproxy.rules`
+最后使用 root 权限执行该文件即可：`# ./iptables.rules`或`# source iptables.rules`。
 :::
 
-::: tip 关于最后一行命令
+### 使用 nftables
+
+首先设置策略路由
+
+```bash
+# 设置策略路由 v4
+ip rule add fwmark 1 table 100
+ip route add local 0.0.0.0/0 dev lo table 100
+
+# 设置策略路由 v6
+ip -6 rule add fwmark 1 table 106
+ip -6 route add local ::/0 dev lo table 106
+
+# 直连从主路由发出
+ip route add default via 192.168.31.1 #写主路由 ipv4, 采用局域网设备上网设置方法一可不写此命令
+ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用局域网设备上网设置方法一可不写此命令
+
+```
+
+::: tip 使用方法
+
+直接将命令复制到旁路由终端
+:::
+
+然后配置 nftables
+
+此处合并 ipv4 与 ipv6
+
+```
+
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet xray {
+        chain prerouting {
+                type filter hook prerouting priority filter; policy accept;
+                ip daddr { 127.0.0.0/8, 224.0.0.0/4, 255.255.255.255 } return
+                meta l4proto tcp ip daddr 192.168.0.0/16 return
+                ip daddr 192.168.0.0/16 udp dport != 53 return
+                ip6 daddr { ::1, fe80::/10 } return
+                meta l4proto tcp ip6 daddr fd00::/8 return
+                ip6 daddr fd00::/8 udp dport != 53 return
+                meta mark 0x000000ff return
+                meta l4proto { tcp, udp } meta mark set 0x00000001 tproxy ip to 127.0.0.1:12345 accept
+                meta l4proto { tcp, udp } meta mark set 0x00000001 tproxy ip6 to [::1]:12345 accept
+        }
+
+        chain output {
+                type route hook output priority filter; policy accept;
+                ip daddr { 127.0.0.0/8, 224.0.0.0/4, 255.255.255.255 } return
+                meta l4proto tcp ip daddr 192.168.0.0/16 return
+                ip daddr 192.168.0.0/16 udp dport != 53 return
+                ip6 daddr { ::1, fe80::/10 } return
+                meta l4proto tcp ip6 daddr fd00::/8 return
+                ip6 daddr fd00::/8 udp dport != 53 return
+                meta mark 0x000000ff return
+                meta l4proto { tcp, udp } meta mark set 0x00000001 accept
+        }
+
+        chain divert {
+                type filter hook prerouting priority mangle; policy accept;
+                meta l4proto tcp socket transparent 1 meta mark set 0x00000001 accept
+        }
+}
+
+```
+
+::: tip 使用方法
+
+将上述配置写入一个文件（如 `nftables.rules`），之后将该文件赋予可执行权限`# chmod 700 ./nftables.rules`
+
+最后使用 root 权限执行该文件即可：`# ./nftables.rules`或`# source nftables.rules`
+:::
+
+::: tip 关于直连从主路由发出
 
 在旁路由使用命令`ip route show`，如果使用下属方法一，则`default via`后应是主路由 ip，无需更改；如使用下述方法二，则`default via`后应是旁路由 ip，此时直连网站 DNS 解析会回环，造成直连网站无法访问，因此需指定为主路由 ip。
+:::
+
+::: tip 使用方法
+
+若需要开机启动请参考 [TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html) 以及 [透明代理（TProxy）配置教程](https://xtls.github.io/document/level-2/tproxy.html#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D)
 :::
 
 其中，网关地址`192.168.0.0/16`, `fd00::/8`等可由`ip address | grep -w inet | awk '{print $2}'`以及`ip address | grep -w inet6 | awk '{print $2}'`[获得](https://xtls.github.io/document/level-2/iptables_gid.html#_4-%E8%AE%BE%E7%BD%AE-iptables-%E8%A7%84%E5%88%99)
@@ -356,7 +613,7 @@ ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用下述�
 
 又或者在路由器“上网设置”中查看。
 
-如果前缀`192.168`, `fd00:`相同可不更改，不同则更改为相应值，写法可通过 Goolge 搜索得到。
+如果前缀`192.168`, `fd00:`相同可不更改，若不同如 `fc00:`, `fd00:` 等则更改为相应值，写法可通过 Goolge 搜索得到如 `fc00::/7`, `fd00::/8`。
 
 ## 局域网设备上网设置
 
@@ -379,7 +636,13 @@ ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用下述�
 
 局域网设备上网的第二种方式，是在路由器上进行网关设置，这种方法对于连接到此路由器的设备无需做任何设置即可科学上网，但注意有些路由器不支持 ipv6 的网关设置，有 ipv6 需求的设备仍需在所需设备上单独手动配置 ipv6 相关设置参考方法一。
 
-<img width="600" alt="image" src="https://user-images.githubusercontent.com/110686480/208310174-2245a890-eb6b-4341-899f-81c6ac8255ff.png">
+<img width="700" alt="image" src="https://user-images.githubusercontent.com/110686480/208310174-2245a890-eb6b-4341-899f-81c6ac8255ff.png">
+
+## Finally
+
+按照以上方法设置后设备即可双栈访问，进入测试网站比如 https://ipv6-test.com/ 可以看到如下结果
+
+<img width="700" alt="image" src="https://user-images.githubusercontent.com/110686480/208743723-f8a2751b-43d0-4353-9383-5ae0e00e9449.png">
 
 ## 写在最后
 
