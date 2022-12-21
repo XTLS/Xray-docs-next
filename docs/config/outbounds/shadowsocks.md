@@ -56,6 +56,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
   "port": 1234,
   "method": "加密方式",
   "password": "密码",
+  "uot": true,
   "level": 0
 }
 ```
@@ -79,6 +80,10 @@ Shadowsocks 服务端端口。必填。
 > `password`: string
 
 必填。
+
+> `uot`: bool
+
+当开启后，会启用`udp over tcp`。
 
 - Shadowsocks 2022
 
