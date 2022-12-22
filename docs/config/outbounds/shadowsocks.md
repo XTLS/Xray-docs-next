@@ -83,7 +83,7 @@ Shadowsocks 服务端端口。必填。
 
 > `uot`: bool
 
-当开启后，会启用`udp over tcp`。
+仅在使用shadowsocks2022时可开启。当开启后，会启用`udp over tcp`。
 
 - Shadowsocks 2022
 
