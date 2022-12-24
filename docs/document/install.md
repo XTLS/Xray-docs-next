@@ -30,14 +30,13 @@ Xray 提供两种验证方式：
 - 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 Windows 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray.exe`
   ，然后[通过命令行带参数运行](./command) 即可
 - 通过 [Scoop](https://scoop.sh) 包管理器安装：Xray 已经被添加到 [Mochi](https://github.com/Qv2ray/mochi)。
-- 通过 [Chocolatey](https://chocolatey.org)
-  包管理器安装：[Xray](https://chocolatey.org/packages/xray/1.3.1)，感谢 [Markson](https://chocolatey.org/profiles/markson_ho)
 
 ## macOS 安装方式
 
 - 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 macOS 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray`
   ，然后[通过命令行带参数运行](./command.md) 即可
 - 通过 [Homebrew](https://brew.sh) 包管理器安装：`brew install xray`
+- [homebrew-xray](https://github.com/N4FA/homebrew-xray) 感谢[@N4FA](https://github.com/N4FA)
 
 ## Linux 安装方式
 
@@ -51,7 +50,7 @@ Xray 提供两种验证方式：
 
   - [Xray-script](https://github.com/kirin10000/Xray-script)
   - [ProxySU](https://github.com/proxysu/ProxySU)
-  - [v2ray-agent](https://github.com/mack-a/v2ray-agent)
+  - [v2ray-agent](https://github.com/reeceyng/v2ray-agent) 感谢[@mack-a](https://github.com/mack-a) [@Reece](https://github.com/reeceyng)
   - [Xray-yes](https://github.com/jiuqi9997/Xray-yes)
   - [Xray-onekey](https://github.com/wulabing/Xray_onekey)
 
@@ -89,7 +88,6 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 ## Docker 安装方式
 
 - [teddysun/xray](https://hub.docker.com/r/teddysun/xray)
-- Xray-docker
 
 ### Docker image 的文件结构
 
@@ -98,8 +96,27 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 - `/usr/local/share/xray/geoip.dat`：IP 数据文件
 - `/usr/local/share/xray/geosite.dat`：域名数据文件
 
-## 更多更多...
+# 图形化客户端
 
-您可以点击 [传送至众多大佬集结区的任意门](../links.md) 获取更多资源
+- OpenWrt
+  - [PassWall](https://github.com/xiaorouji/openwrt-passwall)
+  - [Hello World](https://github.com/jerrykuku/luci-app-vssr)
+  - [ShadowSocksR Plus+](https://github.com/fw876/helloworld)
+  - [luci-app-xray](https://github.com/yichya/luci-app-xray) ([openwrt-xray](https://github.com/yichya/openwrt-xray))
+- Windows
+  - [v2rayN](https://github.com/2dust/v2rayN)
+  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
+  - [Netch (NetFilter & TUN/TAP)](https://github.com/NetchX/Netch) （该项目已冻结存档）
+- Android
+  - [v2rayNG](https://github.com/2dust/v2rayNG)
+  - [Kitsunebi](https://github.com/rurirei/Kitsunebi/tree/release_xtls)
+- iOS / macOS（使用 ARM 芯片）
+  - [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)
+  - [Stash](https://apps.apple.com/app/stash/id1596063349)
+- macOS（X86 芯片 / ARM 芯片）
+  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
+  - [V2RayXS](https://github.com/tzmax/V2RayXS)
 
-## FAQ <Badge text="WIP" type="warning"/>
+# UUID 生成器
+
+第三方的 UUID 生成器 [uuidgenerator.net](https://www.uuidgenerator.net)

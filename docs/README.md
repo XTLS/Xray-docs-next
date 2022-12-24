@@ -50,8 +50,6 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 
 > “配置兼容，整体更好”
 
-- Xray-flutter 是一个优雅的跨平台图形界面工具. <Badge text="WIP" type="warning"/>
-
 ### 我们是谁？
 
 > **It doesn't matter who we are. What matters is that we will keep riding and never look back.**
@@ -62,7 +60,7 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 
 - 🖥️ 帮助开发和测试 Xray, 提交高质量的 Pull request.
 - 📩 在 [GitHub Issues](https://github.com/XTLS/Xray-core/issues) 或 [讨论区](https://github.com/XTLS/Xray-core/discussions)发起建设性或有意义的 issue 与 discussion.
-- 📝 写下您的使用心得并提交至 Xray 的 [文档网站](https://github.com/XTLS/XTLS.github.io).
+- 📝 写下您的使用心得并提交至 Xray 的 [文档网站](https://github.com/XTLS/Xray-docs-next).
 - 💬 在 Telegram 群帮助群友/灌水.
 - **...事实上,每一份对 Xray 的支持都会让 Xray 变得更强大**
 
@@ -95,7 +93,5 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 [Mozilla Public License Version 2.0](https://github.com/XTLS/Xray-core/blob/main/LICENSE)
 
 ### Stargazers over time
-
-> Project X 的 GitHub 主仓库 Xray-core 已获 6000+ stars；Project X 群人数 6000+，频道订阅数 4000+
 
 [![Stargazers over time](https://starchart.cc/XTLS/Xray-core.svg)](https://starchart.cc/XTLS/Xray-core)

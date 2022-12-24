@@ -12,7 +12,6 @@ export function getConfigSidebar(
     {
       text: feature,
       children: [
-        path + "features/vless.md",
         path + "features/xtls.md",
         path + "features/fallback.md",
         path + "features/browser_dialer.md",

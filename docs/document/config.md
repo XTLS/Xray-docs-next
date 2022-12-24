@@ -2,7 +2,7 @@
 
 [下载并安装](./install) 了 Xray 之后，您需要对它进行一下配置。
 
-为了演示，这里只介绍简单的配置方式.
+为了演示，这里只介绍简单的配置方式。更多的模板: [Xray-examples](https://github.com/XTLS/Xray-examples)
 
 如需配置更复杂的功能，请参考更详细的 [配置文件](../config/) 中相关说明。
 
@@ -96,4 +96,4 @@
   - 运行 `xray run -c /etc/xray/config.json`
   - 或使用 systemd 等工具将 Xray 作为服务在后台运行。
 
-更多详细的说明可以参考 [配置文档](../config/) 和 [使用心得](../documents/)。
+更多详细的说明可以参考 [配置文档](../config/) 和 [小小白话文](../documents/level-0/)。

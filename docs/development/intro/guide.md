@@ -7,11 +7,9 @@
 project X 的代码被托管在 github 上:
 
 - xray 核心 [xray-core](https://github.com/XTLS/Xray-core)
-- xray-flutter [xray-flutter](https://github.com/XTLS/Xray-flutter)
 - 安装脚本 [Xray-install](https://github.com/XTLS/Xray-install)
-- 数据文件 [Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat)
 - 配置模板 [Xray-examples](https://github.com/XTLS/Xray-examples)
-- xray 文档 [XTLS.github.io](https://github.com/XTLS/XTLS.github.io)
+- xray 文档 [Xray-docs-next](https://github.com/XTLS/Xray-docs-next)
 
 您可以使用 [Git](https://git-scm.com/) 来获取代码。
 
@@ -28,9 +26,8 @@ project X 的代码被托管在 github 上:
 <Badge text="WIP" type="warning"/>
 
 - 建立尝鲜版本和稳定版本两个发布通道
-  - 临时版本，主要用于特定情况的测试(比如从分支 build 的)，于 TG 群内/issue 回复等渠道 发布特定版本。
-  - 尝鲜版本，可以为 daily build，用于尝鲜和获得即时反馈和再改进。
-  - 稳定版本，为定时更新(比如周更)，合并稳定的修改并发布。
+  - 尝鲜版本，可以为 daily build，主要用于特定情况的测试，尝鲜和获得即时反馈和再改进。
+  - 稳定版本，为定时更新(比如月更)，合并稳定的修改并发布。
 
 ### 引用其它项目
 
@@ -50,9 +47,10 @@ project X 的代码被托管在 github 上:
 
 - Golang
   - 请参考 [Effective Go](https://golang.org/doc/effective_go.html)；
-  - 每一次 push 之前，请运行：`go fmt ./...` 和 `go fmt -s -l -e -w $(find . -type f -name "*.go" ! -name "*.pb.go")`；
-  - 每一次 push 之前，请确保测试通过：`go test ./...`；
-  - 提交 pull request 之前，请确保新增代码有超过 70% 的代码覆盖率（code coverage）；
+  - 每一次 push 之前，请运行：`go generate core/format.go`；
+  - 如果需要修改 protobuf，例如增加新配置项，请运行：`go generate core/proto.go`；
+  - 提交 pull request 之前，建议测试通过：`go test ./...`；
+  - 提交 pull request 之前，建议新增代码有超过 70% 的代码覆盖率（code coverage）；
 - 其它
   - 请注意代码的可读性。
 
@@ -65,7 +63,7 @@ project X 的代码被托管在 github 上:
   2. 克隆你自己的 Xray 仓库到本地：`git clone https://github.com/<your_name>/Xray-core.git`；
   3. 基于 `main` 分支创建新的分支，例如 `git branch issue24 main`；
   4. 在新创建的分支上作修改并提交修改(commit)；
-  5. 在推送(push)修改完成的分支到自己的仓库前，先切换到 `main` 分支，运行 `git pull https://github.com/v2fly/Xray-core.git` 拉取最新的远端代码；
+  5. 在推送(push)修改完成的分支到自己的仓库前，先切换到 `main` 分支，运行 `git pull https://github.com/xray/xray-core.git` 拉取最新的远端代码；
   6. 如果上一步拉取得到了新的远端代码，则切换到之前自己创建的分支，运行 `git rebase main` 执行分支合并操作。如遇到文件冲突，则需要解决冲突；
   7. 上一步处理完毕后，就可以把自己创建的分支推送到自己的仓库：`git push -u origin your-branch`
   8. 最后，把自己仓库的新推送的分支往 `xtls/Xray-core` 的 `main` 分支发 PR 即可；

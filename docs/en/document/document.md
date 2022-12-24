@@ -24,11 +24,11 @@ git checkout -b your-branch
 
 4. 在新分支上做修改。
 
-   注：在修改时请注意遵循 [中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)
+   注：推荐 [中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)
 
-5. 修改完成后，请格式化您的更改。建议使用 Prettier
+5. 修改完成后，请使用 [Prettier](https://prettier.io/docs/en/install.html) 格式化您的更改。
 
-   注：存在格式问题或不遵循中文文案排版指北的 PR，将有可能被拒绝。
+   注：存在格式问题的 PR，将有可能被拒绝。
 
 6. 提交修改，并推送到您的仓库中
 
