@@ -4,6 +4,8 @@ Xray 提供以下环境变量以供修改 Xray 的一些底层配置。
 
 ## XTLS 信息显示
 
+<Badge text="Deprecated" type="warning"/>
+
 ### VLESS
 
 - 名称：`xray.vless.xtls.show` 或 `XRAY_VLESS_XTLS_SHOW`。

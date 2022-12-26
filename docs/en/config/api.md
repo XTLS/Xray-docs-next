@@ -88,3 +88,7 @@ API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 ### StatsService
 
 内置的数据统计服务，详见 [统计信息](./stats.md)。
+
+## API 调用示例
+
+[Xray-API-documents](https://github.com/XTLS/Xray-API-documents) @crossfw

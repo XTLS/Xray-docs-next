@@ -100,15 +100,12 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 
 目前出站协议中有以下流控模式可选：
 
-- `xtls-rprx-origin`：最初的流控模式。该模式纪念价值大于实际使用价值
-- `xtls-rprx-origin-udp443`：同 `xtls-rprx-origin`, 但放行了目标为 443 端口的 UDP 流量
-- `xtls-rprx-direct`：所有平台皆可使用的典型流控模式
-- `xtls-rprx-direct-udp443`：同 `xtls-rprx-direct`, 但是放行了目标为 443 端口的 UDP 流量
-- `xtls-rprx-splice`：Linux 平台下最建议使用的流控模式
-- `xtls-rprx-splice-udp443`：同 `xtls-rprx-splice`, 但是放行了目标为 443 端口的 UDP 流量
-
-::: warning 注意
-当 `flow` 被指定时，还需要将该出站协议的 `streamSettings.security` 一项指定为 `xtls`，`tlsSettings` 改为 `xtlsSettings`。详情请参考 [streamSettings](../transport.md#streamsettingsobject)。
+- `xtls-rprx-origin`：最初的流控模式。该模式纪念价值大于实际使用价值 <Badge text="Deprecated" type="warning"/>
+- `xtls-rprx-origin-udp443`：同 `xtls-rprx-origin`, 但放行了目标为 443 端口的 UDP 流量 <Badge text="Deprecated" type="warning"/>
+- `xtls-rprx-direct`：所有平台皆可使用的典型流控模式 <Badge text="Deprecated" type="warning"/>
+- `xtls-rprx-direct-udp443`：同 `xtls-rprx-direct`, 但是放行了目标为 443 端口的 UDP 流量 <Badge text="Deprecated" type="warning"/>
+- `xtls-rprx-splice`：Linux 平台下最建议使用的流控模式 <Badge text="Deprecated" type="warning"/>
+- `xtls-rprx-splice-udp443`：同 `xtls-rprx-splice`, 但是放行了目标为 443 端口的 UDP 流量 <Badge text="Deprecated" type="warning"/>
 
 此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
 :::

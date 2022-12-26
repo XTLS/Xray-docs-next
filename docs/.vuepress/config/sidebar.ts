@@ -39,7 +39,6 @@ export function getConfigSidebar(
     {
       text: inbound,
       children: [
-        path + "inbounds/",
         path + "inbounds/dokodemo.md",
         path + "inbounds/http.md",
         path + "inbounds/shadowsocks.md",
@@ -52,7 +51,6 @@ export function getConfigSidebar(
     {
       text: outbound,
       children: [
-        path + "outbounds/",
         path + "outbounds/blackhole.md",
         path + "outbounds/dns.md",
         path + "outbounds/freedom.md",
@@ -67,7 +65,6 @@ export function getConfigSidebar(
     {
       text: transport,
       children: [
-        path + "transports/",
         path + "transports/grpc.md",
         path + "transports/h2.md",
         path + "transports/mkcp.md",
