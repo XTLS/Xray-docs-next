@@ -102,9 +102,7 @@
 
 TLS 配置。TLS 由 Golang 提供，通常情况下 TLS 协商的结果为使用 TLS 1.3，不支持 DTLS。
 
-> `xtlsSettings`: [XTLSObject](#tlsobject)
-
-<Badge text="Deprecated" type="warning"/>
+> `xtlsSettings`: [XTLSObject](#tlsobject) <Badge text="Deprecated" type="warning"/>
 
 XTLS 配置。XTLS 是 Xray 的原创黑科技, 也是使 Xray 性能一骑绝尘的核心动力。 XTLS 与 TLS 有相同的安全性, 配置方式也和 TLS 一致.
 

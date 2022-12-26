@@ -62,12 +62,12 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 目前出站协议中有以下流控模式可选：
 
-- `xtls-rprx-origin`：最初的流控模式。该模式纪念价值大于实际使用价值 <Badge text="Deprecated" type="warning"/>
-- `xtls-rprx-origin-udp443`：同 `xtls-rprx-origin`, 但放行了目标为 443 端口的 UDP 流量 <Badge text="Deprecated" type="warning"/>
-- `xtls-rprx-direct`：所有平台皆可使用的典型流控模式 <Badge text="Deprecated" type="warning"/>
-- `xtls-rprx-direct-udp443`：同 `xtls-rprx-direct`, 但是放行了目标为 443 端口的 UDP 流量 <Badge text="Deprecated" type="warning"/>
-- `xtls-rprx-splice`：Linux 平台下最建议使用的流控模式 <Badge text="Deprecated" type="warning"/>
-- `xtls-rprx-splice-udp443`：同 `xtls-rprx-splice`, 但是放行了目标为 443 端口的 UDP 流量 <Badge text="Deprecated" type="warning"/>
+- `xtls-rprx-origin`：<Badge text="Deprecated" type="warning"/> 最初的流控模式。该模式纪念价值大于实际使用价值
+- `xtls-rprx-origin-udp443`：<Badge text="Deprecated" type="warning"/> 同 `xtls-rprx-origin`, 但放行了目标为 443 端口的 UDP 流量
+- `xtls-rprx-direct`：<Badge text="Deprecated" type="warning"/> 所有平台皆可使用的典型流控模式
+- `xtls-rprx-direct-udp443`：<Badge text="Deprecated" type="warning"/> 同 `xtls-rprx-direct`, 但是放行了目标为 443 端口的 UDP 流量
+- `xtls-rprx-splice`：<Badge text="Deprecated" type="warning"/> Linux 平台下最建议使用的流控模式
+- `xtls-rprx-splice-udp443`：<Badge text="Deprecated" type="warning"/> 同 `xtls-rprx-splice`, 但是放行了目标为 443 端口的 UDP 流量
 
 此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
 

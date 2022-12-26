@@ -85,7 +85,6 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 
 ### 更多关于 project X
 
-- 如果你想知道更多关于 project X 的理念与密闻, 请点击[这里](./faq/about/)
 - 如果你想知道更多关于 project X 的足迹与成长, 请点击[这里](./about/news.md)
 
 ### License

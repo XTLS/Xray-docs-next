@@ -76,7 +76,7 @@ BETA 2 预计推出两个初级的 Scheduler：Zstd 压缩、数据量动态扩�
 
 ## UDP issues
 
-https://github.com/XTLS/Xray-core/discussions/252
+[XUDP：VLESS & VMess & Mux UDP FullCone NAT](https://github.com/XTLS/Xray-core/discussions/252)
 
 ## 客户端开发指引
 
