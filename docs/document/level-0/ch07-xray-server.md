@@ -237,11 +237,10 @@
             ],
             "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
           },
-          { // 3.2 防止服务器直连国内
+          {
+            // 3.2 防止服务器直连国内
             "type": "field",
-              "ip": [
-                "geoip:cn"
-              ],
+            "ip": ["geoip:cn"],
             "outboundTag": "block"
           },
           // 3.3 屏蔽广告
