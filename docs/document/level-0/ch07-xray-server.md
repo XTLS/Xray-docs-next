@@ -227,7 +227,7 @@
       },
       // 3*分流设置
       "routing": {
-        "domainStrategy": "AsIs",
+        "domainStrategy": "IPIfNonMatch",
         "rules": [
           // 3.1 防止服务器本地流转问题：如内网被攻击或滥用、错误的本地回环等
           {
@@ -237,7 +237,14 @@
             ],
             "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
           },
-          // 3.2 屏蔽广告
+          { // 3.2 防止服务器直连国内
+            "type": "field",
+              "ip": [
+                "geoip:cn"
+              ],
+            "outboundTag": "block"
+          },
+          // 3.3 屏蔽广告
           {
             "type": "field",
             "domain": [
@@ -257,7 +264,7 @@
             "clients": [
               {
                 "id": "", // 填写你的 UUID
-                "flow": "xtls-rprx-direct",
+                "flow": "xtls-rprx-vision",
                 "level": 0,
                 "email": "vpsadmin@yourdomain.com"
               }
@@ -271,11 +278,8 @@
           },
           "streamSettings": {
             "network": "tcp",
-            "security": "xtls",
-            "xtlsSettings": {
-              "allowInsecure": false, // 正常使用应确保关闭
-              "minVersion": "1.2", // TLS 最低版本设置
-              "alpn": ["http/1.1"],
+            "security": "tls",
+            "tlsSettings": {
               "certificates": [
                 {
                   "certificateFile": "/home/vpsadmin/xray_cert/xray.crt",

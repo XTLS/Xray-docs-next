@@ -226,8 +226,7 @@
                "users": [
                  {
                    "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid", // 和服务器端的一致
-                   "flow": "xtls-rprx-direct", // Windows, macOS 同学保持这个不变
-                   // "flow": "xtls-rprx-splice",    // Linux和安卓同学请改成Splice性能更强
+                   "flow": "xtls-rprx-vision",
                    "encryption": "none",
                    "level": 0
                  }
@@ -237,10 +236,11 @@
          },
          "streamSettings": {
            "network": "tcp",
-           "security": "xtls",
-           "xtlsSettings": {
+           "security": "tls",
+           "tlsSettings": {
              "serverName": "a-name.yourdomain.com", // 替换成你的真实域名
-             "allowInsecure": false // 禁止不安全证书
+             "allowInsecure": false, // 禁止不安全证书
+             "fingerprint": "chrome" // 通过 uTLS 库 模拟 Chrome / Firefox / Safari 或随机生成的指纹
            }
          }
        },

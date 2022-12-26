@@ -143,7 +143,7 @@
     "clients": [
       {
         "id": "", // 填写你的 UUID
-        "flow": "xtls-rprx-direct",
+        "flow": "xtls-rprx-vision",
         "level": 0,
         "email": "love@example.com"
       }
@@ -173,8 +173,8 @@
   },
   "streamSettings": {
     "network": "tcp",
-    "security": "xtls",
-    "xtlsSettings": {
+    "security": "tls",
+    "tlsSettings": {
       "alpn": ["http/1.1"],
       "certificates": [
         {

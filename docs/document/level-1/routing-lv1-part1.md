@@ -73,7 +73,7 @@
 **出站：** 就是流量如何流出 `Xray`
 :::
 
-下面的出站配置示例，用大白话说就是：数据按照 `VLESS` 协议，以 `tcp + xtls (direct)` 的方式、及其他相关设置，把流量发送给对应的 VPS。同时，`Xray` 将这个出站用 `[tag]` 命名为 `proxy-out-vless`：
+下面的出站配置示例，用大白话说就是：数据按照 `VLESS` 协议，以 `tcp + xtls` 的方式、及其他相关设置，把流量发送给对应的 VPS。同时，`Xray` 将这个出站用 `[tag]` 命名为 `proxy-out-vless`：
 
 ```json
 {
@@ -89,7 +89,7 @@
             "users": [
               {
                 "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid",
-                "flow": "xtls-rprx-direct",
+                "flow": "xtls-rprx-vision",
                 "encryption": "none",
                 "level": 0
               }
@@ -99,9 +99,11 @@
       },
       "streamSettings": {
         "network": "tcp",
-        "security": "xtls",
-        "xtlsSettings": {
-          "serverName": "a-name.yourdomain.com"
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "a-name.yourdomain.com",
+          "allowInsecure": false,
+          "fingerprint": "chrome"
         }
       }
     }

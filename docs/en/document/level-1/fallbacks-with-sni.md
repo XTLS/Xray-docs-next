@@ -74,91 +74,91 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
 
 ## Xray 配置
 
-```json5
+```json
 {
-  log: {
-    loglevel: "warning",
+  "log": {
+    "loglevel": "warning"
   },
-  inbounds: [
+  "inbounds": [
     {
-      port: 443,
-      protocol: "vless",
-      settings: {
-        clients: [
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
           {
-            id: "UUID",
-            flow: "xtls-rprx-direct",
-          },
+            "id": "UUID",
+            "flow": "xtls-rprx-vision"
+          }
         ],
-        decryption: "none",
-        fallbacks: [
+        "decryption": "none",
+        "fallbacks": [
           {
-            name: "example.com",
-            path: "/vmessws",
-            dest: 5000,
-            xver: 1,
+            "name": "example.com",
+            "path": "/vmessws",
+            "dest": 5000,
+            "xver": 1
           },
           {
-            dest: 5001,
-            xver: 1,
+            "dest": 5001,
+            "xver": 1
           },
           {
-            alpn: "h2",
-            dest: 5002,
-            xver: 1,
+            "alpn": "h2",
+            "dest": 5002,
+            "xver": 1
           },
           {
-            name: "blog.example.com",
-            dest: 5003,
-            xver: 1,
+            "name": "blog.example.com",
+            "dest": 5003,
+            "xver": 1
           },
           {
-            name: "blog.example.com",
-            alpn: "h2",
-            dest: 5004,
-            xver: 1,
-          },
-        ],
+            "name": "blog.example.com",
+            "alpn": "h2",
+            "dest": 5004,
+            "xver": 1
+          }
+        ]
       },
-      streamSettings: {
-        network: "tcp",
-        security: "xtls",
-        xtlsSettings: {
-          alpn: ["h2", "http/1.1"],
-          certificates: [
+      "streamSettings": {
+        "network": "tcp",
+        "security": "tls",
+        "tlsSettings": {
+          "alpn": ["h2", "http/1.1"],
+          "certificates": [
             {
-              certificateFile: "/etc/ssl/xray/cert.pem",
-              keyFile: "/etc/ssl/xray/privkey.key",
-            },
-          ],
-        },
-      },
+              "certificateFile": "/etc/ssl/xray/cert.pem",
+              "keyFile": "/etc/ssl/xray/privkey.key"
+            }
+          ]
+        }
+      }
     },
     {
-      listen: "127.0.0.1",
-      port: 5000,
-      protocol: "vmess",
-      settings: {
-        clients: [
+      "listen": "127.0.0.1",
+      "port": 5000,
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
           {
-            id: "UUID",
-          },
-        ],
+            "id": "UUID"
+          }
+        ]
       },
-      streamSettings: {
-        network: "ws",
-        wsSettings: {
-          acceptProxyProtocol: true,
-          path: "/vmessws",
-        },
-      },
-    },
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/vmessws"
+        }
+      }
+    }
   ],
-  outbounds: [
+  "outbounds": [
     {
-      protocol: "freedom",
-    },
-  ],
+      "protocol": "freedom"
+    }
+  ]
 }
 ```
 
@@ -181,9 +181,9 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
 
 - 有关 HTTP/2
 
-  首先，`inbounds.streamSettings.xtlsSettings.alpn` 有顺序，应将 `h2` 放前，`http/1.1` 放后，在优先使用 HTTP/2 的同时保证兼容性；反过来会导致 HTTP/2 在协商时变为 HTTP/1.1，成为无效配置。
+  首先，`inbounds.streamSettings.tlsSettings.alpn` 有顺序，应将 `h2` 放前，`http/1.1` 放后，在优先使用 HTTP/2 的同时保证兼容性；反过来会导致 HTTP/2 在协商时变为 HTTP/1.1，成为无效配置。
 
-  在上述配置中，每条回落到 Nginx 的配置都要分成两个。这是因为 h2 是强制 TLS 加密的 HTTP/2 连接，这有益于数据在互联网中传输的安全，但在服务器内部没有必要；而 h2c 是非加密的 HTTP/2 连接，适合该环境。然而，Nginx 不能在同一端口上同时监听 HTTP/1.1 和 h2c，为了解决这个问题，需要在回落中指定 `alpn` 项（是 `fallbacks` 而不是 `xtlsSettings` 里面的），以尝试匹配 TLS ALPN 协商结果。
+  在上述配置中，每条回落到 Nginx 的配置都要分成两个。这是因为 h2 是强制 TLS 加密的 HTTP/2 连接，这有益于数据在互联网中传输的安全，但在服务器内部没有必要；而 h2c 是非加密的 HTTP/2 连接，适合该环境。然而，Nginx 不能在同一端口上同时监听 HTTP/1.1 和 h2c，为了解决这个问题，需要在回落中指定 `alpn` 项（是 `fallbacks` 而不是 `tlsSettings` 里面的），以尝试匹配 TLS ALPN 协商结果。
 
   建议 `alpn` 项只按需用两种填法：[^4]
 
@@ -192,24 +192,26 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
 
   如果使用 Caddy 就大可不必如此繁杂了，因为它**可以**在同一端口上同时监听 HTTP/1.1 和 h2c，配置改动如下：
 
-  ```json5
-  "fallbacks": [
+  ```json
+  {
+    "fallbacks": [
       {
-          "name": "example.com",
-          "path": "/vmessws",
-          "dest": 5000,
-          "xver": 1
+        "name": "example.com",
+        "path": "/vmessws",
+        "dest": 5000,
+        "xver": 1
       },
       {
-          "dest": 5001,
-          "xver": 1
+        "dest": 5001,
+        "xver": 1
       },
       {
-          "name": "blog.example.com",
-          "dest": 5002,
-          "xver": 1
+        "name": "blog.example.com",
+        "dest": 5002,
+        "xver": 1
       }
-  ]
+    ]
+  }
   ```
 
 ## Nginx 配置

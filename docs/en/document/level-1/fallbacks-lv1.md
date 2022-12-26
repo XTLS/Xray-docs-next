@@ -133,55 +133,55 @@
 
 ### 5.1 首先，我将服务器端配置的 443 监听段摘抄如下：
 
-```json5
+```json
 {
-  port: 443,
-  protocol: "vless",
-  settings: {
-    clients: [
+  "port": 443,
+  "protocol": "vless",
+  "settings": {
+    "clients": [
       {
-        id: "", // 填写你的 UUID
-        flow: "xtls-rprx-direct",
-        level: 0,
-        email: "love@example.com",
-      },
+        "id": "", // 填写你的 UUID
+        "flow": "xtls-rprx-vision",
+        "level": 0,
+        "email": "love@example.com"
+      }
     ],
-    decryption: "none",
-    fallbacks: [
+    "decryption": "none",
+    "fallbacks": [
       {
-        dest: 1310, // 默认回落到 Xray 的 Trojan 协议
-        xver: 1,
+        "dest": 1310, // 默认回落到 Xray 的 Trojan 协议
+        "xver": 1
       },
       {
-        path: "/websocket", // 必须换成自定义的 PATH
-        dest: 1234,
-        xver: 1,
+        "path": "/websocket", // 必须换成自定义的 PATH
+        "dest": 1234,
+        "xver": 1
       },
       {
-        path: "/vmesstcp", // 必须换成自定义的 PATH
-        dest: 2345,
-        xver: 1,
+        "path": "/vmesstcp", // 必须换成自定义的 PATH
+        "dest": 2345,
+        "xver": 1
       },
       {
-        path: "/vmessws", // 必须换成自定义的 PATH
-        dest: 3456,
-        xver: 1,
-      },
-    ],
+        "path": "/vmessws", // 必须换成自定义的 PATH
+        "dest": 3456,
+        "xver": 1
+      }
+    ]
   },
-  streamSettings: {
-    network: "tcp",
-    security: "xtls",
-    xtlsSettings: {
-      alpn: ["http/1.1"],
-      certificates: [
+  "streamSettings": {
+    "network": "tcp",
+    "security": "tls",
+    "tlsSettings": {
+      "alpn": ["http/1.1"],
+      "certificates": [
         {
-          certificateFile: "/path/to/fullchain.crt", // 换成你的证书，绝对路径
-          keyFile: "/path/to/private.key", // 换成你的私钥，绝对路径
-        },
-      ],
-    },
-  },
+          "certificateFile": "/path/to/fullchain.crt", // 换成你的证书，绝对路径
+          "keyFile": "/path/to/private.key" // 换成你的私钥，绝对路径
+        }
+      ]
+    }
+  }
 }
 ```
 

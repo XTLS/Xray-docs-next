@@ -190,7 +190,7 @@
 4.  将下面的文件全部复制进去，并将之前生成的`UUID`填入第 61 行 `"id": "",` 之中。（填好之后的样子是 `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
     ），本文的这个配置文件中增加了我的各种啰嗦注解，以方便你理解每一个配置模块的功能是什么。
 
-    ```json5
+    ```json
     // REFERENCE:
     // https://github.com/XTLS/Xray-examples
     // https://xtls.github.io/config/
@@ -202,92 +202,96 @@
     // └─ 5_outbounds 出站设置 - 流出 Xray 的流量往哪里去
     {
       // 1\_日志设置
-      log: {
-        loglevel: "warning", // 内容从少到多: "none", "error", "warning", "info", "debug"
-        access: "/home/vpsadmin/xray_log/access.log", // 访问记录
-        error: "/home/vpsadmin/xray_log/error.log", // 错误记录
+      "log": {
+        "loglevel": "warning", // 内容从少到多: "none", "error", "warning", "info", "debug"
+        "access": "/home/vpsadmin/xray_log/access.log", // 访问记录
+        "error": "/home/vpsadmin/xray_log/error.log" // 错误记录
       },
       // 2_DNS 设置
-      dns: {
-        servers: [
+      "dns": {
+        "servers": [
           "https+local://1.1.1.1/dns-query", // 首选 1.1.1.1 的 DoH 查询，牺牲速度但可防止 ISP 偷窥
-          "localhost",
-        ],
+          "localhost"
+        ]
       },
       // 3*分流设置
-      routing: {
-        domainStrategy: "AsIs",
-        rules: [
+      "routing": {
+        "domainStrategy": "IPIfNonMatch",
+        "rules": [
           // 3.1 防止服务器本地流转问题：如内网被攻击或滥用、错误的本地回环等
           {
-            type: "field",
-            ip: [
-              "geoip:private", // 分流条件：geoip 文件内，名为"private"的规则（本地）
+            "type": "field",
+            "ip": [
+              "geoip:private" // 分流条件：geoip 文件内，名为"private"的规则（本地）
             ],
-            outboundTag: "block", // 分流策略：交给出站"block"处理（黑洞屏蔽）
+            "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
           },
-          // 3.2 屏蔽广告
+          { // 3.2 防止服务器直连国内
+            "type": "field",
+              "ip": [
+                "geoip:cn"
+              ],
+            "outboundTag": "block"
+          },
+          // 3.3 屏蔽广告
           {
-            type: "field",
-            domain: [
-              "geosite:category-ads-all", // 分流条件：geosite 文件内，名为"category-ads-all"的规则（各种广告域名）
+            "type": "field",
+            "domain": [
+              "geosite:category-ads-all" // 分流条件：geosite 文件内，名为"category-ads-all"的规则（各种广告域名）
             ],
-            outboundTag: "block", // 分流策略：交给出站"block"处理（黑洞屏蔽）
-          },
-        ],
+            "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
+          }
+        ]
       },
       // 4*入站设置
       // 4.1 这里只写了一个最简单的 vless+xtls 的入站，因为这是 Xray 最强大的模式。如有其他需要，请根据模版自行添加。
-      inbounds: [
+      "inbounds": [
         {
-          port: 443,
-          protocol: "vless",
-          settings: {
-            clients: [
+          "port": 443,
+          "protocol": "vless",
+          "settings": {
+            "clients": [
               {
-                id: "", // 填写你的 UUID
-                flow: "xtls-rprx-direct",
-                level: 0,
-                email: "vpsadmin@yourdomain.com",
-              },
+                "id": "", // 填写你的 UUID
+                "flow": "xtls-rprx-vision",
+                "level": 0,
+                "email": "vpsadmin@yourdomain.com"
+              }
             ],
-            decryption: "none",
-            fallbacks: [
+            "decryption": "none",
+            "fallbacks": [
               {
-                dest: 80, // 默认回落到防探测的代理
-              },
-            ],
+                "dest": 80 // 默认回落到防探测的代理
+              }
+            ]
           },
-          streamSettings: {
-            network: "tcp",
-            security: "xtls",
-            xtlsSettings: {
-              allowInsecure: false, // 正常使用应确保关闭
-              minVersion: "1.2", // TLS 最低版本设置
-              alpn: ["http/1.1"],
-              certificates: [
+          "streamSettings": {
+            "network": "tcp",
+            "security": "tls",
+            "tlsSettings": {
+              "certificates": [
                 {
-                  certificateFile: "/home/vpsadmin/xray_cert/xray.crt",
-                  keyFile: "/home/vpsadmin/xray_cert/xray.key",
-                },
-              ],
-            },
-          },
-        },
+                  "certificateFile": "/home/vpsadmin/xray_cert/xray.crt",
+                  "keyFile": "/home/vpsadmin/xray_cert/xray.key"
+                }
+              ]
+            }
+          }
+        }
       ],
       // 5*出站设置
-      outbounds: [
+      "outbounds": [
         // 5.1 第一个出站是默认规则，freedom 就是对外直连（vps 已经是外网，所以直连）
         {
-          tag: "direct",
-          protocol: "freedom",
+          "tag": "direct",
+          "protocol": "freedom"
         },
         // 5.2 屏蔽规则，blackhole 协议就是把流量导入到黑洞里（屏蔽）
         {
-          tag: "block",
-          protocol: "blackhole",
-        },
-      ],
+          "tag": "block",
+          "protocol": "blackhole"
+        }
+      ]
     }
     ```
 
