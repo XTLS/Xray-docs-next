@@ -681,7 +681,7 @@ ExecStop=/sbin/ip rule del fwmark 1 table 100 ; \
 WantedBy=multi-user.target
 ```
 
-最后执行 `systemctl enable tproxyrules` 命令。
+3. 最后执行 `systemctl enable tproxyrules` 命令。
 
 ::: tip tproxyrules.service
 
