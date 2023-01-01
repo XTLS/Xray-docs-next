@@ -464,6 +464,18 @@ ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用局域�
 
 ```
 
+如果是在路由器上指定了默认网关为旁路由（亦即下述“局域网设备上网设置方法二”），那么就需要设置上述 `# 直连从主路由发出` ，除了通过 iproute2 命令行方式设置，也可以通过 dhcpcd 或者 systemctl-network 设置静态 IP，这里以 dhcpcd 为例，编辑 `/etc/dhcpcd.conf` 文件，在最下方加入如下配置，具体 IP 根据你的实际情况修改，其中 `interface` 可以通过 `# ip link show` 查看要设定的网口或者无线设备。
+
+```
+interface enp0s25
+static ip_address=192.168.31.100/24
+static ip6_address=fd00:6868:6868::8888/64
+static routers=192.168.31.1
+static domain_name_servers=192.168.31.1 fd00:6868:6868::1
+```
+
+这样通过静态 IP 设置 IP 及网关后就无需每次开机设置 `# 直连从主路由发出`。
+
 ::: tip 使用方法
 
 直接将命令复制到旁路由终端执行
@@ -688,6 +700,11 @@ WantedBy=multi-user.target
 注意其中主路由器 IP 地址，根据实际修改
 
 `ExecStartPre=/bin/sh -c 'until ping -c1 192.168.31.1; do sleep 1; done;'` 命令为确保获得 IP 地址后再执行命令，否则会诡异报错，其中 IP 地址为主路由器地址，根据实际修改。
+:::
+
+::: warning 注意
+
+如果通过 dhcpcd 等设置了静态 IP 及网关，则上述相关 `ip route add/del` 设置需删除
 :::
 
 ## 局域网设备上网设置
