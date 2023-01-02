@@ -23,6 +23,8 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 注意安装相应程序 `# sudo apt install iptables ip6tables` 或 `# sudo apt install nftables`。
 
+若旁路由未安装 xray 程序，可以手动下载相应 xray 程序如 [Xray-linux-64.zip](https://github.com/XTLS/Xray-core/releases/download/v1.7.0/Xray-linux-64.zip) ，然后复制 [install-release.sh](https://github.com/XTLS/Xray-install/blob/main/install-release.sh) 文件到旁路由，赋予可执行权限 `# chmod 700 install-release.sh`，然后使用 `# ./install-release.sh --local Xray-linux-64.zip` 根据提示进行本地安装。
+
 ## Xray 配置
 
 ### 客户端配置
@@ -135,7 +137,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
   ],
   "dns": {
     "hosts": {
-      "填你VPS的域名": "填你VPS的ipv4或ipv6"
+      "填你VPS的域名": "填你VPS的ipv4或ipv6" //注意修改
     },
     "servers": ["fakedns"]
   },
@@ -435,14 +437,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 ## Netfilter 配置
 
-::: warning 注意
-
-nftables 配置与 iptables 配置二选一，不可同时使用。
-:::
-
-### 使用 iptables
-
-此处配置将 ipv4 与 ipv6 写在同一文件中。
+### 首先设置策略路由
 
 ```bash
 # 设置策略路由 v4
@@ -457,6 +452,35 @@ ip -6 route add local ::/0 dev lo table 106
 ip route add default via 192.168.31.1 #写主路由 ipv4, 采用局域网设备上网设置方法一可不写此命令
 ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用局域网设备上网设置方法一可不写此命令
 
+```
+
+如果是在路由器上指定了默认网关为旁路由（亦即下述“局域网设备上网设置方法二”），那么就需要设置上述 `# 直连从主路由发出` ，除了通过 iproute2 命令行方式设置，也可以通过 dhcpcd 或者 systemctl-network 设置静态 IP，这里以 dhcpcd 为例，编辑 `/etc/dhcpcd.conf` 文件，在最下方加入如下配置，具体 IP 根据你的实际情况修改，其中 `interface` 可以通过 `# ip link show` 查看要设定的网口或者无线设备。
+
+```
+interface enp0s25
+static ip_address=192.168.31.100/24
+static ip6_address=fd00:6868:6868::8888/64
+static routers=192.168.31.1
+static domain_name_servers=192.168.31.1 fd00:6868:6868::1
+```
+
+这样通过静态 IP 设置 IP 及网关后就无需每次开机设置 `# 直连从主路由发出`。
+
+::: tip 使用方法
+
+直接将命令复制到旁路由终端执行
+:::
+
+::: warning 注意
+
+以下 nftables 配置与 iptables 配置二选一，不可同时使用。
+:::
+
+### 使用 iptables
+
+此处配置将 ipv4 与 ipv6 写在同一文件中。
+
+```bash
 # 代理局域网设备 v4
 iptables -t mangle -N XRAY
 iptables -t mangle -A XRAY -d 127.0.0.1/32 -j RETURN
@@ -465,8 +489,8 @@ iptables -t mangle -A XRAY -d 255.255.255.255/32 -j RETURN
 iptables -t mangle -A XRAY -d 192.168.0.0/16 -p tcp -j RETURN
 iptables -t mangle -A XRAY -d 192.168.0.0/16 -p udp ! --dport 53 -j RETURN
 iptables -t mangle -A XRAY -j RETURN -m mark --mark 0xff
-iptables -t mangle -A XRAY -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
-iptables -t mangle -A XRAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
+iptables -t mangle -A XRAY -p udp -j TPROXY --on-ip 127.0.0.1 --on-port 12345 --tproxy-mark 1
+iptables -t mangle -A XRAY -p tcp -j TPROXY --on-ip 127.0.0.1 --on-port 12345 --tproxy-mark 1
 iptables -t mangle -A PREROUTING -j XRAY
 
 # 代理局域网设备 v6
@@ -476,8 +500,8 @@ ip6tables -t mangle -A XRAY6 -d fe80::/10 -j RETURN
 ip6tables -t mangle -A XRAY6 -d fd00::/8 -p tcp -j RETURN
 ip6tables -t mangle -A XRAY6 -d fd00::/8 -p udp ! --dport 53 -j RETURN
 ip6tables -t mangle -A XRAY6 -j RETURN -m mark --mark 0xff
-ip6tables -t mangle -A XRAY6 -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
-ip6tables -t mangle -A XRAY6 -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
+ip6tables -t mangle -A XRAY6 -p udp -j TPROXY --on-ip ::1 --on-port 12345 --tproxy-mark 1
+ip6tables -t mangle -A XRAY6 -p tcp -j TPROXY --on-ip ::1 --on-port 12345 --tproxy-mark 1
 ip6tables -t mangle -A PREROUTING -j XRAY6
 
 # 代理网关本机 v4
@@ -524,34 +548,9 @@ ip6tables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
 
 ### 使用 nftables
 
-首先设置策略路由
-
-```bash
-# 设置策略路由 v4
-ip rule add fwmark 1 table 100
-ip route add local 0.0.0.0/0 dev lo table 100
-
-# 设置策略路由 v6
-ip -6 rule add fwmark 1 table 106
-ip -6 route add local ::/0 dev lo table 106
-
-# 直连从主路由发出
-ip route add default via 192.168.31.1 #写主路由 ipv4, 采用局域网设备上网设置方法一可不写此命令
-ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用局域网设备上网设置方法一可不写此命令
-
-```
-
-::: tip 使用方法
-
-直接将命令复制到旁路由终端
-:::
-
-然后配置 nftables
-
 此处合并 ipv4 与 ipv6
 
 ```
-
 #!/usr/sbin/nft -f
 
 flush ruleset
@@ -602,18 +601,101 @@ table inet xray {
 在旁路由使用命令`ip route show`，如果使用下属方法一，则`default via`后应是主路由 ip，无需更改；如使用下述方法二，则`default via`后应是旁路由 ip，此时直连网站 DNS 解析会回环，造成直连网站无法访问，因此需指定为主路由 ip。
 :::
 
-::: tip 使用方法
-
-若需要开机启动请参考 [TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html) 以及 [透明代理（TProxy）配置教程](https://xtls.github.io/document/level-2/tproxy.html#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D)
-:::
-
 其中，网关地址`192.168.0.0/16`, `fd00::/8`等可由`ip address | grep -w inet | awk '{print $2}'`以及`ip address | grep -w inet6 | awk '{print $2}'`[获得](https://xtls.github.io/document/level-2/iptables_gid.html#_4-%E8%AE%BE%E7%BD%AE-iptables-%E8%A7%84%E5%88%99)
 
 或者在 windows 网络设置中查看。
 
 又或者在路由器“上网设置”中查看。
 
-如果前缀`192.168`, `fd00:`相同可不更改，若不同如 `fc00:`, `fd00:` 等则更改为相应值，写法可通过 Goolge 搜索得到如 `fc00::/7`, `fd00::/8`。
+如果前缀`192.168`, `fd00:`相同可不更改，若不同如 `fc00:`, `fe00:` 等则更改为相应值，写法可通过 Goolge 搜索得到如 `fc00::/7`, `fe00::/9`。
+
+### 开机自动运行 Netfilter 配置
+
+首先确认已经运行过上述相应 Netfilter 命令，并且成功测试透明代理配置，以确保接下来输出正确的文件。
+
+#### 若使用 iptables 配置
+
+1. 首先通过 `# iptables-save > /root/iptables.rulesv4` `# ip6tables-save > /root/iptables.rulesv6` 将 iptables 配置写入 `iptables.rulesv4` 和 `iptables.rulesv6` 文件中
+
+2. 然后在 `/etc/systemd/system/` 目录下创建一个名为 `tproxyrules.service` 的文件，添加以下内容并保存
+
+```
+[Unit]
+Description=Tproxy rules
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/bin/sh -c 'until ping -c1 192.168.31.1; do sleep 1; done;'
+ExecStart=/sbin/ip rule add fwmark 1 table 100 ; \
+/sbin/ip -6 rule add fwmark 1 table 106 ; \
+/sbin/ip route add local 0.0.0.0/0 dev lo table 100 ; \
+/sbin/ip -6 route add local ::/0 dev lo table 106 ; \
+/sbin/ip route add default via 192.168.31.1 ; \
+/sbin/ip -6 route add default via fd00:6868:6868::1 ; \
+/sbin/iptables-restore /root/iptables.rulesv4 ; \
+/sbin/ip6tables-restore /root/iptables.rulesv6
+ExecStop=/sbin/ip rule del fwmark 1 table 100 ; \
+/sbin/ip -6 rule del fwmark 1 table 106 ; \
+/sbin/ip route del local 0.0.0.0/0 dev lo table 100 ; \
+/sbin/ip -6 route del local ::/0 dev lo table 106 ; \
+/sbin/ip route del default via 192.168.31.1 ; \
+/sbin/ip -6 route del default via fd00:6868:6868::1 ; \
+/sbin/iptables -t mangle -F ; \
+/sbin/ip6tables -t mangle -F
+
+[Install]
+WantedBy=multi-user.target
+```
+
+3. 最后执行 `systemctl enable tproxyrules` 命令。
+
+#### 如果使用 nftables 配置
+
+1. 首先通过 `# nft list ruleset > /root/nftables.rulesv46` 将 nftables 配置写入 `nftables.rulesv46` 文件中
+
+2. 在 `/etc/systemd/system/` 目录下创建一个名为 `tproxyrules.service` 的文件，然后添加以下内容并保存
+
+```
+[Unit]
+Description=Tproxy rules
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/bin/sh -c 'until ping -c1 192.168.31.1; do sleep 1; done;'
+ExecStart=/sbin/ip rule add fwmark 1 table 100 ; \
+/sbin/ip -6 rule add fwmark 1 table 106 ; \
+/sbin/ip route add local 0.0.0.0/0 dev lo table 100 ; \
+/sbin/ip -6 route add local ::/0 dev lo table 106 ; \
+/sbin/ip route add default via 192.168.31.1 ; \
+/sbin/ip -6 route add default via fd00:6868:6868::1 ; \
+/sbin/nft -f /root/nftables.rulesv46 ;
+ExecStop=/sbin/ip rule del fwmark 1 table 100 ; \
+/sbin/ip -6 rule del fwmark 1 table 106 ; \
+/sbin/ip route del local 0.0.0.0/0 dev lo table 100 ; \
+/sbin/ip -6 route del local ::/0 dev lo table 106 ; \
+/sbin/ip route del default via 192.168.31.1 ; \
+/sbin/ip -6 route del default via fd00:6868:6868::1 ; \
+/sbin/nft flush ruleset
+
+[Install]
+WantedBy=multi-user.target
+```
+
+3. 最后执行 `systemctl enable tproxyrules` 命令。
+
+::: tip tproxyrules.service
+
+注意其中主路由器 IP 地址，根据实际修改
+
+`ExecStartPre=/bin/sh -c 'until ping -c1 192.168.31.1; do sleep 1; done;'` 命令为确保获得 IP 地址后再执行命令，否则会诡异报错，其中 IP 地址为主路由器地址，根据实际修改。
+:::
+
+::: warning 注意
+
+如果通过 dhcpcd 等设置了静态 IP 及网关，则上述相关 `ip route add/del` 设置需删除
+:::
 
 ## 局域网设备上网设置
 
@@ -621,7 +703,7 @@ table inet xray {
 
 ### 方法一
 
-局域网设备上网有两种方式，第一种就是在使用设备上进行静态 IP 的配置，将网关指向旁路由 IP。但注意绝大部分手机不支持 ipv6 的静态 ipv6 配置，除非 root 后进行相关设置。
+局域网设备上网有两种方式，第一种就是在使用设备上进行静态 IP 的配置，将网关指向旁路由 IP。注意绝大部分手机仅支持手动配置 ipv4 网关，不支持手动配置 ipv6 网关，除非 root 后进行相关设置。
 
 以 windows 设备为例，可以先开启 DHCP 记录自动分配的 IP 以参考，然后手写静态配置。
 
@@ -652,4 +734,4 @@ table inet xray {
 
 这种情况下 ipv4 无法完全胜任网络冲浪的需求，即使是那 1%的流量，遇到了也会让人头疼不已。
 
-而可以预见 ipv6 也会逐步与 ipv4 分庭抗礼，所以有必要加入 ipV6 的设置。
+而可以预见 ipv6 也会逐步与 ipv4 分庭抗礼，所以有必要加入 ipv6 的设置。
