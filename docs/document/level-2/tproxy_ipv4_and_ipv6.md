@@ -166,11 +166,6 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       },
       {
         "type": "field",
-        "domain": ["yourdomain.domain"], //改为你自己的域名
-        "outboundTag": "direct"
-      },
-      {
-        "type": "field",
         "domain": ["geosite:geolocation-!cn"],
         "outboundTag": "proxy"
       },
@@ -187,11 +182,6 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       {
         "type": "field",
         "ip": ["geoip:private", "geoip:cn"],
-        "outboundTag": "direct"
-      },
-      {
-        "type": "field",
-        "ip": ["填你VPS的IP"], //改为你自己 VPS 的 IP
         "outboundTag": "direct"
       }
     ]
@@ -713,7 +703,7 @@ WantedBy=multi-user.target
 
 ### 方法一
 
-局域网设备上网有两种方式，第一种就是在使用设备上进行静态 IP 的配置，将网关指向旁路由 IP。注意绝大部分手机仅支持静态 ipv4 配置，不支持静态 ipv6 配置，除非 root 后进行相关设置。
+局域网设备上网有两种方式，第一种就是在使用设备上进行静态 IP 的配置，将网关指向旁路由 IP。注意绝大部分手机仅支持手动配置 ipv4 网关，不支持手动配置 ipv6 网关，除非 root 后进行相关设置。
 
 以 windows 设备为例，可以先开启 DHCP 记录自动分配的 IP 以参考，然后手写静态配置。
 
