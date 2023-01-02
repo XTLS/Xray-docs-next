@@ -18,7 +18,7 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
       "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "level": 0,
       "email": "love@xray.com",
-      "flow": "xtls-rprx-direct"
+      "flow": "xtls-rprx-vision"
     }
   ],
   "decryption": "none",
@@ -56,7 +56,7 @@ fallbacks 的具体配置请点击 [FallbackObject](../features/fallback.md#fall
   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
   "level": 0,
   "email": "love@xray.com",
-  "flow": "xtls-rprx-direct"
+  "flow": "xtls-rprx-vision"
 }
 ```
 
@@ -90,6 +90,9 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 目前入站协议中有以下流控模式可选：
 
+- 无 `flow`，空字符或者 `none`：使用普通 TLS 代理
+- `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充
+- `xtls-rprx-vision,none`：使用新 XTLS 模式 同时兼容同端口使用普通 TLS 代理的客户端
 - `xtls-rprx-origin`：<Badge text="Deprecated" type="warning"/> 最初的流控模式，此时客户端仅可选择 `xtls-rprx-origin` 和 `xtls-rprx-origin-udp443` 这两种流控模式。该模式纪念价值大于实际使用价值。
 - `xtls-rprx-direct`：<Badge text="Deprecated" type="warning"/> 所有平台皆可使用的典型流控方式，此时客户端可选择任何流控模式
 

@@ -21,7 +21,7 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
         {
           "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
           "encryption": "none",
-          "flow": "xtls-rprx-direct",
+          "flow": "xtls-rprx-vision",
           "level": 0
         }
       ]
@@ -44,7 +44,7 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
     {
       "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "encryption": "none",
-      "flow": "xtls-rprx-direct",
+      "flow": "xtls-rprx-vision",
       "level": 0
     }
   ]
@@ -100,6 +100,9 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 
 目前出站协议中有以下流控模式可选：
 
+- 无 `flow`，空字符或者 `none`：使用普通 TLS 代理
+- `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充 支持 uTLS 模拟客户端指纹
+- `xtls-rprx-vision-udp443`：同 `xtls-rprx-vision`, 但是放行了目标为 443 端口的 UDP 流量
 - `xtls-rprx-origin`：<Badge text="Deprecated" type="warning"/> 最初的流控模式。该模式纪念价值大于实际使用价值
 - `xtls-rprx-origin-udp443`：<Badge text="Deprecated" type="warning"/> 同 `xtls-rprx-origin`, 但放行了目标为 443 端口的 UDP 流量
 - `xtls-rprx-direct`：<Badge text="Deprecated" type="warning"/> 所有平台皆可使用的典型流控模式
@@ -108,7 +111,6 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 - `xtls-rprx-splice-udp443`：<Badge text="Deprecated" type="warning"/> 同 `xtls-rprx-splice`, 但是放行了目标为 443 端口的 UDP 流量
 
 此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
-:::
 
 <!-- prettier-ignore -->
 ::: tip 关于 xtls-rprx-*-udp443 流控模式
@@ -131,6 +133,10 @@ Splice 模式的的使用限制：
 此外，使用 Splice 时网速显示会滞后，这是特性，不是 bug。
 
 需要注意的是，使用 mKCP 协议时不会使用 Splice（是的，虽然没有报错，但实际上根本没用到）。
+
+::: tip
+使用 Vision 模式 如果满足上述条件 会自动启用 Splice
+:::
 
 > `level`: number
 
