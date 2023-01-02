@@ -60,6 +60,7 @@ export function getConfigSidebar(
         path + "outbounds/trojan.md",
         path + "outbounds/vless.md",
         path + "outbounds/vmess.md",
+        path + "outbounds/wireguard.md",
       ],
     },
     {
