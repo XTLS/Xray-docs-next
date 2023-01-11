@@ -80,7 +80,7 @@ stream {
 [Unit]
 Description=The NGINX HTTP and reverse proxy server
 After=syslog.target network-online.target remote-fs.target nss-lookup.target
-Wants=network-online.target
+After=xray.service
 
 [Service]
 Type=forking
