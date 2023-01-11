@@ -4,7 +4,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 # TProxy 透明代理（ipv4 and ipv6）配置教程
 
-本配置参考了[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)，[透明代理（TProxy）配置教程](https://xtls.github.io/document/level-2/tproxy.html#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D)以及[透明代理通过 gid 规避 Xray 流量](https://xtls.github.io/document/level-2/iptables_gid.html)，加入了透明代理对 ipv6 的支持，并且使用 VLESS-TCP-XTLS-RPRX-Vision 方案对抗封锁。
+本配置参考了[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)，[透明代理（TProxy）配置教程](https://xtls.github.io/document/level-2/tproxy.html#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D)以及[透明代理通过 gid 规避 Xray 流量](https://xtls.github.io/document/level-2/iptables_gid.html)，加入了透明代理对 ipv6 的支持，并且使用 VLESS-TCP-XTLS-RPRX-Vision 方案对抗封锁 (推荐使用 1.7.2 及之后版本)。
 
 关于 Xray 的配置并不是本文重点，使用者可依实际情况进行修改，具体可以参考[官方文档示例](https://github.com/XTLS/Xray-examples)或其他优秀示例 比如[@chika0801](https://github.com/chika0801/Xray-examples) 又如[@lxhao61](https://github.com/lxhao61/integrated-examples)。
 
@@ -33,14 +33,12 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 ::: tip 透明代理中的 fakedns
 
-在旁路由的透明代理中，使用 `fakedns` 配合 `routeOnly` 以及 `domainSrategy` 为 `AsIs` 时，可最大程度降低访问延迟，详见文档[入站代理](https://xtls.github.io/config/inbound.html#sniffingobject)
-
-关于 `fakedns` 相关内容可参阅[官方文档](https://xtls.github.io/config/fakedns.html)
+在旁路由的透明代理中，使用`routeOnly` 配合 `domainSrategy` 为 `AsIs` 时，可最大程度降低访问延迟，详见文档[入站代理](https://xtls.github.io/config/inbound.html#sniffingobject)
 :::
 
 <Tabs title="客户端配置">
 
-<Tab title="客户端使用 fakedns">
+<Tab title="客户端使用 routeOnly">
 
 ```json
 {
@@ -58,8 +56,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       },
       "sniffing": {
         "enabled": true,
-        "destOverride": ["fakedns", "http", "tls"],
-        "metadataOnly": false,
+        "destOverride": ["http", "tls"],
         "routeOnly": true
       },
       "streamSettings": {
@@ -107,9 +104,6 @@ title: TProxy 透明代理 (ipv4 and ipv6)
     {
       "tag": "direct",
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIP"
-      },
       "streamSettings": {
         "sockopt": {
           "mark": 255
@@ -124,34 +118,12 @@ title: TProxy 透明代理 (ipv4 and ipv6)
           "type": "http"
         }
       }
-    },
-    {
-      "tag": "dns-out",
-      "protocol": "dns",
-      "streamSettings": {
-        "sockopt": {
-          "mark": 255
-        }
-      }
     }
   ],
-  "dns": {
-    "hosts": {
-      "填你VPS的域名": "填你VPS的ipv4或ipv6" //注意修改
-    },
-    "servers": ["fakedns"]
-  },
   "routing": {
     "domainMatcher": "mph",
     "domainStrategy": "AsIs",
     "rules": [
-      {
-        "type": "field",
-        "inboundTag": ["all-in"],
-        "port": 53,
-        "network": "udp",
-        "outboundTag": "dns-out"
-      },
       {
         "type": "field",
         "inboundTag": ["all-in"],
@@ -181,7 +153,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       },
       {
         "type": "field",
-        "ip": ["geoip:private", "geoip:cn"],
+        "ip": ["geoip:private"],
         "outboundTag": "direct"
       }
     ]
@@ -191,7 +163,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 </Tab>
 
-<Tab title="客户端不使用 fakedns">
+<Tab title="客户端不使用 routeOnly">
 
 ```json
 {
@@ -356,7 +328,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       },
       {
         "type": "field",
-        "ip": ["geoip:private", "geoip:cn"],
+        "ip": ["geoip:private", "geoip:cn"], //此处可加入 VPS IP 避免 ssh 时被代理
         "outboundTag": "direct"
       },
       {
@@ -402,7 +374,12 @@ title: TProxy 透明代理 (ipv4 and ipv6)
             "flow": "xtls-rprx-vision"
           }
         ],
-        "decryption": "none"
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": 8080 //回落
+          }
+        ]
       },
       "streamSettings": {
         "network": "tcp",
@@ -454,6 +431,16 @@ ip -6 route add default via fd00:6868:6868::1 #写主路由 ipv6, 采用局域�
 
 ```
 
+::: tip 使用方法
+
+直接将命令复制到旁路由终端执行
+:::
+
+::: tip 关于直连从主路由发出
+
+在旁路由使用命令`ip route show`，如果使用下属方法一，则`default via`后应是主路由 ip，无需更改；如使用下述方法二，则`default via`后应是旁路由 ip，此时直连网站 DNS 解析会回环，造成直连网站无法访问，因此需指定为主路由 ip。
+:::
+
 如果是在路由器上指定了默认网关为旁路由（亦即下述“局域网设备上网设置方法二”），那么就需要设置上述 `# 直连从主路由发出` ，除了通过 iproute2 命令行方式设置，也可以通过 dhcpcd 或者 systemctl-network 设置静态 IP，这里以 dhcpcd 为例，编辑 `/etc/dhcpcd.conf` 文件，在最下方加入如下配置，具体 IP 根据你的实际情况修改，其中 `interface` 可以通过 `# ip link show` 查看要设定的网口或者无线设备。
 
 ```
@@ -465,11 +452,6 @@ static domain_name_servers=192.168.31.1 fd00:6868:6868::1
 ```
 
 这样通过静态 IP 设置 IP 及网关后就无需每次开机设置 `# 直连从主路由发出`。
-
-::: tip 使用方法
-
-直接将命令复制到旁路由终端执行
-:::
 
 ::: warning 注意
 
@@ -596,11 +578,6 @@ table inet xray {
 最后使用 root 权限执行该文件即可：`# ./nftables.rules`或`# source nftables.rules`
 :::
 
-::: tip 关于直连从主路由发出
-
-在旁路由使用命令`ip route show`，如果使用下属方法一，则`default via`后应是主路由 ip，无需更改；如使用下述方法二，则`default via`后应是旁路由 ip，此时直连网站 DNS 解析会回环，造成直连网站无法访问，因此需指定为主路由 ip。
-:::
-
 其中，网关地址`192.168.0.0/16`, `fd00::/8`等可由`ip address | grep -w inet | awk '{print $2}'`以及`ip address | grep -w inet6 | awk '{print $2}'`[获得](https://xtls.github.io/document/level-2/iptables_gid.html#_4-%E8%AE%BE%E7%BD%AE-iptables-%E8%A7%84%E5%88%99)
 
 或者在 windows 网络设置中查看。
@@ -722,7 +699,7 @@ WantedBy=multi-user.target
 
 ## Finally
 
-按照以上方法设置后设备即可双栈访问，进入测试网站比如 https://ipv6-test.com/ 可以看到如下结果
+按照以上方法设置后设备即可双栈访问，进入测试网站比如 https://ipv6-test.com/ 可以看到如下结果 (需要代理此网站才能看到如下结果)
 
 <img width="700" alt="image" src="https://user-images.githubusercontent.com/110686480/208743723-f8a2751b-43d0-4353-9383-5ae0e00e9449.png">
 
