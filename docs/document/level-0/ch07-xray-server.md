@@ -279,6 +279,7 @@
             "network": "tcp",
             "security": "tls",
             "tlsSettings": {
+              "alpn": "http/1.1",
               "certificates": [
                 {
                   "certificateFile": "/home/vpsadmin/xray_cert/xray.crt",
