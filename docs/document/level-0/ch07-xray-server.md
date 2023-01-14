@@ -280,6 +280,7 @@
             "security": "tls",
             "tlsSettings": {
               "certificates": [
+                "alpn": "http/1.1",
                 {
                   "certificateFile": "/home/vpsadmin/xray_cert/xray.crt",
                   "keyFile": "/home/vpsadmin/xray_cert/xray.key"
