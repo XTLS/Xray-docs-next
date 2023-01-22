@@ -4,6 +4,8 @@
 
 如常见用法是分流国内外流量，Xray 可以通过内部机制判断不同地区的流量，然后将它们发送到不同的出站代理。
 
+有关路由功能更详细的解析：[路由 (routing) 功能简析](https://xtls.github.io/document/level-1/routing-lv1-part1.html)
+
 ## RoutingObject
 
 `RoutingObject` 对应配置文件的 `routing` 项。
@@ -40,7 +42,7 @@
 
 对应一个数组，数组中每一项是一个规则。
 
-对于每一个连接，路由将根据这些规则依次进行判断，当一个规则生效时，即将这个连接转发至它所指定的 `outboundTag`或 `balancerTag`。
+对于每一个连接，路由将根据这些规则从上到下依次进行判断，当遇到第一个生效规则时，即将这个连接转发至它所指定的 `outboundTag`或 `balancerTag`。
 
 ::: tip
 当没有匹配到任何规则时，流量默认由第一个 outbound 发出。
@@ -219,3 +221,6 @@
 - `geolocation-!cn`：包含了常见的非大陆站点域名，同时包含了 `tld-!cn`。
 - `tld-cn`：包含了 CNNIC 管理的用于中国大陆的顶级域名，如以 `.cn`、`.中国` 结尾的域名。
 - `tld-!cn`：包含了非中国大陆使用的顶级域名，如以 `.hk`（香港）、`.tw`（台湾）、`.jp`（日本）、`.sg`（新加坡）、`.us`（美国）`.ca`（加拿大）等结尾的域名。
+
+
+你也可以在这里查看完整的域名列表 [Domain list community](https://github.com/v2fly/domain-list-community)。
