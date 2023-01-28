@@ -42,10 +42,7 @@ Endpoint = engage.cloudflareclient.com:2408
   "protocol": "wireguard",
   "settings": {
     "secretKey": "我的私钥",
-    "address": [
-        "172.16.0.2/32",
-        "2606:4700:110:8949:fed8:2642:a640:c8e1/128"
-    ],
+    "address": ["172.16.0.2/32", "2606:4700:110:8949:fed8:2642:a640:c8e1/128"],
     "peers": [
       {
         "publicKey": "Warp公钥",
