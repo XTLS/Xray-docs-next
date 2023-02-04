@@ -29,17 +29,6 @@ title: TProxy 透明代理 (ipv4 and ipv6)
 
 ### 客户端配置
 
-客户端配置可选则使用 fakedns，也可以选择不使用 fakedns 配置，二选一
-
-::: tip 透明代理中的 fakedns
-
-在旁路由的透明代理中，使用`routeOnly` 配合 `domainSrategy` 为 `AsIs` 时，可最大程度降低访问延迟，详见文档[入站代理](https://xtls.github.io/config/inbound.html#sniffingobject)
-:::
-
-<Tabs title="客户端配置">
-
-<Tab title="客户端使用 routeOnly">
-
 ```json
 {
   "log": {
@@ -56,14 +45,25 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       },
       "sniffing": {
         "enabled": true,
-        "destOverride": ["http", "tls"],
-        "routeOnly": true
+        "destOverride": ["http", "tls", "quic"]
       },
       "streamSettings": {
         "sockopt": {
           "tproxy": "tproxy",
           "mark": 255
         }
+      }
+    },
+    {
+      "port": 10808,
+      "protocol": "socks",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls", "quic"]
+      },
+      "settings": {
+        "auth": "noauth",
+        "udp": true
       }
     }
   ],
@@ -97,131 +97,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
           //注意使用 xtls-rprx-vision 流控此处需为 tlsSettings
           "allowInsecure": false,
           "serverName": "yourdomain.domain", //改为你自己的域名
-          "fingerprint": "chrome" //模拟TLS Client Hello指纹，可选 chrome, firefox, safari, randomized, 具体参考 https://xtls.github.io/config/transport.html#tlsobject
-        }
-      }
-    },
-    {
-      "tag": "direct",
-      "protocol": "freedom",
-      "streamSettings": {
-        "sockopt": {
-          "mark": 255
-        }
-      }
-    },
-    {
-      "tag": "block",
-      "protocol": "blackhole",
-      "settings": {
-        "response": {
-          "type": "http"
-        }
-      }
-    }
-  ],
-  "routing": {
-    "domainMatcher": "mph",
-    "domainStrategy": "AsIs",
-    "rules": [
-      {
-        "type": "field",
-        "inboundTag": ["all-in"],
-        "port": 123,
-        "network": "udp",
-        "outboundTag": "direct"
-      },
-      {
-        "type": "field",
-        "domain": ["geosite:cn"],
-        "outboundTag": "direct"
-      },
-      {
-        "type": "field",
-        "domain": ["geosite:geolocation-!cn"],
-        "outboundTag": "proxy"
-      },
-      {
-        "type": "field",
-        "domain": ["geosite:category-ads-all"],
-        "outboundTag": "block"
-      },
-      {
-        "type": "field",
-        "protocol": ["bittorrent"],
-        "outboundTag": "direct"
-      },
-      {
-        "type": "field",
-        "ip": ["geoip:private"],
-        "outboundTag": "direct"
-      }
-    ]
-  }
-}
-```
-
-</Tab>
-
-<Tab title="客户端不使用 routeOnly">
-
-```json
-{
-  "log": {
-    "loglevel": "warning"
-  },
-  "inbounds": [
-    {
-      "tag": "all-in",
-      "port": 12345,
-      "protocol": "dokodemo-door",
-      "settings": {
-        "network": "tcp,udp",
-        "followRedirect": true
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": ["http", "tls"]
-      },
-      "streamSettings": {
-        "sockopt": {
-          "tproxy": "tproxy",
-          "mark": 255
-        }
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      //此为默认outbound，路由(routing)模块若未匹配到任何规则，则默认走此 proxy 出口，如果你希望直连国内优先请将下面 direct 出口放到 outbound 第一，看不懂可忽略
-      "tag": "proxy",
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "yourdomain.domain", //改为你自己的域名，直接填写ipv4或ipv6地址也可以
-            "port": 443,
-            "users": [
-              {
-                "id": "uuid", //填写uuid，可通过在终端中输入 xray uuid 生成；此处也支持任意字符串（https://xtls.github.io/config/inbounds/vless.html#clientobject）
-                "encryption": "none",
-                "flow": "xtls-rprx-vision"
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "sockopt": {
-          "mark": 255
-        },
-        "network": "tcp",
-        "security": "tls", //注意使用 xtls-rprx-vision 流控此处需为 tls
-        "tlsSettings": {
-          //注意使用 xtls-rprx-vision 流控此处需为 tlsSettings
-          "allowInsecure": false,
-          "serverName": "yourdomain.domain", //改为你自己的域名
-          "fingerprint": "chrome" //模拟TLS Client Hello指纹，可选 chrome, firefox, safari, randomized, 具体参考 https://xtls.github.io/config/transport.html#tlsobject
+          "fingerprint": "chrome" //此设置建议先看下Release, https://github.com/XTLS/Xray-core/releases/tag/v1.7.3
         }
       }
     },
@@ -257,47 +133,31 @@ title: TProxy 透明代理 (ipv4 and ipv6)
     }
   ],
   "dns": {
+    "hosts": {
+      "domain:googleapis.cn": "googleapis.com",
+      "dns.google": ["8.8.8.8", "8.8.4.4"],
+      "你的VPS域名": "你的VSP IP" //如果 outbound 的 proxy 里 address 填的域名：希望代理走ipv4，这里 VPS IP 填VPS的ipv4, 希望代理走ipv6，这里VPS IP 填VPS的ipv6；outbound 的 proxy 里 address 填的 IP，这行不用写。
+    },
     "servers": [
+      "https://1.1.1.1/dns-query",
       {
-        "address": "223.5.5.5",
-        "port": 53,
-        "domains": [
-          "geosite:cn",
-          "ntp.org",
-          "yourdomain.domain" //改为你自己的域名
-        ]
+        "address": "tcp+local://119.29.29.29",
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
       },
-      {
-        "address": "114.114.114.114",
-        "port": 53,
-        "domains": [
-          "geosite:cn",
-          "ntp.org",
-          "yourdomain.domain" //改为你自己的域名
-        ]
-      },
-      {
-        "address": "8.8.8.8",
-        "port": 53,
-        "domains": ["geosite:geolocation-!cn"]
-      },
-      {
-        "address": "1.1.1.1",
-        "port": 53,
-        "domains": ["geosite:geolocation-!cn"]
-      }
+      "https://dns.google/dns-query",
+      "tcp+local://223.5.5.5",
+      "localhost"
     ]
   },
   "routing": {
     "domainMatcher": "mph",
-    "domainStrategy": "IPIfNotMatch",
+    "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
         "type": "field",
-        "inboundTag": ["all-in"],
-        "port": 53,
-        "network": "udp",
-        "outboundTag": "dns-out"
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
       },
       {
         "type": "field",
@@ -308,18 +168,15 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       },
       {
         "type": "field",
-        "ip": ["223.5.5.5", "114.114.114.114"],
+        "inboundTag": ["all-in"],
+        "port": 53,
+        "network": "udp",
+        "outboundTag": "dns-out"
+      },
+      { //使用了tcp+local查询dns，这段不写也行，但如果不是local模式需要写
+        "type": "field",
+        "ip": ["119.29.29.29", "223.5.5.5"],
         "outboundTag": "direct"
-      },
-      {
-        "type": "field",
-        "ip": ["8.8.8.8", "1.1.1.1"],
-        "outboundTag": "proxy"
-      },
-      {
-        "type": "field",
-        "domain": ["geosite:category-ads-all"],
-        "outboundTag": "block"
       },
       {
         "type": "field",
@@ -335,15 +192,25 @@ title: TProxy 透明代理 (ipv4 and ipv6)
         "type": "field",
         "domain": ["geosite:cn"],
         "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": ["1.1.1.1"],
+        "outboundTag": "proxy"
+      },
+      {
+        "type": "field",
+        "domain": [
+          "geosite:geolocation-!cn",
+          "domain:googleapis.cn",
+          "dns.google"
+        ],
+        "outboundTag": "proxy"
       }
     ]
   }
 }
 ```
-
-</Tab>
-
-</Tabs>
 
 ### 服务端配置
 
@@ -377,7 +244,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": 8080 //回落
+            "dest": 8080 //回落，需要 web 配合，参见白话文，不设置也行
           }
         ]
       },
