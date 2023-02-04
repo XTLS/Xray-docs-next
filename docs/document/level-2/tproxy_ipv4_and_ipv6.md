@@ -135,18 +135,18 @@ title: TProxy 透明代理 (ipv4 and ipv6)
   "dns": {
     "hosts": {
       "domain:googleapis.cn": "googleapis.com",
-      "dns.google": ["8.8.8.8", "8.8.4.4"],
+      "dns.google": "8.8.8.8",
       "你的VPS域名": "你的VSP IP" //如果 outbound 的 proxy 里 address 填的域名：希望代理走ipv4，这里 VPS IP 填VPS的ipv4, 希望代理走ipv6，这里VPS IP 填VPS的ipv6；outbound 的 proxy 里 address 填的 IP，这行不用写。
     },
     "servers": [
       "https://1.1.1.1/dns-query",
       {
-        "address": "tcp+local://119.29.29.29",
+        "address": "119.29.29.29",
         "domains": ["geosite:cn"],
         "expectIPs": ["geoip:cn"]
       },
       "https://dns.google/dns-query",
-      "tcp+local://223.5.5.5",
+      "223.5.5.5",
       "localhost"
     ]
   },
@@ -174,7 +174,6 @@ title: TProxy 透明代理 (ipv4 and ipv6)
         "outboundTag": "dns-out"
       },
       {
-        //使用了tcp+local查询dns，这段不写也行，但如果不是local模式需要写
         "type": "field",
         "ip": ["119.29.29.29", "223.5.5.5"],
         "outboundTag": "direct"
@@ -196,7 +195,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       },
       {
         "type": "field",
-        "ip": ["1.1.1.1"],
+        "ip": ["1.1.1.1", "8.8.8.8"],
         "outboundTag": "proxy"
       },
       {
