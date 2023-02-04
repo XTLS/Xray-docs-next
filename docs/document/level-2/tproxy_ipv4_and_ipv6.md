@@ -173,7 +173,8 @@ title: TProxy 透明代理 (ipv4 and ipv6)
         "network": "udp",
         "outboundTag": "dns-out"
       },
-      { //使用了tcp+local查询dns，这段不写也行，但如果不是local模式需要写
+      {
+        //使用了tcp+local查询dns，这段不写也行，但如果不是local模式需要写
         "type": "field",
         "ip": ["119.29.29.29", "223.5.5.5"],
         "outboundTag": "direct"
