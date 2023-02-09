@@ -215,17 +215,33 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 此参数的设置为 false 时, ClientHello 里没有 session_ticket 这个扩展。 通常来讲 go 语言程序的 ClientHello 里并没有用到这个扩展, 因此建议保持默认值。 默认值为 `false`。
 
-> `fingerprint` : "" | "chrome" | "firefox" | "safari" | "randomized"
+> `fingerprint` : string
 
-此参数用于配置指定 `TLS Client Hello` 的指纹。当其值为空时，表示不启用此功能。启用后，Xray 将通过 uTLS 库 **模拟** `TLS` 指纹，或随机生成。
+此参数用于配置指定 `TLS Client Hello` 的指纹。当其值为空时，表示不启用此功能。启用后，Xray 将通过 uTLS 库 **模拟** `TLS` 指纹，或随机生成。支持三种配置方式：
+
+1. 常见浏览器最新版本的 TLS 指纹 包括
+
+- `"chrome"`
+- `"firefox"`
+- `"safari"`
+- `"ios"`
+- `"android"`
+- `"safari"`
+- `"edge"`
+- `"360"`
+- `"qq"`
+
+2. 在 xray 启动时自动生成一个指纹
+
+- `"random"`: 在较新版本的浏览器里随机抽取一个
+- `"randomized"`: 完全随机生成一个独一无二的指纹 (100% 支持 TLS 1.3 使用 X25519)
+
+3. 使用 uTLS 原生指纹变量名 例如`"HelloRandomizedNoALPN"` `"HelloChrome_106_Shuffle"`。完整名单见 [uTLS 库](https://github.com/refraction-networking/utls/blob/master/u_common.go#L162)
 
 ::: tip
 此功能仅 **模拟** `TLS Client Hello` 的指纹，行为、其他指纹与 Golang 相同。如果你希望更加完整地模拟浏览器 `TLS`
 指纹与行为，可以使用 [Browser Dialer](./transports/websocket.md#browser-dialer)。
 :::
-
-- `"chrome" | "firefox" | "safari"`: 模拟 Chrome / Firefox / Safari 的 TLS 指纹
-- `"randomized"`: 使用随机指纹
 
 > `certificates`: \[ [CertificateObject](#certificateobject) \]
 
@@ -357,7 +373,10 @@ ocspStapling 检查更新时间间隔。 单位：秒
   "tproxy": "off",
   "domainStrategy": "AsIs",
   "dialerProxy": "",
-  "acceptProxyProtocol": false
+  "acceptProxyProtocol": false,
+  "tcpKeepAliveInterval": 0,
+  "tcpcongestion": "bbr",
+  "interface": "wg0"
 }
 ```
 
@@ -466,3 +485,25 @@ ocspStapling 检查更新时间间隔。 单位：秒
 常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
 
 填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
+
+> `tcpKeepAliveInterval`: number
+
+TCP 保持活跃的数据包发送间隔，单位为秒。~~该设置仅适用于 Linux 下。~~
+
+不配置此项或配置为 0 表示使用 Go 默认值。
+
+::: tip
+填负数时，如 `-1`，不启用 TCP 保持活跃。
+:::
+
+> `tcpcongestion`: ""
+
+TCP 开启内核的 bbr 拥塞控制 仅支持 linux。
+
+- bbr (推荐)
+- cubic
+- reno （默认）
+
+> `interface`: ""
+
+指定绑定出口网卡名称 仅支持 linux。
