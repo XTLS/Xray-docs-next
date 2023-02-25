@@ -2,50 +2,50 @@
 sidebar: auto
 ---
 
-# 快速入门
+# Quick Start
 
-> **这个章节将告诉您如何用最简单的方式获得 Xray，并且开始使用 Xray。**
+> **This chapter will tell you how to get Xray in the easiest way and start using Xray.**
 
-## 下载安装
+## Download and Install
 
-Xray 支持各种平台，并且您可以从多种渠道和方式获得 Xray 的各种版本。
+Xray supports various platforms, and you can get various versions of Xray from various sources and methods.
 
-请点击 [如何下载安装 Xray](./install.md) 以获取 Xray
+Please click [How to Download and Install Xray](./install.md) to get Xray
 
-## 配置运行
+## Configure and Run
 
-下载并安装 Xray 后，只需对他进行配置即可使用。
+After downloading and installing Xray, you need to configure it.
 
-请点击 [如何配置运行 Xray](./config.md) 以学习最简单的配置方式。
+Please click [How to Configure and Run Xray](./config.md) to learn the easiest way to configure Xray.
 
-## 命令参数
+## Command Parameters
 
-Xray 有多种命令和参数可用,因此变得灵活和强大。
+Xray has a variety of commands and parameters available, making it flexible and powerful.
 
-请点击 [Xray 的命令参数](./command.md) 查看 Xray 的更多命令和参数用法。
+Please click [Command Parameters for Xray](./command.md) to view more commands and parameters usages.
 
-## 改进文档
+## Improve Documents
 
-如果你有兴趣，请点击 [使用文档](./document.md) 帮助我们改进文档，或者点击页面下方的 `帮助我们改善此页面！`
+If you're interested, please click [Documents](./document.md) to help us improve the documents, or click the`Help us improve this page!`
 
-我们十分感谢每一位 Contributor 作出的贡献！是你们让 Project X 变得更加强大！
+We are very grateful to every Contributor for their contribution! You guys make Project X even stronger!
 
-## 小小白白话文
+## Beginner Tutorial
 
-给予新手指导的使用心得
+A easy tutorial for beginner.
 
-请点击 [小小白白话文](./level-0/) 以进行查看。
+Please click [小小白白话文](./level-0/) to view it.
 
-## 入门技巧
+## Getting Started Tips
 
-具备了基础之后，你就可以通过 [入门技巧](./level-1/) 来探索更多的使用方式了。
+After you have the basics, you can explore more ways to use them through [Getting Started Tips](./level-1/).
 
-## 进阶文档
+## Advanced Documentation
 
-给予进阶用户指导的使用技巧
+Tips for advanced user guidance
 
-点击 [进阶文档](./level-2/) 以进行查看
+Click on [Advanced Documentation](./level-2/) to view it
 
-::: tip 感谢
-非常感谢大家无私分享使用技巧和心得, 使得 Xray 日益强大。
+::: tip Appreciations
+Thank you very much for your selfless sharing of usage skills and experience, which makes Xray more and more powerful.
 :::

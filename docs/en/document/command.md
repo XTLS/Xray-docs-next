@@ -1,12 +1,12 @@
-# 命令参数
+# Command Parameters
 
 ::: tip
-Xray 使用 Go 风格的命令及参数
+Xray uses Go-style commands and parameters
 :::
 
-## 获取基本命令
+## Get Basic Commands
 
-您可以运行 `xray help` 来获得所有 xray 最基础的用法, 以及可用的命令及说明.
+You can run `xray help`to get the most basic usage of all xray, as well as available commands and instructions.
 
 ```
 Xray is a platform for building proxies.
@@ -28,9 +28,9 @@ Use "xray help <command>" for more information about a command.
 
 ### xray run
 
-指定一个或多个配置文件，并运行。
+Specify one or more configuration files and run.
 
-使用方法:
+Usage:
 
 ```
  xray run [-c config.json] [-confdir dir]
@@ -53,9 +53,9 @@ without launching the server
 
 ### xray version
 
-输出 Xray 版本、 Golang 版本等信息。
+Output Xray version, Golang version and other information.
 
-使用方法:
+Usage:
 
 ```
  xray version
@@ -63,9 +63,9 @@ without launching the server
 
 ### xray api
 
-调用 Xray 的 gRPC API，需要在配置文件中开启。
+To call Xray's gRPC API, it needs to be enabled in the configuration file.
 
-使用方法:
+Usage:
 
 ```
 xray api <command> [arguments]
@@ -84,9 +84,9 @@ xray api <command> [arguments]
 
 ### xray tls
 
-一些与 TLS 相关的工具。
+Some tools related to TLS.
 
-使用方法:
+Usage:
 
 ```
 xray tls <command> [arguments]
@@ -99,17 +99,17 @@ xray tls <command> [arguments]
 
 ### xray uuid
 
-生成 UUID。
+Generated UUID.
 
-使用方法:
+Usage:
 
 ```
 xray uuid
 ```
 
 ::: tip
-当`-config`没有指定时，Xray 将先后尝试从以下路径加载`config.json`:
+When `-config` is not specified, Xray will try to load `config.json` from the following paths:
 
-- 工作目录（Working Directory）
-- [环境变量](../config/features/env.md#资源文件路径)中`Xray.location.asset`所指定的路径
+- Working Directory
+- The path specified by `Xray.location.asset` in the [environment variable](../config/features/env.md).
   :::
