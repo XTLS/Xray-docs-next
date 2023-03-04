@@ -6,21 +6,25 @@
 
 - 支持 TCP 和 UDP 数据包转发，其中 UDP 可选择性关闭；
 - 推荐的加密方式：
-
-  - AES-256-GCM
-  - AES-128-GCM
-  - ChaCha20-Poly1305 或称 ChaCha20-IETF-Poly1305
+  - 2022-blake3-aes-128-gcm
+  - 2022-blake3-aes-256-gcm
+  - 2022-blake3-chacha20-poly1305
+- 其他加密方式
+  - aes-256-gcm
+  - aes-128-gcm
+  - chacha20-poly1305 或称 chacha20-ietf-poly1305
+  - xchacha20-poly1305 或称 xchacha20-ietf-poly1305
   - none 或 plain
 
-  不推荐的加密方式:
+Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，解决了旧协议的以下安全问题：
 
-  - AES-256-CFB
-  - AES-128-CFB
-  - ChaCha20
-  - ChaCha20-IETF
+- [Shadowsocks AEAD 加密方式设计存在严重漏洞，无法保证通信内容的可靠性](https://github.com/shadowsocks/shadowsocks-org/issues/183)
+- 原有 TCP 重放过滤器误报率随时间增加
+- 没有 UDP 重放保护
+- 可用于主动探测的 TCP 行为
 
 ::: danger
-"none" 不加密方式下，服务器端不会验证 "password" 中的密码。为确保安全性, 一般需要加上 TLS 并在传输层使用安全配置，例如 WebSocket 配置较长的 path
+"none" 不加密方式下流量将明文传输。为确保安全性, 不要在公共网络上使用。
 :::
 
 ## InboundConfigurationObject
@@ -28,14 +32,10 @@
 ```json
 {
   "settings": {
-    "clients": [
-      {
-        "password": "密码",
-        "method": "aes-256-gcm",
-        "level": 0,
-        "email": "love@xray.com"
-      }
-    ],
+    "password": "密码",
+    "method": "aes-256-gcm",
+    "level": 0,
+    "email": "love@xray.com",
     "network": "tcp,udp"
   }
 }
@@ -56,25 +56,31 @@
 }
 ```
 
-::: tip
-(v1.2.3+) Xray 支持 Shadowsocks 单端口多用户，但是需要将该入站所有用户的加密方式设置为 AEAD。
-:::
-
 > `method`: string
 
 必填。
 
-- 推荐的加密方式：
-  - AES-256-GCM
-  - AES-128-GCM
-  - ChaCha20-Poly1305 或称 ChaCha20-IETF-Poly1305
-  - none 或 plain
-
 > `password`: string
 
-必填，任意字符串。
+必填。
 
-Shadowsocks 协议不限制密码长度，但短密码会更可能被破解，建议使用 16 字符或更长的密码。
+- Shadowsocks 2022
+
+使用与 WireGuard 类似的预共享密钥作为密码。
+
+使用 `openssl rand -base64 <长度>` 以生成与 shadowsocks-rust 兼容的密钥，长度取决于所使用的加密方法。
+
+| 加密方法                      | 密钥长度 |
+| ----------------------------- | -------: |
+| 2022-blake3-aes-128-gcm       |       16 |
+| 2022-blake3-aes-256-gcm       |       32 |
+| 2022-blake3-chacha20-poly1305 |       32 |
+
+在 Go 实现中，32 位密钥始终工作。
+
+- 其他加密方法
+
+任意字符串。 不限制密码长度，但短密码会更可能被破解，建议使用 16 字符或更长的密码。
 
 > `level`: number
 

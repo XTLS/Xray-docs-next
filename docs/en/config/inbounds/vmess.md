@@ -148,3 +148,17 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 ::: tip
 拥有服务器 UUID 以及其他连接数据的恶意程序可能根据此机制对服务器发起拒绝服务攻击，受到此类攻击的服务可以通过修改 `proxy/vmess/validator.go` 文件中 `func (v \*TimedUserValidator) BurnTaintFuse(userHash []byte) error` 函数的 `atomic.CompareAndSwapUint32(pair.taintedFuse, 0, 1)` 语句为 `atomic.CompareAndSwapUint32(pair.taintedFuse, 0, 0)` 来解除服务器对此类攻击的安全保护机制。使用 VMessAEAD 认证机制的客户端不受到 VMess MD5 认证信息 玷污机制 的影响。
 :::
+
+## VMess MD5 认证信息 淘汰机制
+
+VMess MD5 认证信息 的淘汰机制已经启动。
+
+自 2022 年 1 月 1 日起，服务器端默认禁用对于 MD5 认证信息 的兼容。任何使用 MD5 认证信息的客户端将无法连接到禁用 VMess MD5 认证信息的服务器端。
+
+::: tip
+在服务器端可以通过设置环境变量 xray.vmess.aead.forced=true 以关闭对于 MD5 认证信息的兼容，或者 xray.vmess.aead.forced=false 以强制开启对于 MD5 认证信息 认证机制的兼容（不受到 2022 年自动禁用机制的影响）。
+:::
+
+::: tip
+如无兼容旧客户端必要，应在服务端配置移除 `"alterID"` 参数。
+:::

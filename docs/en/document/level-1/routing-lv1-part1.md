@@ -51,18 +51,20 @@
 
 下面的入站配置示例，用大白话说就是：数据按照 `socks` 协议，通过 `10808` 端口，从本机 `127.0.0.1` 流入`Xray`。同时，`Xray` 将这个入站用 `[tag]` 命名为 `inbound-10808`。
 
-```json5
-"inbounds": [
+```json
+{
+  "inbounds": [
     {
-        "tag": "inbound-10808",
-        "protocol": "socks",
-        "listen": "127.0.0.1",
-        "port": 10808,
-        "settings": {
-            "udp": true
-        }
+      "tag": "inbound-10808",
+      "protocol": "socks",
+      "listen": "127.0.0.1",
+      "port": 10808,
+      "settings": {
+        "udp": true
+      }
     }
-]
+  ]
+}
 ```
 
 **2.2 出站**
@@ -117,18 +119,18 @@
 
 下面的路由配置示例，用大白话说就是：把所有通过 `[tag]="inbound-10808"` 入站流入 `Xray` 的流量，`100%` 全部流转导入 `[tag]="proxy-out-vless"` 的出站，没有任何分流或其他操作。
 
-```json5
-"routing": {
+```json
+{
+  "routing": {
     "domainStrategy": "AsIs",
     "rules": [
-        {
-            "type": "field",
-            "inboundTag": [
-                "inbound-10808"
-            ],
-            "outboundTag": "proxy-out-vless"
-        }
+      {
+        "type": "field",
+        "inboundTag": ["inbound-10808"],
+        "outboundTag": "proxy-out-vless"
+      }
     ]
+  }
 }
 ```
 
@@ -205,21 +207,23 @@
 
 在上例的基础上，我们已经有了 `[proxy]` 的出站 `"proxy-out-vless"`，所以它保持不变。显而易见，我们需要加入两个新的出站方式：`[block]` 和 `[direct]`，如下：
 
-```json5
-"outbounds": [
+```json
+{
+  "outbounds": [
     {
-        "tag": "proxy-out-vless",
-        ......
+      "tag": "proxy-out-vless"
+      // ... ...
     },
     {
-        "tag": "block",
-        "protocol": "blackhole"
+      "tag": "block",
+      "protocol": "blackhole"
     },
     {
-        "tag": "direct-out",
-        "protocol": "freedom"
+      "tag": "direct-out",
+      "protocol": "freedom"
     }
-]
+  ]
+}
 ```
 
 上面的配置用大白话翻译如下：
@@ -232,32 +236,28 @@
 
 接下来就是见证奇迹的时刻了，我们可以用【路由】的配置把这些连接起来！
 
-```json5
-"routing": {
+```json
+{
+  "routing": {
     "domainStrategy": "AsIs",
     "rules": [
-        {
-            "type": "field",
-            "domain": [
-                "geosite:category-ads-all"
-            ],
-            "outboundTag": "block"
-        },
-        {
-            "type": "field",
-            "domain": [
-                "geosite:cn"
-            ],
-            "outboundTag": "direct-out"
-        },
-        {
-            "type": "field",
-            "domain": [
-                "geosite:geolocation-!cn"
-            ],
-            "outboundTag": "proxy-out-vless"
-        }
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:cn"],
+        "outboundTag": "direct-out"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:geolocation-!cn"],
+        "outboundTag": "proxy-out-vless"
+      }
     ]
+  }
 }
 ```
 
@@ -366,21 +366,23 @@
 
 是不是，非常地简单？
 
-```json5
-"outbounds": [
+```json
+{
+  "outbounds": [
     {
-        "tag": "direct-out",
-        "protocol": "freedom"
+      "tag": "direct-out",
+      "protocol": "freedom"
     },
     {
-        "tag": "proxy-out-vless",
-        ......
+      "tag": "proxy-out-vless"
+      // ... ...
     },
     {
-        "tag": "block",
-        "protocol": "blackhole"
+      "tag": "block",
+      "protocol": "blackhole"
     }
-]
+  ]
+}
 ```
 
 此时，路由规则其实变成了：
@@ -420,4 +422,4 @@
 
 请确保你已经读懂了上面的内容，因为这样，你就已经理解了【路由】功能的工作逻辑。有了这个基础，我们就可以继续分析【路由】功能更多更详细的配置方式和匹配条件了。
 
-等你看完后面的内容，就完全可以自由的定制属于自己的路由规则啦！还等什么，让我们一起进入 [《路由 (routing) 功能简析（下）》](./routing-lv1-part2) 吧！
+等你看完后面的内容，就完全可以自由的定制属于自己的路由规则啦！还等什么，让我们一起进入 [《路由 (routing) 功能简析（下）》](./routing-lv1-part2.md) 吧！

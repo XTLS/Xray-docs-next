@@ -80,12 +80,13 @@
     "tproxy": "off",
     "domainStrategy": "AsIs",
     "dialerProxy": "",
-    "acceptProxyProtocol": false
+    "acceptProxyProtocol": false,
+    "tcpKeepAliveInterval": 0
   }
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "domainsocket" | "quic"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "domainsocket" | "quic" | "grpc"
 
 连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
 
@@ -147,16 +148,17 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
 ```json
 {
   "serverName": "xray.com",
+  "rejectUnknownSni": false,
   "allowInsecure": false,
   "alpn": ["h2", "http/1.1"],
   "minVersion": "1.2",
   "maxVersion": "1.3",
-  "preferServerCipherSuites": true,
   "cipherSuites": "此处填写你需要的加密套件名称,每个套件名称之间用:进行分隔",
   "certificates": [],
   "disableSystemRoot": false,
   "enableSessionResumption": false,
-  "fingerprint": ""
+  "fingerprint": "",
+  "pinnedPeerCertificateChainSha256": [""]
 }
 ```
 
@@ -165,6 +167,10 @@ TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型�
 指定服务器端证书的域名，在连接由 IP 建立时有用。
 
 当目标连接由域名指定时，比如在 Socks 入站接收到了域名，或者由 Sniffing 功能探测出了域名，这个域名会自动用于 `serverName`，无须手动配置。
+
+> `rejectUnknownSni`: bool
+
+当值为 `true` 时，服务端接收到的 SNI 与证书域名不匹配即拒绝 TLS 握手，默认为 false。
 
 > `alpn`: \[ string \]
 
@@ -177,12 +183,6 @@ minVersion 为可接受的最小 SSL/TLS 版本。
 > `maxVersion`: \[ string \]
 
 maxVersion 为可接受的最大 SSL/TLS 版本。
-
-> `preferServerCipherSuites`: true | false
-
-指示服务器选择客户端最喜欢的密码套件 或 服务器最优选的密码套件。
-
-如果为 true 则为使用服务器的最优选的密码套件
 
 > `cipherSuites`: \[ string \]
 
@@ -226,7 +226,6 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 - `"safari"`
 - `"ios"`
 - `"android"`
-- `"safari"`
 - `"edge"`
 - `"360"`
 - `"qq"`
@@ -243,6 +242,20 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 指纹与行为，可以使用 [Browser Dialer](./transports/websocket.md#browser-dialer)。
 :::
 
+> `pinnedPeerCertificateChainSha256`: \[string\]
+
+用于指定远程服务器的证书链 SHA256 散列值，使用标准编码格式。仅有当服务器端证书链散列值符合设置项中之一时才能成功建立 TLS 连接。
+
+在连接因为此配置失败时，会展示远程服务器证书散列值。
+
+::: danger
+不建议使用这种方式获得证书链散列值，因为在这种情况下将没有机会验证此时服务器提供的证书是否为真实证书，进而不保证获得的证书散列值为期望的散列值。
+:::
+
+::: tip
+如果需要获得证书的散列值，应在命令行中运行 `xray tls certChainHash --cert <cert.pem>` 来获取，`<cert.pem>` 应替换为实际证书文件路径。
+:::
+
 > `certificates`: \[ [CertificateObject](#certificateobject) \]
 
 证书列表，其中每一项表示一个证书（建议 fullchain）。
@@ -257,6 +270,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 ```json
 {
   "ocspStapling": 3600,
+  "oneTimeLoading": false,
   "usage": "encipherment",
   "certificateFile": "/path/to/certificate.crt",
   "keyFile": "/path/to/key.key",
@@ -313,7 +327,14 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `ocspStapling`: number
 
-ocspStapling 检查更新时间间隔。 单位：秒
+OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认值为 `3600`，即一小时。
+
+> `oneTimeLoading`: true | false
+
+仅加载一次。值为 `true` 时将关闭证书热重载功能与 ocspStapling 功能。
+::: warning
+当值为 `true` 时，将会关闭 OCSP 装订。
+:::
 
 > `usage`: "encipherment" | "verify" | "issue"
 
@@ -473,7 +494,7 @@ ocspStapling 检查更新时间间隔。 单位：秒
 一个出站代理的标识。当值不为空时，将使用指定的 outbound 发出连接。 此选项可用于支持底层传输方式的链式转发。
 
 ::: danger
-此选项与 PorxySettingsObject.Tag 不兼容
+此选项与 ProxySettingsObject.Tag 不兼容
 :::
 
 > `acceptProxyProtocol`: true | false
@@ -498,11 +519,20 @@ TCP 保持活跃的数据包发送间隔，单位为秒。~~该设置仅适用�
 
 > `tcpcongestion`: ""
 
-TCP 开启内核的 bbr 拥塞控制 仅支持 linux。
+TCP 拥塞控制算法。仅支持 Linux。
+不配置此项表示使用系统默认值。
 
-- bbr (推荐)
+::: tip 常见的算法
+
+- bbr（推荐）
 - cubic
-- reno （默认）
+- reno
+
+:::
+
+::: tip
+执行命令 `sysctl net.ipv4.tcp_congestion_control` 获取系统默认值。
+:::
 
 > `interface`: ""
 

@@ -10,6 +10,14 @@
 
 基于 Xray 的透明代理（TProxy）配置完整教程。
 
+[TProxy 透明代理（ipv4 and ipv6）配置教程](./tproxy_ipv4_and_ipv6.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
+
+基于 Xray 的 TProxy 透明代理（ipv4 and ipv6）配置教程
+
+[Nginx_TLS 隧道隐藏指纹](./Nginx_TLS_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
+
+双端使用 Nginx_TLS 隧道隐藏指纹
+
 [[透明代理]通过 gid 规避 Xray 流量](./iptables_gid.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
 
 在 iptables/nftables 实现的透明代理中，一种新的规避 Xray 流量的方式。

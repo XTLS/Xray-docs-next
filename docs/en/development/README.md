@@ -1,7 +1,3 @@
----
-sidebar: auto
----
-
 # 开发指南
 
 ## 编译文档
@@ -28,7 +24,7 @@ Xray 内核提供了一个平台，在其之上可以进二次开发。
 
 Xray 用到了很多种协议, 您可以通过各种途径获得协议的详细描述。
 
-### [mKCP 协议](./protocols/vless.md)
+### [VLESS 协议](./protocols/vless.md)
 
 VLESS 是一个无状态的轻量传输协议，可以作为 Xray 客户端和服务器之间的桥梁。
 

@@ -4,6 +4,8 @@
 
 如常见用法是分流国内外流量，Xray 可以通过内部机制判断不同地区的流量，然后将它们发送到不同的出站代理。
 
+有关路由功能更详细的解析：[路由 (routing) 功能简析](https://xtls.github.io/document/level-1/routing-lv1-part1.html)
+
 ## RoutingObject
 
 `RoutingObject` 对应配置文件的 `routing` 项。
@@ -12,6 +14,7 @@
 {
   "routing": {
     "domainStrategy": "AsIs",
+    "domainMatcher": "hybrid",
     "rules": [],
     "balancers": []
   }
@@ -28,11 +31,18 @@
   - 解析后的 IP 仅在路由选择时起作用，转发的数据包中依然使用原始域名；
 - `"IPOnDemand"`：当匹配时碰到任何基于 IP 的规则，将域名立即解析为 IP 进行匹配；
 
+> `domainMatcher`: "hybrid" | "linear"
+
+域名匹配算法，根据不同的设置使用不同的算法。此处选项会影响所有未单独指定匹配算法的 `RuleObject`。
+
+- `"hybrid"`：使用新的域名匹配算法，速度更快且占用更少。默认值。
+- `"linear"`：使用原来的域名匹配算法。
+
 > `rules`: \[[RuleObject](#ruleobject)\]
 
 对应一个数组，数组中每一项是一个规则。
 
-对于每一个连接，路由将根据这些规则依次进行判断，当一个规则生效时，即将这个连接转发至它所指定的 `outboundTag`或 `balancerTag`。
+对于每一个连接，路由将根据这些规则从上到下依次进行判断，当遇到第一个生效规则时，即将这个连接转发至它所指定的 `outboundTag`或 `balancerTag`。
 
 ::: tip
 当没有匹配到任何规则时，流量默认由第一个 outbound 发出。
@@ -48,6 +58,7 @@
 
 ```json
 {
+  "domainMatcher": "hybrid",
   "type": "field",
   "domain": ["baidu.com", "qq.com", "geosite:cn"],
   "ip": ["0.0.0.0/8", "10.0.0.0/8", "fc00::/7", "fe80::/10", "geoip:cn"],
@@ -67,6 +78,13 @@
 ::: danger
 当多个属性同时指定时，这些属性需要**同时**满足，才可以使当前规则生效。
 :::
+
+> `domainMatcher`: "hybrid" | "linear"
+
+域名匹配算法，根据不同的设置使用不同的算法。此处选项优先级高于 `RoutingObject` 中配置的 `domainMatcher`。
+
+- `"hybrid"`：使用新的域名匹配算法，速度更快且占用更少。默认值。
+- `"linear"`：使用原来的域名匹配算法。
 
 > `type`: "field"
 
@@ -203,3 +221,5 @@
 - `geolocation-!cn`：包含了常见的非大陆站点域名，同时包含了 `tld-!cn`。
 - `tld-cn`：包含了 CNNIC 管理的用于中国大陆的顶级域名，如以 `.cn`、`.中国` 结尾的域名。
 - `tld-!cn`：包含了非中国大陆使用的顶级域名，如以 `.hk`（香港）、`.tw`（台湾）、`.jp`（日本）、`.sg`（新加坡）、`.us`（美国）`.ca`（加拿大）等结尾的域名。
+
+你也可以在这里查看完整的域名列表 [Domain list community](https://github.com/v2fly/domain-list-community)。
