@@ -93,7 +93,7 @@ The only thing to change in the above configuration is your server IP, which is 
 - On Windows and macOS, configuration files are usually `config.json`
   - Just run `Xray` or `Xray.exe`
 - On Linux, configuration files are usually located in `/etc/xray/` or `/usr/local/etc/xray/`.
-  - Run  `xray run -c /etc/xray/config.json`
+  - Run `xray run -c /etc/xray/config.json`
   - Or use something like systemd to run Xray as a service in the background.
 
 For more detailed instructions, please refer to [Configuration](../config/) Document and [小小白话文](../documents/level-0/).

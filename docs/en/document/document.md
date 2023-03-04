@@ -12,7 +12,6 @@ You can submit your changes to the Document by following these steps:
 
 2. Get a clone of the docs from the repository you cloned using whatever tool you like, like:
 
-
 ```
 git clone https://github.com/XTLS/Xray-docs-next.git
 ```
@@ -30,7 +29,6 @@ git checkout -b your-branch
    Note: Pull requests with formatting issues may be rejected.
 
 6. Submit the changes and push them to your repository
-
 
 ```
 git push -u origin your-branch
