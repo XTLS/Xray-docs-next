@@ -1,20 +1,20 @@
-# 配置运行
+# Configure and Run
 
-[下载并安装](./install) 了 Xray 之后，您需要对它进行一下配置。
+After [downloading and installing Xray](./install/), you need to configure it,
 
-为了演示，这里只介绍简单的配置方式。更多的模板: [Xray-examples](https://github.com/XTLS/Xray-examples)
+For demonstration, only a simple configuration method is introduced here. More templates: [Xray-examples](https://github.com/XTLS/Xray-examples)
 
-如需配置更复杂的功能，请参考更详细的 [配置文件](../config/) 中相关说明。
+If you need to configure more complex functions, please refer to the relevant instructions in the more detailed [configuration file](../config/).
 
-## 服务端配置
+## Server Configuration
 
-你需要一台防火墙外的服务器，来运行服务器端的 Xray。配置如下：
+You need a server outside the firewall to run server-side Xray. The configuration is as follows:
 
 ```json
 {
   "inbounds": [
     {
-      "port": 10086, // 服务器监听端口
+      "port": 10086, // server listening port
       "protocol": "vmess",
       "settings": {
         "clients": [
@@ -33,17 +33,17 @@
 }
 ```
 
-服务器的配置中需要确保 `id` 和端口与客户端一致，就可以正常连接了。
+In the configuration of the server, you need to ensure `id` that the and port are consistent with the client, and then you can connect normally.
 
-## 客户端配置
+## Client Configuration
 
-在你的 PC（或手机）中，需要用以下配置运行 Xray ：
+On your PC (or phone), you need to run Xray with the following configuration:
 
 ```json
 {
   "inbounds": [
     {
-      "port": 1080, // SOCKS 代理端口，在浏览器中需配置代理并指向这个端口
+      "port": 1080, // SOCKS proxy port, the proxy needs to be configured in the browser and point to this port
       "listen": "127.0.0.1",
       "protocol": "socks",
       "settings": {
@@ -57,8 +57,8 @@
       "settings": {
         "vnext": [
           {
-            "address": "server", // 服务器地址，请修改为你自己的服务器 ip 或域名
-            "port": 10086, // 服务器端口
+            "address": "server", // Server address, please change it to your own server IP or domain name
+            "port": 10086, // server port
             "users": [
               {
                 "id": "b831381d-6324-4d53-ad4f-8cda48b30811"
@@ -86,14 +86,14 @@
 }
 ```
 
-上述配置唯一要更改的地方是你的服务器 IP，配置中已注明。上述配置会把除局域网（比如访问路由器）以外的所有流量转发至你的服务器。
+The only thing to change in the above configuration is your server IP, which is noted in the configuration. The above configuration will forward all traffic to your server except on the LAN (such as the access router).
 
-## 运行
+## Run
 
-- 在 Windows 和 macOS 中，配置文件通常是 Xray 同目录下的 `config.json` 文件。
-  - 直接运行 `Xray` 或 `Xray.exe` 即可。
-- 在 Linux 中，配置文件通常位于 `/etc/xray/` 或 `/usr/local/etc/xray/` 目录下。
-  - 运行 `xray run -c /etc/xray/config.json`
-  - 或使用 systemd 等工具将 Xray 作为服务在后台运行。
+- On Windows and macOS, configuration files are usually `config.json`
+  - Just run `Xray` or `Xray.exe`
+- On Linux, configuration files are usually located in `/etc/xray/` or `/usr/local/etc/xray/`.
+  - Run `xray run -c /etc/xray/config.json`
+  - Or use something like systemd to run Xray as a service in the background.
 
-更多详细的说明可以参考 [配置文档](../config/) 和 [小小白话文](../documents/level-0/)。
+For more detailed instructions, please refer to [Configuration](../config/) Document and [小小白话文](../documents/level-0/).

@@ -1,45 +1,43 @@
-# 下载安装
+# Download and Install
 
-## 平台支持
+## Platform Support
 
-Xray 在以下平台中可用：
+- Xray is available on the following platforms:
+  - Windows 7 and later (x86 / amd64 / arm32 / arm64);
+  - macOS 10.10 Yosemite and later (amd64 / arm64);
+  - Linux 2.6.23 and later (x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64);
+    - Including but not limited to Debian 7 / 8, Ubuntu 12.04 / 14.04 and subsequent versions, CentOS 7 / 8, Arch Linux, etc.;
+  - FreeBSD (x86 / amd64);
+  - OpenBSD (x86 / amd64);
+  - Dragonfly BSD (amd64);
 
-- Windows 7 及之后版本（x86 / amd64 / arm32）；
-- macOS 10.10 Yosemite 及之后版本（amd64）；
-- Linux 2.6.23 及之后版本（x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64）；
-  - 包括但不限于 Debian 7 / 8、Ubuntu 12.04 / 14.04 及后续版本、CentOS 7 / 8、Arch Linux 等；
-- FreeBSD (x86 / amd64)；
-- OpenBSD (x86 / amd64)；
-- Dragonfly BSD (amd64)；
+## Download Xray
 
-## 下载 Xray
+Precompiled binaries in ZIP format are available at [GitHub Releases](https://github.com/xtls/Xray-core/releases) found in.
 
-预编译的二进制 ZIP 格式压缩包可在 [Github Releases](https://github.com/xtls/Xray-core/releases) 中找到。
+Download the compressed package of the corresponding platform, and use it after decompression.
 
-下载对应平台的压缩包，解压后即可使用。
+## Verify the Installation Package
 
-## 验证安装包
+Xray provides two verification methods:
 
-Xray 提供两种验证方式：
+- SHA1/SHA256 digest of the ZIP archive
+- Reproducible build: Please refer to [Compile Xray](https://xtls.github.io/development/intro/compile.html)
 
-- ZIP 压缩包的 SHA1 / SHA256 摘要
-- 可复现构建：请参照 [编译 Xray](../development/intro/compile.md)
+## Install on Windows
 
-## Windows 安装方式
+- Download the ZIP archive suitable for the Windows platform on [Github Releases](https://github.com/xtls/Xray-core/releases). After decompression, you can get an executable file `xray.exe`, and then run it with [parameters](./command) through the command line.
+- By [Scoop](https://scoop.sh/) Package manager installation: Xray has been added to [Mochi](https://github.com/Qv2ray/mochi).
 
-- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 Windows 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray.exe`
-  ，然后[通过命令行带参数运行](./command) 即可
-- 通过 [Scoop](https://scoop.sh) 包管理器安装：Xray 已经被添加到 [Mochi](https://github.com/Qv2ray/mochi)。
+## Install on macOS
 
-## macOS 安装方式
+- Download the ZIP archive suitable for the macOS platform on [Github Releases](https://github.com/xtls/Xray-core/releases). After decompression, you can get an executable file `xray`, and then run it with [parameters](./command) through the command line.
+- By [Homebrew](https://brew.sh/) Package manager installation: `brew install xray`
+- [homebrew-xray](https://github.com/N4FA/homebrew-xray): Thanks [@N4FA](https://github.com/N4FA)
 
-- 在 [Github Releases](https://github.com/xtls/Xray-core/releases) 下载适用于 macOS 平台的 ZIP 压缩包，解压后可得到可执行文件 `xray`
-  ，然后[通过命令行带参数运行](./command.md) 即可
-- 通过 [Homebrew](https://brew.sh) 包管理器安装：`brew install xray`
+## Install on Linux
 
-## Linux 安装方式
-
-### 安装脚本
+### Install Script
 
 - Linux Script
 
@@ -49,7 +47,7 @@ Xray 提供两种验证方式：
 
   - [Xray-script](https://github.com/kirin10000/Xray-script)
   - [ProxySU](https://github.com/proxysu/ProxySU)
-  - [Xray-agent](https://github.com/reeceyng/v2ray-agent) 感谢[@mack-a](https://github.com/mack-a) [@Reece](https://github.com/reeceyng)
+  - [Xray-agent](https://github.com/reeceyng/v2ray-agent) Thanks [@mack-a](https://github.com/mack-a) [@Reece](https://github.com/reeceyng)
 
 * Magisk
   - [Xray4Magisk](https://github.com/CerteKim/Xray4Magisk)
@@ -59,31 +57,30 @@ Xray 提供两种验证方式：
 
 #### Arch User Repository
 
-需要使用 [AUR helpers](https://wiki.archlinux.org/index.php/AUR_helpers)，以 [yay](https://github.com/Jguer/yay)
-为例，可通过 `yay -S xray` 安装。
+Need to use [AUR helpers](https://wiki.archlinux.org/index.php/AUR_helpers), [yay](https://github.com/Jguer/yay) as an example, it can be installed via `yay -S xray`.
 
 #### Arch Linux CN
 
-首先添加 [Arch Linux CN 仓库](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/)，然后在 root 用户下使用 `pacman -S xray` 安装。
+First add [Arch Linux CN](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror/) repository, and then use the root user `pacman -S xray`to install.
 
 ### Linuxbrew
 
-Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
+The Linuxbrew package manager is used in the same way as Homebrew: `brew install xray`
 
 ### Debian <Badge text="WIP" type="warning"/>
 
-## Docker 安装方式
+## Install via Docker
 
 - [teddysun/xray](https://hub.docker.com/r/teddysun/xray)
 
-### Docker image 的文件结构
+### The File Structure of the Docker Image
 
-- `/etc/xray/config.json`：配置文件
-- `/usr/bin/xray`：Xray 主程序
-- `/usr/local/share/xray/geoip.dat`：IP 数据文件
-- `/usr/local/share/xray/geosite.dat`：域名数据文件
+- `/etc/xray/config.json`: configuration file
+- `/usr/bin/xray`: Xray main program
+- `/usr/local/share/xray/geoip.dat`: IP data file
+- `/usr/local/share/xray/geosite.dat`: domain name data file
 
-# 图形化客户端
+# GUI Client
 
 - OpenWrt
   - [PassWall](https://github.com/xiaorouji/openwrt-passwall)
@@ -92,18 +89,18 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
   - [luci-app-xray](https://github.com/yichya/luci-app-xray) ([openwrt-xray](https://github.com/yichya/openwrt-xray))
 - Windows
   - [v2rayN](https://github.com/2dust/v2rayN)
-  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
-  - [Netch (NetFilter & TUN/TAP)](https://github.com/NetchX/Netch) （该项目已冻结存档）
+  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) (This project has been and archived)
+  - [Netch (NetFilter & TUN/TAP)](https://github.com/NetchX/Netch) (This project has been and archived)
 - Android
   - [v2rayNG](https://github.com/2dust/v2rayNG)
   - [Kitsunebi](https://github.com/rurirei/Kitsunebi/tree/release_xtls)
-- iOS / macOS（使用 ARM 芯片）
+- iOS / macOS (ARM)
   - [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)
   - [Stash](https://apps.apple.com/app/stash/id1596063349)
-- macOS（X86 芯片 / ARM 芯片）
-  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
+- macOS (X86/ARM)
+  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) (This project has been and archived)
   - [V2RayXS](https://github.com/tzmax/V2RayXS)
 
-# UUID 生成器
+# UUID Generator
 
-第三方的 UUID 生成器 [uuidgenerator.net](https://www.uuidgenerator.net)
+Third-party UUID generator [uuidgenerator.net](https://www.uuidgenerator.net)
