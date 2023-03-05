@@ -86,6 +86,19 @@ API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 
 内置的数据统计服务，详见 [统计信息](./stats.md)。
 
+### ReflectionService
+
+支持 gRPC 客户端获取服务端的 API 列表。
+
+```bash
+$ grpcurl -plaintext localhost:10085 list
+grpc.reflection.v1alpha.ServerReflection
+v2ray.core.app.proxyman.command.HandlerService
+v2ray.core.app.stats.command.StatsService
+xray.app.proxyman.command.HandlerService
+xray.app.stats.command.StatsService
+```
+
 ## API 调用示例
 
 [Xray-API-documents](https://github.com/XTLS/Xray-API-documents) @crossfw
