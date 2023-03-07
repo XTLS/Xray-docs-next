@@ -287,8 +287,11 @@ Reality 在 TLS 一部分设定的基础上 有以下独有设置
     "0123456789abcdef" // 0 到 f，长度为 2 的倍数，长度上限为 16
   ]
   // 客户端选项
-  "publicKey": "", // 服务端私钥对应的公钥
-  "shortId": "", // 服务端 shortIds 之一
+  "show": false, // 选填，若为 true，输出调试信息
+  "fingerprint": "chrome", // 必填，使用 uTLS 库模拟客户端 TLS 指纹
+  "serverName": "", // 必填，服务端 serverNames 之一
+  "publicKey": "", // 必填，服务端私钥对应的公钥
+  "shortId": "", // 必填，服务端 shortIds 之一
   "spiderX": "" // 爬虫初始路径与参数，建议每个客户端不同
 }
 ```
