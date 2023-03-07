@@ -14,8 +14,7 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
     {
       "password": "password",
       "email": "love@xray.com",
-      "level": 0,
-      "flow": "xtls-rprx-direct"
+      "level": 0
     }
   ],
   "fallbacks": [
@@ -48,8 +47,7 @@ Xray 的 Trojan 有完整的 fallbacks 支持，配置方式完全一致。
 {
   "password": "password",
   "email": "love@xray.com",
-  "level": 0,
-  "flow": "xtls-rprx-direct"
+  "level": 0
 }
 ```
 
@@ -70,14 +68,3 @@ Xray 的 Trojan 有完整的 fallbacks 支持，配置方式完全一致。
 用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
 userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
-
-> `flow`: string
-
-流控模式，用于选择 XTLS 的算法。
-
-目前入站协议中有以下流控模式可选：
-
-- `xtls-rprx-origin`：<Badge text="Deprecated" type="warning"/> 最初的流控模式，此时客户端仅可选择 `xtls-rprx-origin` 和 `xtls-rprx-origin-udp443` 这两种流控模式。该模式纪念价值大于实际使用价值。
-- `xtls-rprx-direct`：<Badge text="Deprecated" type="warning"/> 所有平台皆可使用的典型流控方式，此时客户端可选择任何流控模式
-
-此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。

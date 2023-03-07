@@ -96,19 +96,19 @@
 
 - `"none"` 表示不加密（默认值）
 - `"tls"` 表示使用 [TLS](https://en.wikipedia.org/wiki/base/transport_Layer_Security)。
-- `"xtls"` 表示使用 [XTLS](./features/xtls.md)。<Badge text="Deprecated" type="warning"/>
+- `"reality"` 表示使用 REALITY。
 
 > `tlsSettings`: [TLSObject](#tlsobject)
 
 TLS 配置。TLS 由 Golang 提供，通常情况下 TLS 协商的结果为使用 TLS 1.3，不支持 DTLS。
 
-> `xtlsSettings`: [XTLSObject](#tlsobject) <Badge text="Deprecated" type="warning"/>
+> `realitySettings`: [RealityObject](#realityobject)
 
-XTLS 配置。XTLS 是 Xray 的原创黑科技, 也是使 Xray 性能一骑绝尘的核心动力。 XTLS 与 TLS 有相同的安全性, 配置方式也和 TLS 一致.
+Reality 配置。Reality 是 Xray 的原创黑科技。 Reality 比 TLS 的安全性更高, 配置方式也和 TLS 一致.
 
 ::: tip
-TLS / XTLS 是目前最安全的传输加密方案, 且外部看来流量类型和正常上网具有一致性。 启用 XTLS 并且配置合适的 XTLS 流控模式, 可以在保持和 TLS 相同的安全性的前提下,
-性能达到数倍甚至十几倍的提升。 当 `security` 的值从 `tls` 改为 `xtls` 时, 只需将 `tlsSettings` 修改成为 `xtlsSettings`
+Reality 是目前最安全的传输加密方案, 且外部看来流量类型和正常上网具有一致性。 启用 Reality 并且配置合适的 XTLS Vision 流控模式, 可以
+达到数倍甚至十几倍的性能提升。
 :::
 
 > `tcpSettings`: [TcpObject](./transports/tcp.md)
@@ -263,6 +263,38 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 ::: tip
 如果要在 ssllibs 或者 myssl 获得 A/A+ 等级的评价,
 请参考 [这里](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
+:::
+
+### RealityObject
+
+Reality 在 TLS 一部分设定的基础上 有以下独有设置
+
+```json
+{
+  "show": false, // 选填，若为 true，输出调试信息
+  "dest": "example.com:443", // 必填，格式同 VLESS fallbacks 的 dest
+  "xver": 0, // 选填，格式同 VLESS fallbacks 的 xver
+  "serverNames": [ // 必填，客户端可用的 serverName 列表，暂不支持 * 通配符
+    "example.com",
+    "www.example.com"
+  ],
+  "privateKey": "", // 必填，执行 ./xray x25519 生成
+  "minClientVer": "", // 选填，客户端 Xray 最低版本，格式为 x.y.z
+  "maxClientVer": "", // 选填，客户端 Xray 最高版本，格式为 x.y.z
+  "maxTimeDiff": 0, // 选填，允许的最大时间差，单位为毫秒
+  "shortIds": [ // 必填，客户端可用的 shortId 列表，可用于区分不同的客户端
+    "", // 若有此项，客户端 shortId 可为空
+    "0123456789abcdef" // 0 到 f，长度为 2 的倍数，长度上限为 16
+  ]
+  // 客户端选项
+  "publicKey": "", // 服务端私钥对应的公钥
+  "shortId": "", // 服务端 shortIds 之一
+  "spiderX": "" // 爬虫初始路径与参数，建议每个客户端不同
+}
+```
+
+::: tip
+更多信息请参考 [REALITY 项目](https://github.com/XTLS/REALITY).
 :::
 
 #### CertificateObject

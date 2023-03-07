@@ -41,7 +41,7 @@
 - 服务器【地址】: `a-name.yourdomain.com`
 - 服务器【端口】: `443`
 - 连接的【协议】: `vless`
-- 连接的【流控】: `xtls-rprx-direct` (direct 模式适合全平台，若是 Linux/安卓用户，可改成 `xtls-rprx-splice` 性能全开)
+- 连接的【流控】: `xtls-rprx-vision` (vision 模式适合全平台)
 - 连接的【验证】: `uuiduuid-uuid-uuid-uuiduuiduuid`
 - 连接的【安全】: `"allowInsecure": false`
 

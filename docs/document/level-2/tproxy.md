@@ -4,7 +4,7 @@ title: TProxy 透明代理
 
 # 透明代理（TProxy）配置教程
 
-本配置基于[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)，加入了 Xray 的新特性，使用 VLESS + XTLS Splice 方案，并将旧教程中默认出站代理的分流方式改为默认出站直连，使用者请按照实际情况进行修改。
+本配置基于[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)，加入了 Xray 的新特性，使用 VLESS + XTLS Vision 方案，并将旧教程中默认出站代理的分流方式改为默认出站直连，使用者请按照实际情况进行修改。
 
 本文中所有配置已在 Raspberry Pi 2B、Ubuntu 20.04 环境下测试成功，如在其它环境中使用请自行调整配置。
 
@@ -76,7 +76,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
             "users": [
               {
                 "id": "UUID",
-                "flow": "xtls-rprx-splice",
+                "flow": "xtls-rprx-vision",
                 "encryption": "none"
               }
             ]

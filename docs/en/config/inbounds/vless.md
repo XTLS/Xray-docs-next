@@ -2,7 +2,6 @@
 
 ::: danger
 目前 VLESS 没有自带加密，请用于可靠信道，如 TLS。
-目前 VLESS 不支持分享。
 :::
 
 VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部分，可以作为 Xray 客户端和服务器之间的桥梁。
@@ -92,8 +91,5 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 - 无 `flow`，空字符或者 `none`：使用普通 TLS 代理
 - `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充
-- `xtls-rprx-vision,none`：使用新 XTLS 模式 同时兼容同端口使用普通 TLS 代理的客户端
-- `xtls-rprx-origin`：<Badge text="Deprecated" type="warning"/> 最初的流控模式，此时客户端仅可选择 `xtls-rprx-origin` 和 `xtls-rprx-origin-udp443` 这两种流控模式。该模式纪念价值大于实际使用价值。
-- `xtls-rprx-direct`：<Badge text="Deprecated" type="warning"/> 所有平台皆可使用的典型流控方式，此时客户端可选择任何流控模式
 
 此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
