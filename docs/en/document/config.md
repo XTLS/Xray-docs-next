@@ -96,4 +96,4 @@ The only thing to change in the above configuration is your server IP, which is 
   - Run `xray run -c /etc/xray/config.json`
   - Or use something like systemd to run Xray as a service in the background.
 
-For more detailed instructions, please refer to [Configuration](../config/) Document and [小小白话文](../documents/level-0/).
+For more detailed instructions, please refer to [Configuration](../config/) Document and [小小白话文](./level-0/).

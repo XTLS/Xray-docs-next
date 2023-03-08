@@ -267,8 +267,6 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 ### RealityObject
 
-Reality 在 TLS 一部分设定的基础上 有以下独有设置
-
 ```json
 {
   "show": false, // 选填，若为 true，输出调试信息
@@ -285,7 +283,7 @@ Reality 在 TLS 一部分设定的基础上 有以下独有设置
   "shortIds": [ // 必填，客户端可用的 shortId 列表，可用于区分不同的客户端
     "", // 若有此项，客户端 shortId 可为空
     "0123456789abcdef" // 0 到 f，长度为 2 的倍数，长度上限为 16
-  ]
+  ],
   // 客户端选项
   "show": false, // 选填，若为 true，输出调试信息
   "fingerprint": "chrome", // 必填，使用 uTLS 库模拟客户端 TLS 指纹

@@ -96,4 +96,4 @@
   - 运行 `xray run -c /etc/xray/config.json`
   - 或使用 systemd 等工具将 Xray 作为服务在后台运行。
 
-更多详细的说明可以参考 [配置文档](../config/) 和 [小小白话文](../document/level-0/)。
+更多详细的说明可以参考 [配置文档](../config/) 和 [小小白话文](./level-0/)。
