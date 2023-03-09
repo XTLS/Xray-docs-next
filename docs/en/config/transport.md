@@ -90,7 +90,7 @@
 
 连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
 
-> `security`: "none" | "tls" | "xtls"
+> `security`: "none" | "tls" | "reality"
 
 是否启用传输层加密，支持的选项有
 
