@@ -102,5 +102,5 @@ h2 Stream 初始窗口大小。当值小于等于 `0` 时，此功能不生效�
 :::
 
 ::: tip
-通过 Cloudflare CDN 时，可将值设为 `65536` 及以上，即禁用动态窗口机制（Dynamic Window）, 可防止 Cloudflare CDN 发送意外的 h2 GOAWAY 帧以关闭现有连接。
+通过 Cloudflare CDN 时，可将值设为 `65536` 及以上，即禁用动态窗口机制（Dynamic Window），可防止 Cloudflare CDN 发送意外的 h2 GOAWAY 帧以关闭现有连接。
 :::
