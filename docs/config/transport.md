@@ -438,7 +438,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 > `mark`: number
 
-一个整数。当其值非零时，在 ountbound 连接以此数值上标记 SO_MARK。
+一个整数。当其值非零时，在 outbound 连接上以此数值标记 SO_MARK。
 
 - 仅适用于 Linux 系统。
 - 需要 CAP_NET_ADMIN 权限。
