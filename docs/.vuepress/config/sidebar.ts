@@ -148,7 +148,7 @@ export function getDocumentLv2Sidebar(
         path + "transparent_proxy/transparent_proxy.md",
         path + "tproxy.md",
         path + "tproxy_ipv4_and_ipv6.md",
-        path + "nginx_tls_tunnel.md",
+        path + "nginx_or_haproxy_tls_tunnel.md",
         path + "iptables_gid.md",
         path + "redirect.md",
         path + "warp.md",
