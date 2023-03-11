@@ -1,18 +1,17 @@
-# API 接口
+# API Interface
 
-API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供远程调用。
+API interface configuration provides a set of APIs based on [gRPC](https://grpc.io/) for remote invocation.
 
-可以通过 api 配置模块开启接口. 当 api 配置开启时，Xray 会自建一个出站代理，须手动将所有的 API 入站连接通过 [路由规则配置](./routing.md) 指向这一出站代理。
+The interface can be enabled through the api configuration module. When the api configuration is enabled, Xray will create an outbound proxy automatically. All incoming API connections need to be manually routed to this outbound proxy through [routing rule configuration](./routing.md).
 
-请参考本节中的 [相关配置](#相关配置)
+Please refer to the [related configuration](#related-configuration) in this section.
 
 ::: warning
-大多数用户并不会用到此 API，新手可以直接忽略这一项。
-:::
+Most users do not need to use this API. Novices can ignore this item directly. :::
 
 ## ApiObject
 
-`ApiObject` 对应配置文件的 `api` 项。
+`ApiObject` corresponds to the `api` item in the configuration file.
 
 ```json
 {
@@ -25,15 +24,15 @@ API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 
 > `tag`: string
 
-出站代理标识。
+Outbound proxy identifier.
 
-> `services`: \[string\]
+> `services`: [string]
 
-开启的 API 列表，可选的值见 [API 列表](#支持的-api-列表)。
+List of enabled APIs, optional values can be found in [Supported API List](#supported-api-list).
 
-## 相关配置
+## Related Configuration
 
-可以在 inbounds 配置中增加一个 api 的 inbound
+An api inbound can be added to the inbounds configuration.
 
 ```json
 "inbounds": [
@@ -49,7 +48,7 @@ API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 ]
 ```
 
-在路由配置中增加针对 api inbound 的路由规则
+Add routing rules for the api inbound in the routing configuration.
 
 ```json
 "routing": {
@@ -65,30 +64,30 @@ API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 }
 ```
 
-## 支持的 API 列表
+## Supported API List
 
 ### HandlerService
 
-一些对于入站出站代理进行修改的 API，可用的功能如下：
+APIs that modify the inbound and outbound proxies, with the following available functions:
 
-- 添加一个新的入站代理；
-- 添加一个新的出站代理；
-- 删除一个现有的入站代理；
-- 删除一个现有的出站代理；
-- 在一个入站代理中添加一个用户（仅支持 VMess、VLESS、Trojan、Shadowsocks（v1.3.0+））；
-- 在一个入站代理中删除一个用户（仅支持 VMess、VLESS、Trojan、Shadowsocks（v1.3.0+））；
+- Add a new inbound proxy;
+- Add a new outbound proxy;
+- Delete an existing inbound proxy;
+- Delete an existing outbound proxy;
+- Add a user to an inbound proxy (VMess, VLESS, Trojan, and Shadowsocks(v1.3.0+) only);
+- Delete a user from an inbound proxy (VMess, VLESS, Trojan, and Shadowsocks(v1.3.0+) only);
 
 ### LoggerService
 
-支持对内置 Logger 的重启，可配合 logrotate 进行一些对日志文件的操作。
+Supports restarting the built-in logger, which can be used in conjunction with logrotate to perform operations on log files.
 
 ### StatsService
 
-内置的数据统计服务，详见 [统计信息](./stats.md)。
+Built-in data statistics service, see [Statistics Information](./stats.md) for details.
 
 ### ReflectionService
 
-支持 gRPC 客户端获取服务端的 API 列表。
+Supports gRPC clients to obtain the list of APIs from the server.
 
 ```bash
 $ grpcurl -plaintext localhost:10085 list
@@ -99,6 +98,6 @@ xray.app.proxyman.command.HandlerService
 xray.app.stats.command.StatsService
 ```
 
-## API 调用示例
+## API Calling Example
 
 [Xray-API-documents](https://github.com/XTLS/Xray-API-documents) @crossfw

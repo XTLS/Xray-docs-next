@@ -1,10 +1,10 @@
-# 统计信息
+# Traffic Statistics
 
-用于配置 Xray 流量数据的统计。
+Used to configure traffic statistics for Xray.
 
 ## StatsObject
 
-`StatsObject` 对应配置文件的 `stats` 项。
+The `StatsObject` corresponds to the `stats` item in the configuration file.
 
 ```json
 {
@@ -12,44 +12,44 @@
 }
 ```
 
-目前统计信息不需要任何参数，只要 `StatsObject` 项存在，内部的统计即会开启。
+Currently, no parameters are required for traffic statistics, and internal statistics will be enabled as long as the `StatsObject` item exists.
 
-开启了统计以后, 只需在 [Policy](./policy.md) 中开启对应的项，就可以统计对应的数据。
+After statistics are enabled, you only need to enable the corresponding items in the [Policy](./policy.md) to collect the corresponding data.
 
-## 获取统计信息
+## Retrieving Traffic Statistics
 
-可以用 `xray api` 的相关命令获取统计信息.
+You can use the `xray api` command to retrieve traffic statistics.
 
-目前已有的统计信息如下：
+The current traffic statistics are as follows:
 
-- 用户数据
+- User Data
 
   - `user>>>[email]>>>traffic>>>uplink`
 
-    特定用户的上行流量，单位字节。
+    The uplink traffic of a specific user, in bytes.
 
   - `user>>>[email]>>>traffic>>>downlink`
 
-    特定用户的下行流量，单位字节。
+    The downlink traffic of a specific user, in bytes.
 
 ::: tip
-如果对应用户没有指定 Email，则不会开启统计。
+If the corresponding user does not have an email specified, statistics will not be enabled.
 :::
 
-- 全局数据
+- Global Data
 
   - `inbound>>>[tag]>>>traffic>>>uplink`
 
-    特定 inbound 的上行流量，单位字节。
+    The uplink traffic of a specific inbound, in bytes.
 
   - `inbound>>>[tag]>>>traffic>>>downlink`
 
-    特定 inbound 的下行流量，单位字节。
+    The downlink traffic of a specific inbound, in bytes.
 
   - `outbound>>>[tag]>>>traffic>>>uplink`
 
-    特定 outbound 的上行流量，单位字节。
+    The uplink traffic of a specific outbound, in bytes.
 
   - `outbound>>>[tag]>>>traffic>>>downlink`
 
-    特定 outbound 的下行流量，单位字节。
+    The downlink traffic of a specific outbound, in bytes.
