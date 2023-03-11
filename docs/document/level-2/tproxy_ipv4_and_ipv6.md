@@ -49,8 +49,7 @@ title: TProxy 透明代理 (ipv4 and ipv6)
       },
       "streamSettings": {
         "sockopt": {
-          "tproxy": "tproxy",
-          "mark": 255
+          "tproxy": "tproxy"
         }
       }
     },
