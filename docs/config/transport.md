@@ -272,7 +272,8 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
   "show": false, // 选填，若为 true，输出调试信息
   "dest": "example.com:443", // 必填，格式同 VLESS fallbacks 的 dest
   "xver": 0, // 选填，格式同 VLESS fallbacks 的 xver
-  "serverNames": [ // 必填，客户端可用的 serverName 列表，暂不支持 * 通配符
+  "serverNames": [
+    // 必填，客户端可用的 serverName 列表，暂不支持 * 通配符
     "example.com",
     "www.example.com"
   ],
@@ -280,7 +281,8 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
   "minClientVer": "", // 选填，客户端 Xray 最低版本，格式为 x.y.z
   "maxClientVer": "", // 选填，客户端 Xray 最高版本，格式为 x.y.z
   "maxTimeDiff": 0, // 选填，允许的最大时间差，单位为毫秒
-  "shortIds": [ // 必填，客户端可用的 shortId 列表，可用于区分不同的客户端
+  "shortIds": [
+    // 必填，客户端可用的 shortId 列表，可用于区分不同的客户端
     "", // 若有此项，客户端 shortId 可为空
     "0123456789abcdef" // 0 到 f，长度为 2 的倍数，长度上限为 16
   ],
