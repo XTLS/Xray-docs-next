@@ -553,6 +553,8 @@ WantedBy=multi-user.target
 ::: tip DNS 设置
 
 此配置劫持 DNS 流量，DNS 可以随便写
+
+建议设置为旁路由 IP，防止 DNS 泄露
 :::
 
 <img width="231" alt="image" src="https://user-images.githubusercontent.com/110686480/208310266-632e36b9-a23b-4b90-aa28-583b50e87c66.png"> <img width="238" alt="image" src="https://user-images.githubusercontent.com/110686480/208309659-e3172218-ef27-4a94-a017-225f8e05b611.png">
