@@ -1,42 +1,45 @@
-# 内置 DNS 服务器
+# Built-in DNS Server
 
-## DNS 服务器
+## DNS Server
 
-Xray 内置的 DNS 模块，主要有两大用途：
+The DNS module built into Xray has two main purposes:
 
-- 在路由阶段, 解析域名为 IP, 并且根据域名解析得到的 IP 进行规则匹配以分流. 是否解析域名及分流和路由配置模块中 `domainStrategy` 的值有关, 只有在设置以下两种值时,才会使用内置 DNS 服务器进行 DNS 查询:
-
-  - "IPIfNonMatch", 请求一个域名时，进行路由里面的 domain 进行匹配，若无法匹配到结果，则对这个域名使用内置 DNS 服务器进行 DNS 查询，并且使用查询返回的 IP 地址再重新进行 IP 路由匹配。
-  - "IPOnDemand", 当匹配时碰到任何基于 IP 的规则，将域名立即解析为 IP 进行匹配。
-
-- 解析目标地址进行连接。
-  - 如 在 `freedom` 出站中，将 `domainStrategy` 设置为 `UseIP`, 由此出站发出的请求, 会先将域名通过内置服务器解析成 IP, 然后进行连接。
-  - 如 在 `sockopt` 中，将 `domainStrategy` 设置为 `UseIP`, 此出站发起的系统连接，将先由内置服务器解析为 IP, 然后进行连接。
+- During the routing phase, it resolves domain names to IP addresses and performs traffic splitting based on the results of domain name resolution and the value of `domainStrategy` in the routing configuration module. The built-in DNS server is only used for DNS queries when either of the following values is set:
+  - "IPIfNonMatch": When a domain name is requested, it first tries to match it against the `domain` entries in the routing configuration. If no match is found, the built-in DNS server is used to perform a DNS query for the domain name, and the returned IP address is used to perform IP routing matching again.
+  - "IPOnDemand": When a domain name is matched against any IP-based rule, it is immediately resolved to an IP address for matching.
+- It resolves the target address for connection.
+  - In the `freedom` outbound setting, if `domainStrategy` is set to `UseIP`, requests made through the outbound proxy will first resolve the domain name to an IP address using the built-in server before making the connection.
+  - In the `sockopt` setting, if `domainStrategy` is set to `UseIP`, system connections initiated through the outbound proxy will first be resolved to an IP address using the built-in server before making the connection.
 
 ::: tip TIP 1
-内置 DNS 服务器所发出的 DNS 查询请求，会自动根据路由配置进行转发。
+DNS queries sent by the built-in DNS server are automatically forwarded based on the routing configuration.
 :::
 
 ::: tip TIP 2
-只支持最基本的 IP 查询（A 和 AAAA 记录），CNAME 记录将会重复查询直至返回 A/AAAA 记录为止。其他查询不会进入内置 DNS 服务器。
+Only basic IP queries (A and AAAA records) are supported. CNAME records will be queried repeatedly until an A/AAAA record is returned. Other queries will not enter the built-in DNS server.
 :::
 
-## DNS 处理流程
+## DNS Processing Flow
 
-若当前要查询的域名：
+If the domain name to be queried:
 
-- 命中了 `hosts` 中的「域名 - IP」、「域名 - IP 数组」映射，则将该 IP 或 IP 数组作为 DNS 解析结果返回。
-- 命中了 `hosts` 中的「域名 - 域名」映射，则该映射的值（另一个域名）将作为当前要查询的域名，进入 DNS 处理流程，直到解析出 IP 后返回，或返回空解析。
-- 没有命中 `hosts`，但命中了某（几）个 DNS 服务器中的 `domains` 域名列表，则按照命中的规则的优先级，依次使用该规则对应的 DNS 服务器进行查询。若命中的 DNS 服务器查询失败或 `expectIPs` 不匹配，则使用下一个命中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有命中的 DNS 服务器均查询失败或 `expectIPs` 不匹配，此时 DNS 组件：
-  - 默认会进行 「DNS 回退（fallback）查询」：使用「上一轮失败查询中未被使用的、且 `skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若查询失败或 `expectIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
-  - 若 `disableFallback` 设置为 `true`，则不会进行「DNS 回退（fallback）查询」。
-- 既没有命中 `hosts`，又没有命中 DNS 服务器中的 `domains` 域名列表，则：
-  - 默认使用「`skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若第一个被选中的 DNS 服务器查询失败或 `expectIPs` 不匹配，则使用下一个被选中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有被选中的 DNS 服务器均查询失败或 `expectIPs` 不匹配，返回空解析。
-  - 若「`skipFallback` 为默认值 `false` 的 DNS 服务器」数量为 0 或 `disableFallback` 设置为 `true`，则使用 DNS 配置中的第一个 DNS 服务器进行查询。查询失败或 `expectIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
+- Matches the mapping of "domain name - IP" or "domain name - IP array" in the `hosts`, then the IP or IP array will be returned as the DNS resolution result.
+
+- Matches the mapping of "domain name - domain name" in the `hosts`, then the value of this mapping (another domain name) will be used as the domain name to be queried, and enter the DNS processing flow until an IP is resolved and returned, or an empty resolution is returned.
+
+- Does not match `hosts`, but matches the `domains` list in one or more DNS servers, then according to the priority of the matching rule, use the DNS server corresponding to the rule to perform the query in sequence. If the DNS server that is hit fails to query or `expectIPs` does not match, then use the next hit DNS server to perform the query. Otherwise, return the resolved IP. If all hit DNS servers fail to query or `expectIPs` does not match, then the DNS component:
+
+  - By default, it will perform "DNS fallback query": use the "DNS server that has not been used in the last failed query and has a default value of `false` for `skipFallback`" to perform the query in sequence. If the query fails or `expectIPs` does not match, return an empty resolution; otherwise, return the resolved IP.
+  - If `disableFallback` is set to `true`, "DNS fallback query" will not be performed.
+
+- If neither `hosts` nor the `domains` list in DNS servers matches, then:
+
+  - By default, use the "DNS server that has a default value of `false` for `skipFallback`" to perform the query in sequence. If the first selected DNS server fails to query or `expectIPs` does not match, then use the next selected DNS server to perform the query. Otherwise, return the resolved IP. If all selected DNS servers fail to query or `expectIPs` does not match, return an empty resolution.
+  - If the number of "DNS servers that have a default value of `false` for `skipFallback`" is 0 or `disableFallback` is set to `true`, use the first DNS server in the DNS configuration to perform the query. If the query fails or `expectIPs` does not match, return an empty resolution; otherwise, return the resolved IP.
 
 ## DnsObject
 
-`DnsObject` 对应配置文件的 `dns` 项。
+`DnsObject` corresponds to the `dns` section in the configuration file.
 
 ```json
 {
@@ -70,83 +73,83 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 > `hosts`: map{string: address} | map{string: [address]}
 
-静态 IP 列表，其值为一系列的 "域名": "地址" 或 "域名": ["地址 1","地址 2"]。其中地址可以是 IP 或者域名。在解析域名时，如果域名匹配这个列表中的某一项:
+A list of static IP addresses, with values consisting of a series of "domain": "address" or "domain": ["address 1","address 2"]. The address can be an IP or a domain name. When resolving a domain name, if the domain name matches an item in this list:
 
-- 当该项的地址为 IP 时，则解析结果为该项的 IP
-- 当该项的地址为域名时，会使用此域名进行 IP 解析，而不使用原始域名。
-- 当地址中同时设置了多个 IP 和域名，则只会返回第一个域名，其余 IP 和域名均被忽略。
+- If the address of the item is an IP, the resolution result will be that IP.
+- If the address of the item is a domain name, this domain name will be used for IP resolution instead of the original domain name.
+- If multiple IPs and domain names are set in the address, only the first domain name will be returned, and the rest of the IPs and domain names will be ignored.
 
-域名的格式有以下几种形式：
+The domain name can take several forms:
 
-- 纯字符串：当此字符串完整匹配目标域名时，该规则生效。例如 "xray.com" 匹配 "xray.com"，但不匹配 "www.xray.com"。
-- 正则表达式：由 `"regexp:"` 开始，余下部分是一个正则表达式。当此正则表达式匹配目标域名时，该规则生效。例如 "regexp:\\\\.goo.\*\\\\.com\$" 匹配 "www.google.com"、"fonts.googleapis.com"，但不匹配 "google.com"。
-- 子域名 (推荐)：由 `"domain:"` 开始，余下部分是一个域名。当此域名是目标域名或其子域名时，该规则生效。例如 "domain:xray.com" 匹配 "www.xray.com" 与 "xray.com"，但不匹配 "wxray.com"。
-- 子串：由 `"keyword:"` 开始，余下部分是一个字符串。当此字符串匹配目标域名中任意部分，该规则生效。比如 "keyword:sina.com" 可以匹配 "sina.com"、"sina.com.cn" 和 "www.sina.com"，但不匹配 "sina.cn"。
-- 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](./routing.md#预定义域名列表)。
+- Plain string: When this string matches the target domain name exactly, the rule takes effect. For example, "xray.com" matches "xray.com" but not "www.xray.com".
+- Regular expression: Starting with `"regexp:"`, the rest is a regular expression. When this regular expression matches the target domain name, the rule takes effect. For example, "regexp:\\.goo.\*\\.com$" matches "www.google.com" and "fonts.googleapis.com", but not "google.com".
+- Subdomain (recommended): Starting with `"domain:"`, the rest is a domain name. When this domain name is the target domain name or its subdomain, the rule takes effect. For example, "domain:xray.com" matches "www.xray.com" and "xray.com", but not "wxray.com".
+- Substring: Starting with `"keyword:"`, the rest is a string. When this string matches any part of the target domain name, the rule takes effect. For example, "keyword:sina.com" can match "sina.com", "sina.com.cn", and "www.sina.com", but not "sina.cn".
+- Predefined domain name list: Starting with `"geosite:"`, the rest is a name, such as `geosite:google` or `geosite:cn`. The names and domain name lists are listed in [Predefined Domain Name Lists](#predefined-domain-name-lists).
 
-> `servers`: \[string | [ServerObject](#serverobject) \]
+> `servers`: [string | [ServerObject](#serverobject) ]
 
-一个 DNS 服务器列表，支持的类型有两种：DNS 地址（字符串形式）和 [ServerObject](#serverobject) 。
+A list of DNS servers that supports two types: DNS addresses (in string format) and [ServerObject](#serverobject).
 
-当值为 `"localhost"` 时，表示使用本机预设的 DNS 配置。
+When the value is `"localhost"`, it means to use the default DNS configuration on the local machine.
 
-当它的值是一个 DNS `"IP:Port"` 地址时，如 `"8.8.8.8:53"`，Xray 会使用此地址的指定 UDP 端口进行 DNS 查询。该查询遵循路由规则。不指定端口时，默认使用 53 端口。
+When the value is a DNS `"IP:Port"` address, such as `"8.8.8.8:53"`, Xray will use the specified UDP port of this address for DNS queries. The query follows the routing rules. When the port is not specified, the default port 53 is used.
 
-当值是 `"tcp://host:port"` 的形式，如 `"tcp://8.8.8.8:53"`，Xray 会使用 `DNS over TCP` 进行查询。该查询遵循路由规则。不指定端口时，默认使用 53 端口。
+When the value is in the form of `"tcp://host:port"`, such as `"tcp://8.8.8.8:53"`, Xray will use `DNS over TCP` for queries. The query follows the routing rules. When the port is not specified, the default port 53 is used.
 
-当值是 `"tcp+local://host:port"` 的形式，如 `"tcp+local://8.8.8.8:53"`，Xray 会使用 `TCP 本地模式 (TCPL)` 进行查询。即 DNS 请求不会经过路由组件，直接通过 Freedom outbound 对外请求，以降低耗时。不指定端口时，默认使用 53 端口。
+When the value is in the form of `"tcp+local://host:port"`, such as `"tcp+local://8.8.8.8:53"`, Xray will use `TCP local mode (TCPL)` for queries. That is, DNS requests will not pass through the routing component and will directly request outbound through Freedom, to reduce latency. When the port is not specified, the default port 53 is used.
 
-当值是 `"https://host:port/dns-query"` 的形式，如 `"https://dns.google/dns-query"`，Xray 会使用 `DNS over HTTPS` (RFC8484, 简称 DOH) 进行查询。有些服务商拥有 IP 别名的证书，可以直接写 IP 形式，比如 `https://1.1.1.1/dns-query`。也可使用非标准端口和路径，如 `"https://a.b.c.d:8443/my-dns-query"`
+When the value is in the form of `"https://host:port/dns-query"`, such as `"https://dns.google/dns-query"`, Xray will use `DNS over HTTPS` (RFC8484, abbreviated as DOH) for queries. Some service providers have certificates with IP aliases, which can be directly written in IP form, such as `https://1.1.1.1/dns-query`. Non-standard ports and paths can also be used, such as `"https://a.b.c.d:8443/my-dns-query"`.
 
-当值是 `"https+local://host:port/dns-query"` 的形式，如 `"https+local://dns.google/dns-query"`，Xray 会使用 `DOH 本地模式 (DOHL)` 进行查询，即 DOH 请求不会经过路由组件，直接通过 Freedom outbound 对外请求，以降低耗时。一般适合在服务端使用。也可使用非标端口和路径。
+When the value is in the form of `"https+local://host:port/dns-query"`, such as `"https+local://dns.google/dns-query"`, Xray will use `DOH local mode (DOHL)` for queries. That is, DOH requests will not pass through the routing component and will directly request outbound through Freedom, to reduce latency. This is generally suitable for use on the server side. Non-standard ports and paths can also be used.
 
-当值是 `"quic+local://host"` 的形式，如 `"quic+local://dns.adguard.com"`，Xray 会使用 `DNS over QUIC 本地模式 (DOQL)` 进行查询，即 DNS 请求不会经过路由组件，直接通过 Freedom outbound 对外请求。该方式需要 DNS 服务器支持 DNS over QUIC。默认使用 784 端口进行查询，可以使用非标端口。
+When the value is in the form of `"quic+local://host"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DNS over QUIC local mode (DOQL)` for queries. That is, DNS requests will not pass through the routing component and will directly request outbound through Freedom. This method requires DNS server support for DNS over QUIC. The default port 784 is used for queries, and non-standard ports can also be used.
 
-当值是 `fakedns` 时，将使用 FakeDNS 功能进行查询。
+When the value is `fakedns`, the FakeDNS function will be used for queries.
 
 ::: tip TIP 1
-当使用 `localhost` 时，本机的 DNS 请求不受 Xray 控制，需要额外的配置才可以使 DNS 请求由 Xray 转发。
+When using `localhost`, DNS requests on the local machine are not controlled by Xray and additional configuration is required to make DNS requests forwarded by Xray.
 :::
 
 ::: tip TIP 2
-不同规则初始化得到的 DNS 客户端会在 Xray 启动日志中以 `info` 级别体现，比如 `local DOH`、`remote DOH` 和 `udp` 等模式。
+DNS clients initialized with different rules will be reflected in the Xray startup log at the `info` level, such as `local DOH`, `remote DOH`, and `udp` modes.
 :::
 
 ::: tip TIP 3
-(v1.4.0+) 可以在 [日志](./log.md) 中打开 DNS 查询日志。
+(v1.4.0+) DNS query logging can be enabled in the [log](./log.md).
 :::
 
 > `clientIp`: string
 
-用于 DNS 查询时通知服务器以指定 IP 位置。不能是私有地址。
+Used to notify the server of the specified IP location during DNS queries. Cannot be a private address.
 
 ::: tip TIP 1
-需要 DNS 服务器支持 EDNS Client Subnet。
+EDNS Client Subnet support is required for the DNS server.
 :::
 
 ::: tip TIP 2
-可以在 [DnsObject](#dnsobject) 为所有 DNS 服务器指定 clientIp, 也可在每个 DNS 服务器配置的 [ServerObject](#serverobject) 为此 DNS 服务器指定 clientIp （优先级高于 [DnsObject](#dnsobject) 的配置）。
+You can specify `clientIp` for all DNS servers in [DnsObject](#dnsobject), or specify it for each DNS server in the configuration of [ServerObject](#serverobject) (which has higher priority than the configuration in [DnsObject](#dnsobject)).
 :::
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6"
 
-`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。默认值为 `UseIP`，即查询 A 和 AAAA 记录。
+`UseIPv4` only queries A records; `UseIPv6` only queries AAAA records. The default value is `UseIP`, which queries both A and AAAA records.
 
 > `disableCache`: true | false
 
-`true` 禁用 DNS 缓存，默认为 `false`，即不禁用。
+`true` disables DNS caching, default is `false` which means caching is not disabled.
 
 > `disableFallback`: true | false
 
-`true` 禁用 DNS 的 fallback 查询，默认为 `false`，即不禁用。
+`true` disables fallback DNS queries, default is `false` which means fallback queries are not disabled.
 
 > `disableFallbackIfMatch`: true | false
 
-`true` 当 DNS 服务器的优先匹配域名列表命中时，禁用 fallback 查询，默认为 `false`，即不禁用。
+`true` disables fallback DNS queries when the matching domain list of the DNS server is hit, default is `false` which means fallback queries are not disabled.
 
 > `tag`: string
 
-由内置 DNS 发出的查询流量，除 `localhost`、`fakedns`、`TCPL`、`DOHL` 和 `DOQL` 模式外，都可以用此标识在路由使用 `inboundTag` 进行匹配。
+Traffic generated by built-in DNS, except for `localhost`, `fakedns`, `TCPL`, `DOHL`, and `DOQL` modes, can be matched with `inboundTag` in routing using this identifier.
 
 ### ServerObject
 
@@ -163,40 +166,40 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 > `address`: address
 
-一个 DNS 服务器列表，支持的类型有两种：DNS 地址（字符串形式）和 ServerObject 。
+A list of DNS servers, which can be either DNS addresses (in string form) or ServerObjects.
 
-当值为 `"localhost"` 时，表示使用本机预设的 DNS 配置。
+When the value is `"localhost"`, it means using the local DNS configuration.
 
-当它的值是一个 DNS `"IP"` 地址时，如 `"8.8.8.8"`，Xray 会使用此地址的指定 UDP 端口进行 DNS 查询。该查询遵循路由规则。默认使用 53 端口。
+When the value is a DNS `"IP"` address, such as `"8.8.8.8"`, Xray will use the specified UDP port of this address for DNS queries. The query follows routing rules. By default, port 53 is used.
 
-当值是 `"tcp://host"` 的形式，如 `"tcp://8.8.8.8"`，Xray 会使用 `DNS over TCP` 进行查询。该查询遵循路由规则。默认使用 53 端口。
+When the value is in the form of `"tcp://host"`, such as `"tcp://8.8.8.8"`, Xray will use `DNS over TCP` for the query. The query follows routing rules. By default, port 53 is used.
 
-当值是 `"tcp+local://host"` 的形式，如 `"tcp+local://8.8.8.8"`，Xray 会使用 `TCP 本地模式 (TCPL)` 进行查询。即 DNS 请求不会经过路由组件，直接通过 Freedom outbound 对外请求，以降低耗时。不指定端口时，默认使用 53 端口。
+When the value is in the form of `"tcp+local://host"`, such as `"tcp+local://8.8.8.8"`, Xray will use `TCP local mode (TCPL)` for the query. That is, the DNS request will not go through the routing component and will be sent directly through the Freedom outbound to reduce latency. When no port is specified, port 53 is used by default.
 
-当值是 `"https://host:port/dns-query"` 的形式，如 `"https://dns.google/dns-query"`，Xray 会使用 `DNS over HTTPS` (RFC8484, 简称 DOH) 进行查询。有些服务商拥有 IP 别名的证书，可以直接写 IP 形式，比如 `https://1.1.1.1/dns-query`。也可使用非标准端口和路径，如 `"https://a.b.c.d:8443/my-dns-query"`
+When the value is in the form of `"https://host:port/dns-query"`, such as `"https://dns.google/dns-query"`, Xray will use `DNS over HTTPS` (RFC8484, abbreviated as DOH) for the query. Some service providers have IP alias certificates, which can be directly written in IP form, such as `https://1.1.1.1/dns-query`. Non-standard ports and paths can also be used, such as `"https://a.b.c.d:8443/my-dns-query"`.
 
-当值是 `"https+local://host:port/dns-query"` 的形式，如 `"https+local://dns.google/dns-query"`，Xray 会使用 `DOH 本地模式 (DOHL)` 进行查询，即 DOH 请求不会经过路由组件，直接通过 Freedom outbound 对外请求，以降低耗时。一般适合在服务端使用。也可使用非标端口和路径。
+When the value is in the form of `"https+local://host:port/dns-query"`, such as `"https+local://dns.google/dns-query"`, Xray will use `DOH local mode (DOHL)` for the query, which means that the DOH request will not go through the routing component and will be sent directly through the Freedom outbound to reduce latency. This is generally suitable for server-side use. Non-standard ports and paths can also be used.
 
-当值是 `"quic+local://host:port"` 的形式，如 `"quic+local://dns.adguard.com"`，Xray 会使用 `DOQ 本地模式 (DOQL)` 进行查询，即 DNS 请求不会经过路由组件，直接通过 Freedom outbound 对外请求。该方式需要 DNS 服务器支持 DNS over QUIC。默认使用 784 端口进行查询，可以使用非标端口。
+When the value is in the form of `"quic+local://host:port"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DOQ local mode (DOQL)` for the query, which means that the DNS request will not go through the routing component and will be sent directly through the Freedom outbound. This method requires DNS server support for DNS over QUIC. By default, port 784 is used for the query, and non-standard ports can be used.
 
-当值是 `fakedns` 时，将使用 FakeDNS 功能进行查询。
+When the value is `fakedns`, FakeDNS functionality will be used for the query.
 
 > `port`: number
 
-DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH、DOHL、DOQL 模式时该项无效，非标端口应在 URL 中指定。
+The port number of the DNS server, such as `53`. If not specified, the default is `53`. This item is not applicable when using DOH, DOHL, or DOQL modes, and non-standard ports should be specified in the URL.
 
-> `domains`: \[string\]
+> `domains`: [string]
 
-一个域名列表，此列表包含的域名，将优先使用此服务器进行查询。域名格式和 [路由配置](./routing.md#ruleobject) 中相同。
+A list of domain names. The domain names in this list will be queried using this server first. The format of domain names is the same as in [routing configuration](./routing.md#ruleobject).
 
-> `expectIPs`:\[string\]
+> `expectIPs`: [string]
 
-一个 IP 范围列表，格式和 [路由配置](./routing.md#ruleobject) 中相同。
+A list of IP ranges in the same format as in [routing configuration](./routing.md#ruleobject).
 
-当配置此项时，Xray DNS 会对返回的 IP 的进行校验，只返回包含 expectIPs 列表中的地址。
+When this item is configured, Xray DNS will verify the returned IP addresses and only return addresses that are included in the `expectIPs` list.
 
-如果未配置此项，会原样返回 IP 地址。
+If this item is not configured, the IP address will be returned as is.
 
 > `skipFallback`: true | false
 
-`true`，在进行 DNS fallback 查询时将跳过此服务器, 默认为 `false`，即不跳过。
+`true` means to skip this server when performing DNS fallback queries, and the default is `false`, which means not to skip.

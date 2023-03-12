@@ -1,14 +1,14 @@
-# 路由
+# Routing
 
-路由功能模块可以将入站数据按不同规则由不同的出站连接发出，以达到按需代理的目的。
+The routing module can send inbound data through different outbound connections according to different rules to achieve on-demand proxying.
 
-如常见用法是分流国内外流量，Xray 可以通过内部机制判断不同地区的流量，然后将它们发送到不同的出站代理。
+A common use case is to split domestic and foreign traffic. Xray can use its internal mechanisms to determine the traffic from different regions and then send them to different outbound proxies.
 
-有关路由功能更详细的解析：[路由 (routing) 功能简析](https://xtls.github.io/document/level-1/routing-lv1-part1.html)
+For a more detailed analysis of the routing function, please refer to [Routing Function Analysis](https://xtls.github.io/document/level-1/routing-lv1-part1.html).
 
 ## RoutingObject
 
-`RoutingObject` 对应配置文件的 `routing` 项。
+`RoutingObject` corresponds to the `routing` item in the configuration file.
 
 ```json
 {
@@ -23,36 +23,39 @@
 
 > `domainStrategy`: "AsIs" | "IPIfNonMatch" | "IPOnDemand"
 
-域名解析策略，根据不同的设置使用不同的策略。
+The domain name resolution strategy, which uses different strategies based on different settings.
 
-- `"AsIs"`：只使用域名进行路由选择。默认值。
-- `"IPIfNonMatch"`：当域名没有匹配任何规则时，将域名解析成 IP（A 记录或 AAAA 记录）再次进行匹配；
-  - 当一个域名有多个 A 记录时，会尝试匹配所有的 A 记录，直到其中一个与某个规则匹配为止；
-  - 解析后的 IP 仅在路由选择时起作用，转发的数据包中依然使用原始域名；
-- `"IPOnDemand"`：当匹配时碰到任何基于 IP 的规则，将域名立即解析为 IP 进行匹配；
+- `"AsIs"`: Use only the domain name for routing selection. Default value.
+
+- `"IPIfNonMatch"`: If the domain name does not match any rule, resolve the domain name into an IP address (A record or AAAA record) and match it again;
+
+  - When a domain name has multiple A records, it will try to match all A records until one of them matches a rule;
+  - The resolved IP only works for routing selection, and the original domain name is still used in the forwarded packets;
+
+- `"IPOnDemand"`: If any IP-based rules are encountered during matching, immediately resolve the domain name into an IP address for matching;
 
 > `domainMatcher`: "hybrid" | "linear"
 
-域名匹配算法，根据不同的设置使用不同的算法。此处选项会影响所有未单独指定匹配算法的 `RuleObject`。
+The domain name matching algorithm, which uses different algorithms based on different settings. This option affects all `RuleObject` that do not have a separately specified matching algorithm.
 
-- `"hybrid"`：使用新的域名匹配算法，速度更快且占用更少。默认值。
-- `"linear"`：使用原来的域名匹配算法。
+- `"hybrid"`: Use the new domain name matching algorithm, which is faster and takes up less space. Default value.
+- `"linear"`: Use the original domain name matching algorithm.
 
-> `rules`: \[[RuleObject](#ruleobject)\]
+> `rules`: [[RuleObject](#ruleobject)]
 
-对应一个数组，数组中每一项是一个规则。
+An array corresponding to a list of rules.
 
-对于每一个连接，路由将根据这些规则从上到下依次进行判断，当遇到第一个生效规则时，即将这个连接转发至它所指定的 `outboundTag`或 `balancerTag`。
+For each connection, the routing will judge these rules from top to bottom in order. When it encounters the first effective rule, it will forward the connection to the `outboundTag` or `balancerTag` specified by the rule.
 
 ::: tip
-当没有匹配到任何规则时，流量默认由第一个 outbound 发出。
+When no rules match, the traffic is sent out by the first outbound by default.
 :::
 
-> `balancers`: \[ [BalancerObject](#balancerobject) \]
+> `balancers`: [ [BalancerObject](#balancerobject) ]
 
-一个数组，数组中每一项是一个负载均衡器的配置。
+An array corresponding to a list of load balancers.
 
-当一个规则指向一个负载均衡器时，Xray 会通过此负载均衡器选出一个 outbound, 然后由它转发流量。
+When a rule points to a load balancer, Xray selects an outbound through this load balancer, and then it forwards the traffic through it.
 
 ### RuleObject
 
@@ -76,114 +79,118 @@
 ```
 
 ::: danger
-当多个属性同时指定时，这些属性需要**同时**满足，才可以使当前规则生效。
+When multiple attributes are specified at the same time, these attributes need to be satisfied **simultaneously** in order for the current rule to take effect.
 :::
 
 > `domainMatcher`: "hybrid" | "linear"
 
-域名匹配算法，根据不同的设置使用不同的算法。此处选项优先级高于 `RoutingObject` 中配置的 `domainMatcher`。
+The domain matching algorithm used varies depending on the settings. The option here takes priority over the `domainMatcher` configured in `RoutingObject`.
 
-- `"hybrid"`：使用新的域名匹配算法，速度更快且占用更少。默认值。
-- `"linear"`：使用原来的域名匹配算法。
+- `"hybrid"`: uses a new domain matching algorithm that is faster and takes up less space. This is the default value.
+- `"linear"`: uses the original domain matching algorithm.
 
 > `type`: "field"
 
-目前只支持`"field"`这一个选项。
+Currently, only the option `"field"` is supported.
 
-> `domain`: \[string\]
+> `domain`: [string]
 
-一个数组，数组每一项是一个域名的匹配。有以下几种形式：
+An array where each item is a domain match. There are several forms:
 
-- 纯字符串：当此字符串匹配目标域名中任意部分，该规则生效。比如 "sina.com" 可以匹配 "sina.com"、"sina.com.cn" 和 "www.sina.com"，但不匹配 "sina.cn"。
-- 正则表达式：由 `"regexp:"` 开始，余下部分是一个正则表达式。当此正则表达式匹配目标域名时，该规则生效。例如 "regexp:\\\\.goo.\*\\\\.com\$" 匹配 "www.google.com" 或 "fonts.googleapis.com"，但不匹配 "google.com"。
-- 子域名（推荐）：由 `"domain:"` 开始，余下部分是一个域名。当此域名是目标域名或其子域名时，该规则生效。例如 "domain:xray.com" 匹配 "www.xray.com"、"xray.com"，但不匹配 "wxray.com"。
-- 完整匹配：由 `"full:"` 开始，余下部分是一个域名。当此域名完整匹配目标域名时，该规则生效。例如 "full:xray.com" 匹配 "xray.com" 但不匹配 "www.xray.com"。
-- 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](#预定义域名列表)。
-- 从文件中加载域名：形如 `"ext:file:tag"`，必须以 `ext:`（小写）开头，后面跟文件名和标签，文件存放在 [资源目录](./features/env.md#资源文件路径) 中，文件格式与 `geosite.dat` 相同，标签必须在文件中存在。
+- Plain string: If this string matches any part of the target domain, the rule takes effect. For example, "sina.com" can match "sina.com", "sina.com.cn", and "www.sina.com", but not "sina.cn".
+- Regular expression: Starts with `"regexp:"` followed by a regular expression. When this regular expression matches the target domain, the rule takes effect. For example, "regexp:\\.goo.\*\\.com$" matches "www.google.com" or "fonts.googleapis.com", but not "google.com".
+- Subdomain (recommended): Starts with `"domain:"` followed by a domain. When this domain is the target domain or a subdomain of the target domain, the rule takes effect. For example, "domain:xray.com" matches "www.xray.com" and "xray.com", but not "wxray.com".
+- Exact match: Starts with `"full:"` followed by a domain. When this domain is an exact match for the target domain, the rule takes effect. For example, "full:xray.com" matches "xray.com" but not "www.xray.com".
+- Predefined domain list: Starts with `"geosite:"` followed by a name such as `geosite:google` or `geosite:cn`. The names and domain lists are listed in [Predefined Domain List](#predefined-domain-list).
+- Load domains from a file: Formatted as `"ext:file:tag"`, where the file is stored in the [resource directory](./features/env.md#resource-file-path) and has the same format as `geosite.dat`. The tag must exist in the file.
 
 ::: tip
-`"ext:geoip.dat:cn"` 等价于 `"geoip:cn"`
+`"ext:geoip.dat:cn"` is equivalent to `"geoip:cn"`
 :::
 
-> `ip`: \[string\]
+`ip`: [string]
 
-一个数组，数组内每一项代表一个 IP 范围。当某一项匹配目标 IP 时，此规则生效。有以下几种形式：
+An array where each item represents an IP range. This rule will take effect when the target IP matches any of the IP ranges in the array. There are several types of IP ranges:
 
-- IP：形如 `"127.0.0.1"`。
-- [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)：形如 `"10.0.0.0/8"`。
-- 预定义 IP 列表：此列表预置于每一个 Xray 的安装包中，文件名为 `geoip.dat`。使用方式形如 `"geoip:cn"`，必须以 `geoip:`（小写）开头，后面跟双字符国家代码，支持几乎所有可以上网的国家。
-  - 特殊值：`"geoip:private"`，包含所有私有地址，如 `127.0.0.1`。
-- 从文件中加载 IP：形如 `"ext:file:tag"`，必须以 `ext:`（小写）开头，后面跟文件名和标签，文件存放在 [资源目录](./features/env.md#资源文件路径) 中，文件格式与 `geoip.dat` 相同标签必须在文件中存在。
+- IP: In the format of `"127.0.0.1"`.
 
-> `port`：number | string
+- [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing): In the format of `"10.0.0.0/8"`.
 
-目标端口范围，有三种形式：
+- Predefined IP lists: These lists are included in every Xray installation package under the file name `geoip.dat`. They can be used in the format of `"geoip:cn"`, where `cn` is a two-letter country code. The prefix `geoip:`(all lowercase) must be used, and nearly all countries that have internet access are supported.
 
-- `"a-b"`：a 和 b 均为正整数，且小于 65536。这个范围是一个前后闭合区间，当目标端口落在此范围内时，此规则生效。
-- `a`：a 为正整数，且小于 65536。当目标端口为 a 时，此规则生效。
-- 以上两种形式的混合，以逗号 "," 分隔。形如：`"53,443,1000-2000"`。
+  - Special value: `"geoip:private"`, which includes all private addresses, such as `127.0.0.1`.
 
-> `sourcePort`：number | string
+- Loading IP from a file: In the format of `"ext:file:tag"`, where `file` is the file name and `tag` is a label that must exist in the file. The prefix `ext:` (all lowercase) must be used, and the file should be located in the [resource directory](./features/env.md#resource-file-path) with the same format as `geoip.dat`.
 
-来源端口，有三种形式：
+> `port`: number | string
 
-- `"a-b"`：a 和 b 均为正整数，且小于 65536。这个范围是一个前后闭合区间，当目标端口落在此范围内时，此规则生效。
-- `a`：a 为正整数，且小于 65536。当目标端口为 a 时，此规则生效。
-- 以上两种形式的混合，以逗号 "," 分隔。形如：`"53,443,1000-2000"`。
+The target port range, which can take on three forms:
+
+- `"a-b"`: `a` and `b` are both positive integers less than 65536. This range is a closed interval, and this rule will take effect when the target port falls within this range.
+- `a`: `a` is a positive integer less than 65536. This rule will take effect when the target port is `a`.
+- A mixture of the above two forms, separated by commas ",". For example: `"53,443,1000-2000"`.
+
+> `sourcePort`: number | string
+
+The source port, which can take on three forms:
+
+- `"a-b"`: `a` and `b` are both positive integers less than 65536. This range is a closed interval, and this rule will take effect when the source port falls within this range.
+- `a`: `a` is a positive integer less than 65536. This rule will take effect when the source port is `a`.
+- A mixture of the above two forms, separated by commas ",". For example: `"53,443,1000-2000"`.
 
 > `network`: "tcp" | "udp" | "tcp,udp"
 
-可选的值有 "tcp"、"udp" 或 "tcp,udp"，当连接方式是指定的方式时，此规则生效。
+This can be "tcp", "udp", or "tcp,udp". This rule will take effect when the connection method is the specified one.
 
-> `source`: \[string\]
+> `source`: [string]
 
-一个数组，数组内每一项代表一个 IP 范围，形式有 IP、CIDR、GeoIP 和从文件中加载 IP。当某一项匹配来源 IP 时，此规则生效。
+An array where each item represents an IP range in the format of IP, CIDR, GeoIP, or loading IP from a file. This rule will take effect when the source IP matches any of the IP ranges in the array.
 
-> `user`: \[string\]
+> `user`: [string]
 
-一个数组，数组内每一项是一个邮箱地址。当某一项匹配来源用户时，此规则生效。
+An array where each item represents an email address. This rule will take effect when the source user matches any of the email addresses in the array.
 
-> `inboundTag`: \[string\]
+> `inboundTag`: [string]
 
-一个数组，数组内每一项是一个标识。当某一项匹配入站协议的标识时，此规则生效。
+An array where each item represents an identifier. This rule will take effect when the inbound protocol matches any of the identifiers in the array.
 
-> `protocol`: \[ "http" | "tls" | "bittorrent" \]
+> `protocol`: [ "http" | "tls" | "bittorrent" ]
 
-一个数组，数组内每一项表示一种协议。当某一个协议匹配当前连接的协议类型时，此规则生效。
+An array where each item represents a protocol. This rule will take effect when the protocol of the current connection matches any of the protocols in the array.
 
 ::: tip
-必须开启入站代理中的 `sniffing` 选项, 才能嗅探出连接所使用的协议类型.
+The `sniffing` option in the inbound proxy must be enabled to detect the protocol type used by the connection.
 :::
 
-> `attrs`: string
+`attrs`: string
 
-一段脚本，用于检测流量的属性值。当此脚本返回真值时，此规则生效。
+A script used to detect the attribute values of the traffic. When this script returns a truthy value, this rule takes effect.
 
-脚本语言为 [Starlark](https://github.com/bazelbuild/starlark)，它的语法是 Python 的子集。脚本接受一个全局变量 `attrs`，其中包含了流量相关的属性。
+The script language is [Starlark](https://github.com/bazelbuild/starlark), which is a subset of Python syntax. The script accepts a global variable `attrs`, which contains traffic-related attributes.
 
-目前只有 http 入站代理会设置这一属性。
+Currently, only the inbound HTTP proxy sets this attribute.
 
-示例：
+Examples:
 
-- 检测 HTTP GET：`"attrs[':method'] == 'GET'"`
-- 检测 HTTP Path：`"attrs[':path'].startswith('/test')"`
-- 检测 Content Type：`"attrs['accept'].index('text/html') >= 0"`
+- Detect HTTP GET: `"attrs[':method'] == 'GET'"`
+- Detect HTTP Path: `"attrs[':path'].startswith('/test')"`
+- Detect Content Type: `"attrs['accept'].index('text/html') >= 0"`
 
 > `outboundTag`: string
 
-对应一个 outbound 的标识。
+Corresponds to the identifier of an outbound.
 
 > `balancerTag`: string
 
-对应一个 Balancer 的标识。
+Corresponds to the identifier of a balancer.
 
 ::: tip
-`balancerTag` 和 `outboundTag` 须二选一。当同时指定时，`outboundTag` 生效。
+`balancerTag` and `outboundTag` are mutually exclusive. When both are specified, `outboundTag` takes effect.
 :::
 
 ### BalancerObject
 
-负载均衡器配置。当一个负载均衡器生效时，它会从指定的 outbound 中，按配置选出一个最合适的 outbound，进行流量转发。
+Load balancer configuration. When a load balancer is in effect, it selects the most appropriate outbound from the specified outbound according to the configuration and forwards traffic.
 
 ```json
 {
@@ -194,32 +201,32 @@
 
 > `tag`: string
 
-此负载均衡器的标识，用于匹配 `RuleObject` 中的 `balancerTag`。
+The identifier of this load balancer, used to match `balancerTag` in `RuleObject`.
 
-> `selector`: \[ string \]
+> `selector`: [ string ]
 
-一个字符串数组，其中每一个字符串将用于和 outbound 标识的前缀匹配。在以下几个 outbound 标识中：`[ "a", "ab", "c", "ba" ]`，`"selector": ["a"]` 将匹配到 `[ "a", "ab" ]`。
+An array of strings, each of which will be used to match the prefix of the outbound identifier. For example, in the following outbound identifiers: `[ "a", "ab", "c", "ba" ]`, `"selector": ["a"]` will match `[ "a", "ab" ]`.
 
-如果匹配到多个 outbound，负载均衡器目前会从中随机选出一个作为最终的 outbound。
+If multiple outbounds are matched, the load balancer currently selects one randomly as the final outbound.
 
-### 预定义域名列表
+### Predefined Domain Lists
 
-此列表预置于每一个 Xray 的安装包中，文件名为 `geosite.dat`。这个文件包含了一些常见的域名，使用方式：`geosite:filename`，如 `geosite:google` 表示对文件内符合 `google` 内包含的域名，进行路由筛选或 DNS 筛选。
+This list is included in every Xray installation package, and the file name is `geosite.dat`. This file contains some common domain names, which can be used as `geosite:filename` to perform routing or DNS filtering for domain names that match those in the file.
 
-常见的域名有：
+Common domain lists include:
 
-- `category-ads`：包含了常见的广告域名。
-- `category-ads-all`：包含了常见的广告域名，以及广告提供商的域名。
-- `cn`：相当于 `geolocation-cn` 和 `tld-cn` 的合集。
-- `apple`：包含了 Apple 旗下绝大部分域名。
-- `google`：包含了 Google 旗下绝大部分域名。
-- `microsoft`：包含了 Microsoft 旗下绝大部分域名。
-- `facebook`：包含了 Facebook 旗下绝大部分域名。
-- `twitter`：包含了 Twitter 旗下绝大部分域名。
-- `telegram`：包含了 Telegram 旗下绝大部分域名。
-- `geolocation-cn`：包含了常见的大陆站点域名。
-- `geolocation-!cn`：包含了常见的非大陆站点域名，同时包含了 `tld-!cn`。
-- `tld-cn`：包含了 CNNIC 管理的用于中国大陆的顶级域名，如以 `.cn`、`.中国` 结尾的域名。
-- `tld-!cn`：包含了非中国大陆使用的顶级域名，如以 `.hk`（香港）、`.tw`（台湾）、`.jp`（日本）、`.sg`（新加坡）、`.us`（美国）`.ca`（加拿大）等结尾的域名。
+- `category-ads`: Contains common advertising domain names.
+- `category-ads-all`: Contains common advertising domain names and advertising provider domain names.
+- `cn`: Equivalent to the combination of `geolocation-cn` and `tld-cn`.
+- `apple`: Contains most of the domain names under Apple.
+- `google`: Contains most of the domain names under Google.
+- `microsoft`: Contains most of the domain names under Microsoft.
+- `facebook`: Contains most of the domain names under Facebook.
+- `twitter`: Contains most of the domain names under Twitter.
+- `telegram`: Contains most of the domain names under Telegram.
+- `geolocation-cn`: Contains common domain names of mainland Chinese websites.
+- `geolocation-!cn`: Contains common domain names of non-mainland Chinese websites, as well as `tld-!cn`.
+- `tld-cn`: Contains top-level domain names managed by CNNIC for mainland China, such as domain names ending in `.cn` and `.中国`.
+- `tld-!cn`: Contains top-level domain names used outside mainland China, such as domain names ending in `.hk` (Hong Kong), `.tw` (Taiwan), `.jp` (Japan), `.sg` (Singapore), `.us` (United States), and `.ca` (Canada).
 
-你也可以在这里查看完整的域名列表 [Domain list community](https://github.com/v2fly/domain-list-community)。
+You can also find the complete list of domain names here: [Domain list community](https://github.com/v2fly/domain-list-community).

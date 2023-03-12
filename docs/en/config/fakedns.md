@@ -1,14 +1,14 @@
 # FakeDNS
 
-FakeDNS 通过伪造 DNS 以获取目标域名，能够降低 DNS 查询时的延迟、配合透明代理获取目标域名。
+FakeDNS is used to obtain target domain names by forging DNS, which can reduce the delay in DNS queries and work with transparent proxies to obtain target domain names.
 
 ::: warning
-FakeDNS 有可能会污染本地 DNS，导致 Xray 关闭后“无法访问网络”。
+FakeDNS may contaminate the local DNS and cause "network unreachable" after Xray is closed.
 :::
 
 ## FakeDNSObject
 
-`FakeDNSObject` 对应配置文件的 `fakedns` 项。
+`FakeDNSObject` corresponds to the `fakedns` item in the configuration file.
 
 ```json
 {
@@ -17,7 +17,7 @@ FakeDNS 有可能会污染本地 DNS，导致 Xray 关闭后“无法访问网�
 }
 ```
 
-`FakeDnsObject` 亦可配置为一个包含多个 FakeIP Pool 的数组。当收到 DNS 查询请求时，FakeDNS 会返回一组同时由多个 FakeIP Pool 得到的一组 FakeIP。
+`FakeDnsObject` can also be configured as an array containing multiple FakeIP Pools. When a DNS query request is received, FakeDNS returns a group of FakeIPs obtained by multiple FakeIP Pools at the same time.
 
 ```json
 [
@@ -34,20 +34,20 @@ FakeDNS 有可能会污染本地 DNS，导致 Xray 关闭后“无法访问网�
 
 > `ipPool`: CIDR
 
-FakeDNS 将使用此选项指定的 IP 块分配地址。
+FakeDNS will use the IP block specified by this option to allocate addresses.
 
 > `poolSize`: int
 
-指定 FakeDNS 储存的 域名-IP 映射的最大数目。当映射数超过此值后，会按照 LRU 规则淘汰映射。默认为 65535。
+Specifies the maximum number of domain name-IP mappings stored by FakeDNS. When the number of mappings exceeds this value, mappings will be eliminated according to the LRU rule. The default is 65535.
 
 ::: warning
-`poolSize` 必须小于或等于 `ipPool` 对应的地址总数。
+`poolSize` must be less than or equal to the total number of addresses corresponding to `ipPool`.
 :::
 
 ::: tip
-若配置文件中 `dns` 项设置了 `fakedns` 但配置文件没有设置 `FakeDnsObject`，Xray 会根据 DNS 组件的 `queryStrategy` 来初始化 `FakeDnsObject`。
+If the `dns` item in the configuration file sets `fakedns`, but the configuration file does not set `FakeDNSObject`, Xray will initialize `FakeDNSObject` based on the `queryStrategy` of the DNS component.
 
-`queryStrategy` 为 `UseIP` 时，初始化的 FakeIP Pool 相当于
+When `queryStrategy` is set to `UseIP`, the initialized FakeIP Pool is equivalent to
 
 ```json
 [
@@ -62,7 +62,7 @@ FakeDNS 将使用此选项指定的 IP 块分配地址。
 ]
 ```
 
-`queryStrategy` 为 `UseIPv4` 时，初始化的 FakeIP Pool 相当于
+When `queryStrategy` is set to `UseIPv4`, the initialized FakeIP Pool is equivalent to
 
 ```json
 {
@@ -71,7 +71,7 @@ FakeDNS 将使用此选项指定的 IP 块分配地址。
 }
 ```
 
-`queryStrategy` 为 `UseIPv6` 时，初始化的 FakeIP Pool 相当于
+When `queryStrategy` is set to `UseIPv6`, the initialized FakeIP Pool is equivalent to
 
 ```json
 {
@@ -82,17 +82,17 @@ FakeDNS 将使用此选项指定的 IP 块分配地址。
 
 :::
 
-### 如何使用？
+### How to use?
 
-FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任意 DNS 规则配合使用。
+FakeDNS is essentially a [DNS server](./dns.md#serverobject) that can be used in conjunction with any DNS rules.
 
-只有将 DNS 查询路由到 FakeDNS，才能使其发挥作用。
+Only by routing DNS queries to FakeDNS can it be effective.
 
 ```json
 {
   "dns": {
     "servers": [
-      "fakedns", // fakedns 排在首位
+      "fakedns", // fakedns comes first
       "8.8.8.8"
     ]
   },
@@ -106,7 +106,7 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
     "rules": [
       {
         "type": "field",
-        "inboundTag": ["dns-in"], // 劫持来自 DNS 查询入口的 DNS 流量，或劫持来自透明代理入站的 DNS 流量。
+        "inboundTag": ["dns-in"], // Intercept DNS traffic from DNS query inbound or from inbound traffic of transparent proxies.
         "port": 53,
         "outboundTag": "dns-out"
       }
@@ -115,27 +115,27 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
 }
 ```
 
-当外部 DNS 请求进入 FakeDNS 组件时，它会返回位于自己 `ipPool` 内的 IP 地址作为域名的虚构解析结果，并记录该域名与虚构解析结果之间的映射关系。
+When external DNS requests enter the FakeDNS component, it will return IP addresses within its own `ipPool` as the virtual resolution results of the domain name, and record the mapping relationship between the domain name and the virtual resolution results.
 
-另外，你需要在**客户端**接收需代理流量的入站中开启 `Sniffing`，并使用 `fakedns` 目标地址重置。
+In addition, you need to enable `Sniffing` in the **client** for incoming traffic that needs to be proxied, and use the `fakedns` target address reset.
 
 ```json
 "sniffing": {
   "enabled": true,
-  "destOverride": ["fakedns"], // 使用 "fakedns"，或与其它 sniffer 搭配使用，或直接使用 "fakedns+others"
-  "metadataOnly": false        // 此项为 true 时 destOverride 仅可使用 fakedns
+  "destOverride": ["fakedns"], // Use "fakedns", or use it with other sniffer, or directly use "fakedns+others".
+  "metadataOnly": false        // When this item is true, destOverride can only use fakedns.
 },
 ```
 
 ::: warning
-如果 FakeIP 没有被正确的还原为域名，将无法连接到服务器。
+If the FakeIP is not correctly restored to the domain name, the server will not be accessible.
 :::
 
-### 与其它类型 DNS 搭配使用
+### Using with other types of DNS
 
-#### 与 DNS 分流共存
+#### Coexistence with DNS shunting
 
-使用 DNS 分流时，为了使 `fakedns` 拥有高优先级，需要对其增加与其他类型 DNS 相同的 `domains`。
+When using DNS shunting, to give `fakedns` a higher priority, you need to add the same `domains` as other types of DNS.
 
 ```json
 {
@@ -143,7 +143,7 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
     {
       "address": "fakedns",
       "domains": [
-        // 与下方分流所用的内容一致
+        // consistent with the content used in the shunt below
         "geosite:cn",
         "domain:example.com"
       ]
@@ -162,9 +162,9 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
 }
 ```
 
-#### FakeDNS 黑名单
+#### FakeDNS blacklist
 
-如不希望某些域名使用 FakeDNS，则可在其它类型的 DNS 配置中添加 `domains` 配置，使指定域名在匹配时其它 DNS 服务器拥有比 FakeDNS 更高的优先级，进而实现 FakeDNS 的黑名单机制。
+If you do not want certain domain names to use FakeDNS, you can add `domains` configuration in other types of DNS configurations so that when the specified domain names are matched, other DNS servers have a higher priority than FakeDNS, thereby achieving the FakeDNS blacklist mechanism.
 
 ```json
 {
@@ -178,9 +178,9 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
 }
 ```
 
-#### FakeDNS 白名单
+#### FakeDNS whitelist
 
-如希望仅某些域名使用 FakeDNS，则可在 `fakedns` 增加 `domains` 配置，使指定域名在匹配时 `fakedns` 拥有比其它 DNS 服务器更高的优先级，进而实现 FakeDNS 的白名单机制。
+If you only want certain domain names to use FakeDNS, you can add `domains` configuration to `fakedns` so that when the specified domain names are matched, `fakedns` has a higher priority than other DNS servers, thereby achieving the FakeDNS whitelist mechanism.
 
 ```json
 {

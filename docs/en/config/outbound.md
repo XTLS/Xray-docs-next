@@ -1,13 +1,13 @@
-# 出站代理
+# Outbound Proxies
 
-出站连接用于发送数据，可用的协议请见 [outbound protocols](./outbounds/)。
+Outbound connections are used for sending data and can use any of the available protocols listed in [outbound protocols](./outbounds/).
 
 ## OutboundObject
 
-`OutboundObject` 对应配置文件中 `outbounds` 项的一个子元素。
+The `OutboundObject` corresponds to a sub-element of the `outbounds` item in the configuration file.
 
 ::: tip
-列表中的第一个元素作为主 outbound。当路由匹配不存在或没有匹配成功时，流量由主 outbound 发出。
+The first element in the list serves as the main outbound. When there is no match or no successful match for the routing, the traffic is sent out by the main outbound.
 :::
 
 ```json
@@ -15,9 +15,9 @@
   "outbounds": [
     {
       "sendThrough": "0.0.0.0",
-      "protocol": "协议名称",
+      "protocol": "protocol name",
       "settings": {},
-      "tag": "标识",
+      "tag": "identifier",
       "streamSettings": {},
       "proxySettings": {
         "tag": "another-outbound-tag"
@@ -30,35 +30,35 @@
 
 > `sendThrough`: address
 
-用于发送数据的 IP 地址，当主机有多个 IP 地址时有效，默认值为 `"0.0.0.0"`。
+The IP address used to send data. It is effective when the host has multiple IP addresses, and the default value is `"0.0.0.0"`.
 
 > `protocol`: string
 
-连接协议名称，可选的协议类型见 [outbound protocols](./outbounds/)。
+The name of the connection protocol. The optional protocol types can be found in [outbound protocols](./outbounds/).
 
 > `settings`: OutboundConfigurationObject
 
-具体的配置内容，视协议不同而不同。详见每个协议中的 `OutboundConfigurationObject`。
+The specific configuration content varies depending on the protocol. See `OutboundConfigurationObject` in each protocol for details.
 
 > `tag`: string
 
-此出站连接的标识，用于在其它的配置中定位此连接。
+The identifier of this outbound connection, used to locate this connection in other configurations.
 
 ::: danger
-当其不为空时，其值必须在所有 `tag` 中 **唯一**。
+When it is not empty, its value must be **unique** among all `tag`s.
 :::
 
 > `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
 
-底层传输方式（transport）是当前 Xray 节点和其它节点对接的方式
+The underlying transport method is the way the current Xray node and other nodes are docked.
 
 > `proxySettings`: [ProxySettingsObject](#proxysettingsobject)
 
-出站代理配置。当出站代理生效时，此 outbound 的 `streamSettings` 将不起作用。
+The outbound proxy configuration. When the outbound proxy takes effect, the `streamSettings` of this outbound will not work.
 
 > `mux`: [MuxObject](#muxobject)
 
-Mux 相关的具体配置。
+Specific configuration related to Mux.
 
 ### ProxySettingsObject
 
@@ -70,25 +70,25 @@ Mux 相关的具体配置。
 
 > `tag`: string
 
-当指定另一个 outbound 的标识时，此 outbound 发出的数据，将被转发至所指定的 outbound 发出。
+When specifying the identifier of another outbound, data emitted by this outbound will be forwarded to the specified outbound.
 
 ::: danger
-这种转发方式**不经过**底层传输方式。如果需要使用支持底层传输方式的转发，请使用 [SockOpt.dialerProxy](./transport.md#sockoptobject)。
+This forwarding method does **not go through** the underlying transport. If you need to use forwarding that supports the underlying transport, please use [SockOpt.dialerProxy](./transport.md#sockoptobject).
 :::
 
 ::: danger
-此选项与 SockOpt.dialerProxy 不兼容
+This option is incompatible with SockOpt.dialerProxy.
 :::
 
 ::: tip
-兼容 v2fly/v2ray-core 的配置 [transportLayer](https://www.v2fly.org/config/outbounds.html#proxysettingsobject)
+Compatible with v2fly/v2ray-core's configuration [transportLayer](https://www.v2fly.org/config/outbounds.html#proxysettingsobject).
 :::
 
 ### MuxObject
 
-Mux 功能是在一条 TCP 连接上分发多个 TCP 连接的数据。实现细节详见 [Mux.Cool](../../development/protocols/muxcool)。Mux 是为了减少 TCP 的握手延迟而设计，而非提高连接的吞吐量。使用 Mux 看视频、下载或者测速通常都有反效果。Mux 只需要在客户端启用，服务器端自动适配。
+The Mux function distributes the data of multiple TCP connections on a single TCP connection. For implementation details, see [Mux.Cool](../../development/protocols/muxcool). Mux is designed to reduce the latency of TCP handshake, not to increase the throughput of connections. Using Mux for watching videos, downloading, or speed testing usually has negative effects. Mux only needs to be enabled on the client side, and the server side automatically adapts.
 
-`MuxObject` 对应 `OutboundObject` 中的 `mux` 项。
+`MuxObject` corresponds to the `mux` item in `OutboundObject`.
 
 ```json
 {
@@ -99,14 +99,14 @@ Mux 功能是在一条 TCP 连接上分发多个 TCP 连接的数据。实现细
 
 > `enabled`: true | false
 
-是否启用 Mux 转发请求，默认值 `false`。
+Whether to enable Mux forwarding requests, default is `false`.
 
 > `concurrency`: number
 
-最大并发连接数。最小值 `1`，最大值 `1024`，默认值 `8`。
+Maximum concurrent connections. Minimum value is `1`, maximum value is `1024`, default is `8`.
 
-这个数值表示了一个 TCP 连接上最多承载的 Mux 连接数量。比如设置 `concurrency=8` 时，当客户端发出了 8 个 TCP 请求，Xray 只会发出一条实际的 TCP 连接，客户端的 8 个请求全部由这个 TCP 连接传输。
+This value represents the maximum number of Mux connections that can be carried on a TCP connection. For example, when `concurrency=8` is set, if the client sends 8 TCP requests, Xray will only send one actual TCP connection, and all 8 requests from the client will be transmitted through this TCP connection.
 
 ::: tip
-填负数时，如 `-1`，不加载 mux 模块。
+When filling in a negative number, such as `-1`, the mux module is not loaded.
 :::

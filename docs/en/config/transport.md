@@ -1,20 +1,20 @@
-# 传输方式
+# Transport Protocol
 
-传输方式（transport）是当前 Xray 节点和其它节点对接的方式。
+Transport protocol is the way that Xray nodes communicate with each other.
 
-传输方式指定了稳定的数据传输的方式。通常来说，一个网络连接的两端需要有对称的传输方式。比如一端用了 WebSocket，那么另一个端也必须使用 WebSocket，否则无法建立连接。
+Transport protocol specifies a stable way to transmit data. Typically, both ends of a network connection need to use the same transport protocol to establish a connection. For example, if one end uses WebSocket, the other end must also use WebSocket, otherwise the connection cannot be established.
 
-传输方式（transport）配置有两部分:
+Transport protocol configuration has two parts:
 
-1. 全局配置（[TransportObject](#transportobject)）
-2. 局部配置（[StreamSettingsObject](#streamsettingsobject)）。
+1. Global configuration ([TransportObject](#transportobject))
+2. Local configuration ([StreamSettingsObject](#streamsettingsobject)).
 
-- 局部配置时,可以指定每个单独的入站或出站用怎样的方式传输。
-- 通常来说客户端和服务器对应的入站和出站需要使用同样的传输方式。当其配置指定了一种传输方式，但没有填写具体设置时，此传输方式会使用全局配置中的设置。
+- When configuring locally, you can specify how each individual inbound or outbound connection is transmitted.
+- Typically, the inbound and outbound connections corresponding to the client and server need to use the same transport protocol. When a transport protocol is specified but no specific settings are provided, the transport protocol will use the settings from the global configuration.
 
 ## TransportObject
 
-`TransportObject` 对应配置文件的 `transport` 项。
+The `TransportObject` corresponds to the `transport` item in the configuration file.
 
 ```json
 {
@@ -32,35 +32,35 @@
 
 > `tcpSettings`: [TcpObject](./transports/tcp.md)
 
-针对 TCP 连接的配置。
+Configuration for TCP connections.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
-针对 mKCP 连接的配置。
+Configuration for mKCP connections.
 
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
-针对 WebSocket 连接的配置。
+Configuration for WebSocket connections.
 
 > `httpSettings`: [HttpObject](./transports/h2.md)
 
-针对 HTTP/2 连接的配置。
+Configuration for HTTP/2 connections.
 
 > `quicSettings`: [QuicObject](./transports/quic.md)
 
-针对 QUIC 连接的配置。
+Configuration for QUIC connections.
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
-针对 gRPC 连接的配置。
+Configuration for gRPC connections.
 
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
-针对 Domain Socket 连接的配置。
+Configuration for Domain Socket connections.
 
 ## StreamSettingsObject
 
-`StreamSettingsObject` 对应入站或出站中的 `streamSettings` 项。每一个入站或出站都可以分别配置不同的传输配置，都可以设置 `streamSettings` 来进行一些传输的配置。
+`StreamSettingsObject` corresponds to the `streamSettings` item in inbound or outbound configuration. Each inbound or outbound can be configured with different transport settings and can use `streamSettings` to perform some transport configurations.
 
 ```json
 {
@@ -88,60 +88,59 @@
 
 > `network`: "tcp" | "kcp" | "ws" | "http" | "domainsocket" | "quic" | "grpc"
 
-连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
+The type of transport used by the connection's data stream, with a default value of `"tcp"`.
 
-> `security`: "none" | "tls" | "reality"
+> `security`: "none" | "tls" | "xtls"
 
-是否启用传输层加密，支持的选项有
+Whether to enable transport layer encryption, with supported options:
 
-- `"none"` 表示不加密（默认值）
-- `"tls"` 表示使用 [TLS](https://en.wikipedia.org/wiki/base/transport_Layer_Security)。
-- `"reality"` 表示使用 REALITY。
+- `"none"` means no encryption (default value).
+- `"tls"` means using [TLS](https://en.wikipedia.org/wiki/base/transport_Layer_Security).
+- `"xtls"` means using [XTLS](./features/xtls.md). <Badge text="Deprecated" type="warning"/>
 
 > `tlsSettings`: [TLSObject](#tlsobject)
 
-TLS 配置。TLS 由 Golang 提供，通常情况下 TLS 协商的结果为使用 TLS 1.3，不支持 DTLS。
+TLS configuration. TLS is provided by Golang, and usually the result of TLS negotiation is to use TLS 1.3, and DTLS is not supported.
 
-> `realitySettings`: [RealityObject](#realityobject)
+> `xtlsSettings`: [XTLSObject](#tlsobject) <Badge text="Deprecated" type="warning"/>
 
-Reality 配置。Reality 是 Xray 的原创黑科技。 Reality 比 TLS 的安全性更高, 配置方式也和 TLS 一致.
+XTLS configuration. XTLS is Xray's original technology, which is the core driver of Xray's outstanding performance. XTLS has the same security as TLS and uses the same configuration as TLS.
 
 ::: tip
-Reality 是目前最安全的传输加密方案, 且外部看来流量类型和正常上网具有一致性。 启用 Reality 并且配置合适的 XTLS Vision 流控模式, 可以
-达到数倍甚至十几倍的性能提升。
+TLS/XTLS is currently the most secure transport encryption scheme, and its traffic appears consistent with normal web traffic to outsiders. Enabling XTLS and configuring the appropriate XTLS flow control mode can provide several times to even more than ten times the performance improvement while maintaining the same security as TLS. When changing the value of `security` from `tls` to `xtls`, simply modify `tlsSettings` to `xtlsSettings`.
 :::
 
 > `tcpSettings`: [TcpObject](./transports/tcp.md)
 
-当前连接的 TCP 配置，仅当此连接使用 TCP 时有效。配置内容与上面的全局配置相同。
+The TCP configuration for the current connection, only valid when TCP is used for this connection. The configuration is the same as the global configuration above.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
-当前连接的 mKCP 配置，仅当此连接使用 mKCP 时有效。配置内容与上面的全局配置相同。
+The mKCP configuration for the current connection, only valid when mKCP is used for this connection. The configuration is the same as the global configuration above.
 
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
-当前连接的 WebSocket 配置，仅当此连接使用 WebSocket 时有效。配置内容与上面的全局配置相同。
+The WebSocket configuration for the current connection, only valid when WebSocket is used for this connection. The configuration is the same as the global configuration above.
 
 > `httpSettings`: [HttpObject](./transports/h2.md)
 
-当前连接的 HTTP/2 配置，仅当此连接使用 HTTP/2 时有效。配置内容与上面的全局配置相同。
+The HTTP/2 configuration for the current connection, only valid when HTTP/2 is used for this connection. The configuration is the same as the global configuration above.
 
 > `quicSettings`: [QUICObject](./transports/quic.md)
 
-当前连接的 QUIC 配置，仅当此连接使用 QUIC 时有效。配置内容与上面的全局配置相同。
+The QUIC configuration for the current connection, only valid when QUIC is used for this connection. The configuration is the same as the global configuration above.
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
-当前连接的 gRPC 配置，仅当此连接使用 gRPC 时有效。配置内容与上面的全局配置相同。
+The gRPC configuration for the current connection, only valid when gRPC is used for this connection. The configuration is the same as the global configuration above.
 
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
-当前连接的 Domain socket 配置，仅当此连接使用 Domain socket 时有效。配置内容与上面的全局配置相同。
+The Domain socket configuration for the current connection, only valid when Domain socket is used for this connection. The configuration is the same as the global configuration above.
 
-> `sockopt`: [SockoptObject](#sockoptobject)
+> `sockopt`: [SockoptObject](./chat#sockoptobject)
 
-透明代理相关的具体配置。
+Specific configuration for transparent proxying.
 
 ### TLSObject
 
@@ -153,7 +152,7 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
   "alpn": ["h2", "http/1.1"],
   "minVersion": "1.2",
   "maxVersion": "1.3",
-  "cipherSuites": "此处填写你需要的加密套件名称,每个套件名称之间用:进行分隔",
+  "cipherSuites": "Specify the names of the encryption suites you need here, separated by :",
   "certificates": [],
   "disableSystemRoot": false,
   "enableSessionResumption": false,
@@ -164,62 +163,61 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 
 > `serverName`: string
 
-指定服务器端证书的域名，在连接由 IP 建立时有用。
+Specifies the domain name of the server certificate, useful when the connection is established by IP.
 
-当目标连接由域名指定时，比如在 Socks 入站接收到了域名，或者由 Sniffing 功能探测出了域名，这个域名会自动用于 `serverName`，无须手动配置。
+When the target connection is specified by domain name, such as when the domain name is received by the Socks inbound or when it is detected by the Sniffing function, this domain name is automatically used for `serverName` without manual configuration.
 
 > `rejectUnknownSni`: bool
 
-当值为 `true` 时，服务端接收到的 SNI 与证书域名不匹配即拒绝 TLS 握手，默认为 false。
+When set to `true`, the server rejects the TLS handshake if the received SNI does not match the domain name in the certificate. The default value is `false`.
 
-> `alpn`: \[ string \]
+> `alpn`: [ string ]
 
-一个字符串数组，指定了 TLS 握手时指定的 ALPN 数值。默认值为 `["h2", "http/1.1"]`。
+An array of strings that specifies the ALPN values to be used during the TLS handshake. The default value is `["h2", "http/1.1"]`.
 
-> `minVersion`: \[ string \]
+> `minVersion`: [ string ]
 
-minVersion 为可接受的最小 SSL/TLS 版本。
+`minVersion` is the minimum acceptable SSL/TLS version.
 
-> `maxVersion`: \[ string \]
+> `maxVersion`: [ string ]
 
-maxVersion 为可接受的最大 SSL/TLS 版本。
+`maxVersion` is the maximum acceptable SSL/TLS version.
 
-> `cipherSuites`: \[ string \]
+> `cipherSuites`: [ string ]
 
-CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之间用:进行分隔.
+`CipherSuites` is used to configure the supported list of cryptographic suites, with each suite name separated by a colon.
 
-你可以在 [这里](https://golang.org/src/crypto/tls/cipher_suites.go#L500)或 [这里](https://golang.org/src/crypto/tls/cipher_suites.go#L44)
-找到 golang 加密套件的名词和说明
+You can find the names and descriptions of Golang encryption suites at [here](https://golang.org/src/crypto/tls/cipher_suites.go#L500) or [here](https://golang.org/src/crypto/tls/cipher_suites.go#L44).
 
 ::: danger
-以上两项配置为非必要选项，正常情况下不影响安全性 在未配置的情况下 golang 根据设备自动选择. 若不熟悉, 请勿配置此选项, 填写不当引起的问题自行负责
+The above two configurations are optional and normally do not affect security. If not configured, Golang will automatically select based on the device. If you are not familiar with these options, do not configure them, and any problems caused by improper configuration are your responsibility.
 :::
 
 > `allowInsecure`: true | false
 
-是否允许不安全连接（仅用于客户端）。默认值为 `false`。
+Whether to allow insecure connections (only for clients). The default value is `false`.
 
-当值为 `true` 时，Xray 不会检查远端主机所提供的 TLS 证书的有效性。
+When set to `true`, Xray will not verify the validity of the TLS certificate provided by the remote host.
 
 ::: danger
-出于安全性考虑，这个选项不应该在实际场景中选择 true，否则可能遭受中间人攻击。
+For security reasons, this option should not be set to true in practical scenarios, otherwise, it may be susceptible to man-in-the-middle attacks.
 :::
 
 > `disableSystemRoot`: true | false
 
-是否禁用操作系统自带的 CA 证书。默认值为 `false`。
+Whether to disable the CA certificate provided by the operating system. The default value is `false`.
 
-当值为 `true` 时，Xray 只会使用 `certificates` 中指定的证书进行 TLS 握手。当值为 `false` 时，Xray 只会使用操作系统自带的 CA 证书进行 TLS 握手。
+When set to `true`, Xray will only use the certificates specified in `certificates` for TLS handshakes. When set to `false`, Xray will only use the CA certificates provided by the operating system for TLS handshakes.
 
 > `enableSessionResumption`: true | false
 
-此参数的设置为 false 时, ClientHello 里没有 session_ticket 这个扩展。 通常来讲 go 语言程序的 ClientHello 里并没有用到这个扩展, 因此建议保持默认值。 默认值为 `false`。
+When this parameter is set to false, the `session_ticket` extension is not included in the ClientHello message. Generally, the ClientHello message in Go language programs does not use this extension, so it is recommended to keep the default value. The default value is `false`.
 
-> `fingerprint` : string
+> `fingerprint`: string
 
-此参数用于配置指定 `TLS Client Hello` 的指纹。当其值为空时，表示不启用此功能。启用后，Xray 将通过 uTLS 库 **模拟** `TLS` 指纹，或随机生成。支持三种配置方式：
+This parameter is used to configure the fingerprint of the `TLS Client Hello`. When its value is empty, this feature is not enabled. After enabling it, Xray will **simulate** the `TLS` fingerprint through the uTLS library or generate it randomly. Three configuration options are supported:
 
-1. 常见浏览器最新版本的 TLS 指纹 包括
+1. TLS fingerprints of the latest versions of popular browsers, including:
 
 - `"chrome"`
 - `"firefox"`
@@ -230,72 +228,37 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 - `"360"`
 - `"qq"`
 
-2. 在 xray 启动时自动生成一个指纹
+1. Generate a fingerprint when xray starts
 
-- `"random"`: 在较新版本的浏览器里随机抽取一个
-- `"randomized"`: 完全随机生成一个独一无二的指纹 (100% 支持 TLS 1.3 使用 X25519)
+- `"random"`: randomly select one in newer versions of browsers
+- `"randomized"`: generate a completely random and unique fingerprint (100% compatible with TLS 1.3 using X25519)
 
-3. 使用 uTLS 原生指纹变量名 例如`"HelloRandomizedNoALPN"` `"HelloChrome_106_Shuffle"`。完整名单见 [uTLS 库](https://github.com/refraction-networking/utls/blob/master/u_common.go#L162)
+1. Use uTLS native fingerprint variable names, such as `"HelloRandomizedNoALPN"` `"HelloChrome_106_Shuffle"`. See the full list in [uTLS library](https://github.com/refraction-networking/utls/blob/master/u_common.go#L162).
 
 ::: tip
-此功能仅 **模拟** `TLS Client Hello` 的指纹，行为、其他指纹与 Golang 相同。如果你希望更加完整地模拟浏览器 `TLS`
-指纹与行为，可以使用 [Browser Dialer](./transports/websocket.md#browser-dialer)。
+This feature only **simulates** the fingerprint of the `TLS Client Hello`, and its behavior and other fingerprints are the same as Golang. If you want to simulate browser `TLS` fingerprints and behaviors more completely, you can use the [Browser Dialer](./transports/websocket.md#browser-dialer).
 :::
 
-> `pinnedPeerCertificateChainSha256`: \[string\]
+> `pinnedPeerCertificateChainSha256`: [string]
 
-用于指定远程服务器的证书链 SHA256 散列值，使用标准编码格式。仅有当服务器端证书链散列值符合设置项中之一时才能成功建立 TLS 连接。
+Specifies the SHA256 hash value of the certificate chain for the remote server, using standard encoding format. Only when the hash value of the server-side certificate chain matches one of the settings can a TLS connection be successfully established.
 
-在连接因为此配置失败时，会展示远程服务器证书散列值。
+When the connection fails due to this configuration, the hash value of the remote server certificate will be displayed.
 
 ::: danger
-不建议使用这种方式获得证书链散列值，因为在这种情况下将没有机会验证此时服务器提供的证书是否为真实证书，进而不保证获得的证书散列值为期望的散列值。
+It is not recommended to use this method to obtain the hash value of the certificate chain, because in this case, there will be no opportunity to verify whether the certificate provided by the server at this time is a real certificate, and it cannot be guaranteed that the obtained certificate hash value is the expected hash value.
 :::
 
 ::: tip
-如果需要获得证书的散列值，应在命令行中运行 `xray tls certChainHash --cert <cert.pem>` 来获取，`<cert.pem>` 应替换为实际证书文件路径。
+If you need to obtain the hash value of the certificate, run `xray tls certChainHash --cert <cert.pem>` in the command line, where `<cert.pem>` should be replaced with the actual certificate file path.
 :::
 
-> `certificates`: \[ [CertificateObject](#certificateobject) \]
+> `certificates`: [ [CertificateObject](./chat#certificateobject) ]
 
-证书列表，其中每一项表示一个证书（建议 fullchain）。
-
-::: tip
-如果要在 ssllibs 或者 myssl 获得 A/A+ 等级的评价,
-请参考 [这里](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
-:::
-
-### RealityObject
-
-```json
-{
-  "show": false, // 选填，若为 true，输出调试信息
-  "dest": "example.com:443", // 必填，格式同 VLESS fallbacks 的 dest
-  "xver": 0, // 选填，格式同 VLESS fallbacks 的 xver
-  "serverNames": [ // 必填，客户端可用的 serverName 列表，暂不支持 * 通配符
-    "example.com",
-    "www.example.com"
-  ],
-  "privateKey": "", // 必填，执行 ./xray x25519 生成
-  "minClientVer": "", // 选填，客户端 Xray 最低版本，格式为 x.y.z
-  "maxClientVer": "", // 选填，客户端 Xray 最高版本，格式为 x.y.z
-  "maxTimeDiff": 0, // 选填，允许的最大时间差，单位为毫秒
-  "shortIds": [ // 必填，客户端可用的 shortId 列表，可用于区分不同的客户端
-    "", // 若有此项，客户端 shortId 可为空
-    "0123456789abcdef" // 0 到 f，长度为 2 的倍数，长度上限为 16
-  ],
-  // 客户端选项
-  "show": false, // 选填，若为 true，输出调试信息
-  "fingerprint": "chrome", // 必填，使用 uTLS 库模拟客户端 TLS 指纹
-  "serverName": "", // 必填，服务端 serverNames 之一
-  "publicKey": "", // 必填，服务端私钥对应的公钥
-  "shortId": "", // 必填，服务端 shortIds 之一
-  "spiderX": "" // 爬虫初始路径与参数，建议每个客户端不同
-}
-```
+A list of certificates, each representing a certificate (recommended fullchain).
 
 ::: tip
-更多信息请参考 [REALITY 项目](https://github.com/XTLS/REALITY).
+If you want to obtain the A/A+ rating in ssllibs or myssl evaluation, please refer to [here](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
 :::
 
 #### CertificateObject
@@ -360,63 +323,63 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `ocspStapling`: number
 
-OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认值为 `3600`，即一小时。
+OCSP stapling update interval in seconds for certificate hot reload. Default value is `3600`, i.e. one hour.
 
 > `oneTimeLoading`: true | false
 
-仅加载一次。值为 `true` 时将关闭证书热重载功能与 ocspStapling 功能。
+Load only once. When set to `true`, it will disable certificate hot reload and OCSP stapling feature.
+
 ::: warning
-当值为 `true` 时，将会关闭 OCSP 装订。
+When set to `true`, OCSP stapling will be disabled.
 :::
 
 > `usage`: "encipherment" | "verify" | "issue"
 
-证书用途，默认值为 `"encipherment"`。
+Certificate usage, default value is `"encipherment"`.
 
-- `"encipherment"`：证书用于 TLS 认证和加密。
-- `"verify"`：证书用于验证远端 TLS 的证书。当使用此项时，当前证书必须为 CA 证书。
-- `"issue"`：证书用于签发其它证书。当使用此项时，当前证书必须为 CA 证书。
+- `"encipherment"`: The certificate is used for TLS authentication and encryption.
+- `"verify"`: The certificate is used to verify the remote TLS certificate. When using this option, the current certificate must be a CA certificate.
+- `"issue"`: The certificate is used to issue other certificates. When using this option, the current certificate must be a CA certificate.
 
 ::: tip TIP 1
-在 Windows 平台上可以将自签名的 CA 证书安装到系统中，即可验证远端 TLS 的证书。
+On Windows platform, self-signed CA certificate can be installed in the system for verifying remote TLS certificates.
 :::
 
 ::: tip TIP 2
-当有新的客户端请求时，假设所指定的 `serverName` 为 `"xray.com"`，Xray 会先从证书列表中寻找可用于 `"xray.com"` 的证书，如果没有找到，则使用任一 `usage`
-为 `"issue"` 的证书签发一个适用于 `"xray.com"` 的证书，有效期为一小时。并将新的证书加入证书列表，以供后续使用。
+When a new client request comes in, assuming the specified `serverName` is `"xray.com"`, Xray will first look for a certificate that can be used for `"xray.com"` in the certificate list. If not found, it will issue a certificate for `"xray.com"` using any certificate with `usage` set to `"issue"`, with a validity of one hour. The new certificate is then added to the certificate list for later use.
 :::
 
 ::: tip TIP 3
-当 `certificateFile` 和 `certificate` 同时指定时，Xray 优先使用 `certificateFile`。`keyFile` 和 `key` 也一样。
+When both `certificateFile` and `certificate` are specified, Xray will use `certificateFile` as the priority. The same applies to `keyFile` and `key`.
 :::
 
 ::: tip TIP 4
-当 `usage` 为 `"verify"` 时，`keyFile` 和 `key` 可均为空。
+When `usage` is set to `"verify"`, `keyFile` and `key` can both be empty.
 :::
 
 ::: tip TIP 5
-使用 `xray tls cert` 可以生成自签名的 CA 证书。
+Use `xray tls cert` to generate self-signed CA certificate.
 :::
 
 ::: tip TIP 6
-如已经拥有一个域名, 可以使用工具便捷的获取免费第三方证书,如[acme.sh](https://github.com/acmesh-official/acme.sh)
+If you already have a domain name, you can use tools to obtain free third-party certificates easily, such as [acme.sh](https://github.com/acmesh-official/acme.sh).
 :::
 
 > `certificateFile`: string
 
-证书文件路径，如使用 OpenSSL 生成，后缀名为 .crt。
+Path to the certificate file generated by OpenSSL, with the suffix `.crt`.
 
-> `certificate`: \[ string \]
+> `certificate`: [ string ]
 
-一个字符串数组，表示证书内容，格式如样例所示。`certificate` 和 `certificateFile` 二者选一。
+A string array representing the certificate content, in the format shown in the example. Either `certificate` or `certificateFile` can be used.
 
 > `keyFile`: string
 
-密钥文件路径，如使用 OpenSSL 生成，后缀名为 .key。目前暂不支持需要密码的 key 文件。
+Path to the key file generated by OpenSSL, with the suffix `.key`. Password-protected key files are not currently supported.
 
-> `key`: \[ string \]
+> `key`: [ string ]
 
-一个字符串数组，表示密钥内容，格式如样例如示。`key` 和 `keyFile` 二者选一。
+A string array representing the key content, in the format shown in the example. Either `key` or `keyFile` can be used.
 
 ### SockoptObject
 
@@ -436,137 +399,128 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 > `mark`: number
 
-一个整数。当其值非零时，在 ountbound 连接以此数值上标记 SO_MARK。
+An integer value. When its value is non-zero, SO_MARK is marked with this value on the outbound connection.
 
-- 仅适用于 Linux 系统。
-- 需要 CAP_NET_ADMIN 权限。
+- Only applicable to Linux systems.
+- Requires CAP_NET_ADMIN permission.
 
 > `tcpFastOpen`: true | false | number
 
-是否启用 [TCP Fast Open](https://zh.wikipedia.org/wiki/TCP%E5%BF%AB%E9%80%9F%E6%89%93%E5%BC%80)。
+Specifies whether [TCP Fast Open](https://en.wikipedia.org/wiki/TCP_Fast_Open) is enabled.
 
-当其值为 `true` 或`正整数`时，启用 TFO；当其值为 `false` 或`负数`时，强制关闭 TFO；当此项不存在或为 `0` 时，使用系统默认设置。 可用于 inbound/outbound。
+When its value is `true` or a positive integer, TFO is enabled; when its value is `false` or a negative integer, TFO is forced to be disabled; when this item does not exist or is `0`, the system default setting is used. It can be used for inbound/outbound connections.
 
-- 仅在以下版本（或更新版本）的操作系统中可用:
-
+- Only available in the following (or later) versions of operating systems:
   - Windows 10 (1607)
   - Mac OS 10.11 / iOS 9
-  - Linux 3.16：需要通过内核参数 `net.ipv4.tcp_fastopen` 进行设定，此参数是一个 bitmap，`0x1` 代表客户端允许启用，`0x2` 代表服务器允许启用；默认值为 `0x1`，如果服务器要启用
-    TFO，请把此内核参数值设为 `0x3`。
-  - FreeBSD 10.3 (Server) / 12.0 (Client)：需要把内核参数 `net.inet.tcp.fastopen.server_enabled`
-    以及 `net.inet.tcp.fastopen.client_enabled` 设为 `1`。
-
-- 对于 Inbound，此处所设定的`正整数`代表 [待处理的 TFO 连接请求数上限](https://tools.ietf.org/html/rfc7413#section-5.1) ，**注意并非所有操作系统都支持在此设定**：
-
-  - Linux / FreeBSD：此处的设定的`正整数`值代表上限，可接受的最大值为 2147483647，为 `true` 时将取 `256`；注意在 Linux，`net.core.somaxconn`
-    会限制此值的上限，如果超过了 `somaxconn`，请同时提高 `somaxconn`。
-  - Mac OS：此处为 `true` 或`正整数`时，仅代表启用 TFO，上限需要通过内核参数 `net.inet.tcp.fastopen_backlog` 单独设定。
-  - Windows：此处为 `true` 或`正整数`时，仅代表启用 TFO。
-
-- 对于 Outbound，设定为 `true` 或`正整数`在任何操作系统都仅表示启用 TFO。
+  - Linux 3.16: It needs to be set through the kernel parameter `net.ipv4.tcp_fastopen`, which is a bitmap. `0x1` represents the client allows enabling it, and `0x2` represents the server allows enabling it. The default value is `0x1`. If the server wants to enable TFO, set this kernel parameter value to `0x3`.
+  - FreeBSD 10.3 (Server) / 12.0 (Client): The kernel parameters `net.inet.tcp.fastopen.server_enabled` and `net.inet.tcp.fastopen.client_enabled` need to be set to `1`.
+- For inbound, the `positive integer` set here represents the maximum number of TFO connection requests to be processed, **note that not all operating systems support this setting**:
+  - Linux/FreeBSD: The `positive integer` value set here represents the upper limit, and the maximum acceptable value is 2147483647. If it is set to `true`, it will take `256`. Note that in Linux, `net.core.somaxconn` will limit the upper limit of this value. If it exceeds `somaxconn`, please also increase `somaxconn`.
+  - Mac OS: When it is `true` or a `positive integer`, it only represents enabling TFO, and the upper limit needs to be set separately through the kernel parameter `net.inet.tcp.fastopen_backlog`.
+  - Windows: When it is `true` or a `positive integer`, it only represents enabling TFO.
+- For outbound, setting it to `true` or a `positive integer` only represents enabling TFO on any operating system.
 
 > `tproxy`: "redirect" | "tproxy" | "off"
 
-是否开启透明代理（仅适用于 Linux）。
+Specifies whether to enable transparent proxy (only applicable to Linux).
 
-- `"redirect"`：使用 Redirect 模式的透明代理。支持所有基于 IPv4/6 的 TCP 和 UDP 连接。
-- `"tproxy"`：使用 TProxy 模式的透明代理。支持所有基于 IPv4/6 的 TCP 和 UDP 连接。
-- `"off"`：关闭透明代理。
+- `"redirect"`: Use the transparent proxy in Redirect mode. It supports all TCP and UDP connections based on IPv4/6.
+- `"tproxy"`: Use the transparent proxy in TProxy mode. It supports all TCP and UDP connections based on IPv4/6.
+- `"off"`: Turn off transparent proxy.
 
-透明代理需要 Root 或 `CAP\_NET\_ADMIN` 权限。
+Transparent proxy requires Root or `CAP\_NET\_ADMIN` permission.
 
 ::: danger
-当 [Dokodemo-door](./inbounds/dokodemo.md) 中指定了 `followRedirect`为`true`，且 Sockopt 设置中的`tproxy` 为空时，Sockopt
-设置中的`tproxy` 的值会被设为 `"redirect"`。
+When `followRedirect` is set to `true` in [Dokodemo-door](./inbounds/dokodemo.md), and `tproxy` in the Sockopt settings is empty, the value of `tproxy` in the Sockopt settings will be set to `"redirect"`.
 :::
 
 > `domainStrategy`: "AsIs" | "UseIP" | "UseIPv4" | "UseIPv6"
 
-在之前的版本中，当 Xray 尝试使用域名建立系统连接时，域名的解析由系统完成，不受 Xray
-控制。这导致了在 [非标准 Linux 环境中无法解析域名](https://github.com/v2ray/v2ray-core/issues/1909) 等问题。为此，Xray 1.3.1 为 Sockopt 引入了 Freedom
-中的 domainStrategy，解决了此问题。
+In previous versions, when Xray attempted to establish a system connection using a domain name, the resolution of the domain name was completed by the system and not controlled by Xray. This led to issues such as the inability to resolve domain names in non-standard Linux environments. To solve this problem, Xray 1.3.1 introduced Freedom's `domainStrategy` into Sockopt.
 
-在目标地址为域名时, 配置相应的值, SystemDialer 的行为模式如下:
+When the target address is a domain name, the corresponding value is configured, and the behavior of SystemDialer is as follows:
 
-- `"AsIs"`: 通过系统 DNS 服务器解析获取 IP, 向此域名发出连接。
-- `"UseIP"`、`"UseIPv4"` 和 `"UseIPv6"`: 使用[内置 DNS 服务器](./dns.md)解析获取 IP 后, 直接向此 IP 发出连接。
+- `"AsIs"`: Resolve the IP address using the system DNS server and connect to the domain name.
+- `"UseIP"`, `"UseIPv4"`, and `"UseIPv6"`: Resolve the IP address using the [built-in DNS server](./dns.md) and connect to the IP address directly.
 
-默认值为 `"AsIs"`。
+The default value is `"AsIs"`.
 
 ::: danger
 
-启用了此功能后，不当的配置可能会导致死循环。
+Improper configuration may cause infinite loops when this feature is enabled.
 
-一句话版本：连接到服务器，需要等待 DNS 查询结果；完成 DNS 查询，需要连接到服务器。
+In short, connecting to the server requires waiting for the DNS query result, and completing the DNS query requires connecting to the server.
 
-> Tony: 先有鸡还是先有蛋?
+> Tony: Which came first, the chicken or the egg?
 
-详细解释：
+Explanation:
 
-1. 触发条件：代理服务器（proxy.com）。内置 DNS 服务器，非 Local 模式。
-2. Xray 尝试向 proxy.com 建立 TCP 连接 **前** ，通过内置 DNS 服务器查询 proxy.com。
-3. 内置 DNS 服务器向 dns.com 建立连接，并发送查询，以获取 proxy.com 的 IP。
-4. **不当的** 的路由规则，导致 proxy.com 代理了步骤 3 中发出的查询。
-5. Xray 尝试向 proxy.com 建立另一个 TCP 连接。
-6. 在建立连接前，通过内置 DNS 服务器查询 proxy.com。
-7. 内置 DNS 服务器复用步骤 3 中的连接，发出查询。
-8. 问题出现。步骤 3 中连接的建立，需要等待步骤 7 中的查询结果；步骤 7 完成查询，需要等待步骤 3 中的连接完全建立。
-9. Good Game！
+1. Trigger condition: proxy server (proxy.com). Built-in DNS server, non-local mode.
+2. Before Xray attempts to establish a TCP connection to proxy.com, it queries proxy.com using the built-in DNS server.
+3. The built-in DNS server establishes a connection to dns.com and sends a query to obtain the IP address of proxy.com.
+4. Improper routing rules cause proxy.com to proxy the query sent in step 3.
+5. Xray attempts to establish another TCP connection to proxy.com.
+6. Before establishing the connection, Xray queries proxy.com using the built-in DNS server.
+7. The built-in DNS server reuses the connection established in step 3 to send a query.
+8. A problem arises. The establishment of the connection in step 3 requires waiting for the query result in step 7, and the completion of the query in step 7 requires waiting for the connection in step 3 to be fully established.
+9. Good game!
 
-解决方案：
+Solution:
 
-- 改内置 DNS 服务器的分流。
-- 用 Hosts。
-- ~~如果你还是不知道解决方案，就别用这个功能了。~~
+- Adjust the split of internal DNS servers.
+- Use Hosts file.
+- ~~If you still don't know the solution, then don't use this feature.~~
 
-因此，**不建议** 经验不足的用户擅自使用此功能。
+Therefore, it is **not recommended** for inexperienced users to use this feature.
+
 :::
 
 > `dialerProxy`: ""
 
-一个出站代理的标识。当值不为空时，将使用指定的 outbound 发出连接。 此选项可用于支持底层传输方式的链式转发。
+An identifier for an outbound proxy. When the value is not empty, the specified outbound will be used to establish the connection. This option can be used to support chain forwarding of underlying transport protocols.
 
 ::: danger
-此选项与 ProxySettingsObject.Tag 不兼容
+This option is incompatible with ProxySettingsObject.Tag
 :::
 
 > `acceptProxyProtocol`: true | false
 
-仅用于 inbound，指示是否接收 PROXY protocol。
+Only used for inbound, indicates whether to accept the PROXY protocol.
 
-[PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) 专用于传递请求的真实来源 IP 和端口，**若你不了解它，请先忽略该项**。
+[PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is used to pass the true source IP and port of a request. **If you are not familiar with it, please ignore this option first**.
 
-常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
+Common reverse proxy software (such as HAProxy, Nginx) can be configured to send it, and VLESS fallbacks xver can also send it.
 
-填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
+When set to `true`, after the lowest-level TCP connection is established, the requesting party must first send PROXY protocol v1 or v2, otherwise the connection will be closed.
 
 > `tcpKeepAliveInterval`: number
 
-TCP 保持活跃的数据包发送间隔，单位为秒。~~该设置仅适用于 Linux 下。~~
+Interval between TCP keep-alive packets, in seconds. ~~This setting only applies to Linux.~~
 
-不配置此项或配置为 0 表示使用 Go 默认值。
+Not configuring this item or configuring it as 0 means using the default value of Go.
 
 ::: tip
-填负数时，如 `-1`，不启用 TCP 保持活跃。
+When filling in a negative number, such as `-1`, TCP keep-alive is not enabled.
 :::
 
 > `tcpcongestion`: ""
 
-TCP 拥塞控制算法。仅支持 Linux。
-不配置此项表示使用系统默认值。
+TCP congestion control algorithm. Only supported by Linux. Not configuring this item means using the system default value.
 
-::: tip 常见的算法
+::: tip
+Common algorithms
 
-- bbr（推荐）
+- bbr (recommended)
 - cubic
 - reno
 
 :::
 
 ::: tip
-执行命令 `sysctl net.ipv4.tcp_congestion_control` 获取系统默认值。
+Execute the command `sysctl net.ipv4.tcp_congestion_control` to get the system default value.
 :::
 
 > `interface`: ""
 
-指定绑定出口网卡名称 仅支持 linux。
+Specifies the name of the bound outbound network interface. Only supported by Linux.

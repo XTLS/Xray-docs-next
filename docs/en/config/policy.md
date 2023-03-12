@@ -1,10 +1,10 @@
-# 本地策略
+# Local Policy
 
-本地策略，可以设置不同的用户等级和对应的策略设置，比如连接超时设置。Xray 处理的每一个连接都对应一个用户，按照用户的等级（level）应用不同的策略。
+Local policy can be used to set different policy settings for different user levels, such as connection timeout settings. Each connection handled by Xray corresponds to a user, and different policies are applied based on the user's level.
 
 ## PolicyObject
 
-`PolicyObject` 对应配置文件的 `policy` 项。
+`PolicyObject` corresponds to the `policy` field in the configuration file.
 
 ```json
 {
@@ -32,15 +32,15 @@
 
 > `level`: map{string: [LevelPolicyObject](#levelpolicyobject)}
 
-一组键值对，每个键是一个字符串形式的数字（JSON 的要求），比如 `"0"`、`"1"` 等，双引号不能省略，此数字对应用户等级。每一个值是一个 [LevelPolicyObject](#levelpolicyobject).
+A set of key-value pairs, where each key is a string representation of a number (as required by JSON), such as `"0"`, `"1"`, etc., with the number corresponding to the user level. Each value is a [LevelPolicyObject](#levelpolicyobject).
 
 ::: tip
-每个入站出站代理现在都可以设置用户等级，Xray 会根据实际的用户等级应用不同的本地策略。
+Each inbound and outbound proxy can now set the user level, and Xray will apply different local policies based on the actual user level.
 :::
 
 > `system`: [SystemPolicyObject](#systempolicyobject)
 
-Xray 系统级别的策略
+Xray system-level policy.
 
 ### LevelPolicyObject
 
@@ -58,41 +58,41 @@ Xray 系统级别的策略
 
 > `handshake`: number
 
-连接建立时的握手时间限制。单位为秒。默认值为 `4`。在入站代理处理一个新连接时，在握手阶段如果使用的时间超过这个时间，则中断该连接。
+The time limit for handshake during connection establishment. Unit: seconds. Default: `4`. When processing a new inbound connection, if the time used in the handshake phase exceeds this limit, the connection will be aborted.
 
 > `connIdle`: number
 
-连接空闲的时间限制。单位为秒。默认值为 `300`。inbound/outbound 处理一个连接时，如果在 `connIdle` 时间内，没有任何数据被传输（包括上行和下行数据），则中断该连接。
+The time limit for connection idle time. Unit: seconds. Default: `300`. When processing an inbound/outbound connection, if no data is transferred (including upstream and downstream data) within `connIdle` time, the connection will be aborted.
 
 > `uplinkOnly`: number
 
-当连接下行线路关闭后的时间限制。单位为秒。默认值为 `2`。当服务器（如远端网站）关闭下行连接时，出站代理会在等待 `uplinkOnly` 时间后中断连接。
+The time limit after the downstream connection is closed. Unit: seconds. Default: `2`. When the server (such as a remote website) closes the downstream connection, the outbound proxy will abort the connection after waiting for `uplinkOnly` time.
 
 > `downlinkOnly`: number
 
-当连接上行线路关闭后的时间限制。单位为秒。默认值为 `5`。当客户端（如浏览器）关闭上行连接时，入站代理会在等待 `downlinkOnly` 时间后中断连接。
+The time limit after the upstream connection is closed. Unit: seconds. Default: `5`. When the client (such as a browser) closes the upstream connection, the inbound proxy will abort the connection after waiting for `downlinkOnly` time.
 
 ::: tip
-在 HTTP 浏览的场景中，可以将 `uplinkOnly` 和 `downlinkOnly` 设为 `0`，以提高连接关闭的效率。
+In the scenario of HTTP browsing, you can set `uplinkOnly` and `downlinkOnly` to `0` to improve the efficiency of connection closing.
 :::
 
 > `statsUserUplink`: true | false
 
-当值为 `true` 时，开启当前等级的所有用户的上行流量统计。
+When set to `true`, enables upstream traffic statistics for all users at the current level.
 
 > `statsUserDownlink`: true | false
 
-当值为 `true` 时，开启当前等级的所有用户的下行流量统计。
+When set to `true`, enables downstream traffic statistics for all users at the current level.
 
 > `bufferSize`: number
 
-每个连接的内部缓存大小。单位为 kB。当值为 `0` 时，内部缓存被禁用。
+The internal buffer size of each connection. Unit: kB. When set to `0`, the internal buffer is disabled.
 
-默认值:
+Default values:
 
-- 在 ARM、MIPS、MIPSLE 平台上，默认值为 `0`。
-- 在 ARM64、MIPS64、MIPS64LE 平台上，默认值为 `4`。
-- 在其它平台上，默认值为 `512`。
+- On ARM, MIPS, and MIPSLE platforms, the default value is `0`.
+- On ARM64, MIPS64, and MIPS64LE platforms, the default value is `4`.
+- On other platforms, the default value is `512`.
 
 ### SystemPolicyObject
 
@@ -107,16 +107,16 @@ Xray 系统级别的策略
 
 > `statsInboundUplink`: true | false
 
-当值为 `true` 时，开启所有入站代理的上行流量统计。
+When set to `true`, enables upstream traffic statistics for all inbound proxies.
 
 > `statsInboundDownlink`: true | false
 
-当值为 `true` 时，开启所有入站代理的下行流量统计。
+When set to `true`, enables downstream traffic statistics for all inbound proxies.
 
 > `statsOutboundUplink`: true | false
 
-当值为 `true` 时，开启所有出站代理的上行流量统计。
+When set to `true`, enables upstream traffic statistics for all outbound proxies.
 
 > `statsOutboundDownlink`: true | false
 
-当值为 `true` 时，开启所有出站代理的下行流量统计。
+When set to `true`, enables downstream traffic statistics for all outbound proxies.

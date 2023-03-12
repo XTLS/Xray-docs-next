@@ -1,10 +1,10 @@
-# 入站代理
+# Inbound Proxy
 
-入站连接用于接收发来的数据，可用的协议请见[inbound protocols](./inbounds/)。
+Inbound connections are used to receive incoming data and the available protocols are listed in [inbound protocols](./inbounds/).
 
 ## InboundObject
 
-`InboundObject` 对应配置文件中 `inbounds` 项的一个子元素。
+The `InboundObject` corresponds to a subelement of the `inbounds` item in the configuration file.
 
 ```json
 {
@@ -12,10 +12,10 @@
     {
       "listen": "127.0.0.1",
       "port": 1080,
-      "protocol": "协议名称",
+      "protocol": "protocol_name",
       "settings": {},
       "streamSettings": {},
-      "tag": "标识",
+      "tag": "identifier",
       "sniffing": {
         "enabled": true,
         "destOverride": ["http", "tls"]
@@ -32,69 +32,69 @@
 
 > `listen`: address
 
-监听地址，IP 地址或 Unix domain socket，默认值为 `"0.0.0.0"`，表示接收所有网卡上的连接.
+The listening address, either an IP address or a Unix domain socket. The default value is `"0.0.0.0"`, which means accepting connections on all network interfaces.
 
-可以指定一个系统可用的 IP 地址。
+An available system IP address can be specified.
 
-支持填写 Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `@` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`@@` 则代表带 padding 的 abstract。
+Unix domain socket can also be specified by providing the absolute path in the form of `"/dev/shm/domain.socket"`. The `@` symbol can be added at the beginning to represent [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html), and `@@` represents padded abstract.
 
-填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，传输方式可选 TCP、WebSocket、HTTP/2、gRPC。
+When Unix domain socket is specified, `port` and `allocate` will be ignored. The protocol currently supports VLESS, VMess, and Trojan. The transport methods available are TCP, WebSocket, HTTP/2, and gRPC.
 
-填写 Unix domain socket 时，填写为形如 `"/dev/shm/domain.socket,0666"` 的形式，即 socket 后加逗号及访问权限指示符，即可指定 socket 的访问权限，可用于解决默认情况下出现的 socket 访问权限问题。
+When specifying a Unix domain socket, you can add a comma and an access permission indicator after the socket, such as `"/dev/shm/domain.socket,0666"`, to specify the access permission of the socket. This can be used to solve the socket access permission issue that occurs by default.
 
 > `port`: number | "env:variable" | string
 
-端口。接受的格式如下:
+Port. The accepted formats are:
 
-- 整型数值：实际的端口号。
-- 环境变量：以 `"env:"` 开头，后面是一个环境变量的名称，如 `"env:PORT"`。Xray 会以字符串形式解析这个环境变量。
-- 字符串：可以是一个数值类型的字符串，如 `"1234"`；或者一个数值范围，如 `"5-10"` 表示端口 5 到端口 10，这 6 个端口。可以使用逗号进行分段，如 `11,13,15-17` 表示端口 11、端口 13、端口 15 到端口 17 这 5 个端口。
+- Integer: the actual port number.
+- Environment variable: starts with `"env:"`, followed by the name of an environment variable, such as `"env:PORT"`. Xray will parse this environment variable as a string.
+- String: can be a numeric string, such as `"1234"`, or a range of port numbers, such as `"5-10"` which represents ports 5 through 10, a total of 6 ports. You can use commas to separate multiple ranges, such as `11,13,15-17`, which represents ports 11, 13, and 15 through 17, a total of 5 ports.
 
-当只有一个端口时，Xray 会在此端口监听入站连接。当指定了一个端口范围时，取决于 `allocate` 设置。
+When only one port is specified, Xray listens for inbound connections on that port. When a range of ports is specified, it depends on the `allocate` setting.
 
 > `protocol`: string
 
-连接协议名称，可选的协议类型见 [inbound protocols](./inbounds/)。
+The connection protocol name. The optional protocol types are listed in [inbound protocols](./inbounds/).
 
 > `settings`: InboundConfigurationObject
 
-具体的配置内容，视协议不同而不同。详见每个协议中的 `InboundConfigurationObject`。
+The specific configuration content depends on the protocol. See `InboundConfigurationObject` in each protocol for details.
 
 > `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
 
-底层传输方式（transport）是当前 Xray 节点和其它节点对接的方式
+The underlying transport method is how the current Xray node interfaces with other nodes.
 
 > `tag`: string
-> 此入站连接的标识，用于在其它的配置中定位此连接。
+>
+> The identifier of this inbound connection, used to locate this connection in other configurations.
 
 ::: danger
-当其不为空时，其值必须在所有 `tag` 中**唯一**。
+When it is not empty, its value must be **unique** among all `tag`s.
 :::
 
 > `sniffing`: [SniffingObject](#sniffingobject)
 
-流量探测主要作用于在透明代理等用途.
-比如一个典型流程如下:
+Traffic sniffing is mainly used in transparent proxies, for example:
 
-1. 如有一个设备上网,去访问 abc.com,首先设备通过 DNS 查询得到 abc.com 的 IP 是 1.2.3.4,然后设备会向 1.2.3.4 去发起连接.
-2. 如果不设置嗅探,Xray 收到的连接请求是 1.2.3.4,并不能用于域名规则的路由分流.
-3. 当设置了 sniffing 中的 enable 为 true,Xray 处理此连接的流量时,会从流量的数据中,嗅探出域名,即 abc.com
-4. Xray 会把 1.2.3.4 重置为 abc.com.路由就可以根据域名去进行路由的域名规则的分流
+1. If a device wants to access `abc.com` while connected to the internet, it will first query the IP address of `abc.com` via DNS and get `1.2.3.4`. Then the device will initiate a connection to `1.2.3.4`.
+2. If sniffing is not set up, Xray will receive a connection request for `1.2.3.4`, which cannot be used for routing based on domain rules.
+3. When `enable` in `sniffing` is set to `true`, Xray will sniff the domain name, `abc.com`, from the traffic data when processing the traffic of this connection.
+4. Xray will reset `1.2.3.4` to `abc.com`. Routing can then be based on domain rules.
 
-因为变成了一个向 abc.com 请求的连接, 就可以做更多的事情, 除了路由域名规则分流, 还能重新做 DNS 解析等其他工作.
+Since the connection is now to `abc.com`, more can be done, such as routing based on domain rules, and even re-resolving the DNS.
 
-当设置了 sniffing 中的 enable 为 true, 还能嗅探出 bittorrent 类型的流量, 然后可以在路由中配置"protocol"项来设置规则处理 BT 流量, 比如服务端用来拦截 BT 流量, 或客户端固定转发 BT 流量到某个 VPS 去等.
+When `enable` in `sniffing` is set to `true`, it can also sniff out bittorrent traffic and then configure the "protocol" item in routing rules to handle bittorrent traffic, such as intercepting bittorrent traffic on the server or forwarding bittorrent traffic to a VPS on the client side.
 
 > `allocate`: [AllocateObject](#allocateobject)
 
-当设置了多个 port 时, 端口分配的具体设置
+Specifies the specific settings for port allocation when multiple ports are set up.
 
 ### SniffingObject
 
 ```json
 {
   "enabled": true,
-  "destOverride": ["http", "tls", "fakedns"],
+  "destOverride": ["http", "tls", "quic", "fakedns", "fakedns+others"],
   "metadataOnly": false,
   "domainsExcluded": [],
   "routeOnly": false
@@ -103,36 +103,36 @@
 
 > `enabled`: true | false
 
-是否开启流量探测。
+Whether to enable traffic sniffing.
 
-> `destOverride`: \["http" | "tls" | "quic" | "fakedns" | "fakedns+others" \]
+> `destOverride`: ["http" | "tls" | "quic" | "fakedns" | "fakedns+others" ]
 
-当流量为指定类型时，按其中包括的目标地址重置当前连接的目标。
+When the traffic is of a specified type, reset the destination of the current connection to the target address included in the list.
 
-其中 `["fakedns+others"]` 相当于 `["http", "tls", "quic", "fakedns"]`，当 IP 地址处于 FakeIP 区间内但没有命中域名记录时会使用 `http`、`tls` 和 `quic` 进行匹配。此项仅在 `metadataOnly` 为 `false` 时有效。
+`["fakedns+others"]` is equivalent to `["http", "tls", "quic", "fakedns"]`, and when the IP address is in the FakeIP range but no domain records are hit, `http`, `tls`, and `quic` will be used for matching. This option is only effective when `metadataOnly` is set to `false`.
 
 > `metadataOnly`: true | false
 
-当启用时，将仅使用连接的元数据嗅探目标地址。此时，除 `fakedns` 以外的 sniffer 将不能激活（包括 `fakedns+others`）。
+When enabled, only use the connection's metadata to sniff the target address. In this case, sniffer other than `fakedns` (including `fakedns+others`) cannot be activated.
 
-如果关闭仅使用元数据推断目标地址，此时客户端必须先发送数据，代理服务器才会实际建立连接。此行为与需要服务器首先发起第一个消息的协议不兼容，如 SMTP 协议。
+If metadata-only is disabled, the client must send data before the proxy server actually establishes the connection. This behavior is incompatible with protocols that require the server to initiate the first message, such as the SMTP protocol.
 
 > `domainsExcluded`: [string] <Badge text="WIP" type="warning"/>
 
-一个域名列表，如果流量探测结果在这个列表中时，将 **不会** 重置目标地址。
+A list of domain names. If the traffic sniffing result matches a domain name in this list, the target address will **not** be reset.
 
 ::: warning
-目前，`domainsExcluded` 不支持类似路由中的域名匹配方式。此选项未来可能会改变，不保证跨版本兼容。
+Currently, `domainsExcluded` does not support domain name matching in the routing sense. This option may change in the future and cross-version compatibility is not guaranteed.
 :::
 
 > `routeOnly`: true | false
 
-将嗅探得到的域名仅用于路由，代理目标地址仍为 IP。默认值为 `false`。
+Use the sniffed domain name for routing only, and keep the target address as the IP address. The default value is `false`.
 
-此项需要开启 `destOverride` 使用。
+This option requires `destOverride` to be enabled.
 
 ::: tip
-在能保证 **被代理连接能得到正确的 DNS 解析** 时，使用 `routeOnly` 且开启 `destOverride` 的同时，将路由匹配策略 `domainStrategy` 设置为 `AsIs` 即可实现全程无 DNS 解析进行域名及 IP 分流。此时遇到 IP 规则匹配时使用的 IP 为域名原始 IP。
+When it is possible to ensure that **the proxied connection can obtain correct DNS resolution**, by using `routeOnly` and enabling `destOverride`, and setting the routing matching strategy `domainStrategy` to `AsIs`, it is possible to achieve domain and IP separation without DNS resolution throughout the process. The IP used when encountering an IP rule match is the original IP of the domain.
 :::
 
 ### AllocateObject
@@ -147,15 +147,15 @@
 
 > `strategy`: "always" | "random"
 
-端口分配策略。
+The port allocation strategy.
 
-- `"always"` 表示总是分配所有已指定的端口，`port` 中指定了多少个端口，Xray 就会监听这些端口。
-- `"random"` 表示随机开放端口，每隔 `refresh` 分钟在 `port` 范围中随机选取 `concurrency` 个端口来监听。
+- `"always"` means all specified ports in `port` will be allocated, and Xray will listen on these ports.
+- `"random"` means ports will be randomly selected from the `port` range every `refresh` minutes, and `concurrency` ports will be listened on.
 
 > `refresh`: number
 
-随机端口刷新间隔，单位为分钟。最小值为 `2`，建议值为 `5`。这个属性仅当 `strategy` 设置为 `"random"` 时有效。
+The interval for refreshing randomly allocated ports in minutes. The minimum value is `2`, and it is recommended to set to `5`. This property is only effective when `strategy` is set to `"random"`.
 
 > `concurrency`: number
 
-随机端口数量。最小值为 `1`，最大值为 `port` 范围的三分之一。建议值为 `3`。
+The number of randomly allocated ports. The minimum value is `1`, and the maximum value is one-third of the `port` range. It is recommended to set to `3`.

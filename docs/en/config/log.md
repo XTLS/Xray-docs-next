@@ -1,18 +1,18 @@
-# 日志配置
+# Log Configuration
 
-日志配置，控制 Xray 输出日志的方式.
+Log configuration controls how Xray outputs logs.
 
-Xray 有两种日志, 访问日志和错误日志, 你可以分别配置两种日志的输出方式.
+Xray has two types of logs: access logs and error logs. You can configure the output method for each type of log separately.
 
 ## LogObject
 
-LogObject 对应配置文件的 `log` 项。
+LogObject corresponds to the `log` item in the configuration file.
 
 ```json
 {
   "log": {
-    "access": "文件地址",
-    "error": "文件地址",
+    "access": "file_path",
+    "error": "file_path",
     "loglevel": "warning",
     "dnsLog": false
   }
@@ -21,27 +21,26 @@ LogObject 对应配置文件的 `log` 项。
 
 > `access`: string
 
-访问日志的文件地址，其值是一个合法的文件地址，如`"/var/log/Xray/access.log"`（Linux）或者`"C:\\Temp\\Xray\\_access.log"`（Windows）。当此项不指定或为空值时，表示将日志输出至 stdout。
+The file path for the access log. The value is a valid file path, such as `"/var/log/Xray/access.log"` (Linux) or `"C:\\Temp\\Xray\\_access.log"` (Windows). When this item is not specified or is an empty value, the log is output to stdout.
 
-- 特殊值`none`，即关闭 access log。
+- The special value `none` disables access logs.
 
 > `error`: string
 
-错误日志的文件地址，其值是一个合法的文件地址，如`"/var/log/Xray/error.log"`（Linux）或者`"C:\\Temp\\Xray\\_error.log"`（Windows）。当此项不指定或为空值时，表示将日志输出至 stdout。
+The file path for the error log. The value is a valid file path, such as `"/var/log/Xray/error.log"` (Linux) or `"C:\\Temp\\Xray\\_error.log"` (Windows). When this item is not specified or is an empty value, the log is output to stdout.
 
-- 特殊值`none`，即关闭 error log。
+- The special value `none` disables error logs.
 
 > `loglevel`: "debug" | "info" | "warning" | "error" | "none"
 
-error 日志的级别, 指示 error 日志需要记录的信息.
-默认值为 `"warning"`。
+The log level for error logs, indicating the information that needs to be recorded. The default value is `"warning"`.
 
-- `"debug"`：调试程序时用到的输出信息。同时包含所有 `"info"` 内容。
-- `"info"`：运行时的状态信息等，不影响正常使用。同时包含所有 `"warning"` 内容。
-- `"warning"`：发生了一些并不影响正常运行的问题时输出的信息，但有可能影响用户的体验。同时包含所有 `"error"` 内容。
-- `"error"`：Xray 遇到了无法正常运行的问题，需要立即解决。
-- `"none"`：不记录任何内容。
+- `"debug"`: Output information used for debugging the program. Includes all `"info"` content.
+- `"info"`: Runtime status information, etc., which does not affect normal use. Includes all `"warning"` content.
+- `"warning"`: Information output when there are some problems that do not affect normal operation but may affect user experience. Includes all `"error"` content.
+- `"error"`: Xray encountered a problem that cannot be run normally and needs to be resolved immediately.
+- `"none"`: Do not record any content.
 
 > `dnsLog`: bool
 
-是否启用 DNS 查询日志，例如：`DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`
+Whether to enable DNS query logs, for example: `DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`.

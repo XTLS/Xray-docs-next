@@ -1,26 +1,26 @@
-# 反向代理
+# Reverse Proxy
 
-反向代理可以把服务器端的流量向客户端转发，即逆向流量转发。
+A reverse proxy forwards traffic from a server to a client, which is known as reverse traffic forwarding.
 
-反向代理的大致工作原理如下:
+Here's how a reverse proxy generally works:
 
-- 假设在主机 A 中有一个网页服务器，这台主机没有公网 IP，无法在公网上直接访问。另有一台主机 B，它可以由公网访问。现在我们需要把 B 作为入口，把流量从 B 转发到 A。
-- 在主机 A 中配置 Xray，称为`bridge`，在 B 中也配置 Xray，称为 `portal`。
-- `bridge` 会向 `portal` 主动建立连接，此连接的目标地址可以自行设定。`portal` 会收到两种连接，一是由 `bridge` 发来的连接，二是公网用户发来的连接。`portal` 会自动将两类连接合并。于是 `bridge` 就可以收到公网流量了。
-- `bridge` 在收到公网流量之后，会将其原封不动地发给主机 A 中的网页服务器。当然，这一步需要路由的协作。
-- `bridge` 会根据流量的大小进行动态的负载均衡。
+- Suppose there is a web server in host A, which does not have a public IP address and cannot be accessed directly on the Internet. There is another host B that can be accessed via the public network. Now we need to use B as the entry point to forward traffic from B to A.
+- Configure Xray in host A as a `bridge`, and also configure Xray in B as a `portal`.
+- `Bridge` will actively establish a connection to `portal`, and the destination address of this connection can be set by itself. `Portal` will receive two types of connections: one is the connection sent by `bridge`, and the other is the connection sent by public network users. `Portal` will automatically merge the two types of connections. So `bridge` can receive public network traffic.
+- After receiving the public network traffic, `bridge` will forward it unchanged to the web server in host A. Of course, this step requires the cooperation of routing.
+- `Bridge` will dynamically load balance according to the size of the traffic.
 
 ::: tip
-反向代理默认已开启 [Mux](../../development/protocols/muxcool/)，请不要在其用到的 outbound 上再次开启 Mux。
+Reverse proxy has Mux enabled by default, so please do not enable Mux again on the outbound it uses.
 :::
 
 ::: warning
-反向代理功能尚处于测试阶段，可能会有一些问题。
+The reverse proxy function is still in the testing phase and may have some issues.
 :::
 
 ## ReverseObject
 
-`ReverseObject` 对应配置文件的 `reverse` 项。
+`ReverseObject` corresponds to the `reverse` field in the configuration file.
 
 ```json
 {
@@ -43,11 +43,11 @@
 
 > `bridges`: \[[BridgeObject](#bridgeobject)\]
 
-数组，每一项表示一个 `bridge`。每个 `bridge` 的配置是一个 [BridgeObject](#bridgeobject)。
+An array in which each item represents a `bridge`. The configuration of each `bridge` is a [BridgeObject](#bridgeobject).
 
-> `portals`: \[[PortalObject](#portalobject)\]
+> `portals`: [[PortalObject](#portalobject)]
 
-数组，每一项表示一个 `portal`。每个 `portal` 的配置是一个 [PortalObject](#bridgeobject)。
+An array in which each item represents a `portal`. The configuration of each `portal` is a [PortalObject](#bridgeobject).
 
 ### BridgeObject
 
@@ -60,12 +60,11 @@
 
 > `tag`: string
 
-所有由 `bridge` 发出的连接，都会带有这个标识。可以在 [路由配置](./routing.md) 中使用 `inboundTag` 进行识别。
+All connections initiated by `bridge` will have this tag. It can be used to identify the connections in [routing configuration](./routing.md).
 
 > `domain`: string
 
-指定一个域名，`bridge` 向 `portal` 建立的连接，都会使用这个域名进行发送。
-这个域名只作为 `bridge` 和 `portal` 的通信用途，不必真实存在。
+Specifies a domain name that will be used by `bridge` to send connections to `portal`. This domain name is only used for communication between `bridge` and `portal`, and does not need to actually exist.
 
 ### PortalObject
 
@@ -78,27 +77,27 @@
 
 > `tag`: string
 
-`portal` 的标识。在 [路由配置](./routing.md) 中使用 `outboundTag` 将流量转发到这个 `portal`。
+The identifier for the `portal`. Use `outboundTag` in [routing configuration](./routing.md) to forward traffic to this `portal`.
 
 > `domain`: string
 
-一个域名。当 `portal` 接收到流量时，如果流量的目标域名是此域名，则 `portal` 认为当前连接上 `bridge` 发来的通信连接。而其它流量则会被当成需要转发的流量。`portal` 所做的工作就是把这两类连接进行识别并拼接。
+A domain name. When the `portal` receives traffic, if the destination domain of the traffic is this domain, the `portal` assumes that the current connection is a communication connection sent by the `bridge`. Other traffic will be considered as traffic that needs to be forwarded. The work of the `portal` is to identify and splice these two types of connections.
 
 ::: tip
-一个 Xray 既可以作为 `bridge`，也可以作为 `portal`，也可以同时两者，以适用于不同的场景需要。
+An Xray can act as a `bridge`, a `portal`, or both at the same time, depending on the needs of different scenarios.
 :::
 
-## 完整配置样例
+## Complete Configuration Example
 
-::: tip
-在运行过程中，建议先启用 `bridge`，再启用 `portal`。
+:::
+tip During operation, it is recommended to enable `bridge` first, then enable `portal`.
 :::
 
-### bridge 配置
+### Bridge Configuration
 
-`bridge` 通常需要两个 outbound，一个用于连接 `portal`，另一个用于发送实际的流量。也就是说，你需要用路由区分两种流量。
+A `bridge` usually requires two outbounds, one for connecting to the `portal`, and the other for sending actual traffic. That is, you need to use routing to distinguish between the two types of traffic.
 
-反向代理配置:
+Reverse proxy configuration:
 
 ```json
 {
@@ -118,7 +117,7 @@ outbound:
   "tag": "out",
   "protocol": "freedom",
   "settings": {
-    "redirect": "127.0.0.1:80" // 将所有流量转发到网页服务器
+    "redirect": "127.0.0.1:80" // Forward all traffic to web server
   }
 }
 ```
@@ -129,7 +128,7 @@ outbound:
   "settings": {
     "vnext": [
       {
-        "address": "portal 的 IP 地址",
+        "address": "portal's IP address",
         "port": 1024,
         "users": [
           {
@@ -143,7 +142,7 @@ outbound:
 }
 ```
 
-路由配置:
+Routing Configuration:
 
 ```json
 {
@@ -163,18 +162,18 @@ outbound:
 }
 ```
 
-### portal 配置
+### Portal Configuration
 
-`portal` 通常需要两个 inbound，一个用于接收 `bridge` 的连接，另一个用于接收实际的流量。同时你也需要用路由区分两种流量。
+`portal` usually requires two inbounds, one for receiving connections from `bridge`, and the other for receiving actual traffic. You also need to distinguish between these two types of traffic using routing.
 
-反向代理配置:
+Reverse proxy configuration:
 
 ```json
 {
   "portals": [
     {
       "tag": "portal",
-      "domain": "test.xray.com" // 必须和 bridge 的配置一样
+      "domain": "test.xray.com" // Must be the same as the bridge's configuration
     }
   ]
 }
@@ -210,7 +209,7 @@ inbound:
 }
 ```
 
-路由配置:
+Routing Configuration:
 
 ```json
 {
