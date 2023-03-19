@@ -269,26 +269,20 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 ```json
 {
-    "show": false,
-    "dest": "example.com:443",
-    "xver": 0,
-    "serverNames": [
-        "example.com",
-        "www.example.com"
-    ],
-    "privateKey": "",
-    "minClientVer": "",
-    "maxClientVer": "",
-    "maxTimeDiff": 0,
-    "shortIds": [
-        "",
-        "0123456789abcdef"
-    ],
-    "fingerprint": "chrome",
-    "serverName": "",
-    "publicKey": "",
-    "shortId": "",
-    "spiderX": ""
+  "show": false,
+  "dest": "example.com:443",
+  "xver": 0,
+  "serverNames": ["example.com", "www.example.com"],
+  "privateKey": "",
+  "minClientVer": "",
+  "maxClientVer": "",
+  "maxTimeDiff": 0,
+  "shortIds": ["", "0123456789abcdef"],
+  "fingerprint": "chrome",
+  "serverName": "",
+  "publicKey": "",
+  "shortId": "",
+  "spiderX": ""
 }
 ```
 
@@ -318,7 +312,19 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `serverNames` : \[string\]
 
+::: tip
+**只需**在**入站**（**服务端**）配置。
+:::
+
 必填，客户端可用的 `serverName` 列表，暂不支持 \* 通配符。
+
+> `serverName` : string
+
+::: tip
+**只需**在**出站**（**客户端**）配置。
+:::
+
+服务端 serverNames 之一。
 
 > `privateKey` : string
 
