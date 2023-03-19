@@ -316,7 +316,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 选填，格式同 VLESS `fallbacks` 的 [xver](https://xtls.github.io/config/features/fallback.html#fallbackobject)
 
-> `serverNames` : string
+> `serverNames` : \[string\]
 
 必填，客户端可用的 `serverName` 列表，暂不支持 \* 通配符。
 
@@ -352,7 +352,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 选填，允许的最大时间差，单位为毫秒。
 
-> `shortIds` : string
+> `shortIds` : \[string\]
 
 必填，客户端可用的 `shortId` 列表，可用于区分不同的客户端。
 
