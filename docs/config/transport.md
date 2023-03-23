@@ -269,36 +269,126 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 ```json
 {
-  "show": false, // 选填，若为 true，输出调试信息
-  "dest": "example.com:443", // 必填，格式同 VLESS fallbacks 的 dest
-  "xver": 0, // 选填，格式同 VLESS fallbacks 的 xver
-  "serverNames": [
-    // 必填，客户端可用的 serverName 列表，暂不支持 * 通配符
-    "example.com",
-    "www.example.com"
-  ],
-  "privateKey": "", // 必填，执行 ./xray x25519 生成
-  "minClientVer": "", // 选填，客户端 Xray 最低版本，格式为 x.y.z
-  "maxClientVer": "", // 选填，客户端 Xray 最高版本，格式为 x.y.z
-  "maxTimeDiff": 0, // 选填，允许的最大时间差，单位为毫秒
-  "shortIds": [
-    // 必填，客户端可用的 shortId 列表，可用于区分不同的客户端
-    "", // 若有此项，客户端 shortId 可为空
-    "0123456789abcdef" // 0 到 f，长度为 2 的倍数，长度上限为 16
-  ],
-  // 客户端选项
-  "show": false, // 选填，若为 true，输出调试信息
-  "fingerprint": "chrome", // 必填，使用 uTLS 库模拟客户端 TLS 指纹
-  "serverName": "", // 必填，服务端 serverNames 之一
-  "publicKey": "", // 必填，服务端私钥对应的公钥
-  "shortId": "", // 必填，服务端 shortIds 之一
-  "spiderX": "" // 爬虫初始路径与参数，建议每个客户端不同
+  "show": false,
+  "dest": "example.com:443",
+  "xver": 0,
+  "serverNames": ["example.com", "www.example.com"],
+  "privateKey": "",
+  "minClientVer": "",
+  "maxClientVer": "",
+  "maxTimeDiff": 0,
+  "shortIds": ["", "0123456789abcdef"],
+  "fingerprint": "chrome",
+  "serverName": "",
+  "publicKey": "",
+  "shortId": "",
+  "spiderX": ""
 }
 ```
 
 ::: tip
 更多信息请参考 [REALITY 项目](https://github.com/XTLS/REALITY).
 :::
+
+> `show` : true | false
+
+当值为 `true` 时，输出调试信息。
+
+> `dest` : string
+
+::: tip
+**只需**在**入站**（**服务端**）配置。
+:::
+
+必填，格式同 VLESS `fallbacks` 的 [dest](https://xtls.github.io/config/features/fallback.html#fallbackobject)。
+
+> `xver` : number
+
+::: tip
+**只需**在**入站**（**服务端**）配置。
+:::
+
+选填，格式同 VLESS `fallbacks` 的 [xver](https://xtls.github.io/config/features/fallback.html#fallbackobject)
+
+> `serverNames` : \[string\]
+
+::: tip
+**只需**在**入站**（**服务端**）配置。
+:::
+
+必填，客户端可用的 `serverName` 列表，暂不支持 \* 通配符。
+
+> `serverName` : string
+
+::: tip
+**只需**在**出站**（**客户端**）配置。
+:::
+
+服务端 serverNames 之一。
+
+> `privateKey` : string
+
+::: tip
+**只需**在**入站**（**服务端**）配置。
+:::
+
+必填，执行 `./xray x25519` 生成。
+
+> `minClientVer` : string
+
+::: tip
+**只需**在**入站**（**服务端**）配置。
+:::
+
+选填，客户端 Xray 最低版本，格式为 `x.y.z`。
+
+> `maxClientVer` : string
+
+::: tip
+**只需**在**入站**（**服务端**）配置。
+:::
+
+选填，客户端 Xray 最高版本，格式为 `x.y.z`。
+
+> `maxTimeDiff` : number
+
+::: tip
+**只需**在**入站**（**服务端**）配置。
+:::
+
+选填，允许的最大时间差，单位为毫秒。
+
+> `shortIds` : \[string\]
+
+必填，客户端可用的 `shortId` 列表，可用于区分不同的客户端。
+
+0 到 f，长度为 2 的倍数，长度上限为 16。
+
+若包含空值，客户端 `shortId` 可为空。
+
+> `fingerprint` : string
+
+::: tip
+**只需**在**出站**（**客户端**）配置。
+:::
+
+必填，同 [TLSObject](https://xtls.github.io/config/transport.html#tlsobject)。
+
+> `publicKey` : string
+
+::: tip
+**只需**在**出站**（**客户端**）配置。
+:::
+
+必填，服务端私钥对应的公钥。使用 `./xray x25519 -i "服务器私钥"` 生成。
+
+> `spiderX` : string
+
+::: tip
+**只需**在**出站**（**客户端**）配置。
+:::
+
+爬虫初始路径与参数，建议每个客户端不同。
 
 #### CertificateObject
 
