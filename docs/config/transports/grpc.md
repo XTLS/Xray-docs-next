@@ -37,6 +37,7 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 {
   "serviceName": "name",
   "multiMode": false,
+  "user_agent": "custom user agent",
   "idle_timeout": 60,
   "health_check_timeout": 20,
   "permit_without_stream": false,
@@ -48,6 +49,14 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 一个字符串，指定服务名称，**类似于** HTTP/2 中的 Path。
 客户端会使用此名称进行通信，服务端会验证服务名称是否匹配。
+
+> `user_agent`: string
+
+::: tip
+**只需**在**出站**（**客户端**）配置。
+:::
+
+设置 gRPC 的用户代理，可能能防止某些 CDN 阻止 gRPC 流量。
 
 > `multiMode`: true | false <Badge text="BETA" type="warning"/>
 
