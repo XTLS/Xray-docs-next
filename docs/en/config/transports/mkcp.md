@@ -45,7 +45,7 @@ The default value is `50`
 Uplink capacity refers to the maximum bandwidth used by the host to send data, measured in MB/s (note: Byte, not bit). It can be set to 0, indicating a very small bandwidth.
 
 The default value is `5`
- 
+
 > `downlinkCapacity`: number
 
 Downlink capacity refers to the maximum bandwidth used by the host to receive data, measured in MB/s (note: Byte, not bit). It can be set to 0, indicating a very small bandwidth.
@@ -60,7 +60,7 @@ It is recommended to set `downlinkCapacity` to a larger value, such as `100`, an
 
 > `congestion`: true | false
 
-Whether or not to enable congestion control. 
+Whether or not to enable congestion control.
 When congestion control is enabled, Xray will detect network quality. It will send less packets when packet loss is severe, or more packets when network is not fully filled.
 
 The default value is `false`
@@ -128,7 +128,7 @@ Type of obfuscation. Corresponding inbound and outbound must have the same value
 
 The original KCP protocol uses a fixed header of 24 bytes, while mKCP modifies it to 18 bytes for data packets and 16 bytes for acknowledgement (ACK) packets. A smaller header helps evade feature detection and speeds up transmission.
 
-In addition, the original KCP can only confirm that one packet has been received with a single ACK packet. This means that when KCP needs to confirm that 100 packets have been received, it will send out 2400 bytes of data (24 * 100), including a large amount of repeated header information that wastes bandwidth. mKCP compresses multiple ACK packets, so 100 ACK packets only require 418 bytes (16 + 2 + 100 * 4), which is equivalent to one-sixth of the original KCP.
+In addition, the original KCP can only confirm that one packet has been received with a single ACK packet. This means that when KCP needs to confirm that 100 packets have been received, it will send out 2400 bytes of data (24 _ 100), including a large amount of repeated header information that wastes bandwidth. mKCP compresses multiple ACK packets, so 100 ACK packets only require 418 bytes (16 + 2 + 100 _ 4), which is equivalent to one-sixth of the original KCP.
 
 ### ACK packet retransmission
 

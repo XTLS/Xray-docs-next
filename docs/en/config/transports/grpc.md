@@ -1,6 +1,6 @@
 # gRPC
 
-An modified transport protocol based on gRPC. 
+An modified transport protocol based on gRPC.
 
 gRPC is based on the HTTP/2 protocol and can theoretically be relayed by other servers that support HTTP/2, such as Nginx.
 
@@ -81,7 +81,7 @@ Enabling health checks may help solve some "connection drop" issues.
 
 > `health_check_timeout`: number
 
-The timeout for the health check, measured in seconds. If the health check is not completed within this time period, it is considered to have failed. 
+The timeout for the health check, measured in seconds. If the health check is not completed within this time period, it is considered to have failed.
 The default value is `20`
 
 ::: tip

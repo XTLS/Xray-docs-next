@@ -16,9 +16,8 @@ QUIC is currently in the experimental phase and uses IETF implementation that is
 
 `QuicObject` corresponds to the `quicSettings` item in the [Transport Protocol](../transport.md).
 
-
 ::: danger
-The configurations of both endpoints must be identical, otherwise the connection will fail. 
+The configurations of both endpoints must be identical, otherwise the connection will fail.
 
 QUIC requires TLS to be enabled and if it is not enabled in the [Transport Protocol](../transport.md), Xray will issue a self-signed certificate for TLS communication.
 :::
@@ -71,6 +70,6 @@ Type of obfuscation. Corresponding inbound and outbound proxy must have the same
 - `"wireguard"`: Obfuscated as WireGuard packets. (NOT true WireGuard protocol)
 
 ::: tip
-When neither encryption nor obfuscation is enabled, QUIC transport is compatible with other QUIC tools. 
+When neither encryption nor obfuscation is enabled, QUIC transport is compatible with other QUIC tools.
 However it is recommended to enable either or both for better undetectable communication.
 :::
