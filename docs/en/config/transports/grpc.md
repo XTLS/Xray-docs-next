@@ -1,37 +1,38 @@
 # gRPC
 
-基于 gRPC 的传输方式。
+An modified transport protocol based on gRPC. 
 
-它基于 HTTP/2 协议，理论上可以通过其它支持 HTTP/2 的服务器（如 Nginx）进行中转。
-gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 mux.cool。
+gRPC is based on the HTTP/2 protocol and can theoretically be relayed by other servers that support HTTP/2, such as Nginx.
+
+gRPC and HTTP/2 has built-in multiplexing, so it is not recommended to enable `mux.cool` when using gRPC or HTTP/2.
 
 ::: warning ⚠⚠⚠
 
-- gRPC 不支持指定 Host。请在出站代理地址中填写 **正确的域名** ，或在 `(x)tlsSettings` 中填写 `ServerName`，否则无法连接。
-- gRPC 不支持回落到其他服务。
-- gRPC 服务存在被主动探测的风险。建议使用 Caddy 或 Nginx 等反向代理工具，通过 Path 前置分流。
+- gRPC doesn't support specifying the Host. Please enter the **correct domain name** in the outbound proxy address, or fill in `ServerName` in `(x)tlsSettings`, otherwise connection cannot be established.
+- gRPC doesn't support fallback to other services.
+- gRPC services are at risk of being actively probed. It is recommended to use reverse proxy tools such as Caddy or Nginx to perform path-based routing.
   :::
 
 ::: tip
-如果您使用 Caddy 或 Nginx 等反向代理，请注意下列事项：
+If you are using a reverse proxy such as Caddy or Nginx, please note the following:
 
-- 请确定反向代理服务器开启了 HTTP/2
-- 请使用 HTTP/2 或 h2c (Caddy)，grpc_pass (Nginx) 连接到 Xray。
-- 普通模式的 Path 为 `/${serviceName}/Tun`, Multi 模式为 `/${serviceName}/TunMulti`
-- 如果需要接收客户端 IP，可以通过由 Caddy / Nginx 发送 `X-Real-IP` header 来传递客户端 IP。
+- Make sure that the reverse proxy server has enabled HTTP/2.
+- Use HTTP/2 or h2c (Caddy), grpc_pass (Nginx) to connect to Xray.
+- The path for regular mode is `/${serviceName}/Tun`, and for Multi mode it is `/${serviceName}/TunMulti`.
+- If you need to receive the client IP address, you can use the `X-Real-IP` header sent by Caddy / Nginx to pass the client IP.
   :::
 
 ::: tip
-如果你正在使用回落，请注意下列事项：
+If you are using fallback, please note the following:
 
-- 不建议回落到 gRPC，存在被主动探测的风险。
-- 请确认`h2` 位于 (x)tlsSettings.alpn 中的第一顺位，否则 gRPC（HTTP/2）可能无法完成 TLS 握手。
-- gRPC 无法通过进行 Path 分流。
+- Fallback to gRPC is not recommended, as there is a risk of being actively probed.
+- Please make sure that `h2` is the first priority in `(x)tlsSettings.alpn`, otherwise gRPC (HTTP/2) may not be able to complete TLS handshake.
+- gRPC cannot perform path-based routing by Xray.
   :::
 
 ## GRPCObject
 
-`GRPCObject` 对应传输配置的 `grpcSettings` 项。
+`GRPCObject` corresponds to the `grpcSettings` item.
 
 ```json
 {
@@ -46,61 +47,63 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 > `serviceName`: string
 
-一个字符串，指定服务名称，**类似于** HTTP/2 中的 Path。
-客户端会使用此名称进行通信，服务端会验证服务名称是否匹配。
+A string that specifies the service name, similar to the `path` in HTTP/2.
+
+The client will use this name for communication, and the server will verify whether the service name matches.
 
 > `multiMode`: true | false <Badge text="BETA" type="warning"/>
 
-`true` 启用 `multiMode`，默认值为： `false`。
+`true` enables `multiMode`, with a default value of `false`.
 
-这是一个 **实验性** 选项，可能不会被长期保留，也不保证跨版本兼容。此模式在 **测试环境中** 能够带来约 20% 的性能提升，实际效果因传输速率不同而不同。
+This is an **experimental** option that may not be retained for the long term, and cross-version compatibility is not guaranteed. This mode can bring about a performance improvement of around 20% in **test environments**, but actual effects may vary depending on the transmission rate.
 
 ::: tip
-**只需**在**出站**（**客户端**）配置。
+**Only need to be configured** in `outbound` **(client)**.
 :::
 
 > `idle_timeout`: number
 
-单位秒，当这段时间内没有数据传输时，将会进行健康检查。如果此值设置为 `10` 以下，将会使用 `10`，即最小值。
+The health check is performed when no data transmission occurs for a certain period of time, measured in seconds. If this value is set to less than `10`, `10` will be used as the minimum value.
 
 ::: tip
-如果没有使用 Caddy 或 Nginx 等反向代理工具（**通常不会**），设为 `60` 以下，服务端可能发送意外的 h2 GOAWAY 帧以关闭现有连接。
+If you are not using reverse proxy tools such as Caddy or Nginx (**which is usually the case**), if this value is set to less than `60`, the server may send "unexpected h2 GOAWAY" frames to close existing connections.
 :::
 
-健康检查默认**不启用**。
+By default, the health check is **not enabled**.
 
 ::: tip
-**只需**在**出站**（**客户端**）配置。
+**Only need to be configured** in `outbound` **(client)**.
 :::
 
 ::: tip
-可能会解决一些“断流”问题。
+Enabling health checks may help solve some "connection drop" issues.
 :::
 
 > `health_check_timeout`: number
 
-单位秒，健康检查的超时时间。如果在这段时间内没有完成健康检查，且仍然没有数据传输时，即认为健康检查失败。默认值为 `20`。
+The timeout for the health check, measured in seconds. If the health check is not completed within this time period, it is considered to have failed. 
+The default value is `20`
 
 ::: tip
-**只需**在**出站**（**客户端**）配置。
+**Only need to be configured** in `outbound` **(client)**.
 :::
 
 > `permit_without_stream`: true | false
 
-`true` 允许在没有子连接时进行健康检查。默认值为 `false`。
+`true` allows health checks to be performed when there are no sub-connections. The default value is `false`.
 
 ::: tip
-**只需**在**出站**（**客户端**）配置。
+**Only need to be configured** in `outbound` **(client)**.
 :::
 
 > `initial_windows_size`: number
 
-h2 Stream 初始窗口大小。当值小于等于 `0` 时，此功能不生效。当值大于 `65535` 时，动态窗口机制（Dynamic Window）会被禁用。默认值为 `0`，即不生效。
+The initial window size of the h2 stream. When the value is less than or equal to `0`, this feature does not take effect. When the value is greater than `65535`, the Dynamic Window mechanism will be disabled. The default value is `0`, which means it is not effective.
 
 ::: tip
-**只需**在**出站**（**客户端**）配置。
+**Only need to be configured** in `outbound` **(client)**.
 :::
 
 ::: tip
-通过 Cloudflare CDN 时，可将值设为 `35536` 及以上，即禁用动态窗口机制（Dynamic Window）,可防止 Cloudflare CDN 发送意外的 h2 GOAWAY 帧以关闭现有连接。
+When using Cloudflare CDN, set the value to `35536` or higher to disable the Dynamic Window mechanism and prevent Cloudflare CDN from sending "unexpected h2 GOAWAY" frames to close existing connections.
 :::

@@ -1,16 +1,16 @@
 # mKCP
 
-mKCP 使用 UDP 来模拟 TCP 连接。
+mKCP uses UDP to emulate TCP connections.
 
-mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP 消耗更多的流量。
+mKCP sacrifices bandwidth to reduce latency. To transmit the same content, mKCP generally consumes more data than TCP.
 
 ::: tip
-请确定主机上的防火墙配置正确
+Make sure the firewall on the host is configured correctly.
 :::
 
 ## KcpObject
 
-`KcpObject` 对应传输配置的 `kcpSettings` 项。
+`KcpObject` corresponds to the `kcpSettings` in the [Transport Protocol](../transport.md),
 
 ```json
 {
@@ -30,77 +30,72 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
 
 > `mtu`: number
 
-最大传输单元（maximum transmission unit）
-请选择一个介于 576 - 1460 之间的值。
+Maximum transmission unit. It indicates the maxium bytes that an UDP packet can carry. Recommended value is between `576` and `1460`
 
-默认值为 `1350`。
+The default value is `1350`
 
 > `tti`: number
 
-传输时间间隔（transmission time interval），单位毫秒（ms），mKCP 将以这个时间频率发送数据。
-请选译一个介于 10 - 100 之间的值。
+Transmission time interval, measured in milliseconds (ms), determines how often mKCP sends data. Please choose a value between `10` and `100`
 
-默认值为 `50`。
+The default value is `50`
 
 > `uplinkCapacity`: number
 
-上行链路容量，即主机发出数据所用的最大带宽，单位 MB/s，注意是 Byte 而非 bit。
-可以设置为 0，表示一个非常小的带宽。
+Uplink capacity refers to the maximum bandwidth used by the host to send data, measured in MB/s (note: Byte, not bit). It can be set to 0, indicating a very small bandwidth.
 
-默认值 `5`。
-
+The default value is `5`
+ 
 > `downlinkCapacity`: number
 
-下行链路容量，即主机接收数据所用的最大带宽，单位 MB/s，注意是 Byte 而非 bit。
-可以设置为 0，表示一个非常小的带宽。
+Downlink capacity refers to the maximum bandwidth used by the host to receive data, measured in MB/s (note: Byte, not bit). It can be set to 0, indicating a very small bandwidth.
 
-默认值 `20`。
+The default value is `20`
 
 ::: tip
-`uplinkCapacity` 和 `downlinkCapacity` 决定了 mKCP 的传输速度。
-以客户端发送数据为例，客户端的 `uplinkCapacity` 指定了发送数据的速度，而服务器端的 `downlinkCapacity` 指定了接收数据的速度。两者的值以较小的一个为准。
+`uplinkCapacity` and `downlinkCapacity` determine the transmission speed of mKCP. For example, when a client sends data, the client's `uplinkCapacity` specifies the speed of sending data, while the server's `downlinkCapacity` specifies the speed of receiving data. The value used is the smaller of the two.
 
-推荐把 `downlinkCapacity` 设置为一个较大的值，比如 100，而 `uplinkCapacity` 设为实际的网络速度。当速度不够时，可以逐渐增加 `uplinkCapacity` 的值，直到带宽的两倍左右。
+It is recommended to set `downlinkCapacity` to a larger value, such as `100`, and set `uplinkCapacity` to the actual network speed. If the speed is insufficient, gradually increase the value of `uplinkCapacity` until it is about twice the bandwidth.
 :::
 
 > `congestion`: true | false
 
-是否启用拥塞控制。
+Whether or not to enable congestion control. 
+When congestion control is enabled, Xray will detect network quality. It will send less packets when packet loss is severe, or more packets when network is not fully filled.
 
-开启拥塞控制之后，Xray 会自动监测网络质量，当丢包严重时，会自动降低吞吐量；当网络畅通时，也会适当增加吞吐量。
-
-默认值为 `false`
+The default value is `false`
 
 > `readBufferSize`: number
 
-单个连接的读取缓冲区大小，单位是 MB。
+The read buffer size for a single connection, measured in `MB`
 
-默认值为 `2`。
+The default value is `2`
 
 > `writeBufferSize`: number
 
-单个连接的写入缓冲区大小，单位是 MB。
+The write buffer size for a single connection, measured in `MB`
 
-默认值为 `2`。
+The default value is `2`
 
 ::: tip
-`readBufferSize` 和 `writeBufferSize` 指定了单个连接所使用的内存大小。
-在需要高速传输时，指定较大的 `readBufferSize` 和 `writeBufferSize` 会在一定程度上提高速度，但也会使用更多的内存。
+`readBufferSize` and `writeBufferSize` specify the memory size used by a single connection. When high-speed transmissions are required, specifying larger values for `readBufferSize` and `writeBufferSize` can improve speed to some extent, but it will also consume more memory.
 
-在网速不超过 20MB/s 时，默认值 1MB 可以满足需求；超过之后，可以适当增加 `readBufferSize` 和 `writeBufferSize` 的值，然后手动平衡速度和内存的关系。
+When the network speed is no more than `20 MB/s`, the default value of `1MB` is sufficient; after exceeding this limit, you can increase the values of `readBufferSize` and `writeBufferSize` appropriately and then manually balance the relationship between speed and memory.
 :::
 
 > `header`: [HeaderObject](#headerobject)
 
-数据包头部伪装设置
+Configuration for packet header obfuscation.
 
 > `seed`: string
 
-可选的混淆密码，使用 AES-128-GCM 算法混淆流量数据，客户端和服务端需要保持一致。
+An optional obfuscation seed is used to obfuscate traffic data using the `AES-128-GCM` algorithm. The client and server need to use the same seed.
 
-本混淆机制不能用于保证通信内容的安全，但可能可以对抗部分封锁。
+This obfuscation mechanism cannot ensure the security of the content, but it may be able to resist some blocking.
 
-> 目前测试环境下开启此设置后没有出现原版未混淆版本的封端口现象
+::: tip NOTE
+Currently, in the testing environment, enabling this setting has not resulted in the original unobfuscated version being blocked by ports.
+:::
 
 ### HeaderObject
 
@@ -112,35 +107,35 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
 
 > `type`: string
 
-伪装类型，可选的值有：
+Type of obfuscation. Corresponding inbound and outbound must have the same value. Choices are:
 
-- `"none"`：默认值，不进行伪装，发送的数据是没有特征的数据包。
-- `"srtp"`：伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。
-- `"utp"`：伪装成 uTP 数据包，会被识别为 BT 下载数据。
-- `"wechat-video"`：伪装成微信视频通话的数据包。
-- `"dtls"`：伪装成 DTLS 1.2 数据包。
-- `"wireguard"`：伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）
+- `"none"`：Default value. No obfuscation is used.
+- `"srtp"`：Obfuscated as SRTP traffic. It may be recognized as video calls such as Facetime.
+- `"utp"`：Obfuscated as uTP traffic. It may be recognized as Bittorrent traffic.
+- `"wechat-video"`：Obfuscated to WeChat traffic.
+- `"dtls"`：Obfuscated as DTLS 1.2 packets.
+- `"wireguard"`：Obfuscated as WireGuard packets. (NOT true WireGuard protocol)
 
-## 鸣谢
+## Special Thanks
 
-- [@skywind3000](https://github.com/skywind3000) 发明并实现了 KCP 协议。
-- [@xtaci](https://github.com/xtaci) 将 KCP 由 C 语言实现翻译成 Go。
-- [@xiaokangwang](https://github.com/xiaokangwang) 测试 KCP 与 Xray 的整合并提交了最初的 PR。
+- [@skywind3000](https://github.com/skywind3000) Credit for inventing and implementing the original KCP protocol in C.
+- [@xtaci](https://github.com/xtaci) Credit for re-implementing KCP protocol in Go.
+- [@xiaokangwang](https://github.com/xiaokangwang) Credit for testing the integration of KCP with Xray and submitting the initial PR.
 
-## 对 KCP 协议的改进
+## Improvements to the KCP protocol
 
-### 更小的协议头
+### smaller protocol header
 
-原生 KCP 协议使用了 24 字节的固定头部，而 mKCP 修改为数据包 18 字节，确认（ACK）包 16 字节。更小的头部有助于躲避特征检查，并加快传输速度。
+The original KCP protocol uses a fixed header of 24 bytes, while mKCP modifies it to 18 bytes for data packets and 16 bytes for acknowledgement (ACK) packets. A smaller header helps evade feature detection and speeds up transmission.
 
-另外，原生 KCP 的单个确认包只能确认一个数据包已收到，也就是说当 KCP 需要确认 100 个数据已收到时，它会发出 24 \* 100 = 2400 字节的数据。其中包含了大量重复的头部数据，造成带宽的浪费。mKCP 会对多个确认包进行压缩，100 个确认包只需要 16 + 2 + 100 \* 4 = 418 字节，相当于原生的六分之一。
+In addition, the original KCP can only confirm that one packet has been received with a single ACK packet. This means that when KCP needs to confirm that 100 packets have been received, it will send out 2400 bytes of data (24 * 100), including a large amount of repeated header information that wastes bandwidth. mKCP compresses multiple ACK packets, so 100 ACK packets only require 418 bytes (16 + 2 + 100 * 4), which is equivalent to one-sixth of the original KCP.
 
-### 确认包重传
+### ACK packet retransmission
 
-原生 KCP 协议的确认（ACK）包只发送一次，如果确认包丢失，则一定会导致数据重传，造成不必要的带宽浪费。而 mKCP 会以一定的频率重发确认包，直到发送方确认为止。单个确认包的大小为 22 字节，相比起数据包的 1000 字节以上，重传确认包的代价要小得多。
+In the original KCP protocol, an ACK packet is only sent once. If an ACK packet is lost, it will cause unnecessary bandwidth waste due to data retransmission. In contrast, mKCP retransmits ACK packets at a certain frequency until they are confirmed by the sender. The size of a single ACK packet is 22 bytes, much smaller than the data packets which are over 1000 bytes. Therefore, the cost of retransmitting ACK packets is much lower.
 
-### 连接状态控制
+### Connection state control
 
-mKCP 可以有效地开启和关闭连接。当远程主机主动关闭连接时，连接会在两秒钟之内释放；当远程主机断线时，连接会在最多 30 秒内释放。
+mKCP can effectively initiate and close connections. When the remote host initiates disconnection, the connection will be released within two seconds. When the remote host lost connection, the connection will be released within a maximum of 30 seconds.
 
-原生 KCP 不支持这个场景。
+The original KCP does not support this scenario.
