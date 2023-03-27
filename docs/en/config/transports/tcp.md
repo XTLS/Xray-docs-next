@@ -8,7 +8,6 @@ It can be combined with various protocols in multiple ways.
 
 `TcpObject` corresponds to the `tcpSettings` item in the Transport Protocol.
 
-
 ```json
 {
   "acceptProxyProtocol": false,

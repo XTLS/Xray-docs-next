@@ -39,9 +39,10 @@ The HTTP protocol path used by WebSocket. Default is `"/"`
 If the path contains the `ed` parameter, `Early Data` will be enabled to reduce latency, and its value is the first packet length threshold. If the length of the first packet exceeds this value, `Early Data` will not be enabled. The recommended value is 2048.
 
 An example usage of `ed` parameter:
+
 ```
 "path": "/aabbcc" //original path
-	
+
 "path": "/aabbcc?ed=2048" //added ed parameter
 ```
 
