@@ -1,22 +1,22 @@
 # Domain Socket
 
 ::: danger
-推荐写到 [inbounds](../inbound.md) 的 `listen` 处，传输方式可选 TCP、WebSocket、HTTP/2.
-未来这里的 DomainSocket 可能会被弃用。
+We recommend writing it to the `listen` field in [inbounds](../inbound.md)and the transport mode can be TCP, WebSocket, or HTTP/2.
+
+Note that the DomainSocket option here may be deprecated in the future.
 :::
 
-Domain Socket 使用标准的 Unix domain socket 来传输数据。
+Domain Socket uses standard Unix domain sockets to transmit data.
 
-它的优势是使用了操作系统内建的传输通道，而不会占用网络缓存。
-理论上相比起本地环回网络（local loopback）来说，Domain socket 速度略快一些。
+The advantage of using DomainSocket is that it uses the built-in transport channel of the operating system and does not occupy the network cache. Theoretically, it is slightly faster than local loopback networks.
 
-目前仅可用于支持 Unix domain socket 的平台，如 Linux 和 macOS。在 Windows 10 Build 17036 前不可用。
+Currently, it can only be used on platforms that support Unix domain sockets, such as Linux and macOS. It is not available until Windows 10 Build 17036.
 
-如果指定了 domain socket 作为传输方式，在入站出站代理中配置的端口和 IP 地址将会失效，所有的传输由 domain socket 取代。
+If DomainSocket is specified as the transport mode, the ports and IP addresses configured in the inbound and outbound proxies will be invalidated, and all transports will be replaced by DomainSocket.
 
 ## DomainSocketObject
 
-`DomainSocketObject` 对应传输配置的 `dsSettings` 项。
+`DomainSocketObject` corresponds to the `dsSettings` item.
 
 ```json
 {
@@ -28,16 +28,16 @@ Domain Socket 使用标准的 Unix domain socket 来传输数据。
 
 > `path`: string
 
-一个合法的文件路径。
+A valid file path.
 
 ::: danger
-在运行 Xray 之前，这个文件必须不存在。
+This file must not exist before running Xray.
 :::
 
 > `abstract`: true | false
 
-是否为 abstract domain socket，默认值 `false`。
+Whether it is an abstract domain socket, with a default value of `false`.
 
 > `padding`: true | false
 
-abstract domain socket 是否带 padding，默认值 `false`。
+Whether the abstract domain socket has padding, with a default value of `false`.

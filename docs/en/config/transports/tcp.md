@@ -1,12 +1,12 @@
 # TCP
 
-TCP 传输模式是目前推荐使用的传输模式之一.
+TCP (Transmission Control Protocol) is currently one of the recommended transport protocols
 
-可以和各种协议有多种组合模式.
+It can be combined with various protocols in multiple ways.
 
 ## TcpObject
 
-`TcpObject` 对应传输配置的 `tcpSettings` 项。
+`TcpObject` corresponds to the `tcpSettings` item in the Transport Protocol.
 
 ```json
 {
@@ -19,27 +19,27 @@ TCP 传输模式是目前推荐使用的传输模式之一.
 
 > `acceptProxyProtocol`: true | false
 
-仅用于 inbound，指示是否接收 PROXY protocol。
+Only used for inbound, indicating whether to accept the PROXY protocol.
 
-[PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) 专用于传递请求的真实来源 IP 和端口，**若你不了解它，请先忽略该项**。
+The [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is used to transmit the real source IP and port of the request. **If you are not familiar with it, please ignore this item.**
 
-常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
+Common reverse proxy software (such as HAProxy and Nginx) can be configured to send it, and VLESS fallbacks xver can also send it.
 
-填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
+When filled in as `true`, after the underlying TCP connection is established, the requesting party must first send PROXY protocol v1 or v2, otherwise the connection will be closed.
 
-默认值为 `false`。
+The default value is `false`
 
 > `header`: [NoneHeaderObject](#noneheaderobject) | [HttpHeaderobject](#httpheaderobject)
 
-数据包头部伪装设置，默认值为 `NoneHeaderObject`。
+Packet header obfuscation settings, the default value is `NoneHeaderObject`
 
 ::: tip
-HTTP 伪装无法被其它 HTTP 服务器（如 Nginx）分流，但可以被 VLESS fallbacks path 分流。
+HTTP obfuscation cannot be proxied by other HTTP servers (such as Nginx), but it can be proxied by VLESS fallbacks path.
 :::
 
 ### NoneHeaderObject
 
-不进行伪装
+No header obfuscation
 
 ```json
 {
@@ -49,11 +49,11 @@ HTTP 伪装无法被其它 HTTP 服务器（如 Nginx）分流，但可以被 VL
 
 > `type`: "none"
 
-指定不进行伪装
+Disable header obfuscation.
 
 ### HttpHeaderObject
 
-HTTP 伪装配置必须在对应的入站出站连接上同时配置，且内容必须一致。
+HTTP header obfuscation. The configuration must be the same between connecting inbound and outbound.
 
 ```json
 {
@@ -65,15 +65,15 @@ HTTP 伪装配置必须在对应的入站出站连接上同时配置，且内容
 
 > `type`: "http"
 
-指定进行 HTTP 伪装
+Enable HTTP header obfuscation.
 
 > `request`: [HTTPRequestObject](#httprequestobject)
 
-HTTP 请求
+HTTP request template.
 
 > `response`: [HTTPResponseObject](#httpresponseobject)
 
-HTTP 响应
+HTTP response template.
 
 #### HTTPRequestObject
 
@@ -97,21 +97,21 @@ HTTP 响应
 
 > `version`: string
 
-HTTP 版本，默认值为 `"1.1"`。
+HTTP version, the default value is `"1.1"`
 
 > `method`: string
 
-HTTP 方法，默认值为 `"GET"`。
+The HTTP method, the default value is `"GET"`
 
 > `path`: \[ string \]
 
-路径，一个字符串数组。默认值为 `["/"]`。当有多个值时，每次请求随机选择一个值。
+paths, an array of strings. The default value is `["/"]`. When there are multiple values, a value is chosen randomly for each request.
 
 > `headers`: map{ string, \[ string \]}
 
-HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是一个数组。
+HTTP header, a key-value pair, each key represents the name of an HTTP header, and the corresponding value is an array.
 
-每次请求会附上所有的键，并随机选择一个对应的值。默认值见上方示例。
+Each request will include all the keys and randomly select a corresponding value. Please refer to the **default values** shown in the example above.
 
 #### HTTPResponseObject
 
@@ -131,18 +131,18 @@ HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的
 
 > `version`: string
 
-HTTP 版本，默认值为 `"1.1"`。
+HTTP version, default is `"1.1"`
 
 > `status`: string
 
-HTTP 状态，默认值为 `"200"`。
+HTTP status, default is `"200"`
 
 > `reason`: string
 
-HTTP 状态说明，默认值为 `"OK"`。
+HTTP status description, default value is `"OK"`
 
 > `headers`: map {string, \[ string \]}
 
-HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是一个数组。
+HTTP header, a key-value pair, each key represents the name of an HTTP header, and the corresponding value is an array.
 
-每次请求会附上所有的键，并随机选择一个对应的值。默认值见上方示例。
+Each request will include all the keys and randomly select a corresponding value. Please refer to the **default values** shown in the example above.

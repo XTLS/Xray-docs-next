@@ -1,24 +1,25 @@
 # QUIC
 
-QUIC 全称 Quick UDP Internet Connection，是由 Google 提出的使用 UDP 进行多路并发传输的协议。其主要优势是:
+QUIC (Quick UDP Internet Connection) is a protocol proposed by Google for multiplexed and concurrent transmission using UDP. Its main advantages are:
 
-1. 减少了握手的延迟（1-RTT 或 0-RTT）
-2. 多路复用，并且没有 TCP 的阻塞问题
-3. 连接迁移，（主要是在客户端）当由 Wifi 转移到 4G 时，连接不会被断开。
+1. Reduced number of roundtrips in handshake phase. (1-RTT or 0-RTT)
+2. Multiplexing, and no [Head-of-Line blocking](https://calendar.perfplanet.com/2020/head-of-line-blocking-in-quic-and-http-3-the-details/) problem.
+3. Connection migration, (mainly on the client side) when switching from Wifi to 4G, the connection will not be interrupted.
 
-QUIC 目前处于实验期，使用了正在标准化过程中的 IETF 实现，不能保证与最终版本的兼容性。
+QUIC is currently in the experimental phase and uses IETF implementation that is still being standardized, so compatibility with the final version cannot be guaranteed.
 
-- 默认设定:
-  - 12 字节的 Connection ID
-  - 30 秒没有数据通过时自动断开连接 (可能会影响一些长连接的使用)
+- Default settings:
+  - 12-byte Connection ID
+  - Automatically disconnect the connection if no data is transmitted for 30 seconds (which may affect the use of some [persistent connections](https://en.wikipedia.org/wiki/HTTP_persistent_connection)).
 
 ## QuicObject
 
-`QuicObject` 对应传输配置的 `quicSettings` 项。
+`QuicObject` corresponds to the `quicSettings` item in the [Transport Protocol](../transport.md).
 
 ::: danger
-对接的两端的配置必须完全一致，否则连接失败。
-QUIC 强制要求开启 TLS，在传输配置中没有开启 TLS 时，Xray 会自行签发一个证书进行 TLS 通讯。
+The configurations of both endpoints must be identical, otherwise the connection will fail.
+
+QUIC requires TLS to be enabled and if it is not enabled in the [Transport Protocol](../transport.md), Xray will issue a self-signed certificate for TLS communication.
 :::
 
 ```json
@@ -33,21 +34,21 @@ QUIC 强制要求开启 TLS，在传输配置中没有开启 TLS 时，Xray 会�
 
 > `security`: "none" | "aes-128-gcm" | "chacha20-poly1305"
 
-加密方式。
+Encryption method.
 
-此加密是对 QUIC 数据包的加密，加密后数据包无法被探测。
+Extra encryption over entire QUIC packet, include the frame head part. Default value is "none" for no encryption. After being encrypted, QUIC packets will not be detected as QUIC but some other unknow traffic.
 
-默认值为不加密。
+The default value is `none`
 
 > `key`: string
 
-加密时所用的密钥。
+Encryption key used for encryption.
 
-可以是任意字符串。当 `security` 不为 `"none"` 时有效。
+It can be any string and is effective when "security" is not set to "none".
 
 > `header`: [HeaderObject](#headerobject)
 
-数据包头部伪装设置
+Packet header obfuscation settings.
 
 ### HeaderObject
 
@@ -59,16 +60,16 @@ QUIC 强制要求开启 TLS，在传输配置中没有开启 TLS 时，Xray 会�
 
 > `type`: string
 
-伪装类型，可选的值有：
+Type of obfuscation. Corresponding inbound and outbound proxy must have the same settings. Choices are:
 
-- `"none"`：默认值，不进行伪装，发送的数据是没有特征的数据包。
-- `"srtp"`：伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。
-- `"utp"`：伪装成 uTP 数据包，会被识别为 BT 下载数据。
-- `"wechat-video"`：伪装成微信视频通话的数据包。
-- `"dtls"`：伪装成 DTLS 1.2 数据包。
-- `"wireguard"`：伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）
+- `"none"`: Default value. No obfuscation is used.
+- `"srtp"`: Obfuscated as SRTP traffic. It may be recognized as video calls such as Facetime.
+- `"utp"`: Obfuscated as uTP traffic. It may be recognized as Bittorrent traffic.
+- `"wechat-video"`: Obfuscated to WeChat traffic.
+- `"dtls"`: Obfuscated as DTLS 1.2 packets.
+- `"wireguard"`: Obfuscated as WireGuard packets. (NOT true WireGuard protocol)
 
 ::: tip
-当加密和伪装都不启用时，数据包即为原始的 QUIC 数据包，可以与其它的 QUIC 工具对接。
-为了避免被探测，建议加密或伪装至少开启一项。
+When neither encryption nor obfuscation is enabled, QUIC transport is compatible with other QUIC tools.
+However it is recommended to enable either or both for better undetectable communication.
 :::

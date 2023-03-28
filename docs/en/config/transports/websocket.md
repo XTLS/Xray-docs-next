@@ -1,16 +1,16 @@
 # WebSocket
 
-使用标准的 WebSocket 来传输数据。
+Use standard WebSocket to transmit data.
 
-WebSocket 连接可以被其它 HTTP 服务器（如 Nginx）分流，也可以被 VLESS fallbacks path 分流。
+WebSocket connections can be peoxied by other HTTP servers (such as Nginx) or by VLESS fallbacks path.
 
 ::: tip
-Websocket 会识别 HTTP 请求的 X-Forwarded-For 头来覆写流量的源地址，优先级高于 PROXY protocol。
+Websocket will recognize the X-Forwarded-For header of the HTTP request to override the source address of the traffic, with a higher priority than the PROXY protocol.
 :::
 
 ## WebSocketObject
 
-`WebSocketObject` 对应传输配置的 `wsSettings` 项。
+`WebSocketObject` corresponds to the `wsSettings` item of the transport configuration.
 
 ```json
 {
@@ -24,30 +24,38 @@ Websocket 会识别 HTTP 请求的 X-Forwarded-For 头来覆写流量的源地�
 
 > `acceptProxyProtocol`: true | false
 
-仅用于 inbound，指示是否接收 PROXY protocol。
+Only used for inbound, indicating whether to accept the PROXY protocol.
 
-[PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) 专用于传递请求的真实来源 IP 和端口，**若你不了解它，请先忽略该项**。
+The [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is used to transmit the real source IP and port of the request. **If you are not familiar with it, please ignore this item.**
 
-常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
+Common reverse proxy software (such as HAProxy and Nginx) can be configured to send it, and VLESS fallbacks xver can also send it.
 
-填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
+When filled in as `true`, after the underlying TCP connection is established, the requesting party must first send PROXY protocol v1 or v2, otherwise the connection will be closed.
 
 > `path` string
 
-WebSocket 所使用的 HTTP 协议路径，默认值为 `"/"`。
+The HTTP protocol path used by WebSocket. Default is `"/"`
 
-如果路径中包含 `ed` 参数，将会启用 `Early Data` 以降低延迟，其值为首包长度阈值。如果首包长度超过此值，就不会启用 `Early Data`。建议的值为 2048。
+If the path contains the `ed` parameter, `Early Data` will be enabled to reduce latency, and its value is the first packet length threshold. If the length of the first packet exceeds this value, `Early Data` will not be enabled. The recommended value is 2048.
+
+An example usage of `ed` parameter:
+
+```
+"path": "/aabbcc" //original path
+
+"path": "/aabbcc?ed=2048" //added ed parameter
+```
 
 ::: warning
-`Early Data` 使用 `Sec-WebSocket-Protocol` 头承载数据。如果你遇到兼容性问题，可以尝试调低阈值。
+`Early Data` uses the `Sec-WebSocket-Protocol` header to carry data. If you encounter compatibility issues, try lowering the threshold.
 :::
 
 > `headers`: map \{string: string\}
 
-自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
+Custom HTTP headers, a key-value pair, where each key represents the name of an HTTP header, and the corresponding value is a string.
 
-默认值为空。
+The default value is empty.
 
 ## Browser Dialer
 
-使用浏览器处理 TLS，详见 [Browser Dialer](../features/browser_dialer.md)
+Use the browser to handle TLS, see [Browser Dialer](../features/browser_dialer.md)
