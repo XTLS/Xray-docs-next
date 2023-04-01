@@ -1,32 +1,32 @@
-# 多文件配置
+# Multi-file configuration
 
-Xray 程序支持使用多个配置文件。
+The Xray program supports the use of multiple configuration files.
 
-多配置文件的主要作用在于分散不同作用模块配置，便于管理和维护。
+The main purpose of using multiple configuration files is to distribute different module configurations, making it easier to manage and maintain.
 
-该功能主要考虑是为了丰富 Xray 的生态链，比如对于 GUI 的客户端，一般只实现节点选择等固定的功能，对于太复杂的配置难以图形化实现；只需留一个 `confdir` 的自定义配置目录供配置复杂的功能；对于服务器的部署脚本，只需往 `confdir` 添加文件即可实现配置多种协议。
+This feature is mainly designed to enrich the Xray ecosystem. For example, for GUI-based clients, only fixed functions such as node selection are usually implemented, and complex configurations are difficult to implement graphically. By leaving a custom `confdir` configuration directory for complex functions, server deployment scripts can simply add files to `confdir` to implement multiple protocol configurations.
 
-## 多文件启动
+## Multi-file startup
 
 ::: tip
-启动信息中会提示依次读入的每个配置文件，留意启动信息是否符合你预设的顺序。
+The startup information will indicate each configuration file being read in sequence. Please pay attention to whether the startup information matches the order you have set.
 :::
 
 ```shell
 $ xray run -confdir /etc/xray/confs
 ```
 
-也可使用 `Xray.location.confdir` 或 `Xray_LOCATION_CONFDIR` 指定 `confdir`。
+You can also use `Xray.location.confdir` or `Xray_LOCATION_CONFDIR` to specify the `confdir`.
 
-参数 `-confdir` 的作用优先于环境变量，如果参数指定了有效的目录则不再读取环境变量中的路径。
+The `-confdir` parameter takes precedence over the environment variable. If a valid directory is specified by the parameter, the path in the environment variable will not be read.
 
-## 规则说明
+## Rule Explaination
 
-### 普通对象（`{}`）
+### Normal Objects（`{}`）
 
-**在 json 的顶级对象当中，后者覆盖或补充前者。**
+**In the top-level object of `JSON`, the latter overrides or supplements the former.**
 
-比如：
+For ecample：
 
 - base.json
 
@@ -51,15 +51,15 @@ $ xray run -confdir /etc/xray/confs
 }
 ```
 
-以多配置启动 Xray：
+When starting Xray with multiple configurations, use the following command:
 
 ```bash
 $ xray run -confdir /etc/xray/confs
 ```
 
-这两个配置文件的就等效于合成一起的整配置。当需要修改出口节点，只需要修改 `outbounds.json` 内容。
+These two configuration files are equivalent to a single combined configuration. If you need to modify the outbound nodes, simply modify the content of `outbounds.json`.
 
-如果需要改编日志 log 的级别，也不需要改 `base.json`，只需后续增加一个配置：
+If you need to change the log level for debugging purposes, there is no need to modify `base.json`. You can add an additional configuration file:
 
 - debuglog.json
 
@@ -71,20 +71,20 @@ $ xray run -confdir /etc/xray/confs
 }
 ```
 
-启动顺序放置在 base 后，即可输出 debug 级别的日志
+Start the program in sequence after `base.json` to output logs at the debug level.
 
-### 数组（`[]`）
+### Arrays（`[]`）
 
-在 json 配置中的`inbounds`和`outbounds`是数组结构，他们有特殊的规则：
+In the JSON configuration, `inbounds` and `outbounds` are array structures with special rules:
 
-- 当配置中的数组元素有 2 或以上，覆盖前者的 inbounds/oubounds；
-- 当配置中的数组元素只有 1 个时，查找原有`tag`相同的元素进行覆盖；若无法找到：
-  - 对于 inbounds，添加至最后（inbounds 内元素顺序无关）
-  - 对于 outbounds，添加至最前（outbounds 默认首选出口）；但如果文件名含有 tail（大小写均可），添加至最后。
+- When there are two or more elements in the array, the latter overrides the former for `inbounds`/`outbounds`.
+- When there is only one element in the array, it searches for an existing element with the same `tag` to override. If it cannot be found:
+  - For `inbounds`, add it to the end (the order of elements in `inbounds` is irrelevant).
+  - For `outbounds`, add it to the beginning (the default first-choice outbound). However, if the filename contains "tail" (case-insensitive), add it to the end.
 
-借助多配置，可以很方便为原有的配置添加不同协议的 inbound，而不必修改原有配置。
+With multiple configurations, it is easy to add inbound for different protocols to the original configuration without modifying the original configuration. 
 
-以下例子不是有效配置，只为展示上述规则。
+The following example is not a valid configuration but is provided to demonstrate the above rules.
 
 - 000.json
 
@@ -127,7 +127,7 @@ $ xray run -confdir /etc/xray/confs
 }
 ```
 
-三个配置将会合成为：
+The three configurations will be combined into:
 
 ```json
 {
@@ -145,15 +145,15 @@ $ xray run -confdir /etc/xray/confs
 }
 ```
 
-## 推荐的多文件列表
+## Recommended Multi-file List
 
-执行：
+Execute：
 
 ```bash
 for BASE in 00_log 01_api 02_dns 03_routing 04_policy 05_inbounds 06_outbounds 07_transport 08_stats 09_reverse; do echo '{}' > "/etc/Xray/$BASE.json"; done
 ```
 
-或
+or
 
 ```bash
 for BASE in 00_log 01_api 02_dns 03_routing 04_policy 05_inbounds 06_outbounds 07_transport 08_stats 09_reverse; do echo '{}' > "/usr/local/etc/Xray/$BASE.json"; done
@@ -165,7 +165,7 @@ for BASE in 00_log 01_api 02_dns 03_routing 04_policy 05_inbounds 06_outbounds 0
 ├── 01_api.json
 ├── 02_dns.json
 ├── 03_routing.json
-├── 04_policy.json
+├── 04_policy.json 
 ├── 05_inbounds.json
 ├── 06_outbounds.json
 ├── 07_transport.json

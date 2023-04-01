@@ -4,34 +4,33 @@
 
 ## Background
 
-基于 [一年前的想法](https://github.com/v2ray/discussion/issues/754#issuecomment-647934994) ，利用原生 JS 实现了简洁的 WSS Browser Dialer，达到了真实浏览器的 TLS 指纹、行为特征。
-
-不过 WSS 仍存在 ALPN 明显的问题，所以下一步是浏览器转发 `HTTP/2`,`QUIC`。
+Based on [an idea from 2020](https://github.com/v2ray/discussion/issues/754#issuecomment-647934994), a concise `WSS Browser Dialer` has been implemented using native `JS`, achieving true browser TLS fingerprints and behavioral characteristics.
+However, `WSS` still has significant issues with `ALPN`, so the next step is to forward `HTTP/2` and `QUIC` through the browser."
 
 ## Xray & JS
 
-创造了一个非常简单、巧妙的通信机制：
+A very simple and clever communication mechanism has been created：
 
-- Xray 监听地址端口 A，作为 HTTP 服务，浏览器访问 A，加载网页中的 JS。
-- JS 主动向 A 建立 WebSocket 连接，成功后，Xray 将连接发给 channel。
-- 需要建立连接时，Xray 从 channel 接收一个可用的连接，并发送目标 URL 和可选的 early data。
-- JS 成功连接到目标后告知 Xray，并继续用这个 conn 全双工双向转发数据，连接关闭行为同步。
-- 连接使用后就会被关闭，但 JS 会确保始终有新空闲连接可用。
+- Xray listens on address port `A` as an `HTTP` service, and the browser accesses `A` to load the `JS` in the webpage.
+- The `JS` actively establishes a WebSocket connection to `A`. After a successful connection, Xray sends the connection to the channel.
+- When a connection needs to be established, Xray receives an available connection from the channel and sends the target URL and optional early data.
+- Once the `JS` successfully connects to the target, it informs Xray and continues to use this conn to bi-directionally forward data. Connection closing behavior is synchronized.
+- After the connection is used, it will be closed, but the JS ensures that there is always a new idle connection available."
 
 ## Early data
 
-根据浏览器的需求，对 early data 机制进行了如下调整：
+According to the browser's needs, the early data mechanism has been adjusted as follows:
 
-- 服务端响应头会带有请求的 `Sec-WebSocket-Protocol`，这也初步混淆了 WSS 握手响应的长度特征。
-- 用于浏览器的 early data 编码是 `base64.RawURLEncoding` 而不是 `StdEncoding`，服务端做了兼容。
-- 此外，由于 [Xray-core#375](https://github.com/XTLS/Xray-core/pull/375) 推荐 `?ed=2048`，这个 PR 顺便将服务端一处 `MaxHeaderBytes` 扩至了 4096。 ~~（虽然好像不改也没问题）~~
+- The server response header will contain the requested `Sec-WebSocket-Protocol`, which also initially obfuscates the length characteristic of the WSS handshake response.
+- The encoding used for early data for browsers is `base64.RawURLEncoding` instead of `StdEncoding`, and the server has made it compatible.
+- In addition, due to [Xray-core#375](https://github.com/XTLS/Xray-core/pull/375) recommendations for `?ed=2048`,  this PR also increased server `MaxHeaderBytes` by 4096. ~~(Although it seems like it would work without modification.)~~
 
 ## Configuration <Badge text="v1.4.1" type="warning"/>
 
-这是一个探索的过程，目前两边都是 Xray-core v1.4.1 时的配置方式：
+This is an exploratory process, and the configuration method used when both sides are Xray-core v1.4.1 is as follows:
 
-- 准备一份可用的 WSS 配置，注意 address 必须填域名，若需要指定 IP，请配置 DNS 或系统 hosts。
-- 若浏览器的流量也会经过 Xray-core，务必将这个域名设为直连，否则会造成流量回环。
-- 设置环境变量指定要监听的地址端口，比如 `XRAY_BROWSER_DIALER = 127.0.0.1:8080`。
-- 先运行 Xray-core，再用任意浏览器访问上面指定的地址端口，还可以 `F12` 看 `Console` 和 `Network`。
-- 浏览器会限制 WebSocket 连接数，所以建议开启 `Mux.Cool`。
+- Prepare a usable WSS configuration, making sure to fill in the domain name for the address. If you need to specify an IP address, configure DNS or system hosts.
+- If browser traffic will also pass through Xray-core, be sure to set this domain name as a direct connection, otherwise it will cause traffic looping.
+- Set the environment variable to specify the address port to listen on, such as `XRAY_BROWSER_DIALER = 127.0.0.1:8080`.
+- First run Xray-core, then use any browser to access the specified address port, and you can also check `Console` and Network with `F12`.
+- The browser will limit the number of WebSocket connections, so it is recommended to enable `Mux.Cool`.
