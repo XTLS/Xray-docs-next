@@ -23,7 +23,7 @@ According to the browser's needs, the early data mechanism has been adjusted as 
 
 - The server response header will contain the requested `Sec-WebSocket-Protocol`, which also initially obfuscates the length characteristic of the WSS handshake response.
 - The encoding used for early data for browsers is `base64.RawURLEncoding` instead of `StdEncoding`, and the server has made it compatible.
-- In addition, due to [Xray-core#375](https://github.com/XTLS/Xray-core/pull/375) recommendations for `?ed=2048`,  this PR also increased server `MaxHeaderBytes` by 4096. ~~(Although it seems like it would work without modification.)~~
+- In addition, due to [Xray-core#375](https://github.com/XTLS/Xray-core/pull/375) recommendations for `?ed=2048`, this PR also increased server `MaxHeaderBytes` by 4096. ~~(Although it seems like it would work without modification.)~~
 
 ## Configuration <Badge text="v1.4.1" type="warning"/>
 

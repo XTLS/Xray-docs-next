@@ -82,7 +82,7 @@ In the JSON configuration, `inbounds` and `outbounds` are array structures with 
   - For `inbounds`, add it to the end (the order of elements in `inbounds` is irrelevant).
   - For `outbounds`, add it to the beginning (the default first-choice outbound). However, if the filename contains "tail" (case-insensitive), add it to the end.
 
-With multiple configurations, it is easy to add inbound for different protocols to the original configuration without modifying the original configuration. 
+With multiple configurations, it is easy to add inbound for different protocols to the original configuration without modifying the original configuration.
 
 The following example is not a valid configuration but is provided to demonstrate the above rules.
 
@@ -165,7 +165,7 @@ for BASE in 00_log 01_api 02_dns 03_routing 04_policy 05_inbounds 06_outbounds 0
 ├── 01_api.json
 ├── 02_dns.json
 ├── 03_routing.json
-├── 04_policy.json 
+├── 04_policy.json
 ├── 05_inbounds.json
 ├── 06_outbounds.json
 ├── 07_transport.json

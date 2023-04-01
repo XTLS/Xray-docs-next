@@ -74,9 +74,10 @@ Note: **The inbound where fallbacks is located must be TCP+TLS**. This is for ro
 Determines the destination of decrypted TLS TCP traffic, which currently supports two types of addresses: (this field is required, otherwise it cannot be started)
 
 1. TCP, in the format of `"addr:port"`, where addr supports IPv4, domain names, and IPv6. If a domain name is entered, a direct TCP connection will be made (rather than using the built-in DNS resolver).
-2. Unix domain socket, in the format of an absolute path, such as `"/dev/shm/domain.socket"`, which can be prefixed with `@` to represent  [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html), and `@@` to represent padded abstract.
+2. Unix domain socket, in the format of an absolute path, such as `"/dev/shm/domain.socket"`, which can be prefixed with `@` to represent [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html), and `@@` to represent padded abstract.
 
 If only the port is specified, both numbers and strings are accepted, such as `80` or `"80"`. This usually points to a plaintext HTTP service (and the addr will be filled in as `"127.0.0.1"`).
+
 > `xver`: number
 
 Sends the [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) protocol, which is used to transmit the real source IP and port of the request. The version can be set to `1` or `2`, with a default value of `0`, which means no PROXY protocol is sent. Version `1` is recommended if needed.
