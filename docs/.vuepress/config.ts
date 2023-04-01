@@ -100,32 +100,37 @@ export default defineUserConfig<DefaultThemeOptions>({
       },
       "/en/": {
         repoLabel: "Source",
+        editLinkText: "Help us improve this page on GitHub！",
+        tip: "Tip",
+        warning: "Warning",
+        danger: "Danger",
+        lastUpdatedText: "Last Updated",
         selectLanguageName: "English (WIP)",
         // TODO: translation
         sidebar: {
           "/en/config/": sidebar.getConfigSidebar(
-            "特性详解",
-            "基础配置",
-            "入站代理",
-            "出站代理",
-            "底层传输",
+            "Xray Features",
+            "Config Reference",
+            "Inbound Protocol",
+            "Outbound Protocol",
+            "Stream Transport Protocol",
             "/en/config/"
           ),
           "/en/document/level-0/": sidebar.getDocumentLv0Sidebar(
-            "小小白白话文",
+            "Beginner Tutorial",
             "/en/document/level-0/"
           ),
           "/en/document/level-1/": sidebar.getDocumentLv1Sidebar(
-            "入门技巧",
+            "Getting Started Tips",
             "/en/document/level-1/"
           ),
           "/en/document/level-2/": sidebar.getDocumentLv2Sidebar(
-            "进阶技巧",
+            "Advanced Documentation",
             "/en/document/level-2/"
           ),
           "/en/development/": sidebar.getDevelopmentSidebar(
-            "开发指南",
-            "协议详解",
+            "Developer Guide",
+            "Protocol Details",
             "/en/development/"
           ),
         },

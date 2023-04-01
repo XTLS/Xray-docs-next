@@ -128,7 +128,7 @@ Type of obfuscation. Corresponding inbound and outbound must have the same value
 
 The original KCP protocol uses a fixed header of 24 bytes, while mKCP modifies it to 18 bytes for data packets and 16 bytes for acknowledgement (ACK) packets. A smaller header helps evade feature detection and speeds up transmission.
 
-In addition, the original KCP can only confirm that one packet has been received with a single ACK packet. This means that when KCP needs to confirm that 100 packets have been received, it will send out 2400 bytes of data (24 _ 100), including a large amount of repeated header information that wastes bandwidth. mKCP compresses multiple ACK packets, so 100 ACK packets only require 418 bytes (16 + 2 + 100 _ 4), which is equivalent to one-sixth of the original KCP.
+In addition, the original KCP can only confirm that one packet has been received with a single ACK packet. This means that when KCP needs to confirm that 100 packets have been received, it will send out 2400 bytes of data (24 x 100), including a large amount of repeated header information that wastes bandwidth. mKCP compresses multiple ACK packets, so 100 ACK packets only require 418 bytes (16 + 2 + 100 x 4), which is equivalent to one-sixth of the original KCP.
 
 ### ACK packet retransmission
 

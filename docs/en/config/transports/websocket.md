@@ -32,7 +32,7 @@ Common reverse proxy software (such as HAProxy and Nginx) can be configured to s
 
 When filled in as `true`, after the underlying TCP connection is established, the requesting party must first send PROXY protocol v1 or v2, otherwise the connection will be closed.
 
-> `path` string
+> `path`: string
 
 The HTTP protocol path used by WebSocket. Default is `"/"`
 

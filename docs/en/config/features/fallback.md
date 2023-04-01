@@ -1,14 +1,14 @@
-# Fallback 回落
+# Fallback
 
-> **Fallback 是 Xray 的最强大功能之一, 可有效防止主动探测, 自由配置常用端口多服务共享**
+> **Fallback is one of the most powerful features of Xray, which can effectively prevent active probing and allows you to use one port for multiple services**
 
-fallback 为 Xray 提供了高强度的防主动探测性, 并且具有独创的首包回落机制.
+Fallback provides Xray with high-strength anti-active probing capabilities and has a unique first-packet fallback mechanism.
 
-fallback 也可以将不同类型的流量根据 path 进行分流, 从而实现一个端口, 多种服务共享.
+Fallback can also divide traffic of different types based on path for multi-service sharing on a single port.
 
-目前您可以在使用 VLESS 或者 trojan 协议时, 通过配置 fallbacks 来使用回落这一特性, 并且创造出非常丰富的组合玩法.
+Currently, you can use the fallback feature by configuring fallbacks when using VLESS or Trojan protocols, thus creating an unimaginable combo of services becomes REALITY.
 
-## fallbacks 配置
+## fallbacks configuration
 
 ```json
   "fallbacks": [
@@ -20,7 +20,7 @@ fallback 也可以将不同类型的流量根据 path 进行分流, 从而实现
 
 > `fallbacks`: \[ [FallbackObject](#fallbackobject) \]
 
-一个数组，包含一系列强大的回落分流配置。
+**`fallbacks` is an array, and here is an example configuration of one of its child elements.**
 
 ### FallbackObject
 
@@ -34,67 +34,65 @@ fallback 也可以将不同类型的流量根据 path 进行分流, 从而实现
 }
 ```
 
-**`fallbacks` 是一个数组，这里是其中一个子元素的配置说明。**
+The `fallbacks` object is optional and can only be used for the `TCP+TLS` transport combination.
 
-`fallbacks` 项是可选的，只能用于 TCP+TLS 传输组合
+- When `fallbacks` configure with any child elements，`"alpn":["http/1.1"]` needs to be configured in [Inbound TLS](../transport.md#tlsobject).
 
-- 该项有子元素时，[Inbound TLS](../transport.md#tlsobject) 需设置 `"alpn":["http/1.1"]`。\*\*
+Usually, you need to set up a default fallback with both `alpn` and `path` omitted or empty, and then configure other routing rules as needed.
 
-通常，你需要先设置一组 `alpn` 和 `path` 均省略或为空的默认回落，然后再按需配置其它分流。
+VLESS will forward traffic with TLS decrypted first packet length <18, invalid protocol version, or failed authentication to the address specified by `dest`.
 
-VLESS 会把 TLS 解密后首包长度 < 18 或协议版本无效、身份认证失败的流量转发到 `dest` 指定的地址。
-
-其它传输组合必须删掉 `fallbacks` 项或所有子元素，此时也不会开启 Fallback，VLESS 会等待读够所需长度，协议版本无效或身份认证失败时，将直接断开连接。
+For other transport combinations, you must remove the `fallbacks` object or all its child elements. At this point, no `fallbacks` will be enabled, and VLESS will wait until it reads enough data. If the protocol version is invalid or authentication fails, the connection will be terminated directly.
 
 > `name`: string
 
-尝试匹配 TLS SNI(Server Name Indication)，空为任意，默认为 ""
+Attempt to match the TLS SNI (Server Name Indication), where an empty value matches any SNI. The default value is `""`, which means empty value.
 
 > `alpn`: string
 
-尝试匹配 TLS ALPN 协商结果，空为任意，默认为 ""
+Attempt to match the result of TLS ALPN negotiation, where an empty value matches any ALPN result. The default value is `""` , which means empty value.
 
-有需要时，VLESS 才会尝试读取 TLS ALPN 协商结果，若成功，输出 info `realAlpn =` 到日志。
-用途：解决了 Nginx 的 h2c 服务不能同时兼容 http/1.1 的问题，Nginx 需要写两行 listen，分别用于 1.1 和 h2c。
-注意：fallbacks alpn 存在 `"h2"` 时，[Inbound TLS](../transport.md#tlsobject) 需设置 `"alpn":["h2","http/1.1"]`，以支持 h2 访问。
+VLESS will read the TLS ALPN negotiation result only when necessary. If successful, it will output `realAlpn =` info to the log.
+Purpose: To solve the problem of Nginx's inability to simultaneously support http/1.1 and h2c services. Nginx needs to write two lines of listen, one for 1.1 and one for h2c.
+Note: When `"h2"` is included in fallbacks alpn, the Inbound TLS needs to be set as `"alpn":["h2","http/1.1"]` to support `h2` access.
 
 ::: tip
-Fallback 内设置的 `alpn` 是匹配实际协商出的 ALPN，而 Inbound TLS 设置的 `alpn` 是握手时可选的 ALPN 列表，两者含义不同。
+The `alpn` set in the Fallback is used to match the actual negotiated ALPN, while the `alpn` set in the Inbound TLS represents the list of optional ALPNs during the handshake. These two have different meanings.
 :::
 
 > `path`: string
 
-尝试匹配首包 HTTP PATH，空为任意，默认为空，非空则必须以 `/` 开头，不支持 h2c。
+Attempt to match the first packet HTTP PATH, where an empty value matches any PATH and a default value is empty. If non-empty, it must start with `/`, and h2c is not supported.
 
-智能：有需要时，VLESS 才会尝试看一眼 PATH（不超过 55 个字节；最快算法，并不完整解析 HTTP），若成功，输出 INFO 日志 `realPath =`。
-用途：分流其它 inbound 的 WebSocket 流量或 HTTP 伪装流量，没有多余处理、纯粹转发流量，理论性能比 Nginx 更强。
+Smart: VLESS will only attempt to check the PATH (no more than 55 bytes; the fastest algorithm that does not fully parse HTTP) when necessary. If successful, it will output `realPath =` in the INFO log.
+Purpose: To route other inbound WebSocket traffic or HTTP disguised traffic, without additional processing, purely forwarding traffic, and theoretically better performance than Nginx.
 
-注意：**fallbacks 所在入站本身必须是 TCP+TLS**，这是分流至其它 WS 入站用的，被分流的入站则无需配置 TLS。
+Note: **The inbound where fallbacks is located must be TCP+TLS**. This is for routing to other WebSocket inbound, while the inbound being routed doesn't need to configure TLS.
 
 > `dest`: string | number
 
-决定 TLS 解密后 TCP 流量的去向，目前支持两类地址：（该项必填，否则无法启动）
+Determines the destination of decrypted TLS TCP traffic, which currently supports two types of addresses: (this field is required, otherwise it cannot be started)
 
-1. TCP，格式为 `"addr:port"`，其中 addr 支持 IPv4、域名、IPv6，若填写域名，也将直接发起 TCP 连接（而不走内置的 DNS）。
-2. Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `@` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`@@` 则代表带 padding 的 abstract。
+1. TCP, in the format of `"addr:port"`, where addr supports IPv4, domain names, and IPv6. If a domain name is entered, a direct TCP connection will be made (rather than using the built-in DNS resolver).
+2. Unix domain socket, in the format of an absolute path, such as `"/dev/shm/domain.socket"`, which can be prefixed with `@` to represent [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html), and `@@` to represent padded abstract.
 
-若只填 port，数字或字符串均可，形如 `80`、`"80"`，通常指向一个明文 http 服务（addr 会被补为 `"127.0.0.1"`）。
+If only the port is specified, both numbers and strings are accepted, such as `80` or `"80"`. This usually points to a plaintext HTTP service (and the addr will be filled in as `"127.0.0.1"`).
 
 > `xver`: number
 
-发送 [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt)，专用于传递请求的真实来源 IP 和端口，填版本 1 或 2，默认为 0，即不发送。若有需要建议填 1。
+Sends the [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) protocol, which is used to transmit the real source IP and port of the request. The version can be set to `1` or `2`, with a default value of `0`, which means no PROXY protocol is sent. Version `1` is recommended if needed.
 
-目前填 1 或 2，功能完全相同，只是结构不同，且前者可打印，后者为二进制。Xray 的 TCP 和 WS 入站均已支持接收 PROXY protocol。
+Currently, versions `1` and `2` have the same functionality but different structures, where version `1` is printable while version 2 is `binary`. Xray's `TCP` and `WebSocket` inbound already support receiving the PROXY protocol.
 
 ::: warning
-若你正在 [配置 Nginx 接收 PROXY protocol](https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/#configuring-nginx-to-accept-the-proxy-protocol)，除了设置 proxy_protocol 外，还需设置 set_real_ip_from，否则可能会出问题。
+If you are [configuring Nginx to receive the PROXY protocol](https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/#configuring-nginx-to-accept-the-proxy-protocol), you need to not only set `proxy_protocol`, but also `set_real_ip_from` to avoid potential issues.
 :::
 
-### 补充说明
+### Additional Information
 
-- 将匹配到最精确的子元素，与子元素的排列顺序无关。若配置了几个 alpn 和 path 均相同的子元素，则会以最后的为准。
-- 回落分流均是解密后 TCP 层的转发，而不是 HTTP 层，只在必要时检查首包 PATH。
-- 您可以查看更多的关于 Fallbacks 的使用技巧和心得
-  - [Fallbacks 功能简析](../../document/level-1/fallbacks-lv1)
+- Matches the most precise sub-element, regardless of the order of arrangement of the sub-elements. If several sub-elements have the same `alpn` and `path` configurations, the last one specified will be used.
+- Fallback routing is performed at the decrypted TCP layer rather than the HTTP layer, and the first packet PATH is only checked when necessary.
+- You can learn more about tips and experiences in using Fallbacks by visiting
+  - [An Analysis of Fallback Functionality.](../../document/level-1/fallbacks-lv1)
 
-## Fallbacks 设计理论 <Badge text="WIP" type="warning"/>
+## Fallbacks design theory <Badge text="WIP" type="warning"/>
