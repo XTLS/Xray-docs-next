@@ -14,7 +14,7 @@
     "@vuepress/plugin-back-to-top": "^2.0.0-beta.25",
     "@vuepress/plugin-debug": "^2.0.0-beta.25",
     "@vuepress/plugin-search": "^2.0.0-beta.25",
-    "postcss-loader": "^7.1.0",
+    "postcss-loader": "^7.2.3",
     "prettier": "^2.8.0",
     "sass": "^1.51.0",
     "sass-loader": "^13.2.0",
