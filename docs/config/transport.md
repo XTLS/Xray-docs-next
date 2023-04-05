@@ -521,7 +521,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "dialerProxy": "",
   "acceptProxyProtocol": false,
   "tcpKeepAliveInterval": 0,
-  "tcpKeepAliveIdle": 300, 
+  "tcpKeepAliveIdle": 300,
   "tcpcongestion": "bbr",
   "interface": "wg0"
 }
@@ -637,6 +637,8 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 TCP 保持活跃的数据包发送间隔，单位为秒。~~该设置仅适用于 Linux 下。~~
 
+它是连接不正常（未收到ack）时候的心跳包。
+
 不配置此项或配置为 0 表示使用 Go 默认值。
 
 ::: tip
@@ -646,6 +648,8 @@ TCP 保持活跃的数据包发送间隔，单位为秒。~~该设置仅适用�
 > `tcpKeepAliveIdle`: number
 
 TCP 空闲时间阈值，单位为秒。当 TCP 连接空闲时间达到这个阈值时，将开始发送 Keep-Alive 探测包。
+
+它是连接正常时候的心跳包。
 
 不配置此项或配置为 0 表示使用 Go 默认值。
 
