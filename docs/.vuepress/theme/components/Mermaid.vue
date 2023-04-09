@@ -31,10 +31,11 @@ export default defineComponent({
           theme: dark.value ? "dark" : "default",
         });
         mermaid.default.render(
-          chartID.value,
-          decodeURI(rawGraph.value),
-          (svgCode, bindFunc) => {
-            html.innerHtml = svgCode;
+          chartID.value!,
+          decodeURI(rawGraph.value!)
+        ).then(
+          ({svg, bindFunctions}) => {
+            html.innerHtml = svg;
           }
         );
       });
@@ -47,10 +48,11 @@ export default defineComponent({
         theme: dark.value ? "dark" : "default",
       });
       mermaid.default.render(
-        chartID.value,
-        decodeURI(rawGraph.value),
-        (svgCode, bindFunc) => {
-          html.innerHtml = svgCode;
+        chartID.value!,
+        decodeURI(rawGraph.value!)
+      ).then(
+        ({svg, bindFunctions}) => {
+          html.innerHtml = svg;
         }
       );
     });
