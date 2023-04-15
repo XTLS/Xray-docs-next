@@ -1,119 +1,117 @@
-# Mux.Cool 协议
+# Mux.Cool Protocol
 
-Mux.Cool 协议是一个多路复用传输协议，用于在一条已建立的数据流中传输多个各自独立的数据流。
+Mux.Cool protocol is a multiplexing transport protocol that is used to transmit multiple independent data streams within an established data stream.
 
-## 版本
+## Version
 
-当前版本是 1 Beta。
+The current version is 1 Beta.
 
-## 依赖
+## Dependencies
 
-### 底层协议
+### Underlying Protocol
 
-Mux.Cool 必须运行在一个已建立的可靠数据流之上。
+Mux.Cool must run on top of a reliable established data stream.
 
-## 通讯过程
+## Communication Process
 
-一个 Mux.Cool 连接中可传输若干个子连接，每个子连接有一个独立的 ID 和状态。传输过程由帧（Frame）组成，每一帧用于传输一个特定的子连接的数据。
+Within a Mux.Cool connection, multiple sub-connections can be transmitted, each with a unique ID and status. The transmission process consists of frames, with each frame used to transmit data for a specific sub-connection.
 
-### 客户端行为
+### Client behavior
 
-当有连接需求时并且没有现有可用的连接时，客户端向服务器发起一个新连接，以下称为“主连接”。
+When there is a need for a connection and there are no existing available connections, the client initiates a new connection to the server, referred to as the "main connection".
 
-1. 一个主连接可用于发送若干个子连接。客户端可自主决定主连接可承载的子连接数量。
-1. 对于一个新的子连接，客户端必须发送状态`New`以通知服务器建立子连接，然后使用状态`Keep`来传送数据。
-1. 当子连接结束时，客户端发送`End`状态来通知服务器关闭子连接。
-1. 客户端可自行决定何时关闭主连接，但必须确定服务器也同时保持连接。
-1. 客户端可使用 KeepAlive 状态来避免服务器关闭主连接。
+1. One main connection can be used to send several sub-connections. The client can decide independently how many sub-connections the main connection can handle.
+2. For a new sub-connection, the client must send the `New` status to notify the server to establish the sub-connection, and then use the `Keep` status to transmit data.
+3. When the sub-connection ends, the client sends the `End` status to notify the server to close the sub-connection.
+4. The client can decide when to close the main connection, but must ensure that the server also maintains the connection.
+5. The client can use the KeepAlive status to prevent the server from closing the main connection.
 
-### 服务器端行为
+### Server-side behavior
 
-当服务器端接收到新的子连接时，服务器应当按正常的连接来处理。
+When a new sub-connection is received on the server side, the server should handle it as a normal connection.
 
-1. 当收到状态`End`时，服务器端可以关闭对目标地址的上行连接。
-1. 在服务器的响应中，必须使用与请求相同的 ID 来传输子连接的数据。
-1. 服务器不能使用`New`状态。
-1. 服务器可使用 KeepAlive 状态来避免客户端关闭主连接。
+1. When the status "End" is received, the server can close the upstream connection to the target address.
+2. The same ID used in the request must be used to transfer sub-connection data in the server response.
+3. The server cannot use the "New" status.
+4. The server can use the KeepAlive status to avoid the client closing the main connection.
 
-## 传输格式
+## Data Format
 
-Mux.Cool 使用对称传输格式，即客户端和服务器发送和接收相同格式的数据。
+Mux.Cool uses symmetric transmission format, where the client and server send and receive data in the same format.
 
-### 帧格式
+### Frame Format
 
-| 2 字节       | L 字节 | X 字节   |
-| ------------ | ------ | -------- |
-| 元数据长度 L | 元数据 | 额外数据 |
+| 2 Bytes           | L Bytes  | X Bytes         |
+| ----------------- | -------- | --------------- |
+| Metadata Length L | Metadata | Additional Data |
 
-### 元数据
+### Metadata
 
-元数据有若干种类型。所有类型的元数据都包含 ID 和 Opt 两项，其含义为：
+There are several types of metadata. All types of metadata contain two items, ID and Opt, with the following meanings:
 
-- ID: 子连接的唯一标识
-  - 对于一般 MUX 子链接，ID 由 1 开始累加
-  - 对于 XUDP，ID 始终为 0
+- ID: Unique identifier of the sub-connection
+  - For general MUX sub-connections, the ID is accumulated starting from 1
+  - For XUDP, the ID is always 0
 - Opt:
-  - D(0x01): 有额外数据
+  - D(0x01): Additional data is available
 
-当选项 Opt(D) 开启时，额外数据格式如下：
+When option Opt(D) is enabled, the additional data format is as follows:
 
-| 2 字节   | X-2 字节 |
-| -------- | -------- |
-| 长度 X-2 | 数据     |
+| 2 Bytes    | X-2 Bytes |
+| ---------- | --------- |
+| Length X-2 | Data      |
 
-### 新建子连接 (New)
+### New Sublink (New)
 
-| 2 字节 | 1 字节 | 1 字节   | 1 字节     | 2 字节 | 1 字节     | A 字节 |
-| ------ | ------ | -------- | ---------- | ------ | ---------- | ------ |
-| ID     | 0x01   | 选项 Opt | 网络类型 N | 端口   | 地址类型 T | 地址 A |
+| 2 Bytes | 1 Byte | 1 Byte | 1 Byte    | 2 Bytes | 1 Byte | A Bytes |
+| ------- | ------ | ------ | --------- | ------- | ------ | ------- |
+| ID      | 0x01   | Option | Network N | Port    | Type T | Address |
 
-其中：
+where:
 
-- 网络类型 N：
-  - 0x01：TCP，表示当前子连接的流量应当以 TCP 的方式发送至目标。
-  - 0x02：UDP，表示当前子连接的流量应当以 UDP 的方式发送至目标。
-- 地址类型 T：
-  - 0x01：IPv4
-  - 0x02：域名
-  - 0x03：IPv6
-- 地址 A：
-  - 当 T = 0x01 时，A 为 4 字节 IPv4 地址；
-  - 当 T = 0x02 时，A 为 1 字节长度（L） + L 字节域名；
-  - 当 T = 0x03 时，A 为 16 字节 IPv6 地址；
+- Network type N:
+  - 0x01: TCP, indicating that the traffic of the current sub-connection should be sent to the destination in the way of TCP.
+  - 0x02: UDP, indicating that the traffic of the current sub-connection should be sent to the destination in the way of UDP.
+- Address type T:
+  - 0x01: IPv4
+  - 0x02: Domain name
+  - 0x03: IPv6
+- Address A:
+  - When T = 0x01, A is a 4-byte IPv4 address;
+  - When T = 0x02, A is a 1-byte length (L) + L-byte domain name;
+  - When T = 0x03, A is a 16-byte IPv6 address;
 
-在新建子连接时，若 Opt(D) 开启，则这一帧所带的数据需要被发往目标主机。
+If Opt(D) is enabled when creating a sub-connection, the data carried by this frame needs to be sent to the target host.
 
-### 保持子连接 (Keep)
+### Keep sub-connections
 
-| 2 字节 | 1 字节 | 1 字节   |
-| ------ | ------ | -------- |
-| ID     | 0x02   | 选项 Opt |
+| 2 Bytes | 1 Byte | 1 Byte |
+| ------- | ------ | ------ |
+| ID      | 0x02   | Option |
 
-在保持子连接时，若 Opt(D) 开启，则这一帧所带的数据需要被发往目标主机。
-XUDP 在 Opt(D) 之后加 UDP 地址，格式同新建子链接
+If Opt(D) is enabled while maintaining sub-connections, the data carried by this frame needs to be sent to the target host. XUDP adds the UDP address after Opt(D), and the format is the same as creating a new sub-connection.
 
-### 关闭子连接 (End)
+### End
 
-| 2 字节 | 1 字节 | 1 字节   |
-| ------ | ------ | -------- |
-| ID     | 0x03   | 选项 Opt |
+| 2 Bytes | 1 Byte | 1 Byte |
+| ------- | ------ | ------ |
+| ID      | 0x03   | Option |
 
-在保持子连接时，若 Opt(D) 开启，则这一帧所带的数据需要被发往目标主机。
+If Opt(D) is enabled while maintaining sub-connections, the data carried by this frame needs to be sent to the target host.
 
-### 保持连接 (KeepAlive)
+### KeepAlive
 
-| 2 字节 | 1 字节 | 1 字节   |
-| ------ | ------ | -------- |
-| ID     | 0x04   | 选项 Opt |
+| 2 Bytes | 1 Byte | 1 Byte     |
+| ------- | ------ | ---------- |
+| ID      | 0x04   | Option Opt |
 
-在保持连接时:
+While staying connected:
 
-- 若 Opt(D) 开启，则这一帧所带的数据必须被丢弃。
-- ID 可为随机值。
+- If Opt(D) is enabled, the data carried by this frame must be discarded.
+- ID can be a random value.
 
-## 应用
+## Application
 
-Mux.Cool 协议与底层协议无关，理论上可以使用任何可靠的流式连接来传输 Mux.Cool 的协议数据。
+The Mux.Cool protocol is agnostic to the underlying protocol and can theoretically use any reliable streaming connection to transmit Mux.Cool protocol data.
 
-在目标导向的协议如 Shadowsocks 和 VMess 协议中，连接建立时必须包含一个指定的地址。
-为了保持兼容性，Mux.Cool 协议指定地址为“v1.mux.cool”。即当主连接的目标地址与之匹配时，则进行 Mux.Cool 方式的转发，否则按传统方式进行转发。（注：这是一个程序内的标记，VMess 和 VLESS 并不会在数据包中发送“v1.mux.cool”地址）
+In target-oriented protocols such as Shadowsocks and VMess, a specified address must be included when establishing a connection. To maintain compatibility, the Mux.Cool protocol specifies the address as "v1.mux.cool". When the target address of the main connection matches this address, the Mux.Cool forwarding method is used. Otherwise, forwarding is done in the traditional way. (Note: This is an internal tag in the program, and VMess and VLESS do not send the "v1.mux.cool" address in data packets.)
