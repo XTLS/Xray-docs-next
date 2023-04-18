@@ -51,7 +51,7 @@ Mux.Cool 使用对称传输格式，即客户端和服务器发送和接收相�
 
 - ID: 子连接的唯一标识
   - 对于一般 MUX 子连接，ID 由 1 开始累加
-  - 对于 xray 实现的 (single xudp)[https://github.com/XTLS/Xray-core/blob/d3060c28f826ba62f5f77085fa1dc2a20f5cd19f/proxy/vless/outbound/outbound.go#L214]，ID 始终为 0
+  - 对于 xray 实现的 (Single XUDP)[https://github.com/XTLS/Xray-core/blob/main/common/xudp/xudp.go]，ID 始终为 0
 - Opt:
   - D(0x01): 有额外数据
 

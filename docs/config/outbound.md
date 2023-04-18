@@ -110,17 +110,17 @@ Mux 功能是在一条 TCP 连接上分发多个 TCP 连接的数据。实现细
 这个数值表示了一个 TCP 连接上最多承载的 Mux 连接数量。比如设置 `concurrency=8` 时，当客户端发出了 8 个 TCP 请求，Xray 只会发出一条实际的 TCP 连接，客户端的 8 个请求全部由这个 TCP 连接传输。
 
 ::: tip
-填负数时，如 `-1`，不使用 mux 模块承载 TCP 流量。
+填负数时，如 `-1`，不使用 Mux 模块承载 TCP 流量。
 :::
 
 > `xudpConcurrency`: number
 
-使用新 XUDP 聚合隧道（也就是另一条 MUX 连接）代理 UDP 流量，填写最大并发 UDP 连接数。最小值 `1`，最大值 `1024`。
+使用新 XUDP 聚合隧道（也就是另一条 Mux 连接）代理 UDP 流量，填写最大并发 UDP 连接数。最小值 `1`，最大值 `1024`。
 
 省略或者填 `0` 时，将与 TCP 流量走同一条路。
 
 ::: tip
-填 `-1` 时不使用 XUDP，UDP 流量将使用代理协议原本的 UDP 传输方式。例如 `Shadowsocks` 会使用原生 UDP，`VLESS` 会使用 UoT。
+填负数时，如 `-1`，不使用 Mux 模块承载 UDP 流量。将使用代理协议原本的 UDP 传输方式。例如 `Shadowsocks` 会使用原生 UDP，`VLESS` 会使用 UoT。
 :::
 
 > `xudpProxyUDP443`: string
@@ -129,6 +129,6 @@ Mux 功能是在一条 TCP 连接上分发多个 TCP 连接的数据。实现细
 
 默认 `reject` 拒绝流量（一般浏览器会自动回落到 TCP HTTP2）
 
-`allow` 允许走 MUX 连接。
+`allow` 允许走 Mux 连接。
 
-`skip` UDP 443 流量将使用代理协议原本的 UDP 传输方式。例如 `Shadowsocks` 会使用原生 UDP，`VLESS` 会使用 UoT。
+填 `skip` 时，不使用 Mux 模块承载 UDP 443 流量。将使用代理协议原本的 UDP 传输方式。例如 `Shadowsocks` 会使用原生 UDP，`VLESS` 会使用 UoT。
