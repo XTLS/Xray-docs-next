@@ -30,14 +30,11 @@ export default defineComponent({
           startOnLoad: false,
           theme: dark.value ? "dark" : "default",
         });
-        mermaid.default.render(
-          chartID.value!,
-          decodeURI(rawGraph.value!)
-        ).then(
-          ({svg, bindFunctions}) => {
+        mermaid.default
+          .render(chartID.value!, decodeURI(rawGraph.value!))
+          .then(({ svg, bindFunctions }) => {
             html.innerHtml = svg;
-          }
-        );
+          });
       });
     });
 
@@ -47,14 +44,11 @@ export default defineComponent({
         startOnLoad: false,
         theme: dark.value ? "dark" : "default",
       });
-      mermaid.default.render(
-        chartID.value!,
-        decodeURI(rawGraph.value!)
-      ).then(
-        ({svg, bindFunctions}) => {
+      mermaid.default
+        .render(chartID.value!, decodeURI(rawGraph.value!))
+        .then(({ svg, bindFunctions }) => {
           html.innerHtml = svg;
-        }
-      );
+        });
     });
 
     return {
