@@ -92,9 +92,9 @@ Mux 功能是在一条 TCP 连接上分发多个 TCP 连接的数据。实现细
 
 ```json
 {
-  "enabled": false,
+  "enabled": true,
   "concurrency": 8,
-  "xudpConcurrency": 128,
+  "xudpConcurrency": 16,
   "xudpProxyUDP443": "reject"
 }
 ```
@@ -119,7 +119,9 @@ Mux 功能是在一条 TCP 连接上分发多个 TCP 连接的数据。实现细
 
 省略或者填 `0` 时，将与 TCP 流量走同一条路。
 
+::: tip
 填 `-1` 时不使用 XUDP，UDP 流量将使用代理协议原本的 UDP 传输方式。例如 `Shadowsocks` 会使用原生 UDP，`VLESS` 会使用 UoT。
+:::
 
 > `xudpProxyUDP443`: string
 
