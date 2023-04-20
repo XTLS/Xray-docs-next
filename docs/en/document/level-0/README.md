@@ -1,25 +1,25 @@
-# 小小白白话文
+# Plain and Simple Language
 
-**这个章节是【从零开始】的基础课，新来的同学好好看好好学哦**
+**This chapter is a basic lesson of [Starting from Scratch]. New students, please watch and learn carefully.**
 
 ::: tip
 Made with ❤️ by [@ricuhkaen](https://github.com/ricuhkaen)
 :::
 
-[【第 1 章】 前言罗嗦篇](./ch01-preface.md) - 机场还是自建？这是个问题
+[【Chapter 1】 Preface: Rambling](./ch01-preface.md) - Airport or Self-built? That is the question.
 
-[【第 2 章】 原料准备篇](./ch02-preparation.md) - 工欲善其事，必先利其器
+[Chapter 2: Preparation of Raw Materials](./ch02-preparation.md) - Tools must be sharpened before they can be used proficiently.
 
-[【第 3 章】 远程登录篇](./ch03-ssh.md) - 一桥飞架南北，天堑变通途
+[Chapter 3: Remote Login](./ch03-ssh.md) - A bridge connecting the north and south, turning a natural obstacle into a thoroughfare.
 
-[【第 4 章】 安全防护篇](./ch04-security.md) - 安全不注意，亲人两行泪
+[【Chapter 4】Security Protection](./ch04-security.md) - If you don't pay attention to security, you will shed tears for your loved ones.
 
-[【第 5 章】 网站建设篇](./ch05-webpage.md) - 秀出你的美
+[【Chapter 5】Website Construction] - Show Your Beauty (Link to webpage.md file)
 
-[【第 6 章】 证书管理篇](./ch06-certificates.md) - 领证的才是合法的
+[Chapter 6: Certificate Management](./ch06-certificates.md) - Only those who obtain certificates are considered legitimate.
 
-[【第 7 章】 Xray 服务器篇](./ch07-xray-server.md) - 终于等到你
+[Chapter 7: Xray Server](./ch07-xray-server.md) - Finally, waited for you.
 
-[【第 8 章】 Xray 客户端篇](./ch08-xray-clients.md) - 新的开始
+[Chapter 8: Xray Client](./ch08-xray-clients.md) - A New Beginning.
 
-[【第 9 章】 附录](./ch09-appendix.md) - 考点都在这里
+[Chapter 9] Appendix - All the exam points are here.
