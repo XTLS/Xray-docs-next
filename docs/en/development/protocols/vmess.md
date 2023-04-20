@@ -68,10 +68,9 @@ The instruction part is encrypted using AES-128-CFB.
 
 Options Opt Details: (When a bit is 1, it means the option is enabled)
 
-|   0   |   1   |   2   |   3   |   4   |   5   |   6   |   7   |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-|   X   |   X   |   X   |   X   |   X   |   M   |   R   |   S   |
-
+|  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+|  X  |  X  |  X  |  X  |  X  |  M  |  R  |  S  |
 
 of which:
 
@@ -126,16 +125,16 @@ Before the transmission is completed, the data packet must contain actual data, 
 The packets are formatted as follows, depending on the encryption method:
 
 - Unencrypted:
-  - L bytes: actual data;
+    - L bytes: actual data;
 - AES-128-CFB: The entire data section is encrypted using AES-128-CFB.
-  - 4 bytes: FNV1a hash of actual data;
-  - L - 4 bytes: actual data;
+    - 4 bytes: FNV1a hash of actual data;
+    - L - 4 bytes: actual data;
 - AES-128-GCM: Key is the Key of the instruction section, IV = count (2 bytes) + IV (10 bytes). count starts at 0 and increases by 1 for each packet; IV is the 3rd to 12th byte of the instruction section IV.
-  - L - 16 bytes: actual data;
-  - 16 bytes: GCM authentication information
+    - L - 16 bytes: actual data;
+    - 16 bytes: GCM authentication information
 - ChaCha20-Poly1305: Key = MD5 (instruction part Key) + MD5 (MD5 (instruction part Key)), IV = count (2 bytes) + IV (10 bytes). count starts at 0 and increases by 1 for each packet; IV is the 3rd to 12th byte of the instruction section IV.
-  - L - 16 bytes: actual data;
-  - 16 bytes: Poly1305 authentication information
+    - L - 16 bytes: actual data;
+    - 16 bytes: Poly1305 authentication information
 
 ## Server Response
 

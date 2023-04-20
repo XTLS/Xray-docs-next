@@ -1,212 +1,219 @@
-# 【第 6 章】证书管理篇
+# [Chapter 6] Certificate Management
 
-## 6.1 申请 TLS 证书
+## 6.1 Applying for a TLS Certificate
 
-接下来我们要做的，是为我们的域名申请一个真实的 TLS 证书，使网站具备标准 TLS 加密的能力及 HTTPS 访问的能力。这就是 Xray 等现阶段安全代理工具确保流量充分加密最重要的工具。
+Next, we need to apply for a real TLS certificate for our domain name, so that the website has the ability to encrypt with standard TLS and the ability to access via HTTPS. This is the most important tool for Xray and other current security proxy tools to ensure fully encrypted traffic.
 
 ::: warning
-请不要轻易使用自签证书。它并没有让操作简单太多，但增加了无谓的风险（如中间人攻击）。
+Please do not use self-signed certificates lightly. It does not make the operation much simpler, but adds unnecessary risks (such as man-in-the-middle attacks).
 :::
 
-这里我会使用一个叫做 [`acme.sh`](https://github.com/acmesh-official/acme.sh) 的证书管理工具，它简单、轻量、高效，并可完成证书自动更新。
+Here, I will use a certificate management tool called [`acme.sh`](https://github.com/acmesh-official/acme.sh), which is simple, lightweight, efficient, and capable of automatically updating certificates.
 
-另外，我相信，现在你已经逐渐熟悉了 Linux 的基础操作，所以已经多次出现的命令从本章开始不再重复截图、只做简单的描述。如果实在想不起来怎么用的话，就稍微复习一下前面的章节吧。
+In addition, I believe that you have gradually become familiar with the basic operations of Linux. Therefore, from this chapter on, commands that have appeared multiple times will no longer have screenshots and will only be briefly described. If you really can't remember how to use them, just review the previous chapters.
 
-## 6.2 安装 `acme.sh`
+## 6.2 Install `acme.sh`
 
-1. 小小白白 Linux 基础命令：
-   | 编号 | 命令名称 | 命令说明 |
-   |:--:|:--:|:--:|
-   | `cmd-12` | `wget` | 访问（或下载）某个网页文件 |
-   | `cmd-13` | `acme.sh` | acme.sh 证书管理相关的命令 |
+1. Basic Linux commands for beginners:
+   |  Number  |  Command  |                    Description                     |
+   | :------: | :-------: | :------------------------------------------------: |
+   | `cmd-12` |  `wget`   |       Retrieve (or download) a webpage file        |
+   | `cmd-13` | `acme.sh` | Commands related to acme.sh certificate management |
 
-2. 运行安装脚本
+2. Run the installation script.
 
-   ```shell
-   wget -O -  https://get.acme.sh | sh
-   ```
+```shell
+wget -O - https://get.acme.sh | sh
+```
 
-3. 让 `acme.sh` 命令生效
+3. Make the `acme.sh` command effective.
 
-   ```shell
-   . .bashrc
-   ```
+```shell
+. .bashrc
+```
 
-4. 开启 `acme.sh` 的自动升级
+(Note: This command is used to source (load) the `.bashrc` file in the shell environment.)
 
-   ```shell
-   acme.sh --upgrade --auto-upgrade
-   ```
+4. Enable `acme.sh` automatic upgrade.
 
-5. 到这一步的完整流程如下图：
+```shell
+acme.sh --upgrade --auto-upgrade
+```
 
-   ![acme.sh安装演示](./ch06-img01-acme-install.gif)
+5. The complete process up to this point is shown in the following diagram:
 
-## 6.3 测试证书申请
+![acme.sh installation demo](./ch06-img01-acme-install.gif)
 
-在正式申请证书之前，我们先用测试命令(`--issue --test`)来验证是否可以成功申请，这样可以避免在本地配置有误时，反复申请证书失败，超过 Let's Encrypt 的频率上限（比如，每小时、每个域名、每个用户失败最多 5 次），导致后面的步骤无法进行。
+## 6.3 Testing Certificate Application
 
-1. 测试证书申请的命令如下（本文均以 `ECC` 证书为例，因为时至今日，实在没什么理由不用它）：
+Before officially applying for the certificate, we use the testing command (`--issue --test`) to verify if the application can be successfully submitted. This can avoid repeated failures in applying for a certificate due to incorrect local configuration, exceeding the frequency limit of Let's Encrypt (such as a maximum of 5 failures per hour, per domain, or per user), which may prevent the subsequent steps from being carried out.
 
-   ```shell
-   acme.sh --issue --server letsencrypt --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
-   ```
+1. The command to apply for a test certificate is as follows (this article uses ECC certificate as an example, because there is really no reason not to use it nowadays):
 
-   ::: warning 说明
-   `ECC`证书的主要优势在于它的 Keysize 更小，意味着同等大小下安全性的提升和加密解密速度的加快。如 ECC-256bit 的强度大约相当于 RSA-3072bit，何乐而不为呢？当然，有人说 ECC 证书握手会明显更快，这我觉得就有些夸张了，因为 RSA 握手也没有太慢，就算有差别应该也是毫秒级，很难直接感知。
+```shell
+acme.sh --issue --server letsencrypt --test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256
+``` 
 
-   另外，如果有些网站确实需要兼容某些古老设备的，那也还是请按需选择`RSA`证书。
+(Note: This is a command in shell script for obtaining SSL certificate from Let's Encrypt CA using ACME protocol. It specifies the test server, the subdomain for which the certificate is requested, the webroot directory of the subdomain, and the key length to use for the certificate.)
+
+::: warning Explanation
+   The main advantage of the `ECC` certificate is that its `Keysize` is smaller, which means that security is improved and encryption and decryption speed is faster for the same size. Why not choose ECC-256bit, which is approximately equivalent to RSA-3072bit in strength? Of course, some people say that the ECC certificate handshake is significantly faster, which I think is a bit exaggerated, because RSA handshake is not too slow either. Even if there is a difference, it should be in milliseconds and difficult to perceive directly.
+
+In addition, if some websites do need to be compatible with certain old devices, please still choose RSA certificates according to your needs.
+
+2. You should eventually see a prompt similar to this:
+
+```log
+[Wed 30 Dec 2022 04:25:12 AM EST] Using ACME_DIRECTORY: https://acme-staging-v02.api.letsencrypt.org/directory
+[Wed 30 Dec 2022 04:25:13 AM EST] Using CA: https://acme-staging-v02.api.letsencrypt.org/directory
+[Wed 30 Dec 2022 04:25:13 AM EST] Create account key ok.
+[Wed 30 Dec 2022 04:25:13 AM EST] Registering account: https://acme-staging-v02.api.letsencrypt.org/directory
+[Wed 30 Dec 2022 04:25:13 AM EST] Registered
+[Wed 30 Dec 2022 04:25:13 AM EST] ACCOUNT_THUMBPRINT='CU6qmPKuRqhyTAIrF4swosR375194z_1ddUlWef8xDc'
+[Wed 30 Dec 2022 04:25:13 AM EST] Creating domain key
+[Wed 30 Dec 2022 04:25:13 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.key
+[Wed 30 Dec 2022 04:25:13 AM EST] Single domain='二级域名.你的域名.com'
+[Wed 30 Dec 2022 04:25:13 AM EST] Getting domain auth token for each domain
+[Wed 30 Dec 2022 04:25:14 AM EST] Getting webroot for domain='二级域名.你的域名.com'
+[Wed 30 Dec 2022 04:25:14 AM EST] Verifying: 二级域名.你的域名.com
+[Wed 30 Dec 2022 04:25:23 AM EST] Pending
+[Wed 30 Dec 2022 04:25:25 AM EST] Success
+[Wed 30 Dec 2022 04:25:25 AM EST] Verify finished, start to sign.
+[Wed 30 Dec 2022 04:25:25 AM EST] Lets finalize the order.
+[Wed 30 Dec 2022 04:25:25 AM EST] Le_OrderFinalize='https://acme-staging-v02.api.letsencrypt.org/acme/finalize/490205995/7730242871'
+[Wed 30 Dec 2022 04:25:25 AM EST] Downloading cert.
+[Wed 30 Dec 2022 04:25:25 AM EST] Le_LinkCert='https://acme-staging-v02.api.letsencrypt.org/acme/cert/xujss5xt8i38waubafz2xujss5xt8i38waubz2'
+[Wed 30 Dec 2022 15:21:52 AM EST] Cert success.
+--BEGIN CERTIFICAT--
+sxlYqPvWreKgD5b8JyOQX0Yg2MLoRUoDyqVkd31PthIiwzdckoh5eD3JU7ysYBtN
+cTFK4LGOfjqi8Ks87EVJdK9IaSAu7ZC6h5to0eqpJ5PLhaM3e6yJBbHmYA8w1Smp
+wAb3tdoHZ9ttUIm9CrSzvDBt6BBT6GqYdDamMyCYBLooMyDEM4CUFsOzCRrEqqvC
+2mTTEmhvpojo5rhdTSJxibozyNWTGwoTj0v9pTUeQcGqLIzqi4DowjBHD5guwRid
+SjAFnm6JT2xUQgWFm58A1gv1OhbH1TRPUUmtE1nFEN7YiSjI4xgxqAXT3CLD2EUb
+wXlUrO6c75zSsQP4bRMzgOjJUqHtSb6IEqELzt4M7KzL5iCOruCChCo2DZxUwvVX
+tOoaAyQJzCbTqE6aUqwiKi3gVyoxvDP9mI5JdRYzsDL6GVud7EHPnYeMl9ubLZAK
+0vg84mbMP3f6mYM4KRa1cqiyOIcQPT4AzGFYVv4sm049bZQg7sd0Bz9CaFvE7yDA
+1y17XlgCDnsjxl66bqI1vkENN9XT5xeFHONqc18b5fZEKSIvdX7iWPFWp1PyMPpG
+0pMCP1EymZNFxIMJLgbWqExwLWfPc5Ib3PjBaIqhXPnw6sT2MQSxXwDupq1UJVhV
+7E3hQRVlwI4CXi6WLHJMNvNRyyK87gCrLH1bKYsPeRVaz77poWBq49zwBCts6hPY
+IeF4ltGXyANNIOPEi8vy138fRU4LYh81d8FjOtFfJZogMjwhfNvapqxPMsioPlmX
+TnZu0n7setrVNUEfTMHWqPpDgk5MPrWLA4LapqaDfEX4pwnQJLMwMi6s94z165c0
+iMRSKA1yU5zqv8aNsDfPoY4OkSPWs4MaXgRRSLBsUfZ15DwQXPk76kegHIyxWvwF
+tYw9HKR5QCMK66fa0z4aJoFVFLK0IIOGEZOanRFUCnkLUDd3QZ3YU8lEcrj7Uxos
+haiRNICyC6UfsCJ94a8vcNyMosPv3xBLMp19WXgiFYqEFQkntkv1FLRI35fjeJmg
+0fmD9VG9bkzGPHihJgQLRlCHasGf6XrdfkSsODAyCUHUHJ0RzqF4YEZMcxDxzuQ2
+YO7bFwj7S3mUdVPZ6MPasjxdyBjJgEBMch2uy4AhmudXfEBQBye8W6ZI4ztZjLVV
+FmP4SIuaNUmMe20TjR8b9NVC96AhxOanWT3mRROsdokpKQGTJvl27EHH8KuAbUOc
+G6KtPy4wslNZNXWcBy9n63RcWak12r7kAIFn38tZxmlw2WUKoRSMAH64GcDTjRQd
+Am65hBHzvGrj93wEuVNIebvNIsJOlng3HFjpIxVqKGMCIfWIKGDE3YzK3p4LbGZ6
+NZFQWYJLNVf2M9CCJfbEImPYgvctrxl39H6KVYPCw1SAdaj9NneUqmREOQkKoEB0
+x6PmNirbMscHhQPSC0JQaqUgaQFgba1ALmzRYAnYhNb0twkTxWbY7DBkAarxqMIp
+yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPIjw9AKH=
+--END CERTIFICAT--
+[Wed 30 Dec 2022 15:21:52 AM
+
+3. Note: The certificate applied for here is a test certificate, which cannot be used directly. It is only used to prove that your domain and configuration are correct. If you observe carefully, you will find that the domain that issues the certificate to you is `https://acme-staging-v02.api.letsencrypt.org`, and this `staging` can be understood as a "test server"!
+
+4. If this step goes wrong, you can run the following command to check the detailed application process and specific errors. If you don't understand, you can hide sensitive information and ask in the Xray group.
+
+```shell
+acme.sh --issue --server letsencrypt --test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
+``` 
+
+(Note: This command is written in Chinese characters, therefore I have translated it into English. The command is used to issue SSL/TLS certificates using acme.sh client with Let's Encrypt CA in test mode for a subdomain of your domain with the specified webroot path, key length and in debug mode.)
+
+Hmm, that's right. Just added a `--debug` parameter at the end of the command.
+
+5. Once this step is confirmed to be successful, you can apply for the formal certificate. (The test certificate does not need to be deleted, as it will be automatically replaced by the formal certificate.)
+
+## 6.4 Application for Official Certification
+
+1. The command for applying for an official certificate is as follows (i.e., remove the `--test` parameter and add the `--force` parameter at the end):
+
+```shell
+acme.sh --set-default-ca --server letsencrypt
+```
+
+This is a command in the shell language. It sets the default Certificate Authority (CA) to Let's Encrypt by using the `acme.sh` script.
+
+```shell
+acme.sh --issue -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
+```
+
+(Note: This is a command written in shell script that requests a SSL certificate from ACME server using the ACME client "acme.sh". It specifies the subdomain of the domain name, the web root directory of the website, the key length, and forces the re-issuance of the certificate.)
+
+::: warning Explanation
+   The meaning of the `--force` parameter is to manually (forcefully) update the certificate before the existing certificate expires. Although the certificate we applied for from the "test server" in the previous step cannot be used directly, it has not expired yet, so this parameter is needed.
    :::
 
-2. 你最终应该看到类似这样的提示：
+2. You should eventually see a prompt that looks similar to the one above.
 
-   ```log
-   [Wed 30 Dec 2022 04:25:12 AM EST] Using ACME_DIRECTORY: https://acme-staging-v02.api.letsencrypt.org/directory
-   [Wed 30 Dec 2022 04:25:13 AM EST] Using CA: https://acme-staging-v02.api.letsencrypt.org/directory
-   [Wed 30 Dec 2022 04:25:13 AM EST] Create account key ok.
-   [Wed 30 Dec 2022 04:25:13 AM EST] Registering account: https://acme-staging-v02.api.letsencrypt.org/directory
-   [Wed 30 Dec 2022 04:25:13 AM EST] Registered
-   [Wed 30 Dec 2022 04:25:13 AM EST] ACCOUNT_THUMBPRINT='CU6qmPKuRqhyTAIrF4swosR375194z_1ddUlWef8xDc'
-   [Wed 30 Dec 2022 04:25:13 AM EST] Creating domain key
-   [Wed 30 Dec 2022 04:25:13 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.key
-   [Wed 30 Dec 2022 04:25:13 AM EST] Single domain='二级域名.你的域名.com'
-   [Wed 30 Dec 2022 04:25:13 AM EST] Getting domain auth token for each domain
-   [Wed 30 Dec 2022 04:25:14 AM EST] Getting webroot for domain='二级域名.你的域名.com'
-   [Wed 30 Dec 2022 04:25:14 AM EST] Verifying: 二级域名.你的域名.com
-   [Wed 30 Dec 2022 04:25:23 AM EST] Pending
-   [Wed 30 Dec 2022 04:25:25 AM EST] Success
-   [Wed 30 Dec 2022 04:25:25 AM EST] Verify finished, start to sign.
-   [Wed 30 Dec 2022 04:25:25 AM EST] Lets finalize the order.
-   [Wed 30 Dec 2022 04:25:25 AM EST] Le_OrderFinalize='https://acme-staging-v02.api.letsencrypt.org/acme/finalize/490205995/7730242871'
-   [Wed 30 Dec 2022 04:25:25 AM EST] Downloading cert.
-   [Wed 30 Dec 2022 04:25:25 AM EST] Le_LinkCert='https://acme-staging-v02.api.letsencrypt.org/acme/cert/xujss5xt8i38waubafz2xujss5xt8i38waubz2'
-   [Wed 30 Dec 2022 15:21:52 AM EST] Cert success.
-   --BEGIN CERTIFICAT--
-   sxlYqPvWreKgD5b8JyOQX0Yg2MLoRUoDyqVkd31PthIiwzdckoh5eD3JU7ysYBtN
-   cTFK4LGOfjqi8Ks87EVJdK9IaSAu7ZC6h5to0eqpJ5PLhaM3e6yJBbHmYA8w1Smp
-   wAb3tdoHZ9ttUIm9CrSzvDBt6BBT6GqYdDamMyCYBLooMyDEM4CUFsOzCRrEqqvC
-   2mTTEmhvpojo5rhdTSJxibozyNWTGwoTj0v9pTUeQcGqLIzqi4DowjBHD5guwRid
-   SjAFnm6JT2xUQgWFm58A1gv1OhbH1TRPUUmtE1nFEN7YiSjI4xgxqAXT3CLD2EUb
-   wXlUrO6c75zSsQP4bRMzgOjJUqHtSb6IEqELzt4M7KzL5iCOruCChCo2DZxUwvVX
-   tOoaAyQJzCbTqE6aUqwiKi3gVyoxvDP9mI5JdRYzsDL6GVud7EHPnYeMl9ubLZAK
-   0vg84mbMP3f6mYM4KRa1cqiyOIcQPT4AzGFYVv4sm049bZQg7sd0Bz9CaFvE7yDA
-   1y17XlgCDnsjxl66bqI1vkENN9XT5xeFHONqc18b5fZEKSIvdX7iWPFWp1PyMPpG
-   0pMCP1EymZNFxIMJLgbWqExwLWfPc5Ib3PjBaIqhXPnw6sT2MQSxXwDupq1UJVhV
-   7E3hQRVlwI4CXi6WLHJMNvNRyyK87gCrLH1bKYsPeRVaz77poWBq49zwBCts6hPY
-   IeF4ltGXyANNIOPEi8vy138fRU4LYh81d8FjOtFfJZogMjwhfNvapqxPMsioPlmX
-   TnZu0n7setrVNUEfTMHWqPpDgk5MPrWLA4LapqaDfEX4pwnQJLMwMi6s94z165c0
-   iMRSKA1yU5zqv8aNsDfPoY4OkSPWs4MaXgRRSLBsUfZ15DwQXPk76kegHIyxWvwF
-   tYw9HKR5QCMK66fa0z4aJoFVFLK0IIOGEZOanRFUCnkLUDd3QZ3YU8lEcrj7Uxos
-   haiRNICyC6UfsCJ94a8vcNyMosPv3xBLMp19WXgiFYqEFQkntkv1FLRI35fjeJmg
-   0fmD9VG9bkzGPHihJgQLRlCHasGf6XrdfkSsODAyCUHUHJ0RzqF4YEZMcxDxzuQ2
-   YO7bFwj7S3mUdVPZ6MPasjxdyBjJgEBMch2uy4AhmudXfEBQBye8W6ZI4ztZjLVV
-   FmP4SIuaNUmMe20TjR8b9NVC96AhxOanWT3mRROsdokpKQGTJvl27EHH8KuAbUOc
-   G6KtPy4wslNZNXWcBy9n63RcWak12r7kAIFn38tZxmlw2WUKoRSMAH64GcDTjRQd
-   Am65hBHzvGrj93wEuVNIebvNIsJOlng3HFjpIxVqKGMCIfWIKGDE3YzK3p4LbGZ6
-   NZFQWYJLNVf2M9CCJfbEImPYgvctrxl39H6KVYPCw1SAdaj9NneUqmREOQkKoEB0
-   x6PmNirbMscHhQPSC0JQaqUgaQFgba1ALmzRYAnYhNb0twkTxWbY7DBkAarxqMIp
-   yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPIjw9AKH=
-   --END CERTIFICAT--
-   [Wed 30 Dec 2022 15:21:52 AM EST] Your cert is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.cer
-   [Wed 30 Dec 2022 15:21:52 AM EST] Your cert key is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.key
-   [Wed 30 Dec 2022 15:21:52 AM EST] The intermediate CA cert is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/ca.cer
-   [Wed 30 Dec 2022 15:21:52 AM EST] And the full chain certs is there:  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/fullchain.cer
-   ```
+```log
+vpsadmin@vps-server:~$ acme.sh --issue -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256
+[Wed 30 Dec 2022 15:22:51 AM EST] Using CA: https://acme-v02.api.letsencrypt.org/directory
+[Wed 30 Dec 2022 15:22:51 AM EST] Creating domain key
+[Wed 30 Dec 2022 15:22:51 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.key
+[Wed 30 Dec 2022 15:22:51 AM EST] Single domain='subdomain.yourdomain.com'
+[Wed 30 Dec 2022 15:22:51 AM EST] Getting domain auth token for each domain
+[Wed 30 Dec 2022 15:22:51 AM EST] Getting webroot for domain='subdomain.yourdomain.com'
+[Wed 30 Dec 2022 15:22:51 AM EST] Verifying: subdomain.yourdomain.com
+[Wed 30 Dec 2022 15:22:51 AM EST] Pending
+[Wed 30 Dec 2022 15:22:51 AM EST] Success
+[Wed 30 Dec 2022 15:22:51 AM EST] Verify finished, start to sign.
+[Wed 30 Dec 2022 15:22:51 AM EST] Lets finalize the order.
+[Wed 30 Dec 2022 15:22:51 AM EST] Le_OrderFinalize='https://acme-v02.api.letsencrypt.org/acme/finalize/490205996/7730242872'
+[Wed 30 Dec 2022 15:22:51 AM EST] Downloading cert.
+[Wed 30 Dec 2022 15:22:51 AM EST] Le_LinkCert='https://acme-v02.api.letsencrypt.org/acme/cert/vsxvk0oldnuobe51ayxz4dms62sk2dwmw9zhuw'
+[Wed 30 Dec 2022 15:22:51 AM EST] Cert success.
+--BEGIN CERTIFICAT--
+sxlYqPvWreKgD5b8JyOQX0Yg2MLoRUoDyqVkd31PthIiwzdckoh5eD3JU7ysYBtN
+cTFK4LGOfjqi8Ks87EVJdK9IaSAu7ZC6h5to0eqpJ5PLhaM3e6yJBbHmYA8w1Smp
+wAb3tdoHZ9ttUIm9CrSzvDBt6BBT6GqYdDamMyCYBLooMyDEM4CUFsOzCRrEqqvC
+2mTTEmhvpojo5rhdTSJxibozyNWTGwoTj0v9pTUeQcGqLIzqi4DowjBHD5guwRid
+SjAFnm6JT2xUQgWFm58A1gv1OhbH1TRPUUmtE1nFEN7YiSjI4xgxqAXT3CLD2EUb
+wXlUrO6c75zSsQP4bRMzgOjJUqHtSb6IEqELzt4M7KzL5iCOruCChCo2DZxUwvVX
+tOoaAyQJzCbTqE6aUqwiKi3gVyoxvDP9mI5JdRYzsDL6GVud7EHPnYeMl9ubLZAK
+0vg84mbMP3f6mYM4KRa1cqiyOIcQPT4AzGFYVv4sm049bZQg7sd0Bz9CaFvE7yDA
+1y17XlgCDnsjxl66bqI1vkENN9XT5xeFHONqc18b5fZEKSIvdX7iWPFWp1PyMPpG
+0pMCP1EymZNFxIMJLgbWqExwLWfPc5Ib3PjBaIqhXPnw6sT2MQSxXwDupq1UJVhV
+7E3hQRVlwI4CXi6WLHJMNvNRyyK87gCrLH1bKYsPeRVaz77poWBq49zwBCts6hPY
+IeF4ltGXyANNIOPEi8vy138fRU4LYh81d8FjOtFfJZogMjwhfNvapqxPMsioPlmX
+TnZu0n7setrVNUEfTMHWqPpDgk5MPrWLA4LapqaDfEX4pwnQJLMwMi6s94z165c0
+iMRSKA1yU5zqv8aNsDfPoY4OkSPWs4MaXgRRSLBsUfZ15DwQXPk76kegHIyxWvwF
+tYw9HKR5QCMK66fa0z4aJoFVFLK0IIOGEZOanRFUCnkLUDd3QZ3YU8lEcrj7Uxos
+haiRNICyC6UfsCJ94a8vcNyMosPv3xBLMp19WXgiFYqEFQkntkv1FLRI35fjeJmg
+0fmD9VG9bkzGPHihJgQLRlCHasGf6XrdfkSsODAyCUHUHJ0RzqF4YEZMcxDxzuQ2
+YO7bFwj7S3mUdVPZ6MPasjxdyBjJgEBMch2uy4AhmudXfEBQBye8W6ZI4ztZjLVV
+FmP4SIuaNUmMe20TjR8b9NVC96AhxOanWT3mRROsdokpKQGTJvl27EHH8KuAbUOc
+G6KtPy4wslNZNXWcBy9n63RcWak12r7kAIFn38tZxmlw2WUKoRSMAH64GcDTjRQd
+Am65hBHzvGrj93wEuVNIebvNIsJOlng3HFjpIxVqKGMCIfWIKGDE3YzK3p4LbGZ6
+NZFQWYJLNVf2M9CCJfbEImPYgvctrxl39H6KVYPCw1SAdaj9NneUqmREOQkKoEB0
+x6PmNirbMscHhQPSC0JQaqUgaQFgba1ALmzRYAnYhNb0twkTxWbY7DBkAarxqMIp
+yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPM=
+--END CERTIFICAT--
+[Wed 30 Dec 2022 15:22:52 AM EST] Your cert is in /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.cer
+[Wed 30 Dec 2022 15:22:52 AM EST] Your cert key is in /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.key
+[Wed 30 Dec 2022 15:22:52 AM EST] The intermediate CA cert is in /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/ca.cer
+[Wed 30 Dec 2022 15:22:52 AM EST] And the full chain certs is there: /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/fullchain.cer
+```
 
-3. 注意：这里申请的是测试证书，没办法直接用的，只是用来证明你的域名、配置全都正确。仔细观察，你会发现给你发证书的域名是 `https://acme-staging-v02.api.letsencrypt.org`，这个 `staging` 你就理解成【测试服】吧！
+3. If you observe carefully, you will find that the domain name that issues the certificate to you this time is `https://acme-v02.api.letsencrypt.org`, which lacks the word `staging`. Therefore, this is the [Production Environment]!
 
-4. 如果这一步出错的话，你可以运行下面的命令，来查看详细的申请过程和具体的错误。（看不懂就隐藏掉敏感信息后，去 Xray 群里问吧）
+## 6.5 Certificate Installation
 
-   ```shell
-   acme.sh --issue --server letsencrypt --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
-   ```
+1. After completing the certificate application, it needs to be installed to a specified location and referenced in the configuration file to take effect:
 
-   嗯没错，就是在命令的最后加了一个 `--debug` 参数
+```shell
+vpsadmin@vps-server:~$ acme.sh --installcert -d subdomain.yourdomain.com --cert-file /path/to/install/cert.crt --key-file /path/to/install/cert.key --fullchain-file /path/to/install/fullchain.crt --ecc
+[Mon 14 Feb 2022 03:00:25 PM CST] Installing cert to: /etc/xray/cert/cert.crt
+[Mon 14 Feb 2022 03:00:25 PM CST] Installing key to: /etc/xray/cert/cert.key
+[Mon 14 Feb 2022 03:00:25 PM CST] Installing full chain to: /etc/xray/cert/fullchain.crt
+``` 
 
-5. 这一步确定成功之后，就可以申请正式的证书了。（测试证书不需要删除，它会自动被正式证书覆盖）
+(Note: This is a shell command for installing a SSL certificate using acme.sh. The command is specifying the domain, file paths for the certificate, private key, and full chain, as well as indicating that an ECC certificate should be used.)
 
-## 6.4 正式证书申请
+## 6.6 Your Progress
 
-1. 申请正式证书的命令如下（即删掉 `--test` 参数，并在最后加入 `--force`参数）：
-
-   ```shell
-   acme.sh --set-default-ca --server letsencrypt
-   ```
-
-   ```shell
-   acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --force
-   ```
-
-   ::: warning 说明
-   `--force` 参数的意思就是，在现有证书到期前，手动（强行）更新证书。上一步我们从“测试服”申请的证书虽然不能直接用，但是它本身是尚未过期的，所以需要用到这个参数。
-   :::
-
-2. 你最终应该看到跟上面很像的提示：
-
-   ```log
-   vpsadmin@vps-server:~$ acme.sh --issue -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
-   [Wed 30 Dec 2022 15:22:51 AM EST] Using CA: https://acme-v02.api.letsencrypt.org/directory
-   [Wed 30 Dec 2022 15:22:51 AM EST] Creating domain key
-   [Wed 30 Dec 2022 15:22:51 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.key
-   [Wed 30 Dec 2022 15:22:51 AM EST] Single domain='二级域名.你的域名.com'
-   [Wed 30 Dec 2022 15:22:51 AM EST] Getting domain auth token for each domain
-   [Wed 30 Dec 2022 15:22:51 AM EST] Getting webroot for domain='二级域名.你的域名.com'
-   [Wed 30 Dec 2022 15:22:51 AM EST] Verifying: 二级域名.你的域名.com
-   [Wed 30 Dec 2022 15:22:51 AM EST] Pending
-   [Wed 30 Dec 2022 15:22:51 AM EST] Success
-   [Wed 30 Dec 2022 15:22:51 AM EST] Verify finished, start to sign.
-   [Wed 30 Dec 2022 15:22:51 AM EST] Lets finalize the order.
-   [Wed 30 Dec 2022 15:22:51 AM EST] Le_OrderFinalize='https://acme-v02.api.letsencrypt.org/acme/finalize/490205996/7730242872'
-   [Wed 30 Dec 2022 15:22:51 AM EST] Downloading cert.
-   [Wed 30 Dec 2022 15:22:51 AM EST] Le_LinkCert='https://acme-v02.api.letsencrypt.org/acme/cert/vsxvk0oldnuobe51ayxz4dms62sk2dwmw9zhuw'
-   [Wed 30 Dec 2022 15:22:51 AM EST] Cert success.
-   --BEGIN CERTIFICAT--
-   sxlYqPvWreKgD5b8JyOQX0Yg2MLoRUoDyqVkd31PthIiwzdckoh5eD3JU7ysYBtN
-   cTFK4LGOfjqi8Ks87EVJdK9IaSAu7ZC6h5to0eqpJ5PLhaM3e6yJBbHmYA8w1Smp
-   wAb3tdoHZ9ttUIm9CrSzvDBt6BBT6GqYdDamMyCYBLooMyDEM4CUFsOzCRrEqqvC
-   2mTTEmhvpojo5rhdTSJxibozyNWTGwoTj0v9pTUeQcGqLIzqi4DowjBHD5guwRid
-   SjAFnm6JT2xUQgWFm58A1gv1OhbH1TRPUUmtE1nFEN7YiSjI4xgxqAXT3CLD2EUb
-   wXlUrO6c75zSsQP4bRMzgOjJUqHtSb6IEqELzt4M7KzL5iCOruCChCo2DZxUwvVX
-   tOoaAyQJzCbTqE6aUqwiKi3gVyoxvDP9mI5JdRYzsDL6GVud7EHPnYeMl9ubLZAK
-   0vg84mbMP3f6mYM4KRa1cqiyOIcQPT4AzGFYVv4sm049bZQg7sd0Bz9CaFvE7yDA
-   1y17XlgCDnsjxl66bqI1vkENN9XT5xeFHONqc18b5fZEKSIvdX7iWPFWp1PyMPpG
-   0pMCP1EymZNFxIMJLgbWqExwLWfPc5Ib3PjBaIqhXPnw6sT2MQSxXwDupq1UJVhV
-   7E3hQRVlwI4CXi6WLHJMNvNRyyK87gCrLH1bKYsPeRVaz77poWBq49zwBCts6hPY
-   IeF4ltGXyANNIOPEi8vy138fRU4LYh81d8FjOtFfJZogMjwhfNvapqxPMsioPlmX
-   TnZu0n7setrVNUEfTMHWqPpDgk5MPrWLA4LapqaDfEX4pwnQJLMwMi6s94z165c0
-   iMRSKA1yU5zqv8aNsDfPoY4OkSPWs4MaXgRRSLBsUfZ15DwQXPk76kegHIyxWvwF
-   tYw9HKR5QCMK66fa0z4aJoFVFLK0IIOGEZOanRFUCnkLUDd3QZ3YU8lEcrj7Uxos
-   haiRNICyC6UfsCJ94a8vcNyMosPv3xBLMp19WXgiFYqEFQkntkv1FLRI35fjeJmg
-   0fmD9VG9bkzGPHihJgQLRlCHasGf6XrdfkSsODAyCUHUHJ0RzqF4YEZMcxDxzuQ2
-   YO7bFwj7S3mUdVPZ6MPasjxdyBjJgEBMch2uy4AhmudXfEBQBye8W6ZI4ztZjLVV
-   FmP4SIuaNUmMe20TjR8b9NVC96AhxOanWT3mRROsdokpKQGTJvl27EHH8KuAbUOc
-   G6KtPy4wslNZNXWcBy9n63RcWak12r7kAIFn38tZxmlw2WUKoRSMAH64GcDTjRQd
-   Am65hBHzvGrj93wEuVNIebvNIsJOlng3HFjpIxVqKGMCIfWIKGDE3YzK3p4LbGZ6
-   NZFQWYJLNVf2M9CCJfbEImPYgvctrxl39H6KVYPCw1SAdaj9NneUqmREOQkKoEB0
-   x6PmNirbMscHhQPSC0JQaqUgaQFgba1ALmzRYAnYhNb0twkTxWbY7DBkAarxqMIp
-   yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPM=
-   --END CERTIFICAT--
-   [Wed 30 Dec 2022 15:22:52 AM EST] Your cert is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.cer
-   [Wed 30 Dec 2022 15:22:52 AM EST] Your cert key is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.key
-   [Wed 30 Dec 2022 15:22:52 AM EST] The intermediate CA cert is in  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/ca.cer
-   [Wed 30 Dec 2022 15:22:52 AM EST] And the full chain certs is there:  /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/fullchain.cer
-   ```
-
-3. 仔细观察，你会发现这次给你发证书的域名是 `https://acme-v02.api.letsencrypt.org`，少了 `staging`，自然就是【正式服】了！
-
-## 6.5 证书安装
-
-1. 证书申请完成后，需要安装，安装到指定位置，并在配置文件中引用即可：
-
-   ```shell
-   vpsadmin@vps-server:~$ acme.sh --installcert -d 二级域名.你的域名.com --cert-file /你要安装到的位置/cert.crt --key-file /你要安装到的位置/cert.key --fullchain-file /你要安装到的位置/fullchain.crt --ecc
-   [Mon 14 Feb 2022 03:00:25 PM CST] Installing cert to: /etc/xray/cert/cert.crt
-   [Mon 14 Feb 2022 03:00:25 PM CST] Installing key to: /etc/xray/cert/cert.key
-   [Mon 14 Feb 2022 03:00:25 PM CST] Installing full chain to: /etc/xray/cert/fullchain.crt
-   ```
-
-## 6.6 你的进度
-
-至此，Xray 所需要的两个基础设施终于全部就位！千呼万唤始出来的 Xray 马上就要揭开面纱，我们终于要进入最激动人心章节啦！
+At this point, the two basic infrastructures required by Xray are finally in place! Xray, which has been eagerly awaited, is about to be revealed, and we are finally about to enter the most exciting chapter!
 
 > ⬛⬛⬛⬛⬛⬛⬜⬜ 75%

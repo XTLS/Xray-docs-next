@@ -1,85 +1,89 @@
-# 【第 3 章】远程登录篇
+# [Chapter 3] Remote Login
 
-## 3.1 远程登录 VPS (PuTTY)
+## 3.1 Remote Login to VPS (PuTTY)
 
-首先，鉴于零基础人群中 Windows 的用户基数最大，所以本文以 Windows 为例进行展示。
+First of all, considering that the user base of Windows is the largest among the zero-based population, this article uses Windows as an example for demonstration.
 
-其次，虽然 Windows 10 之后的 PowerShell 和 WSL 也可以达到很好的 SSH 操作体验。但是因为并非所有版本的 Windows 都有最新的组件，故本文还是以老牌的 PuTTY 为例，进行 SSH 远程登录的操作详解。（使用其他工具的话、在 SSH 登陆之后的操作都是一样的）
+Secondly, although PowerShell and WSL after Windows 10 can also achieve a good SSH operation experience, not all versions of Windows have the latest components. Therefore, this article uses the classic PuTTY as an example to provide a detailed explanation of SSH remote login operation. (If you use other tools, the operations after the SSH login are the same.)
 
-下面就跟我一步步操作吧。
+Follow me step by step and let's start the operation.
 
-1. 进入 PuTTY 的[官网](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)，选择适合你操作系统的版本下载。（本文以 64 位版本为例）
+1. Go to the [official website](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) of PuTTY and download the version that suits your operating system (this article uses the 64-bit version as an example).
 
-   ![下载PuTTY](./ch03-img01-putty-download.png)
+![Download PuTTY](./ch03-img01-putty-download.png)
 
-2. 安装运行后，将会看到 PuTTY 的主界面。现在请拿出你上一章记东西的[小本本](./ch02-preparation.md#21-%E8%8E%B7%E5%8F%96%E4%B8%80%E5%8F%B0vps)，在下图的对应位置填入你 VPS 的**IP 地址(VPS IP)**和**端口(VPS PORT)**。为了方便以后使用时不用重复输入，我们可以保存会话 (Saved Sessions)，未来使用时只要按 Load 即可一键载入设置。
+2. After installation and running, you will see the main interface of PuTTY. Now please take out your notebook from the previous chapter where you wrote down the **IP address (VPS IP)** and **port (VPS PORT)** of your VPS in the corresponding positions of the following figure. In order to save time and avoid repeatedly entering these details in the future, we can save the session (Saved Sessions), and simply load it in the future with one click.
 
-   ![设置PuTTY](./ch03-img02-putty-settings.png)
+![PuTTY Settings](./ch03-img02-putty-settings.png)
 
-3. 我建议将 `Connection` 中的 `keepalive` 设置为 `60` 秒，防止你一段时间没有操作之后 SSH 自动断线。另外务必再次保存设置。
+3. I suggest setting `keepalive` to `60` seconds in the `Connection` to prevent SSH from automatically disconnecting after a period of inactivity. Be sure to save the settings again.
 
-   ![防止频繁断线](./ch03-img03-putty-keepalive.png)
+![Prevent frequent disconnection](./ch03-img03-putty-keepalive.png)
 
-::: warning 注意
-对 PuTTY 的任何设置更新都要再次手动保存 Session，不然关闭后就会丢失
+::: warning Attention
+Any update to the PuTTY configuration needs to be manually saved to the session again. Otherwise, it will be lost after closing.
 :::
 
-4. 点击 Open 就会进入 SSH 连接窗口，对应下图输入用户名与密码，与你的 VPS 远程主机建立连接。（本文假设默认用户名是 `root`，另外，在 Linux 系统输入密码的时候，是不会出现 `******` 这种提示符的，这样可以避免密码长度泄漏，不是你的键盘坏掉了哦！）
+4. Click on Open to enter the SSH connection window, then enter the username and password corresponding to the following figure to establish a connection with your VPS remote host. (This article assumes that the default username is `root`. Also, when entering a password in the Linux system, there will be no prompt like `******`, which can avoid password length leakage. It's not that your keyboard is broken!)
 
-   ![SSH远程登录](./ch03-img04-ssh-login.png)
+![SSH Remote Login](./ch03-img04-ssh-login.png)
 
-## 3.2 成功登录 SSH！初识命令行界面！
+## 3.2 Successfully Logging in SSH! Introduction to Command Line Interface!
 
-1. 如果你的信息都填写正确，你将会看到类似下图的界面，说明已登录成功：
+1. If you have filled in your information correctly, you will see a similar interface as the picture below, indicating that you have successfully logged in:
 
-   ![初次登录VPS](./ch03-img05-ssh-login-success.png)
+![Logging in to VPS for the first time](./ch03-img05-ssh-login-success.png)
 
-   这个界面，就等于远程服务器的【桌面】，但它没有你熟悉的图标和鼠标，没有绚丽的色彩，有的只是简单文字，这就是【**命令行界面**】- `Command Line Interface`，或者缩写为 `CLI`。
+This interface is equivalent to the "desktop" of a remote server, but it does not have familiar icons and a mouse, nor does it have colorful graphics. Instead, all you see is simple text. This is the "**Command Line Interface**" - shortened as `CLI`.
 
-   接下来的所有操作，都需要你像电影里的黑客一样，在这个命令行界面中完成。也许你会觉得陌生，但请相信我，使用命令行既不可怕，也不神秘。说到底，它只不过是把你习惯的鼠标操作变成了文字指令而已，**你说一句，它做一句**。
+All the following operations require you to act like a hacker in a movie and complete them in this command-line interface. Maybe you will feel unfamiliar, but please believe me, using the command-line interface is neither scary nor mysterious. In the end, it just turns your familiar mouse operations into textual commands, **you say it, it does it**.
 
-2. 现在，你可以稍微观察并熟悉一下命令行环境，这个界面其实已经告诉了你一些有用的信息了，比如系统内核版本（比如图内是 `4.19.37-5`）、上次登录时间及 IP 等。当然根据 VPS 的不同，你看到的界面可能会略有不同。
+2. Now, you can observe and familiarize yourself with the command line environment a little bit. This interface has actually provided you with some useful information, such as the system kernel version (e.g. `4.19.37-5` in the picture), last login time and IP address. Of course, depending on the VPS, the interface you see may be slightly different.
 
-3. 请注意命令行最下面一行，闪动的光标左边，有一串字符。图中显示的是`root@vps-server:~#`，这一串要怎么理解呢？很简单：
+3. Please pay attention to the line at the bottom of the command line, to the left of the flashing cursor, there is a string of characters. The one shown in the figure is `root@vps-server:~#`. How to understand this string? It's very simple:
 
-   - 现在的用户是 `root`
-   - `root` 所在的服务器是 `vps-server`
-   - `root` 现在所在的文件夹是 `~`
-   - `#` 之后是你可以输入命令的地方
+- The current user is `root`
+- The server where `root` is located is `vps-server`
+- The current directory where `root` is located is `~`
+- After `#` is the place where you can input commands.
 
-   前两个很直观，无需多说。第三个是关于 Linux 的文件夹系统，现在也不需要过于深入，你只需要知道，"`~`"就是【当前用户的大本营】。第四个，提示符`#`，你也不用管，只需要知道，未来文章中会写一些需要你输入的命令，都会以 "`#`" 或者 "`$`" 开头，提示你**后面**是你输入命令的地方。（所以你复制命令的时候，**只需要复制后面的内容**，不要复制提示符）
+The first two are pretty straightforward, no need to explain further. The third one is about the folder system in Linux. You don't need to go too deep into it for now. Just know that "`~`" represents **the home directory of the current user**. As for the fourth one, the prompt symbol "`#`", you don't need to worry about it either. Just know that in future articles, there will be some commands that you need to input, and they will be preceded by "`#`" or "`$`" to indicate **where you should input the command**. (So when you copy the command, **just copy the content after the prompt symbol** and don't copy the prompt symbol itself.)
 
-## 3.3 第一次更新 Linux 的软件！
+## 3.3 Updating software on Linux for the first time!
 
-1. 正如你的手机，无论安卓还是 iPhone，为了 APP 及时更新（获取安全补丁和新功能），都会时不时从应用商店获得更新信息，并且提示你有多少个 APP 可更新。Linux 系统也有逻辑十分类似的更新机制。所以只要你会更新手机 APP，就能学会更新 Linux 软件！
+1. Just like your phone, whether it's Android or iPhone, in order to keep your apps up-to-date (to get security patches and new features), you will occasionally receive update notifications from the app store, telling you how many apps need to be updated. Linux systems also have a similar update mechanism that works logically. So as long as you know how to update phone apps, you can learn how to update Linux software!
 
-2. Linux 下，每个 APP 都叫做一个“包” （package）。管理 APP 的程序自然就叫做“包管理器”（Package Manager）。你可以通过它安装、更新、卸载各种软件、甚至更新 Linux 系统本身。Linux 下的包管理器非常强大，此处按下不表，现在你只需要知道 Debian 系统的包管理器叫做 `apt` 即可。接下来，我们就先使用 `apt` 做一次软件的全面更新，让你熟悉它的基本操作。
+2. In Linux, each application is called a "package". The program that manages the applications is naturally called a "package manager". You can use it to install, update, and uninstall various software, and even update the Linux system itself. Package managers in Linux are very powerful, but we won't go into details here. For now, you only need to know that the package manager for the Debian system is called `apt`. Next, we will first use `apt` to do a comprehensive update of the software to familiarize you with its basic operations.
 
-3. 小小白白 Linux 基础命令：
+3. Tiny White Linux Basic Commands:
 
-   |   编号   |   命令名称    |   命令说明   |
-   | :------: | :-----------: | :----------: |
-   | `cmd-01` | `apt update`  | 查询软件更新 |
-   | `cmd-02` | `apt upgrade` | 执行软件更新 |
+|  Number  | Command Name  |   Command Description    |
+| :------: | :-----------: | :----------------------: |
+| `cmd-01` | `apt update`  |  Query software updates  |
+| `cmd-02` | `apt upgrade` | Perform software updates |
 
-4. 现在请输入第一条命令，获取更新信息
+4. Now, please enter the first command to get update information.
 
-   ```shell
-   apt update
-   ```
+```shell
+apt update
+``` 
 
-5. 然后请输入第二条命令，并在询问是否继续安装 `(Y/n)` 时输入 `y` 并回车确认，开始安装
+This is a command used in a Linux terminal to update the package list from the repositories configured on the system.
 
-   ```shell
-   apt upgrade
-   ```
+5. Then enter the second command, and when asked if you want to continue installing `(Y/n)`, type `y` and press enter to confirm and start the installation.
 
-6. 完整流程演示如下：
+```shell
+apt upgrade
+```
 
-   ![初次软件更新流程演示](./ch03-img06-apt-upgrade-full.gif)
+This is a command in the shell terminal to upgrade the installed packages on a Debian or Ubuntu Linux system.
 
-## 3.4 你的进度
+6. The complete demonstration of the process is as follows:
 
-**恭喜你又迈出了坚实的一步！** 现在，你已经可以通过 SSH 来登录你的远程服务器了！那登录进去之后，除了升级软件之外，应该再做点什么呢？敬请进入下一章一探究竟吧！
+![Demonstration of the software update process for the first time](./ch03-img06-apt-upgrade-full.gif)
+
+## 3.4 Your Progress
+
+**Congratulations on taking another solid step!** Now, you can log in to your remote server via SSH! After logging in, besides upgrading the software, what else should you do? Please enter the next chapter to find out!
 
 > ⬛⬛⬛⬜⬜⬜⬜⬜ 37.5%

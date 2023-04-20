@@ -1,96 +1,100 @@
-# 【第 1 章】 小小白白话文
+# [Chapter 1] Simple and Plain Language
 
-## 1.1 这篇文档是写给谁的？
+## 1.1 Who is this document written for?
 
-一句话：写给 **① 零基础** **② 希望学习自建 VPS** 的新人。
+One sentence: Written for newbies who are **(1) absolute beginners** and **(2) interested in learning how to build their own VPS**.
 
-## 1.2 这篇文档不是写给谁的？
+## 1.2 Who is this document not written for?
 
-包括但不限于：各路大神大能、懒得自己折腾的小白、已经会折腾的高手、确定要用机场的土豪、确定要用一键脚本的逍遥派...... 总之只要有技术基础、或不愿不想自建的同学，您直接关闭本文即可，因为这篇文章大概是入不了您的法眼的，更可能会让您生一肚子闲气，那多划不来。
+Including but not limited to: experts and professionals, beginners who are too lazy to tinker on their own, advanced users who already know how to tinker, wealthy users who insist on using airport services, and those who prefer using one-click scripts. In short, if you have a technical background or don't want to build it yourself, you can close this article directly, because this article may not be suitable for you and may even make you upset.
 
-## 1.3 郑重声明及其他声明
+## 1.3 Declaration and Other Statements
 
-郑重声明：
+Declaration:
 
-鄙人技术奇菜无比，故本文必然挂一漏万破绽百出。您若发现问题还请温柔提醒，莫要人参公鸡。
+My technical skills are extremely limited, so this article is inevitably full of errors and flaws. If you find any problems, please kindly point them out and don't be too harsh on me.
 
-免责声明：
+Disclaimer:
 
-本文内容请您自行判断是否可信可靠可用，若您根据本文内容建立和使用 VPS 服务器时出了任何问题和不良结果，鄙人概不负责。
+Please judge the reliability and usability of the content of this article by yourself. If you encounter any problems or negative results when establishing and using a VPS server based on the content of this article, I am not responsible for it.
 
-啰嗦声明：
+Verbose statement:
 
-基于本文【零基础用户】的目标受众，许多内容会尽力详尽说明，所以语言偏啰嗦，请做好心理准备。
+Considering the target audience of this article, which is "users with zero experience", many details will be explained in great detail, so the language may be verbose. Please be mentally prepared for this.
 
-## 1.4 为什么自建是个难题？
+## 1.4 Why is self-hosting a challenge?
 
-要回答这个问题，就需要稍微多说一点背景信息了。
+To answer this question, we need to provide a little more background information.
 
-一、科学上网这件事
+1. On the matter of accessing the internet through scientific means
 
-科学上网这件事情，说来已经发展了近二十年（震惊!!!.jpg）。最初，自己稍微动动手即可（改改 host、连一下 ssh）、后来需要找一个网页代理，再后来需要写一个私有协议(比如 Shadowsocks)等等。
+The act of accessing the internet using scientific methods has been around for almost 20 years (shocking!!!.jpg). Initially, one could do it with a little effort (changing the host file, using SSH), then one had to find a web proxy, and later, one had to develop a private protocol (such as Shadowsocks) and so on.
 
-随着 GFW 技术这十几年来不断的迭代升级，若要完成【自己动手科学上网】这个目标，需要做的事情已经包括但不限于：
+With the continuous iteration and upgrade of GFW technology over the past decade, to achieve the goal of [building your own scientific Internet access], the things that need to be done include but are not limited to:
 
-- 了解 Linux 系统基本命令
-- 了解网络传输协议
-- 有技术和经济能力完成 VPS 购买及管理
-- 有技术和经济能力完成域名购买及管理
-- 有技术能力完成 TLS 证书申请 等等。
+- Understand basic Linux commands
+- Understand network transmission protocols
+- Have the technical and financial ability to purchase and manage a VPS
+- Have the technical and financial ability to purchase and manage a domain name
+- Have the technical ability to apply for a TLS certificate, and so on.
 
-这就让【自建 VPS 科学上网】这个曾经简单的行为逐渐变成了令新人望而生畏的挑战。
+This has turned the once simple act of [setting up a self-built VPS for accessing the internet in a secure and unrestricted manner] into a daunting challenge that intimidates newcomers.
 
-二、零基础用户的无奈
+2. Helplessness of Zero-based Users
 
-零基础的非技术用户，如果完成上面这一连串的操作，势必要学习大量的知识，但稍微搜索之后，新人只怕会更加迷茫：大量的信息散布在互联网的各个角落：博客、问答网站、群组、论坛、GitHub、Telegram、YouTube 等等等等）。这些信息纷乱复杂、水平良莠不齐、甚至可能互相矛盾。基本上就是不把新人彻底弄晕誓不罢休。
+For non-technical users with zero foundation, if they complete the above series of operations, they will inevitably need to learn a lot of knowledge. However, after a little searching, newbies are likely to become even more confused: a large amount of information is scattered in various corners of the Internet: blogs, Q&A sites, groups, forums, GitHub, Telegram, YouTube, and so on. These pieces of information are chaotic and complex, with varying levels of quality, and may even contradict each other. Basically, they won't stop until they completely confuse the newcomer.
 
-面对这些杂乱无章的信息，新人突然就从【信息匮乏】变成了【信息过剩】。若是几番连蒙带猜的折腾以失败告终（大概率如此）的话，他的积极性势必大受挫折。在这个过程中，若他又恰好去了一些不太友好的地方去求助，恐怕还要雪上加霜的被嘲讽一番：“这么菜，用机场不就行了，瞎折腾什么啊！”、“先去学会 Linux 再回来问吧”。
+Faced with such chaotic information, newcomers suddenly shift from [information scarcity] to [information overload]. If they fail after several attempts of groping and guessing (which is highly probable), their enthusiasm is bound to be greatly frustrated. In this process, if they happen to seek help in some unfriendly places, they may be ridiculed even more: "You're so inexperienced, just use the airport, why bother messing around!" "Go learn Linux first before coming back to ask."
 
-这时候，大概也只有一声“呵呵”可以表达心情了。
+At this moment, probably only an "hehe" can express the mood.
 
-## 1.5 “用机场不就行了？”
+## 1.5 "Why not just use the airport?"
 
-首先，我想反问一下那些冷嘲热讽的人：“用机场”真的就是万灵药吗？
+First of all, I would like to respond to those who ridicule and criticize by asking a question: Is using the airport really a panacea?
 
-其次，我认为“不懂”和“不想懂”是有本质区别的。态度恶劣的巨婴伸手党自然惹人厌烦，但真心自学却不得要领的人不该受到无端的白眼和歧视，也正是这种对新人不加区分的恶劣社区氛围促使我写下本文。那么闲话少说，我们来看看机场的优势与劣势究竟如何：
+Secondly, I believe that there is a fundamental difference between "not understanding" and "not wanting to understand". The bad attitude of some people who just want handouts is naturally annoying, but those who sincerely want to learn but don't know how should not be subject to unjustified contempt and discrimination. It is precisely this kind of bad community atmosphere that does not distinguish between newcomers that prompted me to write this article. So without further ado, let's take a look at the advantages and disadvantages of the airport:
 
-一、“机场“的优势
+1. 稳定性高：机场节点数量多，分布广泛，避免了单点故障的风险，保证了整个网络的稳定性。
+2. 速度快：机场的节点通常采用高速服务器和优化的网络架构，网络速度较快，能够满足用户的高速上网需求。
+3. 安全性高：机场通常会采用严格的安全措施，如流量加密、防火墙等，保护用户数据的安全性。
+4. 稳定性高：机场通常采用专业的运维团队进行管理和维护，保证了服务的稳定性和可靠性。
+5. 服务质量高：机场通常会提供完善的客户服务，及时解决用户的问题和反馈，提升用户的满意度。
 
-所谓“机场”，就是“线路提供商”。他负责完成 1.4 提到的那一串技术操作和管理，用户则付费获得使用权。所以，它的优点至少有：
+The so-called "airport" refers to the "line provider". They are responsible for completing the technical operations and management mentioned in section 1.4, while users pay for the right to use the service. Therefore, its advantages include at least:
 
-1. **用户操作简单**：扫码操作、一键添加规则等
-2. **线路选择多**：可解锁不同国家、地区的网络服务；比如 iplc 等专线服务、游戏加速服务等
-3. **接入节点多**：所以抵抗节点封锁的能力强一些，封了一个就换下一个
+1. **Simple User Operation**: Scan code operation, one-click rule addition, etc.
+2. **Multiple Line Options**: Can unlock network services in different countries and regions, such as iplc dedicated line services, game acceleration services, etc.
+3. **Multiple Access Nodes**: Therefore, it has a stronger ability to resist node blocking, if one is blocked, just switch to another one.
 
-二、“机场”的风险
+2. Risks of "Airport"
 
-“方便”这枚硬币的另一面就是“风险”，基于“机场”的技术特点和市场情况，它的风险至少有：
+"The other side of the coin of 'convenience' is 'risk'. Based on the technical characteristics and market conditions of the 'airport', its risks include at least:"
 
-1. **“机场”可完全获得用户信息**：用户在网上的所有痕迹，都【必然】经过且【非常可能】长期存储在其服务器上，这些记录无法受到任何具备法律效力的用户隐私协议的约束（**窥视、记录你的一举一动**）
-2. **“机场”缺乏市场管理**：不可避免存在着以欺诈为目标的恶意商家（**主动跑路**）
-3. **“机场”面临监管压力**：大机场相对有保障的同时，也无法避免树大招风。2020 年间，已经有几个大机场停运、跑路的事件发生，用户的正常使用受到严重干扰（**被动跑路**）
-4. **“机场”技术水平难以确定**：线路质量良莠不齐，挂羊头卖狗肉的现象屡见不鲜（**速度慢、掉线多、连不上**）
+1. "Airport" can fully obtain user information: All the traces left by users online will inevitably and very likely be stored on their servers for a long time. These records cannot be restricted by any legally binding user privacy agreement. ("Snooping and recording your every move")
+2. "Airport" lacks market management: There are inevitably malicious merchants who target fraud. ("Actively run away")
+3. "Airport" faces regulatory pressure: While large airports are relatively secure, they cannot avoid attracting attention. In 2020, several large airports experienced shutdowns and runaways, seriously disrupting users' normal usage. ("Passively run away")
+4. "Airport" technical level is difficult to determine: The quality of the line varies greatly, and the phenomenon of falsely advertising quality services is common. ("Slow speed, frequent disconnections, unable to connect")
 
-## 1.6 那么你到底要不要自建呢？
+## 1.6 So should you build your own website?
 
-现在，你已经看到了机场的优势和风险，要用什么，就请各位充分思考并自行决定。毕竟，最适合你的方案才是最好的方案。
+Now that you have seen the advantages and risks of the airport, please think carefully and make your own decision on what to use. After all, the best plan is the one that suits you best.
 
 ![It's Your Choice!](./ch01-img01-choice.png)
 
-1. 如果决定使用机场的话，现在，你可以关闭本文了。
+1. If you decide to use the airport, you can close this article now.
 
-2. 如果你决定自建，那就请继续阅读后面的章节吧！！
+2. If you decide to build it yourself, please continue reading the following chapters!
 
-总之，本文的目标就是成为零基础用户的知识起点，提供对每一步充分的讲解和演示，清清楚楚（甚至**婆婆妈妈、絮絮叨叨、啰啰嗦嗦**）的协助新人完成【**从输入第一条命令开始，完成 VPS 服务器部署，并成功在客户端完成科学上网**】的全程。并在这个过程中帮助新人逐步接触和熟悉 Linux 的基础操作，为之后的进一步自学打下基础。
+In short, the goal of this article is to serve as a starting point for users with zero experience, providing thorough explanations and demonstrations for each step, even if it may seem overly detailed or repetitive. The aim is to assist beginners in completing the entire process of deploying a VPS server from the first command input to successfully accessing the internet via the client, and gradually introducing them to basic Linux operations, laying a foundation for further self-learning.
 
-## 1.7 题外啰嗦几句
+## 1.7 Some digressions
 
-1. 墙外的信息泥沙俱下，请务必学会理性、独立的思辨，不要随意站队，不要轻信猎奇的信息。
+1. There is a wealth of information outside of the wall, so please learn to think rationally and independently. Don't take sides easily and don't believe in sensational information.
 
-2. 衷心希望大家获得更顺畅的网络后，可以获取更新鲜的知识、更丰富的娱乐、接触更美好的世界、结交更多志同道合的朋友，但不要成为任何有不可告人目的之人的替罪羊。
+2. We sincerely hope that with a smoother internet, everyone can access fresher knowledge, richer entertainment, experience a better world, and make more like-minded friends, but do not become a scapegoat for anyone with ulterior motives.
 
-3. 你的互联网身份依然是你的身份，绝对的匿名化是极为困难的，所以请务必遵守你个人所在地区和 IP 所在地区的相关法律法规。无论何时，自我保护都是最基本的底线。
+3. Your internet identity is still your identity, and achieving absolute anonymity is extremely difficult. Therefore, please be sure to comply with the relevant laws and regulations in your personal location and the location of your IP address. Self-protection is always the most basic bottom line.
 
-## 1.8 你的进度
+## 1.8 Your Progress
 
 > ⬛⬜⬜⬜⬜⬜⬜⬜ 12.5%

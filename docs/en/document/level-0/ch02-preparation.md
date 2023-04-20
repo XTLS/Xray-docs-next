@@ -1,55 +1,52 @@
-# 【第 2 章】原料准备篇
+# [Chapter 2] Preparation of Raw Materials
 
-这一章比较特殊，因为涉及到金钱交易行为，本文基于项目的中立立场，不做具体的推荐。我能做的，是告诉你需要准备哪些东西。
+This chapter is rather special because it involves monetary transactions. This article takes a neutral stance on the project and does not make specific recommendations. What I can do is to tell you what you need to prepare.
 
-## 2.1 获取一台 VPS
+## 2.1 Acquiring a VPS
 
-你需要获取一台健康的、IP 没有被墙的 VPS，并在管理后台做下面这些基础准备：
+You need to obtain a healthy VPS with an unblocked IP, and perform the following basic preparations in the management console:
 
-1. 在 VPS 的后台安装 Debian 10 64bit 系统
-2. 小本本记下 VPS 的 IP 地址（本文会用 `"100.200.300.400"` 来表示）
-   ::: tip
-   这是一个故意写错的非法 IP，请替换成你的真实 IP）
-   :::
-3. 小本本记下 VPS 的 SSH 远程登陆端口(Port)
-4. 小本本记下 SSH 远程登录的用户名和密码
+1. Install Debian 10 64-bit system in the backend of VPS.
+2. Write down the IP address of VPS in a notebook (this article will use `"100.200.300.400"` as an example, which is an intentionally incorrect and illegal IP address. Please replace it with your real IP address).
+3. Write down the SSH remote login port of VPS in a notebook.
+4. Write down the username and password for SSH remote login in a notebook.
 
-购买 VPS 是一个比较复杂的事情，建议先去学习一下相关知识，选择适合自己的经济能力和线路需求的即可。另外可以选择薅一些国际大厂的羊毛（比如甲骨文和谷歌提供的永久免费或限时免费的套餐）。总之，务必量力而行。
+Buying a VPS is a relatively complex matter. It is recommended to first learn the relevant knowledge and choose one that suits your own economic ability and line requirements. In addition, you can choose to take advantage of some benefits offered by international giants (such as permanent free or limited-time free packages offered by Oracle and Google). In any case, you must act within your means.
 
-::: tip 说明
-关于选择 Debian 10 作为操作系统，这里稍微多说一句：不管你在网上听说了什么，不管哪个大神告诉你 XXX 版的 Linux 更好、XXX 版的 Linux 更牛，这些 Linux 的派系之争**跟现在的你半毛钱关系也没有**！使用 Debian 10 足以让你的 VPS 服务器在安全、稳健运行的同时得到足够的优化（如 cloud 专用内核、及时的 bbr 支持等）。等你对 Linux 熟悉之后，再回头去尝试其他的 Linux 发行版也不迟。
+:::tip Explanation
+Regarding the choice of Debian 10 as the operating system, let me elaborate a bit: No matter what you have heard online, no matter which guru has told you that XXX version of Linux is better or XXX version of Linux is more powerful, these sectarian disputes have **nothing to do with you right now**! Using Debian 10 is enough to optimize your VPS server for security, stability, and performance (such as using cloud-optimized kernel, timely support of BBR, etc.). After you become familiar with Linux, you can try other Linux distributions.
 :::
 
-## 2.2 获取一个心仪的域名
+## 2.2 Obtaining a Desired Domain Name
 
-你需要获取一个域名、并在 DNS 设置中添加一条 A 记录，指向你 VPS 的 IP 地址
+You need to obtain a domain name and add an A record in the DNS settings, pointing to the IP address of your VPS.
 
-1. 请选择靠谱的国际域名服务商。选择一些常见的域名后缀就行，注意不要用 `.cn` 后缀。
-2. 在 DNS 设置中，添加一条指向你 VPS 的 IP 地址的 A 记录（A 记录的名字可以随便起，本文会用 `"a-name"` 来表示。完整的域名则会用 `"二级域名.你的域名.com"` 或者 `"a-name.yourdomain.com"` 来表示）。效果如下图：
+1. Please choose a reliable international domain name service provider. Choose some common domain name suffixes, and make sure not to use the `.cn` suffix.
+2. In the DNS settings, add an A record pointing to the IP address of your VPS (the name of the A record can be anything, and in this article, it will be represented by `"a-name"`). The complete domain name will be represented by `"subdomain.yourdomain.com"` or `"a-name.yourdomain.com"`. The effect is as shown in the picture below:
 
-![添加A记录](./ch02-img01-a-name.png)
+![Add A Record](./ch02-img01-a-name.png)
 
 ::: tip
-这**不是**一个真实可用的网址，请替换成你的真实网址
+This is **not** a real usable website. Please replace it with your real website URL.
 :::
 
-## 2.3 你本地电脑上需要安装的软件
+## 2.3 Software you need to install on your local computer
 
-1. SSH 远程登录工具
+1. SSH remote login tool
 
-   - Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
+- Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
    - macOS/Linux: Terminal
 
-2. 远程文件拷贝工具
+2. Remote file copying tool
 
-   - Windows: [WinSCP](https://winscp.net/eng/index.php)
+- Windows: [WinSCP](https://winscp.net/eng/index.php)
    - macOS/Linux: Terminal
 
-3. 靠谱的文本编辑器
+3. Reliable text editor
    - Windows/macOS/Linux: [VSCode](https://code.visualstudio.com)
 
-## 2.4 你的进度
+## 2.4 Your Progress
 
-如果上面的原材料你都准备好了的话，你已经拿到了开启新世界大门的钥匙。那还等什么，让我们快点进入下一章，走进这扇门吧！
+If you have all the raw materials ready as mentioned above, you have already obtained the key to unlocking the door to a new world. So, what are you waiting for? Let's quickly move on to the next chapter and step through this door!
 
 > ⬛⬛⬜⬜⬜⬜⬜⬜ 25%

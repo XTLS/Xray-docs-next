@@ -1,59 +1,59 @@
-# 【第 5 章】网站建设篇
+# Chapter 5: Website Building
 
-## 5.1 为什么要做一个网站？
+## 5.1 Why should you create a website?
 
-新人也许会迷惑，为什么科学上网还要建一个网站？我不会编程啊，是不是特别麻烦？
+Some newcomers may be confused: why do I need to build a website for securing an open digital environment? I don't know how to code! Isn't it very complicated?
 
-先回答第一个问题，建网站的原因有：
+First, let's answer the first question. The reasons for building a website are:
 
-1. 申请合法的 TLS 证书（非常重要）
-2. 提供合理的回落，防止主动探测攻击，提高安全性
-3. 建设一个伪装站（如博客、私人网盘、多媒体网站、游戏网站等），直接访问时有合理的前台，使流量使用看上去更合理。
+1. Apply for a legitimate TLS certificate (very important)
+2. Provide reasonable fallback to prevent active probing attacks and improve security
+3. Set up a camouflage site (such as a blog, private cloud storage, multimedia site, game site, etc.) with a reasonable frontend when directly accessed, making traffic usage look more legitimate.
 
-再回答第二个问题：
+Now let's answer the second question:
 
-1. 本文作为演示，仅仅使用了一个最简单的【单文件 html 页面 + Nginx】来搭建，以此完成上面的目标，所以【非常简单】
-2. 这个网站完全可以不仅仅是伪装，而是真的做大做强，这个复杂性就完全取决于你了
-3. 对于“伪装”和“网站运营”这个目标，需要的就是各不相同、秀出真我，需要的同学可以自行搜索学习。这个内容已经完全偏离了科学上网，本文就不深入解析了。
+1. As a demonstration, this article uses only the simplest "single-file HTML page + Nginx" setup to achieve the above objectives, so it is **very easy**.
+2. This website can not only be used for camouflage but also for real development and growth. The complexity depends entirely on you.
+3. For the goals of "camouflage" and "website operation", uniqueness and personalization are needed. Students who need this can search and learn by themselves. This content has completely deviated from scientific online access, so this article will not go into depth.
 
-## 5.2 登录 VPS、安装运行 Nginx
+## 5.2 Log in to VPS, install and run Nginx
 
-1. 这里用到的，都是之前已经详解过的命令，所以就不重复讲解了。看不懂的同学可以看看前面的章节哦。
+1. Here we use commands that have been explained in detail before, so they won't be repeated. If you don't understand, please refer to the previous chapters.
 
    ```shell
    sudo apt update && sudo apt install nginx
    ```
 
-2. 完成后，Nginx 已经自动运行。此时打开 Windows 上的浏览器并输入 `http://100.200.300.400:80`，若看到下图的界面就说明 Nginx 已经正常在运行了。
+2. After completion, Nginx will automatically run. Open the browser on Windows and enter `http://100.200.300.400:80`. If you see the interface shown below, it means Nginx is running normally.
 
-   ![Nginx默认界面](./ch05-img01-nginx-default-running.png)
+   ![Nginx default interface](./ch05-img01-nginx-default-running.png)
 
-## 5.3 创建一个最简单的网页
+## 5.3 Create the simplest web page
 
-1. 小小白白 Linux 基础命令：
-   | 编号 | 命令名称 | 命令说明 |
-   |:--:|:--:|:--:|
-   | `cmd-10` | `mkdir` | 新建文件夹 |
-   | `cmd-11` | `systemctl reload` | 重新加载某个服务 |
+1. Basic Linux commands for beginners:
+   |   No.    |    Command Name    |    Command Description    |
+   | :------: | :----------------: | :-----------------------: |
+   | `cmd-10` |      `mkdir`       |    Create a new folder    |
+   | `cmd-11` | `systemctl reload` | Reload a specific service |
 
-2. 小小白白 Linux 基础配置文件：
-   | 编号 | 配置文件位置 | 文件说明 |
-   |:--:|:--:|:--:|
-   | `conf-02` | `/etc/nginx/nginx.conf` | Nginx 程序设置 |
+2. Basic Linux configuration files for beginners:
+   |    No.    | Configuration File Location |    File Description    |
+   | :-------: | :-------------------------: | :--------------------: |
+   | `conf-02` |   `/etc/nginx/nginx.conf`   | Nginx program settings |
 
-3. 创建一个网站专用的文件夹`/home/vpsadmin/www/webpage/`并建立网页文件`index.html`
+3. Create a dedicated folder `/home/vpsadmin/www/webpage/` for the website and create the web page file `index.html`
    ```shell
    mkdir -p ~/www/webpage/ && nano ~/www/webpage/index.html
    ```
 
 ::: warning
-如果你用的不是 `vpsadmin` 这个用户名，请务必理解这条命令中 `“~”` 符号的意义（这关系到【第 5 步】你要写的内容）：
+If you are not using the username `vpsadmin`, please be sure to understand the meaning of the "~" symbol in this command (this is related to Step 5 content):
 
-- 如果是 【非 `root` 用户】，`“~”` 就等价于 `/home/用户名`
-- 如果是 【 `root` 用户】，`“~”` 就等价于 `/root`
+- If it is a **non-root user**, "~" is equivalent to `/home/username`
+- If it is a **root user**, "~" is equivalent to `/root`
   :::
 
-4. 把下面的内容完整的复制进去，然后保存(`ctrl+o`)退出(`ctrl+x`)
+4. Copy the entire content below, save (`ctrl+o`) and exit (`ctrl+x`).
 
    ```html
    <html lang="">
@@ -89,74 +89,74 @@
          site.
        </p>
        <!-- And add a copyright notice.-->
-       <p>&#169; Wiley Publishing, 2011</p>
+       <p>© Wiley Publishing, 2011</p>
      </body>
    </html>
    ```
 
-5. 修改 `nginx.conf` 并重启 `Nginx` 服务，将`80`端口的 http 访问定位到刚才建立的 `html` 页面上
+5. Modify `nginx.conf` and restart the `Nginx` service, directing the http access on port 80 to the newly created `html` page.
 
-   1. 修改 `nginx.conf` 。
+   1. Modify `nginx.conf`.
 
       ```shell
       sudo nano /etc/nginx/nginx.conf
       ```
 
-   2. 将下面一段，添加在 `http{}` 内，然后保存(`ctrl+o`)退出(`ctrl+x`)。（记得将域名替换为之前准备好的、包含二级域名的真实域名）
+   2. Add the following content inside`http{}`, then save (`ctrl+o`) and exit (`ctrl+x`). (Remember to replace the domain name with the real domain name you prepared earlier, including the subdomain)
 
       ```
               server {
                       listen 80;
-                      server_name 二级域名.你的域名.com;
+                      server_name subdomain.your_domain.com;
                       root /home/vpsadmin/www/webpage;
                       index index.html;
               }
       ```
 
-      ::: warning 特别注意！
-      如我在【第 3 步】中的提示所说，请务必确保 `/home/vpsadmin/www/webpage` 改成你的实际文件路径。
+      ::: warning Be extra careful!
+      As mentioned in Step 3 of section 5.3, make sure to change `/home/vpsadmin/www/webpage` to your actual file path.
       :::
 
-   3. 让 `nginx` 重新载入配置使其生效
+   3. Make `nginx` reload the configuration to take effect.
 
       ```shell
       sudo systemctl reload nginx
       ```
 
-   4. 完整的设置流程如下：
+   4. The complete setup process is as follows:
 
-      ![网页设置演示](./ch05-img02-nginx-conf-full.gif)
+      ![Web page settings demonstration](./ch05-img02-nginx-conf-full.gif)
 
-   5. 此时如果你访问 `http://二级域名.你的域名.com`，你看到这样的页面则说明成功：
+   5. Now, if you visit `http://subdomain.your_domain.com`, you should see this page, indicating success:
 
-      ![http网页成功](./ch05-img03-nginx-http-running.png)
+      ![http web page success](./ch05-img03-nginx-http-running.png)
 
-## 5.4 常见错误的说明
+## 5.4 Common error explanations
 
-首先，如果你一路按照文章的说明来操作，并且足够细心，那肯定不会出错。所以，我并不打算修改本文的写法。
+First of all, if you follow the instructions in the article step by step and are careful enough, you will definitely not encounter any errors. So, I don't intend to change how this article is written.
 
-那为什么依然有很多同学卡在了这一步，网页怎么也打不开呢？基本上就是两个字：**粗心**。因为这里配置可能出现的问题只有两种，原因也只有两个。
+Then why do some students still get stuck at this step, and the web page just won't open? There are basically two words: **carelessness**. Because there are only two possible issues with the configuration here, and there are only two reasons for them.
 
-一、两种问题：
+I. Two types of issues:
 
-- `nginx.conf` 里面的 `/home/vpsadmin/www/webpage` 这一条，与你的实际文件路径不符，`nginx` 找不到文件
-- 路径正确，但 `nginx` 无权读取
+- In `nginx.conf`, the `/home/vpsadmin/www/webpage` does not match the actual file path; `nginx` cannot find the file
+- The path is correct, but `nginx` doesn't have permission to access it
 
-二、两个原因：
+II. Two reasons:
 
-- 使用了【非 `root` 用户】，但仍然直接拷贝文中的命令不加修改。（这基本就等于抄答案时把同学的名字一起抄过去了）
-- 坚持使用【 `root` 用户】
+- Use a **non-root user** but still directly copy the commands in the text without modification. (This is basically like copying the name of another student when copying answers)
+- Insist on using a **root user**
 
-碰到错误的同学，就回过头仔细看一下【5.3】中【第 3 步】和【第 5-2 步】的说明吧。
+If you encounter any errors, please carefully review the explanations in Steps 3 and 5-2 of Section 5.3.
 
 ::: warning
-本文前期已经用了大量篇幅说明了使用【非 `root` 用户】对安全的重要性，全文也是基于此而写。所以，因使用【 `root` 用户】而导致的问题并不在本文的设计范围里。
+In the early stages of this article, a lot of space has been devoted to explaining the importance of using a **non-root user** for security, and the entire article is written based on this premise. So, issues caused by using a **root user** are not within the scope of this article.
 
-但我相信，坚持使用【 `root` 用户】的同学应该是有主见、动手能力强、或者有一定 Linux 基础的同学。问题的症结我已经全部说明了，我相信你一定可以自行解决。
-:::
 
-## 5.5 你的进度
+But I believe that students who persist in using the `root` user should have their own opinions, strong hands-on ability, or have a certain foundation in Linux. I have already explained the crux of the problem, and I believe you can solve it on your own.
 
-至此，Xray 的第一个基础设施【网页】已经就位，我们马上就进入第二个基础设施【证书】吧！
+## 5.5 Your Progress
+
+So far, Xray's first infrastructure [webpage] has been established. Let's now move on to the second infrastructure [certificate]!
 
 > ⬛⬛⬛⬛⬛⬜⬜⬜ 62.5%

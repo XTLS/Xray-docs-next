@@ -56,7 +56,7 @@ as which:
 
 ### Confirmation snippet
 
-| 2 bytes | 1 byte | 1 byte | 4 bytes | 4 bytes         | 4 bytes   | 2 bytes | Len * 4 bytes       |
+| 2 bytes | 1 byte | 1 byte | 4 bytes | 4 bytes         | 4 bytes   | 2 bytes | Len \* 4 bytes      |
 | ------- | ------ | ------ | ------- | --------------- | --------- | ------- | ------------------- |
 | Conv ID | Cmd    | Opt    | Wnd     | Next Seq Number | Timestamp | Length  | Received Seq Number |
 

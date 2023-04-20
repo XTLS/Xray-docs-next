@@ -16,13 +16,13 @@ VLESS had the aforementioned structure as early as the second alpha test version
 
 "`Response authentication`" has been replaced with "`Protocol version`" and moved to the front, allowing VLESS to upgrade and eliminate the overhead of generating pseudo-random numbers. The obfuscation-related structure has been replaced with "`Additional information`" (ProtoBuf) and moved forward, giving the protocol itself scalability, with minimal overhead ([gogo/protobuf](https://github.com/gogo/protobuf)). If there is no additional information, there is no relevant overhead.
 
-I have always felt that "Response Authentication" is not necessary. During ALPHA, math/rand was used to improve the performance of generating random numbers instead of crypto/rand, but now it is no longer needed.
+I always thought that "response authentication" was not necessary, and ALPHA replaced crypto/rand with math/rand in order to improve the performance of random number generation, which is no longer needed.
 
 The "Protocol Version" not only serves as "Response Authentication", but also gives VLESS the ability to upgrade the protocol structure seamlessly, bringing infinite possibilities. The "Protocol Version" is 0 in the test version and 1 in the official version. If there are any incompatible protocol structural changes in the future, the version should be upgraded.
 
 The design of VLESS server is switch version, which supports all VLESS versions at the same time. If you need to upgrade the protocol version (which may not happen), it is recommended that the server support it one month in advance, and then change the client after one month. VMess requests also have protocol versions, but their authentication information is outside, and the instruction part is highly coupled and has fixed encryption, which makes the protocol version meaningless inside. The server does not judge it, and the response does not have a protocol version. Trojan's protocol structure does not have a protocol version.
 
-The following is a UUID. I used to think that 16 bytes were a bit long and considered shortening it. However, I later saw that Trojan used 56 printable characters (56 bytes), which completely dispelled this idea. The server needs to verify the UUID every time, so performance is also very important: VLESS's Validator has undergone multiple refactoring/upgrades. Compared with VMess, it is very concise and consumes very few resources. It can support a large number of users at the same time, and its performance is also very strong. The verification speed is extremely fast (sync.Map). API dynamically adds and deletes users, making it more efficient and smooth. 
+The following is a UUID. I used to think that 16 bytes were a bit long and considered shortening it. However, I later saw that Trojan used 56 printable characters (56 bytes), which completely dispelled this idea. The server needs to verify the UUID every time, so performance is also very important: VLESS's Validator has undergone multiple refactoring/upgrades. Compared with VMess, it is very concise and consumes very few resources. It can support a large number of users at the same time, and its performance is also very strong. The verification speed is extremely fast (sync.Map). API dynamically adds and deletes users, making it more efficient and smooth.
 https://github.com/XTLS/Xray-core/issues/158
 
 Introducing ProtoBuf is an innovation, which will be explained in detail later. The structure from "instruction" to "address" is currently identical to VMess and also supports Mux.
@@ -45,15 +45,24 @@ Below is an introduction to the concepts of Schedulers and Encryption, both of w
 
 ## Flow
 
-~~Temporary Chinese name: Traffic Scheduler~~ (Updated on 2020-09-03: The Chinese name is confirmed as "Flow Control"). The command is carried by ProtoBuf and controls the data section.
+### Flow Control (Formerly Traffic Scheduler)
 
-I previously found that the original "metadata obfuscation" feature of VMess did not bring any meaningful changes in TLS, but only reduced performance, so VLESS abandoned it. Also, the term "obfuscation" is easily misunderstood as camouflage, so it has been abandoned. By the way, I have always been skeptical of camouflage: if it cannot be exactly the same, isn't it a strong feature? If it can be exactly the same, why not directly use the target for camouflage? I initially used SSR, but later found that it only superficially camouflages and deceives the operator, so I never used it again.
+The Flow Control command is carried by ProtoBuf and manages the data section.
 
-So, what problem does the "Traffic Scheduler" solve? It affects the macro traffic temporal characteristics, rather than the micro characteristics that encryption aims to solve. Traffic temporal characteristics can be protocol-based, such as the Socks5 handshake when using Socks5 over TLS. Different characteristics on TLS are different protocols for monitors. At this point, infinite schedulers are equivalent to infinite protocols (re-assigning the amount of data sent each time). Traffic temporal characteristics can also be behavior-based, such as how many files are loaded, the order, and the size of each file when accessing the Google homepage. Adding another layer of encryption cannot effectively conceal this information.
+I previously discovered that VMess's original "metadata obfuscation" feature didn't provide any meaningful changes in TLS but only decreased performance. Consequently, VLESS has abandoned this feature. Moreover, the term "obfuscation" is often misinterpreted as camouflage, so it has been discarded.
 
-Schedulers do not need to be wrapped like Encryption below because the tiny amount of data in the header is negligible compared to the rest of the data.
+As for camouflage, if it can't be an exact match, wouldn't it be a noticeable characteristic? If it could be an exact match, why not use the intended target for camouflage directly? Initially, I used SSR but found it only provided superficial disguises, fooling operators. Thus, I stopped using it.
 
-BETA 2 is expected to introduce two basic schedulers: Zstd compression and dynamic data expansion. Advanced operations will control and distribute at a macro level, but for now, they are still pending.
+#### Purpose of Flow Control
+
+Flow Control influences macro traffic temporal characteristics rather than micro characteristics addressed by encryption. Traffic temporal characteristics can be:
+
+1. **Protocol-based**, e.g., Socks5 handshake when using Socks5 over TLS. Different traits on TLS are considered different protocols for monitors. Infinite schedulers equate to infinite protocols (reallocating data sent each time).
+2. **Behavior-based**, e.g., loading files, their order, and size when accessing Google's homepage. Adding another encryption layer cannot effectively conceal this information.
+
+Schedulers don't require wrapping like encryption since the header data's tiny amount is negligible compared to the remaining data.
+
+BETA 2 is anticipated to introduce two basic schedulers: Zstd compression and dynamic data expansion. Advanced operations will control and distribute at a macro level, but for now, these remain under development.
 
 ## Encryption
 
@@ -61,13 +70,13 @@ Unlike VMess, which is highly coupled, VLESS allows the server and client to pre
 
 Compared with VMess, VLESS replaces security with encryption and disableInsecureEncryption with decryption, which solves all the problems. Currently, encryption and decryption only accept "none" and cannot be left blank (even if there are connection security checks in the future), as detailed in the VLESS configuration document. Encryption does not need to be moved out one level, firstly because it cannot reuse a lot of code, and secondly because it will affect the control granularity, which will be understood by looking at future applications.
 
-Encryption supports two types of forms. One type is completely independent and requires an additional password, suitable for private use. The other type combines with the existing UUID for encryption, which is suitable for public use. 
+Encryption supports two types of forms. One type is completely independent and requires an additional password, suitable for private use. The other type combines with the existing UUID for encryption, which is suitable for public use.
 
 (If the first type of encryption is used and the password is publicly available in some form, such as multiple people sharing it, then a man-in-the-middle attack is not far away.)
 
 A redesigned dynamic port may be released simultaneously with encryption, and the command is carried by ProtoBuf. The specific implementation and the dynamic port of VMess will also have many differences.
 
-It is very easy to cash out encrypted currency, which adds an extra layer of writer & reader. BETA 3 is expected to support SS's aes-128-gcm and chacha20-ietf-poly1305: 
+It is very easy to cash out encrypted currency, which adds an extra layer of writer & reader. BETA 3 is expected to support SS's aes-128-gcm and chacha20-ietf-poly1305:
 
 The encryption on the client-side can be filled with "auto: ss_aes-128-gcm_0_123456, ss_chacha20-ietf-poly1305_0_987654". Auto will choose the most suitable one for the current machine, 0 represents the beta version, and the last one is the password. The decryption on the server-side is also filled in a similar way, and each decryption attempt will be made when the request is received.
 
