@@ -50,8 +50,8 @@ Mux.Cool 使用对称传输格式，即客户端和服务器发送和接收相�
 元数据有若干种类型。所有类型的元数据都包含 ID 和 Opt 两项，其含义为：
 
 - ID: 子连接的唯一标识
-  - 对于一般 MUX 子连接，ID 由 1 开始累加
-  - 对于 xray 实现的 [Single XUDP](https://github.com/XTLS/Xray-core/blob/main/common/xudp/xudp.go)，ID 始终为 0
+  - 对于一般 Mux 子连接，ID 由 1 开始累加
+  - 对于 Xray 实现的 [Single XUDP](https://github.com/XTLS/Xray-core/blob/main/common/xudp/xudp.go)，ID 始终为 0
 - Opt:
   - D(0x01): 有额外数据
 
