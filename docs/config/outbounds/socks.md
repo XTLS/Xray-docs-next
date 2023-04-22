@@ -1,6 +1,6 @@
 # Socks
 
-标准 Socks 协议实现，兼容 [Socks 5](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)。
+标准 Socks 协议实现，兼容 Socks 5。
 
 ::: danger
 **Socks 协议没有对传输加密，不适宜经公网中传输**
