@@ -495,6 +495,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "acceptProxyProtocol": false,
   "tcpKeepAliveInterval": 0,
   "tcpKeepAliveIdle": 300,
+  "tcpUserTimeout": 10000,
   "tcpcongestion": "bbr",
   "interface": "wg0"
 }
@@ -629,6 +630,8 @@ TCP 空闲时间阈值，单位为秒。当 TCP 连接空闲时间达到这个�
 ::: tip
 填负数时，如 `-1`，不启用 TCP 保持活跃。
 :::
+
+> `tcpUserTimeout`: number
 
 > `tcpcongestion`: ""
 
