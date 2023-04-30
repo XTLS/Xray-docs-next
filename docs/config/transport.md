@@ -488,6 +488,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 ```json
 {
   "mark": 0,
+  "tcpMaxSeg": 1440,
   "tcpFastOpen": false,
   "tproxy": "off",
   "domainStrategy": "AsIs",
@@ -495,6 +496,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "acceptProxyProtocol": false,
   "tcpKeepAliveInterval": 0,
   "tcpKeepAliveIdle": 300,
+  "tcpUserTimeout": 10000,
   "tcpcongestion": "bbr",
   "interface": "wg0"
 }
@@ -506,6 +508,10 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 - 仅适用于 Linux 系统。
 - 需要 CAP_NET_ADMIN 权限。
+
+> `tcpMaxSeg`: number
+
+用于设置 TCP 数据包的最大传输单元。
 
 > `tcpFastOpen`: true | false | number
 
@@ -629,6 +635,8 @@ TCP 空闲时间阈值，单位为秒。当 TCP 连接空闲时间达到这个�
 ::: tip
 填负数时，如 `-1`，不启用 TCP 保持活跃。
 :::
+
+> `tcpUserTimeout`: number
 
 > `tcpcongestion`: ""
 
