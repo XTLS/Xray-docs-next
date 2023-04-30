@@ -488,7 +488,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 ```json
 {
   "mark": 0,
-  "TCPMaxSeg": 1440,
+  "tcpMaxSeg": 1440,
   "tcpFastOpen": false,
   "tproxy": "off",
   "domainStrategy": "AsIs",
@@ -508,6 +508,10 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 - 仅适用于 Linux 系统。
 - 需要 CAP_NET_ADMIN 权限。
+
+> `tcpMaxSeg`: number
+
+用于设置TCP数据包的最大传输单元。
 
 > `tcpFastOpen`: true | false | number
 
