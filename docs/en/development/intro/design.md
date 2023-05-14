@@ -1,43 +1,43 @@
-# 设计目标
+# Design Objectives
 
-- Xray 内核提供了一个平台，支持必要的网络代理功能，在其之上可以进二次开发，以提供更好的用户体验；
-- 以跨平台为首要原则，以减少二次开发的成本；
+- Xray Kernel provides a platform that supports essential network proxy functions and can be developed upon to provide a better user experience.
+- Cross-platform is the primary principle to reduce the cost of secondary development.
 
-## 架构
+## Architecture
 
 ![Architecture](./framework.png)
 
-内核分为三层：应用层、代理层和传输层。
+The kernel is divided into three layers: the application layer, the proxy layer, and the transport layer.
 
-每一层内包含数个模块，模块间互相独立，同类型的模块可无缝替换。
+Each layer contains several modules, which are independent of each other. Modules of the same type can be seamlessly replaced.
 
-### 应用层
+### Application Layer
 
-应用层包含一些代理层中常用的功能，这些功能被抽象出来，以便在不同的代理模块中复用。
+The application layer contains some commonly used functions in proxy layers, which are abstracted for reuse in different proxy modules.
 
-应用层的模块应为纯软件实现，与硬件或平台相关的技术无关。
+The modules at the application layer should be implemented purely in software and should not be dependent on hardware or platform-related technologies.
 
-重要模块列表：
+List of Important Modules:
 
-- Dispatcher: 用于把入站代理所接收到的数据，传送给出站代理；
-- Router: 路由模块，详见 [路由配置](../../config/routing.md)；
-- DNS: 内置的 DNS 服务器模块；
-- Proxy Manager: 代理管理器；
+- Dispatcher: Used to transfer data received by the inbound agent to the outbound agent;
+- Router: Routing module, see [Routing Configuration](../../config/routing.md) for details;
+- DNS: Built-in DNS server module;
+- Proxy Manager: Proxy manager;
 
-### 代理层
+### Proxy Layer
 
-代理层分为两部分：入站代理（Inbound Proxy）和出站代理（Outbound Proxy）。
+The proxy layer is divided into two parts: Inbound Proxy and Outbound Proxy.
 
-两部分相互独立，入站代理不依赖于某个特定的出站代理，反之亦然。
+The two parts are independent of each other, where the inbound proxy does not rely on a specific outbound proxy, and vice versa.
 
-#### 入站代理
+#### Inbound Proxy
 
-- 实现 [proxy.Inbound](https://github.com/xtls/Xray-core/blob/main/proxy/proxy.go) 接口；
+- Implement the [proxy.Inbound](https://github.com/xtls/Xray-core/blob/main/proxy/proxy.go) interface;
 
-#### 出站代理
+#### Outbound Proxy
 
-- 实现 [proxy.Outbound](https://github.com/xtls/Xray-core/blob/main/proxy/proxy.go) 接口；
+- Implement the [proxy.Outbound](https://github.com/xtls/Xray-core/blob/main/proxy/proxy.go) interface;
 
-### 传输层
+### Transport Layer
 
-传输层提供一些网络数据传输相关的工具模块。
+The transport layer provides a set of tools and modules related to network data transmission.

@@ -1,13 +1,13 @@
-# 入门技巧
+# Beginner's Tips
 
-**这个章节是入门级的 Xray 使用心得分享，主要分享一些 Xray 常用功能模块的原理说明。**
+**This chapter is an introductory level guide on using Xray, mainly sharing the principles of some commonly used functional modules in Xray.**
 
-[回落 (fallbacks) 功能简析](./fallbacks-lv1.md)
+[Analysis of Fallbacks Function](./fallbacks-lv1.md)
 
-[路由 (routing) 功能简析（上）](./routing-lv1-part1.md)
+[Analysis of Routing Function (Part 1)](./routing-lv1-part1.md)
 
-[路由 (routing) 功能简析（下）](./routing-lv1-part2.md)
+[Analysis of Routing Function (Part 2)](./routing-lv1-part2.md)
 
-[Xray 的工作模式简析](./work.md)
+[Analysis of Xray's Working Mode](./work.md)
 
-[通过 SNI 回落功能实现伪装与按域名分流](./fallbacks-with-sni.md)
+[Fallbacks with SNI for Disguising and Domain-based Routing](./fallbacks-with-sni.md)

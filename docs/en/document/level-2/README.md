@@ -1,35 +1,35 @@
-# 进阶文档
+# Advanced Documentation
 
-**这个章节包含进阶级的 Xray 使用心得分享, 如果您已经熟悉 Xray, 那么这里的经验可以让您更加发挥 Xray 的威力**
+**This chapter contains experience sharing of using Xray at an advanced level. If you are already familiar with Xray, the experience shared here can help you unleash the full power of Xray.**
 
-[透明代理入门](./transparent_proxy/transparent_proxy.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
+[Beginner's Guide to Transparent Proxies](./transparent_proxy/transparent_proxy.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
 
-透明代理的入门篇章。
+An Introduction to Transparent Proxies.
 
-[透明代理（TProxy）配置教程 ](./tproxy.md) by <img src="https://avatars2.githubusercontent.com/u/41363844?s=32" width="32" height="32" alt="a"/> [@BioniCosmos](https://github.com/BioniCosmos)
+[TProxy Configuration Tutorial](./tproxy.md) by <img src="https://avatars2.githubusercontent.com/u/41363844?s=32" width="32" height="32" alt="a"/> [@BioniCosmos](https://github.com/BioniCosmos)
 
-基于 Xray 的透明代理（TProxy）配置完整教程。
+Complete tutorial on configuring transparent proxy (TProxy) based on Xray.
 
-[TProxy 透明代理（ipv4 and ipv6）配置教程](./tproxy_ipv4_and_ipv6.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
+[TProxy Transparent Proxy (IPv4 and IPv6) Configuration Tutorial](./tproxy_ipv4_and_ipv6.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
 
-基于 Xray 的 TProxy 透明代理（ipv4 and ipv6）配置教程
+Xray-based TProxy Transparent Proxy (IPv4 and IPv6) Configuration Tutorial
 
-[Nginx_TLS 隧道隐藏指纹](./Nginx_TLS_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
+[Nginx_TLS Tunnel Hidden Fingerprint](./Nginx_TLS_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
 
-双端使用 Nginx_TLS 隧道隐藏指纹
+Use Nginx_TLS tunnel on both ends to hide the fingerprint.
 
-[[透明代理]通过 gid 规避 Xray 流量](./iptables_gid.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
+[[Transparent Proxy] Avoiding Xray Traffic Through gid](./iptables_gid.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
 
-在 iptables/nftables 实现的透明代理中，一种新的规避 Xray 流量的方式。
+A new way of bypassing Xray traffic in transparent proxy implemented by iptables/nftables.
 
-[通过 Xray 将特定的流量指向特定出口，实现全局路由“分流”](./redirect.md) by <img src="https://avatars.githubusercontent.com/u/28607089?s=32" width="32" height="32" alt="a"/> [@Zzz3m](https://github.com/Zzz3m)
+[Redirect Specific Traffic to Specific Gateway using Xray to Achieve Global Routing "Load Balancing"](./redirect.md) by <img src="https://avatars.githubusercontent.com/u/28607089?s=32" width="32" height="32" alt="a"/> [@Zzz3m](https://github.com/Zzz3m)
 
-将 Xray 玩出花:基于 fwmark 或 sendThrough 方式实现“分流”。
+Play Xray to the fullest: Implement "load balancing" based on fwmark or sendThrough.
 
-[通过 Cloudflare Warp 增强代理安全性](./warp.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
+[Enhancing Proxy Security with Cloudflare Warp](./warp.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
 
-Xray v1.6.5 新增 WireGuard 出站的使用介绍。
+Introduction to using WireGuard for outbound traffic added in Xray v1.6.5.
 
-[Xray 流量统计](./traffic_stats.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
+[Xray Traffic Statistics](./traffic_stats.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
 
-适配 Xray 的流量统计和脚本。
+Adapt traffic statistics and scripts compatible with Xray.

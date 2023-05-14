@@ -1,92 +1,92 @@
-# mKCP 协议
+# mKCP Protocol
 
-mKCP 是流式传输协议，由 [KCP 协议](https://github.com/skywind3000/kcp) 修改而来，可以按顺序传输任意的数据流。
+mKCP is a stream transfer protocol, modified from the [KCP protocol](https://github.com/skywind3000/kcp), which can transmit any data stream in order.
 
-## 版本
+## Version
 
-mKCP 没有版本号，不保证版本之间兼容性。
+mKCP has no version number and does not guarantee compatibility between versions.
 
-## 依赖
+## Dependencies
 
-### 底层协议
+### Underlying Protocol
 
-mKCP 是一个基于 UDP 的协议，所有通讯使用 UDP 传输。
+mKCP is a protocol based on UDP, and all communication uses UDP transmission.
 
-### 函数
+### Functions
 
-- fnv: [FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) 哈希函数
-  - 输入参数为任意长度的字符串；
-  - 输入出一个 32 位无符号整数；
+- fnv: [FNV-1a](https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function) hash function
+  - Takes a string of arbitrary length as input parameter;
+  - Outputs a 32-bit unsigned integer.
 
-## 通讯过程
+## Communication Process
 
-1. mKCP 将数据流拆成若干个数据包进行发送。一个数据流有一个唯一标识，用以区分不同的数据流。数据流中的每一个数据包都携带了同样的标识。
-1. mKCP 没有握手过程，当收到一个数据包时，根据其携带的数据流的标识来判断是否为新的通话，或是正在进行中的通话。
-1. 每一个数据包中包含若干个片段（Segment），片段分为三类：数据（Data）、确认（ACK）、心跳（Ping）。每个片段需要单独处理。
+1. mKCP splits data streams into several data packets for transmission. Each data stream has a unique identifier to distinguish it from other data streams. Each data packet in the data stream carries the same identifier.
+2. mKCP does not have a handshake process. When receiving a data packet, it determines whether it is a new call or an ongoing call based on the identifier of the data stream it carries.
+3. Each data packet contains several segments (Segment), which are divided into three types: data (Data), acknowledgment (ACK), and heartbeat (Ping). Each segment needs to be processed separately.
 
-## 数据格式
+## Data Format
 
-### 数据包
+### Data Packet
 
-| 4 字节     | 2 字节     | L 字节   |
-| ---------- | ---------- | -------- |
-| 认证信息 A | 数据长度 L | 片段部分 |
+| 4 Bytes | 2 Bytes    | L Bytes  |
+| ------- | ---------- | -------- |
+| Auth A  | Data Len L | Fragment |
 
-其中：
+as which:
 
-- 认证信息 A = fnv(片段部分），big endian；
-- 片段部分可能包含多个片段；
+- Authentication information A = fnv(fragment), big endian;
+- The fragment may contain multiple sections.
 
-### 数据片段
+### Data snippet
 
-| 2 字节    | 1 字节   | 1 字节   | 4 字节    | 4 字节    | 4 字节           | 2 字节   | Len 字节 |
-| --------- | -------- | -------- | --------- | --------- | ---------------- | -------- | -------- |
-| 标识 Conv | 指令 Cmd | 选项 Opt | 时间戳 Ts | 序列号 Sn | 未确认序列号 Una | 长度 Len | 数据     |
+| 2 bytes   | 1 byte   | 1 byte   | 4 bytes   | 4 bytes  | 4 bytes        | 2 bytes  | Len bytes |
+| --------- | -------- | -------- | --------- | -------- | -------------- | -------- | --------- |
+| Conv flag | Cmd flag | Opt flag | Timestamp | Sequence | Unacknowledged | Len flag | Data      |
 
-其中：
+as which:
 
-- 标识 Conv: mKCP 数据流的标识
-- 指令 Cmd: 常量 0x01
-- 选项 Opt: 可选的值有：
-  - 0x00: 空选项
-  - 0x01: 对方已发出所有数据
-- 时间戳 Ts: 当前片段从远端发送出来时的时间，big endian
-- 序列号 Sn: 该数据片段时数据流中的位置，起始片段的序列号为 0，之后每个新片段按顺序加 1
-- 未确认序列号 Una: 远端主机正在发送的，且尚未收到确认的最小的 Sn
+- Identifier Conv: Identifier for mKCP data stream
+- Command Cmd: Constant 0x01
+- Option Opt: Optional values include:
+  - 0x00: Empty option
+  - 0x01: Opposite party has sent all data
+- Timestamp Ts: Time when the current segment was sent from the remote end, big endian
+- Sequence Number Sn: The position of the data segment in the data stream, the sequence number of the starting segment is 0, and each new segment is sequentially added by 1
+- Unacknowledged Sequence Number Una: The minimum Sn that the remote host is sending and has not yet received confirmation.
 
-### 确认片段
+### Confirmation snippet
 
-| 2 字节    | 1 字节   | 1 字节   | 4 字节   | 4 字节            | 4 字节    | 2 字节   | Len \* 4 字节  |
-| --------- | -------- | -------- | -------- | ----------------- | --------- | -------- | -------------- |
-| 标识 Conv | 指令 Cmd | 选项 Opt | 窗口 Wnd | 下一接收序列号 Sn | 时间戳 Ts | 长度 Len | 已收到的序列号 |
+| 2 bytes | 1 byte | 1 byte | 4 bytes | 4 bytes         | 4 bytes   | 2 bytes | Len \* 4 bytes      |
+| ------- | ------ | ------ | ------- | --------------- | --------- | ------- | ------------------- |
+| Conv ID | Cmd    | Opt    | Wnd     | Next Seq Number | Timestamp | Length  | Received Seq Number |
 
-其中：
+as which:
 
-- 标识 Conv: mKCP 数据流的标识
-- 指令 Cmd: 常量 0x00
-- 选项 Opt: 同上
-- 窗口 Wnd: 远端主机可以接收的最大序列号
-- 下一接收序列号 Sn: 远端主机未收到的数据片段中的最小序列号
-- 时间戳 Ts: 远端主机最新收到的数据片段的时间戳，可用于计算延迟
-- 已收到的序列号: 每个 4 字节，表示此序列号的数据已经确认收到
+- Identifier Conv: Identifier of the mKCP data stream
+- Command Cmd: Constant 0x00
+- Option Opt: Same as above
+- Window Wnd: The maximum sequence number that the remote host can receive
+- Next receive sequence number Sn: The smallest sequence number of the data segment that the remote host has not received
+- Timestamp Ts: The timestamp of the latest received data segment by the remote host, which can be used to calculate the delay
+- Received sequence numbers: Each 4 bytes, indicating that the data of this sequence number has been confirmed received.
 
-注释：
+as which:
 
-- 远程主机期待收到序列号 [Sn, Wnd) 范围内的数据
+- The remote host expects to receive data within the serial number [Sn, Wnd) range.
 
-### 心跳片段
+### Heartbeat Fragments
 
-| 2 字节    | 1 字节   | 1 字节   | 4 字节           | 4 字节            | 4 字节   |
-| --------- | -------- | -------- | ---------------- | ----------------- | -------- |
-| 标识 Conv | 指令 Cmd | 选项 Opt | 未确认序列号 Una | 下一接收序列号 Sn | 延迟 Rto |
+| 2 Bytes | 1 Byte | 1 Byte | 4 Bytes               | 4 Bytes             | 4 Bytes |
+| ------- | ------ | ------ | --------------------- | ------------------- | ------- |
+| Conv ID | Cmd    | Opt    | Unacknowledged Seq No | Next Receive Seq No | Rto     |
 
-其中：
+as which:
 
-- 标识 Conv: mKCP 数据流的标识
-- 指令 Cmd: 可选的值有
-  - 0x02: 远端主机强行终止会话
-  - 0x03: 正常心跳
-- 选项 Opt: 同上
-- 未确认序列号 Una: 同数据片段的 Una
-- 下一接收序列号 Sn: 同确认片段的 Sn
-- 延迟 Rto: 远端主机自己计算出的延迟
+- Identifier Conv: Identifier for the mKCP data stream
+- Command Cmd: Optional values include:
+  - 0x02: Remote host forcibly terminates the session
+  - 0x03: Normal heartbeat
+- Option Opt: Same as above
+- Unacknowledged sequence number Una: Same as the Una of the data fragment
+- Next receive sequence number Sn: Same as the Sn of the acknowledgement fragment
+- Delay Rto: Delay calculated by the remote host itself

@@ -1,78 +1,80 @@
 ---
-title: SNI 回落
+title: SNI fallback
 ---
 
-# 通过 SNI 回落功能实现伪装与按域名分流
+# Implementing camouflage and domain-based routing through SNI fallback function
 
-VLESS 是一种很轻的协议，和 Trojan 一样，不对流量进行复杂的加密和混淆，而是大隐隐于市，通过 TLS 协议加密，混杂在其他 HTTPS 流量中，在墙内外穿进穿出。为了更好的伪装以应对主动探测，Fallbacks 回落功能随 VLESS 同时出现。这篇教程将演示如何使用 Xray 中 VLESS 入站协议的回落功能配合 Nginx 或 Caddy 在保证伪装完全的前提下实现按域名分流。
+VLESS is a lightweight protocol that, like Trojan, does not perform complex encryption and obfuscation on traffic. Instead, it is encrypted through the TLS protocol and mixed in with other HTTPS traffic, making it difficult to detect. In order to better disguise itself and respond to active probing, the fallback function appeared with VLESS at the same time. This tutorial will demonstrate how to use the fallback function of VLESS inbound protocol in Xray, combined with Nginx or Caddy, to achieve domain name-based traffic routing while ensuring complete disguise.
 
-## 应用情景
+## Application Scenarios
 
-由于 XTLS，Xray 需要监听 443 端口，这导致如果之前有网站运行在服务器上，那么此时网站无法运行或需要运行在其他端口上，这显然是不合理的。有以下三种方案可以解决这个问题：
+Due to XTLS, Xray needs to listen on port 443, which means that if there is a website running on the server, it cannot run or needs to run on another port, which is obviously unreasonable. There are three solutions to this problem:
 
-- Xray 监听其他常用端口（如 22、3389、8443）
+- Xray monitors other commonly used ports (such as 22, 3389, 8443).
 
-  这个方案是最简单的，但不够完美。
+This plan is the simplest, but not perfect enough.
 
-- Nginx 或 HAProxy 监听 443 端口，通过 SNI 分流做 L4 反向代理，实现端口复用
+- Nginx or HAProxy listens on port 443, uses SNI for L4 load balancing, and achieves port multiplexing through reverse proxy.
 
-  这个方案比较复杂，需要对 Nginx 或 HAProxy 的使用有一定了解，此处不作过多解释。
+This plan is relatively complicated and requires some understanding of using Nginx or HAProxy. We will not explain it in too much detail here.
 
-- Xray 监听 443 端口，通过 Fallbacks 功能 SNI 分流将网站流量回落到 Nginx 或 Caddy
+- Xray listens on port 443, and uses Fallbacks feature to split website traffic based on SNI and fallbacks it to Nginx or Caddy.
 
-  这个方案难度适中，也是此教程接下来想要演示的方案。
+This plan has a moderate level of difficulty and is the scheme that this tutorial will demonstrate next.
 
-## SNI 简介
+## Introduction to SNI
 
-服务器名称指示（英语：**S**erver **N**ame **I**ndication，缩写：**SNI**）是 TLS 的一个扩展协议。熟悉反向代理的朋友都知道，如果想要通过域名将流量代理到正确的内容上，需要以下配置：
+Server Name Indication (SNI) is an extension protocol of TLS. Friends who are familiar with reverse proxies know that the following configuration is required if you want to proxy traffic to the correct content through a domain name:
 
 ```nginx
-proxy_set_header Host 主机名;
+proxy_set_header Host hostname;
 ```
 
-这句的作用是将名为 “Host” 的 HTTP Header 设定为某个主机名。为什么要这样做？一般而言，一台服务器对应一个 IP，但却运行多个网站，访问者通过域名查询到 IP 以访问服务器，那么问题来了，如何确定访问者想要访问的是哪一个网站？这需要“基于名称的虚拟主机”。
+(Note: "hostname" should be replaced with the actual hostname.)
 
-当 Web 服务器收到访问请求后，它会查看请求的主机头，使访问者访问正确的网站。然而当 HTTP 协议被 TLS 协议加密后，这种简单的方法就无法实现了。因为 TLS 握手发生在服务器看到任何 HTTP 头之前，因此，服务器不可能使用 HTTP 主机头中的信息来决定呈现哪个证书，更无法决定访问者的访问目标。
+This sentence sets the HTTP Header named "Host" to a certain hostname. Why do we need to do this? Generally, one server corresponds to one IP address, but it runs multiple websites. Visitors access the server by querying the IP address via domain name to visit the website. Then the question arises, how to determine which website the visitor wants to access? This requires "name-based virtual hosting".
 
-SNI 的原理也很简单，它通过让客户端发送主机名作为 TLS 协商的一部分来解决此问题。所以在使用 Nginx 对 HTTPS 协议进行反向代理时，需要在配置中加入 `proxy_ssl_server_name on;`，此时 Nginx 会向被代理的服务器发送 SNI 信息，解决了 HTTPS 协议下虚拟主机失效的问题。另外，使用 SNI 时，即使不指定主机头，也可以正确访问网站。
+When a Web server receives a request, it looks at the host header to direct the visitor to the correct website. However, this simple method cannot be used when HTTP protocol is encrypted by TLS protocol. This is because the TLS handshake occurs before the server sees any HTTP headers, so the server cannot use the information in the HTTP host header to determine which certificate to present or which destination the visitor wants to access.
 
-## 思路
+The principle of SNI is also very simple. It solves the problem by allowing the client to send the hostname as part of the TLS negotiation. Therefore, when using Nginx to reverse proxy the HTTPS protocol, you need to add `proxy_ssl_server_name on;` to the configuration. At this time, Nginx will send SNI information to the proxied server, solving the problem of virtual host failure under the HTTPS protocol. In addition, when using SNI, even if the host header is not specified, the website can be accessed correctly.
 
-![Xray 回落流程](./fallbacks-with-sni-resources/xray-fallbacks.svg)
+## Idea
 
-从 443 端口接收到流量后，Xray 会把 TLS 解密后首包长度 < 18、协议版本无效或身份认证失败的流量通过对 name、path、alpn 的匹配转发到 dest 指定的地址。
+![Xray Fallback Process](./fallbacks-with-sni-resources/xray-fallbacks.svg)
 
-## 添加 DNS 记录
+After receiving traffic from port 443, Xray will decrypt the TLS and forward the traffic that has a first packet length < 18, invalid protocol version, or failed authentication through matching name, path, and alpn to the address specified by dest.
 
-![DNS 记录](./fallbacks-with-sni-resources/xray-dns-records.webp)
+## Adding DNS Records
 
-请按实际情况修改域名和 IP。
+![DNS Records](./fallbacks-with-sni-resources/xray-dns-records.webp)
 
-## 申请 TLS 证书
+Please modify the domain name and IP according to the actual situation.
 
-由于要对不同前缀的域名进行分流，但一个通配符证书的作用域仅限于两“.”之间（例如：申请 `*.example.com`，`example.com` 和 `*.*.example.com` 并不能使用该证书），故需申请 [SAN](https://zh.wikipedia.org/wiki/%E4%B8%BB%E9%A2%98%E5%A4%87%E7%94%A8%E5%90%8D%E7%A7%B0) 通配符证书。根据 Let's Encrypt 官网信息[^1]，申请通配符证书要求 DNS-01 验证方式，此处演示 NS 记录为 Cloudflare 的域名通过 [acme.sh](https://acme.sh) 申请 Let's Encrypt 的免费 TLS 证书。使用其他域名托管商的申请方法请阅读 [dnsapi · acmesh-official/acme.sh Wiki](https://github.com/acmesh-official/acme.sh/wiki/dnsapi)。
+## Applying for TLS Certificate
 
-首先需要到 [Cloudflare 面板](https://dash.cloudflare.com/profile/api-tokens)创建 API Token。参数如下：
+As it is necessary to route traffic to different domain name prefixes, but a wildcard certificate is only valid between two dots (for example, applying for `*.example.com`, the certificate cannot be used for `example.com` and `*.*.example.com`), it is necessary to apply for a [SAN](https://en.wikipedia.org/wiki/Subject_Alternative_Name) (Subject Alternative Name) wildcard certificate. According to the information on the Let's Encrypt official website, applying for a wildcard certificate requires DNS-01 verification. Here, we demonstrate how to apply for a free TLS certificate from Let's Encrypt using [acme.sh](https://acme.sh) for a domain with NS records hosted on Cloudflare. For the application method using other domain name hosting providers, please refer to [dnsapi · acmesh-official/acme.sh Wiki](https://github.com/acmesh-official/acme.sh/wiki/dnsapi).
 
-![API Token 的权限设置](./fallbacks-with-sni-resources/cf-api-token-permissions-for-acme.webp)
+First, you need to go to the [Cloudflare dashboard](https://dash.cloudflare.com/profile/api-tokens) to create an API token. The parameters are as follows:
 
-权限部分至关重要，其他部分任意。
+![API Token permission settings](./fallbacks-with-sni-resources/cf-api-token-permissions-for-acme.webp)
 
-创建完毕后，你会得到一串神秘字符，请将其妥善保管到安全且不会丢失的地方，因为它不再会显示。这串字符就是即将用到的 `CF_Token`。
+The permission part is crucial, while other parts are optional.
 
-::: tip 注意
-以下操作需要在 root 用户下进行，使用 sudo 会出现错误。
+After creating, you will receive a mysterious string of characters. Please keep it safe in a secure and non-losing place, as it will not be displayed again. This string of characters is the `CF_Token` that will be used soon.
+
+::: tip Note
+The following operations need to be performed under the root user. Using sudo will result in errors.
 :::
 
 ```bash
-curl https://get.acme.sh | sh # 安装 acme.sh
-export CF_Token="sdfsdfsdfljlbjkljlkjsdfoiwje" # 设定 API Token 变量
-acme.sh --issue -d example.com -d *.example.com --dns dns_cf # 使用 DNS-01 验证方式申请证书
-mkdir /etc/ssl/xray # 新建证书存放目录
-acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --key-file /etc/ssl/xray/privkey.key --reloadcmd "chown nobody:nogroup -R /etc/ssl/xray && systemctl restart xray" # 安装证书到指定目录并设定自动续签生效指令
+curl https://get.acme.sh | sh # Install acme.sh
+export CF_Token="sdfsdfsdfljlbjkljlkjsdfoiwje" # Set API Token variable
+acme.sh --issue -d example.com -d *.example.com --dns dns_cf # Apply for a certificate using DNS-01 validation method
+mkdir /etc/ssl/xray # Create a directory to store the certificate
+acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --key-file /etc/ssl/xray/privkey.key --reloadcmd "chown nobody:nogroup -R /etc/ssl/xray && systemctl restart xray" # Install the certificate to the specified directory and set the effective command for automatic renewal
 ```
 
-## Xray 配置
+## Xray Configuration
 
 ```json
 {
@@ -162,35 +164,35 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
 }
 ```
 
-以上配置针对于 Nginx，以下是需要注意的一些细节。
+The above configuration is for Nginx. Here are some details that need to be noted.
 
-- 有关 Proxy Protocol
+- About Proxy Protocol
 
-  Proxy Protocol 是 HaProxy 开发的一种旨在解决代理时容易丢失客户端信息问题的协议，常用于链式代理和反向代理。传统的处理方法往往较为复杂且有诸多限制，而 Proxy Protocol 非常简单地在传输数据时附带上原始连接四元组信息的数据包，解决了这个问题。
+Proxy Protocol is a protocol developed by HaProxy to solve the problem of easily losing client information during proxying. It is often used for chain proxying and reverse proxying. The traditional approach to handling this problem is often complex and has many limitations, while Proxy Protocol simply attaches the original connection quadruple information packet to the transmitted data, solving this problem in a very simple way.
 
-  凡事皆有利弊，Proxy Protocol 也是如此。
+Everything has its advantages and disadvantages, and the same goes for the Proxy Protocol.
 
-  - 有发送必须有接收，反之亦然
-  - 同一端口不能既兼容带 Proxy Protocol 数据的连接又兼容不带数据的连接（如：Nginx 同端口的不同虚拟主机（server），本质是上一条）[^2][^3]
+- If there is sending, there must be receiving, and vice versa.
+- The same port cannot be compatible with connections that have Proxy Protocol data and those that don't have data (e.g., different virtual hosts (servers) on the same port in Nginx, which is essentially the previous point). [^2][^3]
 
-  在遇到异常时，请考虑配置是否符合上述条件。
+Please consider whether the configuration meets the above conditions when encountering exceptions.
 
-  此处，我们使用 Proxy Protocol 让被回落到的目标获取到客户端的真实 IP。
+Here, we use the Proxy Protocol to allow the fallback target to obtain the real IP address of the client.
 
-  另外，当 Xray 的某个入站配置存在 `"acceptProxyProtocol": true` 时，ReadV 将失效。
+In addition, when the `"acceptProxyProtocol": true` exists in a certain inbound configuration of Xray, ReadV will be invalidated.
 
-- 有关 HTTP/2
+- Regarding HTTP/2
 
-  首先，`inbounds.streamSettings.tlsSettings.alpn` 有顺序，应将 `h2` 放前，`http/1.1` 放后，在优先使用 HTTP/2 的同时保证兼容性；反过来会导致 HTTP/2 在协商时变为 HTTP/1.1，成为无效配置。
+First, `inbounds.streamSettings.tlsSettings.alpn` has an order. `h2` should be placed before `http/1.1` to prioritize the use of HTTP/2 while ensuring compatibility. Placing them in reverse order will cause HTTP/2 to be negotiated as HTTP/1.1, resulting in an invalid configuration.
 
-  在上述配置中，每条回落到 Nginx 的配置都要分成两个。这是因为 h2 是强制 TLS 加密的 HTTP/2 连接，这有益于数据在互联网中传输的安全，但在服务器内部没有必要；而 h2c 是非加密的 HTTP/2 连接，适合该环境。然而，Nginx 不能在同一端口上同时监听 HTTP/1.1 和 h2c，为了解决这个问题，需要在回落中指定 `alpn` 项（是 `fallbacks` 而不是 `tlsSettings` 里面的），以尝试匹配 TLS ALPN 协商结果。
+In the above configuration, each `fallback` configuration that falls back to Nginx needs to be divided into two. This is because h2 is an HTTP/2 connection that requires TLS encryption, which is beneficial for the security of data transmission over the Internet, but is unnecessary within the server. On the other hand, h2c is a non-encrypted HTTP/2 connection that is suitable for this environment. However, Nginx cannot listen for HTTP/1.1 and h2c on the same port at the same time. To solve this problem, the `alpn` option (in `fallbacks` rather than `tlsSettings`) needs to be specified in the fallback to try to match the TLS ALPN negotiation result.
 
-  建议 `alpn` 项只按需用两种填法：[^4]
+Suggestion: Use only two types of fillings for the `alpn` item as needed: [^4]
 
-  - 省略
-  - `"h2"`
+- Omitted
+- `"h2"`
 
-  如果使用 Caddy 就大可不必如此繁杂了，因为它**可以**在同一端口上同时监听 HTTP/1.1 和 h2c，配置改动如下：
+If you use Caddy, you don't need to be so complicated, because **it can** listen to HTTP/1.1 and h2c on the same port at the same time. The configuration changes are as follows:
 
   ```json
   {
@@ -214,9 +216,21 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
   }
   ```
 
-## Nginx 配置
+(Note: This is a JSON code block. It describes fallback configurations for a service.)
 
-Nginx 将通过官方源进行安装。
+## Nginx Configuration
+
+Nginx will be installed through official sources.
+
+This is a set of Bash commands to install Nginx on Ubuntu. 
+
+The first command installs the necessary packages for the installation process. 
+
+The second command adds the Nginx repository to the list of sources that Ubuntu uses to find software packages. 
+
+The third command downloads the Nginx signing key and adds it to the system's keyring, which verifies the authenticity of the package. 
+
+The fourth command updates the package list with the newly added Nginx repository. 
 
 ```bash
 sudo apt install curl gnupg2 ca-certificates lsb-release
@@ -227,7 +241,7 @@ sudo apt update
 sudo apt install nginx
 ```
 
-删除 `/etc/nginx/conf.d/default.conf` 并创建 `/etc/nginx/conf.d/fallbacks.conf`，内容如下：
+Delete `/etc/nginx/conf.d/default.conf` and create `/etc/nginx/conf.d/fallbacks.conf` with the following content:
 
 ```nginx
 set_real_ip_from 127.0.0.1;
@@ -259,24 +273,31 @@ server {
 }
 ```
 
-## Caddy 配置
+## Caddy Configuration
 
-安装 Caddy 请参阅 [Install — Caddy Documentation](https://caddyserver.com/docs/install)。
+Please refer to [Install — Caddy Documentation](https://caddyserver.com/docs/install) for installing Caddy.
 
-为了使 Caddy 能获取到访问者的真实 IP，需要编译带有 Proxy Protocol 模块的 Caddy。建议直接在 Caddy 官网上在线编译。
+To enable Caddy to obtain the real IP address of visitors, it is necessary to compile Caddy with the Proxy Protocol module. It is recommended to compile it directly on the Caddy website.
 
 ```bash
 sudo curl -o /usr/bin/caddy "https://caddyserver.com/api/download?os=linux&arch=amd64&p=github.com%2Fmastercactapus%2Fcaddy2-proxyprotocol&idempotency=79074247675458"
+
 sudo chmod +x /usr/bin/caddy
 ```
 
-直接替换即可。
+This is a bash script that downloads the Caddy web server and sets the necessary permissions to run it on a Linux system.
+
+Just replace it directly.
 
 ::: tip
-建议先通过官网文档安装 Caddy，再替换二进制文件。这样做无需手动设定进程守护。
+It is recommended to install Caddy through the official website documentation first, and then replace the binary file. This way, there is no need to manually set the process management.
 :::
 
-编辑 `/etc/caddy/Caddyfile`：
+Edit `/etc/caddy/Caddyfile`:
+
+This is a Caddyfile, which is a configuration file used by the Caddy web server. 
+
+In this specific configuration, there are two servers defined: one listening on `127.0.0.1:5001` and another on `127.0.0.1:5002`. Both servers have a `listener_wrapper` defined for `proxy_protocol`, which is a protocol used for passing client connection information through a proxy or load balancer. Additionally, both servers have the `allow_h2c` option enabled, which allows clients to connect using HTTP/2 cleartext (h2c) protocol.
 
 ```Caddyfile
 {
@@ -317,15 +338,15 @@ http://blog.example.com:5002 {
 }
 ```
 
-## 参考
+## Reference
 
-1. [服务器名称指示 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%90%8D%E7%A7%B0%E6%8C%87%E7%A4%BA)
+1. [Server Name Indication - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Server_Name_Indication)
 2. [Home · acmesh-official/acme.sh Wiki](https://github.com/acmesh-official/acme.sh/wiki)
-3. [HTTP/2 - 维基百科，自由的百科全书](https://zh.wikipedia.org/wiki/HTTP/2)
+3. [HTTP/2 - Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/HTTP/2)
 
-## 引用
+## Quotation
 
-[^1]: [常见问题 - Let's Encrypt - 免费的 SSL/TLS 证书](https://letsencrypt.org/zh-cn/docs/faq/)
+[^1]: [Frequently Asked Questions - Let's Encrypt - Free SSL/TLS Certificates](https://letsencrypt.org/docs/faq/)
 [^2]: [Proxy Protocol - HAProxy Technologies](https://www.haproxy.com/blog/haproxy/proxy-protocol/)
-[^3]: [proxy protocol 介绍及 nginx 配置 - 简书](https://www.jianshu.com/p/cc8d592582c9)
+[^3]: [Introduction to Proxy Protocol and Nginx Configuration - Jianshu](https://www.jianshu.com/p/cc8d592582c9)
 [^4]: [v2fly-github-io/vless.md at master · rprx/v2fly-github-io](https://github.com/rprx/v2fly-github-io/blob/master/docs/config/protocols/vless.md)

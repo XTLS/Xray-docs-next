@@ -1,34 +1,34 @@
-# 编译文档
+# Compile the document
 
-## 前序工作
+## Preparatory Work
 
-Xray 使用 [Golang](https://golang.org/) 作为编程语言，你需要先安装最新版本 Golang 才能够编译。
+Xray uses [Golang](https://golang.org/) as its programming language, so you need to install the latest version of Golang first in order to compile.
 
 ::: tip TIP
-安装 Golang: [golang.org/doc/install](https://golang.org/doc/install)
+Install Golang: [golang.org/doc/install](https://golang.org/doc/install)
 :::
 
-> 如果你不幸使用 Windows, 请 **务必** 使用 Powershell
+If you happen to use Windows, please **make sure** to use Powershell.
 
-## 拉取 Xray 源代码
+## Pull Xray source code
 
 ```bash
 git clone https://github.com/XTLS/Xray-core.git
 cd Xray-core && go mod download
 ```
 
-> 如果你闲的没事干，可以试试 GitHub 官方工具: `gh repo clone XTLS/Xray-core`
+If you have free time, you can try GitHub's official tool: `gh repo clone XTLS/Xray-core`
 
-注意：在无法正常访问 Google 的网络环境，依赖无法被正常拉取，需要先设置 `GOPROXY`：
+Note: In a network environment where Google cannot be accessed normally, dependencies cannot be pulled normally, and `GOPROXY` needs to be set first:
 
 ```bash
 go env -w GOPROXY=https://goproxy.io,direct
 ```
 
-## 构建二进制
+## Build Binary
 
 :::warning
-本小节的命令需要在 Xray 根目录内运行。
+This command needs to be executed within Xray root directory.
 :::
 
 ### Windows(Powershell):
@@ -44,38 +44,37 @@ go build -o xray.exe -trimpath -ldflags "-s -w -buildid=" ./main
 CGO_ENABLED=0 go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 ```
 
-运行以上命令会在目录下生成 xray 可执行文件。
+Running the above command will generate an xray executable file in the directory.
 
 ::: tip
-如果需要编译可以进行 debug 的程序,即可以用 dlv 附加到运行的程序进行调试, 请去掉 ldflags 中的 '-w -s' 选项.
+If you need to compile a program that can be debugged, i.e., you can use dlv to attach to the running program for debugging, please remove the '-w -s' options from the ldflags.
 
--w 禁止生成 debug 信息。使用该选项后，将无法使用 gdb 进行调试。
--s 禁用符号表
-PS:其实用 vscode 或其他 IDE 调试似乎更方便。
-:::
+- w option disables the generation of debug information. After using this option, gdb cannot be used for debugging.
+- s option disables the symbol table.
+PS: Actually, debugging with vscode or other IDEs seems to be more convenient.
 
-## 交叉编译：
+## Cross compilation:
 
-这里以在 Windows(Powershell) 环境中，编译到 Linux 服务器为例：
+Here, we take the example of compiling to a Linux server in a Windows (Powershell) environment:
 
 ```powershell
 $env:CGO_ENABLED=0
 $env:GOOS="linux"
 $env:GOARCH="amd64"
-
-go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 ```
 
-上传到服务器后，记得在服务器终端内执行 `chmod +x xray`
+go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main```
+
+After uploading to the server, remember to execute `chmod +x xray` in the server terminal.
 
 ::: tip
-执行 `go tool dist list` 查看所有支持的系统与架构。
+Execute `go tool dist list` to view all supported systems and architectures.
 :::
 
-## 可复现构建：
+## Reproducible Build:
 
-按照上述步骤，能够编译与 Release 中完全相同的二进制文件。
+Following the above steps, it is possible to compile and release an identical binary file as the one in Release.
 
 ::: warning
-请先确认您使用的 Golang 版本与编译 Release 的一致。
+Please confirm that you are using the same Golang version as the one used to compile the release.
 :::
