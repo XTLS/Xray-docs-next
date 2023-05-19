@@ -15,9 +15,9 @@ In addition, I believe that you have gradually become familiar with the basic op
 ## 6.2 Install `acme.sh`
 
 1. Basic Linux commands for beginners:
-   |  Number  |  Command  |                    Description                     |
+   | Number | Command | Description |
    | :------: | :-------: | :------------------------------------------------: |
-   | `cmd-12` |  `wget`   |       Retrieve (or download) a webpage file        |
+   | `cmd-12` | `wget` | Retrieve (or download) a webpage file |
    | `cmd-13` | `acme.sh` | Commands related to acme.sh certificate management |
 
 2. Run the installation script.
@@ -52,18 +52,18 @@ Before officially applying for the certificate, we use the testing command (`--i
 
 ```shell
 acme.sh --issue --server letsencrypt --test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256
-``` 
+```
 
 (Note: This is a command in shell script for obtaining SSL certificate from Let's Encrypt CA using ACME protocol. It specifies the test server, the subdomain for which the certificate is requested, the webroot directory of the subdomain, and the key length to use for the certificate.)
 
 ::: warning Explanation
-   The main advantage of the `ECC` certificate is that its `Keysize` is smaller, which means that security is improved and encryption and decryption speed is faster for the same size. Why not choose ECC-256bit, which is approximately equivalent to RSA-3072bit in strength? Of course, some people say that the ECC certificate handshake is significantly faster, which I think is a bit exaggerated, because RSA handshake is not too slow either. Even if there is a difference, it should be in milliseconds and difficult to perceive directly.
+The main advantage of the `ECC` certificate is that its `Keysize` is smaller, which means that security is improved and encryption and decryption speed is faster for the same size. Why not choose ECC-256bit, which is approximately equivalent to RSA-3072bit in strength? Of course, some people say that the ECC certificate handshake is significantly faster, which I think is a bit exaggerated, because RSA handshake is not too slow either. Even if there is a difference, it should be in milliseconds and difficult to perceive directly.
 
 In addition, if some websites do need to be compatible with certain old devices, please still choose RSA certificates according to your needs.
 
 2. You should eventually see a prompt similar to this:
 
-```log
+````log
 [Wed 30 Dec 2022 04:25:12 AM EST] Using ACME_DIRECTORY: https://acme-staging-v02.api.letsencrypt.org/directory
 [Wed 30 Dec 2022 04:25:13 AM EST] Using CA: https://acme-staging-v02.api.letsencrypt.org/directory
 [Wed 30 Dec 2022 04:25:13 AM EST] Create account key ok.
@@ -118,7 +118,7 @@ yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPIjw9AKH=
 
 ```shell
 acme.sh --issue --server letsencrypt --test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
-``` 
+````
 
 (Note: This command is written in Chinese characters, therefore I have translated it into English. The command is used to issue SSL/TLS certificates using acme.sh client with Let's Encrypt CA in test mode for a subdomain of your domain with the specified webroot path, key length and in debug mode.)
 
@@ -143,8 +143,8 @@ acme.sh --issue -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keyl
 (Note: This is a command written in shell script that requests a SSL certificate from ACME server using the ACME client "acme.sh". It specifies the subdomain of the domain name, the web root directory of the website, the key length, and forces the re-issuance of the certificate.)
 
 ::: warning Explanation
-   The meaning of the `--force` parameter is to manually (forcefully) update the certificate before the existing certificate expires. Although the certificate we applied for from the "test server" in the previous step cannot be used directly, it has not expired yet, so this parameter is needed.
-   :::
+The meaning of the `--force` parameter is to manually (forcefully) update the certificate before the existing certificate expires. Although the certificate we applied for from the "test server" in the previous step cannot be used directly, it has not expired yet, so this parameter is needed.
+:::
 
 2. You should eventually see a prompt that looks similar to the one above.
 
@@ -208,7 +208,7 @@ vpsadmin@vps-server:~$ acme.sh --installcert -d subdomain.yourdomain.com --cert-
 [Mon 14 Feb 2022 03:00:25 PM CST] Installing cert to: /etc/xray/cert/cert.crt
 [Mon 14 Feb 2022 03:00:25 PM CST] Installing key to: /etc/xray/cert/cert.key
 [Mon 14 Feb 2022 03:00:25 PM CST] Installing full chain to: /etc/xray/cert/fullchain.crt
-``` 
+```
 
 (Note: This is a shell command for installing a SSL certificate using acme.sh. The command is specifying the domain, file paths for the certificate, private key, and full chain, as well as indicating that an ECC certificate should be used.)
 

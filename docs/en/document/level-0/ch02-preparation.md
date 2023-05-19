@@ -35,12 +35,12 @@ This is **not** a real usable website. Please replace it with your real website 
 1. SSH remote login tool
 
 - Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
-   - macOS/Linux: Terminal
+  - macOS/Linux: Terminal
 
 2. Remote file copying tool
 
 - Windows: [WinSCP](https://winscp.net/eng/index.php)
-   - macOS/Linux: Terminal
+  - macOS/Linux: Terminal
 
 3. Reliable text editor
    - Windows/macOS/Linux: [VSCode](https://code.visualstudio.com)

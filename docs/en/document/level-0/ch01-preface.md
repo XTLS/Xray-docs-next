@@ -66,7 +66,7 @@ The so-called "airport" refers to the "line provider". They are responsible for 
 2. **Multiple Line Options**: Can unlock network services in different countries and regions, such as iplc dedicated line services, game acceleration services, etc.
 3. **Multiple Access Nodes**: Therefore, it has a stronger ability to resist node blocking, if one is blocked, just switch to another one.
 
-2. Risks of "Airport"
+- Risks of "Airport"
 
 "The other side of the coin of 'convenience' is 'risk'. Based on the technical characteristics and market conditions of the 'airport', its risks include at least:"
 

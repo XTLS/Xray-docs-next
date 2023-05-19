@@ -194,27 +194,27 @@ Suggestion: Use only two types of fillings for the `alpn` item as needed: [^4]
 
 If you use Caddy, you don't need to be so complicated, because **it can** listen to HTTP/1.1 and h2c on the same port at the same time. The configuration changes are as follows:
 
-  ```json
-  {
-    "fallbacks": [
-      {
-        "name": "example.com",
-        "path": "/vmessws",
-        "dest": 5000,
-        "xver": 1
-      },
-      {
-        "dest": 5001,
-        "xver": 1
-      },
-      {
-        "name": "blog.example.com",
-        "dest": 5002,
-        "xver": 1
-      }
-    ]
-  }
-  ```
+```json
+{
+  "fallbacks": [
+    {
+      "name": "example.com",
+      "path": "/vmessws",
+      "dest": 5000,
+      "xver": 1
+    },
+    {
+      "dest": 5001,
+      "xver": 1
+    },
+    {
+      "name": "blog.example.com",
+      "dest": 5002,
+      "xver": 1
+    }
+  ]
+}
+```
 
 (Note: This is a JSON code block. It describes fallback configurations for a service.)
 
@@ -222,15 +222,15 @@ If you use Caddy, you don't need to be so complicated, because **it can** listen
 
 Nginx will be installed through official sources.
 
-This is a set of Bash commands to install Nginx on Ubuntu. 
+This is a set of Bash commands to install Nginx on Ubuntu.
 
-The first command installs the necessary packages for the installation process. 
+The first command installs the necessary packages for the installation process.
 
-The second command adds the Nginx repository to the list of sources that Ubuntu uses to find software packages. 
+The second command adds the Nginx repository to the list of sources that Ubuntu uses to find software packages.
 
-The third command downloads the Nginx signing key and adds it to the system's keyring, which verifies the authenticity of the package. 
+The third command downloads the Nginx signing key and adds it to the system's keyring, which verifies the authenticity of the package.
 
-The fourth command updates the package list with the newly added Nginx repository. 
+The fourth command updates the package list with the newly added Nginx repository.
 
 ```bash
 sudo apt install curl gnupg2 ca-certificates lsb-release
@@ -295,7 +295,7 @@ It is recommended to install Caddy through the official website documentation fi
 
 Edit `/etc/caddy/Caddyfile`:
 
-This is a Caddyfile, which is a configuration file used by the Caddy web server. 
+This is a Caddyfile, which is a configuration file used by the Caddy web server.
 
 In this specific configuration, there are two servers defined: one listening on `127.0.0.1:5001` and another on `127.0.0.1:5002`. Both servers have a `listener_wrapper` defined for `proxy_protocol`, which is a protocol used for passing client connection information through a proxy or load balancer. Additionally, both servers have the `allow_h2c` option enabled, which allows clients to connect using HTTP/2 cleartext (h2c) protocol.
 

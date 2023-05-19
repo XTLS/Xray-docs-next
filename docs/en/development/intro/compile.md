@@ -51,7 +51,7 @@ If you need to compile a program that can be debugged, i.e., you can use dlv to 
 
 - w option disables the generation of debug information. After using this option, gdb cannot be used for debugging.
 - s option disables the symbol table.
-PS: Actually, debugging with vscode or other IDEs seems to be more convenient.
+  PS: Actually, debugging with vscode or other IDEs seems to be more convenient.
 
 ## Cross compilation:
 

@@ -66,7 +66,7 @@ The first two are pretty straightforward, no need to explain further. The third 
 
 ```shell
 apt update
-``` 
+```
 
 This is a command used in a Linux terminal to update the package list from the repositories configured on the system.
 

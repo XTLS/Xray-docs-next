@@ -65,7 +65,7 @@ Now, let's solve the problem of "port = `22`". (Note: some VPS service providers
 
 ```shell
 nano /etc/ssh/sshd_config
-``` 
+```
 
 This is a command in the shell terminal to open the `sshd_config` file located in the `/etc/ssh/` directory using the `nano` text editor.
 
@@ -73,7 +73,7 @@ This is a command in the shell terminal to open the `sshd_config` file located i
 
 ![Interface of nano](./ch04-img01-nano-ui.png)
 
-5) The second thing we need to do is to **find the `Port` item in the opened file and modify its port**. The number after `Port` is the SSH port. It is generally recommended to change it to an integer greater than `1024` and less than `65535` (this article takes `9753` as an example). Please think about how to operate it with the shortcut keys of `nano`. You are right again! It is:
+5. The second thing we need to do is to **find the `Port` item in the opened file and modify its port**. The number after `Port` is the SSH port. It is generally recommended to change it to an integer greater than `1024` and less than `65535` (this article takes `9753` as an example). Please think about how to operate it with the shortcut keys of `nano`. You are right again! It is:
 
 - Use `ctrl+w` to enter search mode, then type `Port 22` and press Enter
 - Delete `22` and replace it with `9753`
@@ -92,7 +92,7 @@ This article uses `9753` as an example, which means that with the release of thi
 
 ```shell
 systemctl restart ssh
-``` 
+```
 
 This is a shell command to restart the SSH service.
 
@@ -131,8 +131,8 @@ After executing the command, follow the prompts to operate. Be sure to set a use
 ![Creating a new user](./ch04-img03-adduser.png)
 
 ::: warning
-   This article takes "vpsadmin" as an example, which means that with the release of this article, this username will also become a significant feature, and may be the first choice for attackers to try. Therefore, just like ports, I strongly recommend that you use another username that you come up with yourself.
-   :::
+This article takes "vpsadmin" as an example, which means that with the release of this article, this username will also become a significant feature, and may be the first choice for attackers to try. Therefore, just like ports, I strongly recommend that you use another username that you come up with yourself.
+:::
 
 3. The complete process demonstration is as follows:
 
@@ -152,7 +152,7 @@ You may have noticed that this command actually consists of two commands. The fi
 
 ```shell
 visudo
-``` 
+```
 
 (Note: `visudo` is a command used in Linux/Unix systems to edit the sudoers file, which specifies which users or groups are allowed to run certain commands with administrative privileges.)
 
@@ -173,7 +173,7 @@ If you want to follow the traditional practice and enter a password every time y
 
 ```shell
 nano /etc/ssh/sshd_config
-``` 
+```
 
 This is a command line instruction to open and edit the `sshd_config` file located at `/etc/ssh/` using the `nano` text editor.
 
@@ -234,8 +234,8 @@ Now let's configure the [Key Authentication]!
 ![Generate Key](./ch04-img08-puttygen-save.png)
 
 ::: warning
-   The example in this image is based on a `2048`-bit `RSA` key. However, in reality, if you want to achieve the same level of security as a `256`-bit key for `EDCSA/Ed25519`, you need to use a `3072`-bit `RSA` key. (i.e., change the number in the bottom right corner to `3072`)
-   :::
+The example in this image is based on a `2048`-bit `RSA` key. However, in reality, if you want to achieve the same level of security as a `256`-bit key for `EDCSA/Ed25519`, you need to use a `3072`-bit `RSA` key. (i.e., change the number in the bottom right corner to `3072`)
+:::
 
 2. You can add a password to your private key to increase security.
 3. Click on `Save public key` to save the public key with the file name `id_rsa.pub`.
@@ -246,52 +246,51 @@ Now let's configure the [Key Authentication]!
 
 2. Upload the public key to the "vpsadmin" user on the VPS.
 
-1. This step requires the use of the previously prepared `WinSCP`.
-2. Go to the [official website](https://winscp.net/eng/index.php) to download and install. It will prompt you to import PuTTY settings, and of course, you can import them with one click!
+1, This step requires the use of the previously prepared `WinSCP`.
+
+2, Go to the [official website](https://winscp.net/eng/index.php) to download and install. It will prompt you to import PuTTY settings, and of course, you can import them with one click!
 
 ![One-click Import Session](./ch04-img10-winscp-import-session.png)
 
-3. If there is no prompt for import or you have already installed it in advance, configure it according to the following figure.
+3, If there is no prompt for import or you have already installed it in advance, configure it according to the following figure.
 
 ![WinSCP login settings](./ch04-img11-winscp-ui.png)
 
-4. The directory on the left side of WinSCP is the folder and files on your local computer. Please locate the folder where the key is stored.
+4, The directory on the left side of WinSCP is the folder and files on your local computer. Please locate the folder where the key is stored.
 
-5. The directory on the right side of WinSCP is the folder and files on the VPS server, which are located in the `/home/vpsadmin/` folder by default. To display hidden files, please click on `X hidden` in the lower right corner.
+5, The directory on the right side of WinSCP is the folder and files on the VPS server, which are located in the `/home/vpsadmin/` folder by default. To display hidden files, please click on `X hidden` in the lower right corner.
 
 ![Local and remote folders](./ch04-img12-winscp-locations.png)
 
-6. Right-click on the right side (in VPS) and create a new folder named `.ssh` (note the period at the beginning).
+6, Right-click on the right side (in VPS) and create a new folder named `.ssh` (note the period at the beginning).
 
 ![Create a folder to place public key in VPS](./ch04-img13-winscp-newfolder-key.png)
 
-7. Upload the [public key] `authorized_keys` to the `.ssh` folder.
+7, Upload the [public key] `authorized_keys` to the `.ssh` folder.
 
 ![Upload authorized_keys](./ch04-img14-winscp-upload-key.png)
 
-8. When uploading, rename the [public key] from `authorized_keys.txt` to `authorized_keys` (remove the `.txt` extension).
+8, When uploading, rename the [public key] from `authorized_keys.txt` to `authorized_keys` (remove the `.txt` extension).
 
 ![Ensure there is no file extension](./ch04-img15-winscp-rename-key.png)
 
-9. The complete process demonstration is as follows:
+9, The complete process demonstration is as follows:
 
 ![Complete demonstration of WinSCP operation](./ch04-img16-winscp-full.gif)
 
 3. Enable RSA key authentication for SSH login and disable password authentication login on the VPS side.
 
-1. Basic Linux Commands:
-      |  Number  | Command |                    Description                    |
-      | :------: | :-----: | :-----------------------------------------------: |
-      | `cmd-08` | `sudo`  |       Run a command with `root` privileges        |
-      | `cmd-09` | `chmod` | Change the permissions of a target file/directory |
-
-2. SSH remote connection to VPS (PuTTY)
-
-3. Change the permission of the `authorized_keys` file to `600` (only the owner can read and write).
+- Basic Linux Commands:
+  | Number | Command | Description |
+  | :------: | :-----: | :-----------------------------------------------: |
+  | `cmd-08` | `sudo` | Run a command with `root` privileges |
+  | `cmd-09` | `chmod` | Change the permissions of a target file/directory |
+- SSH remote connection to VPS (PuTTY)
+- Change the permission of the `authorized_keys` file to `600` (only the owner can read and write).
 
 ```shell
 chmod 600 ~/.ssh/authorized_keys
-``` 
+```
 
 This is a command in shell script to change the permissions of the `authorized_keys` file to `600` for the current user's SSH directory (`~/.ssh/`).
 
@@ -299,7 +298,7 @@ This is a command in shell script to change the permissions of the `authorized_k
 
 ```shell
 sudo nano /etc/ssh/sshd_config
-``` 
+```
 
 (This is a command in the shell/terminal to open the sshd_config file located in the /etc/ssh/ directory with the sudo privilege using the nano text editor.)
 
@@ -311,7 +310,7 @@ sudo nano /etc/ssh/sshd_config
 
 ```shell
 sudo systemctl restart ssh
-``` 
+```
 
 This is a command in the shell terminal to restart the SSH service with root privileges using the `systemctl` command.
 

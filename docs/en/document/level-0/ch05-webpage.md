@@ -31,15 +31,15 @@ Now let's answer the second question:
 ## 5.3 Create the simplest web page
 
 1. Basic Linux commands for beginners:
-   |   No.    |    Command Name    |    Command Description    |
+   | No. | Command Name | Command Description |
    | :------: | :----------------: | :-----------------------: |
-   | `cmd-10` |      `mkdir`       |    Create a new folder    |
+   | `cmd-10` | `mkdir` | Create a new folder |
    | `cmd-11` | `systemctl reload` | Reload a specific service |
 
 2. Basic Linux configuration files for beginners:
-   |    No.    | Configuration File Location |    File Description    |
+   | No. | Configuration File Location | File Description |
    | :-------: | :-------------------------: | :--------------------: |
-   | `conf-02` |   `/etc/nginx/nginx.conf`   | Nginx program settings |
+   | `conf-02` | `/etc/nginx/nginx.conf` | Nginx program settings |
 
 3. Create a dedicated folder `/home/vpsadmin/www/webpage/` for the website and create the web page file `index.html`
    ```shell
@@ -151,7 +151,6 @@ If you encounter any errors, please carefully review the explanations in Steps 3
 
 ::: warning
 In the early stages of this article, a lot of space has been devoted to explaining the importance of using a **non-root user** for security, and the entire article is written based on this premise. So, issues caused by using a **root user** are not within the scope of this article.
-
 
 But I believe that students who persist in using the `root` user should have their own opinions, strong hands-on ability, or have a certain foundation in Linux. I have already explained the crux of the problem, and I believe you can solve it on your own.
 
