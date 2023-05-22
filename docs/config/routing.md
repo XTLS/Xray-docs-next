@@ -69,7 +69,7 @@
   "user": ["love@xray.com"],
   "inboundTag": ["tag-vmess"],
   "protocol": ["http", "tls", "bittorrent"],
-  "attrs": "attrs[':method'] == 'GET'",
+  "attrs": { ":method": "GET" },
   "outboundTag": "direct",
   "balancerTag": "balancer"
 }
@@ -155,19 +155,17 @@
 必须开启入站代理中的 `sniffing` 选项, 才能嗅探出连接所使用的协议类型.
 :::
 
-> `attrs`: string
+> `attrs`: object
 
-一段脚本，用于检测流量的属性值。当此脚本返回真值时，此规则生效。
-
-脚本语言为 [Starlark](https://github.com/bazelbuild/starlark)，它的语法是 Python 的子集。脚本接受一个全局变量 `attrs`，其中包含了流量相关的属性。
+一个 json object，键名字和值皆为字符串，用于检测流量的属性值。当 HTTP headers 包含所有指定的键，并且值包含指定的子字符串，则命中此规则。大小写不敏感。
 
 目前只有 http 入站代理会设置这一属性。
 
 示例：
 
-- 检测 HTTP GET：`"attrs[':method'] == 'GET'"`
-- 检测 HTTP Path：`"attrs[':path'].startswith('/test')"`
-- 检测 Content Type：`"attrs['accept'].index('text/html') >= 0"`
+- 检测 HTTP GET：`{":method": "GET"}`
+- 检测 HTTP Path：`{":path": "/test"}"`
+- 检测 Content Type：`{"accept": "text/html"}"`
 
 > `outboundTag`: string
 

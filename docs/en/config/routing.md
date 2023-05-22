@@ -72,7 +72,7 @@ When a rule points to a load balancer, Xray selects an outbound through this loa
   "user": ["love@xray.com"],
   "inboundTag": ["tag-vmess"],
   "protocol": ["http", "tls", "bittorrent"],
-  "attrs": "attrs[':method'] == 'GET'",
+  "attrs": { ":method": "GET" },
   "outboundTag": "direct",
   "balancerTag": "balancer"
 }
@@ -162,19 +162,17 @@ An array where each item represents a protocol. This rule will take effect when 
 The `sniffing` option in the inbound proxy must be enabled to detect the protocol type used by the connection.
 :::
 
-`attrs`: string
+`attrs`: object
 
-A script used to detect the attribute values of the traffic. When this script returns a truthy value, this rule takes effect.
-
-The script language is [Starlark](https://github.com/bazelbuild/starlark), which is a subset of Python syntax. The script accepts a global variable `attrs`, which contains traffic-related attributes.
+A json object with string keys and values, used to detect the HTTP headers of the traffic. It matches when all specified keys exist in the header and corresponding values are a substring of the header value, case in-sensitive.
 
 Currently, only the inbound HTTP proxy sets this attribute.
 
 Examples:
 
-- Detect HTTP GET: `"attrs[':method'] == 'GET'"`
-- Detect HTTP Path: `"attrs[':path'].startswith('/test')"`
-- Detect Content Type: `"attrs['accept'].index('text/html') >= 0"`
+- Detect HTTP GET：`{":method": "GET"}`
+- Detect HTTP Path：`{":path": "/test"}"`
+- Detect Content Type：`{"accept": "text/html"}"`
 
 > `outboundTag`: string
 
