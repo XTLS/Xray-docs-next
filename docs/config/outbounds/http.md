@@ -25,7 +25,11 @@ HTTP 协议。
         }
       ]
     }
-  ]
+  ],
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36",
+    "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"
+  }
 }
 ```
 
@@ -36,6 +40,10 @@ HTTP 协议。
 > `servers`: \[ [ServerObject](#serverobject) \]
 
 HTTP 服务器列表，其中每一项是一个服务器配置，若配置多个，循环使用 (RoundRobin)。
+
+> `headers`: map{ string, string }
+
+HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，每次请求会附上所有的键值对
 
 ### ServerObject
 
