@@ -2,7 +2,9 @@
 
 The [Trojan](https://trojan-gfw.github.io/trojan/protocol) protocol.
 
-::: danger Trojan is designed to work with correctly configured encrypted TLS tunnels. :::
+::: danger
+Trojan is designed to work with correctly configured encrypted TLS tunnels.
+:::
 
 ## InboundConfigurationObject
 
