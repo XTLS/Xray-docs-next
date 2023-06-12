@@ -1,13 +1,13 @@
 # HTTP
 
-HTTP 协议。
+HTTP is a protocol that is used for communication over the internet. Please note that HTTP does not provide encryption for data transmission and is not suitable for transmitting sensitive information over public networks, as it can be easily targeted for attacks.
 
 ::: danger
-**http 协议没有对传输加密，不适宜经公网中传输，更容易成为被人用作攻击的肉鸡。**
+**The HTTP protocol does not provide encryption for transmission, making it unsuitable for transmitting over public networks and more susceptible to being used as a compromised host for attacks.**
 :::
 
 ::: tip
-`http` 只能代理 tcp 协议，udp 系的协议均不能通过。
+HTTP can only proxy TCP protocols, and cannot handle UDP-based protocols.
 :::
 
 ## OutboundConfigurationObject
@@ -30,12 +30,12 @@ HTTP 协议。
 ```
 
 ::: tip
-目前 HTTP 协议 outbound 中 `streamSettings` 设置 `security` 和 `tlsSettings` 是生效的。
+Currently, in the HTTP outbound protocol, the `streamSettings` configuration with `security` and `tlsSettings` is effective.
 :::
 
 > `servers`: \[ [ServerObject](#serverobject) \]
 
-HTTP 服务器列表，其中每一项是一个服务器配置，若配置多个，循环使用 (RoundRobin)。
+A list of HTTP servers, where each item represents a server configuration. If multiple servers are configured, they will be used in a round-robin manner.
 
 ### ServerObject
 
@@ -54,15 +54,15 @@ HTTP 服务器列表，其中每一项是一个服务器配置，若配置多个
 
 > `address`: string
 
-HTTP 代理服务器地址，必填。
+The address of the HTTP proxy server. Required.
 
 > `port`: int
 
-HTTP 代理服务器端口，必填。
+The port of the HTTP proxy server. Required.
 
 > `user`: \[[AccountObject](#accountobject)\]
 
-一个数组，数组中每个元素为一个用户帐号。默认值为空。
+An array of user accounts. Default value is an empty array.
 
 #### AccountObject
 
@@ -75,8 +75,8 @@ HTTP 代理服务器端口，必填。
 
 > `user`: string
 
-用户名，字符串类型。必填。
+The username. Required.
 
 > `pass`: string
 
-密码，字符串类型。必填。
+The password. Required.

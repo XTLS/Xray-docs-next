@@ -1,9 +1,9 @@
 # Wireguard
 
-标准 Wireguard 协议实现。
+Wireguard is a standard implementation of the Wireguard protocol.
 
 ::: danger
-**Wireguard 协议并非专门为翻墙而设计，若在最外层过墙，存在特征可能导致服务器被封锁**
+**The Wireguard protocol is not specifically designed for circumvention purposes. If used as the outer layer for circumvention, its characteristics may lead to server blocking.**
 :::
 
 ## OutboundConfigurationObject
@@ -29,28 +29,28 @@
 ```
 
 ::: tip
-目前 Wireguard 协议 outbound 中不支持设置 `streamSettings`
+Currently, the Wireguard protocol outbound does not support setting `streamSettings`.
 :::
 
 > `secretKey`: string
 
-用户私钥。必填。
+The user's private key. Required.
 
 > `address`: string array
 
-Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址，支持 IPv6
+Wireguard will create a virtual network interface `tun` locally. Use one or more IP addresses, including IPv6.
 
 > `mtu`: int
 
-Wireguard 底层 tun 的分片大小
+The fragment size of the underlying `tun` device in Wireguard.
 
 > `workers`: int
 
-Wireguard 使用线程数
+The number of threads used by Wireguard.
 
 > `peers`: \[ [Peers](#peers) \]
 
-Wireguard 服务器列表，其中每一项是一个服务器配置。
+A list of Wireguard servers, where each item is a server configuration.
 
 ### Peers
 
@@ -66,24 +66,24 @@ Wireguard 服务器列表，其中每一项是一个服务器配置。
 
 > `endpoint`: address
 
-服务器地址, 必填
+The server address. Required.
 
 ::: tip
-使用 url:端口号 格式，形如 `engage.cloudflareclient.com:2408`
+Use the format `url:port`, for example, `engage.cloudflareclient.com:2408`.
 :::
 
 > `publicKey`: string
 
-服务器公钥，用于验证, 必填
+The server's public key used for verification. Required.
 
 > `preSharedKey`: string
 
-额外的对称加密密钥
+An additional symmetric encryption key.
 
 > `keepAlive`: int
 
-心跳包时间间隔，单位为秒，默认为 0 表示无心跳
+The interval of keep-alive packets in seconds. The default is 0, which means no keep-alive.
 
 > `allowedIPs`: string array
 
-Wireguard 仅允许特定源 IP 的流量
+Only allow traffic from specific source IP addresses in Wireguard.

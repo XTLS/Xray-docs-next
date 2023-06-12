@@ -1,12 +1,12 @@
 # VLESS
 
 ::: danger
-目前 VLESS 没有自带加密，请用于可靠信道，如 TLS。
+Currently, VLESS does not provide built-in encryption. Please use it with a reliable channel, such as TLS.
 :::
 
-VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部分，可以作为 Xray 客户端和服务器之间的桥梁。
+VLESS is a stateless lightweight transport protocol that consists of inbound and outbound parts. It can serve as a bridge between Xray clients and servers.
 
-与 [VMess](./vmess.md) 不同，VLESS 不依赖于系统时间，认证方式同样为 UUID，但不需要 alterId。
+Unlike [VMess](./vmess.md), VLESS does not rely on system time. The authentication method is still UUID-based, but it does not require alterId.
 
 ## InboundConfigurationObject
 
@@ -29,24 +29,21 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 }
 ```
 
-> `clients`: \[ [ClientObject](#clientobject) \]
+> `clients`: [ClientObject](#clientobject)
 
-一个数组，代表一组服务端认可的用户.
+An array representing a group of users approved by the server.
 
-其中每一项是一个用户 [ClientObject](#clientobject)。
+Each item in the array is a user [ClientObject](#clientobject).
 
 > `decryption`: "none"
 
-现阶段需要填 `"none"`，不能留空。
-若未正确设置 decryption 的值，使用 Xray 或 -test 时会收到错误信息。
+Currently, you need to specify `"none"`. It cannot be left empty. If the `decryption` value is not set correctly, you will receive an error message when using Xray or `-test`.
 
-注意这里是 decryption，和 clients 同级。
-decryption 和 vmess 协议的 encryption 的位置不同，是因为若套一层约定加密，服务端需要先解密才能知道是哪个用户。
+Note that `decryption` is at the same level as `clients`. The placement of `decryption` is different from the `encryption` in the vmess protocol because if there is a layer of agreed encryption, the server needs to decrypt it first to know which user it belongs to.
 
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
-一个数组，包含一系列强大的回落分流配置（可选）。
-fallbacks 的具体配置请点击 [FallbackObject](../features/fallback.md#fallbacks-配置)
+An array that contains a series of powerful fallback configurations (optional). The specific configuration for `fallbacks` can be found in the [FallbackObject](../features/fallback.md#fallbacks-configuration) documentation.
 
 ### ClientObject
 
@@ -61,35 +58,34 @@ fallbacks 的具体配置请点击 [FallbackObject](../features/fallback.md#fall
 
 > `id`: string
 
-VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是一个合法的 UUID.
-自定义字符串和其映射的 UUID 是等价的, 这意味着你将可以这样在配置文件中写 id 来标识同一用户,即
+The user ID for VLESS. It can be any string less than 30 bytes or a valid UUID. Custom strings and their corresponding UUIDs are equivalent, which means you can use either of the following in the configuration file to identify the same user:
 
-- 写 `"id": "我爱🍉老师1314"`,
-- 或写 `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (此 UUID 是 `我爱🍉老师1314` 的 UUID 映射)
+- `"id": "我爱🍉老师1314"`
+- `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (This UUID is the mapping of the string "我爱 🍉 老师 1314")
 
-其映射标准在 [VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
+The mapping standard is described in the [VLESS UUID Mapping Standard: Mapping a Custom String to a UUIDv5](https://github.com/XTLS/Xray-core/issues/158).
 
-你可以使用命令 `xray uuid -i "自定义字符串"` 生成自定义字符串所映射的的 UUID。
+You can use the command `xray uuid -i "custom string"` to generate the UUID corresponding to a custom string.
 
-> 也可以使用命令 `xray uuid` 生成随机的 UUID.
+> You can also use the command `xray uuid` to generate a random UUID.
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
 
-level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+The value of `level` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
 
 > `email`: string
 
-用户邮箱，用于区分不同用户的流量（会体现在日志、统计中）。
+User email address used to differentiate traffic from different users (reflected in logs and statistics).
 
 > `flow`: string
 
-流控模式，用于选择 XTLS 的算法。
+Flow control mode used to select the XTLS algorithm.
 
-目前入站协议中有以下流控模式可选：
+Currently, the following flow control modes are available for inbound protocols:
 
-- 无 `flow`，空字符或者 `none`：使用普通 TLS 代理
-- `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充
+- No `flow`, empty string, or `none`: Use regular TLS proxy.
+- `xtls-rprx-vision`: Use the new XTLS mode, including inner-handshake random padding.
 
-此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
+Additionally, XTLS currently only supports TCP, mKCP, and DomainSocket as transport methods.
