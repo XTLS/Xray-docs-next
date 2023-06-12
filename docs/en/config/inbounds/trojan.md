@@ -25,7 +25,7 @@ Trojan is designed to work with correctly configured encrypted TLS tunnels.
 }
 ```
 
-> `clients`: [ClientObject](#clientobject)
+> `clients`: \[ [ClientObject](#clientobject) \]
 
 An array representing a group of users approved by the server.
 

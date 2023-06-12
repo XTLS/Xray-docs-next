@@ -29,7 +29,7 @@ Unlike [VMess](./vmess.md), VLESS does not rely on system time. The authenticati
 }
 ```
 
-> `clients`: [ClientObject](#clientobject)
+> `clients`: \[ [ClientObject](#clientobject) \]
 
 An array representing a group of users approved by the server.
 
