@@ -1,9 +1,9 @@
 # Trojan
 
-[Trojan](https://trojan-gfw.github.io/trojan/protocol) 协议
+The [Trojan](https://trojan-gfw.github.io/trojan/protocol) protocol.
 
 ::: danger
-Trojan 被设计工作在正确配置的加密 TLS 隧道
+Trojan is designed to work with correctly configured encrypted TLS tunnels.
 :::
 
 ## InboundConfigurationObject
@@ -27,18 +27,16 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 > `clients`: \[ [ClientObject](#clientobject) \]
 
-一个数组，代表一组服务端认可的用户.
+An array representing a group of users approved by the server.
 
-其中每一项是一个用户 [ClientObject](#clientobject)。
+Each item in the array is a user [ClientObject](#clientobject).
 
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
-一个数组，包含一系列强大的回落分流配置（可选）。
-fallbacks 的具体配置请点击[FallbackObject](../features/fallback.md#fallbacks-配置)
+An array that contains a series of powerful fallback configurations (optional). The specific configuration for `fallbacks` can be found in the [FallbackObject](../features/fallback.md#fallbacks-configuration) documentation.
 
 ::: tip
-Xray 的 Trojan 有完整的 fallbacks 支持，配置方式完全一致。
-触发回落的条件也与 VLESS 类似：首包长度 < 58 或第 57 个字节不为 `\r`（因为 Trojan 没有协议版本）或身份认证失败。
+Xray's Trojan has full support for fallbacks, and the configuration is identical. The conditions triggering fallback are similar to VLESS: first packet length < 58 or the 57th byte is not `\r` (because Trojan does not have a protocol version) or authentication failure.
 :::
 
 ### ClientObject
@@ -53,18 +51,18 @@ Xray 的 Trojan 有完整的 fallbacks 支持，配置方式完全一致。
 
 > `password`: string
 
-必填，任意字符串。
+Required. Any string.
 
 > `email`: string
 
-邮件地址，可选，用于标识用户
+Email address. Optional. Used to identify the user.
 
 ::: danger
-如果存在多个 ClientObject, 请注意 email 不可以重复。
+If there are multiple `ClientObject`s, please make sure that the email addresses are not duplicated.
 :::
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
 
-userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+The value of `level` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.

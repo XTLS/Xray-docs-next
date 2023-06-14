@@ -1,30 +1,30 @@
 # Shadowsocks
 
-[Shadowsocks](https://zh.wikipedia.org/wiki/Shadowsocks) 协议，兼容大部分其它版本的实现。
+The [Shadowsocks](https://en.wikipedia.org/wiki/Shadowsocks) protocol is compatible with most other implementations of Shadowsocks.
 
-目前兼容性如下：
+The current compatibility is as follows:
 
-- 支持 TCP 和 UDP 数据包转发，其中 UDP 可选择性关闭；
-- 推荐的加密方式：
+- Supports TCP and UDP packet forwarding, with the option to selectively disable UDP.
+- Recommended encryption methods:
   - 2022-blake3-aes-128-gcm
   - 2022-blake3-aes-256-gcm
   - 2022-blake3-chacha20-poly1305
-- 其他加密方式
+  - Other encryption methods:
   - aes-256-gcm
   - aes-128-gcm
-  - chacha20-poly1305 或称 chacha20-ietf-poly1305
-  - xchacha20-poly1305 或称 xchacha20-ietf-poly1305
-  - none 或 plain
+  - chacha20-poly1305 or chacha20-ietf-poly1305
+  - xchacha20-poly1305 or xchacha20-ietf-poly1305
+  - none or plain
 
-Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，解决了旧协议的以下安全问题：
+The Shadowsocks 2022 new protocol format improves performance and includes complete replay protection, addressing the following security issues in the old protocol:
 
-- [Shadowsocks AEAD 加密方式设计存在严重漏洞，无法保证通信内容的可靠性](https://github.com/shadowsocks/shadowsocks-org/issues/183)
-- 原有 TCP 重放过滤器误报率随时间增加
-- 没有 UDP 重放保护
-- 可用于主动探测的 TCP 行为
+- [Serious vulnerabilities in Shadowsocks AEAD encryption, which cannot guarantee the integrity of the communication content](https://github.com/shadowsocks/shadowsocks-org/issues/183)
+- Increasing false positive rate of the original TCP replay filter over time
+- Lack of UDP replay protection
+- TCP behaviors that can be used for active probing
 
 ::: danger
-"none" 不加密方式下流量将明文传输。为确保安全性, 不要在公共网络上使用。
+Traffic transmitted without encryption using the "none" method will be in plain text. Do not use it on public networks for security reasons.
 :::
 
 ## InboundConfigurationObject
@@ -32,7 +32,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 ```json
 {
   "settings": {
-    "password": "密码",
+    "password": "password",
     "method": "aes-256-gcm",
     "level": 0,
     "email": "love@xray.com",
@@ -43,7 +43,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 > `network`: "tcp" | "udp" | "tcp,udp"
 
-可接收的网络协议类型。比如当指定为 `"tcp"` 时，仅会接收 TCP 流量。默认值为 `"tcp"`。
+The supported network protocol type. For example, when specified as `"tcp"`, it will only handle TCP traffic. The default value is `"tcp"`.
 
 ## ClientObject
 
@@ -58,36 +58,36 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 > `method`: string
 
-必填。
+Required.
 
 > `password`: string
 
-必填。
+Required.
 
 - Shadowsocks 2022
 
-使用与 WireGuard 类似的预共享密钥作为密码。
+Use a pre-shared key similar to WireGuard as the password.
 
-使用 `openssl rand -base64 <长度>` 以生成与 shadowsocks-rust 兼容的密钥，长度取决于所使用的加密方法。
+Use `openssl rand -base64 <length>` to generate a compatible key with shadowsocks-rust, where the length depends on the encryption method used.
 
-| 加密方法                      | 密钥长度 |
-| ----------------------------- | -------: |
-| 2022-blake3-aes-128-gcm       |       16 |
-| 2022-blake3-aes-256-gcm       |       32 |
-| 2022-blake3-chacha20-poly1305 |       32 |
+| Encryption Method             | Key Length |
+| ----------------------------- | ---------: |
+| 2022-blake3-aes-128-gcm       |         16 |
+| 2022-blake3-aes-256-gcm       |         32 |
+| 2022-blake3-chacha20-poly1305 |         32 |
 
-在 Go 实现中，32 位密钥始终工作。
+In the Go implementation, a 32-byte key always works.
 
-- 其他加密方法
+- Other encryption methods
 
-任意字符串。 不限制密码长度，但短密码会更可能被破解，建议使用 16 字符或更长的密码。
+Any string. There is no limitation on the password length, but shorter passwords are more susceptible to cracking. It is recommended to use a password of 16 characters or longer.
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
 
-`level` 的值, 对应 [policy](../policy.md#levelpolicyobject) 中 `level` 的值。 如不指定, 默认为 0。
+The value of `level` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
 
 > `email`: string
 
-用户邮箱，用于区分不同用户的流量（日志、统计）。
+The user's email, used to differentiate traffic from different users (logs, statistics).

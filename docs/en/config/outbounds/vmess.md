@@ -1,9 +1,9 @@
 # VMess
 
-[VMess](../../development/protocols/vmess.md) 是一个加密传输协议，通常作为 Xray 客户端和服务器之间的桥梁。
+[VMess](../../development/protocols/vmess.md) is an encrypted transport protocol commonly used as a bridge between Xray clients and servers.
 
 ::: danger
-VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在 90 秒之内，时区无关。在 Linux 系统中可以安装`ntp`服务来自动同步系统时间。
+VMess relies on system time. Please ensure that the UTC time of your system, when using Xray, has an error within 90 seconds, regardless of the time zone. On Linux systems, you can install the `ntp` service to automatically synchronize the system time.
 :::
 
 ## OutboundConfigurationObject
@@ -29,9 +29,9 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 > `vnext`：\[ [ServerObject](#serverobject) \]
 
-一个数组，包含一组的服务端配置.
+An array containing a set of server configurations.
 
-其中每一项是一个服务端配置[ServerObject](#serverobject)。
+Each item in the array is a server configuration [ServerObject](#serverobject).
 
 ### ServerObject
 
@@ -45,17 +45,17 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 > `address`: address
 
-服务端地址，支持 IP 地址或者域名。
+The server address, which can be an IP address or domain name.
 
 > `port`: number
 
-服务端监听的端口号, 必填。
+The port number that the server is listening on. Required.
 
 > `users`: \[ [UserObject](#userobject) \]
 
-一个数组，代表一组服务端认可的用户.
+An array representing a group of users authorized by the server.
 
-其中每一项是一个用户[UserObject](#userobject)。
+Each item is a user configuration [UserObject](#userobject).
 
 #### UserObject
 
@@ -68,57 +68,51 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 }
 ```
 
-> `id`：string
+> `id`: string
 
-Vmess 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是一个合法的 UUID.
+The user ID for VMess, which can be any string less than 30 bytes or a valid UUID.
 
-自定义字符串和其映射的 UUID 是等价的, 这意味着你将可以这样在配置文件中写 id 来标识同一用户,即
+Custom strings and their corresponding UUIDs are equivalent. This means that you can use either a custom string or its corresponding UUID to identify the same user in the configuration file. For example:
 
-- 写 `"id": "我爱🍉老师1314"`,
-- 或写 `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (此 UUID 是 `我爱🍉老师1314` 的 UUID 映射)
+- Write `"id": "我爱🍉老师1314"`,
+- Or write `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (this UUID is the mapping of the custom string "我爱 🍉 老师 1314")
 
-其映射标准在 [VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
+The mapping standard is described in the [VLESS UUID Mapping Standard: Mapping a Custom String to a UUIDv5](https://github.com/XTLS/Xray-core/issues/158).
 
-你可以使用命令 `xray uuid -i "自定义字符串"` 生成自定义字符串所映射的的 UUID, 也可以使用命令 `xray uuid` 生成随机的 UUID。
+You can use the command `xray uuid -i "custom string"` to generate the UUID corresponding to a custom string, or use the command `xray uuid` to generate a random UUID.
 
 > `alterId`：number
 
-为了进一步防止被探测，一个用户可以在主 ID 的基础上，再额外生成多个 ID。这里只需要指定额外的 ID 的数量，推荐值为 0 代表启用 VMessAEAD。
-最大值 65535。这个值不能超过服务器端所指定的值。
+To further prevent detection, a user can generate additional IDs in addition to the main ID. Here, you only need to specify the number of additional IDs. The recommended value is 0, which means VMessAEAD is enabled. The maximum value is 65535. This value cannot exceed the value specified on the server side.
 
-不指定的话，默认值是 0。
+If not specified, the default value is 0.
 
-::: tip
-客户端 AlterID 设置为 0 代表启用 VMessAEAD ；服务端为自动适配，可同时兼容启用和未开启 VMessAEAD 的客户端。
-客户端可通过设置环境变量 `Xray_VMESS_AEAD_DISABLED=true` 强行禁用 VMessAEAD
-:::
+::: tip Setting the client's AlterID to 0 enables VMessAEAD. The server automatically adapts and can simultaneously be compatible with clients that have enabled or disabled VMessAEAD. The client can forcefully disable VMessAEAD by setting the environment variable `Xray_VMESS_AEAD_DISABLED=true`. :::
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+The user level. Connections will use the corresponding [local policy](../policy.md#levelpolicyobject) associated with this user level.
 
-level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+The `level` value corresponds to the `level` value in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
 
 > `security`: "aes-128-gcm" | "chacha20-poly1305" | "auto" | "none" | "zero"
 
-加密方式，客户端将使用配置的加密方式发送数据，服务器端自动识别，无需配置。
+The encryption method. The client will use the configured encryption method to send data, and the server will automatically recognize it without the need for configuration.
 
-- `"aes-128-gcm"`：推荐在 PC 上使用
-- `"chacha20-poly1305"`：推荐在手机端使用
-- `"auto"`：默认值，自动选择（运行框架为 AMD64、ARM64 或 s390x 时为 aes-128-gcm 加密方式，其他情况则为 Chacha20-Poly1305 加密方式）
-- `"none"`：不加密
-
-* `"zero"`：不加密，也不进行消息认证 (v1.4.0+)
+- `"aes-128-gcm"`: Recommended for use on PCs.
+- `"chacha20-poly1305"`: Recommended for use on mobile devices.
+- `"auto"`: Default value. Automatically selects the encryption method (uses aes-128-gcm when running on AMD64, ARM64, or s390x architecture, and Chacha20-Poly1305 in other cases).
+- `"none"`: No encryption.
+- `"zero"`: No encryption and no message authentication (v1.4.0+).
 
 ::: tip
-推荐使用`"auto"`加密方式，这样可以永久保证安全性和兼容性。
+It is recommended to use the `"auto"` encryption method as it ensures long-term security and compatibility.
 
-`"none"` 伪加密方式会计算并验证数据包的校验数据，由于认证算法没有硬件支持，在部分平台可能速度比有硬件加速的 `"aes-128-gcm"` 还慢。
+The `"none"` pseudo-encryption method calculates and verifies the packet's checksum. However, due to the lack of hardware support for the authentication algorithm, it may be slower than the hardware-accelerated `"aes-128-gcm"` on some platforms.
 
-`"zero"` 伪加密方式不会加密消息也不会计算数据的校验数据，因此理论上速度会高于其他任何加密方式。实际速度可能受到其他因素影响。
+The `"zero"` pseudo-encryption method neither encrypts the message nor calculates the checksum, theoretically providing higher speed than any other encryption method. The actual speed may be influenced by other factors.
 
-不推荐在未开启 TLS 加密并强制校验证书的情况下使用 `"none"` `"zero"` 伪加密方式。
-如果使用 CDN 或其他会解密 TLS 的中转平台或网络环境建立连接，不建议使用 `"none"` `"zero"` 伪加密方式。
+It is not recommended to use the `"none"` or `"zero"` pseudo-encryption methods without enabling TLS encryption and forcibly verifying certificates. If you use a CDN or other intermediate platforms or network environments that decrypt TLS connections, it is not recommended to use the `"none"` or `"zero"` pseudo-encryption methods.
 
-无论使用哪种加密方式， VMess 的包头都会受到加密和认证的保护。
+Regardless of the encryption method used, the VMess packet header is protected by encryption and authentication.
 :::

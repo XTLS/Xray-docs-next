@@ -1,9 +1,9 @@
 # Trojan
 
-[Trojan](https://trojan-gfw.github.io/trojan/protocol) 协议
+[Trojan](https://trojan-gfw.github.io/trojan/protocol) protocol
 
 ::: danger
-Trojan 被设计工作在正确配置的加密 TLS 隧道
+Trojan is designed to work with correctly configured encrypted TLS tunnels.
 :::
 
 ## OutboundConfigurationObject
@@ -24,7 +24,7 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 > `servers`: \[ [ServerObject](#serverobject) \]
 
-一个数组，其中每一项是一个 [ServerObject](#serverobject)。
+An array representing a list of servers, where each item is a [ServerObject](#serverobject).
 
 ### ServerObject
 
@@ -40,22 +40,22 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 > `address`: address
 
-服务端地址，支持 IPv4、IPv6 和域名。必填。
+The server address, which can be an IPv4, IPv6, or domain name. Required.
 
 > `port`: number
 
-服务端端口，通常与服务端监听的端口相同。
+The server port, usually the same port that the server is listening on.
 
 > `password`: string
 
-密码. 必填，任意字符串。
+The password for authentication. Required. It can be any string.
 
 > `email`: string
 
-邮件地址，可选，用于标识用户
+The email address, optional, used to identify the user.
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+The user level. Connections will use the corresponding [local policy](../policy.md#levelpolicyobject) associated with this user level.
 
-level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+The `level` value corresponds to the `level` value in the [policy](../policy.md#policyobject). If not specified, the default value is 0.

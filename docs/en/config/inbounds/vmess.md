@@ -1,9 +1,9 @@
 # VMess
 
-[VMess](../../development/protocols/vmess.md) 是一个加密传输协议，通常作为 Xray 客户端和服务器之间的桥梁。
+[VMess](../../development/protocols/vmess.md) is an encrypted transport protocol that is commonly used as a bridge between Xray clients and servers.
 
 ::: danger
-VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在 90 秒之内，时区无关。在 Linux 系统中可以安装`ntp`服务来自动同步系统时间。
+VMess relies on system time. Please ensure that the system UTC time used by Xray is within 90 seconds of the actual time, regardless of time zone. On Linux systems, you can install the `ntp` service to automatically synchronize the system time.
 :::
 
 ## InboundConfigurationObject
@@ -31,28 +31,28 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 > `clients`: \[ [ClientObject](#clientobject) \]
 
-一个数组，代表一组服务端认可的用户.
+An array representing a group of users approved by the server.
 
-其中每一项是一个用户[ClientObject](#clientobject)。
+Each item in the array is a user [ClientObject](#clientobject).
 
-当此配置用作动态端口时，Xray 会自动创建用户。
+When this configuration is used for dynamic ports, Xray will automatically create users.
 
 > `detour`: [DetourObject](#detourobject)
 
-指示对应的出站协议使用另一个服务器。
+Indicates that another server should be used for the corresponding outbound protocol.
 
 > `default`: [DefaultObject](#defaultobject)
 
-可选，clients 的默认配置。仅在配合`detour`时有效。
+Optional. The default configuration for clients. Only effective when used with `detour`.
 
 > `disableInsecureEncryption`: true | false
 
-是否禁止客户端使用不安全的加密方式，如果设置为 true 当客户端指定下列加密方式时，服务器会主动断开连接。
+Whether to disable the use of insecure encryption methods by clients. If set to true, the server will actively disconnect the connection when the client specifies the following encryption methods:
 
 - `"none"`
 - `"aes-128-cfb"`
 
-默认值为`false`。
+The default value is `false`.
 
 ### ClientObject
 
@@ -67,42 +67,39 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 > `id`: string
 
-Vmess 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是一个合法的 UUID.
+The user ID for VMess. It can be any string less than 30 bytes or a valid UUID.
 
 ::: tip
-自定义字符串和其映射的 UUID 是等价的, 这意味着你将可以这样在配置文件中写 id 来标识同一用户,即
+Custom strings and their corresponding UUIDs are equivalent, which means you can use either of the following in the configuration file to identify the same user:
 
-- 写 `"id": "我爱🍉老师1314"`,
-- 或写 `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (此 UUID 是 `我爱🍉老师1314` 的 UUID 映射)  
-  :::
+- `"id": "我爱🍉老师1314"`
+- `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (This UUID is the mapping of the string "我爱 🍉 老师 1314")
 
-其映射标准在 [VLESS UUID 映射标准：将自定义字符串映射为一个 UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
+The mapping standard is described in the [VLESS UUID Mapping Standard: Mapping a Custom String to a UUIDv5](https://github.com/XTLS/Xray-core/issues/158).
 
-你可以使用命令 `xray uuid -i "自定义字符串"` 生成自定义字符串所映射的的 UUID。
+You can use the command `xray uuid -i "custom string"` to generate the UUID corresponding to a custom string.
 
-> 也可以使用命令 `xray uuid` 生成随机的 UUID.
+You can also use the command `xray uuid` to generate a random UUID. :::
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
 
-level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+The value of `level` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
 
 > `alterId`: number
 
-为了进一步防止被探测，一个用户可以在主 ID 的基础上，再额外生成多个 ID。这里只需要指定额外的 ID 的数量，推荐值为 0 代表启用 VMessAEAD。
-最大值 65535。这个值不能超过服务器端所指定的值。
+To further prevent detection, a user can generate additional IDs in addition to the main ID. Here, you only need to specify the number of additional IDs. The recommended value is 0, which means enabling VMessAEAD. The maximum value is 65535. This value cannot exceed the value specified on the server side.
 
-不指定的话，默认值是 0。
+If not specified, the default value is 0.
 
 ::: tip
-客户端 AlterID 设置为 0 代表启用 VMessAEAD ；服务端为自动适配，可同时兼容启用和未开启 VMessAEAD 的客户端。
-客户端可通过设置环境变量 `Xray_VMESS_AEAD_DISABLED=true` 强行禁用 VMessAEAD
+Setting the client's AlterID to 0 means enabling VMessAEAD. The server automatically adapts to both clients with VMessAEAD enabled and disabled. Clients can force disable VMessAEAD by setting the environment variable `Xray_VMESS_AEAD_DISABLED=true`.
 :::
 
 > `email`: string
 
-用户邮箱地址，用于区分不同用户的流量。
+The user's email address, used to differentiate traffic from different users.
 
 ### DetourObject
 
@@ -114,7 +111,7 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 > `to`: string
 
-一个 inbound 的`tag`, 指定的 inbound 的必须是使用 VMess 协议的 inbound.
+The `tag` of an inbound that specifies the inbound using the VMess protocol.
 
 ### DefaultObject
 
@@ -127,38 +124,36 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
 
-level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+The value of `level` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
 
 > `alterId`: number
 
-动态端口的默认`alterId`，默认值为`0`。
+The default `alterId` for dynamic ports. The default value is 0.
 
-## VMess MD5 认证信息 玷污机制
+## VMess MD5 Authentication Tainting Mechanism
 
-为了进一步对抗可能的探测和封锁，每个 VMess 认证数据的服务端结构都会包含一个一次写入的玷污状态标记，初始状态为无瑕状态，当服务器检测到重放探测时或者因为其他原因入站连接出错以致校验数据不正确时，该连接所对应的请求认证数据会被玷污。
+To further combat possible detection and blocking, the server-side structure of each VMess authentication data includes a one-time writable taint status flag. The initial state is an untainted state. When the server detects replay attacks or the inbound connection encounters errors that result in incorrect verification data, the authentication data corresponding to that connection will be tainted.
 
-被玷污的认证数据无法被用于建立连接，当攻击者或客户端使用被玷污的认证数据建立连接时，服务器会输出包含 `invalid user` `ErrTainted` 的错误信息，并阻止该连接。
+Tainted authentication data cannot be used to establish a connection. When an attacker or client uses tainted authentication data to establish a connection, the server will output an error message containing `invalid user` and `ErrTainted`, and block the connection.
 
-当服务器没有受到重放攻击时，该机制对正常连接的客户端没有影响。
-
-如果服务器正在被重放攻击，可能会出现连接不稳定的情况。
+This mechanism has no impact on normal clients when the server is not subjected to replay attacks.
 
 ::: tip
-拥有服务器 UUID 以及其他连接数据的恶意程序可能根据此机制对服务器发起拒绝服务攻击，受到此类攻击的服务可以通过修改 `proxy/vmess/validator.go` 文件中 `func (v \*TimedUserValidator) BurnTaintFuse(userHash []byte) error` 函数的 `atomic.CompareAndSwapUint32(pair.taintedFuse, 0, 1)` 语句为 `atomic.CompareAndSwapUint32(pair.taintedFuse, 0, 0)` 来解除服务器对此类攻击的安全保护机制。使用 VMessAEAD 认证机制的客户端不受到 VMess MD5 认证信息 玷污机制 的影响。
+Malicious programs that have the server UUID and other connection data may launch denial-of-service attacks against the server based on this mechanism. Services that are targeted by such attacks can disable the server's security protection against such attacks by modifying the `atomic.CompareAndSwapUint32(pair.taintedFuse, 0, 1)` statement in the `func (v *TimedUserValidator) BurnTaintFuse(userHash []byte) error` function in the `proxy/vmess/validator.go` file to `atomic.CompareAndSwapUint32(pair.taintedFuse, 0, 0)`. Clients using the VMessAEAD authentication mechanism are not affected by the VMess MD5 authentication tainting mechanism.
 :::
 
-## VMess MD5 认证信息 淘汰机制
+## VMess MD5 Authentication Elimination Mechanism
 
-VMess MD5 认证信息 的淘汰机制已经启动。
+The elimination mechanism for VMess MD5 authentication has been activated.
 
-自 2022 年 1 月 1 日起，服务器端默认禁用对于 MD5 认证信息 的兼容。任何使用 MD5 认证信息的客户端将无法连接到禁用 VMess MD5 认证信息的服务器端。
+Starting from January 1, 2022, the server-side compatibility for MD5 authentication is disabled by default. Any client using MD5 authentication will be unable to connect to servers that have disabled VMess MD5 authentication.
 
 ::: tip
-在服务器端可以通过设置环境变量 xray.vmess.aead.forced=true 以关闭对于 MD5 认证信息的兼容，或者 xray.vmess.aead.forced=false 以强制开启对于 MD5 认证信息 认证机制的兼容（不受到 2022 年自动禁用机制的影响）。
+On the server side, you can disable the automatic disabling of MD5 authentication by setting the environment variable `xray.vmess.aead.forced=true`, or force enable compatibility with the MD5 authentication mechanism by setting `xray.vmess.aead.forced=false` (not affected by the automatic disabling mechanism in 2022).
 :::
 
 ::: tip
-如无兼容旧客户端必要，应在服务端配置移除 `"alterID"` 参数。
+If there is no need to support old clients, the `"alterID"` parameter should be removed from the server-side configuration.
 :::

@@ -1,6 +1,6 @@
 # Blackhole
 
-Blackhole（黑洞）是一个出站数据协议，它会阻碍所有数据的出站，配合 [路由配置](../routing.md) 一起使用，可以达到禁止访问某些网站的效果。
+Blackhole is an outbound data protocol that blocks all outbound data. When used in conjunction with [routing configurations](../routing.md), it can be used to block access to certain websites.
 
 ## OutboundConfigurationObject
 
@@ -14,10 +14,9 @@ Blackhole（黑洞）是一个出站数据协议，它会阻碍所有数据的�
 
 > `response`: [ResponseObject](#responseobject)
 
-配置黑洞的响应数据。
+Configures the response data for the blackhole.
 
-Blackhole 会在收到待转发数据之后，发送指定的响应数据，然后关闭连接，待转发的数据将被丢弃。
-如不指定此项，Blackhole 将直接关闭连接。
+After receiving the data to be forwarded, the blackhole will send the specified response data and then close the connection. The data to be forwarded will be discarded. If this field is not specified, the blackhole will simply close the connection.
 
 ### ResponseObject
 
@@ -29,6 +28,6 @@ Blackhole 会在收到待转发数据之后，发送指定的响应数据，然�
 
 > `type`: "http" | "none"
 
-当 `type` 为 `"none"`（默认值）时，Blackhole 将直接关闭连接。
+When `type` is set to `"none"` (default value), the blackhole will simply close the connection.
 
-当 `type` 为 `"http"` 时，Blackhole 会发回一个简单的 HTTP 403 数据包，然后关闭连接。
+When `type` is set to `"http"`, the blackhole will send a simple HTTP 403 packet as the response and then close the connection.
