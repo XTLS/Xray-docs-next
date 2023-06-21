@@ -176,15 +176,15 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 
 一个字符串数组，指定了 TLS 握手时指定的 ALPN 数值。默认值为 `["h2", "http/1.1"]`。
 
-> `minVersion`: \[ string \]
+> `minVersion`: string
 
-minVersion 为可接受的最小 SSL/TLS 版本。
+minVersion 为可接受的最小 TLS 版本。
 
-> `maxVersion`: \[ string \]
+> `maxVersion`: string
 
-maxVersion 为可接受的最大 SSL/TLS 版本。
+maxVersion 为可接受的最大 TLS 版本。
 
-> `cipherSuites`: \[ string \]
+> `cipherSuites`: string
 
 CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之间用:进行分隔.
 
