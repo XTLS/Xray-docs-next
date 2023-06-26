@@ -164,7 +164,7 @@ The `sniffing` option in the inbound proxy must be enabled to detect the protoco
 
 `attrs`: object
 
-A json object with string keys and values, used to detect the HTTP headers of the traffic. It matches when all specified keys exist in the header and corresponding values are a substring of the header value, case in-sensitive.
+A json object with string keys and values, used to detect the HTTP headers of the traffic. It matches when all specified keys exist in the header and corresponding values are a substring of the header value. The key is case in-sensitive. You can use regex to match with value.
 
 Currently, only the inbound HTTP proxy sets this attribute.
 
