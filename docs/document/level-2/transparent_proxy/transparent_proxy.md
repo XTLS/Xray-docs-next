@@ -197,7 +197,16 @@ iptables -t mangle -A PREROUTING -j XRAY
 
 我们平时用的 DNS 一般来自路由器，但这个 iptables 规则只代理了局域网中的设备，却没有代理网关本机，这样返回的 DNS 查询结果可能是错误的或者污染的。
 
-iptables-tproxy 不支持对`OUTPUT链`操作，但是`Netfilter`有个特性，在`OUTPUT链`给包打标记为`1`后相应的包会重路由到`PREROUTING链`上。所以我们就给网关本机需要代理的请求在`OUTPUT链`上标记`1`即可。
+iptables-tproxy 不支持对`OUTPUT链`操作，但是我们可以通过配置`策略路由`，把`OUTPUT链`中相应的包重新路由到`PREROUTING链`上。
+
+```bash
+# 添加策略路由: 标记为1的包，走路由表100
+ip rule add fwmark 1 table 100 
+# 添加路由条目到路由表100: 所有包路由到本地
+ip route add local 0.0.0.0/0 dev lo table 100
+```
+
+通过配置上述`策略路由`，我们只需要在`OUTPUT链`中给包打标记为`1`，相应的包就会路由到网关本机，即`PREROUTING链`上。所以我们就给网关本机需要代理的请求在`OUTPUT链`上标记`1`即可。
 
 如果要代理网关本机发出的的全部请求，就会引入一个问题，Xray 运行在网关，Xray 向代理服务端发送请求，这个请求又被代理了，就形成了回环。
 
