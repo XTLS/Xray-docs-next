@@ -12,7 +12,8 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 {
   "network": "tcp",
   "address": "1.1.1.1",
-  "port": 53
+  "port": 53,
+  "nonIPQuery": "drop"
 }
 ```
 
@@ -27,5 +28,9 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 > `port`: number
 
 修改 DNS 服务器端口。当不指定时，保持来源中指定的端口不变。
+
+> `nonIPQuery`: string
+
+控制非 IP 查询（非 A 和 AAAA），`"drop"` 丢弃或者 `"skip"` 不由内置 DNS 服务器处理，将转发给目标。默认为 `"drop"`。
 
 ## DNS 配置实例 <Badge text="WIP" type="warning"/>

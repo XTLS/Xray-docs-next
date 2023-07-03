@@ -12,7 +12,8 @@ When handling DNS queries, this outbound protocol will forward IP queries (A and
 {
   "network": "tcp",
   "address": "1.1.1.1",
-  "port": 53
+  "port": 53,
+  "nonIPQuery": "drop"
 }
 ```
 
@@ -27,5 +28,9 @@ Modifies the DNS server address. When not specified, the original address specif
 > `port`: number
 
 Modifies the DNS server port. When not specified, the original port specified in the source will be retained.
+
+> `nonIPQuery`: string
+
+Control non IP queries (neither A or AAAA), `"drop"` this request or `"skip"` processing in DNS module，the request will be forwarded to target. By default is `"drop"`.
 
 ## DNS Configuration Example <Badge text="WIP" type="warning"/>
