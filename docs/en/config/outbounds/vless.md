@@ -6,7 +6,7 @@ Currently, VLESS does not have built-in encryption, please use it on a reliable 
 
 VLESS is a stateless lightweight transport protocol, which is divided into inbound and outbound parts, and can be used as a bridge between Xray clients and servers.
 
-Unlike [VMess](./vmess.md), VLESS does not rely on system time, and the authentication method is also UUID, but it does not require alterId.
+Unlike [VMess](./vmess.md), VLESS does not rely on system time, and the authentication method is also UUID.
 
 ## OutboundConfigurationObject
 

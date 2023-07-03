@@ -3,7 +3,7 @@
 [VMess](../../development/protocols/vmess.md) is an encrypted transport protocol commonly used as a bridge between Xray clients and servers.
 
 ::: danger
-VMess relies on system time. Please ensure that the UTC time of your system, when using Xray, has an error within 90 seconds, regardless of the time zone. On Linux systems, you can install the `ntp` service to automatically synchronize the system time.
+VMess relies on system time. Please ensure that the UTC time of your system, when using Xray, has an error within 120 seconds, regardless of the time zone. On Linux systems, you can install the `ntp` service to automatically synchronize the system time.
 :::
 
 ## OutboundConfigurationObject
@@ -17,7 +17,6 @@ VMess relies on system time. Please ensure that the UTC time of your system, whe
       "users": [
         {
           "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-          "alterId": 0,
           "security": "auto",
           "level": 0
         }
@@ -62,7 +61,6 @@ Each item is a user configuration [UserObject](#userobject).
 ```json
 {
   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-  "alterId": 0,
   "security": "auto",
   "level": 0
 }
@@ -80,14 +78,6 @@ Custom strings and their corresponding UUIDs are equivalent. This means that you
 The mapping standard is described in the [VLESS UUID Mapping Standard: Mapping a Custom String to a UUIDv5](https://github.com/XTLS/Xray-core/issues/158).
 
 You can use the command `xray uuid -i "custom string"` to generate the UUID corresponding to a custom string, or use the command `xray uuid` to generate a random UUID.
-
-> `alterId`：number
-
-To further prevent detection, a user can generate additional IDs in addition to the main ID. Here, you only need to specify the number of additional IDs. The recommended value is 0, which means VMessAEAD is enabled. The maximum value is 65535. This value cannot exceed the value specified on the server side.
-
-If not specified, the default value is 0.
-
-::: tip Setting the client's AlterID to 0 enables VMessAEAD. The server automatically adapts and can simultaneously be compatible with clients that have enabled or disabled VMessAEAD. The client can forcefully disable VMessAEAD by setting the environment variable `Xray_VMESS_AEAD_DISABLED=true`. :::
 
 > `level`: number
 
