@@ -8,7 +8,12 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
 {
   "domainStrategy": "AsIs",
   "redirect": "127.0.0.1:3366",
-  "userLevel": 0
+  "userLevel": 0,
+  "fragment": {
+    "packets": "tlshello",
+    "length": "100-200",
+    "interval": "10-20" // ms
+  }
 }
 ```
 
@@ -40,3 +45,13 @@ When the address is not specified, such as `":443"`, Freedom will not modify the
 User level. The connection will use the corresponding [local policy](../policy.md#levelpolicyobject) for this user level.
 
 The value of `userLevel` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
+
+> `fragment`: map
+
+A key-value map used to control TCP fragmentation，under some circumstances it can cheat the censor syetem, like bypass a SNI blacklist.
+
+`"packets"`：support two different methods. "1-3" is for segmentation at TCP layer, "tlshello" is for TLS client hello packet fragmentation
+
+`"length"`: length to make the cut
+
+`"interval"`: time between fragments（ms）

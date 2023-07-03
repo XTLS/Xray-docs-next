@@ -8,7 +8,12 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
 {
   "domainStrategy": "AsIs",
   "redirect": "127.0.0.1:3366",
-  "userLevel": 0
+  "userLevel": 0,
+  "fragment": {
+    "packets": "tlshello",
+    "length": "100-200",
+    "interval": "10-20" // ms
+  }
 }
 ```
 
@@ -42,3 +47,13 @@ Freedom 会强制将所有数据发送到指定地址（而不是 inbound 指定
 用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
 userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+
+> `fragment`: map
+
+一些键值对配置项，用于控制发出的 TCP 分片，在某些情况下可以欺骗审查系统，比如绕过 SNI 黑名单。
+
+`"packets"`：支持两种分片方式 "1-3" 是 TCP 的流切片，"tlshello" 是 TLS 握手包切片
+
+`"length"`：分片包长
+
+`"interval"`：分片间隔（ms）
