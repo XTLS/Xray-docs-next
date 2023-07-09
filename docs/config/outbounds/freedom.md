@@ -54,6 +54,6 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值�
 
 `"packets"`：支持两种分片方式 "1-3" 是 TCP 的流切片，"tlshello" 是 TLS 握手包切片
 
-`"length"`：分片包长
+`"length"`：分片包长 (byte)
 
 `"interval"`：分片间隔（ms）
