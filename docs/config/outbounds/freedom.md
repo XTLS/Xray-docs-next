@@ -52,7 +52,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值�
 
 一些键值对配置项，用于控制发出的 TCP 分片，在某些情况下可以欺骗审查系统，比如绕过 SNI 黑名单。
 
-`"packets"`：支持两种分片方式 "1-3" 是 TCP 的流切片，"tlshello" 是 TLS 握手包切片
+`"packets"`：支持两种分片方式 "1-3" 是 TCP 的流切片，应用于客户端第 1 至第 3 次写数据。"tlshello" 是 TLS 握手包切片。
 
 `"length"`：分片包长
 
