@@ -13,6 +13,7 @@
   - aes-256-gcm
   - aes-128-gcm
   - chacha20-poly1305 或称 chacha20-ietf-poly1305
+  - xchacha20-poly1305 或称 xchacha20-ietf-poly1305
   - none 或 plain
 
 Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，解决了旧协议的以下安全问题：
@@ -37,6 +38,8 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
       "port": 1234,
       "method": "加密方式",
       "password": "密码",
+      "uot": true,
+      "UoTVersion": 2,
       "level": 0
     }
   ]
@@ -57,6 +60,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
   "method": "加密方式",
   "password": "密码",
   "uot": true,
+  "UoTVersion": 2,
   "level": 0
 }
 ```
@@ -83,7 +87,13 @@ Shadowsocks 服务端端口。必填。
 
 > `uot`: bool
 
-当开启后，会启用`udp over tcp`。
+启用`udp over tcp`。
+
+> `UoTVersion`: number
+
+`UDP over TCP` 的实现版本。
+
+当前可选值：`1`, `2`
 
 - Shadowsocks 2022
 
