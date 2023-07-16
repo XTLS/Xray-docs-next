@@ -24,6 +24,7 @@
     }
   ],
   "mtu": 1420, // optional, default 1420
+  "reserved": [1, 2, 3],
   "workers": 2 // optional, default runtime.NumCPU()
 }
 ```
@@ -42,11 +43,15 @@ Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址�
 
 > `mtu`: int
 
-Wireguard 底层 tun 的分片大小
+Wireguard 底层 tun 的分片大小。
+
+> `reserved` \[ number \]
+
+Wireguard 保留字节。
 
 > `workers`: int
 
-Wireguard 使用线程数
+Wireguard 使用线程数。
 
 > `peers`: \[ [Peers](#peers) \]
 
