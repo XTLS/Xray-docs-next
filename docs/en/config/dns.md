@@ -82,7 +82,7 @@ A list of static IP addresses, with values consisting of a series of "domain": "
 The domain name can take several forms:
 
 - Plain string: When this string matches the target domain name exactly, the rule takes effect. For example, "xray.com" matches "xray.com" but not "www.xray.com".
-- Regular expression: Starting with `"regexp:"`, the rest is a regular expression. When this regular expression matches the target domain name, the rule takes effect. For example, "regexp:\\.goo.\*\\.com$" matches "www.google.com" and "fonts.googleapis.com", but not "google.com".
+- Regular expression: Starting with `"regexp:"`, the rest is a regular expression. When this regular expression matches the target domain name, the rule takes effect. For example, "regexp:\\\\.goo.\*\\\\.com$" matches "www.google.com" and "fonts.googleapis.com", but not "google.com".
 - Subdomain (recommended): Starting with `"domain:"`, the rest is a domain name. When this domain name is the target domain name or its subdomain, the rule takes effect. For example, "domain:xray.com" matches "www.xray.com" and "xray.com", but not "wxray.com".
 - Substring: Starting with `"keyword:"`, the rest is a string. When this string matches any part of the target domain name, the rule takes effect. For example, "keyword:sina.com" can match "sina.com", "sina.com.cn", and "www.sina.com", but not "sina.cn".
 - Predefined domain name list: Starting with `"geosite:"`, the rest is a name, such as `geosite:google` or `geosite:cn`. The names and domain name lists are listed in [Predefined Domain Name Lists](#predefined-domain-name-lists).
