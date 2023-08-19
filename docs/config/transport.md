@@ -638,6 +638,8 @@ TCP 空闲时间阈值，单位为秒。当 TCP 连接空闲时间达到这个�
 
 > `tcpUserTimeout`: number
 
+单位为毫秒。
+
 > `tcpcongestion`: ""
 
 TCP 拥塞控制算法。仅支持 Linux。
