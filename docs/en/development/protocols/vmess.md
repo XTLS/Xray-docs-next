@@ -144,7 +144,7 @@ The header data is encrypted using AES-128-CFB encryption. The IV is MD5 of the 
 | ------------------------- | ---------- | ----------- | ---------------- | --------------- | -------------------- |
 | Response Authentication V | Option Opt | Command Cmd | Command Length M | Command Content | Actual Response Data |
 
-其中：
+in which：
 
 - Response Authentication V: must match the response authentication V in the client request.
 - Option Opt:
