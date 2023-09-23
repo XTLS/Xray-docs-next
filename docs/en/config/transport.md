@@ -523,4 +523,4 @@ Execute the command `sysctl net.ipv4.tcp_congestion_control` to get the system d
 
 > `interface`: ""
 
-Specifies the name of the bound outbound network interface. Only supported by Linux.
+Specifies the name of the bound outbound network interface. Only supported by Linux,Darwin(MacOS,iOS).
