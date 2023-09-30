@@ -39,7 +39,7 @@ jobs:
       - name: Build for Main Repository
         env:
           XRAY_DOCS_MAIN_REPO: "true"
-          NODE_OPTIONS: "--max_old_space_size=4096"
+          NODE_OPTIONS: "--max_old_space_size=4096 --openssl-legacy-provider"
         run: |
           yarn docs:build
       - name: Deploy to main Repository
