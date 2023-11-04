@@ -93,8 +93,8 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 
 - `/etc/xray/config.json`：配置文件
 - `/usr/bin/xray`：Xray 主程序
-- `/usr/local/share/xray/geoip.dat`：IP 数据文件
-- `/usr/local/share/xray/geosite.dat`：域名数据文件
+- `/usr/share/xray/geoip.dat`：IP 数据文件
+- `/usr/share/xray/geosite.dat`：域名数据文件
 
 # 图形化客户端
 
