@@ -278,7 +278,6 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
   "maxClientVer": "",
   "maxTimeDiff": 0,
   "shortIds": ["", "0123456789abcdef"],
-  "shortId": "",
   "fingerprint": "chrome",
   "serverName": "",
   "publicKey": "",
