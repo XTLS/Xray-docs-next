@@ -111,6 +111,10 @@
 
 其中 `["fakedns+others"]` 相当于 `["http", "tls", "quic", "fakedns"]`，当 IP 地址处于 FakeIP 区间内但没有命中域名记录时会使用 `http`、`tls` 和 `quic` 进行匹配。此项仅在 `metadataOnly` 为 `false` 时有效。
 
+::: tip
+Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进行嗅探用作路由而不想重置目标地址，请在这里添加对应的协议并启用 `routeOnly` 。
+:::
+
 > `metadataOnly`: true | false
 
 当启用时，将仅使用连接的元数据嗅探目标地址。此时，除 `fakedns` 以外的 sniffer 将不能激活（包括 `fakedns+others`）。
