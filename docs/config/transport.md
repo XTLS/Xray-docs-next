@@ -81,7 +81,8 @@
     "domainStrategy": "AsIs",
     "dialerProxy": "",
     "acceptProxyProtocol": false,
-    "tcpKeepAliveInterval": 0
+    "tcpKeepAliveInterval": 0,
+    "V6Only": false
   }
 }
 ```
@@ -497,7 +498,8 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "tcpKeepAliveIdle": 300,
   "tcpUserTimeout": 10000,
   "tcpcongestion": "bbr",
-  "interface": "wg0"
+  "interface": "wg0",
+  "V6Only": false
 }
 ```
 
@@ -659,3 +661,7 @@ TCP 拥塞控制算法。仅支持 Linux。
 > `interface`: ""
 
 指定绑定出口网卡名称 仅支持 linux。
+
+> `V6Only`: true | false
+
+填写 `true` 时，监听 `::` 地址仅接受 IPv6 连接。仅支持 Linux。
