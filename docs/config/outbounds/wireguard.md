@@ -25,7 +25,8 @@
   ],
   "mtu": 1420, // optional, default 1420
   "reserved": [1, 2, 3],
-  "workers": 2 // optional, default runtime.NumCPU()
+  "workers": 2, // optional, default runtime.NumCPU()
+  "domainStrategy": "ForceIPv6v4" // 需要 Xray-core v1.8.6 或更高版本
 }
 ```
 
@@ -56,6 +57,11 @@ Wireguard 使用线程数。
 > `peers`: \[ [Peers](#peers) \]
 
 Wireguard 服务器列表，其中每一项是一个服务器配置。
+
+> `domainStrategy`: "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4" | "ForceIP"
+
+需要 Xray-core v1.8.6 或更高版本。<br>
+当接收到的请求是域名时，使用[内置 DNS 服务器](./dns.md)解析获取 IP 后, 将此 IP 通过 wireguard 发出连接。
 
 ### Peers
 
