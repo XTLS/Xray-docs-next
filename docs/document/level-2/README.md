@@ -24,7 +24,7 @@
 
 [通过 Xray 将特定的流量指向特定出口，实现全局路由“分流”](./redirect.md) by <img src="https://avatars.githubusercontent.com/u/28607089?s=32" width="32" height="32" alt="a"/> [@Zzz3m](https://github.com/Zzz3m)
 
-将 Xray 玩出花:基于 fwmark 或 sendThrough 方式实现“分流”。
+将 Xray 玩出花:基于 fwmark 、 sendThrough 或 sockopt.interface 方式实现“分流”。
 
 [通过 Cloudflare Warp 增强代理安全性](./warp.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
 
