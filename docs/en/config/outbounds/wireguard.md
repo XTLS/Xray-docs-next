@@ -24,7 +24,9 @@ Wireguard is a standard implementation of the Wireguard protocol.
     }
   ],
   "mtu": 1420, // optional, default 1420
+  "reserved": [1, 2, 3],
   "workers": 2 // optional, default runtime.NumCPU()
+  "domainStrategy": "ForceIP" // Requires Xray-core v1.8.6 or higher
 }
 ```
 
@@ -44,6 +46,12 @@ Wireguard will create a virtual network interface `tun` locally. Use one or more
 
 The fragment size of the underlying `tun` device in Wireguard.
 
+> `reserved` \[ number \]
+
+Wireguard Reserved Bytes.<br>
+For example, when connecting to warp via wireguard, some IPs in Hong Kong and Los Angeles need to have a reserved value in order to connect successfully due to cloudflare limitations.<br>
+The value of reserved can be obtained using third-party tools such as [warp-reg](https://github.com/badafans/warp-reg)、[warp-reg.sh](https://github.com/chise0713/warp-reg.sh)
+
 > `workers`: int
 
 The number of threads used by Wireguard.
@@ -51,6 +59,12 @@ The number of threads used by Wireguard.
 > `peers`: \[ [Peers](#peers) \]
 
 A list of Wireguard servers, where each item is a server configuration.
+
+> `domainStrategy`: "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4" | "ForceIP"
+
+Requires Xray-core v1.8.6 or higher.<br>
+The default value is `"ForceIP"` when left blank.<br>
+When the incoming request is for a domain name, regardless of whether `domainStrategy` is left empty (or if `domainStrategy` is not written), use the [built-in DNS server](./dns.md) to get an IP (if the DNS part is not written in the configuration, system DNS is used), and this IP is used to send the connection via wireguard.
 
 ### Peers
 
