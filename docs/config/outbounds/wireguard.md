@@ -48,7 +48,9 @@ Wireguard 底层 tun 的分片大小。
 
 > `reserved` \[ number \]
 
-Wireguard 保留字节。
+Wireguard 保留字节。<br>
+例如通过 wireguard 连接 warp 时，由于 cloudflare 的限制，香港、洛杉矶部分 IP 需要有 reserved 的值才能成功连接。<br>
+reserved 的值可使用第三方工具获得，例如 [warp-reg](https://github.com/badafans/warp-reg)、[warp-reg.sh](https://github.com/chise0713/warp-reg.sh)
 
 > `workers`: int
 
