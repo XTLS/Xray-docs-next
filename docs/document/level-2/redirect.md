@@ -95,7 +95,7 @@ lsmod | grep wireguard
 
 ## 4、Xray-core 配置文件修改
 
-```jsonc
+```json
 {
   "api": {
     "services": [

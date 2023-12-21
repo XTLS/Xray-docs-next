@@ -21,11 +21,13 @@ The commands are:
         version      Show current version of Xray
         api          Call an API in an Xray process
         tls          TLS tools
-        uuid         Generate new UUIDs
+        uuid         Generate UUIDv4 or UUIDv5
+        x25519       Generate key pair for x25519 key exchange
+        wg           Generate key pair for wireguard key exchange
 
 Use "xray help <command>" for more information about a command.
-```
 
+```
 ### xray run
 
 Specify one or more configuration files and run.
@@ -99,12 +101,30 @@ xray tls <command> [arguments]
 
 ### xray uuid
 
-Generated UUID.
+Generate UUID.
 
 Usage:
 
 ```
 xray uuid
+```
+
+### xray x25519
+Generate x25519 key pair。
+
+Usage:
+
+```
+xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding]
+```
+
+### xray wg
+Generate wireguard curve25519 key pair。
+
+Usage:
+
+```
+xray wg [-i "(base64.StdEncoding)"]
 ```
 
 ::: tip
