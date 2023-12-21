@@ -525,15 +525,16 @@ Execute the command `sysctl net.ipv4.tcp_congestion_control` to get the system d
 
 > `interface`: ""
 
-Specifies the name of the bound outbound network interface. Only supported by Linux,Darwin(MacOS,iOS).
+Specifies the name of the bound outbound network interface. supported by Linux MacOS iOS.<br>
+MacOS iOS Requires Xray-core v1.8.6 or higher.
 
 > `tcpMptcp`: true | false
 
-Requires Xray-core v1.8.6 or higher<br>
+Requires Xray-core v1.8.6 or higher.<br>
 Default value `false`, fill in `true` to enable [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP), need to be enabled in both server and client configuration.
 
 > `tcpNoDelay`: true | false
 
-Requires Xray-core v1.8.6 or higher<br>
+Requires Xray-core v1.8.6 or higher.<br>
 Default value `false`, recommended to be enabled with "tcpMptcp": true.
 
