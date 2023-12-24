@@ -499,7 +499,9 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "tcpUserTimeout": 10000,
   "tcpcongestion": "bbr",
   "interface": "wg0",
-  "V6Only": false
+  "V6Only": false,
+  "tcpMptcp": false,
+  "tcpNoDelay": false
 }
 ```
 
@@ -660,8 +662,19 @@ TCP 拥塞控制算法。仅支持 Linux。
 
 > `interface`: ""
 
-指定绑定出口网卡名称 仅支持 linux。
+指定绑定出口网卡名称，支持 linux / iOS / Mac OS。<br>
+iOS / Mac OS 需要 Xray-core v1.8.6 或更高版本。
 
 > `V6Only`: true | false
 
 填写 `true` 时，监听 `::` 地址仅接受 IPv6 连接。仅支持 Linux。
+
+> `tcpMptcp`: true | false
+
+需要 Xray-core v1.8.6 或更高版本。<br>
+默认值 `false`，填写 `true` 时，启用 [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP)，需在服务端和客户端配置中同时启用。
+
+> `tcpNoDelay`: true | false
+
+需要 Xray-core v1.8.6 或更高版本。<br>
+默认值 `false`，建议与 "tcpMptcp": true 一起启用。
