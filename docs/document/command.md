@@ -21,9 +21,12 @@ The commands are:
         version      Show current version of Xray
         api          Call an API in an Xray process
         tls          TLS tools
-        uuid         Generate new UUIDs
+        uuid         Generate UUIDv4 or UUIDv5
+        x25519       Generate key pair for x25519 key exchange
+        wg           Generate key pair for wireguard key exchange
 
 Use "xray help <command>" for more information about a command.
+
 ```
 
 ### xray run
@@ -103,7 +106,6 @@ xray tls <command> [arguments]
 ```
 
 ### xray uuid
-
 生成 UUID。
 
 使用方法:
@@ -112,9 +114,29 @@ xray tls <command> [arguments]
 xray uuid [-i "example"]
 ```
 
+### xray x25519
+生成 x25519 密钥对。
+
+使用方法:
+
+```
+xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding ]
+```
+
+### xray wg
+生成 wireguard curve25519 密钥对。
+
+使用方法:
+
+```
+xray wg [-i "(base64.StdEncoding)"]
+```
+
 ::: tip
 当 `-config` 没有指定时，Xray 将先后尝试从以下路径加载 `config.json` :
 
 - 工作目录（Working Directory）
 - [环境变量](../config/features/env.md#资源文件路径)中 `Xray.location.asset` 所指定的路径
   :::
+
+
