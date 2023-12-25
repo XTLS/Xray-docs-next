@@ -40,6 +40,10 @@ Xray-core v1.8.6 新增功能：<br>
 当使用 `"UseIPv4"` 或 `"UseIPv6"` 模式时，Freedom 会只使用对应的 IPv4 或 IPv6 地址。当 `sendThrough` 指定了不匹配的本地地址时，将导致连接失败。
 :::
 
+::: tip TIP 3
+`UseIP` 和 `ForceIP` 的区别是，前者解析失败了会走 AsIs，后者解析失败了会被 block。这样整个 `domainStrategy` 都更加灵活了。
+:::
+
 ```jsonc
     "dns": {
         "servers": [
