@@ -53,6 +53,15 @@ Xray-core v1.8.6 新增功能：<br>
 - UseIPv4 只查询 A 记录
 - UseIPv6 只查询 AAAA 记录
 
+```jsonc
+        {
+            "protocol": "freedom",
+            "settings": {
+                "domainStrategy": "AsIs" // 默认值 AsIs
+            }
+        }
+```
+
 | | UseIP | UseIPv6v4 | UseIPv6 | UseIPv4v6 | UseIPv4 |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | `"queryStrategy": "UseIP"` | **1** | **2** | IPv6 | **3** | IPv4 |
