@@ -183,7 +183,7 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
         "servers": [
             "https://1.1.1.1/dns-query",
             {
-                "address": "https://1.1.1.1/dns-query",
+                "address": "https://8.8.8.8/dns-query",
                 "domains": [
                     "geosite:netflix"
                 ],
@@ -195,7 +195,7 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
     }
 ```
 
-子项 geosite:netflix 的查询由于 `"queryStrategy"` 值冲突，得到空响应。geosite:netflix 的域名由全局 DNS `https://1.1.1.1/dns-query` 查询，得到 A 记录
+子项 geosite:netflix 的查询由于 `"queryStrategy"` 值冲突，得到空响应。geosite:netflix 的域名由全局 DNS `https://1.1.1.1/dns-query` 查询，得到 A 记录。
 
 > `disableCache`: true | false
 
