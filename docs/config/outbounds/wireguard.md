@@ -46,7 +46,7 @@ Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址�
 
 Wireguard 底层 tun 的分片大小。
 
-> `reserved` \[ number \]<br>
+> `reserved` \[ number \]
 
 Wireguard 保留字节。
 
