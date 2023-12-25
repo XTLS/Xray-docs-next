@@ -176,7 +176,7 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
 ```
 
 **注意：**<br>
-当子项中的 `"queryStrategy"` 值与全局 `"queryStrategy"` 值冲突时，会造成子项中的网站打不开。
+当子项中的 `"queryStrategy"` 值与全局 `"queryStrategy"` 值冲突时，子项的查询将空响应。
 
 ```jsonc
     "dns": {
@@ -191,9 +191,11 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
                 "queryStrategy": "UseIPv6" // "UseIPv6" 与 "UseIPv4" 冲突
             }
         ],
-        "queryStrategy": "UseIPv4" // 建议将 "UseIPv4" 改为 "UseIP"
+        "queryStrategy": "UseIPv4"
     }
 ```
+
+子项 geosite:netflix 的查询由于 `"queryStrategy"` 值冲突，得到空响应。geosite:netflix 的域名由全局 DNS `https://1.1.1.1/dns-query` 查询，得到 A 记录
 
 > `disableCache`: true | false
 
