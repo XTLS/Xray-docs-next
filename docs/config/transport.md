@@ -671,10 +671,9 @@ iOS / Mac OS 需要 Xray-core v1.8.6 或更高版本。
 
 > `tcpMptcp`: true | false
 
-需要 Xray-core v1.8.6 或更高版本。<br>
+Xray-core v1.8.6 新增参数。<br>
 默认值 `false`，填写 `true` 时，启用 [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP)，需在服务端和客户端配置中同时启用。
 
 > `tcpNoDelay`: true | false
 
-需要 Xray-core v1.8.6 或更高版本。<br>
 默认值 `false`，建议与 "tcpMptcp": true 一起启用。
