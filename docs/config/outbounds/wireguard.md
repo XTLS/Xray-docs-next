@@ -66,7 +66,7 @@ Wireguard 服务器列表，其中每一项是一个服务器配置。
 
 Xray-core v1.8.6 新增参数。<br>
 若不写此参数，或留空，默认值 `"ForceIP"`。<br>
-当目标地址为域名时，使用 Xray-core [内置 DNS 服务器](./dns.md)查询获取 IP（若没写 `"dns"` 配置，使用系统 DNS），将此 IP 通过 wireguard 发出连接。<br>
+当目标地址为域名时，使用 Xray-core [内置 DNS 服务器](../dns.md)查询获取 IP（若没写 `"dns"` 配置，使用系统 DNS），将此 IP 通过 wireguard 发出连接。<br>
 
 | domainStrategy | test-ipv6.com | bgp.he.net | chat.openai.com |
 | :--- | :---: | :---: | :---: |
