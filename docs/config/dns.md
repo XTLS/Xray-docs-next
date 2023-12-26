@@ -56,6 +56,22 @@ Xray 内置的 DNS 模块，主要有两大用途：
         "skipFallback": false,
         "clientIP": "1.2.3.4"
       },
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "domains": [
+          "geosite:netflix"
+        ],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv4"
+      },
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "domains": [
+          "geosite:openai"
+        ],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6"
+      },
       "localhost"
     ],
     "clientIp": "1.2.3.4",
@@ -131,6 +147,55 @@ Xray 内置的 DNS 模块，主要有两大用途：
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6"
 
 `UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。默认值为 `UseIP`，即查询 A 和 AAAA 记录。
+
+Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务器中分别设置。
+
+```jsonc
+    "dns": {
+        "servers": [
+            "https://1.1.1.1/dns-query",
+            {
+                "address": "https://1.1.1.1/dns-query",
+                "domains": [
+                    "geosite:netflix"
+                ],
+                "skipFallback": true,
+                "queryStrategy": "UseIPv4" // geosite:netflix 的域名使用 "UseIPv4"
+            },
+            {
+                "address": "https://1.1.1.1/dns-query",
+                "domains": [
+                    "geosite:openai"
+                ],
+                "skipFallback": true,
+                "queryStrategy": "UseIPv6" // geosite:openai 的域名使用 "UseIPv6"
+            }
+        ],
+        "queryStrategy": "UseIP" // 全局使用 "UseIP"
+    }
+```
+
+**注意：**<br>
+当子项中的 `"queryStrategy"` 值与全局 `"queryStrategy"` 值冲突时，子项的查询将空响应。
+
+```jsonc
+    "dns": {
+        "servers": [
+            "https://1.1.1.1/dns-query",
+            {
+                "address": "https://8.8.8.8/dns-query",
+                "domains": [
+                    "geosite:netflix"
+                ],
+                "skipFallback": true,
+                "queryStrategy": "UseIPv6" // "UseIPv6" 与 "UseIPv4" 冲突
+            }
+        ],
+        "queryStrategy": "UseIPv4"
+    }
+```
+
+子项 geosite:netflix 的查询由于 `"queryStrategy"` 值冲突，得到空响应。geosite:netflix 的域名由全局 DNS `https://1.1.1.1/dns-query` 查询，得到 A 记录。
 
 > `disableCache`: true | false
 
