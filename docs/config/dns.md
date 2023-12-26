@@ -57,7 +57,7 @@ Xray 内置的 DNS 模块，主要有两大用途：
         "clientIP": "1.2.3.4"
       },
       {
-        "address": "https://1.1.1.1/dns-query",
+        "address": "https://8.8.8.8/dns-query",
         "domains": [
           "geosite:netflix"
         ],
@@ -146,39 +146,11 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6"
 
-`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。默认值为 `UseIP`，即查询 A 和 AAAA 记录。
+默认值 `UseIP` 同时查询 A 和 AAAA 记录。`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。
 
 Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务器中分别设置。
 
-```jsonc
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://1.1.1.1/dns-query",
-                "domains": [
-                    "geosite:netflix"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv4" // geosite:netflix 的域名使用 "UseIPv4"
-            },
-            {
-                "address": "https://1.1.1.1/dns-query",
-                "domains": [
-                    "geosite:openai"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // geosite:openai 的域名使用 "UseIPv6"
-            }
-        ],
-        "queryStrategy": "UseIP" // 全局使用 "UseIP"
-    }
-```
-
-**注意：**<br>
-当子项中的 `"queryStrategy"` 值与全局 `"queryStrategy"` 值冲突时，子项的查询将空响应。
-
-```jsonc
+```json
     "dns": {
         "servers": [
             "https://1.1.1.1/dns-query",
@@ -188,14 +160,53 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
                     "geosite:netflix"
                 ],
                 "skipFallback": true,
-                "queryStrategy": "UseIPv6" // "UseIPv6" 与 "UseIPv4" 冲突
+                "queryStrategy": "UseIPv4" // netflix 的域名查询 A 记录
+            },
+            {
+                "address": "https://1.1.1.1/dns-query",
+                "domains": [
+                    "geosite:openai"
+                ],
+                "skipFallback": true,
+                "queryStrategy": "UseIPv6" // openai 的域名查询 AAAA 记录
+            }
+        ],
+        "queryStrategy": "UseIP" // 全局同时查询 A 和 AAAA 记录
+    }
+```
+
+::: tip TIP 1
+全局 `"queryStrategy"` 值优先，当子项中的 `"queryStrategy"` 值与全局 `"queryStrategy"` 值冲突时，子项的查询将空响应。
+:::
+
+::: tip TIP 2
+当子项中不写 `"queryStrategy"` 参数时，使用全局 `"queryStrategy"` 参数值。与 Xray-core v1.8.6 以前版本行为相同。
+:::
+
+例如：<br>
+全局 `"queryStrategy": "UseIPv6"` 与 子项 `"queryStrategy": "UseIPv4"` 冲突。<br>
+全局 `"queryStrategy": "UseIPv4"` 与 子项 `"queryStrategy": "UseIPv6"` 冲突。<br>
+全局 `"queryStrategy": "UseIP"` 与 子项 `"queryStrategy": "UseIPv6"` 不冲突。<br>
+全局 `"queryStrategy": "UseIP"` 与 子项 `"queryStrategy": "UseIPv4"` 不冲突。
+
+```json
+    "dns": {
+        "servers": [
+            "https://1.1.1.1/dns-query",
+            {
+                "address": "https://8.8.8.8/dns-query",
+                "domains": [
+                    "geosite:netflix"
+                ],
+                "skipFallback": true,
+                "queryStrategy": "UseIPv6" // 全局 "UseIPv4" 与 子项 "UseIPv6" 冲突
             }
         ],
         "queryStrategy": "UseIPv4"
     }
 ```
 
-子项 geosite:netflix 的查询由于 `"queryStrategy"` 值冲突，得到空响应。geosite:netflix 的域名由全局 DNS `https://1.1.1.1/dns-query` 查询，得到 A 记录。
+子项 netflix 的域名查询由于 `"queryStrategy"` 值冲突，得到空响应。netflix 的域名由 `https://1.1.1.1/dns-query` 查询，得到 A 记录。
 
 > `disableCache`: true | false
 
