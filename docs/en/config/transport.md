@@ -530,11 +530,10 @@ MacOS iOS Requires Xray-core v1.8.6 or higher.
 
 > `tcpMptcp`: true | false
 
-Requires Xray-core v1.8.6 or higher.<br>
+Xray-core v1.8.6 New parameter.<br>
 Default value `false`, fill in `true` to enable [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP), need to be enabled in both server and client configuration.
 
 > `tcpNoDelay`: true | false
 
-Requires Xray-core v1.8.6 or higher.<br>
 Default value `false`, recommended to be enabled with "tcpMptcp": true.
 
