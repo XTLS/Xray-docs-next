@@ -59,6 +59,22 @@ If the domain name to be queried:
         "skipFallback": false,
         "clientIP": "1.2.3.4"
       },
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "domains": [
+          "geosite:netflix"
+        ],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv4"
+      },
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "domains": [
+          "geosite:openai"
+        ],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6"
+      },
       "localhost"
     ],
     "clientIp": "1.2.3.4",
@@ -134,6 +150,55 @@ You can specify `clientIp` for all DNS servers in [DnsObject](#dnsobject), or sp
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6"
 
 `UseIPv4` only queries A records; `UseIPv6` only queries AAAA records. The default value is `UseIP`, which queries both A and AAAA records.
+
+Xray-core v1.8.6 New feature: `queryStrategy` can be set separately for each `DNS` server.
+
+```jsonc
+    "dns": {
+        "servers": [
+            "https://1.1.1.1/dns-query",
+            {
+                "address": "https://1.1.1.1/dns-query",
+                "domains": [
+                    "geosite:netflix"
+                ],
+                "skipFallback": true,
+                "queryStrategy": "UseIPv4" // geosite:netflix's domain name uses "UseIPv4"
+            },
+            {
+                "address": "https://1.1.1.1/dns-query",
+                "domains": [
+                    "geosite:openai"
+                ],
+                "skipFallback": true,
+                "queryStrategy": "UseIPv6" // The domain name geosite:openai uses "UseIPv6".
+            }
+        ],
+        "queryStrategy": "UseIP" // Global use of "UseIP"
+    }
+```
+
+**NOTE：**<br>
+When the `"queryStrategy"` value in the child item conflicts with the global `"queryStrategy"` value, the query for the child item will respond null.
+
+```jsonc
+    "dns": {
+        "servers": [
+            "https://1.1.1.1/dns-query",
+            {
+                "address": "https://8.8.8.8/dns-query",
+                "domains": [
+                    "geosite:netflix"
+                ],
+                "skipFallback": true,
+                "queryStrategy": "UseIPv6" // "UseIPv6" conflicts with "UseIPv4".
+            }
+        ],
+        "queryStrategy": "UseIPv4"
+    }
+```
+
+Subterm geosite:netflix query gets null response due to conflicting `"queryStrategy"` values. geosite:netflix domain is queried by global DNS `https://1.1.1.1/dns-query` and gets A record.
 
 > `disableCache`: true | false
 
