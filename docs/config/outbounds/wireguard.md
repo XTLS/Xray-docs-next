@@ -66,7 +66,7 @@ Wireguard 服务器列表，其中每一项是一个服务器配置。
 
 Xray-core v1.8.6 新增参数。<br>
 若不写此参数，或留空，默认值 `"ForceIP"`。<br>
-当目标地址为域名时，使用 Xray-core [内置 DNS 服务器](./dns.md)查询获取 IP（若没写 `"dns"` 配置，使用系统 DNS），将此 IP 通过 wireguard 发出连接。<br>
+当目标地址为域名时，使用 Xray-core [内置 DNS 服务器](../dns.md)查询获取 IP（若没写 `"dns"` 配置，使用系统 DNS），将此 IP 通过 wireguard 发出连接。<br>
 
 | domainStrategy | test-ipv6.com | bgp.he.net | chat.openai.com |
 | :--- | :---: | :---: | :---: |
@@ -79,11 +79,11 @@ Xray-core v1.8.6 新增参数。<br>
 **1：** 提示`你已经有 IPv6 地址了，但你的浏览器不太愿意用，这一点比较令人担心。`<br>
 **2：** 有机率提示`你已经有 IPv6 地址了，但你的浏览器不太愿意用，这一点比较令人担心。`
 
-**注意1**：
-- 若与 `"queryStrategy"` 产生冲突，会造成网站不能打开。
-- 例如当 `domainStrategy: "ForceIPv4"` 时，geosite:openai 的网站使用了 `"queryStrategy": "UseIPv6"`，将打开失败。
+::: tip
+若 `domainStrategy` 的值与 `"dns"` 配置中 `"queryStrategy"` 的值产生冲突，会造成网站打开失败。
+:::
 
-```jsonc
+```json
     "dns": {
         "servers": [
             "https://1.1.1.1/dns-query",
@@ -96,14 +96,17 @@ Xray-core v1.8.6 新增参数。<br>
                 "queryStrategy": "UseIPv6" // 只查询 AAAA 记录
             }
         ],
-        "queryStrategy": "UseIP" // 若不写此参数，默认值 UseIP，即同时查询 A 和 AAAA 记录，可选值 UseIPv4 和 UseIPv6，其它记录类型由系统 DNS 查询
+        "queryStrategy": "UseIP" // 同时查询 A 和 AAAA 记录，若不写此参数，默认值 UseIP，
     },
 ```
 
-**注意2**：
-- Xray-core v1.8.0 - v1.8.4 没有 `"domainStrategy"`。
-- 当目标地址为域名时，使用 Xray-core 内置 DNS 服务器查询获取 IP，使用 `"dns"` 配置中的 `"queryStrategy"` 的值来控制 IPv4 或 IPv6 优先级。
-- 若没写 `"dns"` 配置，使用系统 DNS 查询获取 IP，IPv4 或 IPv6 优先级由系统控制。
+当 `domainStrategy: "ForceIPv4"` 时，控制 geosite:openai 域名查询的 DNS 字段使用了 `"queryStrategy": "UseIPv6"`，将会导致 geosite:openai 的网站打开失败。
+
+::: tip
+Xray-core v1.8.0 - v1.8.4 没有 `"domainStrategy"`。<br>
+当目标地址为域名时，使用 Xray-core 内置 DNS 服务器查询获取 IP。使用 `"dns"` 配置中 `"queryStrategy"` 的值控制 IPv4 或 IPv6 优先级。<br>
+若没写 `"dns"` 配置，使用系统 DNS 查询获取 IP，IPv4 或 IPv6 优先级由系统控制。
+:::
 
 ### Peers
 
