@@ -76,18 +76,25 @@
   "grpcSettings": {},
   "sockopt": {
     "mark": 0,
+    "tcpMaxSeg": 1440,
     "tcpFastOpen": false,
     "tproxy": "off",
     "domainStrategy": "AsIs",
     "dialerProxy": "",
     "acceptProxyProtocol": false,
     "tcpKeepAliveInterval": 0,
-    "V6Only": false
+    "tcpKeepAliveIdle": 300,
+    "tcpUserTimeout": 10000,
+    "tcpcongestion": "bbr",
+    "interface": "wg0",
+    "V6Only": false,
+    "tcpMptcp": false,
+    "tcpNoDelay": false
   }
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "domainsocket" | "quic" | "grpc"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "h2" | "quic" | "grpc" | "domainsocket"
 
 连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
 
@@ -676,4 +683,4 @@ Xray-core v1.8.6 新增参数。<br>
 
 > `tcpNoDelay`: true | false
 
-默认值 `false`，建议与 "tcpMptcp": true 一起启用。
+默认值 `false`，建议与 `"tcpMptcp": true` 一起启用。
