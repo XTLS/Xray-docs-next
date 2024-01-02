@@ -94,9 +94,13 @@
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "h2" | "quic" | "grpc" | "domainsocket"
+> `network`: "tcp" | "ws" | "h2" | "grpc" | "quic" | "kcp"
 
 连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
+
+::: tip
+"h2" 可以写成 "http"，"grpc" 可以写成 "gun"，"kcp" 可以写成 "mkcp"。
+:::
 
 > `security`: "none" | "tls" | "reality"
 
@@ -562,7 +566,13 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 设置中的`tproxy` 的值会被设为 `"redirect"`。
 :::
 
-> `domainStrategy`: "AsIs" | "UseIP" | "UseIPv4" | "UseIPv6"
+> `domainStrategy`: "AsIs"<br>
+> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"<br>
+> "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
+
+Xray-core v1.8.6 新增功能：<br>
+`"UseIPv6v4"` | `"UseIPv4v6"`<br>
+`"ForceIP"` | `"ForceIPv6v4"` | `"ForceIPv6"` | `"ForceIPv4v6"` | `"ForceIPv4"`
 
 在之前的版本中，当 Xray 尝试使用域名建立系统连接时，域名的解析由系统完成，不受 Xray
 控制。这导致了在 [非标准 Linux 环境中无法解析域名](https://github.com/v2ray/v2ray-core/issues/1909) 等问题。为此，Xray 1.3.1 为 Sockopt 引入了 Freedom
@@ -648,7 +658,7 @@ TCP 空闲时间阈值，单位为秒。当 TCP 连接空闲时间达到这个�
 
 > `tcpUserTimeout`: number
 
-单位为毫秒。
+单位为毫秒。详细介绍：https://github.com/grpc/proposal/blob/master/A18-tcp-user-timeout.md
 
 > `tcpcongestion`: ""
 

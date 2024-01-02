@@ -22,7 +22,8 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
   "readBufferSize": 1,
   "writeBufferSize": 1,
   "header": {
-    "type": "none"
+    "type": "none",
+    "domain": "example.com"
   },
   "seed": "Password"
 }
@@ -106,7 +107,8 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
 
 ```json
 {
-  "type": "none"
+  "type": "none",
+  "domain": "example.com"
 }
 ```
 
@@ -120,6 +122,11 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
 - `"wechat-video"`：伪装成微信视频通话的数据包。
 - `"dtls"`：伪装成 DTLS 1.2 数据包。
 - `"wireguard"`：伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）
+- `"dns"`：某些校园网在未登录的情况下允许DNS查询，给KCP添加DNS头，把流量伪装成dns请求，可以绕过某些校园网登录。
+
+> `domain`: string
+
+配合伪装类型 `"dns"` 使用，可随便填一个域名。
 
 ## 鸣谢
 
