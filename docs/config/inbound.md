@@ -125,6 +125,39 @@ Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进
 
 一个域名列表，如果流量探测结果在这个列表中时，将 **不会** 重置目标地址。
 
+推荐填写下列域名，可能解决米家智能设备，iOS 推送通知，某些游戏（彩虹六号）语音问题
+
+```json
+"domainsExcluded": [
+    "courier.push.apple.com",
+    "rbsxbxp-mim.vivox.com",
+    "rbsxbxp.www.vivox.com",
+    "rbsxbxp-ws.vivox.com",
+    "rbspsxp.www.vivox.com",
+    "rbspsxp-mim.vivox.com",
+    "rbspsxp-ws.vivox.com",
+    "rbswxp.www.vivox.com",
+    "rbswxp-mim.vivox.com",
+    "disp-rbspsp-5-1.vivox.com",
+    "disp-rbsxbp-5-1.vivox.com",
+    "proxy.rbsxbp.vivox.com",
+    "proxy.rbspsp.vivox.com",
+    "proxy.rbswp.vivox.com",
+    "rbswp.vivox.com",
+    "rbsxbp.vivox.com",
+    "rbspsp.vivox.com",
+    "rbspsp.www.vivox.com",
+    "rbswp.www.vivox.com",
+    "rbsxbp.www.vivox.com",
+    "rbsxbxp.vivox.com",
+    "rbspsxp.vivox.com",
+    "rbswxp.vivox.com",
+    "Mijia Cloud",
+    "dlg.io.mi.com"
+]
+
+```
+
 ::: warning
 目前，`domainsExcluded` 不支持类似路由中的域名匹配方式。此选项未来可能会改变，不保证跨版本兼容。
 :::
