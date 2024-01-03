@@ -111,8 +111,12 @@
 
 其中 `["fakedns+others"]` 相当于 `["http", "tls", "quic", "fakedns"]`，当 IP 地址处于 FakeIP 区间内但没有命中域名记录时会使用 `http`、`tls` 和 `quic` 进行匹配。此项仅在 `metadataOnly` 为 `false` 时有效。
 
-::: tip
+::: tip 1
 Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进行嗅探用作路由而不想重置目标地址，请在这里添加对应的协议并启用 `routeOnly` 。
+:::
+
+::: tip 2
+当使用 Tor 浏览器，设置使用代理访问互联网（HTTP / SOCKS），地址为本地 IP 127.0.0.1，需要关闭 `"sniffing"` 才能正常使用。
 :::
 
 > `metadataOnly`: true | false
@@ -125,34 +129,15 @@ Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进
 
 一个域名列表，如果流量探测结果在这个列表中时，将 **不会** 重置目标地址。
 
-推荐填写下列域名，可能解决米家智能设备，iOS 推送通知，某些游戏（彩虹六号）语音问题
+::: tip
+填写一些域名，可能解决iOS 推送通知，米家智能设备，某些游戏（彩虹六号）语音问题。<br>
+如果需要排查某些问题的原因，可以通过关闭 `"sniffing"` 或者启用 `"routeOnly"` 来测试。
+:::
 
 ```json
 "domainsExcluded": [
-    "courier.push.apple.com",
-    "rbsxbxp-mim.vivox.com",
-    "rbsxbxp.www.vivox.com",
-    "rbsxbxp-ws.vivox.com",
-    "rbspsxp.www.vivox.com",
-    "rbspsxp-mim.vivox.com",
-    "rbspsxp-ws.vivox.com",
-    "rbswxp.www.vivox.com",
-    "rbswxp-mim.vivox.com",
-    "disp-rbspsp-5-1.vivox.com",
-    "disp-rbsxbp-5-1.vivox.com",
-    "proxy.rbsxbp.vivox.com",
-    "proxy.rbspsp.vivox.com",
-    "proxy.rbswp.vivox.com",
-    "rbswp.vivox.com",
-    "rbsxbp.vivox.com",
-    "rbspsp.vivox.com",
-    "rbspsp.www.vivox.com",
-    "rbswp.www.vivox.com",
-    "rbsxbp.www.vivox.com",
-    "rbsxbxp.vivox.com",
-    "rbspsxp.vivox.com",
-    "rbswxp.vivox.com",
-    "Mijia Cloud",
+    "courier.push.apple.com", // iOS 推送通知
+    "Mijia Cloud", // 米家智能设备
     "dlg.io.mi.com"
 ]
 
