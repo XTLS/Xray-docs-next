@@ -18,7 +18,8 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
         {
           "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
           "security": "auto",
-          "level": 0
+          "level": 0,
+          "experiments": ""
         }
       ]
     }
@@ -62,7 +63,8 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 {
   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
   "security": "auto",
-  "level": 0
+  "level": 0,
+  "experiments": ""
 }
 ```
 
@@ -108,3 +110,12 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 无论使用哪种加密方式， VMess 的包头都会受到加密和认证的保护。
 :::
+
+> `experiments`: string
+
+启用的 VMess 协议实验性功能。（此处的功能为不稳定功能， 可能随时被移除）多个启用的实验之间可以用 | 字符分割，如 "AuthenticatedLength|NoTerminationSignal" 。
+
+"AuthenticatedLength" 启用认证的数据包长度实验。此实验需要同时在客户端与服务器端同时开启，并运行相同版本的程序。
+
+"NoTerminationSignal" 启用不发送断开连接标致实验。此实验可能会影响被代理的连接的稳定性。
+
