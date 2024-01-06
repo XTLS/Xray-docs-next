@@ -113,6 +113,7 @@
 - [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)：形如 `"10.0.0.0/8"`。
 - 预定义 IP 列表：此列表预置于每一个 Xray 的安装包中，文件名为 `geoip.dat`。使用方式形如 `"geoip:cn"`，必须以 `geoip:`（小写）开头，后面跟双字符国家代码，支持几乎所有可以上网的国家。
   - 特殊值：`"geoip:private"`，包含所有私有地址，如 `127.0.0.1`。
+  - 反选（!）功能 `"geoip:!cn"`，表示 geoip:cn 中非 cn 的结果。
 - 从文件中加载 IP：形如 `"ext:file:tag"`，必须以 `ext:`（小写）开头，后面跟文件名和标签，文件存放在 [资源目录](./features/env.md#资源文件路径) 中，文件格式与 `geoip.dat` 相同标签必须在文件中存在。
 
 > `port`：number | string
