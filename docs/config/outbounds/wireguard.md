@@ -86,17 +86,6 @@ Xray-core v1.8.6 新增参数。<br>
 若不写此参数，或留空，默认值 `"ForceIP"`。<br>
 当目标地址为域名时，使用 Xray-core [内置 DNS 服务器](../dns.md)查询获取 IP（若没写 `"dns"` 配置，使用系统 DNS），将此 IP 通过 wireguard 发出连接。<br>
 
-| domainStrategy | test-ipv6.com | bgp.he.net | chat.openai.com |
-| :--- | :---: | :---: | :---: |
-| ForceIPv6v4 | IPv6v4地址 | IPv6地址 | IPv6地址 |
-| ForceIPv6 | 网站打不开 | IPv6地址 | IPv6地址 |
-| ForceIPv4v6 | IPv6v4地址 **1** | IPv4地址 | IPv4地址 |
-| ForceIPv4 | IPv4地址 | IPv4地址 | IPv4地址 |
-| ForceIP | IPv6v4地址 **2** | IPv6地址 | IPv6地址 |
-
-**1：** 提示`你已经有 IPv6 地址了，但你的浏览器不太愿意用，这一点比较令人担心。`<br>
-**2：** 有机率提示`你已经有 IPv6 地址了，但你的浏览器不太愿意用，这一点比较令人担心。`
-
 ::: tip
 若 `domainStrategy` 的值与 `"dns"` 配置中 `"queryStrategy"` 的值产生冲突，会造成网站打开失败。
 :::
