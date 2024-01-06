@@ -30,60 +30,9 @@ Xray-core v1.8.6 新增功能：<br>
 当目标地址为域名时，配置相应的值，Freedom 的行为模式如下：
 
 - `"AsIs"`：Freedom 使用系统 DNS 同时查询 A 和 AAAA 记录获取 IP，向此域名发出连接。IPv4 或 IPv6 优先级由系统控制。
-
-| | AsIs |
-| :--- | :---: |
-| 系统有 IPv4 IPv6 | 通常 IPv6 优先 |
-| 系统只有 IPv4 | IPv4 |
-| 系统只有 IPv6 | IPv6 |
-
-- `"UseIP"`、`"UseIPv6v4"`、`"UseIPv6"`、`"UseIPv4v6"`、`"UseIPv4"`：使用 Xray-core [内置 DNS 服务器](../dns.md) 查询获取 IP，向此域名发出连接。IPv4 或 IPv6 优先级详见下方表格。
-
-| 系统有 IPv4 IPv6 | UseIP | UseIPv6v4 | UseIPv6 | UseIPv4v6 | UseIPv4 |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| `"queryStrategy": "UseIP"` | **1** | **2** | IPv6 | **3** | IPv4 |
-| `"queryStrategy": "UseIPv4"` | IPv4 | **4** | **5** | **6** | IPv4 |
-| `"queryStrategy": "UseIPv6"` | IPv6 | **7** | IPv6 | **8** | **9** |
-
-**1：** IPv4 IPv6 地址，随机优先<br>
-**2：** IPv4 IPv6 地址，IPv6 优先<br>
-**3：** IPv4 IPv6 地址，IPv4 优先<br>
-**4：** IPv4 IPv6 地址，IPv6 优先，IPv6 地址由系统 DNS 查询<br>
-**5：** IPv6 地址，IPv6 地址由系统 DNS 查询<br>
-**6：** IPv4 IPv6 地址，IPv4 优先，IPv6 地址由系统 DNS 查询<br>
-**7：** IPv4 IPv6 地址，IPv6 优先，IPv4 地址由系统 DNS 查询<br>
-**8：** IPv4 IPv6 地址，IPv4 优先，IPv4 地址由系统 DNS 查询<br>
-**9：** IPv4 地址，IPv4 地址由系统 DNS 查询
-
-- `"ForceIP"`、`"ForceIPv6v4"`、`"ForceIPv6"`、`"ForceIPv4v6"`、`"ForceIPv4"`：使用 Xray-core [内置 DNS 服务器](../dns.md) 查询获取 IP，向此域名发出连接。IPv4 或 IPv6 优先级详见下方表格。
-
-| 系统有 IPv4 IPv6 | ForceIP | ForceIPv6v4 | ForceIPv6 | ForceIPv4v6 | ForceIPv4 |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| `"queryStrategy": "UseIP"` | **1** | **2** | IPv6 | **3** | IPv4 |
-| `"queryStrategy": "UseIPv4"` | IPv4 | IPv4 | 冲突 | IPv4 | IPv4 |
-| `"queryStrategy": "UseIPv6"` | IPv6 | IPv6 | IPv6 | IPv6 | 冲突 |
-
-**1：** IPv4 IPv6 地址，随机优先<br>
-**2：** IPv4 IPv6 地址，IPv6 优先<br>
-**3：** IPv4 IPv6 地址，IPv4 优先
-
-- 当使用 `"UseIP"` 系列值 或 `"ForceIP"` 系列值时，若没写 `"dns"` 配置，使用系统 DNS 同时查询 A 和 AAAA 记录获取 IP，向此域名发出连接。IPv4 或 IPv6 优先级详见下方表格。
-
-| | UseIP | UseIPv6v4 | UseIPv6 | UseIPv4v6 | UseIPv4 |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| 系统有 IPv4 IPv6 | **1** | **2** | IPv6 | **3** | IPv4 |
-| 系统只有 IPv4 | IPv4 | 冲突 | 冲突 | IPv4 | IPv4 |
-| 系统只有 IPv6 | IPv6 | IPv6 | IPv6 | 冲突 | 冲突 |
-
-| | ForceIP | ForceIPv6v4 | ForceIPv6 | ForceIPv4v6 | ForceIPv4 |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| 系统有 IPv4 IPv6 | **1** | **2** | IPv6 | **3** | IPv4 |
-| 系统只有 IPv4 | IPv4 | 冲突 | 冲突 | IPv4 | IPv4 |
-| 系统只有 IPv6 | IPv6 | IPv6 | IPv6 | 冲突 | 冲突 |
-
-**1：** IPv4 IPv6 地址，随机优先<br>
-**2：** IPv4 IPv6 地址，IPv6 优先<br>
-**3：** IPv4 IPv6 地址，IPv4 优先
+- `"UseIP"`、`"UseIPv6v4"`、`"UseIPv6"`、`"UseIPv4v6"`、`"UseIPv4"`：使用 Xray-core [内置 DNS 服务器](../dns.md) 查询获取 IP，向此域名发出连接。
+- `"ForceIP"`、`"ForceIPv6v4"`、`"ForceIPv6"`、`"ForceIPv4v6"`、`"ForceIPv4"`：使用 Xray-core [内置 DNS 服务器](../dns.md) 查询获取 IP，向此域名发出连接。
+- 当使用 `"UseIP"` 系列值 或 `"ForceIP"` 系列值时，若没写 `"dns"` 配置，使用系统 DNS 同时查询 A 和 AAAA 记录获取 IP，向此域名发出连接。
 
 ::: tip TIP 1
 当使用 `"UseIP"`、`"ForceIP"` 模式时，并且 [出站连接配置](../outbound.md#outboundobject) 中指定了 `sendThrough` 时，Freedom 会根据 `sendThrough` 的值自动判断所需的 IP 类型，IPv4 或 IPv6。
