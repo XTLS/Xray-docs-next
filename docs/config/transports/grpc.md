@@ -52,7 +52,7 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 ::: tip
 当 `serviceName` 起始为斜杠时可以自定义 path。<br>
-例如在服务端填写 `"serviceName": "/my/sample/path1|path2"`，客户端可填写 "serviceName": "/my/sample/path1" 或 "serviceName": "/my/sample/path2"。
+例如在服务端填写 `"serviceName": "/my/sample/path1|path2"`，客户端可填写 `"serviceName": "/my/sample/path1"` 或 `"/my/sample/path2"`。
 :::
 
 > `user_agent`: string
