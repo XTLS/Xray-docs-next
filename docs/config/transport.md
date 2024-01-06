@@ -690,7 +690,7 @@ iOS / Mac OS 需要 Xray-core v1.8.6 或更高版本。
 
 > `tcpWindowClamp`: number
 
-绑定通告的 windows 大小为该值。内核会在它与 SOCK_MIN_RCVBUF/2 之间选一个最大值。SOCK_MIN_RCVBUF 是 256 字节。
+绑定通告的 windows 大小为该值。内核会在它与 SOCK_MIN_RCVBUF/2 之间选一个最大值。
 
 > `tcpMptcp`: true | false
 
