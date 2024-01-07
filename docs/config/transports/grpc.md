@@ -50,6 +50,11 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 一个字符串，指定服务名称，**类似于** HTTP/2 中的 Path。
 客户端会使用此名称进行通信，服务端会验证服务名称是否匹配。
 
+::: tip
+当 `serviceName` 起始为斜杠时可以自定义 path。<br>
+例如在服务端填写 `"serviceName": "/my/sample/path1|path2"`，客户端可填写 `"serviceName": "/my/sample/path1"` 或 `"/my/sample/path2"`。
+:::
+
 > `user_agent`: string
 
 ::: tip

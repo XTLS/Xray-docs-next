@@ -88,6 +88,7 @@
     "tcpcongestion": "bbr",
     "interface": "wg0",
     "V6Only": false,
+    "tcpWindowClamp": 600
     "tcpMptcp": false,
     "tcpNoDelay": false
   }
@@ -511,6 +512,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "tcpcongestion": "bbr",
   "interface": "wg0",
   "V6Only": false,
+  "tcpWindowClamp": 600
   "tcpMptcp": false,
   "tcpNoDelay": false
 }
@@ -685,6 +687,10 @@ iOS / Mac OS 需要 Xray-core v1.8.6 或更高版本。
 > `V6Only`: true | false
 
 填写 `true` 时，监听 `::` 地址仅接受 IPv6 连接。仅支持 Linux。
+
+> `tcpWindowClamp`: number
+
+绑定通告的 windows 大小为该值。内核会在它与 SOCK_MIN_RCVBUF/2 之间选一个最大值。
 
 > `tcpMptcp`: true | false
 

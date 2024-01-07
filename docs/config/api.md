@@ -65,6 +65,17 @@ API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
 }
 ```
 
+在基础配置中增加 api
+
+```json
+"api": {
+  "tag": "api",
+  "services": [
+    "StatsService"
+  ]
+}
+```
+
 ## 支持的 API 列表
 
 ### HandlerService
