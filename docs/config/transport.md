@@ -171,7 +171,8 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
   "disableSystemRoot": false,
   "enableSessionResumption": false,
   "fingerprint": "",
-  "pinnedPeerCertificateChainSha256": [""]
+  "pinnedPeerCertificateChainSha256": [""],
+  "masterKeyLog":""
 }
 ```
 
@@ -277,6 +278,10 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 如果要在 ssllibs 或者 myssl 获得 A/A+ 等级的评价,
 请参考 [这里](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
 :::
+
+> `masterKeyLog` : string
+
+(Pre)-Master-Secret log 文件路径，可用于Wireshark等软件解密Xray发送的TLS连接，暂不支持与utls一起使用，需要Xray-Core v1.8.7。
 
 ### RealityObject
 
