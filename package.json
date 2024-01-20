@@ -10,19 +10,22 @@
     "@types/jquery": "^3.5.14",
     "@types/mermaid": "^9.2.0",
     "@types/node": "^20.11.0",
-    "@vuepress/bundler-vite": "^2.0.0-beta.25",
-    "@vuepress/plugin-back-to-top": "^2.0.0-beta.25",
-    "@vuepress/plugin-debug": "^2.0.0-beta.25",
-    "@vuepress/plugin-search": "^2.0.0-beta.25",
+    "@vuepress/bundler-vite": "^2.0.0-rc.0",
+    "@vuepress/bundler-webpack": "2.0.0-rc.0",
+    "@vuepress/plugin-back-to-top": "^2.0.0-rc.0",
+    "@vuepress/plugin-debug": "^2.0.0-beta.33",
+    "@vuepress/plugin-search": "^2.0.0-rc.0",
+    "typescript": "^5.2.2",
     "postcss-loader": "^8.0.0",
     "prettier": "^3.2.2",
     "sass": "^1.51.0",
-    "sass-loader": "^14.0.0",
+    "sass-loader": "^13.3.2",
     "vue-property-decorator": "^9.1.2",
-    "vuepress": "^2.0.0-beta.25"
+    "vuepress": "^2.0.0-rc.0"
   },
+  "packageManager": "pnpm@8.10.5",
   "scripts": {
-    "docs:dev": "vuepress dev docs --clean-temp --clean-cache --host 127.0.0.1",
+    "docs:dev": "vuepress dev docs",
     "docs:build": "vuepress build docs",
     "lint": "prettier --write ."
   },
@@ -33,6 +36,16 @@
     "jquery": "^3.6.0",
     "markdown-it-footnote": "^4.0.0",
     "mermaid": "^10.7.0",
-    "vuepress-plugin-mermaidjs": "^2.0.0-beta.2"
+    "vuepress-plugin-mermaidjs": "^2.0.0-beta.2",
+    "@vuepress/cli": "2.0.0-rc.0",
+    "@vuepress/client": "2.0.0-rc.0",
+    "@vuepress/core": "2.0.0-rc.0",
+    "@vuepress/plugin-google-analytics": "2.0.0-rc.0",
+    "@vuepress/plugin-register-components": "2.0.0-rc.0",
+    "@vuepress/plugin-shiki": "2.0.0-rc.0",
+    "@vuepress/theme-default": "2.0.0-rc.0",
+    "@vuepress/utils": "2.0.0-rc.0",
+    "anywhere": "^1.6.0",
+    "vue": "^3.4.15"
   }
 }

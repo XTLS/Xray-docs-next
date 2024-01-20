@@ -1,8 +1,13 @@
-import { defineUserConfig } from "@vuepress/cli";
-import type { DefaultThemeOptions } from "@vuepress/theme-default";
-import * as sidebar from "./config/sidebar";
+import { viteBundler } from "@vuepress/bundler-vite";
+import { webpackBundler } from "@vuepress/bundler-webpack";
+import { UserConfig, defineUserConfig } from "@vuepress/cli";
+import { searchPlugin } from "@vuepress/plugin-search";
+import markdownItFootnote from "markdown-it-footnote";
+import { defaultTheme } from "vuepress";
 import * as navbar from "./config/navbar";
-import * as path from "path";
+import { MermaidPlugin } from "./config/plugins/mermaidPlugin";
+import * as sidebar from "./config/sidebar";
+import { docsPlugin } from "./theme/index";
 
 const isProduction = process.env.NODE_ENV === "production";
 const forMainRepo = process.env.XRAY_DOCS_MAIN_REPO === "true";
@@ -14,20 +19,15 @@ console.log(
   isProduction && !useVite ? "@vuepress/webpack" : "@vuepress/vite"
 );
 
-export default defineUserConfig<DefaultThemeOptions>({
-  theme: path.join(__dirname, "./theme"),
+export default defineUserConfig(<UserConfig>{
   plugins: [
-    [
-      "@vuepress/plugin-search",
-      {
-        locales: {
-          "/": {
-            placeholder: "搜索",
-          },
+    searchPlugin({
+      locales: {
+        "/": {
+          placeholder: "搜索",
         },
       },
-    ],
-    ["@vuepress/plugin-debug", !isProduction],
+    }),
   ],
   base: forMainRepo ? "/" : "/Xray-docs-next/",
   locales: {
@@ -42,7 +42,8 @@ export default defineUserConfig<DefaultThemeOptions>({
       description: "Official document of Xray",
     },
   },
-  themeConfig: {
+  theme: defaultTheme({
+    ...docsPlugin,
     smoothScroll: true,
     repo: "xtls/xray-core",
     docsRepo: "xtls/Xray-docs-next",
@@ -56,6 +57,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     },
     locales: {
       "/": {
+        navbar: navbar.hans,
         repoLabel: "查看源码",
         editLinkText: "帮助我们改善此页面！",
         tip: "提示",
@@ -72,31 +74,30 @@ export default defineUserConfig<DefaultThemeOptions>({
             "入站代理",
             "出站代理",
             "底层传输",
-            "/config/"
+            "/config/",
           ),
           "/document/": sidebar.getDocumentSidebar(
             "快速入门文档",
-            "/document/"
+            "/document/",
           ),
           "/document/level-0/": sidebar.getDocumentLv0Sidebar(
             "小小白白话文",
-            "/document/level-0/"
+            "/document/level-0/",
           ),
           "/document/level-1/": sidebar.getDocumentLv1Sidebar(
             "入门技巧",
-            "/document/level-1/"
+            "/document/level-1/",
           ),
           "/document/level-2/": sidebar.getDocumentLv2Sidebar(
             "进阶技巧",
-            "/document/level-2/"
+            "/document/level-2/",
           ),
           "/development/": sidebar.getDevelopmentSidebar(
             "开发指南",
             "协议详解",
-            "/development/"
+            "/development/",
           ),
         },
-        navbar: navbar.hans,
       },
       "/en/": {
         repoLabel: "Source",
@@ -114,30 +115,30 @@ export default defineUserConfig<DefaultThemeOptions>({
             "Inbound Protocol",
             "Outbound Protocol",
             "Stream Transport Protocol",
-            "/en/config/"
+            "/en/config/",
           ),
           "/en/document/level-0/": sidebar.getDocumentLv0Sidebar(
             "Beginner Tutorial",
-            "/en/document/level-0/"
+            "/en/document/level-0/",
           ),
           "/en/document/level-1/": sidebar.getDocumentLv1Sidebar(
             "Getting Started Tips",
-            "/en/document/level-1/"
+            "/en/document/level-1/",
           ),
           "/en/document/level-2/": sidebar.getDocumentLv2Sidebar(
             "Advanced Documentation",
-            "/en/document/level-2/"
+            "/en/document/level-2/",
           ),
           "/en/development/": sidebar.getDevelopmentSidebar(
             "Developer Guide",
             "Protocol Details",
-            "/en/development/"
+            "/en/development/",
           ),
         },
         navbar: navbar.en,
       },
     },
-  },
+  }),
   head: [["link", { rel: "icon", href: `/logo.png` }]],
   markdown: {
     toc: {
@@ -145,7 +146,9 @@ export default defineUserConfig<DefaultThemeOptions>({
     },
   },
   extendsMarkdown: (md) => {
-    md.use(require("markdown-it-footnote"));
+    md.use(markdownItFootnote);
+    md.use(MermaidPlugin);
   },
-  bundler: isProduction && !useVite ? "@vuepress/webpack" : "@vuepress/vite",
+  bundler:
+    process.env.DOCS_BUNDLER === "webpack" ? webpackBundler() : viteBundler(),
 });
