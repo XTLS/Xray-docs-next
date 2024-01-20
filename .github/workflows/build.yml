@@ -16,7 +16,7 @@ jobs:
           node-version: "18"
       - name: Install yarn
         run: |
-          yarn policies set-version 1.22.19
+          npm install yarn@1.22.19 -g
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
