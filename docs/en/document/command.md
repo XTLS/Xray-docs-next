@@ -28,6 +28,7 @@ The commands are:
 Use "xray help <command>" for more information about a command.
 
 ```
+
 ### xray run
 
 Specify one or more configuration files and run.
@@ -110,6 +111,7 @@ xray uuid
 ```
 
 ### xray x25519
+
 Generate x25519 key pair。
 
 Usage:
@@ -119,6 +121,7 @@ xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding]
 ```
 
 ### xray wg
+
 Generate wireguard curve25519 key pair。
 
 Usage:

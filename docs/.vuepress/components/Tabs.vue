@@ -24,7 +24,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+// import { defineComponent } from 'vue'
+import { defineComponent, getCurrentInstance } from 'vue'
 
 export default defineComponent({
   props: {
@@ -35,34 +36,40 @@ export default defineComponent({
   data() {
     return {
       children: [],
-    };
+    }
   },
   beforeMount() {
-    this.children = [];
+    this.children = []
   },
   mounted() {
+    console.log('>>> run in Tabs > mounted')
     this.$nextTick(async function () {
-      const bootstrap = await import("bootstrap");
-      let triggerEl = document.getElementById(this.children["0"].id + "-label");
-      new bootstrap.Tab(triggerEl).show();
-    });
+      const bootstrap = await import('bootstrap')
+      // let triggerEl = document.getElementById(this.children['0'].id + '-label')
+      let triggerEl = document.getElementById(this.children['0']?.id + '-label')
+      // new bootstrap.Tab(triggerEl).show()
+      if (triggerEl) {
+        new bootstrap.Tab(triggerEl).show()
+      }
+    })
   },
   computed: {
     tag: function () {
-      return "tabs-" + this.title;
+      return 'tabs-' + this.title
     },
     contentTag: function () {
-      return "tabs-" + this.title + "-content";
+      return 'tabs-' + this.title + '-content'
     },
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>
-@import "node_modules/bootstrap/scss/bootstrap";
+@import 'node_modules/bootstrap/scss/bootstrap';
 
 button.nav-link {
   color: var(--c-text-accent);
+
   &:hover,
   &:focus {
     color: var(--x-nav-text-hover);
@@ -73,6 +80,7 @@ nav {
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--c-border);
 }
+
 div.tab-content {
   border-bottom: 1px solid var(--c-border);
 }

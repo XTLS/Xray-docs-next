@@ -3,14 +3,14 @@
     class="tab-pane fade"
     :id="tabID"
     role="tabpanel"
-    :aria-labelledby="labelID"
+    :aria-labelledby="labelID.toString()"
   >
     <slot />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
@@ -19,23 +19,23 @@ export default defineComponent({
     },
   },
   data() {
-    let tag = this.title;
+    let tag = this.title
     return {
       tabID: tag,
-    };
+    }
   },
   mounted() {
-    this.tabID = "tab-" + Math.random().toString(36).substring(2);
-    this.$parent.$data.children.push({ id: this.tabID, title: this.title });
+    this.tabID = 'tab-' + Math.random().toString(36).substring(2)
+    this.$parent.$data.children.push({ id: this.tabID, title: this.title })
   },
   computed: {
     labelID(): String {
-      return this.tabID + "-label";
+      return this.tabID + '-label'
     },
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>
-@import "node_modules/bootstrap/scss/bootstrap";
+@import 'node_modules/bootstrap/scss/bootstrap';
 </style>

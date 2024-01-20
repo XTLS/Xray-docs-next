@@ -55,8 +55,9 @@ Access `http://127.0.0.1:11111/debug/pprof/` or use go tool pprof to start profi
 Access `http://127.0.0.1:11111/debug/vars`
 
 Variables exported include:
-* `stats` includes statistics about inbounds, outbounds and users
-* `observatory` includes observatory results
+
+- `stats` includes statistics about inbounds, outbounds and users
+- `observatory` includes observatory results
 
 for example with [luci-app-xray](https://github.com/yichya/luci-app-xray) you are likely to get a result like this (standard expvar things like `cmdline` and `memstats` are omitted)
 
@@ -64,91 +65,92 @@ for example with [luci-app-xray](https://github.com/yichya/luci-app-xray) you ar
 
 ```json
 {
-    "observatory": {
-        "tcp_outbound": {
-            "alive": true,
-            "delay": 782,
-            "outbound_tag": "tcp_outbound",
-            "last_seen_time": 1648477189,
-            "last_try_time": 1648477189
-        },
-        "udp_outbound": {
-            "alive": true,
-            "delay": 779,
-            "outbound_tag": "udp_outbound",
-            "last_seen_time": 1648477191,
-            "last_try_time": 1648477191
-        }
+  "observatory": {
+    "tcp_outbound": {
+      "alive": true,
+      "delay": 782,
+      "outbound_tag": "tcp_outbound",
+      "last_seen_time": 1648477189,
+      "last_try_time": 1648477189
     },
-    "stats": {
-        "inbound": {
-            "api": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "dns_server_inbound_5300": {
-                "downlink": 14286,
-                "uplink": 5857
-            },
-            "http_inbound": {
-                "downlink": 74460,
-                "uplink": 10231
-            },
-            "https_inbound": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "metrics": {
-                "downlink": 6327,
-                "uplink": 1347
-            },
-            "socks_inbound": {
-                "downlink": 19925615,
-                "uplink": 5512
-            },
-            "tproxy_tcp_inbound": {
-                "downlink": 4739161,
-                "uplink": 1568869
-            },
-            "tproxy_udp_inbound": {
-                "downlink": 0,
-                "uplink": 2608142
-            }
-        },
-        "outbound": {
-            "blackhole_outbound": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "direct": {
-                "downlink": 97714548,
-                "uplink": 3234617
-            },
-            "dns_server_outbound": {
-                "downlink": 7116,
-                "uplink": 2229
-            },
-            "manual_tproxy_outbound_tcp_1": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "manual_tproxy_outbound_udp_1": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "tcp_outbound": {
-                "downlink": 23873238,
-                "uplink": 1049595
-            },
-            "udp_outbound": {
-                "downlink": 639282,
-                "uplink": 74634
-            }
-        },
-        "user": {}
+    "udp_outbound": {
+      "alive": true,
+      "delay": 779,
+      "outbound_tag": "udp_outbound",
+      "last_seen_time": 1648477191,
+      "last_try_time": 1648477191
     }
+  },
+  "stats": {
+    "inbound": {
+      "api": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "dns_server_inbound_5300": {
+        "downlink": 14286,
+        "uplink": 5857
+      },
+      "http_inbound": {
+        "downlink": 74460,
+        "uplink": 10231
+      },
+      "https_inbound": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "metrics": {
+        "downlink": 6327,
+        "uplink": 1347
+      },
+      "socks_inbound": {
+        "downlink": 19925615,
+        "uplink": 5512
+      },
+      "tproxy_tcp_inbound": {
+        "downlink": 4739161,
+        "uplink": 1568869
+      },
+      "tproxy_udp_inbound": {
+        "downlink": 0,
+        "uplink": 2608142
+      }
+    },
+    "outbound": {
+      "blackhole_outbound": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "direct": {
+        "downlink": 97714548,
+        "uplink": 3234617
+      },
+      "dns_server_outbound": {
+        "downlink": 7116,
+        "uplink": 2229
+      },
+      "manual_tproxy_outbound_tcp_1": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "manual_tproxy_outbound_udp_1": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "tcp_outbound": {
+        "downlink": 23873238,
+        "uplink": 1049595
+      },
+      "udp_outbound": {
+        "downlink": 639282,
+        "uplink": 74634
+      }
+    },
+    "user": {}
+  }
 }
 ```
+
 </details>
 
 To get a better view of these numbers, [Netdata](https://github.com/netdata/netdata) (with python.d plugin) is a great option:
@@ -263,6 +265,7 @@ xray:
            id: udp
            expvar_type: int
 ```
+
 </details>
 
 And you will get a nice plot like this:
@@ -270,6 +273,7 @@ And you will get a nice plot like this:
 ![160428235-2988bf69-5d6c-41ec-8267-1bd512508aa8](https://github.com/chika0801/Xray-docs-next/assets/88967758/455e88ce-ced2-4593-a9fa-425bb293215b)
 
 ### Additional
+
 Maybe reusing the empty object `stats` in config file is better than adding `metrics` here?
 
 **Edit:** removed prometheus related things and added usage about expvars

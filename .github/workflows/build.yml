@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v2
         with:
-          node-version: "18"
+          node-version: '18'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -26,8 +26,8 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install and Build
         env:
-          XRAY_DOCS_USE_VITE: "true"
-          NODE_OPTIONS: "--max_old_space_size=4096"
+          XRAY_DOCS_USE_VITE: 'true'
+          NODE_OPTIONS: '--max_old_space_size=4096'
         run: |
           yarn install
           yarn docs:build
@@ -38,8 +38,8 @@ jobs:
           publish_dir: docs/.vuepress/dist
       - name: Build for Main Repository
         env:
-          XRAY_DOCS_MAIN_REPO: "true"
-          NODE_OPTIONS: "--max_old_space_size=4096 --openssl-legacy-provider"
+          XRAY_DOCS_MAIN_REPO: 'true'
+          NODE_OPTIONS: '--max_old_space_size=4096 --openssl-legacy-provider'
         run: |
           yarn docs:build
       - name: Deploy to main Repository

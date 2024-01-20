@@ -3,6 +3,7 @@
 The [Shadowsocks](https://en.wikipedia.org/wiki/Shadowsocks) protocol is compatible with most other implementations of Shadowsocks. The server supports TCP and UDP packet forwarding, with an option to selectively disable UDP.
 
 ### Supported Encryption Methods
+
 The currently supported methods are following:
 
 - Recommended encryption methods:
@@ -67,21 +68,24 @@ Required.
 
 > `password`: string
 
-Required. For **Shadowsocks 2022** a pre-shared `base64` random key similar to WireGuard's keys should be used as the password. The command 
+Required. For **Shadowsocks 2022** a pre-shared `base64` random key similar to WireGuard's keys should be used as the password. The command
+
 ```sh
 openssl rand -base64 <length>
 ```
+
 could used to generate a key. The length of the required key for `shadowsocks-rust` implementation depends on the encryption method:
 
 | Encryption Method               | Key Length |
-| -----------------------------   | ---------: |
+| ------------------------------- | ---------: |
 | `2022-blake3-aes-128-gcm`       |         16 |
 | `2022-blake3-aes-256-gcm`       |         32 |
 | `2022-blake3-chacha20-poly1305` |         32 |
 
-In the `go-shadowsocks` implementation written in Golang, a 32-byte key always works. 
+In the `go-shadowsocks` implementation written in Golang, a 32-byte key always works.
 
 For **any other encryption method** _any string_ could be used. There is no limitation on the password length, but shorter passwords are more susceptible to cracking. It is recommended to use a random-generated password of 16 characters or longer. The following example generates 40-characters length password:
+
 ```sh
 sudo strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 40 | tr -d '\n'; echo
 ```

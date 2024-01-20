@@ -536,4 +536,3 @@ Default value `false`, fill in `true` to enable [Multipath TCP](https://en.wikip
 > `tcpNoDelay`: true | false
 
 Default value `false`, recommended to be enabled with "tcpMptcp": true.
-

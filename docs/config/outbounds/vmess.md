@@ -118,4 +118,3 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 "AuthenticatedLength" 启用认证的数据包长度实验。此实验需要同时在客户端与服务器端同时开启，并运行相同版本的程序。
 
 "NoTerminationSignal" 启用不发送断开连接标致实验。此实验可能会影响被代理的连接的稳定性。
-

@@ -68,18 +68,19 @@ Xray-core v1.8.6 New parameter.<br>
 If you do not write this parameter, or leave it blank, the default value is `"ForceIP"`.<br>
 When the destination address is a domain name, use the Xray-core [built-in DNS server](./dns.md) to get an IP (if no `"dns"` configuration is written, system DNS is used), and send a connection to this IP via wireguard.<br>
 
-| domainStrategy | test-ipv6.com | bgp.he.net | chat.openai.com |
-| :--- | :---: | :---: | :---: |
-| ForceIPv6v4 | IPv6v4 | IPv6 | IPv6 |
-| ForceIPv6 | The website won't open. | IPv6 | IPv6 |
-| ForceIPv4v6 | IPv6v4 **1** | IPv4 | IPv4 |
-| ForceIPv4 | IPv4 | IPv4 | IPv4 |
-| ForceIP | IPv6v4 **2** | IPv6 | IPv6 |
+| domainStrategy |      test-ipv6.com      | bgp.he.net | chat.openai.com |
+| :------------- | :---------------------: | :--------: | :-------------: |
+| ForceIPv6v4    |         IPv6v4          |    IPv6    |      IPv6       |
+| ForceIPv6      | The website won't open. |    IPv6    |      IPv6       |
+| ForceIPv4v6    |      IPv6v4 **1**       |    IPv4    |      IPv4       |
+| ForceIPv4      |          IPv4           |    IPv4    |      IPv4       |
+| ForceIP        |      IPv6v4 **2**       |    IPv6    |      IPv6       |
 
 **1：** Tip `You already have an IPv6 address, but your browser is less inclined to use it, which is more worrying. `<br>
 **2：** The chances of prompting `You already have an IPv6 address, but your browser is less inclined to use it, which is more worrisome. `
 
 **Note 1**：
+
 - Conflicts with `"queryStrategy"` may cause the site to fail to open.
 - For example when `domainStrategy: "ForceIPv4"` is used, geosite:openai's site with `"queryStrategy": "UseIPv6"` will fail to open.
 
@@ -101,6 +102,7 @@ When the destination address is a domain name, use the Xray-core [built-in DNS s
 ```
 
 **Note 2**：
+
 - Xray-core v1.8.0 - v1.8.4 without `"domainStrategy"`.
 - When the destination address is a domain name, use the Xray-core built-in DNS server query to obtain the IP, using the value of `"queryStrategy"` in the `"dns"` configuration to control the IPv4 or IPv6 priority.
 - If the `"dns"` configuration is not written, the system DNS query is used to obtain IP, and the IPv4 or IPv6 priority is controlled by the system.

@@ -58,17 +58,13 @@ Xray 内置的 DNS 模块，主要有两大用途：
       },
       {
         "address": "https://8.8.8.8/dns-query",
-        "domains": [
-          "geosite:netflix"
-        ],
+        "domains": ["geosite:netflix"],
         "skipFallback": true,
         "queryStrategy": "UseIPv4"
       },
       {
         "address": "https://1.1.1.1/dns-query",
-        "domains": [
-          "geosite:openai"
-        ],
+        "domains": ["geosite:openai"],
         "skipFallback": true,
         "queryStrategy": "UseIPv6"
       },

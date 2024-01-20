@@ -91,6 +91,7 @@ Linux 使用`Netfilter`来管理网络，`Netfilter`模型如下：
 4. 能够手写客户端 json 文件配置，至少要能看懂
 
 ### 前期准备工作
+
 ::: warning
 在开始操作前，记得使用 `sysctl -w net.ipv4.ip_forward=1` 打开linux ipv4封包转发
 :::

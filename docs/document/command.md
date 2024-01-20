@@ -106,6 +106,7 @@ xray tls <command> [arguments]
 ```
 
 ### xray uuid
+
 生成 UUID。
 
 使用方法:
@@ -115,6 +116,7 @@ xray uuid [-i "example"]
 ```
 
 ### xray x25519
+
 生成 x25519 密钥对。
 
 使用方法:
@@ -124,6 +126,7 @@ xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding ]
 ```
 
 ### xray wg
+
 生成 wireguard curve25519 密钥对。
 
 使用方法:
@@ -138,5 +141,3 @@ xray wg [-i "(base64.StdEncoding)"]
 - 工作目录（Working Directory）
 - [环境变量](../config/features/env.md#资源文件路径)中 `Xray.location.asset` 所指定的路径
   :::
-
-
