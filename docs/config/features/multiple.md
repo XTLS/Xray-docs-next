@@ -54,12 +54,29 @@ $ xray run -confdir /etc/xray/confs
 以多配置启动 Xray：
 
 ```bash
+# 路径 /etc/xray/confs 为多文件存放目录
 $ xray run -confdir /etc/xray/confs
 ```
 
-这两个配置文件的就等效于合成一起的整配置。当需要修改出口节点，只需要修改 `outbounds.json` 内容。
+`base.json` 和 `outbounds.json` 这两个配置文件的效果之和等效于单文件配置的效果, 如下方所示:
 
-如果需要改编日志 log 的级别，也不需要改 `base.json`，只需后续增加一个配置：
+```json
+{
+  "log": {},
+  "api": {},
+  "dns": {},
+  "stats": {},
+  "policy": {},
+  "transport": {},
+  "routing": {},
+  "inbounds": [],
+  "outbounds": []
+}
+```
+
+当需要修改出口节点，只需要修改 `outbounds.json` 的内容。
+
+如果需要改变日志 log 的级别，也不需要改 `base.json`，只需后续增加一个配置：
 
 - debuglog.json
 
@@ -71,22 +88,28 @@ $ xray run -confdir /etc/xray/confs
 }
 ```
 
-启动顺序放置在 base 后，即可输出 debug 级别的日志
+启动顺序放置在 base 后，即可输出 debug 级别的日志。
+
+::: tip
+文件启动顺序是通过在每个文件名前面增加前缀数字的方式实现的，如 `00_文件名`, `01_文件名`。 数字越大排序越靠后。 
+:::
 
 ### 数组（`[]`）
 
 在 json 配置中的`inbounds`和`outbounds`是数组结构，他们有特殊的规则：
 
-- 当配置中的数组元素有 2 或以上，覆盖前者的 inbounds/oubounds；
+- 当配置中的数组元素有 2 个或以上，则后者覆盖前者的 inbounds/oubounds 的内容，详情看下方的【接近可用配置的例子】；
 - 当配置中的数组元素只有 1 个时，查找原有`tag`相同的元素进行覆盖；若无法找到：
   - 对于 inbounds，添加至最后（inbounds 内元素顺序无关）
   - 对于 outbounds，添加至最前（outbounds 默认首选出口）；但如果文件名含有 tail（大小写均可），添加至最后。
 
 借助多配置，可以很方便为原有的配置添加不同协议的 inbound，而不必修改原有配置。
 
+## 接近可用配置的例子
+
 以下例子不是有效配置，只为展示上述规则。
 
-- 000.json
+- 00.json
 
 ```json
 {
@@ -100,7 +123,7 @@ $ xray run -confdir /etc/xray/confs
 }
 ```
 
-- 001.json
+- 01.json
 
 ```json
 {
@@ -113,7 +136,7 @@ $ xray run -confdir /etc/xray/confs
 }
 ```
 
-- 002.json
+- 02.json
 
 ```json
 {
@@ -127,7 +150,7 @@ $ xray run -confdir /etc/xray/confs
 }
 ```
 
-三个配置将会合成为：
+三个配置将会合并为：
 
 ```json
 {
@@ -135,7 +158,7 @@ $ xray run -confdir /etc/xray/confs
     {
       "protocol": "socks",
       "tag": "socks",
-      "port": 4321 // < 002顺序在000后，因此覆盖tag为socks的inbound端口为4321
+      "port": 4321 // < 02.json顺序在00.json后，因此覆盖tag为socks的inbound端口为4321
     },
     {
       "protocol": "http",
