@@ -89,7 +89,10 @@
 > `type`: "field"
 
 目前只支持`"field"`这一个选项。
-Xray-core v1.8.7 前必填，v1.8.7 后可省略该行。
+
+::: tip
+Xray-core v1.8.7 或更高版本可省略该行。
+:::
 
 > `domain`: \[string\]
 
