@@ -134,6 +134,11 @@ Xray-core v1.8.0 - v1.8.4 没有 `"domainStrategy"`。<br>
 URL:端口 格式，例如 `engage.cloudflareclient.com:2408`<br>
 IP:端口 格式，例如 `162.159.192.1:2408` 或  `[2606:4700:d0::a29f:c001]:2408`
 
+::: tip
+当目标地址类型为 URL 时，将使用 Xray-core 内置 DNS 查询 URL 以获取 IP，IPv4 或 IPv6 优先级由 `domainStrategy` 的值控制。<br>
+若没写 `"dns"` 配置，使用系统 DNS 查询 URL 以获取 IP，IPv4 或 IPv6 优先级由系统控制。
+:::
+
 > `publicKey`: string
 
 服务器公钥，用于验证, 必填
