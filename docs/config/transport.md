@@ -687,7 +687,8 @@ TCP 拥塞控制算法。仅支持 Linux。
 > `interface`: ""
 
 指定绑定出口网卡名称，支持 linux / iOS / Mac OS。<br>
-iOS / Mac OS 需要 Xray-core v1.8.6 或更高版本。
+iOS / Mac OS 需要 Xray-core v1.8.6 或更高版本。<br>
+Windows 需要 Xray-core v1.8.7 或更高版本。
 
 > `V6Only`: true | false
 
