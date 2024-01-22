@@ -6,7 +6,7 @@ Xray 使用 Go 风格的命令及参数
 
 ## 获取基本命令
 
-您可以运行 `xray help` 来获得所有 xray 最基础的用法, 以及可用的命令及说明.
+您可以运行 `xray help` 来获得所有 xray 最基础的用法, 以及可用的命令及说明。
 
 ```
 Xray is a platform for building proxies.
@@ -57,6 +57,12 @@ without launching the server
 ::: tip
 配置文件除了默认的 JSON 格式外，也可以使用 TOML 和 YAML。在不指定格式的前提下会通过文件扩展名识别。
 :::
+
+```
+ xray run -dump
+```
+
+用以输出多文件配置融合之后的结果。
 
 ### xray version
 

@@ -89,7 +89,10 @@
 > `type`: "field"
 
 目前只支持`"field"`这一个选项。
-Xray-core v1.8.7 前必填，v1.8.7 后可省略该行。
+
+::: tip
+Xray-core v1.8.7 或更高版本可省略该行。
+:::
 
 > `domain`: \[string\]
 
@@ -188,7 +191,10 @@ Xray-core v1.8.7 前必填，v1.8.7 后可省略该行。
 ```json
 {
   "tag": "balancer",
-  "selector": []
+  "selector": [],
+  "strategy": {
+   "type":"roundRobin"
+  }
 }
 ```
 
@@ -201,6 +207,54 @@ Xray-core v1.8.7 前必填，v1.8.7 后可省略该行。
 一个字符串数组，其中每一个字符串将用于和 outbound 标识的前缀匹配。在以下几个 outbound 标识中：`[ "a", "ab", "c", "ba" ]`，`"selector": ["a"]` 将匹配到 `[ "a", "ab" ]`。
 
 如果匹配到多个 outbound，负载均衡器目前会从中随机选出一个作为最终的 outbound。
+
+> `strategy`: \[ string \]
+
+`"type":"roundRobin"` 表示按顺序选择匹配到的 outbounds tag，若不写 `"strategy"` 字段表示随机选择匹配到的 outbounds tag。
+
+配置示例：
+
+```json
+    "routing": {
+        "rules": [
+            {
+                "inboundTag": [
+                    "in"
+                ],
+                "balancerTag": "round"
+            }
+        ],
+        "balancers" : [
+            {
+                "selector": [
+                    "out"
+                ],
+                "strategy": {
+                    "type":"roundRobin"
+                },
+                "tag": "round"
+            }
+        ]
+    }
+
+    "inbounds": [
+        {
+            // 入站配置
+            "tag": "in"
+        }
+    ]
+
+    "outbounds": [
+        {
+            // 出站配置
+            "tag": "out1"
+        },
+        {
+            // 出站配置
+            "tag": "out2"
+        }
+    ]
+```
 
 ### 预定义域名列表
 
