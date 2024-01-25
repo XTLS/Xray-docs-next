@@ -3,60 +3,81 @@
 </template>
 
 <script lang="ts">
+import { useMutationObserver } from "@vueuse/core";
 import {
+  computed,
   defineComponent,
+  h,
   onMounted,
-  nextTick,
-  toRef,
+  ref,
+  shallowRef,
   watch,
   reactive,
+  nextTick,
+  toRef
 } from "vue";
-import { useDarkMode } from "@vuepress/theme-default/lib/client";
+
+import { getDarkmodeStatus } from "../../plugins/mermaid/helpers/darkmode.js";
+
 export default defineComponent({
   name: "Mermaid",
-  props: {
-    identifier: String,
-    graph: String,
-  },
-  setup(props) {
-    const dark = useDarkMode();
-    const chartID = toRef(props, "identifier");
-    const rawGraph = toRef(props, "graph");
-    const html = reactive({ innerHtml: "" });
-    onMounted(() => {
-      nextTick(async function () {
-        const mermaid = await import("mermaid");
-        mermaid.default.initialize({
-          startOnLoad: false,
-          theme: dark.value ? "dark" : "default",
-        });
-        mermaid.default
-          .render(chartID.value!, decodeURI(rawGraph.value!))
-          .then(({ svg, bindFunctions }) => {
-            html.innerHtml = svg;
-          });
-      });
-    });
 
-    watch(dark, async () => {
+  props: {
+    id: { type: String, required: true },
+    code: { type: String, required: true },
+  },
+
+  setup(props) {
+    const html = reactive({ innerHtml: "" });
+
+    const chartID = toRef(props, "id");
+    const rawGraph = toRef(props, "code");
+
+    const isDarkmode = ref(false);
+
+    const renderMermaid = async (): Promise<void> => {
       const mermaid = await import("mermaid");
+
       mermaid.default.initialize({
+        theme: isDarkmode.value ? "dark" : "default",
         startOnLoad: false,
-        theme: dark.value ? "dark" : "default",
       });
-      mermaid.default
-        .render(chartID.value!, decodeURI(rawGraph.value!))
-        .then(({ svg, bindFunctions }) => {
-          html.innerHtml = svg;
-        });
-    });
+
+      mermaid.default.render(chartID.value!, decodeURI(rawGraph.value!)).then(({ svg, bindFunctions }) => {
+        html.innerHtml = svg;
+      });
+    };
+
+    onMounted(() => {
+      isDarkmode.value = getDarkmodeStatus()
+      nextTick(renderMermaid)
+    })
+
+    // watch darkmode change
+    if (typeof document !== 'undefined') {
+      useMutationObserver(
+        document.documentElement,
+        () => {
+          isDarkmode.value = getDarkmodeStatus();
+        },
+        {
+          attributeFilter: ["class", "data-theme"],
+          attributes: true,
+        },
+      );
+    }
+
+
+    watch(isDarkmode, () => renderMermaid());
 
     return {
       tag: chartID,
-      payload: html,
-    };
+      payload: html
+    }
+
   },
 });
 </script>
 
 <style scoped></style>
+

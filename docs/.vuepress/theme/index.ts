@@ -1,5 +1,7 @@
-import { Theme } from "@vuepress/core";
-import { path } from "@vuepress/utils";
+// import { Theme } from "@vuepress/core";
+import { Theme } from "vuepress/core";
+// import { path } from "@vuepress/utils";
+import { path } from "vuepress/utils";
 import { defaultTheme } from "vuepress";
 
 export const docsPlugin: Theme = (options, app) => {
