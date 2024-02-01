@@ -12,6 +12,10 @@ export default defaultTheme({
   smoothScroll: true,
   repo: 'xtls/xray-core',
   docsDir: 'docs',
+  docsRepo: 'xtls/Xray-docs-next',
+  docsBranch: 'main',
+  editLinks: true,
+  enableToggle: true,
   locales: {
     '/': {
       navbar: navbarZh,
@@ -58,11 +62,6 @@ export default defaultTheme({
       toggleColorMode: 'toggle color mode',
       toggleSidebar: 'toggle side bar',
     },
-    docsRepo: 'xtls/Xray-docs-next',
-    docsBranch: 'main',
-    editLinks: true,
-    enableToggle: true,
-    smoothScroll: true,
     // logo: '/logo.png',
 
     // sidebar: 'auto',
