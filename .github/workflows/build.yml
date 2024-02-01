@@ -32,6 +32,7 @@ jobs:
           XRAY_DOCS_USE_VITE: "true"
           NODE_OPTIONS: "--max_old_space_size=4096"
         run: |
+          pnpm install
           yarn docs:build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
