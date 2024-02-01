@@ -19,7 +19,7 @@ dependencies:
     version: 2.0.0-rc.3(vuepress@2.0.0-rc.2)
   '@vuepress/theme-default':
     specifier: 2.0.0-rc.3
-    version: 2.0.0-rc.3(sass-loader@13.3.3)(typescript@5.3.3)(vuepress@2.0.0-rc.2)
+    version: 2.0.0-rc.3(sass-loader@14.1.0)(typescript@5.3.3)(vuepress@2.0.0-rc.2)
   '@vueuse/core':
     specifier: ^10.7.2
     version: 10.7.2(vue@3.3.13)
@@ -77,8 +77,8 @@ devDependencies:
     specifier: ^1.51.0
     version: 1.70.0
   sass-loader:
-    specifier: ^13.3.2
-    version: 13.3.3(sass@1.70.0)(webpack@5.90.0)
+    specifier: ^14.1.0
+    version: 14.1.0(sass@1.70.0)(webpack@5.90.0)
   typescript:
     specifier: ^5.2.2
     version: 5.3.3
@@ -1397,7 +1397,7 @@ packages:
     dependencies:
       '@mdit-vue/types': 2.0.0
 
-  /@vuepress/theme-default@2.0.0-rc.3(sass-loader@13.3.3)(typescript@5.3.3)(vuepress@2.0.0-rc.2):
+  /@vuepress/theme-default@2.0.0-rc.3(sass-loader@14.1.0)(typescript@5.3.3)(vuepress@2.0.0-rc.2):
     resolution: {integrity: sha512-IOgAkAgYFyq3O/404KLTXFeJGVF6UyNx5fa8ywO89mpUlJZycUpgIvBS7vQN/hnew43VMEfVEGYwqoCmHVioPw==}
     peerDependencies:
       sass-loader: ^14.0.0
@@ -1420,7 +1420,7 @@ packages:
       '@vuepress/plugin-theme-data': 2.0.0-rc.3(typescript@5.3.3)(vuepress@2.0.0-rc.2)
       '@vueuse/core': 10.7.2(vue@3.4.15)
       sass: 1.70.0
-      sass-loader: 13.3.3(sass@1.70.0)(webpack@5.90.0)
+      sass-loader: 14.1.0(sass@1.70.0)(webpack@5.90.0)
       vue: 3.4.15(typescript@5.3.3)
       vue-router: 4.2.5(vue@3.4.15)
       vuepress: 2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2)(@vuepress/bundler-webpack@2.0.0-rc.2)(typescript@5.3.3)(vue@3.3.13)
@@ -4760,23 +4760,25 @@ packages:
   /safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  /sass-loader@13.3.3(sass@1.70.0)(webpack@5.90.0):
-    resolution: {integrity: sha512-mt5YN2F1MOZr3d/wBRcZxeFgwgkH44wVc2zohO2YF6JiOMkiXe4BYRZpSu2sO1g71mo/j16txzUhsKZlqjVGzA==}
-    engines: {node: '>= 14.15.0'}
+  /sass-loader@14.1.0(sass@1.70.0)(webpack@5.90.0):
+    resolution: {integrity: sha512-LS2mLeFWA+orYxHNu+O18Xe4jR0kyamNOOUsE3NyBP4DvIL+8stHpNX0arYTItdPe80kluIiJ7Wfe/9iHSRO0Q==}
+    engines: {node: '>= 18.12.0'}
     peerDependencies:
-      fibers: '>= 3.1.0'
+      '@rspack/core': 0.x || 1.x
       node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
       sass: ^1.3.0
       sass-embedded: '*'
       webpack: ^5.0.0
     peerDependenciesMeta:
-      fibers:
+      '@rspack/core':
         optional: true
       node-sass:
         optional: true
       sass:
         optional: true
       sass-embedded:
+        optional: true
+      webpack:
         optional: true
     dependencies:
       neo-async: 2.6.2
