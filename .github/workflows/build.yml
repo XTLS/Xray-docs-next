@@ -14,9 +14,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: "18"
-      - name: Install yarn
+      - name: Install yarn and pnpm
         run: |
           npm install yarn@1.22.19 -g
+          npm install -g pnpm
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
