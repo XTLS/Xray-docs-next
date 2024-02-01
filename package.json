@@ -41,6 +41,6 @@
     "jquery": "^3.6.0",
     "markdown-it-footnote": "^4.0.0",
     "mermaid": "^10.7.0",
-    "vue": "3.3.13"
+    "vue": "3.4.15"
   }
 }
