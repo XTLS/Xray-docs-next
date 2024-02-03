@@ -23,6 +23,7 @@
       "publicKey": "PUBLIC_KEY"
     }
   ],
+  "kernelMode": true, // optional, default true if it's supported and permission is sufficient
   "mtu": 1420, // optional, default 1420
   "reserved": [1, 2, 3],
   "workers": 2, // optional, default runtime.NumCPU()
@@ -41,6 +42,15 @@
 > `address`: string array
 
 Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址，支持 IPv6
+
+> `kernelMode`: true | false
+
+是否使用 Linux 内核的虚拟网卡 TUN。<br>
+需要系统支持且有 root 权限才能使用 Linux 内核的虚拟网卡 TUN，使用后会占用 IPv6 的 1023 号路由表。<br>
+
+::: tip
+若 IPv6 的 1023 号路由表内已有路由条目，且 `kernelMode` 的值为 `true`，将无法正常使用。
+:::
 
 > `mtu`: int
 
