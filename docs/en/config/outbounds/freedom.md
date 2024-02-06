@@ -13,7 +13,8 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
     "packets": "tlshello",
     "length": "100-200",
     "interval": "10-20" // ms
-  }
+  },
+  "proxyProtocol": 0
 }
 ```
 
@@ -55,3 +56,7 @@ A key-value map used to control TCP fragmentation，under some circumstances it 
 `"length"`: length to make the cut
 
 `"interval"`: time between fragments（ms）
+
+> `proxyProtocol`: number
+
+The value of `proxyProtocol` represents the PROXY Protocol version. default value is `0`.

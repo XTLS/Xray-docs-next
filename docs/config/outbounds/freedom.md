@@ -13,7 +13,8 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
     "packets": "tlshello",
     "length": "100-200",
     "interval": "10-20" // 单位ms
-  }
+  },
+  "proxyProtocol": 0
 }
 ```
 
@@ -70,3 +71,9 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值�
 `"length"`：分片包长 (byte)
 
 `"interval"`：分片间隔（ms）
+
+> `proxyProtocol`: number
+
+PROXY protocol 通常配合 `redirect` 重定向到开启了 PROXY protocol 协议的 Nginx 或其他后端服务中。如果后端服务不支持 PROXY protocol 协议，连接将会被断开。
+
+proxyProtocol 的值为 PROXY protocol 版本号，可选 `1` 或 `2`，如不指定，默认为 `0` 不启用。
