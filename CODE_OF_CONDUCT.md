@@ -8,7 +8,7 @@ Project X 的文档托管在 [GitHub](https://github.com/XTLS/Xray-docs-next) �
 
 您可以通过以下步骤, 提交您对文档的改动:
 
-1. 从 [project X 文档仓库](https://github.com/XTLS/Xray-docs-next) 打开仓库, 点击右上角的 fork, fork 一份文档仓库的镜像到您自己的 github 仓库.
+1. 从 [Project X 文档仓库](https://github.com/XTLS/Xray-docs-next) 打开仓库, 点击右上角的 fork, fork 一份文档仓库的镜像到您自己的 github 仓库.
 
 2. 使用任何您喜欢的工具, 从您克隆的仓库获得文档的克隆, 如:
 
@@ -24,11 +24,11 @@ git checkout -b your-branch
 
 4. 在新分支上做修改。
 
-   注：在修改时请注意遵循 [中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)
+   注：推荐 [中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)
 
-5. 修改完成后，请格式化您的更改。建议使用 Prettier
+5. 修改完成后，请使用 [Prettier](https://prettier.io/docs/en/install.html) 格式化您的更改。
 
-   注：存在格式问题或不遵循中文文案排版指北的 PR，将有可能被拒绝。
+   注：存在格式问题的 PR，将有可能被拒绝。
 
 6. 提交修改，并推送到您的仓库中
 
