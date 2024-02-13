@@ -83,9 +83,9 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 - 感谢提出有意义的建议和意见的朋友们.
 - 感谢 Telegram 群每一位帮助群友的朋友.
 
-### 更多关于 project X
+### 更多关于 Project X
 
-- 如果你想知道更多关于 project X 的足迹与成长, 请点击[这里](./about/news.md)
+- 如果你想知道更多关于 Project X 的足迹与成长, 请点击[这里](./about/news.md)
 
 ### License
 
