@@ -1,6 +1,6 @@
 # Loopback
 
-Loopback 是个出站数据协议，其作用为将经该出站传出的数据重新送入路由入站，以达到数据再次被路由处理的效果。
+Loopback 是个出站数据协议，其作用为将经该出站传出的数据重新送入路由入站，以达到数据无需离开 Xray-core 即可再次被路由处理的效果。
 
 ## OutboundConfigurationObject
 
