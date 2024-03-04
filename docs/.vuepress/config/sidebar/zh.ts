@@ -49,6 +49,7 @@ export const sidebarZh: SidebarConfig = {
         '/config/outbounds/dns.md',
         '/config/outbounds/freedom.md',
         '/config/outbounds/http.md',
+        '/config/outbounds/loopback.md',
         '/config/outbounds/shadowsocks.md',
         '/config/outbounds/socks.md',
         '/config/outbounds/trojan.md',
