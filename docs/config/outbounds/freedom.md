@@ -22,29 +22,18 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
 > "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"<br>
 > "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
-Xray-core v1.8.6 新增功能：<br>
-`"UseIPv6v4"` | `"UseIPv4v6"`<br>
-`"ForceIP"` | `"ForceIPv6v4"` | `"ForceIPv6"` | `"ForceIPv4v6"` | `"ForceIPv4"`
-
-若不写此参数，或留空，默认值 `"AsIs"`。
+默认值 `"AsIs"`。
 
 当目标地址为域名时，配置相应的值，Freedom 的行为模式如下：
 
-- `"AsIs"`：Freedom 使用系统 DNS 同时查询 A 和 AAAA 记录获取 IP，向此域名发出连接。IPv4 或 IPv6 优先级由系统控制。
-- `"UseIP"`、`"UseIPv6v4"`、`"UseIPv6"`、`"UseIPv4v6"`、`"UseIPv4"`：使用 Xray-core [内置 DNS 服务器](../dns.md) 查询获取 IP，向此域名发出连接。
-- `"ForceIP"`、`"ForceIPv6v4"`、`"ForceIPv6"`、`"ForceIPv4v6"`、`"ForceIPv4"`：使用 Xray-core [内置 DNS 服务器](../dns.md) 查询获取 IP，向此域名发出连接。
-- 当使用 `"UseIP"` 系列值 或 `"ForceIP"` 系列值时，若没写 `"dns"` 配置，使用系统 DNS 同时查询 A 和 AAAA 记录获取 IP，向此域名发出连接。
+- 当使用 `"AsIs"` 时，Xray将直接使用系统栈发起连接，优先级与选择IP取决于系统设置。
+- 当填写其他值时，将使用 Xray-core [内置 DNS 服务器](../dns.md) 服务器进行解析。若不存在DNSObject，则使用系统DNS。若有多个符合条件的IP地址时，核心会随机选择一个IP作为目标IP。
+- `"IPv4"` 代表尝试仅使用IPv4进行连接，`"IPv4v6"` 代表尝试使用IPv4或IPv6连接，但对于双栈域名，尽量使用IPv4。（v4v6调换后同理，不再赘述）
+- 当使用 `"Use"` 开头的选项时，若解析结果不符合要求（如，域名只有IPv4解析结果但使用了UseIPv6），则会回落回AsIs。
+- 当使用 `"Force"` 开头的选项时，若解析结果不符合要求，则该连接会无法建立。
 
 ::: tip TIP 1
-当使用 `"UseIP"`、`"ForceIP"` 模式时，并且 [出站连接配置](../outbound.md#outboundobject) 中指定了 `sendThrough` 时，Freedom 会根据 `sendThrough` 的值自动判断所需的 IP 类型，IPv4 或 IPv6。
-:::
-
-::: tip TIP 2
-当使用 `"UseIPv4"`、`"UseIPv6"` 或 `"ForceIPv4"`、`"ForceIPv6"` 模式时，Freedom 会只使用对应的 IPv4 或 IPv6 地址。当 `sendThrough` 指定了不匹配的本地地址时，将导致连接失败。
-:::
-
-::: tip TIP 3
-`"UseIPv4"`、`"UseIPv6"` 和 `"ForceIPv4"`、`"ForceIPv6"` 的区别是，前者解析失败了会走 AsIs，后者解析失败了会被 block。这样整个 `domainStrategy` 都更加灵活了。
+当使用 `"UseIP"`、`"ForceIP"` 模式时，并且 [出站连接配置](../outbound.md#outboundobject) 中指定了 `sendThrough` 时，Freedom 会根据 `sendThrough` 的值自动判断所需的 IP 类型，IPv4 或 IPv6。若手动指定了单种IP类型（如UseIPv4），但与 `sendThrough` 指定的本地地址不匹配，将会导致连接失败。
 :::
 
 > `redirect`: address_port
