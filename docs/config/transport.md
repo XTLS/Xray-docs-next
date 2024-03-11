@@ -101,7 +101,7 @@
 }
 ```
 
-> `network`: "tcp" | "ws" | "h2" | "grpc" | "quic" | "kcp"
+> `network`: "tcp" | "ws" | "h2" | "grpc" | "quic" | "kcp" | "httpupgrade"
 
 连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
 
