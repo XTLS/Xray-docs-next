@@ -1,6 +1,6 @@
 # HttpUpgrade
 
-一个实现了类似于 WebSocket 进行 HTTP 1.1 升级请求和响应的协议，这使得它可以像 WebSocket 一样可以被CDN或者Nginx进行反代，但无需实现 WebSocket 协议的其他部分，使得它有更高的效率。
+一个实现了类似于 WebSocket 进行 HTTP 1.1 升级请求和响应的协议，这使得它可以像 WebSocket 一样可以被CDN或者Nginx进行反代，但无需实现 WebSocket 协议的其他部分，所以具有更高的效率。
 其设计不推荐单独使用，而是和TLS等安全协议一起工作。
 
 ## HttpUpgradeObject

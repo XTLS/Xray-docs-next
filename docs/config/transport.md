@@ -160,7 +160,7 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
-针对 HTTPUpragde 连接的配置。
+当前连接的 HTTPUpragde 配置，仅当此连接使用 HTTPUpragde 时有效。配置内容与上面的全局配置相同。
 
 
 > `sockopt`: [SockoptObject](#sockoptobject)
