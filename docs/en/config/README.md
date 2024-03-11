@@ -74,3 +74,7 @@ Reverse proxy. You can forward server-side traffic to the client, that is, rever
 > fakedns: [FakeDnsObject](./fakedns.md)
 
 FakeDNS configuration. It can be used with transparent proxy to obtain the actual domain name.
+
+> metrics: [metricsObject](./metrics.md)
+
+Metrics configuration. A more straightforward (and hopefully better) way to export metrics.

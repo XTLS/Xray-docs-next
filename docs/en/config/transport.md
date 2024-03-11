@@ -25,7 +25,8 @@ The `TransportObject` corresponds to the `transport` item in the configuration f
     "httpSettings": {},
     "quicSettings": {},
     "dsSettings": {},
-    "grpcSettings": {}
+    "grpcSettings": {},
+    "httpupgradeSettings": {}
   }
 }
 ```
@@ -54,6 +55,10 @@ Configuration for QUIC connections.
 
 Configuration for gRPC connections.
 
+> `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
+
+Configuration for HTTPUpgrade connections.
+
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
 Configuration for Domain Socket connections.
@@ -74,6 +79,7 @@ Configuration for Domain Socket connections.
   "quicSettings": {},
   "dsSettings": {},
   "grpcSettings": {},
+  "httpupgradeSettings": {},
   "sockopt": {
     "mark": 0,
     "tcpFastOpen": false,
@@ -86,11 +92,11 @@ Configuration for Domain Socket connections.
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "domainsocket" | "quic" | "grpc"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "quic" | "grpc" | "httpupgrade"
 
 The type of transport used by the connection's data stream, with a default value of `"tcp"`.
 
-> `security`: "none" | "tls" | "xtls"
+> `security`: "none" | "tls" | "reality"
 
 Whether to enable transport layer encryption, with supported options:
 
@@ -138,9 +144,13 @@ The gRPC configuration for the current connection, only valid when gRPC is used 
 
 The Domain socket configuration for the current connection, only valid when Domain socket is used for this connection. The configuration is the same as the global configuration above.
 
+> `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
+
+Configuration of the current HTTPUpragde connection. Valid only when HTTPUpgrade is used by this connection. The configuration schema is the exact same as the global schema.
+
 > `sockopt`: [SockoptObject](./chat#sockoptobject)
 
-Specific configuration for transparent proxying.
+Specific configuration for transparent proxies.
 
 ### TLSObject
 
