@@ -92,11 +92,11 @@ Configuration for Domain Socket connections.
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "domainsocket" | "quic" | "grpc"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "quic" | "grpc" | "httpupgrade"
 
 The type of transport used by the connection's data stream, with a default value of `"tcp"`.
 
-> `security`: "none" | "tls" | "xtls"
+> `security`: "none" | "tls" | "reality"
 
 Whether to enable transport layer encryption, with supported options:
 
