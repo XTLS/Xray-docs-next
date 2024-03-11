@@ -25,7 +25,8 @@
     "httpSettings": {},
     "quicSettings": {},
     "dsSettings": {},
-    "grpcSettings": {}
+    "grpcSettings": {},
+    "httpupgradeSettings": {}
   }
 }
 ```
@@ -54,6 +55,10 @@
 
 针对 gRPC 连接的配置。
 
+> `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
+
+针对 HTTPUpragde 连接的配置。
+
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
 针对 Domain Socket 连接的配置。
@@ -74,6 +79,7 @@
   "quicSettings": {},
   "dsSettings": {},
   "grpcSettings": {},
+  "httpupgradeSettings": {},
   "sockopt": {
     "mark": 0,
     "tcpMaxSeg": 1440,
@@ -151,6 +157,11 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
 当前连接的 Domain socket 配置，仅当此连接使用 Domain socket 时有效。配置内容与上面的全局配置相同。
+
+> `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
+
+针对 HTTPUpragde 连接的配置。
+
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 
