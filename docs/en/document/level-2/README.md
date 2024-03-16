@@ -14,7 +14,7 @@ Complete tutorial on configuring transparent proxy (TProxy) based on Xray.
 
 Xray-based TProxy Transparent Proxy (IPv4 and IPv6) Configuration Tutorial
 
-[Nginx_TLS Tunnel Hidden Fingerprint](./Nginx_TLS_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
+[Nginx_TLS Tunnel Hidden Fingerprint](./nginx_or_haproxy_tls_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
 
 Use Nginx_TLS tunnel on both ends to hide the fingerprint.
 
