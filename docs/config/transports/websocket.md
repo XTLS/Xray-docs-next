@@ -36,7 +36,7 @@ Websocket 会识别 HTTP 请求的 X-Forwarded-For 头来覆写流量的源地�
 
 WebSocket 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
-如果路径中包含 `ed` 参数，将会启用 `Early Data` 以降低延迟，其值为首包长度阈值。如果首包长度超过此值，就不会启用 `Early Data`。建议的值为 2048。
+如果路径中包含 `ed` 参数(如 ```/mypath?ed=2048```)，将会启用 `Early Data` 以降低延迟，其值为首包长度阈值。如果首包长度超过此值，就不会启用 `Early Data`。最大值为8192，建议的值为 2048。
 
 ::: warning
 `Early Data` 使用 `Sec-WebSocket-Protocol` 头承载数据。如果你遇到兼容性问题，可以尝试调低阈值。

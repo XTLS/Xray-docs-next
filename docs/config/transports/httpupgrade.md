@@ -29,6 +29,8 @@
 
 HTTPUpgrade 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
+如果路径中包含 `ed` 参数(如 ```/mypath?ed=2048```)，将会启用 `Early Data` 以降低延迟，其值为首包长度阈值。如果首包长度超过此值，就不会启用 `Early Data`。最大值为8192，建议的值为 2048。
+
 > `host`: string
 
 HTTPUpgrade 的HTTP请求中所发送的Host，默认值为空。
