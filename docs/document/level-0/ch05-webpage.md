@@ -124,7 +124,13 @@
    </html>
    ```
 
-5. 修改 `nginx.conf` 并重启 `Nginx` 服务，将`80`端口的 http 访问定位到刚才建立的 `html` 页面上
+   赋予其他用户读取该文件的权限
+
+   ```shell
+   chmod -R a+r .
+   ```
+
+6. 修改 `nginx.conf` 并重启 `Nginx` 服务，将`80`端口的 http 访问定位到刚才建立的 `html` 页面上
 
    1. 修改 `nginx.conf` 。
 
