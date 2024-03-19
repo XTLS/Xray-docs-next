@@ -101,7 +101,7 @@ The type of transport used by the connection's data stream, with a default value
 Whether to enable transport layer encryption, with supported options:
 
 - `"none"` means no encryption (default value).
-- `"tls"` means using [TLS](https://en.wikipedia.org/wiki/base/transport_Layer_Security).
+- `"tls"` means using [TLS](https://en.wikipedia.org/wiki/transport_Layer_Security).
 - `"xtls"` means using [XTLS](./features/xtls.md). <Badge text="Deprecated" type="warning"/>
 
 > `tlsSettings`: [TLSObject](#tlsobject)
