@@ -114,7 +114,7 @@
 是否启用传输层加密，支持的选项有
 
 - `"none"` 表示不加密（默认值）
-- `"tls"` 表示使用 [TLS](https://en.wikipedia.org/wiki/base/transport_Layer_Security)。
+- `"tls"` 表示使用 [TLS](https://zh.wikipedia.org/wiki/%E5%82%B3%E8%BC%B8%E5%B1%A4%E5%AE%89%E5%85%A8%E6%80%A7%E5%8D%94%E5%AE%9A)。
 - `"reality"` 表示使用 REALITY。
 
 > `tlsSettings`: [TLSObject](#tlsobject)
