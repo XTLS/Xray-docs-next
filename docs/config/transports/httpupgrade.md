@@ -1,4 +1,4 @@
-# HttpUpgrade
+# HTTPUpgrade
 
 一个实现了类似于 WebSocket 进行 HTTP 1.1 升级请求和响应的协议，这使得它可以像 WebSocket 一样可以被CDN或者Nginx进行反代，但无需实现 WebSocket 协议的其他部分，所以具有更高的效率。
 其设计不推荐单独使用，而是和TLS等安全协议一起工作。
@@ -12,6 +12,9 @@
   "acceptProxyProtocol": false,
   "path": "/",
   "host": "xray.com"
+  "headers": {
+    "key": "value"
+  }
 }
 ```
 
@@ -34,3 +37,9 @@ HTTPUpgrade 所使用的 HTTP 协议路径，默认值为 `"/"`。
 > `host`: string
 
 HTTPUpgrade 的HTTP请求中所发送的Host，默认值为空。
+
+> `headers`: map \{string: string\}
+
+自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
+
+当同时在此处与 ```"host"``` 设置 Host 时，将会使用 ```"host"``` 的值。
