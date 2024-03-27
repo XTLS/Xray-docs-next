@@ -36,12 +36,14 @@ HTTPUpgrade 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
 > `host`: string
 
-HTTPUpgrade 的HTTP请求中所发送的Host，默认值为空。若服务端值为空时，不验证客户端发送来的Host值。若服务端指定了值，客户端发送来的Host值需一致才能连接成功。
+HTTPUpgrade 的HTTP请求中所发送的host，默认值为空。若服务端值为空时，不验证客户端发送来的host值。
+
+当在服务端指定该值，或在 ```headers``` 中指定host，将会校验与客户端请求host是否一致。
+
+客户端选择发送的host优先级 ```host``` >  ```headers``` > ```address```
 
 > `headers`: map \{string: string\}
 
 自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
 
 默认值为空。
-
-当同时在此处与 ```"host"``` 设置 Host 时，将会使用 ```"host"``` 的值。
