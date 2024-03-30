@@ -225,19 +225,19 @@ This should not be set to `true` in deployments for security reaons, or it can b
 
 > `disableSystemRoot`: true | false
 
-Whether to disable the CA certificate provided by the operating system. The default value is `false`.
+Whether to disable the CA certificates provided by the operating system. Defaults to `false`.
 
-When set to `true`, Xray will only use the certificates specified in `certificates` for TLS handshakes. When set to `false`, Xray will only use the CA certificates provided by the operating system for TLS handshakes.
+When `true`, Xray will only use the certificates specified in `certificates` for TLS handshakes. When `false`, Xray will only use the CA certificates provided by the operating system for TLS handshakes.
 
 > `enableSessionResumption`: true | false
 
-When this parameter is set to false, the `session_ticket` extension is not included in the ClientHello message. Generally, the ClientHello message in Go language programs does not use this extension, so it is recommended to keep the default value. The default value is `false`.
+When `false`, the `session_ticket` extension will not be included in ClientHello. Oftentimes the ClientHello in Go programs does not have this extension enabled, so it is recommended to leave it as-is. Defaults to `false`.
 
 > `fingerprint`: string
 
-This parameter is used to configure the fingerprint of the `TLS Client Hello`. When its value is empty, this feature is not enabled. After enabling it, Xray will **simulate** the `TLS` fingerprint through the uTLS library or generate it randomly. Three configuration options are supported:
+Specifies the fingerprint of the `TLS Client Hello` message. When empty, fingerprint simulation will not be enabled. When enabled, Xray will **simulate** the `TLS` fingerprint through the uTLS library or have it generated randomly. Three types of options are supported:
 
-1. TLS fingerprints of the latest versions of popular browsers, including:
+1. Simulate TLS fingerprints of the latest versions of popular browsers, including:
 
 - `"chrome"`
 - `"firefox"`
@@ -248,38 +248,44 @@ This parameter is used to configure the fingerprint of the `TLS Client Hello`. W
 - `"360"`
 - `"qq"`
 
-1. Generate a fingerprint when xray starts
+1. Have a fingerprint generated automatically when xray starts
 
-- `"random"`: randomly select one in newer versions of browsers
+- `"random"`: randomly select one of the up-to-date browsers
 - `"randomized"`: generate a completely random and unique fingerprint (100% compatible with TLS 1.3 using X25519)
 
-1. Use uTLS native fingerprint variable names, such as `"HelloRandomizedNoALPN"` `"HelloChrome_106_Shuffle"`. See the full list in [uTLS library](https://github.com/refraction-networking/utls/blob/master/u_common.go#L162).
+1. Use uTLS native fingerprint variable names, such as `"HelloRandomizedNoALPN"` `"HelloChrome_106_Shuffle"`. See the full list in the [uTLS library](https://github.com/refraction-networking/utls/blob/master/u_common.go#L162).
 
 ::: tip
-This feature only **simulates** the fingerprint of the `TLS Client Hello`, and its behavior and other fingerprints are the same as Golang. If you want to simulate browser `TLS` fingerprints and behaviors more completely, you can use the [Browser Dialer](./transports/websocket.md#browser-dialer).
+This feature only **simulates** the fingerprint of `TLS Client Hello` message, leaving other behaviours the same as vanilla Go TLS. If you want to simulate a browser `TLS` more completely, use the [Browser Dialer](./transports/websocket.md#browser-dialer).
 :::
 
 > `pinnedPeerCertificateChainSha256`: [string]
 
-Specifies the SHA256 hash value of the certificate chain for the remote server, using standard encoding format. Only when the hash value of the server-side certificate chain matches one of the settings can a TLS connection be successfully established.
+Specifies the SHA256 hash values of the certificate chain of the remote server, using the standard encoding format. Only when the hash value of the server-side certificate chain matches any of the specified can a TLS connection be successfully established.
 
-When the connection fails due to this configuration, the hash value of the remote server certificate will be displayed.
+When the connection fails with this active, the hash value of the remote certificate will be shown.
 
 ::: danger
 It is not recommended to use this method to obtain the hash value of the certificate chain, because in this case, there will be no opportunity to verify whether the certificate provided by the server at this time is a real certificate, and it cannot be guaranteed that the obtained certificate hash value is the expected hash value.
 :::
 
 ::: tip
-If you need to obtain the hash value of the certificate, run `xray tls certChainHash --cert <cert.pem>` in the command line, where `<cert.pem>` should be replaced with the actual certificate file path.
+If you need to obtain the hash value of the certificate, run `xray tls certChainHash --cert <cert.pem>` in the command line, where `<cert.pem>` is replaced by the actual certificate file path.
 :::
 
 > `certificates`: [ [CertificateObject](./chat#certificateobject) ]
 
-A list of certificates, each representing a certificate (recommended fullchain).
+A list of certificates, each representing a single certificate (fullchain recommended).
 
 ::: tip
-If you want to obtain the A/A+ rating in ssllibs or myssl evaluation, please refer to [here](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
+If you want to achieve A/A+ rating in SSLLabs or MySSL tests, visit [here](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600) for further information.
 :::
+
+> `masterKeyLog`: string
+
+Path to the (Pre-)Master-Secret log file. Can be used by sniffers like WireShark to decrypt TLS connections managed by Xray. Cannot be used with uTLS at the moment, and requires Xray-core v.8.7 or later.
+
+
 
 #### CertificateObject
 
