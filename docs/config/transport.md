@@ -375,7 +375,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 必填，同 [TLSObject](https://xtls.github.io/config/transport.html#tlsobject)。
 
-> `shortID` : string
+> `shortId` : string
 
 服务端 shortIds 之一。
 

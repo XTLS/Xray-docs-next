@@ -285,7 +285,102 @@ If you want to achieve A/A+ rating in SSLLabs or MySSL tests, visit [here](https
 
 Path to the (Pre-)Master-Secret log file. Can be used by sniffers like WireShark to decrypt TLS connections managed by Xray. Cannot be used with uTLS at the moment, and requires Xray-core v.8.7 or later.
 
+#### RealityObject
 
+```json
+{
+  "show": false,
+  "dest": "example.com:443",
+  "xver": 0,
+  "serverNames": ["example.com", "www.example.com"],
+  "privateKey": "",
+  "minClientVer": "",
+  "maxClientVer": "",
+  "maxTimeDiff": 0,
+  "shortIds": ["", "0123456789abcdef"],
+  "fingerprint": "chrome",
+  "serverName": "",
+  "publicKey": "",
+  "shortId": "",
+  "spiderX": ""
+}
+```
+
+::: tip
+Further information available in the [REALITY project repo](https://github.com/XTLS/REALITY).
+:::
+
+> `show`: true | false
+
+Emits verbose logs when `true`.
+
+::: tip
+**Inbound** (**server-side**) configs below.
+:::
+
+> `dest`: string
+
+Required. Same schema as [dest](https://xtls.github.io/config/features/fallback.html#fallbackobject) in VLESS `fallbacks`.
+
+> `xver`: string
+
+Optional. Same schema as [xver](https://xtls.github.io/config/features/fallback.html#fallbackobject) in VLESS `fallbacks`.
+
+> `serverNames`: [string]
+
+Required. A list of accepted server names. No support for `*` wildcards yet.
+
+> `privateKey`: string
+
+Required. Generate with `./xray x25519`.
+
+> `minClientVer`: string
+
+Optional. Minimal accepted version of the Xray client, specified in `x.y.z`.
+
+> `maxClientVer`: string
+
+Optional. Maximum accepted version of the Xray client, specified in `x.y.z`.
+
+> `maxTimeDiff`: number
+
+Optional. The maximum time difference allowed, specified in milliseconds.
+
+> `shortIds`: [string]
+
+Required. A list of `shortId`s accepted. Can be used to distinguish different clients.
+
+Specified in hex strings, with the length as multiples of 2. Cannot be longer than 16 characters.
+
+`shortId` on clients can be left blank if a blank value exists on the server.
+
+::: tip
+**Outbound** (**client-side**) configs below.
+:::
+
+> `serverName`: string
+
+One of the server names accepted by the server.
+
+> `fingerprint`: string
+
+Required. Same as the [TLSObject](#tlsobject).
+
+> `shortId`: string
+
+One of the short IDs accepted by the server.
+
+Specified in hex strings, with the length as multiples of 2. Cannot be longer than 16 characters.
+
+`shortId` on clients can be left blank if a blank value exists on the server.
+
+> `publicKey`: string
+
+Required. The public key that corresponds to the private key on the server. Can be obtained by `./xray x25519 -i "privateKey"`.
+
+> `spiderX`: string
+
+The bootstrapping path and query params of the spider. It's recommended to have this varied per client.
 
 #### CertificateObject
 
