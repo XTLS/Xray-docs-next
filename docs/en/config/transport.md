@@ -171,55 +171,56 @@ Configures transparent proxies.
   "alpn": ["h2", "http/1.1"],
   "minVersion": "1.2",
   "maxVersion": "1.3",
-  "cipherSuites": "Specify the names of the encryption suites you need here, separated by :",
+  "cipherSuites": "Specify encryption suites here, separated by :",
   "certificates": [],
   "disableSystemRoot": false,
   "enableSessionResumption": false,
   "fingerprint": "",
-  "pinnedPeerCertificateChainSha256": [""]
+  "pinnedPeerCertificateChainSha256": [""],
+  "masterKeyLog": ""
 }
 ```
 
 > `serverName`: string
 
-Specifies the domain name of the server certificate, useful when the connection is established by IP.
+Specifies the domain of the server-side certificate, useful when connecting only via IP addresses.
 
-When the target connection is specified by domain name, such as when the domain name is received by the Socks inbound or when it is detected by the Sniffing function, this domain name is automatically used for `serverName` without manual configuration.
+When the target is specified by domains, like when the domain is received by SOCKS inbounds or detected via sniffing, the extracted domain will automatically be used as `serverName`, without any need for manual configuration.
 
 > `rejectUnknownSni`: bool
 
-When set to `true`, the server rejects the TLS handshake if the received SNI does not match the domain name in the certificate. The default value is `false`.
+When `true`, the server rejects TLS handshakes if the SNI received does not match domains specified in the certificate. The default value is `false`.
 
 > `alpn`: [ string ]
 
-An array of strings that specifies the ALPN values to be used during the TLS handshake. The default value is `["h2", "http/1.1"]`.
+An array of strings specifying the ALPN values used in TLS handshakes. Defaults to `["h2", "http/1.1"]`.
 
 > `minVersion`: [ string ]
 
-`minVersion` is the minimum acceptable SSL/TLS version.
+`minVersion` specifies the minimum SSL/TLS version accepted.
 
 > `maxVersion`: [ string ]
 
-`maxVersion` is the maximum acceptable SSL/TLS version.
+`maxVersion` specifies the maximum SSL/TLS version accepted.
 
 > `cipherSuites`: [ string ]
 
-`CipherSuites` is used to configure the supported list of cryptographic suites, with each suite name separated by a colon.
+`CipherSuites` specifies a list of supported cryptographic suites, with names of each separated by a colon.
 
-You can find the names and descriptions of Golang encryption suites at [here](https://golang.org/src/crypto/tls/cipher_suites.go#L500) or [here](https://golang.org/src/crypto/tls/cipher_suites.go#L44).
+You can find the names and descriptions of encryption suites in Go [here](https://golang.org/src/crypto/tls/cipher_suites.go#L500) or [here](https://golang.org/src/crypto/tls/cipher_suites.go#L44).
 
 ::: danger
-The above two configurations are optional and normally do not affect security. If not configured, Golang will automatically select based on the device. If you are not familiar with these options, do not configure them, and any problems caused by improper configuration are your responsibility.
+The above two configs are optional and do not have impact on security under normal circumstances. When not configured, Go will select the parameters automatically on a per-device basis. If you are not familiar with these configs, leave them as is, or you will bear consequences of potential problems caused by your improper configuration.
 :::
 
 > `allowInsecure`: true | false
 
-Whether to allow insecure connections (only for clients). The default value is `false`.
+Whether to allow insecure connections (client-only). Defaults to `false`.
 
-When set to `true`, Xray will not verify the validity of the TLS certificate provided by the remote host.
+When `true`, Xray will not verify the validity of the TLS certificate provided by the outbound.
 
 ::: danger
-For security reasons, this option should not be set to true in practical scenarios, otherwise, it may be susceptible to man-in-the-middle attacks.
+This should not be set to `true` in deployments for security reaons, or it can be susceptible to man-in-the-middle attacks.
 :::
 
 > `disableSystemRoot`: true | false
