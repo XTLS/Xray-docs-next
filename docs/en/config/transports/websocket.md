@@ -18,7 +18,7 @@ WebSocket inbounds will parse the `X-Forwarded-For` header received, overriding 
   "path": "/",
   "host": "xray.com",
   "headers": {
-    "host": "xray.com"
+    "key": "value"
   }
 }
 ```
