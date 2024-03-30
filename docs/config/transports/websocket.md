@@ -16,9 +16,9 @@ Websocket 会识别 HTTP 请求的 X-Forwarded-For 头来覆写流量的源地�
 {
   "acceptProxyProtocol": false,
   "path": "/",
-  "host": "xray.com"
+  "host": "xray.com",
   "headers": {
-    "host": "xray.com"
+    "key": "value"
   }
 }
 ```

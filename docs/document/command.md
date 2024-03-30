@@ -64,6 +64,12 @@ The -dump flag tells Xray to print the merged config.
 配置文件除了默认的 JSON 格式外，也可以使用 TOML 和 YAML。在不指定格式的前提下会通过文件扩展名识别。
 :::
 
+```
+ xray run -dump
+```
+
+用以输出多文件配置融合之后的结果。
+
 ### xray version
 
 输出 Xray 版本、 Golang 版本等信息。
