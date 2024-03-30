@@ -1,60 +1,55 @@
 # WebSocket
 
-Use standard WebSocket to transmit data.
+Uses standard WebSocket for data transmission.
 
-WebSocket connections can be peoxied by other HTTP servers (such as Nginx) or by VLESS fallbacks path.
+WebSocket connections can be proxied by other web servers (like NGINX) or by VLESS fallback paths.
 
 ::: tip
-Websocket will recognize the X-Forwarded-For header of the HTTP request to override the source address of the traffic, with a higher priority than the PROXY protocol.
+WebSocket inbounds will parse the `X-Forwarded-For` header received, overriding the source address with a higher priority than the source address got from PROXY protocol.
 :::
 
 ## WebSocketObject
 
-`WebSocketObject` corresponds to the `wsSettings` item of the transport configuration.
+`WebSocketObject` corresponds to the `wsSettings` property of the transport configs.
 
 ```json
 {
   "acceptProxyProtocol": false,
   "path": "/",
+  "host": "xray.com",
   "headers": {
-    "Host": "xray.com"
+    "host": "xray.com"
   }
 }
 ```
 
 > `acceptProxyProtocol`: true | false
 
-Only used for inbound, indicating whether to accept the PROXY protocol.
+Only used by inbounds. Indicates whether to accept the PROXY protocol.
 
-The [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is used to transmit the real source IP and port of the request. **If you are not familiar with it, please ignore this item.**
+The [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is used to transmit the real source IP and port of connections. **If you are not familiar with this, leave it alone.**
 
-Common reverse proxy software (such as HAProxy and Nginx) can be configured to send it, and VLESS fallbacks xver can also send it.
+Commonplace reverse proxy software solutions (like HAProxy and NGINX) can be configured to have source IPs and ports sent with PROXY protocol. Same goes to VLESS fallbacks `xver`.
 
-When filled in as `true`, after the underlying TCP connection is established, the requesting party must first send PROXY protocol v1 or v2, otherwise the connection will be closed.
+When `true`, after the underlying TCP connection is established, the downstream must first send the source IPs and ports in PROXY protocol v1 or v2, or the connection will be terminated.
 
 > `path`: string
 
-The HTTP protocol path used by WebSocket. Default is `"/"`
+The HTTP path used by the WebSocket connection. Defaults to `"/"`.
 
-If the path contains the `ed` parameter, `Early Data` will be enabled to reduce latency, and its value is the first packet length threshold. If the length of the first packet exceeds this value, `Early Data` will not be enabled. The recommended value is 2048.
+If `path` contains the `ed` query parameter, `early data` will be activated for latency reduction, and its value will be the length threshold of the first packet. If the length of the first packet exceeds this value, `early data` won't be activated. The recommended value is 2560, with a maximum of 8192. Compatibility problems can occur when the value is set too high. Try lowering the threshold when encountering such problems.
 
-An example usage of `ed` parameter:
+> `host`: string
 
-```
-"path": "/aabbcc" //original path
+The `Host` header sent in HTTP requests. Defaults to an empty string. Servers will not validate the `Host` header sent by clients when left blank.
 
-"path": "/aabbcc?ed=2048" //added ed parameter
-```
+If the `Host` header has been defined on the server in any way, the server will validate if the `Host` header matches.
 
-::: warning
-`Early Data` uses the `Sec-WebSocket-Protocol` header to carry data. If you encounter compatibility issues, try lowering the threshold.
-:::
+The current priority of the `Host` header sent by clients: ```host``` > ```headers``` > ```address```
 
 > `headers`: map \{string: string\}
 
-Custom HTTP headers, a key-value pair, where each key represents the name of an HTTP header, and the corresponding value is a string.
-
-The default value is empty.
+Customized HTTP headers defined in key-value pairs. Defaults to empty.
 
 ## Browser Dialer
 
