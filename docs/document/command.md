@@ -42,18 +42,24 @@ Use "xray help <command>" for more information about a command.
 ```
 Run Xray with config, the default command.
 
-The -config=file, -c=file flags set the config files for
+The -config=file, -c=file flags set the config files for 
 Xray. Multiple assign is accepted.
 
 The -confdir=dir flag sets a dir with multiple json config
 
-The -format=json flag sets the format of config files.
+The -format=json flag sets the format of config files. 
 Default "auto".
 
-The -test flag tells Xray to test config files only,
-without launching the server
-```
+The -test flag tells Xray to test config files only, 
+without launching the server.
 
+The -dump flag tells Xray to print the merged config.
+```
+`-config=` / `-c=` 用于指定使用的配置文件的位置，支持多文件配置。
+`-confdir=` 用于指定一个包含多个配置文件的文件夹。
+`-format=` 用于指定使用的配置文件的格式。
+`-test` 用于测试配置文件的合法性。
+`-dump` 用于显示多文件配置文件合并之后的效果。
 ::: tip
 配置文件除了默认的 JSON 格式外，也可以使用 TOML 和 YAML。在不指定格式的前提下会通过文件扩展名识别。
 :::

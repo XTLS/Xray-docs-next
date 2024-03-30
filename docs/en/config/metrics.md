@@ -1,10 +1,10 @@
 # Metrics
 
-更直接（希望更好）的统计导出方式。
+A more straightforward (and hopefully better) way to export metrics.
 
-## 相关配置
+## Related configurations
 
-可以在 inbounds 配置中增加一个 metrics 的 inbound
+It's possible to add a metrics inbound among inbounds.
 
 ```json
     "inbounds": [
@@ -20,7 +20,7 @@
     ]
 ```
 
-在路由配置中增加针对 metrics inbound 的路由规则
+And add routing rules regarding the metrics inbound in the routing configuration.
 
 ```json
     "routing": {
@@ -36,7 +36,7 @@
     }
 ```
 
-在基础配置中增加 metrics
+Then finally, enable metrics under the root object.
 
 ```json
     "metrics": {
@@ -44,7 +44,7 @@
     }
 ```
 
-## 使用方法
+## Usage
 
 ### pprof
 
@@ -60,7 +60,7 @@ Variables exported include:
 
 for example with [luci-app-xray](https://github.com/yichya/luci-app-xray) you are likely to get a result like this (standard expvar things like `cmdline` and `memstats` are omitted)
 
-<details><summary>点击查看</summary><br>
+<details><summary>Click to expand</summary><br>
 
 ```json
 {
@@ -156,7 +156,7 @@ To get a better view of these numbers, [Netdata](https://github.com/netdata/netd
 1. Edit related configuration file (`sudo /etc/netdata/edit-config python.d/go_expvar.conf`)
 2. Take the following configuration file as an example:
 
-<details><summary>点击查看</summary><br>
+<details><summary>Click to expand</summary><br>
 
 ```
 xray:

@@ -28,6 +28,36 @@
 
    ![Nginx默认界面](./ch05-img01-nginx-default-running.png)
 
+3. 如果无法看到上述Nginx默认页面，可能是需要配置Debian系统上默认的防火墙组件Uncomplicated Firewall (UFW)，以便启用 HTTP (80) 和 HTTPS (443) 端口流量。
+
+   a. 验证方法，输入：
+   ```shell
+   sudo ufw status
+   ```
+   b. 如果输出如下，表明80和433端口未开启，需要执行c步骤
+   ```shell
+   Status: active
+   To                         Action      From
+   --                         ------      ----
+   22/tcp                     ALLOW       Anywhere
+   22/tcp (v6)                ALLOW       Anywhere (v6)
+   ```
+   c. 启用UFW的Nginx 80 和 443 端口命令
+   ```shell
+   sudo ufw allow 'Nginx Full'
+   ```
+   d. 输入a中命令再次验证，如果输出如下，表示Nginx流量已经被防火墙放行，这样就应该可以看到前述第2点中的Nginx默认页面。
+   ```shell
+   Status: active
+   To                         Action      From
+   --                         ------      ----
+   22/tcp                     ALLOW       Anywhere
+   Nginx Full                 ALLOW       Anywhere
+   22/tcp (v6)                ALLOW       Anywhere (v6)
+   Nginx Full (v6)            ALLOW       Anywhere (v6)
+   ```
+
+   
 ## 5.3 创建一个最简单的网页
 
 1. 小小白白 Linux 基础命令：
@@ -94,7 +124,13 @@
    </html>
    ```
 
-5. 修改 `nginx.conf` 并重启 `Nginx` 服务，将`80`端口的 http 访问定位到刚才建立的 `html` 页面上
+   赋予其他用户读取该文件的权限
+
+   ```shell
+   chmod -R a+r .
+   ```
+
+6. 修改 `nginx.conf` 并重启 `Nginx` 服务，将`80`端口的 http 访问定位到刚才建立的 `html` 页面上
 
    1. 修改 `nginx.conf` 。
 
