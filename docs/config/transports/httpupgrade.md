@@ -11,7 +11,7 @@
 {
   "acceptProxyProtocol": false,
   "path": "/",
-  "host": "xray.com"
+  "host": "xray.com",
   "headers": {
     "key": "value"
   }
