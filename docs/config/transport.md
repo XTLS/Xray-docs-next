@@ -91,9 +91,9 @@
     "tcpKeepAliveInterval": 0,
     "tcpKeepAliveIdle": 300,
     "tcpUserTimeout": 10000,
-    "tcpcongestion": "bbr",
+    "tcpCongestion": "bbr",
     "interface": "wg0",
-    "V6Only": false,
+    "v6only": false,
     "tcpWindowClamp": 600,
     "tcpMptcp": false,
     "tcpNoDelay": false
