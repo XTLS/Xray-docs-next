@@ -21,7 +21,8 @@ The configuration file of Xray is in JSON format, and the configuration format f
   "transport": {},
   "stats": {},
   "reverse": {},
-  "fakedns": {}
+  "fakedns": {},
+  "metrics": {}
 }
 ```
 
@@ -33,47 +34,47 @@ If you are new to Xray, you can first click to view [configuration and running i
 
 > log:[LogObject](./log.md)
 
-Log configuration, which controls the way Xray outputs logs.
+Log configurations, controlling how Xray emits logs.
 
 > api:[ApiObject](./api.md)
 
-Provides some API interfaces for remote calls.
+Configures how Xray provides API interfaces for calling remotely.
 
 > dns: [DnsObject](./dns.md)
 
-Built-in DNS server. If this item is not configured, the system's DNS settings will be used.
+Configures the built-in DNS server. System DNS will be used if not configured.
 
 > routing: [RoutingObject](./routing.md)
 
-Routing function. You can set rules to route data to different outbounds.
+Configures routing. Specify rules to route connections through different outbounds.
 
 > policy: [PolicyObject](./policy.md)
 
-Local policy, which can set different user levels and corresponding policy settings.
+Local policy configurations, specifying different user levels and corresponding policies.
 
 > inbounds: \[ [InboundObject](./inbound.md) \]
 
-An array, with each element being an inbound connection configuration.
+An array of inbound connection configurations.
 
 > outbounds: \[ [OutboundObject](./outbound.md) \]
 
-An array, with each element being an outbound connection configuration.
+An array of outbound connection configurations.
 
 > transport: [TransportObject](./transport.md)
 
-Used to configure the way Xray establishes and uses network connections with other servers.
+Configures how Xray establishes and uses network connections to other servers.
 
 > stats: [StatsObject](./stats.md)
 
-Used to configure traffic data statistics.
+Configures traffic statistics.
 
 > reverse: [ReverseObject](./reverse.md)
 
-Reverse proxy. You can forward server-side traffic to the client, that is, reverse traffic forwarding.
+Configures the built-in reverse proxy. You can forward server traffic to the client, effectively achieving reverse proxying.
 
 > fakedns: [FakeDnsObject](./fakedns.md)
 
-FakeDNS configuration. It can be used with transparent proxy to obtain the actual domain name.
+FakeDNS configuration. Can be used with a transparent proxy to obtain the actual domains.
 
 > metrics: [metricsObject](./metrics.md)
 

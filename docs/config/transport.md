@@ -91,9 +91,9 @@
     "tcpKeepAliveInterval": 0,
     "tcpKeepAliveIdle": 300,
     "tcpUserTimeout": 10000,
-    "tcpcongestion": "bbr",
+    "tcpCongestion": "bbr",
     "interface": "wg0",
-    "V6Only": false,
+    "v6only": false,
     "tcpWindowClamp": 600,
     "tcpMptcp": false,
     "tcpNoDelay": false
@@ -183,7 +183,7 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
   "enableSessionResumption": false,
   "fingerprint": "",
   "pinnedPeerCertificateChainSha256": [""],
-  "masterKeyLog":""
+  "masterKeyLog": ""
 }
 ```
 
@@ -375,7 +375,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 必填，同 [TLSObject](https://xtls.github.io/config/transport.html#tlsobject)。
 
-> `shortID` : string
+> `shortId` : string
 
 服务端 shortIds 之一。
 

@@ -1,20 +1,20 @@
-# Transport Protocol
+# Transport
 
-Transport protocol is the way that Xray nodes communicate with each other.
+Transports specify how Xray communicates with peers.
 
-Transport protocol specifies a stable way to transmit data. Typically, both ends of a network connection need to use the same transport protocol to establish a connection. For example, if one end uses WebSocket, the other end must also use WebSocket, otherwise the connection cannot be established.
+Transports specify how to achieve stable data transmission. Both ends of a connection often need to specify the same transport protocol to successfully establish a connection. Like, if one end uses WebSocket, the other end must also use WebSocket, or else the connection cannot be established.
 
-Transport protocol configuration has two parts:
+Transport configuration consists of two parts:
 
-1. Global configuration ([TransportObject](#transportobject))
-2. Local configuration ([StreamSettingsObject](#streamsettingsobject)).
+1. Global config ([TransportObject](#transportobject))
+2. Local config ([StreamSettingsObject](#streamsettingsobject)).
 
-- When configuring locally, you can specify how each individual inbound or outbound connection is transmitted.
-- Typically, the inbound and outbound connections corresponding to the client and server need to use the same transport protocol. When a transport protocol is specified but no specific settings are provided, the transport protocol will use the settings from the global configuration.
+- When locally configured, you can specify how each inbound or outbound connection is transmitted individually.
+- Server inbounds and client outbounds often need to use the same transport protocol. When a transport protocol is specified without local configs, the transport will fall back to global transport configs.
 
 ## TransportObject
 
-The `TransportObject` corresponds to the `transport` item in the configuration file.
+The `TransportObject` corresponds to the `transport` property in the config root.
 
 ```json
 {
@@ -33,39 +33,39 @@ The `TransportObject` corresponds to the `transport` item in the configuration f
 
 > `tcpSettings`: [TcpObject](./transports/tcp.md)
 
-Configuration for TCP connections.
+Configures TCP connections.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
-Configuration for mKCP connections.
+Configures mKCP connections.
 
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
-Configuration for WebSocket connections.
+Configures WebSocket connections.
 
 > `httpSettings`: [HttpObject](./transports/h2.md)
 
-Configuration for HTTP/2 connections.
+Configures HTTP/2 connections.
 
 > `quicSettings`: [QuicObject](./transports/quic.md)
 
-Configuration for QUIC connections.
+Configures QUIC connections.
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
-Configuration for gRPC connections.
+Configures gRPC connections.
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
-Configuration for HTTPUpgrade connections.
+Configures HTTPUpgrade connections.
 
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
-Configuration for Domain Socket connections.
+Configures Domain Socket connections.
 
 ## StreamSettingsObject
 
-`StreamSettingsObject` corresponds to the `streamSettings` item in inbound or outbound configuration. Each inbound or outbound can be configured with different transport settings and can use `streamSettings` to perform some transport configurations.
+`StreamSettingsObject` corresponds to the `streamSettings` property in the inbound or outbound config. Each inbound or outbound can be configured with different transports and can use `streamSettings` to specify local configs.
 
 ```json
 {
@@ -82,75 +82,84 @@ Configuration for Domain Socket connections.
   "httpupgradeSettings": {},
   "sockopt": {
     "mark": 0,
+    "tcpMaxSeg": 1440,
     "tcpFastOpen": false,
     "tproxy": "off",
     "domainStrategy": "AsIs",
     "dialerProxy": "",
     "acceptProxyProtocol": false,
-    "tcpKeepAliveInterval": 0
+    "tcpKeepAliveInterval": 0,
+    "tcpKeepAliveIdle": 300,
+    "tcpUserTimeout": 10000,
+    "tcpCongestion": "bbr",
+    "interface": "wg0",
+    "v6only": false,
+    "tcpWindowClamp": 600,
+    "tcpMptcp": false,
+    "tcpNoDelay": false
   }
 }
 ```
 
 > `network`: "tcp" | "kcp" | "ws" | "http" | "quic" | "grpc" | "httpupgrade"
 
-The type of transport used by the connection's data stream, with a default value of `"tcp"`.
+The underlying protocol of the transport used by the data stream of the connection, defaulting to `"tcp"`.
 
 > `security`: "none" | "tls" | "reality"
 
-Whether to enable transport layer encryption, with supported options:
+Whether to enable transport layer encryption. Supported options below.
 
-- `"none"` means no encryption (default value).
-- `"tls"` means using [TLS](https://en.wikipedia.org/wiki/transport_Layer_Security).
-- `"xtls"` means using [XTLS](./features/xtls.md). <Badge text="Deprecated" type="warning"/>
+- `"none"` enables no encryption (default).
+- `"tls"` enables encryption with [TLS](https://en.wikipedia.org/wiki/transport_Layer_Security).
+- `"xtls"` enables encryption with REALITY.
 
 > `tlsSettings`: [TLSObject](#tlsobject)
 
-TLS configuration. TLS is provided by Golang, and usually the result of TLS negotiation is to use TLS 1.3, and DTLS is not supported.
+Configures vanilla TLS. The TLS encryption suite is provided by Golang, which often uses TLS 1.3, and has no support for DTLS.
 
-> `xtlsSettings`: [XTLSObject](#tlsobject) <Badge text="Deprecated" type="warning"/>
+> `realitySettings`: [RealityObject](#realityobject)
 
-XTLS configuration. XTLS is Xray's original technology, which is the core driver of Xray's outstanding performance. XTLS has the same security as TLS and uses the same configuration as TLS.
+Configures REALITY. REALITY is a piece of advanced encryption technology developed in-house, with higher security than vanilla TLS, but configs of both are largely the same.
 
 ::: tip
-TLS/XTLS is currently the most secure transport encryption scheme, and its traffic appears consistent with normal web traffic to outsiders. Enabling XTLS and configuring the appropriate XTLS flow control mode can provide several times to even more than ten times the performance improvement while maintaining the same security as TLS. When changing the value of `security` from `tls` to `xtls`, simply modify `tlsSettings` to `xtlsSettings`.
+REALITY is by far the most secure transport encryption solution, perfectly mimicking normal web browsing when observed. Enabling REALITY with appropriate XTLS Vision flow control schemes has the potential of reaching magnitudes of performance boosts.
 :::
 
 > `tcpSettings`: [TcpObject](./transports/tcp.md)
 
-The TCP configuration for the current connection, only valid when TCP is used for this connection. The configuration is the same as the global configuration above.
+Configures the current TCP connection. Valid only when TCP is used. Same schema as global.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
-The mKCP configuration for the current connection, only valid when mKCP is used for this connection. The configuration is the same as the global configuration above.
+Configures the current mKCP connection. Valid only when mKCP is used. Same schema as global.
 
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
-The WebSocket configuration for the current connection, only valid when WebSocket is used for this connection. The configuration is the same as the global configuration above.
+Configures the current WebSocket connection. Valid only when WebSocket is used. Same schema as global.
 
 > `httpSettings`: [HttpObject](./transports/h2.md)
 
-The HTTP/2 configuration for the current connection, only valid when HTTP/2 is used for this connection. The configuration is the same as the global configuration above.
+Configures the current HTTP/2 connection. Valid only when HTTP/2 is used. Same schema as global.
 
 > `quicSettings`: [QUICObject](./transports/quic.md)
 
-The QUIC configuration for the current connection, only valid when QUIC is used for this connection. The configuration is the same as the global configuration above.
+Configures the current QUIC connection. Valid only when QUIC is used. Same schema as global.
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
-The gRPC configuration for the current connection, only valid when gRPC is used for this connection. The configuration is the same as the global configuration above.
+Configures the current gRPC connection. Valid only when gRPC is used. Same schema as global.
 
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
-The Domain socket configuration for the current connection, only valid when Domain socket is used for this connection. The configuration is the same as the global configuration above.
+Configures the current Domain Socket connection. Valid only when Domain Socket is used. Same schema as global.
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
-Configuration of the current HTTPUpragde connection. Valid only when HTTPUpgrade is used by this connection. The configuration schema is the exact same as the global schema.
+Configures the current HTTPUpragde connection. Valid only when HTTPUpgrade is used. Same schema as global.
 
 > `sockopt`: [SockoptObject](./chat#sockoptobject)
 
-Specific configuration for transparent proxies.
+Configures transparent proxies.
 
 ### TLSObject
 
@@ -162,72 +171,73 @@ Specific configuration for transparent proxies.
   "alpn": ["h2", "http/1.1"],
   "minVersion": "1.2",
   "maxVersion": "1.3",
-  "cipherSuites": "Specify the names of the encryption suites you need here, separated by :",
+  "cipherSuites": "Specify encryption suites here, separated by :",
   "certificates": [],
   "disableSystemRoot": false,
   "enableSessionResumption": false,
   "fingerprint": "",
-  "pinnedPeerCertificateChainSha256": [""]
+  "pinnedPeerCertificateChainSha256": [""],
+  "masterKeyLog": ""
 }
 ```
 
 > `serverName`: string
 
-Specifies the domain name of the server certificate, useful when the connection is established by IP.
+Specifies the domain of the server-side certificate, useful when connecting only via IP addresses.
 
-When the target connection is specified by domain name, such as when the domain name is received by the Socks inbound or when it is detected by the Sniffing function, this domain name is automatically used for `serverName` without manual configuration.
+When the target is specified by domains, like when the domain is received by SOCKS inbounds or detected via sniffing, the extracted domain will automatically be used as `serverName`, without any need for manual configuration.
 
 > `rejectUnknownSni`: bool
 
-When set to `true`, the server rejects the TLS handshake if the received SNI does not match the domain name in the certificate. The default value is `false`.
+When `true`, the server rejects TLS handshakes if the SNI received does not match domains specified in the certificate. The default value is `false`.
 
 > `alpn`: [ string ]
 
-An array of strings that specifies the ALPN values to be used during the TLS handshake. The default value is `["h2", "http/1.1"]`.
+An array of strings specifying the ALPN values used in TLS handshakes. Defaults to `["h2", "http/1.1"]`.
 
 > `minVersion`: [ string ]
 
-`minVersion` is the minimum acceptable SSL/TLS version.
+`minVersion` specifies the minimum SSL/TLS version accepted.
 
 > `maxVersion`: [ string ]
 
-`maxVersion` is the maximum acceptable SSL/TLS version.
+`maxVersion` specifies the maximum SSL/TLS version accepted.
 
 > `cipherSuites`: [ string ]
 
-`CipherSuites` is used to configure the supported list of cryptographic suites, with each suite name separated by a colon.
+`CipherSuites` specifies a list of supported cryptographic suites, with names of each separated by a colon.
 
-You can find the names and descriptions of Golang encryption suites at [here](https://golang.org/src/crypto/tls/cipher_suites.go#L500) or [here](https://golang.org/src/crypto/tls/cipher_suites.go#L44).
+You can find the names and descriptions of encryption suites in Go [here](https://golang.org/src/crypto/tls/cipher_suites.go#L500) or [here](https://golang.org/src/crypto/tls/cipher_suites.go#L44).
 
 ::: danger
-The above two configurations are optional and normally do not affect security. If not configured, Golang will automatically select based on the device. If you are not familiar with these options, do not configure them, and any problems caused by improper configuration are your responsibility.
+The above two configs are optional and do not have impact on security under normal circumstances. When not configured, Go will select the parameters automatically on a per-device basis. If you are not familiar with these configs, leave them as is, or you will bear consequences of potential problems caused by your improper configuration.
 :::
 
 > `allowInsecure`: true | false
 
-Whether to allow insecure connections (only for clients). The default value is `false`.
+Whether to allow insecure connections (client-only). Defaults to `false`.
 
-When set to `true`, Xray will not verify the validity of the TLS certificate provided by the remote host.
+When `true`, Xray will not verify the validity of the TLS certificate provided by the outbound.
 
 ::: danger
-For security reasons, this option should not be set to true in practical scenarios, otherwise, it may be susceptible to man-in-the-middle attacks.
+This should not be set to `true` in deployments for security reaons, or it can be susceptible to man-in-the-middle attacks.
 :::
 
 > `disableSystemRoot`: true | false
 
-Whether to disable the CA certificate provided by the operating system. The default value is `false`.
+Whether to disable the CA certificates provided by the operating system. Defaults to `false`.
 
-When set to `true`, Xray will only use the certificates specified in `certificates` for TLS handshakes. When set to `false`, Xray will only use the CA certificates provided by the operating system for TLS handshakes.
+When `true`, Xray will only use the certificates specified in `certificates` for TLS handshakes. When `false`, Xray will only use the CA certificates provided by the operating system for TLS handshakes.
 
 > `enableSessionResumption`: true | false
 
-When this parameter is set to false, the `session_ticket` extension is not included in the ClientHello message. Generally, the ClientHello message in Go language programs does not use this extension, so it is recommended to keep the default value. The default value is `false`.
+When `false`, the `session_ticket` extension will not be included in ClientHello. Oftentimes the ClientHello in Go programs does not have this extension enabled, so it is recommended to leave it as-is. Defaults to `false`.
 
 > `fingerprint`: string
 
-This parameter is used to configure the fingerprint of the `TLS Client Hello`. When its value is empty, this feature is not enabled. After enabling it, Xray will **simulate** the `TLS` fingerprint through the uTLS library or generate it randomly. Three configuration options are supported:
+Specifies the fingerprint of the `TLS Client Hello` message. When empty, fingerprint simulation will not be enabled. When enabled, Xray will **simulate** the `TLS` fingerprint through the uTLS library or have it generated randomly. Three types of options are supported:
 
-1. TLS fingerprints of the latest versions of popular browsers, including:
+1. Simulate TLS fingerprints of the latest versions of popular browsers, including:
 
 - `"chrome"`
 - `"firefox"`
@@ -238,38 +248,139 @@ This parameter is used to configure the fingerprint of the `TLS Client Hello`. W
 - `"360"`
 - `"qq"`
 
-1. Generate a fingerprint when xray starts
+1. Have a fingerprint generated automatically when xray starts
 
-- `"random"`: randomly select one in newer versions of browsers
+- `"random"`: randomly select one of the up-to-date browsers
 - `"randomized"`: generate a completely random and unique fingerprint (100% compatible with TLS 1.3 using X25519)
 
-1. Use uTLS native fingerprint variable names, such as `"HelloRandomizedNoALPN"` `"HelloChrome_106_Shuffle"`. See the full list in [uTLS library](https://github.com/refraction-networking/utls/blob/master/u_common.go#L162).
+1. Use uTLS native fingerprint variable names, such as `"HelloRandomizedNoALPN"` `"HelloChrome_106_Shuffle"`. See the full list in the [uTLS library](https://github.com/refraction-networking/utls/blob/master/u_common.go#L162).
 
 ::: tip
-This feature only **simulates** the fingerprint of the `TLS Client Hello`, and its behavior and other fingerprints are the same as Golang. If you want to simulate browser `TLS` fingerprints and behaviors more completely, you can use the [Browser Dialer](./transports/websocket.md#browser-dialer).
+This feature only **simulates** the fingerprint of `TLS Client Hello` message, leaving other behaviours the same as vanilla Go TLS. If you want to simulate a browser `TLS` more completely, use the [Browser Dialer](./transports/websocket.md#browser-dialer).
 :::
 
 > `pinnedPeerCertificateChainSha256`: [string]
 
-Specifies the SHA256 hash value of the certificate chain for the remote server, using standard encoding format. Only when the hash value of the server-side certificate chain matches one of the settings can a TLS connection be successfully established.
+Specifies the SHA256 hash values of the certificate chain of the remote server, using the standard encoding format. Only when the hash value of the server-side certificate chain matches any of the specified can a TLS connection be successfully established.
 
-When the connection fails due to this configuration, the hash value of the remote server certificate will be displayed.
+When the connection fails with this active, the hash value of the remote certificate will be shown.
 
 ::: danger
 It is not recommended to use this method to obtain the hash value of the certificate chain, because in this case, there will be no opportunity to verify whether the certificate provided by the server at this time is a real certificate, and it cannot be guaranteed that the obtained certificate hash value is the expected hash value.
 :::
 
 ::: tip
-If you need to obtain the hash value of the certificate, run `xray tls certChainHash --cert <cert.pem>` in the command line, where `<cert.pem>` should be replaced with the actual certificate file path.
+If you need to obtain the hash value of the certificate, run `xray tls certChainHash --cert <cert.pem>` in the command line, where `<cert.pem>` is replaced by the actual certificate file path.
 :::
 
 > `certificates`: [ [CertificateObject](./chat#certificateobject) ]
 
-A list of certificates, each representing a certificate (recommended fullchain).
+A list of certificates, each representing a single certificate (fullchain recommended).
 
 ::: tip
-If you want to obtain the A/A+ rating in ssllibs or myssl evaluation, please refer to [here](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
+If you want to achieve A/A+ rating in SSLLabs or MySSL tests, visit [here](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600) for further information.
 :::
+
+> `masterKeyLog`: string
+
+Path to the (Pre-)Master-Secret log file. Can be used by sniffers like WireShark to decrypt TLS connections managed by Xray. Cannot be used with uTLS at the moment, and requires Xray-core v.8.7 or later.
+
+#### RealityObject
+
+```json
+{
+  "show": false,
+  "dest": "example.com:443",
+  "xver": 0,
+  "serverNames": ["example.com", "www.example.com"],
+  "privateKey": "",
+  "minClientVer": "",
+  "maxClientVer": "",
+  "maxTimeDiff": 0,
+  "shortIds": ["", "0123456789abcdef"],
+  "fingerprint": "chrome",
+  "serverName": "",
+  "publicKey": "",
+  "shortId": "",
+  "spiderX": ""
+}
+```
+
+::: tip
+Further information available in the [REALITY project repo](https://github.com/XTLS/REALITY).
+:::
+
+> `show`: true | false
+
+Emits verbose logs when `true`.
+
+::: tip
+**Inbound** (**server-side**) configs below.
+:::
+
+> `dest`: string
+
+Required. Same schema as [dest](https://xtls.github.io/config/features/fallback.html#fallbackobject) in VLESS `fallbacks`.
+
+> `xver`: string
+
+Optional. Same schema as [xver](https://xtls.github.io/config/features/fallback.html#fallbackobject) in VLESS `fallbacks`.
+
+> `serverNames`: [string]
+
+Required. A list of accepted server names. No support for `*` wildcards yet.
+
+> `privateKey`: string
+
+Required. Generate with `./xray x25519`.
+
+> `minClientVer`: string
+
+Optional. Minimal accepted version of the Xray client, specified in `x.y.z`.
+
+> `maxClientVer`: string
+
+Optional. Maximum accepted version of the Xray client, specified in `x.y.z`.
+
+> `maxTimeDiff`: number
+
+Optional. The maximum time difference allowed, specified in milliseconds.
+
+> `shortIds`: [string]
+
+Required. A list of `shortId`s accepted. Can be used to distinguish different clients.
+
+Specified in hex strings, with the length as multiples of 2. Cannot be longer than 16 characters.
+
+`shortId` on clients can be left blank if a blank value exists on the server.
+
+::: tip
+**Outbound** (**client-side**) configs below.
+:::
+
+> `serverName`: string
+
+One of the server names accepted by the server.
+
+> `fingerprint`: string
+
+Required. Same as the [TLSObject](#tlsobject).
+
+> `shortId`: string
+
+One of the short IDs accepted by the server.
+
+Specified in hex strings, with the length as multiples of 2. Cannot be longer than 16 characters.
+
+`shortId` on clients can be left blank if a blank value exists on the server.
+
+> `publicKey`: string
+
+Required. The public key that corresponds to the private key on the server. Can be obtained by `./xray x25519 -i "privateKey"`.
+
+> `spiderX`: string
+
+The bootstrapping path and query params of the spider. It's recommended to have this varied per client.
 
 #### CertificateObject
 
