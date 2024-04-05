@@ -27,7 +27,7 @@ Loopback 是个出站数据协议，其作用为将经该出站传出的数据�
       "protocol": "loopback",
       "tag": "need-to-split",
       "settings": {
-        "tag": "traffic-input" // 该 tag 在下方用于 RuleObject 的 inboundTag
+        "inboundTag": "traffic-input" // 该 tag 在下方用于 RuleObject 的 inboundTag
       }
     },
     {
