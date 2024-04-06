@@ -189,7 +189,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
                   "endpoint":"engage.cloudflareclient.com:2408"
                }
             ],
-            "reserved":[0, 0, 0], // 如果你有的话，粘贴reserved到这里
+            "reserved":[0, 0, 0] // 如果你有的话，粘贴reserved到这里
          },
          "streamSettings":{
             "sockopt":{
