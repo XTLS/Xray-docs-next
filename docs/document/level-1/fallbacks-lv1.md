@@ -131,7 +131,7 @@
 
 ## 5. 多层回落示例及解读
 
-理解了【回落の完全体】是什么，那就可以动手操作配置多层回落了。其实，项目已经提供了非常完整的示例，即官方模板中的 [VLESS-TCP-XTLS-WHATEVER](https://github.com/XTLS/Xray-examples/blob/main/VLESS-TCP-XTLS-WHATEVER/)。
+理解了【回落の完全体】是什么，那就可以动手操作配置多层回落了。
 
 ### 5.1 首先，我将服务器端配置的 443 监听段摘抄如下：
 
