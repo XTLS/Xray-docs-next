@@ -16,7 +16,7 @@
     "postcss-loader": "^8.0.0",
     "prettier": "^3.2.2",
     "sass": "^1.51.0",
-    "sass-loader": "^14.1.0",
+    "sass-loader": "^14.2.0",
     "typescript": "^5.4.2",
     "vue-property-decorator": "^9.1.2",
     "vuepress": "2.0.0-rc.2"
