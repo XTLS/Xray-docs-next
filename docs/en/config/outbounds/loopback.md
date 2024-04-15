@@ -27,7 +27,7 @@ If you need to do some more detailed routing for traffics that have been routed 
       "protocol": "loopback",
       "tag": "need-to-split",
       "settings": {
-        "tag": "traffic-input" // This tag will be used as the inboundTag inside the RuleObject 
+        "inboundTag": "traffic-input" // This tag will be used as the inboundTag inside the RuleObject 
       }
     },
     {
