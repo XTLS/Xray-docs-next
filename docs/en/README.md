@@ -5,10 +5,10 @@ heroText: Project X
 tagline: Fear not the clouds that obscure the view, golden eyes like a torch brighten the sky
 actions:
   - text: Start here →
-    link: /document/
+    link: /en/document/
     type: primary
   - text: Configuration guide →
-    link: /config/
+    link: /en/config/
     type: secondary
 features:
   - title: High-speed protocol
