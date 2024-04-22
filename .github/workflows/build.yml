@@ -33,6 +33,7 @@ jobs:
           XRAY_DOCS_USE_VITE: "true"
           NODE_OPTIONS: "--max_old_space_size=4096"
         run: |
+          corepack enable
           pnpm install
           yarn docs:build
       - name: Deploy
