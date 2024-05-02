@@ -157,7 +157,7 @@ Configures the current Domain Socket connection. Valid only when Domain Socket i
 
 Configures the current HTTPUpragde connection. Valid only when HTTPUpgrade is used. Same schema as global.
 
-> `sockopt`: [SockoptObject](./chat#sockoptobject)
+> `sockopt`: [SockoptObject](#sockoptobject)
 
 Configures transparent proxies.
 
@@ -273,7 +273,7 @@ It is not recommended to use this method to obtain the hash value of the certifi
 If you need to obtain the hash value of the certificate, run `xray tls certChainHash --cert <cert.pem>` in the command line, where `<cert.pem>` is replaced by the actual certificate file path.
 :::
 
-> `certificates`: [ [CertificateObject](./chat#certificateobject) ]
+> `certificates`: [ [CertificateObject](#certificateobject) ]
 
 A list of certificates, each representing a single certificate (fullchain recommended).
 
