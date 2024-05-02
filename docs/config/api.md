@@ -100,8 +100,8 @@ API 服务监听的 IP 和端口。这是一个可选配置项。
 
 添加、删除、替换 routing 规则，查询均衡器统计信息的 API，可用的功能如下：
 
-- adrules 添加一条 routing 规则
-- rmrules 删除一条 routing 规则
+- adrules 添加、替换 routing 配置
+- rmrules 删除 routing 规则
 - sib 断开来源 IP 的连接
 - bi 查询均衡器统计信息
 - bo 强制均衡器选中指定的 outboundTag
