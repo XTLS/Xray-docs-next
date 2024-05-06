@@ -28,6 +28,7 @@ export const sidebarZh: SidebarConfig = {
         '/config/stats.md',
         '/config/transport.md',
         '/config/metrics.md',
+        '/config/observatory.md',
       ],
     },
     {

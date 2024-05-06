@@ -192,9 +192,8 @@ Xray-core v1.8.7 或更高版本可省略该行。
 {
   "tag": "balancer",
   "selector": [],
-  "strategy": {
-   "type":"roundRobin"
-  }
+  "fallbackTag": "outbound",
+  "strategy": {}
 }
 ```
 
@@ -208,11 +207,32 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 如果匹配到多个 outbound，负载均衡器目前会从中随机选出一个作为最终的 outbound。
 
-> `strategy`: \[ string \]
+> `fallbackTag`: string
 
-`"type":"roundRobin"` 表示按顺序选择匹配到的 outbounds tag，若不写 `"strategy"` 字段表示随机选择匹配到的 outbounds tag。
+如果负载均衡器无法选出合适的 outbound 时，使用这个配置项指定的 outbound。
 
-配置示例：
+> `strategy`: [StrategyObject](#strategyobject)
+
+#### StrategyObject
+```json
+{
+    "type": "roundRobin",
+    "settings": {}
+}
+```
+> `type` : "random" | "roundRobin" | "leastPing" | "leastLoad"
+
+- `random` 默认值。随机选择匹配到的出站代理。
+- `roundRobin` 按顺序选择匹配到的出站代理。
+- `leastPing` 根据连接观测结果选择延迟最小的匹配到的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 配置项。
+- `leastLoad` 根据连接观测结果，经过一定的算法计算后选出最优的匹配到的出站代理。需要添加 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
+
+> `settings`: [StrategySettingsObject](#strategysettingsobject)
+
+##### StrategySettingsObject
+这是一个可选配置项，目前只有 `leastLoad` 负载均衡策略可以添加这个配置项。
+
+### 负载均衡配置示例
 
 ```json
     "routing": {
