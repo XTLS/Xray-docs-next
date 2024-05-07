@@ -209,7 +209,7 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 > `fallbackTag`: string
 
-如果负载均衡器无法选出合适的 outbound 时，使用这个配置项指定的 outbound。
+如果负载均衡器无法选出合适的 outbound，则使用这个配置项指定的 outbound。
 
 > `strategy`: [StrategyObject](#strategyobject)
 
@@ -225,12 +225,12 @@ Xray-core v1.8.7 或更高版本可省略该行。
 - `random` 默认值。随机选择匹配到的出站代理。
 - `roundRobin` 按顺序选择匹配到的出站代理。
 - `leastPing` 根据连接观测结果选择延迟最小的匹配到的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 配置项。
-- `leastLoad` 根据连接观测结果，经过一定的算法计算后选出最优的匹配到的出站代理。需要添加 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
+- `leastLoad` 根据连接观测结果选择最稳定的出站代理。需要添加 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
 
 > `settings`: [StrategySettingsObject](#strategysettingsobject)
 
 ##### StrategySettingsObject
-这是一个可选配置项，目前只有 `leastLoad` 负载均衡策略可以添加这个配置项。
+这是一个可选配置项，不同负载均衡策略的配置格式有所不同。目前只有 `leastLoad` 负载均衡策略可以添加这个配置项。
 
 ### 负载均衡配置示例
 
