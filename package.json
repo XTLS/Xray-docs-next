@@ -21,7 +21,7 @@
     "vue-property-decorator": "^9.1.2",
     "vuepress": "2.0.0-rc.2"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@9.1.0",
   "scripts": {
     "docs:dev": "vuepress dev docs --clean-temp --clean-cache",
     "docs:build": "vuepress build docs --clean-temp --clean-cache",
