@@ -427,7 +427,7 @@ sudo nano /etc/apt/sources.list
 2.  然后把下面这一条加在最后，并保存退出。
 
 ```
-deb http://deb.debian.org/debian buster-backports main
+deb http://archive.debian.org/debian buster-backports main
 ```
 
 3.  刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
