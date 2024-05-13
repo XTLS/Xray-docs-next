@@ -112,11 +112,7 @@
 其中 `["fakedns+others"]` 相当于 `["http", "tls", "quic", "fakedns"]`，当 IP 地址处于 FakeIP 区间内但没有命中域名记录时会使用 `http`、`tls` 和 `quic` 进行匹配。此项仅在 `metadataOnly` 为 `false` 时有效。
 
 ::: tip
-Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进行嗅探用作路由而不想重置目标地址，请在这里添加对应的协议并启用 `routeOnly` 。
-:::
-
-::: tip
-当使用 Tor 浏览器，设置使用代理访问互联网（HTTP / SOCKS），地址为本地 IP 127.0.0.1，需要关闭 `"sniffing"` 才能正常使用。
+Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进行嗅探用作路由而不想重置目标地址（如使用Tor浏览器时，重置目标地址会导致无法连接），请在这里添加对应的协议并启用 `routeOnly` 。
 :::
 
 > `metadataOnly`: true | false
