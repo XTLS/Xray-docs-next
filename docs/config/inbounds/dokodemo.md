@@ -45,6 +45,33 @@ Dokodemo door（任意门）可以监听一个本地端口，并把所有进入�
 
 userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值. 如不指定, 默认为 0。
 
+## 用处
+
+任意门主要有两个用处 一个是用作透明代理(见下)，另一个是映射一个端口。
+
+有时一些服务并不支持使用 Socks5 这样的正向代理，使用 Tun 或者 Tproxy 又有些小题大做了，而这些服务又只和一个 IP 一个端口通信 (比如: iperf, Minecraft server, Wireguard endpoint), 就可以用到任意门。
+
+如以下 Config (假设默认出站为一有效代理)
+
+```json
+{
+  "listen": "127.0.0.1",
+  "port": 25565,
+  "protocol": "dokodemo-door",
+  "settings": {
+    "address": "mc.hypixel.net",
+    "port": 25565,
+    "network": "tcp",
+    "timeout": 0,
+    "followRedirect": false,
+    "userLevel": 0
+  },
+  "tag": "mc"
+}
+```
+
+这时候核心会监听 127.0.0.1:25565 并通过默认出站转发至 mc.hypixel.net:25565 (一个MC服务器), 这时候再通过 Minecraft 客户端连接 127.0.0.1:25565, 就相当于通过代理连接了 Hypixel 服务器。
+
 ## 透明代理配置样例
 
 此部分请参考[透明代理（TProxy）配置教程](../../document/level-2/tproxy)。
