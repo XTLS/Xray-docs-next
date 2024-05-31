@@ -569,12 +569,12 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 - 仅在以下版本（或更新版本）的操作系统中可用:
 
-  - Windows 10 (1607)
-  - Mac OS 10.11 / iOS 9
   - Linux 3.16：需要通过内核参数 `net.ipv4.tcp_fastopen` 进行设定，此参数是一个 bitmap，`0x1` 代表客户端允许启用，`0x2` 代表服务器允许启用；默认值为 `0x1`，如果服务器要启用
     TFO，请把此内核参数值设为 `0x3`。
+  - ~~Windows 10 (1607)~~（实现不正确）
+  - Mac OS 10.11 / iOS 9（需要测试）
   - FreeBSD 10.3 (Server) / 12.0 (Client)：需要把内核参数 `net.inet.tcp.fastopen.server_enabled`
-    以及 `net.inet.tcp.fastopen.client_enabled` 设为 `1`。
+    以及 `net.inet.tcp.fastopen.client_enabled` 设为 `1`。（需要测试）
 
 - 对于 Inbound，此处所设定的`正整数`代表 [待处理的 TFO 连接请求数上限](https://tools.ietf.org/html/rfc7413#section-5.1) ，**注意并非所有操作系统都支持在此设定**：
 
