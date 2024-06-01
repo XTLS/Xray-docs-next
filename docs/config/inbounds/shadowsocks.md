@@ -32,11 +32,17 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 ```json
 {
   "settings": {
-    "password": "密码",
+    "network": "tcp,udp",
     "method": "aes-256-gcm",
+    "password": "密码",
     "level": 0,
     "email": "love@xray.com",
-    "network": "tcp,udp"
+    "clients": [
+      {
+        "password": "114514",
+        "method": "aes-128-gcm"
+      }
+    ]
   }
 }
 ```
@@ -45,20 +51,9 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 可接收的网络协议类型。比如当指定为 `"tcp"` 时，仅会接收 TCP 流量。默认值为 `"tcp"`。
 
-## ClientObject
-
-```json
-{
-  "password": "密码",
-  "method": "aes-256-gcm",
-  "level": 0,
-  "email": "love@xray.com"
-}
-```
-
 > `method`: string
 
-必填。
+加密方式，可选项见上。
 
 > `password`: string
 
@@ -85,9 +80,27 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 > `level`: number
 
 用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
-
 `level` 的值, 对应 [policy](../policy.md#levelpolicyobject) 中 `level` 的值。 如不指定, 默认为 0。
 
 > `email`: string
 
 用户邮箱，用于区分不同用户的流量（日志、统计）。
+
+## ClientObject
+
+```json
+{
+  "password": "密码",
+  "method": "aes-256-gcm",
+  "level": 0,
+  "email": "love@xray.com"
+}
+```
+
+当存在此选项时，代表启用多用户模式，InboundConfigurationObject 中的设置的 `"password"` 将会被忽略，在此为每个用户指定单独的选项。
+
+当 InboundConfigurationObject 中的 `method` 不为SS2022选项时，可以在此为每个用户指定 `"method"`。(`"method"`中也仅支持非SS2022选项)
+
+当 InboundConfigurationObject 中的 `method` 为SS2022选项时，出于安全考量，不再支持为单个用户设置 `"method"`，统一为 InboundConfigurationObject 所指定的`"method"`。
+
+其余选项与 InboundConfigurationObject 中的含义一致。
