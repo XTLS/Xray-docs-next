@@ -34,12 +34,12 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
   "settings": {
     "network": "tcp,udp",
     "method": "aes-256-gcm",
-    "password": "密码",
+    "password": "114514",
     "level": 0,
     "email": "love@xray.com",
     "clients": [
       {
-        "password": "114514",
+        "password": "1919810",
         "method": "aes-128-gcm"
       }
     ]
@@ -90,17 +90,19 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 ```json
 {
-  "password": "密码",
+  "password": "1919810",
   "method": "aes-256-gcm",
   "level": 0,
   "email": "love@xray.com"
 }
 ```
 
-当存在此选项时，代表启用多用户模式，InboundConfigurationObject 中的设置的 `"password"` 将会被忽略，在此为每个用户指定单独的选项。
+当存在此选项时，代表启用多用户模式.
 
-当 InboundConfigurationObject 中的 `method` 不为SS2022选项时，可以在此为每个用户指定 `"method"`。(`"method"`中也仅支持非SS2022选项)
+当 InboundConfigurationObject 中的 `method` 不为SS2022选项时，可以在此为每个用户指定 `"method"`。(`"method"`中也仅支持非SS2022选项)与`"password"`(与此同时 InboundConfigurationObject 中的设置的 `"password"` 将会被忽略)。
 
 当 InboundConfigurationObject 中的 `method` 为SS2022选项时，出于安全考量，不再支持为单个用户设置 `"method"`，统一为 InboundConfigurationObject 所指定的`"method"`。
+
+注意SS2022并不会像旧SS一样忽略上层 `"password"`, 客户端的正确密码写法应为, `ServerPassword:UserPassword`。如:`"password": "114514:1919810"`
 
 其余选项与 InboundConfigurationObject 中的含义一致。
