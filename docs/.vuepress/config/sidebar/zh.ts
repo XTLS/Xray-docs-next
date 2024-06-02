@@ -69,7 +69,8 @@ export const sidebarZh: SidebarConfig = {
         '/config/transports/quic.md',
         '/config/transports/tcp.md',
         '/config/transports/websocket.md',
-        '/config/transports/httpupgrade.md'
+        '/config/transports/httpupgrade.md',
+        '/config/transports/splithttp.md'
       ],
     },
   ],

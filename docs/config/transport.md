@@ -63,6 +63,10 @@
 
 针对 HTTPUpragde 连接的配置。
 
+> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
+
+针对 SplitHTTP 连接的配置。
+
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
 针对 Domain Socket 连接的配置。
