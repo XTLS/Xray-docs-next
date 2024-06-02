@@ -68,7 +68,8 @@ export const sidebarEn: SidebarConfig = {
         '/en/config/transports/quic.md',
         '/en/config/transports/tcp.md',
         '/en/config/transports/websocket.md',
-        '/en/config/transports/httpupgrade.md'
+        '/en/config/transports/httpupgrade.md',
+        '/en/config/transports/splithttp.md'
       ],
     },
   ],

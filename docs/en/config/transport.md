@@ -27,6 +27,7 @@ The `TransportObject` corresponds to the `transport` property in the config root
     "dsSettings": {},
     "grpcSettings": {},
     "httpupgradeSettings": {}
+    "splithttpSettings": {}
   }
 }
 ```
@@ -63,6 +64,10 @@ Configures HTTPUpgrade connections.
 
 Configures Domain Socket connections.
 
+> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
+
+Configures SplitHTTP connections.
+
 ## StreamSettingsObject
 
 `StreamSettingsObject` corresponds to the `streamSettings` property in the inbound or outbound config. Each inbound or outbound can be configured with different transports and can use `streamSettings` to specify local configs.
@@ -80,6 +85,7 @@ Configures Domain Socket connections.
   "dsSettings": {},
   "grpcSettings": {},
   "httpupgradeSettings": {},
+  "splithttpSettings": {},
   "sockopt": {
     "mark": 0,
     "tcpMaxSeg": 1440,
@@ -156,6 +162,10 @@ Configures the current Domain Socket connection. Valid only when Domain Socket i
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
 Configures the current HTTPUpragde connection. Valid only when HTTPUpgrade is used. Same schema as global.
+
+> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
+
+Configures SplitHTTP connections. Valid only when SplitHTTP is used. Same schema as global.
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 
