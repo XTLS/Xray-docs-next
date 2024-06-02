@@ -6,13 +6,17 @@
 
 传输方式（transport）配置有两部分:
 
-1. 全局配置（[TransportObject](#transportobject)）
+1. ~~全局配置（[TransportObject](#transportobject)）(已弃用)~~
+
 2. 局部配置（[StreamSettingsObject](#streamsettingsobject)）。
 
 - 局部配置时,可以指定每个单独的入站或出站用怎样的方式传输。
 - 通常来说客户端和服务器对应的入站和出站需要使用同样的传输方式。当其配置指定了一种传输方式，但没有填写具体设置时，此传输方式会使用全局配置中的设置。
+<details>
+<summary>全局配置</summary>
 
-## TransportObject
+
+## TransportObject(已弃用)
 
 `TransportObject` 对应配置文件的 `transport` 项。
 
@@ -62,6 +66,8 @@
 > `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
 
 针对 Domain Socket 连接的配置。
+
+</details>
 
 ## StreamSettingsObject
 
