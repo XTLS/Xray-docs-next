@@ -46,7 +46,53 @@ The current priority of the `Host` header sent by clients: `host` > `headers` > 
 
 Customized HTTP headers defined in key-value pairs. Defaults to empty.
 
+> `maxUploadSize`
+
+The largest possible chunk to upload. Defaults to 1 MB. This should be less
+than the max request body size your CDN allows. Decrease this if the client
+prints HTTP 413 errors. Increase this to improve upload bandwidth.
+
+> `maxConcurrentUploads`
+
+The number of concurrent uploads to run. Defaults to 10. Connections are reused
+wherever possible, but you may want to lower this value if the connection is
+unstable, or if the server is using too much memory.
+
+The value on the client must not be higher than on the server. Otherwise,
+connectivity issues will occur.
+
 ## Known issues
 
-ALPN negotiation is currently not correctly implemented. HTTPS connections
-always assume HTTP/2 prior knowledge.
+* ALPN negotiation is currently not correctly implemented. HTTPS connections
+  always assume HTTP/2 prior knowledge.
+
+## Protocol details
+
+See [PR](https://github.com/XTLS/Xray-core/pull/3412) for extensive discussion
+and revision of the protocol. Here is a summary, and the minimum needed to be
+compatible:
+
+1. `GET /?session=UUID` starts a new "virtual" stream connection. The server
+  immediately responds with `200 OK` and `Transfer-Encoding: chunked`, and
+  immediately sends a two-byte payload to force HTTP middleboxes into flushing
+  headers.
+
+2. Once the client has read all of this, it can start uploading using `POST
+   /?session=UUID?seq=0`. `seq` can be used like TCP seq number, and multiple
+   "packets" may be sent concurrently. The server has to reassemble the
+   "packets" live. The sequence number never resets for simplicity reasons.
+
+3. The `GET` request is kept open until the tunneled connection has to be
+   terminated. Either server or client can close. How this actually works
+   depends on the HTTP version.
+
+Recommendations:
+
+* Do not assume any custom headers are transferred correctly by the CDN. This
+  transport is built for CDN who do not support WebSocket, these CDN tend to
+  not be very modern (or good).
+
+* It should be assumed there is no streaming upload within a HTTP request, so
+  the size of a packet should be chosen to optimize between latency,
+  throughput, and any size limits imposed by the CDN (just like TCP, nagle's
+  algorithm and MTU...)
