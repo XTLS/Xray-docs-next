@@ -99,5 +99,5 @@ Recommendations:
   expected that the CDN will translate arbitrarily between versions. A HTTP/1.1
   server may indirectly end up talking to a h2 client, and vice versa.
 
-  Xray does not support HTTP/1.1 over TLS. If TLS is enabled, h2 prior
-  knowledge is assumed.
+  SplitHTTP in Xray does not support HTTP/1.1 over TLS. If TLS is enabled, h2
+  prior knowledge is assumed.
