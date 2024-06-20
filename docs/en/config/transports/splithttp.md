@@ -2,17 +2,17 @@
 
 Uses HTTP chunked-transfer encoding for download, and multiple HTTP requests for upload.
 
-Can be deployed on CDNs that do not support WebSocket, but there are still some requirements:
+Can be deployed on CDNs that do not support WebSocket, but there is still one requirement:
 
-- The CDN must support HTTP chunked transfer encoding in a streaming fashion,
-  no response buffering. The transport will send the `X-Accel-Buffering: no`
-  response header, but only some CDNs respect this.
+**The CDN must support HTTP chunked transfer encoding in a streaming fashion**,
+no response buffering. The transport will send the `X-Accel-Buffering: no`
+response header, but only some CDNs respect this. If the connection hangs, most
+likely this part does not work.
 
-  If the connection hangs, most likely this part does not work.
-
-- The CDN must disable caching, or caching should include the query string in cache key.
-
-Download performance should be similar to WebSocket, but upload is limited.
+This transport serves the same purpose as Meek (support non-WS CDN). It has the
+above streaming requirement to the CDN so that download can be much faster than
+(v2fly) Meek, close to WebSocket performance. The upload is also optimized, but
+still much more limited than WebSocket.
 
 Like WebSocket transport, SplitHTTP parses the `X-Forwarded-For` header for logging.
 
@@ -61,26 +61,24 @@ unstable, or if the server is using too much memory.
 The value on the client must not be higher than on the server. Otherwise,
 connectivity issues will occur.
 
-## Known issues
-
-* ALPN negotiation is currently not correctly implemented. HTTPS connections
-  always assume HTTP/2 prior knowledge.
-
 ## Protocol details
 
 See [PR](https://github.com/XTLS/Xray-core/pull/3412) for extensive discussion
 and revision of the protocol. Here is a summary, and the minimum needed to be
 compatible:
 
-1. `GET /?session=UUID` starts a new "virtual" stream connection. The server
-  immediately responds with `200 OK` and `Transfer-Encoding: chunked`, and
-  immediately sends a two-byte payload to force HTTP middleboxes into flushing
-  headers.
+1. `GET /<UUID>` opens the download. The server immediately responds
+   with `200 OK` and `Transfer-Encoding: chunked`, and immediately sends a
+   two-byte payload to force HTTP middleboxes into flushing headers.
 
-2. Once the client has read all of this, it can start uploading using `POST
-   /?session=UUID?seq=0`. `seq` can be used like TCP seq number, and multiple
-   "packets" may be sent concurrently. The server has to reassemble the
-   "packets" live. The sequence number never resets for simplicity reasons.
+2. Client uploads using `POST /<UUID>/<seq>`. `seq` starts at `0` and can be
+   used like TCP seq number, and multiple "packets" may be sent concurrently.
+   The server has to reassemble the "packets" live. The sequence number never
+   resets for simplicity reasons.
+
+   The client may open upload and download in any order, either one starts a
+   session. However, eventually `GET` needs to be opened (current deadline is
+   hardcoded to 30 seconds) If not, the session will be terminated.
 
 3. The `GET` request is kept open until the tunneled connection has to be
    terminated. Either server or client can close. How this actually works
@@ -96,3 +94,10 @@ Recommendations:
   the size of a packet should be chosen to optimize between latency,
   throughput, and any size limits imposed by the CDN (just like TCP, nagle's
   algorithm and MTU...)
+
+* HTTP/1.1 and h2 should be supported by server and client, and it should be
+  expected that the CDN will translate arbitrarily between versions. A HTTP/1.1
+  server may indirectly end up talking to a h2 client, and vice versa.
+
+  Xray does not support HTTP/1.1 over TLS. If TLS is enabled, h2 prior
+  knowledge is assumed.
