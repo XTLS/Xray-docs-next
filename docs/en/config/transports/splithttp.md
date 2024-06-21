@@ -63,7 +63,6 @@ connectivity issues will occur.
 
 ## Protocol details
 
-
 See [#3412](https://github.com/XTLS/Xray-core/pull/3412) and
 [#3462](https://github.com/XTLS/Xray-core/pull/3462) for extensive discussion
 and revision of the protocol. Here is a summary, and the minimum needed to be
