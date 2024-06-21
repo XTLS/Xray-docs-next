@@ -7,8 +7,6 @@
 
 - CDN必须支持HTTP分块传输，且支持流式传输不会缓冲响应，核心将会发送 `X-Accel-Buffering: no` 以告知CDN，但是需要CDN遵守此标头。如果连接被挂起，该传输很可能无法工作。
 
-- CDN必须禁用缓存, 或者缓存不忽略查询字符串。
-
 目的与V2fly Meek相同，由于使用了分块下载，下行速率更为优秀，上行也经过优化但仍非常有限，也因此对 HTTP 中间盒要求更高（见上）。
 
 `SplitHTTP` 也接受 `X-Forwarded-For` header。
@@ -65,7 +63,7 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 讨论详见 [#3412](https://github.com/XTLS/Xray-core/pull/3412) 和 [#3462](https://github.com/XTLS/Xray-core/pull/3462) 以下是简述和简要兼容实现要求
 
-1. 使用 `GET /?session=UUID` 开始下载。服务器立即回复 `200 OK` 和 `Transfer Encoding:chunked` , 并立即发送一个两字节的有效负载，以强制HTTP中间盒刷新标头。
+1. 使用 `GET /<UUID>` 开始下载。服务器立即回复 `200 OK` 和 `Transfer Encoding:chunked` , 并立即发送一个两字节的有效负载，以强制HTTP中间盒刷新标头。
 
 2. 一旦客户端完成协商，它可以使用 `POST /<UUID>/<seq>` 开始发送上行数据. `seq` 作用类似于 TCP 序列号, 数据包可以被同时发送，服务端必须按序列号将数据重组。序列号不应该重置。
 
