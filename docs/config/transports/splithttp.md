@@ -5,13 +5,11 @@
 
 可以通过不支持WebSocket的CDN上，但仍有一些要求：
 
-- CDN必须支持HTTP分块传输，且支持流式传输不会缓冲响应，核心将会发送 `X-Accel-Buffering: no` 以告知CDN，但是需要CDN遵守此标头。
-
-  如果连接被挂起，该传输很可能无法工作。
+- CDN必须支持HTTP分块传输，且支持流式传输不会缓冲响应，核心将会发送 `X-Accel-Buffering: no` 以告知CDN，但是需要CDN遵守此标头。如果连接被挂起，该传输很可能无法工作。
 
 - CDN必须禁用缓存, 或者缓存不忽略查询字符串。
 
-上行效率可能非常有限
+目的与V2fly Meek相同，由于使用了分块下载，下行速率更为优秀，上行也经过优化但仍非常有限，也因此对 HTTP 中间盒要求更高（见上）。
 
 `SplitHTTP` 也接受 `X-Forwarded-For` header。
 
@@ -33,11 +31,11 @@ The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
 
 > `path`: string
 
-WebSocket 所使用的 HTTP 协议路径，默认值为 `"/"`。
+SplitHTTP 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
 > `host`: string
 
-WebSocket 的HTTP请求中所发送的host，默认值为空。若服务端值为空时，不验证客户端发送来的host值。
+SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值为空时，不验证客户端发送来的host值。
 
 当在服务端指定该值，或在 ```headers``` 中指定host，将会校验与客户端请求host是否一致。
 
@@ -63,22 +61,22 @@ WebSocket 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 客户端所设定的值必须低于服务端，否则可能导致连接问题。
 
-## 已知问题
-
-* ALPN 协商仍未正确实现，HTTPS连接将默认使用H2。
-
 ## 协议细节
 
-讨论与建议详见 [PR](https://github.com/XTLS/Xray-core/pull/3412)，这里是实现简述。
+讨论详见 [#3412](https://github.com/XTLS/Xray-core/pull/3412) 和 [#3462](https://github.com/XTLS/Xray-core/pull/3462) 以下是简述和简要兼容实现要求
 
-1. 使用 `GET /?session=UUID` 打开一个新的“虚拟”流连接。服务器立即回复 `200 OK` 和 `Transfer Encoding:chunked` , 并立即发送一个两字节的有效负载，以强制HTTP中间盒刷新标头。
+1. 使用 `GET /?session=UUID` 开始下载。服务器立即回复 `200 OK` 和 `Transfer Encoding:chunked` , 并立即发送一个两字节的有效负载，以强制HTTP中间盒刷新标头。
 
-2. 一旦客户端完成协商，它可以使用 `POST /?session=UUID?seq=0` 开始发送上行数据. `seq` 作用类似于 TCP 序列号, 数据包可以被同时发送，服务端必须按序列号将数据重组。序列号不会重置。
+2. 一旦客户端完成协商，它可以使用 `POST /<UUID>/<seq>` 开始发送上行数据. `seq` 作用类似于 TCP 序列号, 数据包可以被同时发送，服务端必须按序列号将数据重组。序列号不应该重置。
 
-3. `GET` 请求将一直保持在打开状态直到连接被终止，服务端和客户端都可以关闭连接。具体行为取决于HTTP版本。
+   客户端可以以任意决定打开上行与下行请求的顺序，任何一种都可以启动会话，但是必须要在30秒内打开 `GET` 连接，否则会话将被终止。
+
+4. `GET` 请求将一直保持在打开状态直到连接被终止，服务端和客户端都可以关闭连接。具体行为取决于HTTP版本。
 
 建议:
 
 * 不要假设CDN会正确传输所有标头，这个协议是为了穿透不支持WS的CDN设计的，这些CDN的架构通常不怎么友好。
 
 * 应该假设所有HTTP连接都没有流式请求，所以每个包的大小应该基于延迟、吞吐量以及中间盒本身的限制考虑(类似TCP的MTU与纳格算法)。
+
+* 关于HTTP版本，核心暂时未支持 h2c，故未使用 HTTPS 时 Xray 仅支持 http/1.1. 为了避免ALPN协商造成的额外复杂性，Xray总是在使用 HTTPS 时使用h2，但是出于对CDN回源连接类型的兼容考虑，Xray服务端兼容 HTTPS+http/1.1 的请求。其他实现可以根据实际需求和限制选择版本号。
