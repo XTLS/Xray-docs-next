@@ -99,7 +99,7 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 
 目前出站协议中有以下流控模式可选：
 
-- 无 `flow`，空字符或者 `none`：使用普通 TLS 代理
+- 无 `flow` 或者 空字符： 使用普通 TLS 代理
 - `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充 支持 uTLS 模拟客户端指纹
 - `xtls-rprx-vision-udp443`：同 `xtls-rprx-vision`, 但是放行了目标为 443 端口的 UDP 流量
 

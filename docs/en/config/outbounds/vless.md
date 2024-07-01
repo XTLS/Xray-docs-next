@@ -99,7 +99,7 @@ Flow control mode, used to select the XTLS algorithm.
 
 Currently, there are the following flow control modes available in the outbound protocol:
 
-- No `flow`, empty character or `none`: using regular TLS proxy
+- No `flow` or empty string: Use regular TLS proxy.
 - `xtls-rprx-vision`: using the new XTLS mode includes inner handshake random padding supports uTLS client fingerprint simulation
 - `xtls-rprx-vision-udp443`: same as `xtls-rprx-vision`, but allows UDP traffic with a destination of port 443
 
