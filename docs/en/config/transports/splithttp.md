@@ -26,7 +26,9 @@ The `SplitHttpObject` corresponds to the `splithttpSettings` section under trans
   "host": "xray.com",
   "headers": {
     "key": "value"
-  }
+  },
+  "maxUploadSize": 1000000,
+  "maxConcurrentUploads": 10
 }
 ```
 
