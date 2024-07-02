@@ -6,13 +6,16 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
 
 Transport configuration consists of two parts:
 
-1. Global config ([TransportObject](#transportobject))
+1. ~~Global config ([TransportObject](#transportobject)) (deprecated)~~
 2. Local config ([StreamSettingsObject](#streamsettingsobject)).
 
 - When locally configured, you can specify how each inbound or outbound connection is transmitted individually.
 - Server inbounds and client outbounds often need to use the same transport protocol. When a transport protocol is specified without local configs, the transport will fall back to global transport configs.
 
-## TransportObject
+<details>
+<summary>Global configuration (deprecated)</summary>
+
+## TransportObject (deprecated)
 
 The `TransportObject` corresponds to the `transport` property in the config root.
 
@@ -67,6 +70,8 @@ Configures Domain Socket connections.
 > `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
 
 Configures SplitHTTP connections.
+
+</details>
 
 ## StreamSettingsObject
 
