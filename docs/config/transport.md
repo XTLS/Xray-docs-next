@@ -61,7 +61,7 @@
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
-针对 HTTPUpragde 连接的配置。
+针对 HTTPUpgrade 连接的配置。
 
 > `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
 
@@ -90,6 +90,7 @@
   "dsSettings": {},
   "grpcSettings": {},
   "httpupgradeSettings": {},
+  "splithttpSettings": {},
   "sockopt": {
     "mark": 0,
     "tcpMaxSeg": 1440,
@@ -111,7 +112,7 @@
 }
 ```
 
-> `network`: "tcp" | "ws" | "h2" | "grpc" | "quic" | "kcp" | "httpupgrade"
+> `network`: "tcp" | "ws" | "h2" | "grpc" | "quic" | "kcp" | "httpupgrade" | "splithttp"
 
 连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
 
@@ -170,8 +171,11 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
-当前连接的 HTTPUpragde 配置，仅当此连接使用 HTTPUpragde 时有效。配置内容与上面的全局配置相同。
+当前连接的 HTTPUpgrade 配置，仅当此连接使用 HTTPUpgrade 时有效。配置内容与上面的全局配置相同。
 
+> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
+
+当前连接的 SplitHTTP 配置，仅当此连接使用 SplitHTTP 时有效。配置内容与上面的全局配置相同。
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 

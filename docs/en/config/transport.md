@@ -107,7 +107,7 @@ Configures SplitHTTP connections.
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "quic" | "grpc" | "httpupgrade"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "quic" | "grpc" | "httpupgrade" | "splithttp"
 
 The underlying protocol of the transport used by the data stream of the connection, defaulting to `"tcp"`.
 
