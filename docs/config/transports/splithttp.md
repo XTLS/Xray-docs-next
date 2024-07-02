@@ -21,7 +21,7 @@ The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
   "host": "xray.com",
   "headers": {
     "key": "value"
-  }
+  },
   "maxUploadSize": 1000000,
   "maxConcurrentUploads": 10 
 }
