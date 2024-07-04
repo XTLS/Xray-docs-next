@@ -1,6 +1,6 @@
 # 入站代理
 
-入站连接用于接收发来的数据，可用的协议请见[入站协议](./inbounds/)。
+入站连接用于接收发来的数据，可用的协议请见[入站协议](./inbounds/dokodemo.html)。
 
 ## InboundObject
 
@@ -54,7 +54,7 @@
 
 > `protocol`: string
 
-连接协议名称，可选的协议类型见 [入站协议](./inbounds/)。
+连接协议名称，可选的协议类型见 [入站协议](./inbounds/dokodemo.html)。
 
 > `settings`: InboundConfigurationObject
 
