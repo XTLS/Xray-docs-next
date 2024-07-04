@@ -5,9 +5,9 @@ Uses HTTP chunked-transfer encoding for download, and multiple HTTP requests for
 Can be deployed on CDNs that do not support WebSocket, but there is still one requirement:
 
 **The CDN must support HTTP chunked transfer encoding in a streaming fashion**,
-no response buffering. The transport will send the `X-Accel-Buffering: no`
-response header, but only some CDNs respect this. If the connection hangs, most
-likely this part does not work.
+no response buffering. The transport will send the `X-Accel-Buffering: no` and
+`Content-Type: text/event-stream` response headers, but only some CDNs respect this.
+If the connection hangs, most likely this part does not work.
 
 This transport serves the same purpose as Meek (support non-WS CDN). It has the
 above streaming requirement to the CDN so that download can be much faster than
@@ -102,9 +102,11 @@ Recommendations:
   expected that the CDN will translate arbitrarily between versions. A HTTP/1.1
   server may indirectly end up talking to a h2 client, and vice versa.
 
-  The SplitHTTP client in Xray does not support HTTP/1.1 over TLS. If TLS is
-  enabled, h2 prior knowledge is assumed. The supported combinations are
-  therefore HTTP/1.1 without TLS, and h2 with TLS.
+  In order to keep the implementation simple, SplitHTTP client in Xray assumes
+  h2 prior knowledge if TLS is enabled. HTTP/1.1 has to be enabled explicitly
+  by setting `http/1.1` ALPN. h2c is not supported on the client at all.
 
   The SplitHTTP server in Xray supports all common combinations as expected:
-  HTTP/1.1 with or without TLS, and h2 with TLS.
+  HTTP/1.1 with or without TLS, h2 and h2c, however no h3.
+
+  Neither Xray server nor client support h3, but this may change in the future.
