@@ -37,7 +37,7 @@
 
 > `protocol`: string
 
-连接协议名称，可选的协议类型见 [出站协议](./outbounds/)。
+连接协议名称，可选的协议列表见左侧 出站代理。
 
 > `settings`: OutboundConfigurationObject
 
