@@ -1,5 +1,7 @@
 # SplitHTTP
 
+<Badge text="v1.8.16+" type="warning"/>
+
 Uses HTTP chunked-transfer encoding for download, and multiple HTTP requests for upload.
 
 Can be deployed on CDNs that do not support WebSocket, but there is still one requirement:

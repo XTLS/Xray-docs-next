@@ -1,5 +1,6 @@
 # SplitHTTP
 
+<Badge text="v1.8.16+" type="warning"/>
 
 使用HTTP分块传输编码下载，使用多个HTTP POST请求进行上传。
 
