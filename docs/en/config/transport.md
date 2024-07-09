@@ -673,3 +673,37 @@ Default value `false`, fill in `true` to enable [Multipath TCP](https://en.wikip
 
 Default value `false`, recommended to be enabled with "tcpMptcp": true.
 
+>  `customSockopt`: []
+
+An array for advanced users to specify any sockopt. In theory, all the above connection-related settings can be set equivalently here. Naturally, other options that exist in Linux but have not been added to the core can also be set. The example below is equivalent to `"tcpcongestion": "bbr"` in core.
+
+Please make sure you understand Linux socket programming before using it.
+
+```
+"customSockopt": [
+  {
+    "type": "str",
+    "level":"6",
+    "opt": "13",
+    "value": "bbr"
+  }
+]
+```
+
+>> `type`: ""
+
+Required, the type of setting, valid values are `int` or `str`.
+
+>> `level`: ""
+
+Optional, protocol level, used to specify the effective range, the default is `6`, which is TCP.
+
+>> `opt`: ""
+
+The option name of the operation, using decimal (the example here is that the value of `TCP_CONGESTION` is defined as `0xd` and converted to decimal is 13)
+
+>> `value`: ""
+
+The option value to be set, the example here is set to bbr.
+
+Decimal numbers are required when type is specified as int.
