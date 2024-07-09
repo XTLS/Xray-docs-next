@@ -562,7 +562,8 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "V6Only": false,
   "tcpWindowClamp": 600
   "tcpMptcp": false,
-  "tcpNoDelay": false
+  "tcpNoDelay": false,
+  "customSockopt": []
 }
 ```
 
@@ -755,3 +756,38 @@ Xray-core v1.8.6 新增参数。<br>
 > `tcpNoDelay`: true | false
 
 默认值 `false`，建议与 `"tcpMptcp": true` 一起启用。
+
+> `customSockopt`: []
+
+一个数组，用于高级用户指定需要的任何 sockopt, 理论上上述所有与连接有关的设置均可以在此等价设置, 自然也可以设置Linux中存在但是核心未添加的其他选项，下方示例等价于核心中的 `"tcpcongestion": "bbr"`
+
+使用前请确保你了解 Linux Socket 编程。
+
+```
+"customSockopt": [
+  {
+    "type": "str",
+    "level":"6",
+    "opt": "13",
+    "value": "bbr"
+  }
+]
+```
+
+>> `type`: ""
+
+必填，设置的类型，目前可选int或str.
+
+>> `level`: ""
+
+可选，协议级别，用于指定生效范围，默认为6, 即TCP.
+
+>> `opt`: ""
+
+操作的选项名称，使用十进制(此处示例为 TCP_CONGESTION 的值 定义为 0xd 转换为10进制即为13)
+
+>> `value`: ""
+
+要设置的选项值，此处示例为设置为bbr.
+
+当 type 指定为 int 时需要使用十进制数字。
