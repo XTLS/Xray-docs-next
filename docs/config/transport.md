@@ -763,7 +763,7 @@ Xray-core v1.8.6 新增参数。<br>
 
 使用前请确保你了解 Linux Socket 编程。
 
-```
+```json
 "customSockopt": [
   {
     "type": "str",
@@ -774,19 +774,19 @@ Xray-core v1.8.6 新增参数。<br>
 ]
 ```
 
->> `type`: ""
+> `type`: ""
 
 必填，设置的类型，目前可选int或str.
 
->> `level`: ""
+> `level`: ""
 
 可选，协议级别，用于指定生效范围，默认为6, 即TCP.
 
->> `opt`: ""
+> `opt`: ""
 
 操作的选项名称，使用十进制(此处示例为 TCP_CONGESTION 的值 定义为 0xd 转换为10进制即为13)
 
->> `value`: ""
+> `value`: ""
 
 要设置的选项值，此处示例为设置为bbr.
 

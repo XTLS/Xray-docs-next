@@ -679,7 +679,7 @@ An array for advanced users to specify any sockopt. In theory, all the above con
 
 Please make sure you understand Linux socket programming before using it.
 
-```
+```json
 "customSockopt": [
   {
     "type": "str",
@@ -690,19 +690,19 @@ Please make sure you understand Linux socket programming before using it.
 ]
 ```
 
->> `type`: ""
+> `type`: ""
 
 Required, the type of setting, valid values are `int` or `str`.
 
->> `level`: ""
+> `level`: ""
 
 Optional, protocol level, used to specify the effective range, the default is `6`, which is TCP.
 
->> `opt`: ""
+> `opt`: ""
 
 The option name of the operation, using decimal (the example here is that the value of `TCP_CONGESTION` is defined as `0xd` and converted to decimal is 13)
 
->> `value`: ""
+> `value`: ""
 
 The option value to be set, the example here is set to bbr.
 
