@@ -20,13 +20,13 @@ You can also use `Xray.location.confdir` or `Xray_LOCATION_CONFDIR` to specify t
 
 The `-confdir` parameter takes precedence over the environment variable. If a valid directory is specified by the parameter, the path in the environment variable will not be read.
 
-## Rule Explaination
+## Rule Explanation
 
 ### Normal Objects（`{}`）
 
 **In the top-level object of `JSON`, the latter overrides or supplements the former.**
 
-For ecample：
+For example：
 
 - base.json
 

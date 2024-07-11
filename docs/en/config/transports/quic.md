@@ -36,7 +36,7 @@ QUIC requires TLS to be enabled and if it is not enabled in the [Transport Proto
 
 Encryption method.
 
-Extra encryption over entire QUIC packet, include the frame head part. Default value is "none" for no encryption. After being encrypted, QUIC packets will not be detected as QUIC but some other unknow traffic.
+Extra encryption over entire QUIC packet, include the frame head part. Default value is "none" for no encryption. After being encrypted, QUIC packets will not be detected as QUIC but some other unknown traffic.
 
 The default value is `none`
 

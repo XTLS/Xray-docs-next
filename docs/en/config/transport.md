@@ -166,7 +166,7 @@ Configures the current Domain Socket connection. Valid only when Domain Socket i
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
-Configures the current HTTPUpragde connection. Valid only when HTTPUpgrade is used. Same schema as global.
+Configures the current HTTPUpgrade connection. Valid only when HTTPUpgrade is used. Same schema as global.
 
 > `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
 

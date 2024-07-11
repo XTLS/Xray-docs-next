@@ -49,7 +49,7 @@ The value of `userLevel` corresponds to the value of `level` in the [policy](../
 
 > `fragment`: map
 
-A key-value map used to control TCP fragmentation，under some circumstances it can cheat the censor syetem, like bypass a SNI blacklist.
+A key-value map used to control TCP fragmentation，under some circumstances it can cheat the censor system, like bypass a SNI blacklist.
 
 `"packets"`：support two different methods. "1-3" is for segmentation at TCP layer, applying to the beginning 1 to 3 data writes by the client. "tlshello" is for TLS client hello packet fragmentation.
 
