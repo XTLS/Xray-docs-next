@@ -4,7 +4,7 @@ title: Nginx 或 Haproxy 搭建 TLS 隧道隐藏指纹
 
 Nginx 或 Haproxy 实现的 HTTPS 隧道、HTTP/2 over HTTPS 隧道、WebSocket over HTTP/2 over HTTPS 隧道、gRPC over HTTP/2 over HTTPS 隧道以及自签证书双端认证的 gRPC over HTTP/2 over HTTPS 隧道
 
-# 客户端服务端 Nginx 构建 HTPPS 隧道隐藏指纹
+# 客户端服务端 Nginx 构建 HTTPS 隧道隐藏指纹
 
 网路结构：
 
@@ -326,7 +326,7 @@ ip6tables -t mangle -A XRAY6_MASK -d VPS_IPv6/128 -j RETURN
 
 ## 结束
 
-# 双端 Haproxy 构建 HTPPS 隧道隐藏指纹
+# 双端 Haproxy 构建 HTTPS 隧道隐藏指纹
 
 安装 Haproxy
 
