@@ -2,7 +2,7 @@ import { defaultTheme } from '@vuepress/theme-default'
 // import { path, getDirname } from '@vuepress/utils'
 import { path, getDirname } from 'vuepress/utils'
 import process from 'node:process'
-import { navbarEn, navbarZh, sidebarEn, sidebarZh } from './config/index.js'
+import { navbarEn, navbarZh, sidebarEn, sidebarZh, navbarRu, sidebarRu } from './config/index.js'
 
 let __dirname = getDirname(import.meta.url)
 const isProduction = process.env.NODE_ENV === 'production'
@@ -61,6 +61,24 @@ export default defaultTheme({
       openInNewWindow: 'open in new tag',
       toggleColorMode: 'toggle color mode',
       toggleSidebar: 'toggle side bar',
+    },
+    '/ru/': {
+      navbar: navbarRu,
+      sidebar: sidebarRu,
+      repoLabel: 'Посмотреть исходный код', 
+      editLinkText: 'Помогите нам улучшить эту страницу!',
+      tip: 'Подсказка',                
+      warning: 'Внимание',             
+      danger: 'Предупреждение',              
+      lastUpdatedText: 'Последние изменения',     
+      selectLanguageName: 'Русский',
+      selectLanguageText: ' Упрощенный китайский / Сменить язык', 
+      selectLanguageAriaLabel: 'Упрощенный китайский / Сменить язык', 
+      docsDir: 'docs',            
+      backToHome: 'На главную',    
+      openInNewWindow: 'Открыть в новой вкладке',
+      toggleColorMode: 'Переключить цветовую схему', 
+      toggleSidebar: 'Переключить боковую панель',  
     },
     // logo: '/logo.png',
 

@@ -48,6 +48,11 @@ export default defineUserConfig(<UserConfig>{
       title: "Project X",
       description: "Official document of Xray",
     },
+    "/ru/": {
+      lang: "ru-RU",
+      title: "Project X",
+      description: "Официальная документация Xray",
+    },
   },
   theme,
   head: [["link", { rel: "icon", href: `/logo.png` }]],
