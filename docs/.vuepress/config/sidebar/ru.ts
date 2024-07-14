@@ -1,7 +1,7 @@
 import type { SidebarConfig } from '@vuepress/theme-default'
 
 export const sidebarRu: SidebarConfig = {
-  '/config/': [
+  '/ru/config/': [
     {
       text: 'Описание функций',
       children: [
@@ -74,7 +74,7 @@ export const sidebarRu: SidebarConfig = {
       ],
     },
   ],
-  '/document/': [
+  '/ru/document/': [
     {
       text: 'Быстрый старт',
       children: [
@@ -126,7 +126,7 @@ export const sidebarRu: SidebarConfig = {
       ],
     }
   ],
-  '/development/': [
+  '/ru/development/': [
     {
       text: 'Руководство разработчика',
       children: [
