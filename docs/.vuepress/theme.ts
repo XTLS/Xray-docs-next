@@ -2,7 +2,7 @@ import { defaultTheme } from '@vuepress/theme-default'
 // import { path, getDirname } from '@vuepress/utils'
 import { path, getDirname } from 'vuepress/utils'
 import process from 'node:process'
-import { navbarEn, navbarZh, sidebarEn, sidebarZh, navbarRu, sidebarRu } from './config/index.js'
+import { navbarEn, navbarZh, navbarRu, sidebarEn, sidebarZh, sidebarRu } from './config/index.js'
 
 let __dirname = getDirname(import.meta.url)
 const isProduction = process.env.NODE_ENV === 'production'
