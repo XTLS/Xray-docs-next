@@ -2,7 +2,7 @@
 
 Использует стандартный WebSocket для передачи данных.
 
-Подключение WebSocket может быть разделено другими HTTP-серверами (например, Nginx) и VLESS fallbacks path.
+Подключение WebSocket может быть проксировано другими HTTP-серверами (например, Nginx) и VLESS fallbacks path.
 
 ::: tip
 WebSocket распознает заголовок X-Forwarded-For в HTTP-запросе для перезаписи исходного адреса трафика, приоритет выше, чем у PROXY protocol.
