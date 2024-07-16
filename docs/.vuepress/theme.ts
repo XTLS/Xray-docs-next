@@ -2,7 +2,7 @@ import { defaultTheme } from '@vuepress/theme-default'
 // import { path, getDirname } from '@vuepress/utils'
 import { path, getDirname } from 'vuepress/utils'
 import process from 'node:process'
-import { navbarEn, navbarZh, sidebarEn, sidebarZh } from './config/index.js'
+import { navbarEn, navbarZh, navbarRu, sidebarEn, sidebarZh, sidebarRu } from './config/index.js'
 
 let __dirname = getDirname(import.meta.url)
 const isProduction = process.env.NODE_ENV === 'production'
@@ -40,8 +40,8 @@ export default defaultTheme({
       sidebar: sidebarEn,
       navbar: navbarEn,
       selectLanguageName: 'English (WIP)',
-      selectLanguageText: '🌏 简体中文 / Change language',
-      selectLanguageAriaLabel: '简体中文 / Change language',
+      selectLanguageText: '🌎 English / Change language',
+      selectLanguageAriaLabel: 'English / Change language',
       editLinkText: 'Help us improve this page on GitHub！',
       lastUpdatedText: 'Last Updated',
       contributorsText: 'contributors',
@@ -61,6 +61,24 @@ export default defaultTheme({
       openInNewWindow: 'open in new tag',
       toggleColorMode: 'toggle color mode',
       toggleSidebar: 'toggle side bar',
+    },
+    '/ru/': {
+      navbar: navbarRu,
+      sidebar: sidebarRu,
+      repoLabel: 'Посмотреть исходный код', 
+      editLinkText: 'Помогите нам улучшить эту страницу!',
+      tip: 'Подсказка',                
+      warning: 'Внимание',             
+      danger: 'Предупреждение',              
+      lastUpdatedText: 'Последние изменения',     
+      selectLanguageName: 'Русский (WIP)',
+      selectLanguageText: '🌍 Русский / Change language', 
+      selectLanguageAriaLabel: 'Русский / Change language', 
+      docsDir: 'docs',            
+      backToHome: 'На главную',    
+      openInNewWindow: 'Открыть в новой вкладке',
+      toggleColorMode: 'Переключить цветовую схему', 
+      toggleSidebar: 'Переключить боковую панель',  
     },
     // logo: '/logo.png',
 
