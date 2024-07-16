@@ -28,6 +28,7 @@ export default defineUserConfig(<UserConfig>{
   plugins: [
     i18nPlugin({
       updatedTime: "git",
+      translationGuide: "https://github.com/XTLS/Xray-docs-next",
       locales: {
         en: {
           lang: "en-US",

@@ -22,7 +22,9 @@ The configuration file of Xray is in JSON format, and the configuration format f
   "stats": {},
   "reverse": {},
   "fakedns": {},
-  "metrics": {}
+  "metrics": {},
+  "observatory": {},
+  "burstObservatory": {}
 }
 ```
 
@@ -79,3 +81,11 @@ FakeDNS configuration. Can be used with a transparent proxy to obtain the actual
 > metrics: [metricsObject](./metrics.md)
 
 Metrics configuration. A more straightforward (and hopefully better) way to export metrics.
+
+> observatory: [ObservatoryObject](./observatory.md#observatoryobject)
+
+Background connection observation. Detect the connection status of outbound proxies.
+
+> burstObservatory: [BurstObservatoryObject](./observatory.md#burstobservatoryobject)
+
+Concurrent connection observation. Detect the connection status of outbound proxies.
