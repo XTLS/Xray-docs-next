@@ -112,3 +112,11 @@ Recommendations:
   HTTP/1.1 with or without TLS, h2 and h2c, however no h3.
 
   Neither Xray server nor client support h3, but this may change in the future.
+
+## Browser Dialer
+
+<Badge text="v1.8.17+" type="warning"/>
+
+If uTLS is not enough, SplitHTTP's TLS can be handled by a browser using [Browser Dialer](../features/browser_dialer.md)
+
+Depending on the browser, Browser Dialer also supports transmission of SplitHTTP using HTTP3 (QUIC) while the regular implementation does not.

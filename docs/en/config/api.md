@@ -7,7 +7,7 @@ The interface can be enabled through the api configuration module. When the api 
 Please refer to the [related configuration](#related-configuration) in this section.
 
 ::: warning
-Most users do not need to use this API. Novices can ignore this item directly.
+Most users do not need to use this API. Novices can ignore this page entirely.
 :::
 
 ## ApiObject
@@ -18,6 +18,7 @@ Most users do not need to use this API. Novices can ignore this item directly.
 {
   "api": {
     "tag": "api",
+    "listen": "127.0.0.1:8080",
     "services": ["HandlerService", "LoggerService", "StatsService"]
   }
 }
@@ -26,6 +27,13 @@ Most users do not need to use this API. Novices can ignore this item directly.
 > `tag`: string
 
 Outbound proxy identifier.
+
+> `listen`: string
+
+The IP and port that the API service listens on. This is an optional configuration item.
+
+When you omit this item, you need to add inbounds and routing configurations according to the examples in the [relevant configurations below](#related-configuration).
+
 
 > `services`: [string]
 
@@ -65,6 +73,18 @@ Add routing rules for the api inbound in the routing configuration.
 }
 ```
 
+Add api to basic configuration
+
+```
+"api": {
+  "tag": "api",
+  "services": [
+    "StatsService"
+  ]
+}
+```
+
+
 ## Supported API List
 
 ### HandlerService
@@ -77,6 +97,18 @@ APIs that modify the inbound and outbound proxies, with the following available 
 - Delete an existing outbound proxy;
 - Add a user to an inbound proxy (VMess, VLESS, Trojan, and Shadowsocks(v1.3.0+) only);
 - Delete a user from an inbound proxy (VMess, VLESS, Trojan, and Shadowsocks(v1.3.0+) only);
+
+## RoutingService
+
+API for adding, deleting, and replacing routing rules and querying equalizer statistics. The available functions are as follows:
+
+* `adrules` adds and replaces routing configuration
+* `rmrules` delete routing rules
+* `sib` Disconnect source IP
+* `bi` Query equalizer statistics
+* `bo` Forces the equalizer to select the specified outboundTag
+
+You can use something like `./xray help api bi` to query the specific usage.
 
 ### LoggerService
 

@@ -28,6 +28,7 @@ export const sidebarEn: SidebarConfig = {
         '/en/config/stats.md',
         '/en/config/transport.md',
         '/en/config/metrics.md',
+        '/en/config/observatory.md',
       ],
     },
     {

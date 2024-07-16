@@ -10,6 +10,7 @@ import process from 'node:process'
 // import { getDirname, path } from '@vuepress/utils'
 import { getDirname, path } from 'vuepress/utils'
 import { MermaidPlugin } from './plugins/mermaid/node/mermaid'
+import i18nPlugin from "vuepress-plugin-i18n";
 
 const __dirname = getDirname(import.meta.url)
 console.log('>>> __dirname -> ', __dirname)
@@ -25,6 +26,21 @@ console.log(
 
 export default defineUserConfig(<UserConfig>{
   plugins: [
+    i18nPlugin({
+      updatedTime: "git",
+      translationGuide: "https://github.com/XTLS/Xray-docs-next",
+      locales: {
+        en: {
+          lang: "en-US",
+          untranslated: {
+            title: "Untranslated"
+          },
+          outdated: {
+            title: "Outdated"
+          }
+        }
+      }
+    }),
     searchPlugin({
       locales: {
         "/": {
