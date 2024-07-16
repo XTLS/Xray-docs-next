@@ -13,7 +13,7 @@
     "@vuepress/bundler-webpack": "2.0.0-rc.2",
     "@vuepress/plugin-back-to-top": "^2.0.0-rc.3",
     "@vuepress/plugin-search": "2.0.0-rc.3",
-    "vuepress-plugin-i18n": "https://github.com/mmmray/vuepress-plugin-i18n#8bee51f",
+    "vuepress-plugin-i18n": "https://github.com/XTLS/vuepress-plugin-i18n#8bee51f",
     "postcss-loader": "^8.0.0",
     "prettier": "^3.3.2",
     "sass": "^1.51.0",
