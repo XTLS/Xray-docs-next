@@ -90,6 +90,9 @@ importers:
       vuepress:
         specifier: 2.0.0-rc.2
         version: 2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.14.9)(jiti@1.21.0)(sass@1.77.4)(terser@5.31.0)(typescript@5.5.2))(@vuepress/bundler-webpack@2.0.0-rc.2(esbuild@0.22.0)(typescript@5.5.2))(typescript@5.5.2)(vue@3.3.13(typescript@5.5.2))
+      vuepress-plugin-i18n:
+        specifier: https://github.com/XTLS/vuepress-plugin-i18n#5ae5b2d
+        version: https://codeload.github.com/XTLS/vuepress-plugin-i18n/tar.gz/5ae5b2d(typescript@5.5.2)(vuepress@2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.14.9)(jiti@1.21.0)(sass@1.77.4)(terser@5.31.0)(typescript@5.5.2))(@vuepress/bundler-webpack@2.0.0-rc.2(esbuild@0.22.0)(typescript@5.5.2))(typescript@5.5.2)(vue@3.3.13(typescript@5.5.2)))
 
 packages:
 
@@ -3053,6 +3056,9 @@ packages:
     resolution: {integrity: sha512-dOESqjYr96iWYylGObzd39EuNTa5VJxyvVAEm5Jnh7KGo75V43Hk1odPQkNDyXNmUR6k+gEiDVXnjB8HJ3crXw==}
     engines: {node: '>=12'}
 
+  striptags@3.2.0:
+    resolution: {integrity: sha512-g45ZOGzHDMe2bdYMdIvdAfCQkCTDMGBazSw1ypMowwGIee7ZQ5dU0rBJ8Jqgl+jAKIv4dbeE1jscZq9wid1Tkw==}
+
   style-loader@3.3.4:
     resolution: {integrity: sha512-0WqXzrsMTyb8yjZJHDqwmnwRJvhALK9LfRtRc6B4UTWe8AijYLZYZ9thuJTZc2VfQWINADW/j+LiJnfy2RoC1w==}
     engines: {node: '>= 12.13.0'}
@@ -3304,6 +3310,18 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  vuepress-plugin-i18n@https://codeload.github.com/XTLS/vuepress-plugin-i18n/tar.gz/5ae5b2d:
+    resolution: {tarball: https://codeload.github.com/XTLS/vuepress-plugin-i18n/tar.gz/5ae5b2d}
+    version: 0.8.4
+    peerDependencies:
+      vuepress: 2.0.0-rc.2
+
+  vuepress-shared@2.0.0-rc.15:
+    resolution: {integrity: sha512-PzuXgAlzTrD6b6pCaeSb65CD5ponpD86IF+xaCxWrQDAQWk4zSY2brPk6seS10i2teZFNqVeyY8ERoC27HOzcg==}
+    engines: {node: '>=18.16.0', npm: '>=8', pnpm: '>=7', yarn: '>=2'}
+    peerDependencies:
+      vuepress: 2.0.0-rc.2
 
   vuepress@2.0.0-rc.2:
     resolution: {integrity: sha512-OEHfXx4Q3IzkXqcY9bKZqHXYAnSR82AGrmWYX5R1I3+ntzjaAbUhUKbG/jjMzLg40XqAHS++pM/zzMBNrcY3rg==}
@@ -6790,6 +6808,8 @@ snapshots:
 
   strip-final-newline@3.0.0: {}
 
+  striptags@3.2.0: {}
+
   style-loader@3.3.4(webpack@5.91.0(esbuild@0.22.0)):
     dependencies:
       webpack: 5.91.0(esbuild@0.22.0)
@@ -6989,6 +7009,37 @@ snapshots:
       '@vue/shared': 3.4.27
     optionalDependencies:
       typescript: 5.5.2
+
+  vuepress-plugin-i18n@https://codeload.github.com/XTLS/vuepress-plugin-i18n/tar.gz/5ae5b2d(typescript@5.5.2)(vuepress@2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.14.9)(jiti@1.21.0)(sass@1.77.4)(terser@5.31.0)(typescript@5.5.2))(@vuepress/bundler-webpack@2.0.0-rc.2(esbuild@0.22.0)(typescript@5.5.2))(typescript@5.5.2)(vue@3.3.13(typescript@5.5.2))):
+    dependencies:
+      '@vuepress/client': 2.0.0-rc.2(typescript@5.5.2)
+      '@vuepress/core': 2.0.0-rc.2(typescript@5.5.2)
+      '@vuepress/utils': 2.0.0-rc.2
+      chokidar: 3.6.0
+      vue: 3.3.13(typescript@5.5.2)
+      vuepress: 2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.14.9)(jiti@1.21.0)(sass@1.77.4)(terser@5.31.0)(typescript@5.5.2))(@vuepress/bundler-webpack@2.0.0-rc.2(esbuild@0.22.0)(typescript@5.5.2))(typescript@5.5.2)(vue@3.3.13(typescript@5.5.2))
+      vuepress-shared: 2.0.0-rc.15(typescript@5.5.2)(vuepress@2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.14.9)(jiti@1.21.0)(sass@1.77.4)(terser@5.31.0)(typescript@5.5.2))(@vuepress/bundler-webpack@2.0.0-rc.2(esbuild@0.22.0)(typescript@5.5.2))(typescript@5.5.2)(vue@3.3.13(typescript@5.5.2)))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - supports-color
+      - typescript
+
+  vuepress-shared@2.0.0-rc.15(typescript@5.5.2)(vuepress@2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.14.9)(jiti@1.21.0)(sass@1.77.4)(terser@5.31.0)(typescript@5.5.2))(@vuepress/bundler-webpack@2.0.0-rc.2(esbuild@0.22.0)(typescript@5.5.2))(typescript@5.5.2)(vue@3.3.13(typescript@5.5.2))):
+    dependencies:
+      '@vueuse/core': 10.11.0(vue@3.4.27(typescript@5.5.2))
+      cheerio: 1.0.0-rc.12
+      dayjs: 1.11.11
+      execa: 8.0.1
+      fflate: 0.8.2
+      gray-matter: 4.0.3
+      semver: 7.6.2
+      striptags: 3.2.0
+      vue: 3.4.27(typescript@5.5.2)
+      vue-router: 4.3.2(vue@3.4.27(typescript@5.5.2))
+      vuepress: 2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.14.9)(jiti@1.21.0)(sass@1.77.4)(terser@5.31.0)(typescript@5.5.2))(@vuepress/bundler-webpack@2.0.0-rc.2(esbuild@0.22.0)(typescript@5.5.2))(typescript@5.5.2)(vue@3.3.13(typescript@5.5.2))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - typescript
 
   vuepress@2.0.0-rc.2(@vuepress/bundler-vite@2.0.0-rc.2(@types/node@20.14.9)(jiti@1.21.0)(sass@1.77.4)(terser@5.31.0)(typescript@5.5.2))(@vuepress/bundler-webpack@2.0.0-rc.2(esbuild@0.22.0)(typescript@5.5.2))(typescript@5.5.2)(vue@3.3.13(typescript@5.5.2)):
     dependencies:
