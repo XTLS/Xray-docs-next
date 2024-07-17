@@ -78,4 +78,10 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 * 应当假设所有HTTP连接都不支持流式请求，所以上行连接发送的的每个包的大小应该基于延迟、吞吐量以及中间盒本身的限制考虑(类似TCP的MTU与纳格算法)。
 
-* 关于HTTP版本，核心暂时未支持 h2c，故未使用 HTTPS 时 Xray 仅会发送 http/1.1 请求。 为了避免ALPN协商造成的额外复杂性，Xray客户端在使用 HTTPS 时使用 h2 (除非在 tlsSettings 中手动指定 alpn 为 http/1.1 )，Xray服务端则兼容各种类型的入站连接(暂时没有h3)，因为入站连接可以由于中间盒而出现各种类型的请求。
+* 关于HTTP版本，核心暂时未支持 h2c，故未使用 HTTPS 时 Xray 仅会发送 http/1.1 请求。 
+
+为了避免ALPN协商造成的额外复杂性，Xray客户端在使用 HTTPS 时使用 h2，也可以在客户端 tlsSettings 中手动指定 alpn 为 http/1.1 或者 h3 来使用对应的HTTP版本发起请求，Xray服务端则兼容包括h2c在内各种类型的入站连接(暂时没有h3)，因为入站连接可以由于中间盒的转发而出现各种类型的请求。
+
+## Browser Dialer
+
+如果使用HTTPS，该传输还支持 [Browser Dialer](../features/browser_dialer.md)
