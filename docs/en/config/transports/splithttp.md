@@ -105,18 +105,14 @@ Recommendations:
   server may indirectly end up talking to a h2 client, and vice versa.
 
   In order to keep the implementation simple, SplitHTTP client in Xray assumes
-  h2 prior knowledge if TLS is enabled. HTTP/1.1 has to be enabled explicitly
-  by setting `http/1.1` ALPN. h2c is not supported on the client at all.
+  h2 prior knowledge if TLS is enabled. You can also manually specify ALPN as
+  `http/1.1` or `h3` to initiate requests using the corresponding HTTP version.
 
   The SplitHTTP server in Xray supports all common combinations as expected:
   HTTP/1.1 with or without TLS, h2 and h2c, however no h3.
-
-  Neither Xray server nor client support h3, but this may change in the future.
 
 ## Browser Dialer
 
 <Badge text="v1.8.17+" type="warning"/>
 
 If uTLS is not enough, SplitHTTP's TLS can be handled by a browser using [Browser Dialer](../features/browser_dialer.md)
-
-Depending on the browser, Browser Dialer also supports transmission of SplitHTTP using HTTP3 (QUIC) while the regular implementation does not.
