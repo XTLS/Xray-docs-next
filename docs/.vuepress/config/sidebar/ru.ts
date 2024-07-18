@@ -32,7 +32,7 @@ export const sidebarRu: SidebarConfig = {
       ],
     },
     {
-      text: 'Входящий прокси',
+      text: 'Входящие подключения',
       children: [
         '/ru/config/inbounds/dokodemo.md',
         '/ru/config/inbounds/http.md',
@@ -44,7 +44,7 @@ export const sidebarRu: SidebarConfig = {
       ],
     },
     {
-      text: 'Исходящий прокси',
+      text: 'Исходящие подключения',
       children: [
         '/ru/config/outbounds/blackhole.md',
         '/ru/config/outbounds/dns.md',
