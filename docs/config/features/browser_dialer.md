@@ -1,4 +1,6 @@
-## Background
+# Browser Dialer
+
+## 背景
 
 通过 uTLS，Xray 可以模拟主流浏览器的 TLS 握手指纹（具体参见 TLS 中 `fingerprint` 选项）。但是仍然不能保证在任意时刻 uTLS 模拟浏览器行为完全一致。
 
