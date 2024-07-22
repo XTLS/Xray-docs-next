@@ -119,7 +119,7 @@ When the value is in the form of `"https://host:port/dns-query"`, such as `"http
 
 When the value is in the form of `"https+local://host:port/dns-query"`, such as `"https+local://dns.google/dns-query"`, Xray will use `DOH local mode (DOHL)` for queries. That is, DOH requests will not pass through the routing component and will directly request outbound through Freedom, to reduce latency. This is generally suitable for use on the server side. Non-standard ports and paths can also be used.
 
-When the value is in the form of `"quic+local://host"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DNS over QUIC local mode (DOQL)` for queries. That is, DNS requests will not pass through the routing component and will directly request outbound through Freedom. This method requires DNS server support for DNS over QUIC. The default port 784 is used for queries, and non-standard ports can also be used.
+When the value is in the form of `"quic+local://host"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DNS over QUIC local mode (DOQL)` for queries. That is, DNS requests will not pass through the routing component and will directly request outbound through Freedom. This method requires DNS server support for DNS over QUIC. The default port 853 is used for queries, and non-standard ports can also be used.
 
 When the value is `fakedns`, the FakeDNS function will be used for queries.
 
@@ -245,7 +245,7 @@ When the value is in the form of `"https://host:port/dns-query"`, such as `"http
 
 When the value is in the form of `"https+local://host:port/dns-query"`, such as `"https+local://dns.google/dns-query"`, Xray will use `DOH local mode (DOHL)` for the query, which means that the DOH request will not go through the routing component and will be sent directly through the Freedom outbound to reduce latency. This is generally suitable for server-side use. Non-standard ports and paths can also be used.
 
-When the value is in the form of `"quic+local://host:port"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DOQ local mode (DOQL)` for the query, which means that the DNS request will not go through the routing component and will be sent directly through the Freedom outbound. This method requires DNS server support for DNS over QUIC. By default, port 784 is used for the query, and non-standard ports can be used.
+When the value is in the form of `"quic+local://host:port"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DOQ local mode (DOQL)` for the query, which means that the DNS request will not go through the routing component and will be sent directly through the Freedom outbound. This method requires DNS server support for DNS over QUIC. By default, port 853 is used for the query, and non-standard ports can be used.
 
 When the value is `fakedns`, FakeDNS functionality will be used for the query.
 
