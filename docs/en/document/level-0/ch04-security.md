@@ -87,6 +87,12 @@ This article uses `9753` as an example, which means that with the release of thi
 
 - If you observed carefully in step 3, you would have noticed that saving is not done by the common `ctrl+s`.
 - The correct shortcut keys: save is `ctrl+o` + `enter`, and exit is `ctrl+x`.
+- (For some operating systems) Add a firewall rule to set the new SSH port, otherwise, you won't be able to log in via SSH after the instance restarts.
+- For example, on Ubuntu using ufw.
+
+```shell
+sudo ufw allow 9753/tcp
+```
 
 7. The last thing we need to do is to [restart the SSH service to make the changes take effect].
 
@@ -94,7 +100,7 @@ This article uses `9753` as an example, which means that with the release of thi
 systemctl restart ssh
 ```
 
-This is a shell command to restart the SSH service.
+Then you can try opening a new session in your SSH software to check if you can connect. If there are any issues, you can modify the configuration through the old SSH session (SSH connections that are already open will not be closed when restarting sshd).
 
 8. The complete process demonstration is as follows:
 

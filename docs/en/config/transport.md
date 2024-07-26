@@ -274,6 +274,12 @@ Specifies the fingerprint of the `TLS Client Hello` message. When empty, fingerp
 This feature only **simulates** the fingerprint of `TLS Client Hello` message, leaving other behaviours the same as vanilla Go TLS. If you want to simulate a browser `TLS` more completely, use the [Browser Dialer](./transports/websocket.md#browser-dialer).
 :::
 
+::: tip
+When using this feature, some TLS options that affect the TLS fingerprint will be overridden by the utls library and will no longer be effective, such as ALPN.
+The parameters that will be passed are
+`"serverName" "allowInsecure" "disableSystemRoot" "pinnedPeerCertificateChainSha256" "masterKeyLog"`
+:::
+
 > `pinnedPeerCertificateChainSha256`: [string]
 
 Specifies the SHA256 hash values of the certificate chain of the remote server, using the standard encoding format. Only when the hash value of the server-side certificate chain matches any of the specified can a TLS connection be successfully established.
