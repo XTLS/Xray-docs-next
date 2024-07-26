@@ -287,6 +287,12 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 指纹与行为，可以使用 [Browser Dialer](./transports/websocket.md#browser-dialer)。
 :::
 
+::: tip
+当使用此功能时，TLS 的部分影响TLS指纹的选项将被 utls 库覆盖不再生效，列如ALPN。
+会被传递的参数有
+`"serverName" "allowInsecure" "disableSystemRoot" "pinnedPeerCertificateChainSha256" "masterKeyLog"`
+:::
+
 > `pinnedPeerCertificateChainSha256`: \[string\]
 
 用于指定远程服务器的证书链 SHA256 散列值，使用标准编码格式。仅有当服务器端证书链散列值符合设置项中之一时才能成功建立 TLS 连接。
