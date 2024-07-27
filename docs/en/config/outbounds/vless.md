@@ -103,7 +103,7 @@ Currently, there are the following flow control modes available in the outbound 
 - `xtls-rprx-vision`: using the new XTLS mode includes inner handshake random padding supports uTLS client fingerprint simulation
 - `xtls-rprx-vision-udp443`: same as `xtls-rprx-vision`, but allows UDP traffic with a destination of port 443
 
-In addition, currently, XTLS only supports TCP, mKCP, and DomainSocket transport modes.
+Additionally, XTLS currently only supports TCP+TLS/Reality.
 
 <!-- prettier-ignore -->
 ::: tip About xtls-rprx-*-udp443 flow control mode
