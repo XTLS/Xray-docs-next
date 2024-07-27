@@ -92,4 +92,4 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 - 无 `flow` 或者 空字符： 使用普通 TLS 代理
 - `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充
 
-此外，目前 XTLS 仅支持 TCP、mKCP、DomainSocket 这三种传输方式。
+此外，目前 XTLS 仅支持 TCP+TLS/Reality
