@@ -88,4 +88,6 @@ Currently, the following flow control modes are available for inbound protocols:
 - No `flow` or empty string: Use regular TLS proxy.
 - `xtls-rprx-vision`: Use the new XTLS mode, including inner-handshake random padding.
 
-Additionally, XTLS currently only supports TCP, mKCP, and DomainSocket as transport methods.
+
+
+Additionally, XTLS currently only supports TCP+TLS/Reality. 
