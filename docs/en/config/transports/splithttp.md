@@ -26,9 +26,9 @@ The `SplitHttpObject` corresponds to the `splithttpSettings` section under trans
   "headers": {
     "key": "value"
   },
-  "maxUploadSize": 1000000,
-  "maxConcurrentUploads": 100,
-  "minUploadIntervalMs": 30,
+  "scMaxEachPostBytes": 1000000,
+  "scMaxConcurrentPosts": 100,
+  "scMinPostsIntervalMs": 30,
   "noSSEHeader": false
 }
 ```
@@ -49,7 +49,7 @@ The current priority of the `Host` header sent by clients: `host` > `headers` > 
 
 Customized HTTP headers defined in key-value pairs. Defaults to empty.
 
-> `maxUploadSize`: int/string
+> `scMaxEachPostBytes`: int/string
 
 The maximum size of upload chunks, in bytes. The client defaults to 1MB and the
 server defaults to 2MB.
@@ -64,7 +64,7 @@ or other HTTP reverse proxy, otherwise an HTTP 413 error will be thrown.
 It can also be in the form of a string `"1000000-2000000"`. The core will
 randomly select a value within the range each time to reduce fingerprints.
 
-> `maxConcurrentUploads`: int/string
+> `scMaxConcurrentPosts`: int/string
 
 The number of concurrent uploads to run. Defaults to 100 on the client, and
 200 on the server.
@@ -77,22 +77,18 @@ will be much lower.
 It can also be in the form of a string `"100-200"`, and the core will randomly
 select a value within the range each time to reduce fingerprints.
 
-> `minUploadIntervalMs`: int/string
-
-*Added in 1.8.22*
+> `scMinPostsIntervalMs`: int/string
 
 (Client-only) How much time to pass between upload requests at a minimum.
 Defaults to `30` (milliseconds).
 
-It can also be in the form of a string `"30-60"`, and the core will randomly
+It can also be in the form of a string `"10-50"`, and the core will randomly
 select a value within the range each time to reduce fingerprints.
 
 > `noSSEHeader`
 
-*Added in 1.8.22*
-
 (Server-only) Do not send the `Content-Type: text/event-stream` response
-header. Defaults to false.
+header. Defaults to false (the header will be sent)
 
 ## HTTP versions
 
