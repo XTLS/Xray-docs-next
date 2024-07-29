@@ -44,6 +44,6 @@ HTTPUpgrade 的HTTP请求中所发送的host，默认值为空。若服务端值
 
 > `headers`: map \{string: string\}
 
-自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
+仅客户端，自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
 
 默认值为空。
