@@ -2,13 +2,13 @@
 
 <Badge text="v1.8.16+" type="warning"/>
 
-使用HTTP分块传输编码下载，使用多个HTTP POST请求进行上传。
+使用HTTP分块传输编码流式响应处理下载，使用多个HTTP POST请求进行上传。
 
 可以通过不支持WebSocket的CDN上，但仍有一些要求：
 
-- CDN必须支持HTTP分块传输，且支持流式响应不会缓冲，核心将会发送 `X-Accel-Buffering: no` 以及 `Content-Type: text/event-stream` 以告知CDN，但是需要CDN遵守此标头。如果中间盒不支持流式响应而导致连接被挂起，则该传输很可能无法工作。
+- CDN必须支持HTTP分块传输，且支持流式响应而不会缓冲，核心将会发送 `X-Accel-Buffering: no` 以及 `Content-Type: text/event-stream` 以告知CDN，但是需要CDN遵守此标头。如果中间盒不支持流式响应而导致连接被挂起，则该传输很可能无法工作。
 
-目的与V2fly Meek相同，由于使用了分块下载，下行速率更为优秀，上行也经过优化但仍非常有限，也因此对 HTTP 中间盒要求更高（见上）。
+目的与V2fly Meek相同，由于使用了流式响应处理下载，下行速率更为优秀，上行也经过优化但仍非常有限，也因此对 HTTP 中间盒要求更高（见上）。
 
 `SplitHTTP` 也接受 `X-Forwarded-For` header。
 
@@ -24,7 +24,8 @@ The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
     "key": "value"
   },
   "maxUploadSize": 1000000,
-  "maxConcurrentUploads": 10 
+  "maxConcurrentUploads": 10,
+  "minUploadIntervalMs": 30
 }
 ```
 
@@ -44,21 +45,53 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
 
-> `maxUploadSize`: int
+> `maxUploadSize`: int/string
 
-上传分块的最大大小，单位为字节，默认为 1 MB.
+上传分块的最大大小，单位为字节，客户端默认为 1MB, 服务端默认为 2MB .
+
+客户端设置的大小必须低于该值，否则当发送的 POST 请求大于服务端设置的值时，请求会被拒绝。
 
 这个值应该小于CDN或其他HTTP反向代理所允许的最大请求体，否则将抛出 HTTP 413 错误。
 
-适当提升这个值可以增加上传速率。
+也可以是字符串 "1000000-2000000" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
 
-> `maxConcurrentUploads`: int
+> `maxConcurrentUploads`: int/string
 
-上传连接的最大并发数，默认为10, 连接将尽可能被重用。
+单个连接上传post的最大并发数，客户端默认为100, 服务端默认为200。
 
-如果连接不稳定或者服务端内存占用过高可以尝试调低。
+客户端实际发起的数量必须低于服务端。(实际情况下并发数量一般不会超过20，很难达到上限，所以实际上客户端设置的值可以超过服务端，但不建议这么做)
 
-客户端所设定的值必须低于服务端，否则可能导致连接问题。
+也可以是字符串 "100-200" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
+
+> 'minUploadIntervalMs': int/string
+
+仅客户端，若上传缓冲区未满，则核心会在该间隔后直接发送缓冲区内数据避免长时间积压小流量数据。默认值为 30.
+
+也可以是字符串 "30-60" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
+
+## HTTP 版本
+
+### 客户端行为
+
+默认情况下，客户端将会默认在未启用 TLS 时使用 http/1.1, 启用 TLS 时，使用 h2.
+
+当启用 TLS 时，允许在 TLS 设置的 alpn 数组内设置 http/1.1 h2 h3 来指定具体的http版本(仅当该数组只有一个元素时生效，若填入多个元素则返回默认行为)
+
+### 服务端行为
+
+默认情况下，客户端将会默认监听 TCP, 此时可以处理 http/1.1 和 h2 流量。
+
+当启用 TLS 时，允许在 TLS 设置的 alpn 数组内设置 h3, 此时服务端将改为监听 UDP 端口, 处理 h3 流量。
+
+### 小提示
+
+由于该协议为标准的 HTTP 请求，所以对于 HTTP 版本的转换并不敏感，各种中间盒都可能转换 HTTP 版本。
+
+列如：你希望使用 h3 连接 Cloudflare, 但是Cloudflare 不会使用 h3 回源, 而是使用 http/1.1 或 h2 回源，此时客户端 alpn 应为 h3, 而服务端就不应为 h3, 因为发往服务端的请求不是 h3.
+
+## Browser Dialer
+
+如果使用HTTPS，该传输还支持 [Browser Dialer](../features/browser_dialer.md)
 
 ## 协议细节
 
@@ -77,11 +110,3 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 * 不要期望CDN会正确传输所有标头，这个协议的目的是为了穿透不支持WS的CDN，而这些CDN的行为通常不怎么友好。
 
 * 应当假设所有HTTP连接都不支持流式请求，所以上行连接发送的的每个包的大小应该基于延迟、吞吐量以及中间盒本身的限制考虑(类似TCP的MTU与纳格算法)。
-
-* 关于HTTP版本，核心暂时未支持 h2c，故未使用 HTTPS 时 Xray 仅会发送 http/1.1 请求。 
-
-为了避免ALPN协商造成的额外复杂性，Xray客户端在使用 HTTPS 时使用 h2，也可以在客户端 tlsSettings 中手动指定 alpn 为 http/1.1 或者 h3 来使用对应的HTTP版本发起请求，Xray服务端则兼容包括h2c在内各种类型的入站连接(暂时没有h3)，因为入站连接可以由于中间盒的转发而出现各种类型的请求。
-
-## Browser Dialer
-
-如果使用HTTPS，该传输还支持 [Browser Dialer](../features/browser_dialer.md)
