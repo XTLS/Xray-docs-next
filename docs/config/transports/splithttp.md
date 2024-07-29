@@ -23,9 +23,9 @@ The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
   "headers": {
     "key": "value"
   },
-  "maxUploadSize": 1000000,
-  "maxConcurrentUploads": 100,
-  "minUploadIntervalMs": 30,
+  "scMaxEachPostBytes": 1000000,
+  "scMaxConcurrentPosts": 100,
+  "scMinPostsIntervalMs": 30,
   "noSSEHeader": false
 }
 ```
@@ -46,27 +46,27 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
 
-> `maxUploadSize`: int/string
+> `scMaxEachPostBytes`: int/string
 
-上传分块的最大大小，单位为字节，客户端默认为 1MB, 服务端默认为 2MB .
+上传分块的最大大小，单位为字节，默认值为 1000000, 即 1MB.
 
 客户端设置的大小必须低于该值，否则当发送的 POST 请求大于服务端设置的值时，请求会被拒绝。
 
 这个值应该小于CDN或其他HTTP反向代理所允许的最大请求体，否则将抛出 HTTP 413 错误。
 
-也可以是字符串 "1000000-2000000" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
+也可以是字符串 "500000-1000000" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
 
-> `maxConcurrentUploads`: int/string
+> `scMaxConcurrentPosts`: int/string
 
-单个连接上传post的最大并发数，客户端默认为100, 服务端默认为200。
+单个连接上传post的最大并发数，默认为100.
 
-上传并发同时也受(也主要受) `minUploadIntervalMs` 控制，故该值仅做保险。
+上传并发同时也受(也主要受) `scMinPostsIntervalMs` 控制，故该值仅做保险。
 
 客户端实际发起的数量必须低于服务端。(实际情况下由于上述很难达到上限，所以事实上客户端设置的值可以超过服务端，但不建议这么做)
 
-也可以是字符串 "100-200" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
+也可以是字符串 "50-100" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
 
-> `minUploadIntervalMs`: int/string
+> `scMinPostsIntervalMs`: int/string
 
 仅客户端，发起POST上传请求的最小间隔。默认值为 30.
 
