@@ -27,7 +27,9 @@ The `SplitHttpObject` corresponds to the `splithttpSettings` section under trans
     "key": "value"
   },
   "maxUploadSize": 1000000,
-  "maxConcurrentUploads": 10
+  "maxConcurrentUploads": 100,
+  "minUploadIntervalMs": 30,
+  "noSSEHeader": false
 }
 ```
 
@@ -47,20 +49,50 @@ The current priority of the `Host` header sent by clients: `host` > `headers` > 
 
 Customized HTTP headers defined in key-value pairs. Defaults to empty.
 
-> `maxUploadSize`
+> `maxUploadSize`: int/string
 
-The largest possible chunk to upload. Defaults to 1 MB. This should be less
-than the max request body size your CDN allows. Decrease this if the client
-prints HTTP 413 errors. Increase this to improve upload bandwidth.
+The maximum size of upload chunks, in bytes. The client defaults to 1MB and the
+server defaults to 2MB.
 
-> `maxConcurrentUploads`
+The size set by the client must be lower than this value, otherwise when the
+POST request is sent larger than the value set by the server, the request will
+be rejected.
 
-The number of concurrent uploads to run. Defaults to 10. Connections are reused
-wherever possible, but you may want to lower this value if the connection is
-unstable, or if the server is using too much memory.
+This value should be smaller than the maximum request body allowed by the CDN
+or other HTTP reverse proxy, otherwise an HTTP 413 error will be thrown.
+
+It can also be in the form of a string `"1000000-2000000"`. The core will
+randomly select a value within the range each time to reduce fingerprints.
+
+> `maxConcurrentUploads`: int/string
+
+The number of concurrent uploads to run. Defaults to 100 on the client, and
+200 on the server.
 
 The value on the client must not be higher than on the server. Otherwise,
-connectivity issues will occur.
+connectivity issues will occur. In practice, the upload concurrency is also
+limited by `minUploadIntervalMs`, so the actual concurrency on the client side
+will be much lower.
+
+It can also be in the form of a string `"100-200"`, and the core will randomly
+select a value within the range each time to reduce fingerprints.
+
+> `minUploadIntervalMs`: int/string
+
+*Added in 1.8.22*
+
+(Client-only) How much time to pass between upload requests at a minimum.
+Defaults to `30` (milliseconds).
+
+It can also be in the form of a string `"30-60"`, and the core will randomly
+select a value within the range each time to reduce fingerprints.
+
+> `noSSEHeader`
+
+*Added in 1.8.22*
+
+(Server-only) Do not send the `Content-Type: text/event-stream` response
+header. Defaults to false.
 
 ## HTTP versions
 
