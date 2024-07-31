@@ -167,26 +167,26 @@
            "domain": ["geosite:cn"],
            "outboundTag": "direct"
          },
-         // 3.3 国内IP直连
-         {
-           "type": "field",
-           "ip": ["geoip:cn", "geoip:private"],
-           "outboundTag": "direct"
-         },
-         // 3.4 国外域名代理
+         // 3.3 国外域名代理
          {
            "type": "field",
            "domain": ["geosite:geolocation-!cn"],
            "outboundTag": "proxy"
          },
-         // 3.5 默认规则
-         // 在Xray中，任何不符合上述路由规则的流量，都会默认使用【第一个outbound（5.1）】的设置，所以一定要把转发VPS的outbound放第一个
-         // 3.6 走国内"223.5.5.5"的DNS查询流量分流走direct出站
+         // 3.4 走国内"223.5.5.5"的DNS查询流量分流走direct出站
          {
            "type": "field",
            "ip": ["223.5.5.5"],
            "outboundTag": "direct"
+         },
+         // 3.5 国内IP直连
+         {
+           "type": "field",
+           "ip": ["geoip:cn", "geoip:private"],
+           "outboundTag": "direct"
          }
+         // 3.6 默认规则
+         // 在Xray中，任何不符合上述路由规则的流量，都会默认使用【第一个outbound（5.1）】的设置，所以一定要把转发VPS的outbound放第一个
        ]
      },
 
@@ -214,7 +214,7 @@
      // 5_出站设置
      "outbounds": [
        // 5.1 默认转发VPS
-       // 一定放在第一个，在routing 3.5 里面已经说明了，这等于是默认规则，所有不符合任何规则的流量都走这个
+       // 一定放在第一个，在routing 3.6 里面已经说明了，这等于是默认规则，所有不符合任何规则的流量都走这个
        {
          "tag": "proxy",
          "protocol": "vless",
