@@ -436,6 +436,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
   "ocspStapling": 3600,
   "oneTimeLoading": false,
   "usage": "encipherment",
+  "buildChain": false,
   "certificateFile": "/path/to/certificate.crt",
   "keyFile": "/path/to/key.key",
   "certificate": [
@@ -531,6 +532,14 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 ::: tip TIP 6
 如已经拥有一个域名, 可以使用工具便捷的获取免费第三方证书,如[acme.sh](https://github.com/acmesh-official/acme.sh)
+:::
+
+> `buildChain`: true | false
+
+仅当证书用途为 `issue` 时生效，若值为 `true` ，签发证书时将CA证书嵌入证书链。
+
+::: tip TIP 1
+不应该将根证书嵌入证书链。该选项只适合在签名CA证书为中间证书时启用。
 :::
 
 > `certificateFile`: string

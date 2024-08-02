@@ -410,6 +410,7 @@ The bootstrapping path and query params of the spider. It's recommended to have 
   "ocspStapling": 3600,
   "oneTimeLoading": false,
   "usage": "encipherment",
+  "buildChain": false,
   "certificateFile": "/path/to/certificate.crt",
   "keyFile": "/path/to/key.key",
   "certificate": [
@@ -505,6 +506,14 @@ Use `xray tls cert` to generate self-signed CA certificate.
 
 ::: tip TIP 6
 If you already have a domain name, you can use tools to obtain free third-party certificates easily, such as [acme.sh](https://github.com/acmesh-official/acme.sh).
+:::
+
+> `buildChain`: true | false
+
+Only valid when `usage` is `issue`. When set to `true`, the CA certificate will be appended to leaf certificate as chain during issuing certificates.
+
+::: tip TIP 1
+Root certificates should not be embedded in the certificate chain. This option is only applicable when the signing CA certificate is an intermediate certificate.
 :::
 
 > `certificateFile`: string
