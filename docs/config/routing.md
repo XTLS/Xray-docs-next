@@ -292,7 +292,7 @@ Xray-core v1.8.7 或更高版本可省略该行。
 - `twitter`：包含了 Twitter 旗下绝大部分域名。
 - `telegram`：包含了 Telegram 旗下绝大部分域名。
 - `geolocation-cn`：包含了常见的大陆站点域名。
-- `geolocation-!cn`：包含了常见的非大陆站点域名，同时包含了 `tld-!cn`。
+- `geolocation-!cn`：包含了常见的非大陆站点域名。
 - `tld-cn`：包含了 CNNIC 管理的用于中国大陆的顶级域名，如以 `.cn`、`.中国` 结尾的域名。
 - `tld-!cn`：包含了非中国大陆使用的顶级域名，如以 `.hk`（香港）、`.tw`（台湾）、`.jp`（日本）、`.sg`（新加坡）、`.us`（美国）`.ca`（加拿大）等结尾的域名。
 
