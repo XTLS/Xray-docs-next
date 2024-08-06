@@ -223,7 +223,7 @@ Common domain lists include:
 - `twitter`: Contains most of the domain names under Twitter.
 - `telegram`: Contains most of the domain names under Telegram.
 - `geolocation-cn`: Contains common domain names of mainland Chinese websites.
-- `geolocation-!cn`: Contains common domain names of non-mainland Chinese websites, as well as `tld-!cn`.
+- `geolocation-!cn`: Contains common domain names of non-mainland Chinese websites.
 - `tld-cn`: Contains top-level domain names managed by CNNIC for mainland China, such as domain names ending in `.cn` and `.中国`.
 - `tld-!cn`: Contains top-level domain names used outside mainland China, such as domain names ending in `.hk` (Hong Kong), `.tw` (Taiwan), `.jp` (Japan), `.sg` (Singapore), `.us` (United States), and `.ca` (Canada).
 
