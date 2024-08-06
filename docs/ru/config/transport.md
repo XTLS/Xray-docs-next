@@ -388,7 +388,7 @@ SHA256-хэш цепочки сертификатов удаленного се�
 
 > `dest`: string
 
-Обязательный параметр, формат такой же, как у `dest` в `fallbacks` для VLESS [dest](https://xtls.github.io/config/features/fallback.html#fallbackobject).
+Обязательный параметр, формат такой же, как у `dest` в `fallbacks` для VLESS [dest](./features/fallback.md#fallbackobject).
 
 ::: warning
 Для лучшей маскировки Xray **напрямую перенаправляет** трафик, не прошедший аутентификацию Reality (незаконные запросы Reality), на `dest`.  
@@ -398,7 +398,7 @@ SHA256-хэш цепочки сертификатов удаленного се�
 
 > `xver`: number
 
-Необязательный параметр, формат такой же, как у `xver` в `fallbacks` для VLESS [xver](https://xtls.github.io/config/features/fallback.html#fallbackobject).
+Необязательный параметр, формат такой же, как у `xver` в `fallbacks` для VLESS [xver](./features/fallback.md#fallbackobject).
 
 > `serverNames`: \[string\]
 
@@ -449,7 +449,7 @@ SHA256-хэш цепочки сертификатов удаленного се�
 
 > `fingerprint`: string
 
-Обязательный параметр, такой же, как в [TLSObject](https://xtls.github.io/config/transport.html#tlsobject).
+Обязательный параметр, такой же, как в [TLSObject](#tlsobject).
 
 > `shortId`: string
 
