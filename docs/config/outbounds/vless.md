@@ -1,4 +1,4 @@
-# VLESS
+# VLESS（XTLS Vision Seed）
 
 ::: danger
 目前 VLESS 没有自带加密，请用于可靠信道，如 TLS。

@@ -1,4 +1,4 @@
-# SplitHTTP
+# SplitHTTP（H2、QUIC H3）
 
 <Badge text="v1.8.16+" type="warning"/>
 

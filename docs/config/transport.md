@@ -1,4 +1,4 @@
-# 传输方式
+# 传输方式（uTLS、REALITY）
 
 传输方式（transport）是当前 Xray 节点和其它节点对接的方式。
 
