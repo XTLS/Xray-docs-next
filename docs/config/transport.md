@@ -355,7 +355,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `dest` : string
 
-必填，格式同 VLESS `fallbacks` 的 [dest](https://xtls.github.io/config/features/fallback.html#fallbackobject)。
+必填，格式同 VLESS `fallbacks` 的 [dest](./features/fallback.md#fallbackobject)。
 
 ::: warning
 为了伪装的效果考虑，Xray对于鉴权失败（非合法reality请求）的流量，会**直接转发**至 dest.
@@ -365,7 +365,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `xver` : number
 
-选填，格式同 VLESS `fallbacks` 的 [xver](https://xtls.github.io/config/features/fallback.html#fallbackobject)
+选填，格式同 VLESS `fallbacks` 的 [xver](./features/fallback.md#fallbackobject)
 
 > `serverNames` : \[string\]
 
@@ -411,7 +411,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `fingerprint` : string
 
-必填，同 [TLSObject](https://xtls.github.io/config/transport.html#tlsobject)。
+必填，同 [TLSObject](#tlsobject)。
 
 > `shortId` : string
 

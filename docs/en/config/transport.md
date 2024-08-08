@@ -341,11 +341,11 @@ Emits verbose logs when `true`.
 
 > `dest`: string
 
-Required. Same schema as [dest](https://xtls.github.io/config/features/fallback.html#fallbackobject) in VLESS `fallbacks`.
+Required. Same schema as [dest](./features/fallback.md#fallbackobject) in VLESS `fallbacks`.
 
 > `xver`: string
 
-Optional. Same schema as [xver](https://xtls.github.io/config/features/fallback.html#fallbackobject) in VLESS `fallbacks`.
+Optional. Same schema as [xver](./features/fallback.md#fallbackobject) in VLESS `fallbacks`.
 
 > `serverNames`: [string]
 
