@@ -62,6 +62,8 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值�
 
 `"interval"`：分片间隔（ms）
 
+当其为 0 且设置 `"packets": "tlshello"` 时，被分片的 Client Hello 将会在一个TCP包中发送（如果其原始大小未超过MSS或MTU导致被系统自动分片）
+
 > `proxyProtocol`: number
 
 PROXY protocol 通常配合 `redirect` 重定向到开启了 PROXY protocol 协议的 Nginx 或其他后端服务中。如果后端服务不支持 PROXY protocol 协议，连接将会被断开。
