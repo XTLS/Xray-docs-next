@@ -114,7 +114,7 @@ Xray-core v1.8.7 或更高版本可省略该行。
 一个数组，数组内每一项代表一个 IP 范围。当某一项匹配目标 IP 时，此规则生效。有以下几种形式：
 
 - IP：形如 `"127.0.0.1"`。
-- [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)：形如 `"10.0.0.0/8"`。
+- [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)：形如 `"10.0.0.0/8"`，也可以用 `"0.0.0.0/0"` `"::/0"` 来指定所有 IPv4 或者 IPv6.
 - 预定义 IP 列表：此列表预置于每一个 Xray 的安装包中，文件名为 `geoip.dat`。使用方式形如 `"geoip:cn"`，必须以 `geoip:`（小写）开头，后面跟双字符国家代码，支持几乎所有可以上网的国家。
   - 特殊值：`"geoip:private"`，包含所有私有地址，如 `127.0.0.1`。
   - 反选（!）功能，`"geoip:!cn"` 表示非 geoip:cn 中的结果。
