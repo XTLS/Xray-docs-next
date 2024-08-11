@@ -20,13 +20,13 @@ The commands are:
         run          Run Xray with config, the default command
         version      Show current version of Xray
         api          Call an API in an Xray process
+        convert      Convert configs
         tls          TLS tools
         uuid         Generate UUIDv4 or UUIDv5
         x25519       Generate key pair for x25519 key exchange
         wg           Generate key pair for wireguard key exchange
 
 Use "xray help <command>" for more information about a command.
-
 ```
 
 ### xray run
@@ -99,6 +99,59 @@ xray api <command> [arguments]
         ado           Add outbounds
         rmi           Remove inbounds
         rmo           Remove outbounds
+```
+
+### xray convert
+
+把配置文件转换成 protobuf 或者把 typedMessage 转换成 json
+
+使用方法:
+
+```
+xray convert <command> [arguments]
+
+The commands are:
+
+        pb           Convert multiple json configs to protobuf
+        json         Convert typedMessage to json
+```
+
+pb 子命令使用示例：
+```bash
+# 用法：xray convert pb [-debug] [-type] [json file] [json file] ...
+
+# 把三个配置合并成 mix.pb
+xray convert pb c1.json c2.json c3.json > mix.pb
+
+# 使用 -debug 选项查看 mix.pb 的内容
+xray convert pb -debug mix.pb
+
+# 使用 mix.pb 启动 Xray-core
+xray -c mix.pb
+
+# 详细说明
+xray help convert pb
+```
+
+json 子命令使用示例：
+```bash
+# 用法：xray convert json [-type] [stdin:] [typedMessage file]
+
+tmsg='{
+  "type": "xray.proxy.shadowsocks.Account",
+  "value": "CgMxMTEQBg=="
+}'
+
+echo ${tmsg} | xray convert json stdin:
+
+# 上面这个命令的输出结果是：
+'{
+  "cipherType": "AES_256_GCM",
+  "password": "111"
+}'
+
+# 详细说明
+xray help convert json
 ```
 
 ### xray tls
