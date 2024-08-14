@@ -4,7 +4,7 @@ The routing module can send inbound data through different outbound connections 
 
 A common use case is to split domestic and foreign traffic. Xray can use its internal mechanisms to determine the traffic from different regions and then send them to different outbound proxies.
 
-For a more detailed analysis of the routing function, please refer to [Routing Function Analysis](https://xtls.github.io/document/level-1/routing-lv1-part1.html).
+For a more detailed analysis of the routing function, please refer to [Routing Function Analysis](../document/level-1/routing-lv1-part1.md).
 
 ## RoutingObject
 

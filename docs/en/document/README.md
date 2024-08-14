@@ -10,7 +10,7 @@ sidebar: auto
 
 Xray supports various platforms, and you can get various versions of Xray from various sources and methods.
 
-Please click [How to Download and Install Xray](./install.md) to get Xray
+Please click [How to Download and Install Xray](./install.md) to get Xray.
 
 ## Configure and Run
 
@@ -26,15 +26,15 @@ Please click [Command Parameters for Xray](./command.md) to view more commands a
 
 ## Improve Documents
 
-If you're interested, please click [Documents](./document.md) to help us improve the documents, or click the`Help us improve this page!`
+If you're interested, please click [Documents](./document.md) to help us improve the documents, or click the `Help us improve this page!`
 
 We are very grateful to every Contributor for their contribution! You guys make Project X even stronger!
 
 ## Beginner Tutorial
 
-A easy tutorial for beginner.
+An easy tutorial for beginner.
 
-Please click [小小白白话文](./level-0/) to view it.
+Please click [Beginner Tutorial](./level-0/) to view it.
 
 ## Getting Started Tips
 
