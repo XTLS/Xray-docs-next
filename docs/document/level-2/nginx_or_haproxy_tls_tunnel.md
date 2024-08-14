@@ -36,7 +36,7 @@ xray_client ---tcp--- nginx_client ---HTTPS--- nginx_sever ---tcp--- xray_server
 
 服务端加入如下配置
 
-服务器申请证书不再赘述，参考[白话文](https://xtls.github.io/document/level-0/ch06-certificates.html)
+服务器申请证书不再赘述，参考[白话文](../level-0/ch06-certificates.md)
 
 ```
 stream {

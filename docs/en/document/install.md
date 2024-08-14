@@ -22,7 +22,7 @@ Download the compressed package of the corresponding platform, and use it after 
 Xray provides two verification methods:
 
 - SHA1/SHA256 digest of the ZIP archive
-- Reproducible build: Please refer to [Compile Xray](https://xtls.github.io/development/intro/compile.html)
+- Reproducible build: Please refer to [Compile Xray](../development/intro/compile.html)
 
 ## Install on Windows
 

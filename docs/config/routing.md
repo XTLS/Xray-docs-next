@@ -4,7 +4,7 @@
 
 如常见用法是分流国内外流量，Xray 可以通过内部机制判断不同地区的流量，然后将它们发送到不同的出站代理。
 
-有关路由功能更详细的解析：[路由 (routing) 功能简析](https://xtls.github.io/document/level-1/routing-lv1-part1.html)
+有关路由功能更详细的解析：[路由 (routing) 功能简析](../document/level-1/routing-lv1-part1.md)。
 
 ## RoutingObject
 
