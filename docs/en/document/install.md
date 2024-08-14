@@ -4,7 +4,7 @@
 
 - Xray is available on the following platforms:
   - Windows 7 and later (x86 / amd64 / arm32 / arm64);
-    - If you need to use these version (1.8.4, 1.8.6, 1.8.18 and later) in Windows 7, operating system update **KB4474419** is required. Concerning for Internet security, it is recommended to install KB4490628 for getting later operating systems from Windows Update.
+    - If you need to use these version (1.8.4, 1.8.6, 1.8.18 and later marked with ```win7```) in Windows 7, operating system update **KB4474419** is required. Concerning for Internet security, it is recommended to install KB4490628 for getting later operating systems from Windows Update.
   - macOS 10.10 Yosemite and later (amd64 / arm64);
   - Linux 2.6.23 and later (x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64);
     - Including but not limited to Debian 7 / 8, Ubuntu 12.04 / 14.04 and subsequent versions, CentOS 7 / 8, Arch Linux, etc.;
