@@ -5,12 +5,12 @@
 Xray 在以下平台中可用：
 
 - Windows 7 及之后版本（x86 / amd64 / arm32 / arm64）；
+  - Windows 7 中使用 1.8.4、1.8.6 的常规版本以及 1.8.18 以后的 ```win7``` 版本需要系统安装有 **KB4474419** 更新方可使用；推荐同时安装  KB4490628 以便联网后接受后续的操作系统安全更新。
 - macOS 10.10 Yosemite 及之后版本（amd64 / arm64）；
 - Linux 2.6.23 及之后版本（x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64）；
   - 包括但不限于 Debian 7 / 8、Ubuntu 12.04 / 14.04 及后续版本、CentOS 7 / 8、Arch Linux 等；
 - FreeBSD (x86 / amd64)；
 - OpenBSD (x86 / amd64)；
-- Dragonfly BSD (amd64)；
 
 ## 下载 Xray
 
@@ -44,18 +44,17 @@ Xray 提供两种验证方式：
 
 - Linux Script
 
-  - [Xray-install](https://github.com/XTLS/Xray-install)
+  - [XTLS/Xray-install](https://github.com/XTLS/Xray-install) （**官方脚本**）
+  - [tempest](https://github.com/team-cloudchaser/tempest) （支持 [`systemd`](https://systemd.io) 以及 [OpenRC](https://github.com/OpenRC/openrc); 仅限 Linux 下使用）
 
 * One Click
 
-  - [Xray-script](https://github.com/kirin10000/Xray-script)
-  - [ProxySU](https://github.com/proxysu/ProxySU)
-  - [v2ray-agent](https://github.com/reeceyng/v2ray-agent) 感谢[@mack-a](https://github.com/mack-a) [@Reece](https://github.com/reeceyng)
-  - [Xray-yes](https://github.com/jiuqi9997/Xray-yes)
-  - [Xray-onekey](https://github.com/wulabing/Xray_onekey)
+  - [Xray-REALITY](https://github.com/zxcvos/Xray-script), [xray-reality](https://github.com/sajjaddg/xray-reality), [reality-ezpz](https://github.com/aleskxyz/reality-ezpz)
+  - [Xray_bash_onekey](https://github.com/hello-yunshu/Xray_bash_onekey), [XTool](https://github.com/LordPenguin666/XTool)
+  - [v2ray-agent](https://github.com/mack-a/v2ray-agent), [Xray_onekey](https://github.com/wulabing/Xray_onekey), [ProxySU](https://github.com/proxysu/ProxySU)
 
 * Magisk
-  - [Xray4Magisk](https://github.com/CerteKim/Xray4Magisk)
+  - [Xray4Magisk](https://github.com/Asterisk4Magisk/Xray4Magisk)
   - [Xray_For_Magisk](https://github.com/E7KMbb/Xray_For_Magisk)
 
 ### Arch Linux
@@ -99,23 +98,27 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 # 图形化客户端
 
 - OpenWrt
-  - [PassWall](https://github.com/xiaorouji/openwrt-passwall)
-  - [Hello World](https://github.com/jerrykuku/luci-app-vssr)
+  - [PassWall](https://github.com/xiaorouji/openwrt-passwall), [PassWall 2](https://github.com/xiaorouji/openwrt-passwall2)
   - [ShadowSocksR Plus+](https://github.com/fw876/helloworld)
   - [luci-app-xray](https://github.com/yichya/luci-app-xray) ([openwrt-xray](https://github.com/yichya/openwrt-xray))
 - Windows
   - [v2rayN](https://github.com/2dust/v2rayN)
-  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
-  - [Netch (NetFilter & TUN/TAP)](https://github.com/NetchX/Netch) （该项目已冻结存档）
+  - [Furious](https://github.com/LorenEteval/Furious)
+  - [Invisible Man - Xray](https://github.com/InvisibleManVPN/InvisibleMan-XRayClient)
 - Android
   - [v2rayNG](https://github.com/2dust/v2rayNG)
-  - [Kitsunebi](https://github.com/rurirei/Kitsunebi/tree/release_xtls)
-- iOS / macOS（使用 ARM 芯片）
-  - [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)
-  - [Stash](https://apps.apple.com/app/stash/id1596063349)
-- macOS（X86 芯片 / ARM 芯片）
-  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) （该项目已冻结存档）
+  - [X-flutter](https://github.com/XTLS/X-flutter)
+- iOS & macOS arm64
+  - [FoXray](https://apps.apple.com/app/foxray/id6448898396)
+  - [Streisand](https://apps.apple.com/app/streisand/id6450534064)
+- macOS arm64 & x64
+  - [V2rayU](https://github.com/yanue/V2rayU)
   - [V2RayXS](https://github.com/tzmax/V2RayXS)
+  - [Furious](https://github.com/LorenEteval/Furious)
+  - [FoXray](https://apps.apple.com/app/foxray/id6448898396)
+- Linux
+  - [v2rayA](https://github.com/v2rayA/v2rayA)
+  - [Furious](https://github.com/LorenEteval/Furious)
 
 # UUID 生成器
 

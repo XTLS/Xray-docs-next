@@ -4,12 +4,12 @@
 
 - Xray is available on the following platforms:
   - Windows 7 and later (x86 / amd64 / arm32 / arm64);
+    - If you need to use these version (1.8.4, 1.8.6, 1.8.18 and later marked with ```win7```) in Windows 7, operating system update **KB4474419** is required. Concerning for Internet security, it is recommended to install KB4490628 to acqacquire later operating systems from Windows Update.
   - macOS 10.10 Yosemite and later (amd64 / arm64);
   - Linux 2.6.23 and later (x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64);
     - Including but not limited to Debian 7 / 8, Ubuntu 12.04 / 14.04 and subsequent versions, CentOS 7 / 8, Arch Linux, etc.;
   - FreeBSD (x86 / amd64);
   - OpenBSD (x86 / amd64);
-  - Dragonfly BSD (amd64);
 
 ## Download Xray
 
@@ -41,16 +41,17 @@ Xray provides two verification methods:
 
 - Linux Script
 
-  - [Xray-install](https://github.com/XTLS/Xray-install)
+  - [XTLS/Xray-install](https://github.com/XTLS/Xray-install) (**Official**)
+  - [tempest](https://github.com/team-cloudchaser/tempest) (supports [`systemd`](https://systemd.io) and [OpenRC](https://github.com/OpenRC/openrc); Linux-only)
 
 * One Click
 
-  - [Xray-script](https://github.com/kirin10000/Xray-script)
-  - [ProxySU](https://github.com/proxysu/ProxySU)
-  - [Xray-agent](https://github.com/reeceyng/v2ray-agent) Thanks [@mack-a](https://github.com/mack-a) [@Reece](https://github.com/reeceyng)
+  - [Xray-REALITY](https://github.com/zxcvos/Xray-script), [xray-reality](https://github.com/sajjaddg/xray-reality), [reality-ezpz](https://github.com/aleskxyz/reality-ezpz)
+  - [Xray_bash_onekey](https://github.com/hello-yunshu/Xray_bash_onekey), [XTool](https://github.com/LordPenguin666/XTool)
+  - [v2ray-agent](https://github.com/mack-a/v2ray-agent), [Xray_onekey](https://github.com/wulabing/Xray_onekey), [ProxySU](https://github.com/proxysu/ProxySU)
 
 * Magisk
-  - [Xray4Magisk](https://github.com/CerteKim/Xray4Magisk)
+  - [Xray4Magisk](https://github.com/Asterisk4Magisk/Xray4Magisk)
   - [Xray_For_Magisk](https://github.com/E7KMbb/Xray_For_Magisk)
 
 ### Arch Linux
@@ -83,23 +84,27 @@ The Linuxbrew package manager is used in the same way as Homebrew: `brew install
 # GUI Client
 
 - OpenWrt
-  - [PassWall](https://github.com/xiaorouji/openwrt-passwall)
-  - [Hello World](https://github.com/jerrykuku/luci-app-vssr)
+  - [PassWall](https://github.com/xiaorouji/openwrt-passwall), [PassWall 2](https://github.com/xiaorouji/openwrt-passwall2)
   - [ShadowSocksR Plus+](https://github.com/fw876/helloworld)
   - [luci-app-xray](https://github.com/yichya/luci-app-xray) ([openwrt-xray](https://github.com/yichya/openwrt-xray))
 - Windows
   - [v2rayN](https://github.com/2dust/v2rayN)
-  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) (This project has been and archived)
-  - [Netch (NetFilter & TUN/TAP)](https://github.com/NetchX/Netch) (This project has been and archived)
+  - [Furious](https://github.com/LorenEteval/Furious)
+  - [Invisible Man - Xray](https://github.com/InvisibleManVPN/InvisibleMan-XRayClient)
 - Android
   - [v2rayNG](https://github.com/2dust/v2rayNG)
-  - [Kitsunebi](https://github.com/rurirei/Kitsunebi/tree/release_xtls)
-- iOS / macOS (ARM)
-  - [Shadowrocket](https://apps.apple.com/app/shadowrocket/id932747118)
-  - [Stash](https://apps.apple.com/app/stash/id1596063349)
-- macOS (X86/ARM)
-  - [Qv2ray](https://github.com/Qv2ray/Qv2ray) (This project has been and archived)
+  - [X-flutter](https://github.com/XTLS/X-flutter)
+- iOS & macOS arm64
+  - [FoXray](https://apps.apple.com/app/foxray/id6448898396)
+  - [Streisand](https://apps.apple.com/app/streisand/id6450534064)
+- macOS arm64 & x64
+  - [V2rayU](https://github.com/yanue/V2rayU)
   - [V2RayXS](https://github.com/tzmax/V2RayXS)
+  - [Furious](https://github.com/LorenEteval/Furious)
+  - [FoXray](https://apps.apple.com/app/foxray/id6448898396)
+- Linux
+  - [v2rayA](https://github.com/v2rayA/v2rayA)
+  - [Furious](https://github.com/LorenEteval/Furious)
 
 # UUID Generator
 
