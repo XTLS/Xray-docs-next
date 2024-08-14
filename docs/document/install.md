@@ -5,13 +5,12 @@
 Xray 在以下平台中可用：
 
 - Windows 7 及之后版本（x86 / amd64 / arm32 / arm64）；
-  - Windows 7 中使用 1.8.4-1.8.6 的常规版本以及 1.8.18 以后的 ```win7``` 版本需要系统安装有 KB4474419 更新方可使用；推荐同时安装  KB4490628 以便联网后接受后续的操作系统安全更新。
+  - Windows 7 中使用 1.8.4、1.8.6 的常规版本以及 1.8.18 以后的 ```win7``` 版本需要系统安装有 **KB4474419** 更新方可使用；推荐同时安装  KB4490628 以便联网后接受后续的操作系统安全更新。
 - macOS 10.10 Yosemite 及之后版本（amd64 / arm64）；
 - Linux 2.6.23 及之后版本（x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64）；
   - 包括但不限于 Debian 7 / 8、Ubuntu 12.04 / 14.04 及后续版本、CentOS 7 / 8、Arch Linux 等；
 - FreeBSD (x86 / amd64)；
 - OpenBSD (x86 / amd64)；
-- Dragonfly BSD (amd64)；
 
 ## 下载 Xray
 
