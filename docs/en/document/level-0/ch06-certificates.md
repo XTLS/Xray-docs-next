@@ -72,7 +72,7 @@ In addition, if some websites do need to be compatible with certain old devices,
 [Wed 30 Dec 2022 04:25:13 AM EST] ACCOUNT_THUMBPRINT='CU6qmPKuRqhyTAIrF4swosR375194z_1ddUlWef8xDc'
 [Wed 30 Dec 2022 04:25:13 AM EST] Creating domain key
 [Wed 30 Dec 2022 04:25:13 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.key
-[Wed 30 Dec 2022 04:25:13 AM EST] Single domain='subdomain.yourdomain.comm'
+[Wed 30 Dec 2022 04:25:13 AM EST] Single domain='subdomain.yourdomain.com'
 [Wed 30 Dec 2022 04:25:13 AM EST] Getting domain auth token for each domain
 [Wed 30 Dec 2022 04:25:14 AM EST] Getting webroot for domain='subdomain.yourdomain.com'
 [Wed 30 Dec 2022 04:25:14 AM EST] Verifying: subdomain.yourdomain.com
