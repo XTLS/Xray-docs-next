@@ -1,6 +1,6 @@
 # Socks
 
-标准 Socks 协议实现，兼容 [Socks 4](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)、[Socks 4a](https://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4A.protocol) 和 Socks 5。
+标准 Socks 协议实现，兼容 [Socks 4](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol)、[Socks 4a](https://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4A.protocol) Socks 5, 以及 **HTTP**。
 
 ::: danger
 **Socks 协议没有对传输加密，不适宜经公网中传输**
@@ -28,6 +28,8 @@
 > `auth`: "noauth" | "password"
 
 Socks 协议的认证方式，支持 `"noauth"` 匿名方式和 `"password"` 用户密码方式。
+
+当使用 password 时，发往入站的HTTP请求也会要求同样的账号密码。
 
 默认值为 `"noauth"`。
 
