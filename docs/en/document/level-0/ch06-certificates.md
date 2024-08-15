@@ -71,11 +71,11 @@ In addition, if some websites do need to be compatible with certain old devices,
 [Wed 30 Dec 2022 04:25:13 AM EST] Registered
 [Wed 30 Dec 2022 04:25:13 AM EST] ACCOUNT_THUMBPRINT='CU6qmPKuRqhyTAIrF4swosR375194z_1ddUlWef8xDc'
 [Wed 30 Dec 2022 04:25:13 AM EST] Creating domain key
-[Wed 30 Dec 2022 04:25:13 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/二级域名.你的域名.com_ecc/二级域名.你的域名.com.key
-[Wed 30 Dec 2022 04:25:13 AM EST] Single domain='二级域名.你的域名.com'
+[Wed 30 Dec 2022 04:25:13 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.key
+[Wed 30 Dec 2022 04:25:13 AM EST] Single domain='subdomain.yourdomain.com'
 [Wed 30 Dec 2022 04:25:13 AM EST] Getting domain auth token for each domain
-[Wed 30 Dec 2022 04:25:14 AM EST] Getting webroot for domain='二级域名.你的域名.com'
-[Wed 30 Dec 2022 04:25:14 AM EST] Verifying: 二级域名.你的域名.com
+[Wed 30 Dec 2022 04:25:14 AM EST] Getting webroot for domain='subdomain.yourdomain.com'
+[Wed 30 Dec 2022 04:25:14 AM EST] Verifying: subdomain.yourdomain.com
 [Wed 30 Dec 2022 04:25:23 AM EST] Pending
 [Wed 30 Dec 2022 04:25:25 AM EST] Success
 [Wed 30 Dec 2022 04:25:25 AM EST] Verify finished, start to sign.
