@@ -149,7 +149,7 @@ The meaning of the `--force` parameter is to manually (forcefully) update the ce
 2. You should eventually see a prompt that looks similar to the one above.
 
 ```log
-vpsadmin@vps-server:~$ acme.sh --issue -d SUBDOMAIN.YOUR-DOMAIN.com -w /home/vpsadmin/www/webpage --keylength ec-256
+vpsadmin@vps-server:~$ acme.sh --issue -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256
 [Wed 30 Dec 2022 15:22:51 AM EST] Using CA: https://acme-v02.api.letsencrypt.org/directory
 [Wed 30 Dec 2022 15:22:51 AM EST] Creating domain key
 [Wed 30 Dec 2022 15:22:51 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.key
