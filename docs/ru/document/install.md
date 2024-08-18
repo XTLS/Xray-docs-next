@@ -100,6 +100,7 @@ Xray предлагает два способа проверки:
   - [Hello World](https://github.com/jerrykuku/luci-app-vssr)
   - [ShadowSocksR Plus+](https://github.com/fw876/helloworld)
   - [luci-app-xray](https://github.com/yichya/luci-app-xray) ([openwrt-xray](https://github.com/yichya/openwrt-xray))
+  - [v2rayA](https://github.com/v2raya/v2raya-openwrt)
 - Windows
   - [v2rayN](https://github.com/2dust/v2rayN)
   - [Qv2ray](https://github.com/Qv2ray/Qv2ray) (проект заморожен и архивирован)
@@ -113,6 +114,9 @@ Xray предлагает два способа проверки:
 - macOS (чип X86 / ARM)
   - [Qv2ray](https://github.com/Qv2ray/Qv2ray) (проект заморожен и архивирован)
   - [V2RayXS](https://github.com/tzmax/V2RayXS)
+  - [v2rayA](https://github.com/v2rayA/v2rayA)
+- Linux (чип X86 / ARM)
+  - [v2rayA](https://github.com/v2rayA/v2rayA)
 
 # Генератор UUID
 
