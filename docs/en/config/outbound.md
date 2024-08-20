@@ -86,7 +86,7 @@ Compatible with v2fly/v2ray-core's configuration [transportLayer](https://www.v2
 
 ### MuxObject
 
-The Mux function distributes the data of multiple TCP connections on a single TCP connection. For implementation details, see [Mux.Cool](../../development/protocols/muxcool). Mux is designed to reduce the latency of TCP handshake, not to increase the throughput of connections. Using Mux for watching videos, downloading, or speed testing usually has negative effects. Mux only needs to be enabled on the client side, and the server side automatically adapts.
+The Mux feature distributes the data of multiple TCP connections on a single TCP connection. For implementation details, see [Mux.Cool](../../development/protocols/muxcool). Mux is designed to reduce the latency of TCP handshake, not to increase the throughput of connections. Using Mux for watching videos, downloading, or speed testing usually has negative effects. Mux only needs to be enabled on the client side, and the server side automatically adapts. Mux has an additional function: to run multiple UDP connections, i.e. XUDP.
 
 `MuxObject` corresponds to the `mux` item in `OutboundObject`.
 
