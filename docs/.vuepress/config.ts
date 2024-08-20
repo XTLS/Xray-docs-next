@@ -15,10 +15,8 @@ import i18nPlugin from "vuepress-plugin-i18n";
 const __dirname = getDirname(import.meta.url)
 console.log('>>> __dirname -> ', __dirname)
 const isProduction = process.env.NODE_ENV === "production";
-const forMainRepo = process.env.XRAY_DOCS_MAIN_REPO === "true";
 const useVite = process.env.XRAY_DOCS_USE_VITE === "true";
 
-console.log("base:", forMainRepo ? "/" : "/Xray-docs-next/");
 console.log(
   "bundler:",
   isProduction && !useVite ? "@vuepress/webpack" : "@vuepress/vite"
@@ -52,7 +50,7 @@ export default defineUserConfig(<UserConfig>{
       componentsDir: path.resolve(__dirname, './theme/components'),
     }),
   ],
-  base: forMainRepo ? "/" : "/Xray-docs-next/",
+  base: "/",
   locales: {
     "/": {
       lang: "zh-CN",
