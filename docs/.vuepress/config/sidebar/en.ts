@@ -41,6 +41,7 @@ export const sidebarEn: SidebarConfig = {
         '/en/config/inbounds/trojan.md',
         '/en/config/inbounds/vless.md',
         '/en/config/inbounds/vmess.md',
+        '/en/config/inbounds/wireguard.md',
       ],
     },
     {
