@@ -41,6 +41,7 @@ export const sidebarZh: SidebarConfig = {
         '/config/inbounds/trojan.md',
         '/config/inbounds/vless.md',
         '/config/inbounds/vmess.md',
+        '/config/inbounds/wireguard.md',
       ],
     },
     {
