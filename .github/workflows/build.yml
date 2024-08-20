@@ -31,22 +31,10 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Install and Build
-        env:
-          XRAY_DOCS_USE_VITE: "true"
-          NODE_OPTIONS: "--max_old_space_size=4096"
-        run: |
-          pnpm install
-          yarn docs:build
-      - name: Deploy
-        if: github.event_name != 'pull_request'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/.vuepress/dist
+      - name: Install
+        run: pnpm install
       - name: Build for Main Repository
         env:
-          XRAY_DOCS_MAIN_REPO: "true"
           NODE_OPTIONS: "--max_old_space_size=4096 --openssl-legacy-provider"
         run: |
           yarn docs:build
