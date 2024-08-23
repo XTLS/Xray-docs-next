@@ -578,7 +578,7 @@ When its value is `true` or a positive integer, TFO is enabled; when its value i
 
 Specifies whether to enable transparent proxy (only applicable to Linux).
 
-- `"redirect"`: Use the transparent proxy in Redirect mode. It supports all TCP and UDP connections based on IPv4/6.
+- `"redirect"`: Use the transparent proxy in Redirect mode. It supports all TCP connections based on IPv4/6.
 - `"tproxy"`: Use the transparent proxy in TProxy mode. It supports all TCP and UDP connections based on IPv4/6.
 - `"off"`: Turn off transparent proxy.
 
