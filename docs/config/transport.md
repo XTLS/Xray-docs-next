@@ -623,7 +623,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 是否开启透明代理（仅适用于 Linux）。
 
-- `"redirect"`：使用 Redirect 模式的透明代理。支持所有基于 IPv4/6 的 TCP 和 UDP 连接。
+- `"redirect"`：使用 Redirect 模式的透明代理。支持所有基于 IPv4/6 的 TCP 连接。
 - `"tproxy"`：使用 TProxy 模式的透明代理。支持所有基于 IPv4/6 的 TCP 和 UDP 连接。
 - `"off"`：关闭透明代理。
 
