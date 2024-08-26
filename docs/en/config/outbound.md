@@ -32,9 +32,20 @@ The first element in the list serves as the main outbound. When there is no matc
 
 The IP address used to send data. It is effective when the host has multiple IP addresses, and the default value is `"0.0.0.0"`.
 
+It is allowed to fill in the IPv6 CIDR block (such as `114:514:1919:810::/64`),
+and Xray will use the random IP address in the address block to initiate
+external connections. Network access, routing tables, and kernel parameters
+need to be configured correctly to allow Xray to bind to any IP within the
+address block.
+
+For networks that use ndp to access, it is not recommended to set a subnet
+smaller than `/120`, otherwise it may cause NDP flood and a series of problems
+such as the router neighbor cache being filled up.
+
 > `protocol`: string
 
-The name of the connection protocol. The optional protocol types can be found in [outbound protocols](./outbounds/).
+The name of the connection protocol. For a list of optional protocols, see
+Outbound Proxy in the left sidebar.
 
 > `settings`: OutboundConfigurationObject
 
@@ -50,11 +61,12 @@ When it is not empty, its value must be **unique** among all `tag`s.
 
 > `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
 
-The underlying transport method is the way the current Xray node and other nodes are docked.
+The underlying transport method is the way the current Xray connects with other nodes.
 
 > `proxySettings`: [ProxySettingsObject](#proxysettingsobject)
 
-The outbound proxy configuration. When the outbound proxy takes effect, the `streamSettings` of this outbound will not work.
+The outbound proxy configuration. When the outbound proxy takes effect, the
+`streamSettings` of this outbound will not work.
 
 > `mux`: [MuxObject](#muxobject)
 
@@ -103,10 +115,34 @@ Whether to enable Mux forwarding requests, default is `false`.
 
 > `concurrency`: number
 
-Maximum concurrent connections. Minimum value is `1`, maximum value is `1024`, default is `8`.
+Maximum concurrent connections. Minimum value is `1`, maximum value is `1024`.
+If this parameter is omitted or equal to `0`, the value will be `8`.
 
 This value represents the maximum number of Mux connections that can be carried on a TCP connection. For example, when `concurrency=8` is set, if the client sends 8 TCP requests, Xray will only send one actual TCP connection, and all 8 requests from the client will be transmitted through this TCP connection.
 
 ::: tip
 When filling in a negative number, such as `-1`, the mux module is not loaded.
 :::
+
+> `xudpConcurrency`: number
+
+Use a new XUDP aggregate tunnel (that is, another Mux connection) to proxy UDP
+traffic and fill in the maximum number of concurrent sub-UoTs. minimum value
+`1`, the maximum value `1024`. If this parameter is omitted or equal to `0`,
+UDP traffic will use the same path as TCP traffic.
+
+::: tip
+When filling in negative numbers, such as `-1`, UDP will not be transmitted via
+Mux. The original UDP transmission method of the proxy protocol will be used.
+For example, Shadowsocks will use native UDP, VLESS will use UoT.
+:::
+
+> `xudpProxyUDP443`: string
+
+Control how Mux handles proxied UDP/443 (QUIC) traffic:
+
+- Default `reject`: Deny traffic (generaly, browsers will fall back to to TCP HTTP/2)
+- `allow`: Allow connections.
+- `skip`: The Mux module is not used to carry UDP 443 traffic. The original UDP
+  transmission method of the proxy protocol will be used. For example,
+  Shadowsocks will use native UDP, VLESS will use UoT.
