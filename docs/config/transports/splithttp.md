@@ -6,7 +6,7 @@
 
 可以通过不支持WebSocket的CDN上，但仍有一些要求：
 
-- CDN必须支持HTTP分块传输，且支持流式响应而不会缓冲，核心将会发送 `X-Accel-Buffering: no` 以及 `Content-Type: text/event-stream` 以告知CDN，但是需要CDN遵守此标头。如果中间盒不支持流式响应而导致连接被挂起，则该传输很可能无法工作。
+- CDN必须支持HTTP分块传输，且支持流式响应而不会缓冲，核心将会发送各种信息以告知CDN，但是需要CDN遵守。如果中间盒不支持流式响应而导致连接被挂起，则该传输很可能无法工作。
 
 目的与V2fly Meek相同，由于使用了流式响应处理下载，下行速率更为优秀，上行也经过优化但仍非常有限，也因此对 HTTP 中间盒要求更高（见上）。
 
@@ -26,7 +26,8 @@ The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
   "scMaxEachPostBytes": 1000000,
   "scMaxConcurrentPosts": 100,
   "scMinPostsIntervalMs": 30,
-  "noSSEHeader": false
+  "noSSEHeader": false,
+  "xPaddingBytes": "100-1000"
 }
 ```
 
@@ -76,6 +77,12 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 仅服务端，不发送 `Content-Type: text/event-stream` 响应头，默认 `false` (即会发送)
 
+> `xPaddingBytes` int/string
+
+设置请求（出站）和响应（入站）的填充大小，用于减少请求指纹。单位byte, 默认为 `"100-1000"` 每次会在该范围中随机选择一个数字。 也可以是单个数字 `"200"`/`200`
+
+设置为 `-1` 将完全禁用填充
+
 ## HTTP 版本
 
 ### 客户端行为
@@ -106,11 +113,18 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 1. 使用 `GET /<UUID>` 开始下载。服务器立即回复 `200 OK` 和 `Transfer Encoding:chunked` , 并立即发送一个两字节的有效负载，以强制HTTP中间盒刷新标头。
 
+现阶段服务器会发送以下标头
+
+* `X-Accel-Buffering: no` 禁用缓冲
+* `Content-Type: text/event-stream` 在部分中间盒中禁用缓冲，可以使用 `"noSSEHeader"` 选项关闭
+* `Transfer-Encoding: chunked` 分块传输，仅在 HTTP/1.1 中使用
+* `Cache-Control: no-store` to disable any potential response caching. 禁用CDN的缓存
+
 2. 使用 `POST /<UUID>/<seq>` 开始发送上行数据. `seq` 作用类似于 TCP 序列号，从0开始，数据包可以被同时发送，服务端必须按序列号将数据重组。序列号不应重置。
 
    客户端可以以任意决定打开上行与下行请求的顺序，任何一种都可以启动会话，但是必须要在30秒内打开 `GET` 连接，否则会话将被终止。
 
-4. `GET` 请求将一直保持在打开状态直到连接被终止，服务端和客户端都可以关闭连接。具体行为取决于HTTP版本。
+3. `GET` 请求将一直保持在打开状态直到连接被终止，服务端和客户端都可以关闭连接。具体行为取决于HTTP版本。
 
 建议:
 

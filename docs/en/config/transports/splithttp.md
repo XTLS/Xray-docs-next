@@ -29,7 +29,8 @@ The `SplitHttpObject` corresponds to the `splithttpSettings` section under trans
   "scMaxEachPostBytes": 1000000,
   "scMaxConcurrentPosts": 100,
   "scMinPostsIntervalMs": 30,
-  "noSSEHeader": false
+  "noSSEHeader": false,
+  "xPaddingBytes": "100-1000"
 }
 ```
 
@@ -51,8 +52,7 @@ Customized HTTP headers defined in key-value pairs. Defaults to empty.
 
 > `scMaxEachPostBytes`: int/string
 
-The maximum size of upload chunks, in bytes. The client defaults to 1MB and the
-server defaults to 2MB.
+The maximum size of upload chunks, in bytes. Defaults to 1MB.
 
 The size set by the client must be lower than this value, otherwise when the
 POST request is sent larger than the value set by the server, the request will
@@ -89,6 +89,19 @@ select a value within the range each time to reduce fingerprints.
 
 (Server-only) Do not send the `Content-Type: text/event-stream` response
 header. Defaults to false (the header will be sent)
+
+> `xPaddingBytes`
+
+*Added in 1.8.24*
+
+Control the padding of requests and responses. Defaults to `"100-1000"`,
+meaning that each GET and POST will be padded with a random amount of bytes in
+that range.
+
+A value of `-1` disables padding entirely.
+
+You can lower this to save bandwidth or increase it to improve censorship
+resistance. Too much padding may cause the CDN to reject traffic.
 
 ## HTTP versions
 
@@ -138,9 +151,13 @@ compatible:
    (arbitrary length, such as `ooook`) to force HTTP middleboxes into flushing
    headers.
 
-   The server will send the `X-Accel-Buffering: no` and `Content-Type:
-   text/event-stream` headers to force CDN into not buffering the response
-   body. In HTTP/1.1 it may also send `Transfer-Encoding: chunked`.
+   The server will send these headers:
+
+    * `X-Accel-Buffering: no` to prevent response buffering in nginx and CDN
+    * `Content-Type: text/event-stream` to prevent response buffering in some
+      CDN, can be disabled with `noSSEHeader`
+    * `Transfer-Encoding: chunked` in HTTP/1.1 only
+    * `Cache-Control: no-store` to disable any potential response caching.
 
 2. Client uploads using `POST /<UUID>/<seq>`. `seq` starts at `0` and can be
    used like TCP seq number, and multiple "packets" may be sent concurrently.
