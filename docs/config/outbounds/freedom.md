@@ -1,4 +1,4 @@
-# Freedom
+# Freedom（fragment、noise）
 
 Freedom 是一个出站协议，可以用来向任意网络发送（正常的） TCP 或 UDP 数据。
 
@@ -14,7 +14,7 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
     "length": "100-200",
     "interval": "10-20" // 单位ms
   },
-  "noise"： {
+  "noise": {
     "packet":"rand:100-200",
     "delay": "10-20"
   },
@@ -78,9 +78,9 @@ UDP noise, 用于在发出UDP连接前发出一些随机数据作为“噪声”
 
 现阶段支持两种模式 `rand` 与 `str`
 
-rand 模式，发送随机字节，冒号后接为随机字节长度，可以是固定值也可以是用 `-` 分割的随机范围，如 `"rand:150"`, 和 `"rand:100-200"`
+`rand` 模式，发送随机字节，冒号后接为随机字节长度，可以是固定值也可以是用 `-` 分割的随机范围，如 `"rand:150"`, 和 `"rand:100-200"`
 
-str 模式，发送固定的字符串，冒号后接为要发送的字符串，可以是任何字符串，不能包含冒号，如 "str:To be, or not to be, that is the question"
+`str` 模式，发送固定的字符串，冒号后接为要发送的字符串，可以是任何字符串，不能包含冒号，如 `"str:To be, or not to be, that is the question"`
 
 `"delay"`：str
 
