@@ -63,11 +63,9 @@ export const sidebarZh: SidebarConfig = {
     {
       text: '底层传输',
       children: [
-        '/config/transports/domainsocket.md',
         '/config/transports/grpc.md',
         '/config/transports/h2.md',
         '/config/transports/mkcp.md',
-        '/config/transports/quic.md',
         '/config/transports/tcp.md',
         '/config/transports/websocket.md',
         '/config/transports/httpupgrade.md',
