@@ -4,75 +4,6 @@
 
 传输方式指定了稳定的数据传输的方式。通常来说，一个网络连接的两端需要有对称的传输方式。比如一端用了 WebSocket，那么另一个端也必须使用 WebSocket，否则无法建立连接。
 
-传输方式（transport）配置有两部分:
-
-1. ~~全局配置（[TransportObject](#transportobject)）(已弃用)~~
-
-2. 局部配置（[StreamSettingsObject](#streamsettingsobject)）。
-
-- 局部配置时,可以指定每个单独的入站或出站用怎样的方式传输。
-- 通常来说客户端和服务器对应的入站和出站需要使用同样的传输方式。当其配置指定了一种传输方式，但没有填写具体设置时，此传输方式会使用全局配置中的设置。
-<details>
-<summary>全局配置</summary>
-
-
-## TransportObject(已弃用)
-
-`TransportObject` 对应配置文件的 `transport` 项。
-
-```json
-{
-  "transport": {
-    "tcpSettings": {},
-    "kcpSettings": {},
-    "wsSettings": {},
-    "httpSettings": {},
-    "quicSettings": {},
-    "dsSettings": {},
-    "grpcSettings": {},
-    "httpupgradeSettings": {}
-  }
-}
-```
-
-> `tcpSettings`: [TcpObject](./transports/tcp.md)
-
-针对 TCP 连接的配置。
-
-> `kcpSettings`: [KcpObject](./transports/mkcp.md)
-
-针对 mKCP 连接的配置。
-
-> `wsSettings`: [WebSocketObject](./transports/websocket.md)
-
-针对 WebSocket 连接的配置。
-
-> `httpSettings`: [HttpObject](./transports/h2.md)
-
-针对 HTTP/2 连接的配置。
-
-> `quicSettings`: [QuicObject](./transports/quic.md)
-
-针对 QUIC 连接的配置。
-
-> `grpcSettings`: [GRPCObject](./transports/grpc.md)
-
-针对 gRPC 连接的配置。
-
-> `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
-
-针对 HTTPUpgrade 连接的配置。
-
-> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
-
-针对 SplitHTTP 连接的配置。
-
-> `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
-
-针对 Domain Socket 连接的配置。
-
-</details>
-
 ## StreamSettingsObject
 
 `StreamSettingsObject` 对应入站或出站中的 `streamSettings` 项。每一个入站或出站都可以分别配置不同的传输配置，都可以设置 `streamSettings` 来进行一些传输的配置。
@@ -143,39 +74,35 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 
 > `tcpSettings`: [TcpObject](./transports/tcp.md)
 
-当前连接的 TCP 配置，仅当此连接使用 TCP 时有效。配置内容与上面的全局配置相同。
+当前连接的 TCP 配置，仅当此连接使用 TCP 时有效。
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
-当前连接的 mKCP 配置，仅当此连接使用 mKCP 时有效。配置内容与上面的全局配置相同。
+当前连接的 mKCP 配置，仅当此连接使用 mKCP 时有效。
 
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
-当前连接的 WebSocket 配置，仅当此连接使用 WebSocket 时有效。配置内容与上面的全局配置相同。
+当前连接的 WebSocket 配置，仅当此连接使用 WebSocket 时有效。
 
 > `httpSettings`: [HttpObject](./transports/h2.md)
 
-当前连接的 HTTP/2 配置，仅当此连接使用 HTTP/2 时有效。配置内容与上面的全局配置相同。
+当前连接的 HTTP/2 配置，仅当此连接使用 HTTP/2 时有效。
 
 > `quicSettings`: [QUICObject](./transports/quic.md)
 
-当前连接的 QUIC 配置，仅当此连接使用 QUIC 时有效。配置内容与上面的全局配置相同。
+当前连接的 QUIC 配置，仅当此连接使用 QUIC 时有效。
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
-当前连接的 gRPC 配置，仅当此连接使用 gRPC 时有效。配置内容与上面的全局配置相同。
-
-> `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
-
-当前连接的 Domain socket 配置，仅当此连接使用 Domain socket 时有效。配置内容与上面的全局配置相同。
+当前连接的 gRPC 配置，仅当此连接使用 gRPC 时有效。。
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
-当前连接的 HTTPUpgrade 配置，仅当此连接使用 HTTPUpgrade 时有效。配置内容与上面的全局配置相同。
+当前连接的 HTTPUpgrade 配置，仅当此连接使用 HTTPUpgrade 时有效。
 
 > `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
 
-当前连接的 SplitHTTP 配置，仅当此连接使用 SplitHTTP 时有效。配置内容与上面的全局配置相同。
+当前连接的 SplitHTTP 配置，仅当此连接使用 SplitHTTP 时有效。
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 
@@ -318,7 +245,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `masterKeyLog` : string
 
-(Pre)-Master-Secret log 文件路径，可用于Wireshark等软件解密Xray发送的TLS连接，暂不支持与utls一起使用，需要Xray-Core v1.8.7。
+(Pre)-Master-Secret log 文件路径，可用于Wireshark等软件解密Xray发送的TLS连接，暂不支持与utls一起使用。
 
 ### RealityObject
 
