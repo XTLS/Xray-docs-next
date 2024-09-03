@@ -4,75 +4,6 @@ Transports specify how Xray communicates with peers.
 
 Transports specify how to achieve stable data transmission. Both ends of a connection often need to specify the same transport protocol to successfully establish a connection. Like, if one end uses WebSocket, the other end must also use WebSocket, or else the connection cannot be established.
 
-Transport configuration consists of two parts:
-
-1. ~~Global config ([TransportObject](#transportobject)) (deprecated)~~
-2. Local config ([StreamSettingsObject](#streamsettingsobject)).
-
-- When locally configured, you can specify how each inbound or outbound connection is transmitted individually.
-- Server inbounds and client outbounds often need to use the same transport protocol. When a transport protocol is specified without local configs, the transport will fall back to global transport configs.
-
-<details>
-<summary>Global configuration (deprecated)</summary>
-
-## TransportObject (deprecated)
-
-The `TransportObject` corresponds to the `transport` property in the config root.
-
-```json
-{
-  "transport": {
-    "tcpSettings": {},
-    "kcpSettings": {},
-    "wsSettings": {},
-    "httpSettings": {},
-    "quicSettings": {},
-    "dsSettings": {},
-    "grpcSettings": {},
-    "httpupgradeSettings": {}
-    "splithttpSettings": {}
-  }
-}
-```
-
-> `tcpSettings`: [TcpObject](./transports/tcp.md)
-
-Configures TCP connections.
-
-> `kcpSettings`: [KcpObject](./transports/mkcp.md)
-
-Configures mKCP connections.
-
-> `wsSettings`: [WebSocketObject](./transports/websocket.md)
-
-Configures WebSocket connections.
-
-> `httpSettings`: [HttpObject](./transports/h2.md)
-
-Configures HTTP/2 connections.
-
-> `quicSettings`: [QuicObject](./transports/quic.md)
-
-Configures QUIC connections.
-
-> `grpcSettings`: [GRPCObject](./transports/grpc.md)
-
-Configures gRPC connections.
-
-> `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
-
-Configures HTTPUpgrade connections.
-
-> `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
-
-Configures Domain Socket connections.
-
-> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
-
-Configures SplitHTTP connections.
-
-</details>
-
 ## StreamSettingsObject
 
 `StreamSettingsObject` corresponds to the `streamSettings` property in the inbound or outbound config. Each inbound or outbound can be configured with different transports and can use `streamSettings` to specify local configs.
@@ -86,8 +17,6 @@ Configures SplitHTTP connections.
   "kcpSettings": {},
   "wsSettings": {},
   "httpSettings": {},
-  "quicSettings": {},
-  "dsSettings": {},
   "grpcSettings": {},
   "httpupgradeSettings": {},
   "splithttpSettings": {},
@@ -112,7 +41,7 @@ Configures SplitHTTP connections.
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "quic" | "grpc" | "httpupgrade" | "splithttp"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "grpc" | "httpupgrade" | "splithttp"
 
 The underlying protocol of the transport used by the data stream of the connection, defaulting to `"tcp"`.
 
@@ -152,17 +81,9 @@ Configures the current WebSocket connection. Valid only when WebSocket is used. 
 
 Configures the current HTTP/2 connection. Valid only when HTTP/2 is used. Same schema as global.
 
-> `quicSettings`: [QUICObject](./transports/quic.md)
-
-Configures the current QUIC connection. Valid only when QUIC is used. Same schema as global.
-
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
 Configures the current gRPC connection. Valid only when gRPC is used. Same schema as global.
-
-> `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
-
-Configures the current Domain Socket connection. Valid only when Domain Socket is used. Same schema as global.
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 

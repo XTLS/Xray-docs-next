@@ -17,8 +17,6 @@
   "kcpSettings": {},
   "wsSettings": {},
   "httpSettings": {},
-  "quicSettings": {},
-  "dsSettings": {},
   "grpcSettings": {},
   "httpupgradeSettings": {},
   "splithttpSettings": {},
@@ -43,7 +41,7 @@
 }
 ```
 
-> `network`: "tcp" | "ws" | "h2" | "grpc" | "quic" | "kcp" | "httpupgrade" | "splithttp"
+> `network`: "tcp" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "splithttp"
 
 连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
 
@@ -87,10 +85,6 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 > `httpSettings`: [HttpObject](./transports/h2.md)
 
 当前连接的 HTTP/2 配置，仅当此连接使用 HTTP/2 时有效。
-
-> `quicSettings`: [QUICObject](./transports/quic.md)
-
-当前连接的 QUIC 配置，仅当此连接使用 QUIC 时有效。
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 

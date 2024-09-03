@@ -5,76 +5,6 @@
 Транспорт определяет способ передачи данных.  Обычно оба конца сетевого подключения должны использовать одинаковый транспорт.  
 Например, если один конец использует WebSocket, то другой конец также должен использовать WebSocket, иначе соединение не будет установлено.
 
-Настройка транспорта (transport) состоит из двух частей:
-
-1. ~~Глобальные настройки ([TransportObject](#transportobject)) (устарело)~~
-2. Локальные настройки ([StreamSettingsObject](#streamsettingsobject)).
-
-- Локальные настройки позволяют указать способ передачи данных для каждого отдельного входящего или исходящего подключения.
-- Обычно клиент и сервер должны использовать одинаковый транспорт для соответствующих входящих и исходящих подключений.  
-    Если в настройках указан тип транспорта, но не указаны конкретные параметры, будут использованы настройки из глобальной конфигурации.
-
-<details>
-<summary>Глобальные настройки</summary>
-
-
-## TransportObject (устарело)
-
-`TransportObject` соответствует полю `transport` в конфигурационном файле.
-
-```json
-{
-  "transport": {
-    "tcpSettings": {},
-    "kcpSettings": {},
-    "wsSettings": {},
-    "httpSettings": {},
-    "quicSettings": {},
-    "dsSettings": {},
-    "grpcSettings": {},
-    "httpupgradeSettings": {}
-  }
-}
-```
-
-> `tcpSettings`: [TcpObject](./transports/tcp.md)
-
-Настройки TCP-подключений.
-
-> `kcpSettings`: [KcpObject](./transports/mkcp.md)
-
-Настройки mKCP-подключений.
-
-> `wsSettings`: [WebSocketObject](./transports/websocket.md)
-
-Настройки WebSocket-подключений.
-
-> `httpSettings`: [HttpObject](./transports/h2.md)
-
-Настройки HTTP/2-подключений.
-
-> `quicSettings`: [QuicObject](./transports/quic.md)
-
-Настройки QUIC-подключений.
-
-> `grpcSettings`: [GRPCObject](./transports/grpc.md)
-
-Настройки gRPC-подключений.
-
-> `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
-
-Настройки HTTPUpgrade-подключений.
-
-> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
-
-Настройки SplitHTTP-подключений.
-
-> `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
-
-Настройки Domain Socket-подключений.
-
-</details>
-
 ## StreamSettingsObject
 
 `StreamSettingsObject` соответствует полю `streamSettings` во входящем или исходящем подключении.  
@@ -89,8 +19,6 @@
   "kcpSettings": {},
   "wsSettings": {},
   "httpSettings": {},
-  "quicSettings": {},
-  "dsSettings": {},
   "grpcSettings": {},
   "httpupgradeSettings": {},
   "splithttpSettings": {},
@@ -116,7 +44,7 @@
 }
 ```
 
-> `network`: "tcp" | "ws" | "h2" | "grpc" | "quic" | "kcp" | "httpupgrade" | "splithttp"
+> `network`: "tcp" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "splithttp"
 
 Тип транспорта, используемый для передачи данных.  
 Значение по умолчанию - `"tcp"`.
@@ -171,19 +99,9 @@ Reality - это самый безопасный на данный момент 
 Настройки HTTP/2 для текущего подключения, действуют только при использовании HTTP/2.  
 Настройки аналогичны глобальным настройкам, описанным выше.
 
-> `quicSettings`: [QUICObject](./transports/quic.md)
-
-Настройки QUIC для текущего подключения, действуют только при использовании QUIC.  
-Настройки аналогичны глобальным настройкам, описанным выше.
-
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
 Настройки gRPC для текущего подключения, действуют только при использовании gRPC.  
-Настройки аналогичны глобальным настройкам, описанным выше.
-
-> `dsSettings`: [DomainSocketObject](./transports/domainsocket.md)
-
-Настройки Domain socket для текущего подключения, действуют только при использовании Domain socket.  
 Настройки аналогичны глобальным настройкам, описанным выше.
 
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
