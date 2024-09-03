@@ -41,7 +41,7 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "quic" | "grpc" | "httpupgrade" | "splithttp"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "grpc" | "httpupgrade" | "splithttp"
 
 The underlying protocol of the transport used by the data stream of the connection, defaulting to `"tcp"`.
 
