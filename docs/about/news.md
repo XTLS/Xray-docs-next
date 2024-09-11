@@ -4,6 +4,91 @@ sidebar: auto
 
 # 大史记
 
+## 2024.9.7 <Badge>[v24.9.7](https://github.com/XTLS/Xray-core/releases/tag/v24.9.7)</Badge>
+
+- 更改版本号之后的首次发版。
+- 这次移除了 QUIC 以及 DomainSocket 传输，移除了两处远古配置遗留代码。
+  - 二进制大小比 v1.8.24 减小了 1MB。
+- 依然有每次必备的 bug 修复。
+
+## 2024.8.30 <Badge>[v1.8.24](https://github.com/XTLS/Xray-core/releases/tag/v1.8.24)</Badge>
+
+- 在等待 SplitHTTP multiplex controller 期间，main 分支已经积累了大量重要更新，所以我们决定先发一个版本。
+  - Socks 入站现在默认兼容 HTTP 代理请求。
+  - UDP noise (preview)
+  - 还有一些改进。
+- 由于传统版本号的存在，为每个版本规划功能、进行排期已经严重阻碍了新功能的开发、合并、发布。所以我们决定从下个版本开始弃用传统的版本号，改用发版日期作为版本号，如 v24.8.30，并取消版本规划，全面采用流式更新，写好的功能直接合并，不再等待，预计每月月底发一个版本。
+  - 毕竟对于反审查软件来说，相较于传统的版本号，新功能的及时性、每月更新更为重要，而不是发一个功能确定的版本并长期维护。
+- 下个版本会移除一些历史久远的代码，以后日常积累新代码、提醒迁移，跨年新版删代码、breaking。
+- 我们相信有了各位的捐款以及对发版形式的革新，Xray-core 这个项目会发展得更好。
+
+## 2024.8.26
+
+- Project VLESS 群组创立。
+- We have created Project VLESS (https://t.me/projectVless) for non-Chinese users (Russian mainly).
+
+## 2024.8.3
+
+- 第一个[Project X NFT ](https://github.com/XTLS/Xray-core/discussions/3633) 正式发行！
+  - 就像 Xray 开创过很多历史一样，发行 NFT 也是这个领域前无古人的操作。这些 NFT 非常有纪念意义，甚至可以说是有历史意义，远大于现在的初始价格，假以时日它们必将价值连城。最后再次感谢大家对 Project X 的支持。
+
+## 2024.7.29 <Badge>[v1.8.23](https://github.com/XTLS/Xray-core/releases/tag/v1.8.23)</Badge>
+
+- 恭喜 @mmmray 贡献了 Xray-core 的第 1000 个 commit！
+- 优化了 SplitHTTP 上行的稳定性，服务端必须升级到该版本以支持新版客户端。
+- 更多 SplitHTTP 上的变化。
+
+## 2024.7.22 <Badge>[v1.8.21](https://github.com/XTLS/Xray-core/releases/tag/v1.8.21)</Badge>
+
+- 中间似乎回到了最初的腹泻式发版状态……
+- 正如 v1.8.16 所预告的，SplitHTTP 现已初步支持 HTTP/3（QUIC）。
+  - SplitHTTP H3 是第一个完全基于标准 H3、支持套 CDN 的 QUIC 类代理，亦可用反代、Browser Dialer 来隐蔽自身。
+  - 毫无疑问，SplitHTTP H3 已经开启了一个崭新的时代。
+  - ~~这下 Xray 不小心也有了基于 HTTP/3 的 QUIC 类代理。而且还能套 CDN，前无古人，遥遥领先，总之就是赢！麻了~~
+
+## 2024.6.18 <Badge>[v1.8.16](https://github.com/XTLS/Xray-core/releases/tag/v1.8.16)</Badge>
+
+- 新传输来了，它目前叫 SplitHTTP。
+  - 实现进一步的流量混淆有两种刚好相反的方式：**多路复用** 与 **拆分连接** 。
+  - 可以通过不支持 WebSocket、gRPC 的 CDN，实现与 Meek 相同的目标，且 SplitHTTP 比 Meek 更简单、效率更高。
+  - SplitHTTP 没有 WebSocket 的 ALPN 问题，这是一大优势，未来还会支持 HTTP/3（QUIC）。
+
+## 2024.6.2
+
+- 一个新的传输方式正在被打造……
+
+## 2024.5.23 <Badge>[v1.8.13](https://github.com/XTLS/Xray-core/releases/tag/v1.8.13)</Badge>
+
+- 一个安全更新。
+
+## 2024.4.26 <Badge>[v1.8.11](https://github.com/XTLS/Xray-core/releases/tag/v1.8.11)</Badge>
+
+- 我们现在有了 issues 模板，感谢 @Fangliding ！
+- 现在有了生成 ECH 密钥的工具。
+- 增强、修复，并移除了一点不再使用的代码。
+
+## 2024.4.13
+
+- VLESS Seed 整备完毕，待势而发。
+
+## 2024.3.18 <Badge>
+
+- 和 WebSocket 一样，HTTPUpgrade 也有 0-RTT 了。
+
+## 2024.3.11 <Badge>[v1.8.9](https://github.com/XTLS/Xray-core/releases/tag/v1.8.9)</Badge>
+
+- 新增 HTTPUpgrade 传输，听说比 WebSocket 要轻。
+
+## 2024.2.29
+
+- gRPC 传输现在也有 Host 一样的配置字段了！它叫 `authority`。这下 gRPC 也能“域前置”了，没有 ALPN 问题。
+
+## 2024.2.25 <Badge>[v1.8.8](https://github.com/XTLS/Xray-core/releases/tag/v1.8.8)</Badge>
+
+- 现在 XUDP 流量统一使用 Vision 填充了，速来体验。
+- 新增了 leastLoad balancer。
+- 修复错误、优化性能……
+
 ## 2023.11.21
 
 - 发表在 USENIX 顶会的[论文](https://t.me/projectXtls/212)证实，XTLS Vision 已经达到它的设计目标。
