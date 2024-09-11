@@ -48,7 +48,7 @@ sidebar: auto
 ## 2024.6.18 <Badge>[v1.8.16](https://github.com/XTLS/Xray-core/releases/tag/v1.8.16)</Badge>
 
 - 新传输来了，它目前叫 SplitHTTP。
-  - 实现进一步的流量混淆有两种刚好相反的方式：**多路复用** 与 **拆分连接** 。
+  - 实现进一步的流量混淆有两种刚好相反的方式：多路复用与拆分连接。
   - 可以通过不支持 WebSocket、gRPC 的 CDN，实现与 Meek 相同的目标，且 SplitHTTP 比 Meek 更简单、效率更高。
   - SplitHTTP 没有 WebSocket 的 ALPN 问题，这是一大优势，未来还会支持 HTTP/3（QUIC）。
 
@@ -66,7 +66,7 @@ sidebar: auto
 
 - VLESS Seed 整备完毕，待势而发。
 
-## 2024.3.18 <Badge>
+## 2024.3.18 <Badge>[v1.8.10](https://github.com/XTLS/Xray-core/releases/tag/v1.8.10)</Badge>
 
 - 和 WebSocket 一样，HTTPUpgrade 也有 0-RTT 了。
 
