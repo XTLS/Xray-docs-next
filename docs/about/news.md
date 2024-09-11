@@ -4,7 +4,72 @@ sidebar: auto
 
 # 大史记
 
-## 2021.12.24
+## 2022.12.26 <Badge>[v1.7.0](https://github.com/XTLS/Xray-core/releases/tag/v1.7.0)</Badge>
+
+- 因为手滑，这次的版本号直接大升，感谢大家支持！
+
+## 2022.11.28 <Badge>[v1.6.5](https://github.com/XTLS/Xray-core/releases/tag/v1.6.5)</Badge>
+
+- 这次我们有了 WireGuard 出站。
+- 使用 WireGuard 搭配 CF WARP 使用可以解锁有趣的新玩法呢。
+- 同样安全更新和修复也不会少。
+
+## 2022.11.7 <Badge>[v1.6.3](https://github.com/XTLS/Xray-core/releases/tag/v1.6.3)</Badge>
+
+- 现在 Vision 流控也能使用 uTLS 指纹模拟了，这就是使用 `tlsSettings` 带来的好处吗！
+
+## 2022.10.29 <Badge>[v1.6.2](https://github.com/XTLS/Xray-core/releases/tag/v1.6.2)</Badge>
+
+- 第一个包含 Vision 流控的发行版已经放出！欢迎试用并提交反馈！
+
+## 2022.10.22 <Badge>[v1.6.1](https://github.com/XTLS/Xray-core/releases/tag/v1.6.1)</Badge>
+
+- 为 WebSocket、HTTP/2 以及 gRPC 传输带来了 uTLS 指纹支持！
+  - 之前只有普通 TLS 下 TCP 传输能用的选项现在更好用了。
+- Linux 下可以单独为出入口设置 TCP 拥塞控制了。
+
+## 2022.10.3
+
+- 天气渐凉，但是并没有凉下开发的脚步。封锁天降，但无法阻止前行……
+- 新的 XTLS 流控酝酿中……
+  - 解决之前流控已有的问题；
+  - 对 TLS 1.3 直接启用 splice；
+  - 增加 TLS 握手长度混淆；
+  - 简化代码，使用 `tlsSettings` 而不是 `xtlsSettings`……
+
+## 2022.8.28 <Badge>[v1.5.10](https://github.com/XTLS/Xray-core/releases/tag/v1.5.10)</Badge>
+
+- 底层传输支持更合理的 TCP Keepalive 配置了。
+
+## 2022.6.20 <Badge>[v1.5.8](https://github.com/XTLS/Xray-core/releases/tag/v1.5.8)</Badge>
+
+- 现在 Shadowsocks-2022 的 relay 中转也受支持了。
+
+## 2022.5.29 <Badge>[v1.5.6](https://github.com/XTLS/Xray-core/releases/tag/v1.5.6)</Badge>
+
+- Shadowsocks-2022 协议来到了 Xray-core！
+  - 感谢 @nekohasekai 开发全新 go 实现 https://github.com/SagerNet/sing-shadowsocks 并引入 Xray。
+  - 感谢 @database64128 推动 Shadowsocks 社区提出完整设计方案。
+  - 感谢 @RPRX 提交原始漏洞。
+- Shadowsocks-2022 是重新设计的全新协议：
+  - 在保留 Shadowsocks 原生 udp 的基础上解决了重放攻击等安全问题（与 vmess 一样使用时间戳，因此客户端与服务端需要时间一致）。
+  - 支持单端口多用户，并且参考 quic、wireguard 等协议设计与实现使用了 session 机制，减低加密负担，保证网络变动时的无缝迁移。
+
+## 2022.4.24 <Badge>[v1.5.5](https://github.com/XTLS/Xray-core/releases/tag/v1.5.5)</Badge>
+
+- 这次带来了方便可视化的检测数据接口！快来体验！
+- 修复了一些影响使用体验的问题。
+
+## 2022.3.13 <Badge>[v1.5.4](https://github.com/XTLS/Xray-core/releases/tag/v1.5.4)</Badge>
+
+- 给 Windows 平台加上了没有黑窗冒出的 wxray.exe 文件，并带来了对 UDS 监听的增强。
+
+## 2022.1.29 <Badge>[v1.5.3](https://github.com/XTLS/Xray-core/releases/tag/v1.5.3)</Badge>
+
+- 牛辞胜岁，虎跃新程。🧨
+- 这次带来了对 QUIC 传输的流分配改进，使用 QUIC 传输现在更丝滑了。
+
+## 2021.12.24 <Badge>[v1.5.2](https://github.com/XTLS/Xray-core/releases/tag/v1.5.2)</Badge>
 
 - 为 gRPC 添加了一个新的选项，在通过 CDN 时变得更好用了。
 
