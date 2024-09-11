@@ -14,7 +14,8 @@ LogObject 对应配置文件的 `log` 项。
     "access": "文件地址",
     "error": "文件地址",
     "loglevel": "warning",
-    "dnsLog": false
+    "dnsLog": false,
+    "maskAddress": ""
   }
 }
 ```
@@ -45,3 +46,12 @@ error 日志的级别, 指示 error 日志需要记录的信息.
 > `dnsLog`: bool
 
 是否启用 DNS 查询日志，例如：`DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`
+
+> `maskAddress`: string
+
+IP地址遮罩，启用后将自动替换log中出现的IP地址，用于在分享日志时保护隐私，默认为空即不启用。
+
+目前可选等级 `quarter` `half` `full` 遮罩形式对应如下
+
+- ipv4 `1.2.*.*` `1.*.*.*` `[Masked IPv4]`
+- ipv6 `1234:5678::/32` `1234::/16` `[Masked IPv6]`
