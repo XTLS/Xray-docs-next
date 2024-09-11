@@ -25,11 +25,11 @@ sidebar: auto
 ## 2024.8.26
 
 - Project VLESS 群组创立。
-- We have created Project VLESS (https://t.me/projectVless) for non-Chinese users (Russian mainly).
+- We have created [Project VLESS](https://t.me/projectVless) for non-Chinese users (Russian mainly).
 
 ## 2024.8.3
 
-- 第一个[Project X NFT ](https://github.com/XTLS/Xray-core/discussions/3633) 正式发行！
+- 第一个[Project X NFT](https://github.com/XTLS/Xray-core/discussions/3633) 正式发行！
   - 就像 Xray 开创过很多历史一样，发行 NFT 也是这个领域前无古人的操作。这些 NFT 非常有纪念意义，甚至可以说是有历史意义，远大于现在的初始价格，假以时日它们必将价值连城。最后再次感谢大家对 Project X 的支持。
 
 ## 2024.7.29 <Badge>[v1.8.23](https://github.com/XTLS/Xray-core/releases/tag/v1.8.23)</Badge>
@@ -44,7 +44,6 @@ sidebar: auto
 - 正如 v1.8.16 所预告的，SplitHTTP 现已初步支持 HTTP/3（QUIC）。
   - SplitHTTP H3 是第一个完全基于标准 H3、支持套 CDN 的 QUIC 类代理，亦可用反代、Browser Dialer 来隐蔽自身。
   - 毫无疑问，SplitHTTP H3 已经开启了一个崭新的时代。
-  - ~~这下 Xray 不小心也有了基于 HTTP/3 的 QUIC 类代理。而且还能套 CDN，前无古人，遥遥领先，总之就是赢！麻了~~
 
 ## 2024.6.18 <Badge>[v1.8.16](https://github.com/XTLS/Xray-core/releases/tag/v1.8.16)</Badge>
 
