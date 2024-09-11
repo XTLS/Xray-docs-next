@@ -4,6 +4,72 @@ sidebar: auto
 
 # 大史记
 
+## 2021.12.24
+
+- 为 gRPC 添加了一个新的选项，在通过 CDN 时变得更好用了。
+
+## 2021.12.15 <Badge>[v1.5.1](https://github.com/XTLS/Xray-core/releases/tag/v1.5.1)</Badge>
+
+- “过渡时期的阶段性的维护版本”
+- 新功能、增强还有大量修复陆续有来。
+- 记得将 VMess 配置中的 `alterID` 去掉！
+
+## 2021.10.20 <Badge>[v1.5.0](https://github.com/XTLS/Xray-core/releases/tag/v1.5.0)</Badge>
+
+- 真的是巨大的改动！
+- 重构了 DNS 组件，支持的协议和细化配置更多了。
+- 增强了 gRPC 传输以及 FakeDNS。
+- 现在终于支持 Windows ARM64 了。
+- 更多新功能和改进等待体验。
+
+## 2021.9.23 <Badge>[v1.4.5](https://github.com/XTLS/Xray-core/releases/tag/v1.4.5)</Badge>
+
+- 中秋快乐，阖家团圆。
+- ~~修正了版本号过低，版本号不吉利的 bug。~~
+- 这次移除了 Shadowsocks 里面已经不安全的加密方式。要尽快迁移到 AEAD 加密上面喔。
+- 这次修复了远古时期开始就存在的历史问题：开启流量统计功能可能会使性能下降。简单来说，不论什么配置现在打开统计都不会对性能有任何影响了。
+- 还有对 XTLS 的安全性更新以及大量修复。
+- 对了，因为 TLS 库的更新，`cipherSuites` 不能再指定加密套件顺序了，而 `preferServerCipherSuites` 已经被彻底弃用。事实上这些变化在 Xray-core v1.4.3 中已经产生了。
+
+## 2021.9.16
+
+- 文档站已经完全切换到 docs-next，丝般顺滑，体验更好！地址仍为 https://xtls.github.io/
+
+## 2021.9.8 <Badge>[v1.4.3](https://github.com/XTLS/Xray-core/releases/tag/v1.4.3)</Badge>
+
+- 这是一个阶段性维护版本。开发仍在继续……
+- 在此期间累积了大量改进和新功能。
+- 加入新的 DomainMatcher，现在域名规则匹配性能更好了。
+- 加入对 HTTP/2 和 gRPC 传输的健康检查、对未知 SNI 的处理改进，以及修复了一大堆 bug。
+- ~~Helden sterben nicht!~~
+
+## 2021.7.14
+
+- AnXray ~~重金设计~~ 的新图标已经上线!
+  - 现在图标的辨识度更高了。
+- 过去三个星期，AnXray 共积累了 600 stars、2K+ 频道订阅数和 11K+ GitHub 下载量，感谢大家的支持。
+- AX 为 AnXray 的缩写，推荐用 AX 指代 AnXray，简短方便
+
+## 2021.6.21
+
+- 现在一个以 Xray-core 为核心的开源、自由的 Android 客户端已经出现——AnXray！
+  - 支持众多协议、插件.
+  - 设计了 X-style 的 logo、slogan，以及独一无二的 material 黑白主题。
+  - APP 内还有个小彩蛋等你去发现。
+- 前两天从早到晚反复打磨细节，希望大家多多 Star、关注。
+
+## 2021.5.1
+
+- 对 tun2socks 的改进出现在 v2rayNG 上面了。
+
+## 2021.4.26
+
+- 给 tun2socks 带来了一个改进。后续有可能能吃到它~
+
+## 2021.4.12
+
+- 现在带来了 X-flutter 前瞻，可以期待一下会是什么样子呢~ ~~🍪~~
+
 ## 2021.4.6
 
 - VuePress Next.
