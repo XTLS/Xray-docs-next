@@ -72,7 +72,12 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
   - 有问题尽管随便问，知道的尽量回答。
   - 禁政治，禁 NSFW
 
+- [Project VLESS](https://t.me/projectVless)
+
+  - 对非中文参与的官方用户群。 [@Project X](https://t.me/projectXray) 的姊妹群。
+
 - [Project X 频道](https://t.me/projectXtls)
+
   - 发布 Project X 的最新资讯
 
 ### 致谢
