@@ -4,9 +4,132 @@ sidebar: auto
 
 # 大史记
 
+## 2023.11.21
+
+- 发表在 USENIX 顶会的[论文](https://t.me/projectXtls/212)证实，XTLS Vision 已经达到它的设计目标。
+- 同时对 TLS-in-TLS 有更好的做法吗？
+
+## 2023.11.18 <Badge>[v1.8.6](https://github.com/XTLS/Xray-core/releases/tag/v1.8.6)</Badge>
+
+- WireGuard 现在也有了对应的入站。Freedom 出站也终于有了 splice。
+- 现在出站的 domainStrategy 也得到了统一。
+- 更多的美味小点心。
+- ~~我们真的要对一代经典 Windows 7 说再见了吗？~~
+
+## 2023.9.30
+
+- 为 v2rayNG 设计了全新的配色，安装最新的 Pre-release 版本即可体验。
+
+## 2023.8.29 <Badge>[v1.8.4](https://github.com/XTLS/Xray-core/releases/tag/v1.8.4)</Badge>
+
+- 1.8.x 在经过半年的打磨后终于来到了第一个认可的正式版了。
+- 同样地，这次集成的改进也不少，速来品尝！
+
+## 2023.7.22
+
+- 又修好了一个 HTTP/2 传输的历史遗留断流问题。
+
+## 2023.7.7
+
+- 即将给 Vision 添加 Seed 支持。
+
+## 2023.6.30
+
+- 下一个 XTLS 流控：xtls-rprx-switch 🍪
+  - XTLS 的 0-RTT 已经预告几个月了，本来也是想保留神秘感。
+  - 对比现有的 XTLS Vision 和 Mux 有着更加不错的优势。
+
+## 2023.6.27
+
+- [如何选取 REALITY 目标域名？来看这里助你事半功倍！](https://github.com/XTLS/Xray-core/discussions/2256#discussioncomment-6295296)
+
+## 2023.6.19 <Badge>[v1.8.3](https://github.com/XTLS/Xray-core/releases/tag/v1.8.3)</Badge>
+
+- 精简代码计划后的第一个版本，VMess (MD5)、MTProto 以及 Starlark 相关代码已被卸下。轻装上阵。
+- 对代码进重构也是轻装上阵的一部分。
+- 同时我们也没有忘记增添一些增强功能，还有修复漏洞。
+- ~~v1.8.3 为今年的最后一个版本。~~
+
+## 2023.6.6
+
+- 好消息：下一个 XTLS 流控不叫 Vision。 🍪
+
+## 2023.4.21
+
+- 也许我们可以借助一下 RealiTLScanner……
+
+## 2023.4.20
+
+- 经过长年累月的开发，累积代码不计其数……
+- 精简代码计划被提出了！
+
+## 2023.4.19
+
+- `xtls-0rtt-vision(-udp443)` 🍪
+
+## 2023.4.18 <Badge>[v1.8.1](https://github.com/XTLS/Xray-core/releases/tag/v1.8.1)</Badge>
+
+- 升级后的 XUDP 也来了！
+- 现在 XUDP 也带有连接迁移、端口复用的特性，并且带有全局 Session ID ~~，麻麻再也不用担心意外断线的时候怎么办了~~ 。
+- 同时我们也添加了 XUDP 的控制配置，让你能更好掌控它~
+- 新的 XUDP 配合 XTLS Vision 食用风味更好喔~
+- 惯例还有小甜点，欢迎品尝~
+
+## 2023.4.6
+
+- XUDP 也在悄然升级……
+
+## 2023.3.29
+
+- `PLUX protocol` 🍪
+
+## 2023.3.19
+
+- 对 REALITY 的分享链接标准也已经出现了。
+
+## 2023.3.9 <Badge>[v1.8.0](https://github.com/XTLS/Xray-core/releases/tag/v1.8.0)</Badge>
+
+- THE NEXT FUTURE, REALITY is NOW release on Xray-core
+- REALITY 已经实装发版！欢迎体验！
+- XTLS Vision 也已经完善，请两端升级至最新版食用。因为这次填充算法改变，旧版和新版之间会存在兼容性问题。
+- HTTP/2 传输也已经做了改善，现在使用新版即可纵享丝滑~
+- 还有大量小改进欢迎体验~
+
+## 2023.3.4
+
+- Legends never die, they become a part of ~~you~~ VLESS.
+- They simply fade away.
+
+## 2023.3.2
+
+- HTTP/2 传输的一些遗留问题已经被改善，欢迎搭配 REALITY 测试能不能纵享丝滑~
+
+## 2023.2.16
+
+- THE NEXT FUTURE becomes THE REALITY NOW!
+
+## 2023.2.9
+
+- REALITY is reality now!
+
+## 2023.2.8 <Badge>[v1.7.5](https://github.com/XTLS/Xray-core/releases/tag/v1.7.5)</Badge>
+
+- 恭喜 @yuhan6665 贡献了 Xray-core 的第 500 个 commit！
+- XTLS Vision 流控已经接近完善，即将实用。
+- 现在对 uTLS 指纹模拟添加了更多可选项，有哪一款适合你？
+- 分享链接也支持同时分享 uTLS 指纹配置了。
+- 还有更多的功能增强和修复。
+- 这一版也是能最后一次看到 XTLS Origin、Direct 和 Splice 流控的一版了。 ~~有点伤感不是吗？~~
+- Keep riding and never look back.
+
+## 2023.1.29
+
+- Winter cannot cover the NEXT FUTURE...
+
 ## 2022.12.26 <Badge>[v1.7.0](https://github.com/XTLS/Xray-core/releases/tag/v1.7.0)</Badge>
 
 - 因为手滑，这次的版本号直接大升，感谢大家支持！
+- 将会严格执行 Semantic Versioning。
 
 ## 2022.11.28 <Badge>[v1.6.5](https://github.com/XTLS/Xray-core/releases/tag/v1.6.5)</Badge>
 
