@@ -57,10 +57,6 @@ sidebar: auto
 
 - 一个新的传输方式正在被打造……
 
-## 2024.5.23 <Badge>[v1.8.13](https://github.com/XTLS/Xray-core/releases/tag/v1.8.13)</Badge>
-
-- 一个安全更新。
-
 ## 2024.4.26 <Badge>[v1.8.11](https://github.com/XTLS/Xray-core/releases/tag/v1.8.11)</Badge>
 
 - 我们现在有了 issues 模板，感谢 @Fangliding ！
