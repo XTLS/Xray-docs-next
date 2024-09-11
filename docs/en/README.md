@@ -72,7 +72,12 @@ Welcome to help Xray become stronger!
   - Feel free to ask questions, and try to answer those you know.
   - No politics, No NSFW
 
+- [Project VLESS](https://t.me/projectVless)
+
+  - The official Xray-core group for non-Chinese participants. Sister group of [@Project X](https://t.me/projectXray)
+
 - [Project X Channel](https://t.me/projectXtls)
+
   - Publish the latest news of Project X
 
 ### Thanks

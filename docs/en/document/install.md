@@ -4,7 +4,7 @@
 
 - Xray is available on the following platforms:
   - Windows 7 and later (x86 / amd64 / arm32 / arm64);
-    - If you need to use these version (1.8.4, 1.8.6, 1.8.18 and later marked with ```win7```) in Windows 7, operating system update **KB4474419** is required. Concerning for Internet security, it is recommended to install KB4490628 to acqacquire later operating systems from Windows Update.
+    - If you need to use these version (1.8.18 and later marked with ```win7```, 1.8.6, 1.8.4) in Windows 7, operating system update **KB4474419** is required. For better Internet security, it is recommended to install KB4490628 to acquire later operating system updates from Windows Update.
   - macOS 10.10 Yosemite and later (amd64 / arm64);
   - Linux 2.6.23 and later (x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64);
     - Including but not limited to Debian 7 / 8, Ubuntu 12.04 / 14.04 and subsequent versions, CentOS 7 / 8, Arch Linux, etc.;
@@ -94,6 +94,7 @@ The Linuxbrew package manager is used in the same way as Homebrew: `brew install
 - Android
   - [v2rayNG](https://github.com/2dust/v2rayNG)
   - [X-flutter](https://github.com/XTLS/X-flutter)
+  - [SaeedDev94/Xray](https://github.com/SaeedDev94/Xray)
 - iOS & macOS arm64
   - [FoXray](https://apps.apple.com/app/foxray/id6448898396)
   - [Streisand](https://apps.apple.com/app/streisand/id6450534064)
