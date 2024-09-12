@@ -73,7 +73,13 @@ footer: Лицензия CC-BY-SA 4.0 | Авторские права 2020-на�
   - Не стесняйтесь задавать вопросы, а если знаете ответ - помогите другим.
   - Запрещены политика и контент для взрослых (NSFW).
 
+- [Project VLESS Group](https://t.me/projectVless)
+
+  - The official Xray-core group for non-Chinese participants. Sister group of [Project X](https://t.me/projectXray)
+  - No advertising, No insults, No politics.
+
 - [Канал Project X](https://t.me/projectXtls)
+
   - Публикация последних новостей о Project X.
 
 ### Благодарности
