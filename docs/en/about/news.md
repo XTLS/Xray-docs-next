@@ -4,79 +4,112 @@ sidebar: auto
 
 # 大史记
 
+## 2024.9.12
+
+大史记重出江湖？！
+
 ## 2024.9.7 <Badge>[v24.9.7](https://github.com/XTLS/Xray-core/releases/tag/v24.9.7)</Badge>
 
-- 更改版本号之后的首次发版。
+更改版本号之后的首次发版。
+
 - 这次移除了 QUIC 以及 DomainSocket 传输，移除了两处远古配置遗留代码。
   - 二进制大小比 v1.8.24 减小了 1MB。
 - 依然有每次必备的 bug 修复。
 
 ## 2024.8.30 <Badge>[v1.8.24](https://github.com/XTLS/Xray-core/releases/tag/v1.8.24)</Badge>
 
-- 在等待 SplitHTTP multiplex controller 期间，main 分支已经积累了大量重要更新，所以我们决定先发一个版本。
-  - Socks 入站现在默认兼容 HTTP 代理请求。
-  - UDP noise (preview)
-  - 还有一些改进。
-- 由于传统版本号的存在，为每个版本规划功能、进行排期已经严重阻碍了新功能的开发、合并、发布。所以我们决定从下个版本开始弃用传统的版本号，改用发版日期作为版本号，如 v24.8.30，并取消版本规划，全面采用流式更新，写好的功能直接合并，不再等待，预计每月月底发一个版本。
-  - 毕竟对于反审查软件来说，相较于传统的版本号，新功能的及时性、每月更新更为重要，而不是发一个功能确定的版本并长期维护。
-- 下个版本会移除一些历史久远的代码，以后日常积累新代码、提醒迁移，跨年新版删代码、breaking。
-- 我们相信有了各位的捐款以及对发版形式的革新，Xray-core 这个项目会发展得更好。
+在等待 SplitHTTP multiplex controller 期间，main 分支已经积累了大量重要更新，所以我们决定先发一个版本。
+
+- Socks 入站现在默认兼容 HTTP 代理请求。
+- UDP noise (preview)
+- 还有一些改进。
+
+由于传统版本号的存在，为每个版本规划功能、进行排期已经严重阻碍了新功能的开发、合并、发布。所以我们决定从下个版本开始弃用传统的版本号，改用发版日期作为版本号，如 v24.8.30，并取消版本规划，全面采用流式更新，写好的功能直接合并，不再等待，预计每月月底发一个版本。
+毕竟对于反审查软件来说，相较于传统的版本号，新功能的及时性、每月更新更为重要，而不是发一个功能确定的版本并长期维护。
+下个版本会移除一些历史久远的代码，以后日常积累新代码、提醒迁移，跨年新版删代码、breaking。
+我们相信有了各位的捐款以及对发版形式的革新，Xray-core 这个项目会发展得更好。
 
 ## 2024.8.26
 
-- Project VLESS 群组创立。
-- We have created [Project VLESS](https://t.me/projectVless) for non-Chinese users (Russian mainly).
+Project VLESS 群组创立。
+
+We have created [Project VLESS](https://t.me/projectVless) for non-Chinese users (Russian mainly).
 
 ## 2024.8.3
 
-- 第一个[Project X NFT](https://github.com/XTLS/Xray-core/discussions/3633) 正式发行！
-  - 就像 Xray 开创过很多历史一样，发行 NFT 也是这个领域前无古人的操作。这些 NFT 非常有纪念意义，甚至可以说是有历史意义，远大于现在的初始价格，假以时日它们必将价值连城。最后再次感谢大家对 Project X 的支持。
+第一个 [Project X NFT](https://github.com/XTLS/Xray-core/discussions/3633#discussioncomment-10240940) 正式发行！
+就像 Xray 开创过很多历史一样，发行 NFT 也是这个领域前无古人的操作。这些 NFT 非常有纪念意义，甚至可以说是有历史意义，远大于现在的初始价格，假以时日它们必将价值连城。最后再次感谢大家对 Project X 的支持。
 
 ## 2024.7.29 <Badge>[v1.8.23](https://github.com/XTLS/Xray-core/releases/tag/v1.8.23)</Badge>
 
-- 恭喜 @mmmray 贡献了 Xray-core 的第 1000 个 commit！
+- 恭喜 [@mmmray](https://github.com/mmmray) 贡献了 Xray-core 的第 1000 个 commit！
 - 优化了 SplitHTTP 上行的稳定性，服务端必须升级到该版本以支持新版客户端。
 - 更多 SplitHTTP 上的变化。
 
 ## 2024.7.22 <Badge>[v1.8.21](https://github.com/XTLS/Xray-core/releases/tag/v1.8.21)</Badge>
 
-- 中间似乎回到了最初的腹泻式发版状态……
-- 正如 v1.8.16 所预告的，SplitHTTP 现已初步支持 HTTP/3（QUIC）。
-  - SplitHTTP H3 是第一个完全基于标准 H3、支持套 CDN 的 QUIC 类代理，亦可用反代、Browser Dialer 来隐蔽自身。
-  - 毫无疑问，SplitHTTP H3 已经开启了一个崭新的时代。
+中间似乎回到了最初的腹泻式发版状态……
+
+正如 v1.8.16 所预告的，SplitHTTP 现已初步支持 HTTP/3（QUIC）。毫无疑问，SplitHTTP H3 已经开启了一个崭新的时代。
+
+- SplitHTTP H3 是第一个完全基于标准 H3、支持套 CDN 的 QUIC 类代理，亦可用反代、Browser Dialer 来隐蔽自身。
+
+## 2024.7.16
+
+Project X 文档迎来了俄语版！感谢 [@iambabyninja](https://github.com/iambabyninja) 的翻译！
+
+> Привет, друзья из России!
+
+## 2024.7.15
+
+通过已知信息以及努力，Xray-core 现在重新支持 Windows 7！在后续的发版中，Windows 7 用户下载名为 Xray-win7-32.zip 或 Xray-win7-64.zip 的压缩包解压即可享受，感谢大家的支持！
+具体使用方式请点[这里](../document/install.html)
+
+虽然日后随着各方面升级 Windows 7 最终会离开，但是现在还是可以让这个时间来得稍微晚一些。
 
 ## 2024.6.18 <Badge>[v1.8.16](https://github.com/XTLS/Xray-core/releases/tag/v1.8.16)</Badge>
 
-- 新传输来了，它目前叫 SplitHTTP。
-  - 实现进一步的流量混淆有两种刚好相反的方式：多路复用与拆分连接。
-  - 可以通过不支持 WebSocket、gRPC 的 CDN，实现与 Meek 相同的目标，且 SplitHTTP 比 Meek 更简单、效率更高。
-  - SplitHTTP 没有 WebSocket 的 ALPN 问题，这是一大优势，未来还会支持 HTTP/3（QUIC）。
+新传输来了，它目前叫 SplitHTTP。
+
+- 实现进一步的流量混淆有两种刚好相反的方式：多路复用与拆分连接。
+- 可以通过不支持 WebSocket、gRPC 的 CDN，实现与 Meek 相同的目标，且 SplitHTTP 比 Meek 更简单、效率更高。
+- SplitHTTP 没有 WebSocket 的 ALPN 问题，这是一大优势，未来还会支持 HTTP/3（QUIC）。
+- 另外 SplitHTTP 也已经加入分享链接套餐~
 
 ## 2024.6.2
 
-- 一个新的传输方式正在被打造……
+一个新的传输方式正在被打造……
 
 ## 2024.4.26 <Badge>[v1.8.11](https://github.com/XTLS/Xray-core/releases/tag/v1.8.11)</Badge>
 
-- 我们现在有了 issues 模板，感谢 @Fangliding ！
 - 现在有了生成 ECH 密钥的工具。
 - 增强、修复，并移除了一点不再使用的代码。
 
+## 2024.4.20
+
+我们现在有了 issues 模板，感谢 [@Fangliding](https://github.com/Fangliding) ！
+
 ## 2024.4.13
 
-- VLESS Seed 整备完毕，待势而发。
+VLESS Seed 整备完毕，待势而发。
 
 ## 2024.3.18 <Badge>[v1.8.10](https://github.com/XTLS/Xray-core/releases/tag/v1.8.10)</Badge>
 
-- 和 WebSocket 一样，HTTPUpgrade 也有 0-RTT 了。
+和 WebSocket 一样，HTTPUpgrade 也有 0-RTT 了。
 
 ## 2024.3.11 <Badge>[v1.8.9](https://github.com/XTLS/Xray-core/releases/tag/v1.8.9)</Badge>
 
-- 新增 HTTPUpgrade 传输，听说比 WebSocket 要轻。
+新增 HTTPUpgrade 传输，听说比 WebSocket 要轻。
+- 已加入分享链接套餐~
 
 ## 2024.2.29
 
-- gRPC 传输现在也有 Host 一样的配置字段了！它叫 `authority`。这下 gRPC 也能“域前置”了，没有 ALPN 问题。
+gRPC 传输现在也有 Host 一样的配置字段了！它叫 `authority`。这下 gRPC 也能“域前置”了，没有 ALPN 问题。
+
+## 2024.1.9
+
+惊闻 Win7 无法运行新版 Xray-core？探索之下竟发现 Go 放弃了对 Win7 的支持。
+有什么办法能继续支持这个有些古老但是依然优雅的操作系统吗？
 
 ## 2024.2.25 <Badge>[v1.8.8](https://github.com/XTLS/Xray-core/releases/tag/v1.8.8)</Badge>
 
@@ -86,42 +119,44 @@ sidebar: auto
 
 ## 2023.11.21
 
-- 发表在 USENIX 顶会的[论文](https://t.me/projectXtls/212)证实，XTLS Vision 已经达到它的设计目标。
-- 同时对 TLS-in-TLS 有更好的做法吗？
+发表在 USENIX 顶会的[论文](https://t.me/projectXtls/212)证实，XTLS Vision 已经达到它的设计目标。
+而 XTLS 也不会止步于此，如 X 射线一般穿破高耸的围墙。
 
 ## 2023.11.18 <Badge>[v1.8.6](https://github.com/XTLS/Xray-core/releases/tag/v1.8.6)</Badge>
 
 - WireGuard 现在也有了对应的入站。Freedom 出站也终于有了 splice。
 - 现在出站的 domainStrategy 也得到了统一。
 - 更多的美味小点心。
+- 因为 ~~不可抗力~~ 功能变更，Dragonfly BSD 支持黯然离场。
 - ~~我们真的要对一代经典 Windows 7 说再见了吗？~~
 
 ## 2023.9.30
 
-- 为 v2rayNG 设计了全新的配色，安装最新的 Pre-release 版本即可体验。
+为 v2rayNG 设计了全新的配色，安装最新的 Pre-release 版本即可体验。
 
 ## 2023.8.29 <Badge>[v1.8.4](https://github.com/XTLS/Xray-core/releases/tag/v1.8.4)</Badge>
 
-- 1.8.x 在经过半年的打磨后终于来到了第一个认可的正式版了。
-- 同样地，这次集成的改进也不少，速来品尝！
+1.8.x 在经过半年的打磨后终于来到了第一个认可的正式版了。
+同样地，这次集成的改进也不少，速来品尝！
 
 ## 2023.7.22
 
-- 又修好了一个 HTTP/2 传输的历史遗留断流问题。
+又修好了一个 HTTP/2 传输的历史遗留断流问题。
 
 ## 2023.7.7
 
-- 即将给 Vision 添加 Seed 支持。
+即将给 Vision 添加 Seed 支持。
 
 ## 2023.6.30
 
-- 下一个 XTLS 流控：xtls-rprx-switch 🍪
-  - XTLS 的 0-RTT 已经预告几个月了，本来也是想保留神秘感。
-  - 对比现有的 XTLS Vision 和 Mux 有着更加不错的优势。
+下一个 XTLS 流控：xtls-rprx-switch 🍪
+
+- XTLS 的 0-RTT 已经预告几个月了，本来也是想保留神秘感。
+- 对比现有的 XTLS Vision 和 Mux 有着更加不错的优势。
 
 ## 2023.6.27
 
-- [如何选取 REALITY 目标域名？来看这里助你事半功倍！](https://github.com/XTLS/Xray-core/discussions/2256#discussioncomment-6295296)
+[如何选取 REALITY 目标域名？来看这里助你事半功倍！](https://github.com/XTLS/Xray-core/discussions/2256#discussioncomment-6295296)
 
 ## 2023.6.19 <Badge>[v1.8.3](https://github.com/XTLS/Xray-core/releases/tag/v1.8.3)</Badge>
 
@@ -132,24 +167,25 @@ sidebar: auto
 
 ## 2023.6.6
 
-- 好消息：下一个 XTLS 流控不叫 Vision。 🍪
+好消息：下一个 XTLS 流控不叫 Vision。 🍪
 
 ## 2023.4.21
 
-- 也许我们可以借助一下 RealiTLScanner……
+也许我们可以借助一下 [RealiTLScanner](https://github.com/XTLS/RealiTLScanner)……
 
 ## 2023.4.20
 
-- 经过长年累月的开发，累积代码不计其数……
-- 精简代码计划被提出了！
+经过长年累月的开发，累积代码不计其数……
+精简代码计划被提出了！
 
 ## 2023.4.19
 
-- `xtls-0rtt-vision(-udp443)` 🍪
+`xtls-0rtt-vision(-udp443)` 🍪
 
 ## 2023.4.18 <Badge>[v1.8.1](https://github.com/XTLS/Xray-core/releases/tag/v1.8.1)</Badge>
 
-- 升级后的 XUDP 也来了！
+升级后的 XUDP 也来了！
+
 - 现在 XUDP 也带有连接迁移、端口复用的特性，并且带有全局 Session ID ~~，麻麻再也不用担心意外断线的时候怎么办了~~ 。
 - 同时我们也添加了 XUDP 的控制配置，让你能更好掌控它~
 - 新的 XUDP 配合 XTLS Vision 食用风味更好喔~
@@ -157,73 +193,79 @@ sidebar: auto
 
 ## 2023.4.6
 
-- XUDP 也在悄然升级……
+XUDP 也在悄然升级……
 
 ## 2023.3.29
 
-- `PLUX protocol` 🍪
+`PLUX protocol` 🍪
 
 ## 2023.3.19
 
-- 对 REALITY 的分享链接标准也已经出现了。
+对 REALITY 的分享链接标准也已经出现了。
 
 ## 2023.3.9 <Badge>[v1.8.0](https://github.com/XTLS/Xray-core/releases/tag/v1.8.0)</Badge>
 
-- THE NEXT FUTURE, REALITY is NOW release on Xray-core
-- REALITY 已经实装发版！欢迎体验！
-- XTLS Vision 也已经完善，请两端升级至最新版食用。因为这次填充算法改变，旧版和新版之间会存在兼容性问题。
+> THE NEXT FUTURE, REALITY is NOW release on Xray-core
+
+REALITY 已经实装发版！欢迎体验！
+XTLS Vision 也已经完善，请两端升级至最新版食用。
+
+- 因为这次 Vision 填充算法改变，XTLS Vision 旧版和新版之间会存在兼容性问题。
 - HTTP/2 传输也已经做了改善，现在使用新版即可纵享丝滑~
 - 还有大量小改进欢迎体验~
 
 ## 2023.3.4
 
-- Legends never die, they become a part of ~~you~~ VLESS.
-- They simply fade away.
+> Legends never die, they become a part of ~~you~~ VLESS.
+> They simply fade away.
 
 ## 2023.3.2
 
-- HTTP/2 传输的一些遗留问题已经被改善，欢迎搭配 REALITY 测试能不能纵享丝滑~
+HTTP/2 传输的一些遗留问题已经被改善，欢迎搭配 REALITY 测试纵享丝滑~
 
 ## 2023.2.16
 
-- THE NEXT FUTURE becomes THE REALITY NOW!
+THE NEXT FUTURE becomes THE REALITY NOW!
 
 ## 2023.2.9
 
-- REALITY is reality now!
+REALITY is reality now!
 
 ## 2023.2.8 <Badge>[v1.7.5](https://github.com/XTLS/Xray-core/releases/tag/v1.7.5)</Badge>
 
-- 恭喜 @yuhan6665 贡献了 Xray-core 的第 500 个 commit！
+Keep riding and never look back.
+
+- 恭喜 [@yuhan6665](https://github.com/yuhan6665) 贡献了 Xray-core 的第 500 个 commit！
 - XTLS Vision 流控已经接近完善，即将实用。
 - 现在对 uTLS 指纹模拟添加了更多可选项，有哪一款适合你？
 - 分享链接也支持同时分享 uTLS 指纹配置了。
 - 还有更多的功能增强和修复。
 - 这一版也是能最后一次看到 XTLS Origin、Direct 和 Splice 流控的一版了。 ~~有点伤感不是吗？~~
-- Keep riding and never look back.
 
 ## 2023.1.29
 
-- Winter cannot cover the NEXT FUTURE...
+Winter cannot cover the NEXT FUTURE...
 
 ## 2022.12.26 <Badge>[v1.7.0](https://github.com/XTLS/Xray-core/releases/tag/v1.7.0)</Badge>
 
-- 因为手滑，这次的版本号直接大升，感谢大家支持！
-- 将会严格执行 Semantic Versioning。
+因为手滑，这次的版本号直接大升，感谢大家支持！
+
+- 以后将会严格执行 Semantic Versioning。
 
 ## 2022.11.28 <Badge>[v1.6.5](https://github.com/XTLS/Xray-core/releases/tag/v1.6.5)</Badge>
 
-- 这次我们有了 WireGuard 出站。
+这次我们有了 WireGuard 出站。
+
 - 使用 WireGuard 搭配 CF WARP 使用可以解锁有趣的新玩法呢。
 - 同样安全更新和修复也不会少。
 
 ## 2022.11.7 <Badge>[v1.6.3](https://github.com/XTLS/Xray-core/releases/tag/v1.6.3)</Badge>
 
-- 现在 Vision 流控也能使用 uTLS 指纹模拟了，这就是使用 `tlsSettings` 带来的好处吗！
+现在 Vision 流控也能使用 uTLS 指纹模拟了，这就是使用 `tlsSettings` 带来的好处吗！
 
 ## 2022.10.29 <Badge>[v1.6.2](https://github.com/XTLS/Xray-core/releases/tag/v1.6.2)</Badge>
 
-- 第一个包含 Vision 流控的发行版已经放出！欢迎试用并提交反馈！
+第一个包含 Vision 流控的发行版已经放出！欢迎试用并提交反馈！
 
 ## 2022.10.22 <Badge>[v1.6.1](https://github.com/XTLS/Xray-core/releases/tag/v1.6.1)</Badge>
 
@@ -233,7 +275,8 @@ sidebar: auto
 
 ## 2022.10.3
 
-- 天气渐凉，但是并没有凉下开发的脚步。封锁天降，但无法阻止前行……
+天气渐凉，但是并没有凉下开发的脚步。封锁天降，但无法阻止前行……
+
 - 新的 XTLS 流控酝酿中……
   - 解决之前流控已有的问题；
   - 对 TLS 1.3 直接启用 splice；
@@ -242,49 +285,56 @@ sidebar: auto
 
 ## 2022.8.28 <Badge>[v1.5.10](https://github.com/XTLS/Xray-core/releases/tag/v1.5.10)</Badge>
 
-- 底层传输支持更合理的 TCP Keepalive 配置了。
+底层传输支持更合理的 TCP Keepalive 配置了。
 
 ## 2022.6.20 <Badge>[v1.5.8](https://github.com/XTLS/Xray-core/releases/tag/v1.5.8)</Badge>
 
-- 现在 Shadowsocks-2022 的 relay 中转也受支持了。
+现在 Shadowsocks-2022 的 relay 中转也受支持了。
 
 ## 2022.5.29 <Badge>[v1.5.6](https://github.com/XTLS/Xray-core/releases/tag/v1.5.6)</Badge>
 
-- Shadowsocks-2022 协议来到了 Xray-core！
-  - 感谢 @nekohasekai 开发全新 go 实现 https://github.com/SagerNet/sing-shadowsocks 并引入 Xray。
-  - 感谢 @database64128 推动 Shadowsocks 社区提出完整设计方案。
-  - 感谢 @RPRX 提交原始漏洞。
-- Shadowsocks-2022 是重新设计的全新协议：
-  - 在保留 Shadowsocks 原生 udp 的基础上解决了重放攻击等安全问题（与 vmess 一样使用时间戳，因此客户端与服务端需要时间一致）。
-  - 支持单端口多用户，并且参考 quic、wireguard 等协议设计与实现使用了 session 机制，减低加密负担，保证网络变动时的无缝迁移。
+Shadowsocks-2022 协议来到了 Xray-core！
+
+- 感谢 [@nekohasekai](https://github.com/nekohasekai) 开发全新 go 实现 https://github.com/SagerNet/sing-shadowsocks 并引入 Xray。
+- 感谢 [@database64128](https://github.com/database64128) 推动 Shadowsocks 社区提出完整设计方案。
+- 感谢 [@RPRX](https://github.com/RPRX) 提交原始漏洞。
+
+Shadowsocks-2022 是重新设计的全新协议：
+
+- 在保留 Shadowsocks 原生 udp 的基础上解决了重放攻击等安全问题（与 vmess 一样使用时间戳，因此客户端与服务端需要时间一致）。
+- 支持单端口多用户，并且参考 quic、wireguard 等协议设计与实现使用了 session 机制，减低加密负担，保证网络变动时的无缝迁移。
 
 ## 2022.4.24 <Badge>[v1.5.5](https://github.com/XTLS/Xray-core/releases/tag/v1.5.5)</Badge>
 
-- 这次带来了方便可视化的检测数据接口！快来体验！
-- 修复了一些影响使用体验的问题。
+这次带来了方便可视化的检测数据接口！快来体验！
+
+- 顺便修复了一些影响使用体验的问题。
 
 ## 2022.3.13 <Badge>[v1.5.4](https://github.com/XTLS/Xray-core/releases/tag/v1.5.4)</Badge>
 
-- 给 Windows 平台加上了没有黑窗冒出的 wxray.exe 文件，并带来了对 UDS 监听的增强。
+给 Windows 平台加上了没有黑窗冒出的 wxray.exe 文件，并带来了对 UDS 监听的增强。
 
 ## 2022.1.29 <Badge>[v1.5.3](https://github.com/XTLS/Xray-core/releases/tag/v1.5.3)</Badge>
 
-- 牛辞胜岁，虎跃新程。🧨
+牛辞胜岁，虎跃新程。🧨
+
 - 这次带来了对 QUIC 传输的流分配改进，使用 QUIC 传输现在更丝滑了。
 
 ## 2021.12.24 <Badge>[v1.5.2](https://github.com/XTLS/Xray-core/releases/tag/v1.5.2)</Badge>
 
-- 为 gRPC 添加了一个新的选项，在通过 CDN 时变得更好用了。
+为 gRPC 添加了一个新的选项，在通过 CDN 时变得更好用了。
 
 ## 2021.12.15 <Badge>[v1.5.1](https://github.com/XTLS/Xray-core/releases/tag/v1.5.1)</Badge>
 
-- “过渡时期的阶段性的维护版本”
+> “过渡时期的阶段性的维护版本”
+
 - 新功能、增强还有大量修复陆续有来。
 - 记得将 VMess 配置中的 `alterID` 去掉！
 
 ## 2021.10.20 <Badge>[v1.5.0](https://github.com/XTLS/Xray-core/releases/tag/v1.5.0)</Badge>
 
-- 真的是巨大的改动！
+真的是巨大的改动！
+
 - 重构了 DNS 组件，支持的协议和细化配置更多了。
 - 增强了 gRPC 传输以及 FakeDNS。
 - 现在终于支持 Windows ARM64 了。
@@ -292,7 +342,8 @@ sidebar: auto
 
 ## 2021.9.23 <Badge>[v1.4.5](https://github.com/XTLS/Xray-core/releases/tag/v1.4.5)</Badge>
 
-- 中秋快乐，阖家团圆。
+中秋快乐，阖家团圆。
+
 - ~~修正了版本号过低，版本号不吉利的 bug。~~
 - 这次移除了 Shadowsocks 里面已经不安全的加密方式。要尽快迁移到 AEAD 加密上面喔。
 - 这次修复了远古时期开始就存在的历史问题：开启流量统计功能可能会使性能下降。简单来说，不论什么配置现在打开统计都不会对性能有任何影响了。
@@ -301,15 +352,17 @@ sidebar: auto
 
 ## 2021.9.16
 
-- 文档站已经完全切换到 docs-next，丝般顺滑，体验更好！地址仍为 https://xtls.github.io/
+- 文档站已经完全切换到 docs-next，丝般顺滑，体验更好！地址仍为 [https://xtls.github.io/](https://xtls.github.io/)
 
 ## 2021.9.8 <Badge>[v1.4.3](https://github.com/XTLS/Xray-core/releases/tag/v1.4.3)</Badge>
 
-- 这是一个阶段性维护版本。开发仍在继续……
+这是一个阶段性维护版本。开发仍在继续……
+
 - 在此期间累积了大量改进和新功能。
 - 加入新的 DomainMatcher，现在域名规则匹配性能更好了。
 - 加入对 HTTP/2 和 gRPC 传输的健康检查、对未知 SNI 的处理改进，以及修复了一大堆 bug。
-- ~~Helden sterben nicht!~~
+
+> ~~Helden sterben nicht!~~
 
 ## 2021.7.14
 
@@ -320,23 +373,25 @@ sidebar: auto
 
 ## 2021.6.21
 
-- 现在一个以 Xray-core 为核心的开源、自由的 Android 客户端已经出现——AnXray！
+现在一个以 Xray-core 为核心的开源、自由的 Android 客户端已经出现——[AnXray](https://github.com/XTLS/AnXray)！由 [@nekohasekai](https://github.com/nekohasekai) 维护。
+
   - 支持众多协议、插件.
-  - 设计了 X-style 的 logo、slogan，以及独一无二的 material 黑白主题。
+  - 首席视觉设计师 [@RPRX](https://github.com/RPRX) 设计了 X-style 的 logo、slogan，以及独一无二的 material 黑白主题。
   - APP 内还有个小彩蛋等你去发现。
-- 前两天从早到晚反复打磨细节，希望大家多多 Star、关注。
+
+前两天从早到晚反复打磨细节，希望大家多多 Star、关注。
 
 ## 2021.5.1
 
-- 对 tun2socks 的改进出现在 v2rayNG 上面了。
+对 tun2socks 的改进出现在 v2rayNG 上面了。
 
 ## 2021.4.26
 
-- 给 tun2socks 带来了一个改进。后续有可能能吃到它~
+给 tun2socks 带来了一个改进。后续有可能能吃到它~
 
 ## 2021.4.12
 
-- 现在带来了 X-flutter 前瞻，可以期待一下会是什么样子呢~ ~~🍪~~
+现在带来了 X-flutter 前瞻，可以期待一下会是什么样子呢~ ~~🍪~~
 
 ## 2021.4.6
 
@@ -410,7 +465,7 @@ sidebar: auto
 - _(VLESS: 嘤嘤嘤)_
 - UDP 奇奇怪怪的 BUG 被干掉了, 一个字, "稳定".
 - 嗅探可以排除你不想嗅探的域名, 可以开启一些新玩法.
-- 向发现问题->开 issue->自行测试->自行分析->自行找到问题->自行解决->然后给上下游提交 PR 的大佬 <img src="https://avatars2.githubusercontent.com/u/8384161?s=32" width="32px" height="32px" alt="a"/> [@Bohan Yang](https://github.com/bohanyang) 致敬!
+- 向发现问题->开 issue->自行测试->自行分析->自行找到问题->自行解决->然后给上下游提交 PR 的大佬 [@Bohan Yang](https://github.com/bohanyang) 致敬!
 - 其他美味小樱桃, 惯例更新品尝就对啦.
 
 ## 2021.01.19
@@ -424,7 +479,7 @@ sidebar: auto
 
 ## 2021.01.17
 
-- 辛苦的翻译工作开始了, 感谢<img src="https://avatars2.githubusercontent.com/u/60207794?s=32" width="32px" height="32px" alt="a"/> [@玖柒 Max](https://github.com/jiuqi9997)和其他所有的翻译大佬们.
+- 辛苦的翻译工作开始了, 感谢 [@玖柒 Max](https://github.com/jiuqi9997)和其他所有的翻译大佬们.
 - [English version](https://xtls.github.io/en/)
 
 ## 2021.01.15 <Badge>[1.2.2](https://github.com/XTLS/Xray-core/releases/tag/v1.2.2)</Badge>
@@ -466,7 +521,7 @@ sidebar: auto
 ## 2021.01.03
 
 - 文档仓库第一个 PR。🎉
-  [透明代理（TProxy）配置教程 ](../document/level-2/tproxy.md) ，感谢<img src="https://avatars2.githubusercontent.com/u/41363844?s=32" width="32px" height="32px" alt="a"/> [@BioniCosmos](https://github.com/BioniCosmos)
+  [透明代理（TProxy）配置教程 ](../document/level-2/tproxy.md) ，感谢 [@BioniCosmos](https://github.com/BioniCosmos)
 - tg 群突破 2500。
 
 ## 2021.01.01
