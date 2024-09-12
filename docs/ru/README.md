@@ -93,6 +93,7 @@ footer: Лицензия CC-BY-SA 4.0 | Авторские права 2020-на�
 ### Подробнее о Project X
 
 - Если вы хотите узнать больше об истории и развитии Project X, нажмите [здесь](./about/news.md)
+- Now Project X releases NFTs! If you would like to have one Project X NFT, or want to donate to or sponsoring Project X, please click [here](https://github.com/XTLS/Xray-core/discussions/3633#discussioncomment-10231076)
 
 ### Лицензия
 

@@ -92,6 +92,7 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 ### 更多关于 Project X
 
 - 如果你想知道更多关于 Project X 的足迹与成长, 请点击[这里](./about/news.md)
+- 现在 Project X 也发行 NFT 了！如果想拥有一枚 Project X NFT 或者想捐赠或者赞助 Project X，请点击[这里](https://github.com/XTLS/Xray-core/discussions/3633)
 
 ### License
 
