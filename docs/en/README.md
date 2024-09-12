@@ -92,6 +92,7 @@ Welcome to help Xray become stronger!
 ### More about project X
 
 - If you would like to learn more about project X's history and growth, please click [here](./about/news.md)
+- Now Project X releases NFTs! If you would like to have one Project X NFT, or want to donate to or sponsoring Project X, please click [here](https://github.com/XTLS/Xray-core/discussions/3633#discussioncomment-10240940)
 
 ### License
 

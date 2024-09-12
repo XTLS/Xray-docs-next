@@ -103,9 +103,9 @@ xray api <command> [arguments]
 
 ### xray convert
 
-把配置文件转换成 protobuf 或者把 typedMessage 转换成 json
+把配置文件转换成 protobuf 或者把 typedMessage 转换成 JSON
 
-使用方法:
+使用方法：
 
 ```
 xray convert <command> [arguments]
@@ -116,7 +116,7 @@ The commands are:
         json         Convert typedMessage to json
 ```
 
-pb 子命令使用示例：
+`pb` 子命令使用示例：
 ```bash
 # 用法：xray convert pb [-debug] [-type] [json file] [json file] ...
 
