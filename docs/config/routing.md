@@ -71,7 +71,8 @@
   "protocol": ["http", "tls", "bittorrent"],
   "attrs": { ":method": "GET" },
   "outboundTag": "direct",
-  "balancerTag": "balancer"
+  "balancerTag": "balancer",
+  "ruleTag": "rule name"
 }
 ```
 
@@ -185,6 +186,12 @@ Xray-core v1.8.7 或更高版本可省略该行。
 ::: tip
 `balancerTag` 和 `outboundTag` 须二选一。当同时指定时，`outboundTag` 生效。
 :::
+
+> `ruleTag`: string
+
+可选，无实际作用，仅用于标识这条规则的名字
+
+如果设置，则命中该条规则时会在 Info 等级输出相关信息，用于调试路由具体命中了哪条规则。
 
 ### BalancerObject
 
