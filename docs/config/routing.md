@@ -164,13 +164,15 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 一个 json object，键名字和值皆为字符串，用于检测流量的属性值。当 HTTP headers 包含所有指定的键，并且值包含指定的子字符串，则命中此规则。键大小写不敏感。值支持使用正则表达式。
 
-目前只有 http 入站代理会设置这一属性。
+同时也支持类似 h2 的伪头部 `:method` 和 `:path` 用于匹配方法和路径(尽管在 HTTP/1.1 中是不存在这些 header 的)
+
+对于 HTTP 入站的非 CONNECT 方法，可以直接获取到attrs, 对于其他入站则需要开启 sniffing 嗅探才能获得这些值用于匹配。
 
 示例：
 
 - 检测 HTTP GET：`{":method": "GET"}`
-- 检测 HTTP Path：`{":path": "/test"}"`
-- 检测 Content Type：`{"accept": "text/html"}"`
+- 检测 HTTP Path：`{":path": "/test"}`
+- 检测 Content Type：`{"accept": "text/html"}`
 
 > `outboundTag`: string
 
