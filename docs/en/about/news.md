@@ -10,7 +10,7 @@ The Great Chronicles Return to the Scene?!
 
 ## 2024.9.7 <Badge>[v24.9.7](https://github.com/XTLS/Xray-core/releases/tag/v24.9.7)</Badge>
 
-First release after changing the version number.
+First release after abandoning semantic versioning.
 
 - This time, QUIC and DomainSocket transports were removed, along with two pieces of legacy code.
   - The binary size is 1MB smaller than v1.8.24.
@@ -24,11 +24,11 @@ While waiting for the SplitHTTP multiplex controller, the main branch had accumu
 - UDP noise (preview)
 - And some other improvements.
 
-Due to the existence of traditional version numbers, planning features and scheduling for each release have severely hindered the development, merging, and release of new features. Therefore, we decided to abandon traditional version numbers starting with the next release and use the release date as the version number, such as v24.8.30, and cancel version planning, fully adopting continuous updates. Features will be merged and released as soon as they are ready, with a version released at the end of each month.
+Due to the existence of semantic versioning, planning features and scheduling for each release have severely hindered the development, merging, and release of new features. Therefore, we decided to abandon semantic versioning starting with the next release and use the release date as the version number, such as v24.8.30, and cancel version planning, fully adopting continuous updates. Features will be merged and released as soon as they are ready, with a version released at the end of each month.
 
-After all, for anti-censorship software, the timeliness of new features and monthly updates are more important than a feature-defined version with long-term maintenance.
+After all, as a software aiming to help people bypass censorship, instead of maintaining a long-term stable version, it's more important to adapt new features and keep updating monthly.
 
-The next version will remove some historical code, and future versions will accumulate new code regularly, with migration reminders. Annual new versions will delete outdated code and introduce breaking changes.
+The next version will remove some legacy code no longer in used, add warning log for using deprecated features/configs, and for sure, some breaking changes. Be aware that future versions will be released once we consider something new is ready for a release.
 
 We believe that with your donations and the reform of the release format, the Xray-core project will develop even better.
 
