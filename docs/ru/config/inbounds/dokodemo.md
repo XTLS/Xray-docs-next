@@ -9,7 +9,6 @@ Dokodemo door может прослушивать локальный порт и
   "address": "8.8.8.8",
   "port": 53,
   "network": "tcp",
-  "timeout": 0,
   "followRedirect": false,
   "userLevel": 0
 }
@@ -28,10 +27,6 @@ Dokodemo door может прослушивать локальный порт и
 > `network`: "tcp" | "udp" | "tcp,udp"
 
 Поддерживаемые типы сетевых протоколов. Например, если указано `"tcp"`, то будет приниматься только трафик TCP. Значение по умолчанию: `"tcp"`.
-
-> `timeout`: number
-
-Ограничение времени простоя соединения. Измеряется в секундах. Значение по умолчанию: `300`. Если во время обработки соединения в течение `timeout` секунд не передается никаких данных, соединение разрывается.
 
 > `followRedirect`: true | false
 
@@ -62,7 +57,6 @@ Dokodemo door может прослушивать локальный порт и
     "address": "mc.hypixel.net",
     "port": 25565,
     "network": "tcp",
-    "timeout": 0,
     "followRedirect": false,
     "userLevel": 0
   },
