@@ -23,7 +23,6 @@ In Linux, you can use the following environment variables to enable global HTTP 
 
 ```json
 {
-  "timeout": 0,
   "accounts": [
     {
       "user": "my-username",
@@ -34,12 +33,6 @@ In Linux, you can use the following environment variables to enable global HTTP 
   "userLevel": 0
 }
 ```
-
-> `timeout`: number
-
-The idle timeout in seconds. The default value is `300`, and 0 means no timeout.
-
-When handling a connection, if no data is transmitted within the timeout period, the connection will be terminated.
 
 > `accounts`: \[[AccountObject](#accountobject)\]
 

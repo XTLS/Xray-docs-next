@@ -9,7 +9,6 @@ Dokodemo door（任意门）可以监听一个本地端口，并把所有进入�
   "address": "8.8.8.8",
   "port": 53,
   "network": "tcp",
-  "timeout": 0,
   "followRedirect": false,
   "userLevel": 0
 }
@@ -28,10 +27,6 @@ Dokodemo door（任意门）可以监听一个本地端口，并把所有进入�
 > `network`: "tcp" | "udp" | "tcp,udp"
 
 可接收的网络协议类型。比如当指定为 `"tcp"` 时，仅会接收 TCP 流量。默认值为 `"tcp"`。
-
-> `timeout`: number
-
-连接空闲的时间限制。单位为秒。默认值为 `300`。处理一个连接时，如果在 `timeout` 时间内，没有任何数据被传输，则中断该连接。
 
 > `followRedirect`: true | false
 
@@ -62,7 +57,6 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
     "address": "mc.hypixel.net",
     "port": 25565,
     "network": "tcp",
-    "timeout": 0,
     "followRedirect": false,
     "userLevel": 0
   },

@@ -107,15 +107,15 @@ Added HTTPUpgrade transport, said to be lighter than WebSocket.
 
 gRPC transport now also has a Host-like configuration field! It's called `authority`. Now gRPC can also "domain front," without ALPN issues.
 
-## 2024.1.9
-
-Shocked to hear that Win7 cannot run the new version of Xray-core? Upon exploration, it was discovered that Go has dropped support for Win7. Is there a way to continue supporting this somewhat ancient but still elegant operating system?
-
 ## 2024.2.25 <Badge>[v1.8.8](https://github.com/XTLS/Xray-core/releases/tag/v1.8.8)</Badge>
 
 - Now XUDP traffic is uniformly padded with Vision, come and experience it.
 - Added leastLoad balancer.
 - Fixed errors, optimized performance...
+
+## 2024.1.9
+
+Shocked to hear that Win7 cannot run the new version of Xray-core? Upon exploration, it was discovered that Go has dropped support for Win7. Is there a way to continue supporting this somewhat ancient but still elegant operating system?
 
 ## 2023.11.21
 
@@ -174,8 +174,7 @@ Maybe we can leverage [RealiTLScanner](https://github.com/XTLS/RealiTLScanner)�
 
 ## 2023.4.20
 
-After years of development and countless lines of code...
-The code simplification plan has been proposed!
+After years of development and countless lines of code... [The code simplification plan](https://github.com/XTLS/Xray-core/discussions/1967) has been proposed!
 
 ## 2023.4.19
 
@@ -216,6 +215,7 @@ XTLS Vision has also been improved, please upgrade both ends to the latest versi
 ## 2023.3.4
 
 > Legends never die, they become a part of ~~you~~ VLESS.
+>
 > They simply fade away.
 
 ## 2023.3.2
@@ -390,7 +390,7 @@ Brought an improvement to tun2socks. You might get to enjoy it in the future~
 
 ## 2021.4.12
 
-Introducing X-flutter preview; looking forward to what it might be like~ ~~🍪~~
+Let's foresee X-flutter; looking forward to what it might be like~ ~~🍪~~
 
 ## 2021.4.6
 

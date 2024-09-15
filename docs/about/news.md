@@ -25,19 +25,23 @@ sidebar: auto
 - 还有一些改进。
 
 由于传统版本号的存在，为每个版本规划功能、进行排期已经严重阻碍了新功能的开发、合并、发布。所以我们决定从下个版本开始弃用传统的版本号，改用发版日期作为版本号，如 v24.8.30，并取消版本规划，全面采用流式更新，写好的功能直接合并，不再等待，预计每月月底发一个版本。
+
 毕竟对于反审查软件来说，相较于传统的版本号，新功能的及时性、每月更新更为重要，而不是发一个功能确定的版本并长期维护。
+
 下个版本会移除一些历史久远的代码，以后日常积累新代码、提醒迁移，跨年新版删代码、breaking。
+
 我们相信有了各位的捐款以及对发版形式的革新，Xray-core 这个项目会发展得更好。
 
 ## 2024.8.26
 
 Project VLESS 群组创立。
 
-We have created [Project VLESS](https://t.me/projectVless) for non-Chinese users (Russian mainly).
+We have created [Project VLESS](https://t.me/projectVless) for non-Chinese users (mainly Russian).
 
 ## 2024.8.3
 
 第一个 [Project X NFT](https://github.com/XTLS/Xray-core/discussions/3633) 正式发行！
+
 就像 Xray 开创过很多历史一样，发行 NFT 也是这个领域前无古人的操作。这些 NFT 非常有纪念意义，甚至可以说是有历史意义，远大于现在的初始价格，假以时日它们必将价值连城。最后再次感谢大家对 Project X 的支持。
 
 ## 2024.7.29 <Badge>[v1.8.23](https://github.com/XTLS/Xray-core/releases/tag/v1.8.23)</Badge>
@@ -62,8 +66,7 @@ Project X 文档迎来了俄语版！感谢 [@iambabyninja](https://github.com/i
 
 ## 2024.7.15
 
-通过已知信息以及努力，Xray-core 现在重新支持 Windows 7！在后续的发版中，Windows 7 用户下载名为 Xray-win7-32.zip 或 Xray-win7-64.zip 的压缩包解压即可享受，感谢大家的支持！
-具体使用方式请点[这里](../document/install.html)
+通过已知信息以及努力，Xray-core 现在重新支持 Windows 7！在后续的发版中，Windows 7 用户下载名为 Xray-win7-32.zip 或 Xray-win7-64.zip 的压缩包解压即可享受，感谢大家的支持！具体使用方式请点[这里](../document/install.html)
 
 虽然日后随着各方面升级 Windows 7 最终会离开，但是现在还是可以让这个时间来得稍微晚一些。
 
@@ -100,16 +103,12 @@ VLESS Seed 整备完毕，待势而发。
 ## 2024.3.11 <Badge>[v1.8.9](https://github.com/XTLS/Xray-core/releases/tag/v1.8.9)</Badge>
 
 新增 HTTPUpgrade 传输，听说比 WebSocket 要轻。
+
 - 已加入分享链接套餐~
 
 ## 2024.2.29
 
 gRPC 传输现在也有 Host 一样的配置字段了！它叫 `authority`。这下 gRPC 也能“域前置”了，没有 ALPN 问题。
-
-## 2024.1.9
-
-惊闻 Win7 无法运行新版 Xray-core？探索之下竟发现 Go 放弃了对 Win7 的支持。
-有什么办法能继续支持这个有些古老但是依然优雅的操作系统吗？
 
 ## 2024.2.25 <Badge>[v1.8.8](https://github.com/XTLS/Xray-core/releases/tag/v1.8.8)</Badge>
 
@@ -117,9 +116,14 @@ gRPC 传输现在也有 Host 一样的配置字段了！它叫 `authority`。这
 - 新增了 leastLoad balancer。
 - 修复错误、优化性能……
 
+## 2024.1.9
+
+惊闻 Win7 无法运行新版 Xray-core？探索之下竟发现 Go 放弃了对 Win7 的支持。有什么办法能继续支持这个有些古老但是依然优雅的操作系统吗？
+
 ## 2023.11.21
 
 发表在 USENIX 顶会的[论文](https://t.me/projectXtls/212)证实，XTLS Vision 已经达到它的设计目标。
+
 而 XTLS 也不会止步于此，如 X 射线一般穿破高耸的围墙。
 
 ## 2023.11.18 <Badge>[v1.8.6](https://github.com/XTLS/Xray-core/releases/tag/v1.8.6)</Badge>
@@ -137,6 +141,7 @@ gRPC 传输现在也有 Host 一样的配置字段了！它叫 `authority`。这
 ## 2023.8.29 <Badge>[v1.8.4](https://github.com/XTLS/Xray-core/releases/tag/v1.8.4)</Badge>
 
 1.8.x 在经过半年的打磨后终于来到了第一个认可的正式版了。
+
 同样地，这次集成的改进也不少，速来品尝！
 
 ## 2023.7.22
@@ -175,8 +180,7 @@ gRPC 传输现在也有 Host 一样的配置字段了！它叫 `authority`。这
 
 ## 2023.4.20
 
-经过长年累月的开发，累积代码不计其数……
-精简代码计划被提出了！
+经过长年累月的开发，累积代码不计其数…… [精简代码计划](https://github.com/XTLS/Xray-core/discussions/1967) 被提出了！
 
 ## 2023.4.19
 
@@ -217,6 +221,7 @@ XTLS Vision 也已经完善，请两端升级至最新版食用。
 ## 2023.3.4
 
 > Legends never die, they become a part of ~~you~~ VLESS.
+>
 > They simply fade away.
 
 ## 2023.3.2
@@ -366,7 +371,7 @@ Shadowsocks-2022 是重新设计的全新协议：
 
 ## 2021.7.14
 
-- AnXray ~~重金设计~~ 的新图标已经上线!
+- AnXray ~~重金设计~~ 的新图标已经上线！
   - 现在图标的辨识度更高了。
 - 过去三个星期，AnXray 共积累了 600 stars、2K+ 频道订阅数和 11K+ GitHub 下载量，感谢大家的支持。
 - AX 为 AnXray 的缩写，推荐用 AX 指代 AnXray，简短方便

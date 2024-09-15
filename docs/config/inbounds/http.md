@@ -23,7 +23,6 @@ HTTP 协议。
 
 ```json
 {
-  "timeout": 0,
   "accounts": [
     {
       "user": "my-username",
@@ -34,12 +33,6 @@ HTTP 协议。
   "userLevel": 0
 }
 ```
-
-> `timeout`: number
-
-连接空闲的时间限制。单位为秒。默认值为 `300`, 0 表示不限时。
-
-处理一个连接时，如果在 `timeout` 时间内，没有任何数据被传输，则中断该连接。
 
 > `accounts`: \[[AccountObject](#accountobject)\]
 
