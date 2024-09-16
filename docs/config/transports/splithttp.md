@@ -27,7 +27,13 @@ The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
   "scMaxConcurrentPosts": 100,
   "scMinPostsIntervalMs": 30,
   "noSSEHeader": false,
-  "xPaddingBytes": "100-1000"
+  "xPaddingBytes": "100-1000",
+  "xmux": {
+    "maxConnections": 0,
+    "maxConcurrency": 0,
+    "cMaxReuseTimes": 0,
+    "cMaxLifetimeMs": 0
+  }
 }
 ```
 
@@ -82,6 +88,23 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 设置请求（出站）和响应（入站）的填充大小，用于减少请求指纹。单位byte, 默认为 `"100-1000"` 每次会在该范围中随机选择一个数字。 也可以是单个数字 `"200"`/`200`
 
 设置为 `-1` 将完全禁用填充
+
+> `xmux`
+
+允许用户对 SplitHTTP 在 h2 与 h3 中的多路复用行为进行控制，如不在次设置，默认行为为将所有请求复用至一条 h2/QUIC 连接。
+
+与 mux.cool 不同，该复用工作于更低的等级，效率可能更好，如果有复用需求建议在此设置，不要启用 mux.cool.
+
+术语解释：流会复用物理连接，像这样 连接1(流1,流2,流3) 连接2(流4,流5,流6) .. 以此类推 在其他地方你可能看到 连接-子连接 这样的描述，都是一样的东西。
+
+* `maxConnections`: 默认值为 0(即无限) 要打开的最大连接数，连接达到此值时核心会积极打开连接，对每一条流都新建一个连接，直到达到该值。然后核心会开始复用已经建立的连接。 与 `maxConcurrency` 冲突。
+
+* `maxConcurrency`: 默认值为 0(即无限) 每个连接中复用的流的最大数量，连接中流的数量达到该值后核心会新建更多连接以容纳更多的流，类似于 mux.cool 的 concurrency.
+
+* `cMaxReuseTimes`: 默认值为 0(即无限) 一个连接最多被复用几次，当达到该值后核心不会向该连接再分配流，其将在内部最后一条流关闭后断开。
+
+* `cMaxLifetimeMs`: 默认值为 0(即无限) 一个连接最多可以存活多久，当连接打开的时间超过该值后核心不会向该连接再分配流，其将在内部最后一条流关闭后断开。
+
 
 ## HTTP 版本
 
