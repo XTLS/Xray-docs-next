@@ -30,7 +30,7 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
     "packet":"hiGFW",
     "delay":"10-16"
   }
-]
+],
   "proxyProtocol": 0
 }
 ```
@@ -74,13 +74,26 @@ A key-value map used to control TCP fragmentation，under some circumstances it 
 
 `"interval"`: time between fragments（ms）
 
-> `noise`: map
+::: warning
+⚠️ "noise":{} is deptecated,only "noises":[{}] is supported in 24.9.16 and later
+  :::
 
-A key-value map used to control UDP noise，under some circumstances it can bypass some udp based protocol restrictions.
+> `noises`: [ noiseObject ]
 
-`"packet"`：support two different methods."rand:min-max" generates random bytes with min and max length provided for noise."str:Customstring" will use user input string as noise.
+A Array used to control UDP noise，under some circumstances it can bypass some udp based protocol restrictions.
+xray will loop through this array and send each noise packet one by one
 
-`"delay"`：delay before sending real data (ms).If not specified, the default value is 0.
+`"type"`：Three types are supported. "rand" generates a random byte , "str" uses a user input string, "base64" uses a user input base64 encoded string
+
+`"packet"`：If type is set to "rand" this field will take a range "50-100" or a single value "50"
+
+if type is set to "str" this field will take a string
+
+if type is set to "base64" this field will take a base64 encoded string
+
+`"delay"`：delay before sending real data (ms). can be a string range like "10-20" or a single integer
+
+If not specified, the default value is 0.
 
 > `proxyProtocol`: number
 
