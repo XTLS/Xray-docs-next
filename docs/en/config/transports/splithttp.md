@@ -30,7 +30,13 @@ The `SplitHttpObject` corresponds to the `splithttpSettings` section under trans
   "scMaxConcurrentPosts": 100,
   "scMinPostsIntervalMs": 30,
   "noSSEHeader": false,
-  "xPaddingBytes": "100-1000"
+  "xPaddingBytes": "100-1000",
+  "xmux": {
+    "maxConnections": 0,
+    "maxConcurrency": 0,
+    "cMaxReuseTimes": 0,
+    "cMaxLifetimeMs": 0
+  }
 }
 ```
 
@@ -102,6 +108,37 @@ A value of `-1` disables padding entirely.
 
 You can lower this to save bandwidth or increase it to improve censorship
 resistance. Too much padding may cause the CDN to reject traffic.
+
+> `xmux`
+
+*Added in 24.9.16*
+
+Control the way that SplitHTTP distributes *sub-connections* (H2 stream or QUIC
+stream) on "physical" TCP/QUIC *connections*. The default behavior is to put
+all sub-connections of an outbound onto a single physical connection, which is
+basically equal to using `mux.cool` with `concurrency=1`.
+
+It is recommended to tweak this transport-specific `xmux` instead of the global
+`mux` key (mux.cool) for better performance, especially on QUIC/H3 connections.
+That said, either one may be useful to work around certain connectivity issues
+(and bugs in xray or other software).
+
+* `maxConnections`: Default 0 = infinite. The number of physical connections to
+  open. Every sub-connection will open a new connection until this value is
+  reached, only then connections will be reused. Mutually exclusive with
+  `maxConcurrency`.
+
+* `maxConcurrency`: Default 0 = infinite. The maximum number of sub-connections
+  to put onto a physical connection. New physical connections will be opened to
+  stay under this limit overall. Mutually exclusive with `maxConnections`.
+  Equivalent to mux.cool's `concurrency`.
+
+* `cMaxReuseTimes`: Default 0 = infinite. Stop re-using a physical connection
+  after it has been used for this many sub-connections.
+
+* `cMaxLifetimeMs`: Default 0 = infinite. Stop re-using a physical connection
+  after it has been open for this many milliseconds.
+
 
 ## HTTP versions
 
