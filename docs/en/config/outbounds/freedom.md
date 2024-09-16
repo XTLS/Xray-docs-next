@@ -14,10 +14,23 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
     "length": "100-200",
     "interval": "10-20" // ms
   },
-  "noise": {
-    "packet": "rand:5-10",
-    "delay": "10-20" // ms
+  "noises":[
+  {
+    "type":"base64",
+    "packet":"7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
+    "delay":"10-16"
   },
+  {
+    "type":"rand",
+    "packet":"10-20",
+    "delay":"10-16"
+  },
+  {
+    "type":"str",
+    "packet":"hiGFW",
+    "delay":"10-16"
+  }
+]
   "proxyProtocol": 0
 }
 ```
