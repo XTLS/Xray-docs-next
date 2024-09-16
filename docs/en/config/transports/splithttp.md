@@ -116,7 +116,7 @@ resistance. Too much padding may cause the CDN to reject traffic.
 Control the way that SplitHTTP distributes *sub-connections* (H2 stream or QUIC
 stream) on "physical" TCP/QUIC *connections*. The default behavior is to put
 all sub-connections of an outbound onto a single physical connection, which is
-basically equal to using `mux.cool` with `concurrency=1`.
+basically equal to using `mux.cool` with `concurrency=999999999`.
 
 It is recommended to tweak this transport-specific `xmux` instead of the global
 `mux` key (mux.cool) for better performance, especially on QUIC/H3 connections.
