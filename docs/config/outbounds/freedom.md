@@ -1,4 +1,4 @@
-# Freedom（fragment、noise）
+# Freedom（fragment、noises）
 
 Freedom 是一个出站协议，可以用来向任意网络发送（正常的） TCP 或 UDP 数据。
 
@@ -81,7 +81,7 @@ UDP noise, 用于在发出UDP连接前发出一些随机数据作为“噪声”
 
 `"packet"`: 基于前面的 `type` 要发送的数据包内容
 
-- 当 `type` 为 rand 时，这里指定随机数据的长度 可以是固定值 `"100"` 或者浮动值 `"50-150"
+- 当 `type` 为 rand 时，这里指定随机数据的长度 可以是固定值 `"100"` 或者浮动值 `"50-150"`
 - 当 `type` 为 str 时，这里指定要发送的字符串
 - 当 `type` 为 base64 时，这里指定base64过的二进制数据
   
