@@ -32,8 +32,8 @@ The `SplitHttpObject` corresponds to the `splithttpSettings` section under trans
   "noSSEHeader": false,
   "xPaddingBytes": "100-1000",
   "xmux": {
-    "maxConnections": 0,
     "maxConcurrency": 0,
+    "maxConnections": 0,
     "cMaxReuseTimes": 0,
     "cMaxLifetimeMs": 0
   }
@@ -123,15 +123,15 @@ It is recommended to tweak this transport-specific `xmux` instead of the global
 That said, either one may be useful to work around certain connectivity issues
 (and bugs in xray or other software).
 
-* `maxConnections`: Default 0 = infinite. The number of physical connections to
-  open. Every sub-connection will open a new connection until this value is
-  reached, only then connections will be reused. Mutually exclusive with
-  `maxConcurrency`.
-
 * `maxConcurrency`: Default 0 = infinite. The maximum number of sub-connections
   to put onto a physical connection. New physical connections will be opened to
   stay under this limit overall. Mutually exclusive with `maxConnections`.
   Equivalent to mux.cool's `concurrency`.
+
+* `maxConnections`: Default 0 = infinite. The number of physical connections to
+  open. Every sub-connection will open a new connection until this value is
+  reached, only then connections will be reused. Mutually exclusive with
+  `maxConcurrency`.
 
 * `cMaxReuseTimes`: Default 0 = infinite. Stop re-using a physical connection
   after it has been used for this many sub-connections.

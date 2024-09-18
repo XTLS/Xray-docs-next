@@ -29,8 +29,8 @@ The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
   "noSSEHeader": false,
   "xPaddingBytes": "100-1000",
   "xmux": {
-    "maxConnections": 0,
     "maxConcurrency": 0,
+    "maxConnections": 0,
     "cMaxReuseTimes": 0,
     "cMaxLifetimeMs": 0
   }
@@ -99,9 +99,9 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 - 流会复用物理连接，像这样 连接1(流1,流2,流3) 连接2(流4,流5,流6) .. 以此类推 在其他地方你可能看到 连接-子连接 这样的描述，都是一样的东西。
 - 下述所有字段类型均为 int/string 均支持固定值 `16` 或浮动值 `"8-32"` 的写法
 
-* `maxConcurrency`: 默认值为 0(即无限) 每个连接中复用的流的最大数量，连接中流的数量达到该值后核心会新建更多连接以容纳更多的流，类似于 mux.cool 的 concurrency.
-
 * `maxConnections`: 默认值为 0(即无限) 要打开的最大连接数，连接达到此值前核心会积极打开连接，对每一条流都新建一个连接，直到达到该值。然后核心会开始复用已经建立的连接。 与 `maxConcurrency` 冲突。
+
+* `maxConcurrency`: 默认值为 0(即无限) 每个连接中复用的流的最大数量，连接中流的数量达到该值后核心会新建更多连接以容纳更多的流，类似于 mux.cool 的 concurrency.
 
 * `cMaxReuseTimes`: 默认值为 0(即无限) 一个连接最多被复用几次，当达到该值后核心不会向该连接再分配流，其将在内部最后一条流关闭后断开。
 
