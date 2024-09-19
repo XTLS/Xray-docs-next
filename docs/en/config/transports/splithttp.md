@@ -113,32 +113,19 @@ resistance. Too much padding may cause the CDN to reject traffic.
 
 *Added in 24.9.16*
 
-Control the way that SplitHTTP distributes *sub-connections* (H2 stream or QUIC
-stream) on "physical" TCP/QUIC *connections*. The default behavior is to put
-all sub-connections of an outbound onto a single physical connection, which is
-basically equal to using `mux.cool` with `concurrency=999999999`.
+Allows users to control the multiplexing behavior in h2 and h3. If not set, the default behavior is to multiplex all requests to one TCP/QUIC connection.
 
-It is recommended to tweak this transport-specific `xmux` instead of the global
-`mux` key (mux.cool) for better performance, especially on QUIC/H3 connections.
-That said, either one may be useful to work around certain connectivity issues
-(and bugs in xray or other software).
+Since the default is unlimited reuse, `xmux` actually limits this. It's not recommended to enable `mux.cool` at the same time.
 
-* `maxConcurrency`: Default 0 = infinite. The maximum number of sub-connections
-  to put onto a physical connection. New physical connections will be opened to
-  stay under this limit overall. Mutually exclusive with `maxConnections`.
-  Equivalent to mux.cool's `concurrency`.
+Terminology: *Streams* will reuse physical connections, as in, one connection can hold many streams. In other places, streams are called sub-connections, they are the same thing.
 
-* `maxConnections`: Default 0 = infinite. The number of physical connections to
-  open. Every sub-connection will open a new connection until this value is
-  reached, only then connections will be reused. Mutually exclusive with
-  `maxConcurrency`.
+* `maxConcurrency`: Default 0 = infinite. The maximum number of streams reused in each connection. After the number of streams in the connection reaches this value, the core will create more connections to accommodate more streams, similar to the concurrency of mux.cool. Mutually exclusive with `maxConnections`.
 
-* `cMaxReuseTimes`: Default 0 = infinite. Stop re-using a physical connection
-  after it has been used for this many sub-connections.
+* `maxConnections`: Default 0 = infinite. The maximum number of connections to open. Every stream will open a new connection until this value is reached, only then connections will be reused. Mutually exclusive with `maxConcurrency`.
 
-* `cMaxLifetimeMs`: Default 0 = infinite. Stop re-using a physical connection
-  after it has been open for this many milliseconds.
+* `cMaxReuseTimes`: Default 0 = infinite. A connection can be reused at most several times. When this value is reached, the core will not allocate streams to the connection. It will be disconnected after the last internal stream is closed.
 
+* `cMaxLifetimeMs`: Default 0 = infinite. How long can a connection "survive" at most? When the connection is open for more than this value, the core will not redistribute streams to the connection, and it will be disconnected after the last internal stream is closed.
 
 ## HTTP versions
 
