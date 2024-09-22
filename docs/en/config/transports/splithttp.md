@@ -109,23 +109,42 @@ A value of `-1` disables padding entirely.
 You can lower this to save bandwidth or increase it to improve censorship
 resistance. Too much padding may cause the CDN to reject traffic.
 
-> `xmux`
+> `xmux`: [XmuxObject](#xmuxobject)
 
-*Added in 24.9.16*
+## XmuxObject
+
+<Badge text="v24.9.19+" type="warning"/>
 
 Allows users to control the multiplexing behavior in h2 and h3. If not set, the default behavior is to multiplex all requests to one TCP/QUIC connection.
+
+```json
+{
+  "maxConcurrency": 0,
+  "maxConnections": 0,
+  "cMaxReuseTimes": 0,
+  "cMaxLifetimeMs": 0
+}
+```
 
 Since the default is unlimited reuse, `xmux` actually limits this. It's not recommended to enable `mux.cool` at the same time.
 
 Terminology: *Streams* will reuse physical connections, as in, one connection can hold many streams. In other places, streams are called sub-connections, they are the same thing.
 
-* `maxConcurrency`: Default 0 = infinite. The maximum number of streams reused in each connection. After the number of streams in the connection reaches this value, the core will create more connections to accommodate more streams, similar to the concurrency of mux.cool. Mutually exclusive with `maxConnections`.
+> `maxConcurrency`: int/string
 
-* `maxConnections`: Default 0 = infinite. The maximum number of connections to open. Every stream will open a new connection until this value is reached, only then connections will be reused. Mutually exclusive with `maxConcurrency`.
+Default 0 = infinite. The maximum number of streams reused in each connection. After the number of streams in the connection reaches this value, the core will create more connections to accommodate more streams, similar to the concurrency of mux.cool. Mutually exclusive with `maxConnections`.
 
-* `cMaxReuseTimes`: Default 0 = infinite. A connection can be reused at most several times. When this value is reached, the core will not allocate streams to the connection. It will be disconnected after the last internal stream is closed.
+> `maxConnections`: int/string
 
-* `cMaxLifetimeMs`: Default 0 = infinite. How long can a connection "survive" at most? When the connection is open for more than this value, the core will not redistribute streams to the connection, and it will be disconnected after the last internal stream is closed.
+Default 0 = infinite. The maximum number of connections to open. Every stream will open a new connection until this value is reached, only then connections will be reused. Mutually exclusive with `maxConcurrency`.
+
+> `cMaxReuseTimes`: int/string
+
+Default 0 = infinite. A connection can be reused at most several times. When this value is reached, the core will not allocate streams to the connection. It will be disconnected after the last internal stream is closed.
+
+> `cMaxLifetimeMs`: int/string
+
+Default 0 = infinite. How long can a connection "survive" at most? When the connection is open for more than this value, the core will not redistribute streams to the connection, and it will be disconnected after the last internal stream is closed.
 
 ## HTTP versions
 
