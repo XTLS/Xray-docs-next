@@ -52,7 +52,7 @@ Port. The accepted formats are:
 
 When only one port is specified, Xray listens for inbound connections on that port. When a range of ports is specified, it depends on the `allocate` setting.
 
-> `protocol`: string
+> `protocol`: "dokodemo-door" | "http" | "shadowsocks" | "socks" | "vless" | "vmess" | "trojan" | "wireguard"
 
 The connection protocol name. The optional protocol types are listed in [inbound protocols](./inbounds/).
 

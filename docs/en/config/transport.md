@@ -51,7 +51,7 @@ Whether to enable transport layer encryption. Supported options below.
 
 - `"none"` enables no encryption (default).
 - `"tls"` enables encryption with [TLS](https://en.wikipedia.org/wiki/transport_Layer_Security).
-- `"xtls"` enables encryption with REALITY.
+- `"reality"` enables encryption with REALITY.
 
 > `tlsSettings`: [TLSObject](#tlsobject)
 

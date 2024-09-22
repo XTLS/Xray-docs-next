@@ -14,7 +14,8 @@ LogObject corresponds to the `log` item in the configuration file.
     "access": "file_path",
     "error": "file_path",
     "loglevel": "warning",
-    "dnsLog": false
+    "dnsLog": false,
+    "maskAddress": ""
   }
 }
 ```
@@ -44,3 +45,12 @@ The log level for error logs, indicating the information that needs to be record
 > `dnsLog`: bool
 
 Whether to enable DNS query logs, for example: `DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`.
+
+> `maskAddress`: "quarter" | "half" | "full"
+
+IP address masking, when enabled, will automatically replace the IP address appearing in the log. It is used to protect privacy when sharing logs. The default is empty and is not enabled.
+
+Currently available levels are `quarter`, `half`, `full`. The mask form corresponds to the following:
+
+- ipv4 `1.2.*.*` `1.*.*.*` `[Masked IPv4]`
+- ipv6 `1234:5678::/32` `1234::/16` `[Masked IPv6]`

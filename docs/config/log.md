@@ -47,7 +47,7 @@ error 日志的级别, 指示 error 日志需要记录的信息.
 
 是否启用 DNS 查询日志，例如：`DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`
 
-> `maskAddress`: string
+> `maskAddress`: "quarter" | "half" | "full"
 
 IP地址遮罩，启用后将自动替换log中出现的IP地址，用于在分享日志时保护隐私，默认为空即不启用。
 

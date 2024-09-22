@@ -57,7 +57,7 @@
 
 当只有一个端口时，Xray 会在此端口监听入站连接。当指定了一个端口范围时，取决于 `allocate` 设置。
 
-> `protocol`: string
+> `protocol`: "dokodemo-door" | "http" | "shadowsocks" | "socks" | "vless" | "vmess" | "trojan" | "wireguard"
 
 连接协议名称，可选的协议列表见左侧 入站代理。
 
