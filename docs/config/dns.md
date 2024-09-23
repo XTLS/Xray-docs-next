@@ -100,9 +100,9 @@ Xray 内置的 DNS 模块，主要有两大用途：
 - 子串：由 `"keyword:"` 开始，余下部分是一个字符串。当此字符串匹配目标域名中任意部分，该规则生效。比如 "keyword:sina.com" 可以匹配 "sina.com"、"sina.com.cn" 和 "www.sina.com"，但不匹配 "sina.cn"。
 - 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](./routing.md#预定义域名列表)。
 
-> `servers`: \[string | [ServerObject](#serverobject) \]
+> `servers`: \[string | [DnsServerObject](#dnsserverobject) \]
 
-一个 DNS 服务器列表，支持的类型有两种：DNS 地址（字符串形式）和 [ServerObject](#serverobject) 。
+一个 DNS 服务器列表，支持的类型有两种：DNS 地址（字符串形式）和 [DnsServerObject](#dnsserverobject) 。
 
 当值为 `"localhost"` 时，表示使用本机预设的 DNS 配置。
 
@@ -141,7 +141,7 @@ Xray 内置的 DNS 模块，主要有两大用途：
 :::
 
 ::: tip TIP 2
-可以在 [DnsObject](#dnsobject) 为所有 DNS 服务器指定 clientIp, 也可在每个 DNS 服务器配置的 [ServerObject](#serverobject) 为此 DNS 服务器指定 clientIp （优先级高于 [DnsObject](#dnsobject) 的配置）。
+可以在 [DnsObject](#dnsobject) 为所有 DNS 服务器指定 clientIp, 也可在每个 DNS 服务器配置的 [DnsServerObject](#dnsserverobject) 为此 DNS 服务器指定 clientIp （优先级高于 [DnsObject](#dnsobject) 的配置）。
 :::
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6"
@@ -224,7 +224,7 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
 
 由内置 DNS 发出的查询流量，除 `localhost`、`fakedns`、`TCPL`、`DOHL` 和 `DOQL` 模式外，都可以用此标识在路由使用 `inboundTag` 进行匹配。
 
-### ServerObject
+### DnsServerObject
 
 ```json
 {
@@ -239,7 +239,7 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
 
 > `address`: address
 
-一个 DNS 服务器列表，支持的类型有两种：DNS 地址（字符串形式）和 ServerObject 。
+一个 DNS 服务器列表，支持的类型有两种：DNS 地址（字符串形式）和 DnsServerObject 。
 
 当值为 `"localhost"` 时，表示使用本机预设的 DNS 配置。
 

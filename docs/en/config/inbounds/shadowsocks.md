@@ -61,9 +61,9 @@ The supported network protocol type. For example, when specified as `"tcp"`, it 
 }
 ```
 
-> `method`: string, any of the [supported methods](#supportedencryptionmethods)
+> `method`: string
 
-Required.
+Required, any of the [supported methods](#supportedencryptionmethods)
 
 > `password`: string
 

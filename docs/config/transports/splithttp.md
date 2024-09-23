@@ -53,7 +53,7 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 仅客户端，自定义 HTTP 头，一个键值对，每个键表示一个 HTTP 头的名称，对应的值是字符串。
 
-> `scMaxEachPostBytes`: int/string
+> `scMaxEachPostBytes`: int | string
 
 上传分块的最大大小，单位为字节，默认值为 1000000, 即 1MB.
 
@@ -63,7 +63,7 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 也可以是字符串 "500000-1000000" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
 
-> `scMaxConcurrentPosts`: int/string
+> `scMaxConcurrentPosts`: int | string
 
 单个连接上传post的最大并发数，默认为100.
 
@@ -73,7 +73,7 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 也可以是字符串 "50-100" 的形式，核心每次会在范围内随机选择一个值，以减少指纹。
 
-> `scMinPostsIntervalMs`: int/string
+> `scMinPostsIntervalMs`: int | string
 
 仅客户端，发起POST上传请求的最小间隔。默认值为 30.
 
@@ -83,7 +83,7 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 仅服务端，不发送 `Content-Type: text/event-stream` 响应头，默认 `false` (即会发送)
 
-> `xPaddingBytes` int/string
+> `xPaddingBytes` int | string
 
 设置请求（出站）和响应（入站）的填充大小，用于减少请求指纹。单位byte, 默认为 `"100-1000"` 每次会在该范围中随机选择一个数字。 也可以是单个数字 `"200"`/`200`
 

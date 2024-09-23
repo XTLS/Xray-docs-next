@@ -56,7 +56,7 @@ The current priority of the `Host` header sent by clients: `host` > `headers` > 
 
 Customized HTTP headers defined in key-value pairs. Defaults to empty.
 
-> `scMaxEachPostBytes`: int/string
+> `scMaxEachPostBytes`: int | string
 
 The maximum size of upload chunks, in bytes. Defaults to 1MB.
 
@@ -70,7 +70,7 @@ or other HTTP reverse proxy, otherwise an HTTP 413 error will be thrown.
 It can also be in the form of a string `"1000000-2000000"`. The core will
 randomly select a value within the range each time to reduce fingerprints.
 
-> `scMaxConcurrentPosts`: int/string
+> `scMaxConcurrentPosts`: int | string
 
 The number of concurrent uploads to run. Defaults to 100 on the client, and
 200 on the server.
@@ -83,7 +83,7 @@ will be much lower.
 It can also be in the form of a string `"100-200"`, and the core will randomly
 select a value within the range each time to reduce fingerprints.
 
-> `scMinPostsIntervalMs`: int/string
+> `scMinPostsIntervalMs`: int | string
 
 (Client-only) How much time to pass between upload requests at a minimum.
 Defaults to `30` (milliseconds).
@@ -130,19 +130,19 @@ Since the default is unlimited reuse, `xmux` actually limits this. It's not reco
 
 Terminology: *Streams* will reuse physical connections, as in, one connection can hold many streams. In other places, streams are called sub-connections, they are the same thing.
 
-> `maxConcurrency`: int/string
+> `maxConcurrency`: int | string
 
 Default 0 = infinite. The maximum number of streams reused in each connection. After the number of streams in the connection reaches this value, the core will create more connections to accommodate more streams, similar to the concurrency of mux.cool. Mutually exclusive with `maxConnections`.
 
-> `maxConnections`: int/string
+> `maxConnections`: int | string
 
 Default 0 = infinite. The maximum number of connections to open. Every stream will open a new connection until this value is reached, only then connections will be reused. Mutually exclusive with `maxConcurrency`.
 
-> `cMaxReuseTimes`: int/string
+> `cMaxReuseTimes`: int | string
 
 Default 0 = infinite. A connection can be reused at most several times. When this value is reached, the core will not allocate streams to the connection. It will be disconnected after the last internal stream is closed.
 
-> `cMaxLifetimeMs`: int/string
+> `cMaxLifetimeMs`: int | string
 
 Default 0 = infinite. How long can a connection "survive" at most? When the connection is open for more than this value, the core will not redistribute streams to the connection, and it will be disconnected after the last internal stream is closed.
 
