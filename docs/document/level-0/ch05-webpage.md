@@ -56,8 +56,12 @@
    22/tcp (v6)                ALLOW       Anywhere (v6)
    Nginx Full (v6)            ALLOW       Anywhere (v6)
    ```
+   4. nginx安装后默认的用户可能和启动用户不一致，将nginx配置文件中的user项修改为启动用户
+   ```shell
+   sudo nano /etc/nginx/nginx.conf
+   ```
+   ![image](https://github.com/user-attachments/assets/87d512ef-0ea4-48ed-baa7-efa9705a4452)
 
-   
 ## 5.3 创建一个最简单的网页
 
 1. 小小白白 Linux 基础命令：
