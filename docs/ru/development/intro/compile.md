@@ -1,37 +1,37 @@
-# 编译文档
+# Документация по сборке
 
-## 前序工作
+## Подготовка
 
-Xray 使用 [Golang](https://golang.org/) 作为编程语言，你需要先安装最新版本 Golang 才能够编译。
+Xray использует [Golang](https://golang.org/) в качестве языка программирования, поэтому вам необходимо сначала установить последнюю версию Golang, чтобы иметь возможность выполнить сборку.
 
-::: tip TIP
-安装 Golang: [golang.org/doc/install](https://golang.org/doc/install)
+::: tip СОВЕТ
+Установка Golang: [golang.org/doc/install](https://golang.org/doc/install)
 :::
 
-> 如果你不幸使用 Windows, 请 **务必** 使用 Powershell
+> Если вы, к сожалению, используете Windows, **обязательно** используйте Powershell.
 
-## 拉取 Xray 源代码
+## Получение исходного кода Xray
 
 ```bash
 git clone https://github.com/XTLS/Xray-core.git
 cd Xray-core && go mod download
 ```
 
-> 如果你闲的没事干，可以试试 GitHub 官方工具: `gh repo clone XTLS/Xray-core`
+> Если вам нечем заняться, можете попробовать официальный инструмент GitHub: `gh repo clone XTLS/Xray-core`.
 
-注意：在无法正常访问 Google 的网络环境，依赖无法被正常拉取，需要先设置 `GOPROXY`：
+Примечание: в сетевых средах, где нет доступа к Google, зависимости не могут быть получены обычным способом, поэтому необходимо сначала установить `GOPROXY`:
 
 ```bash
 go env -w GOPROXY=https://goproxy.io,direct
 ```
 
-## 构建二进制
+## Сборка бинарного файла
 
 :::warning
-本小节的命令需要在 Xray 根目录内运行。
+Команды в этом разделе необходимо выполнять в корневом каталоге Xray.
 :::
 
-### Windows(Powershell):
+### Windows (Powershell):
 
 ```powershell
 $env:CGO_ENABLED=0
@@ -44,19 +44,19 @@ go build -o xray.exe -trimpath -ldflags "-s -w -buildid=" ./main
 CGO_ENABLED=0 go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 ```
 
-运行以上命令会在目录下生成 xray 可执行文件。
+Выполнение этих команд создаст исполняемый файл xray в текущем каталоге.
 
 ::: tip
-如果需要编译可以进行 debug 的程序,即可以用 dlv 附加到运行的程序进行调试, 请去掉 ldflags 中的 '-w -s' 选项.
+Если вам нужно собрать программу с поддержкой отладки, то есть такую, к которой можно подключиться с помощью dlv для отладки, удалите опции '-w -s' из ldflags.
 
--w 禁止生成 debug 信息。使用该选项后，将无法使用 gdb 进行调试。
--s 禁用符号表
-PS:其实用 vscode 或其他 IDE 调试似乎更方便。
+-w отключает генерацию отладочной информации. Если эта опция используется, отладка с помощью gdb будет невозможна.
+-s отключает таблицу символов.
+P.S.: На самом деле отладка с помощью vscode или другой IDE может быть более удобной.
 :::
 
-## 交叉编译：
+## Кросс-компиляция:
 
-这里以在 Windows(Powershell) 环境中，编译到 Linux 服务器为例：
+В качестве примера рассмотрим компиляцию в среде Windows (Powershell) для сервера Linux:
 
 ```powershell
 $env:CGO_ENABLED=0
@@ -66,16 +66,18 @@ $env:GOARCH="amd64"
 go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 ```
 
-上传到服务器后，记得在服务器终端内执行 `chmod +x xray`
+После загрузки на сервер не забудьте выполнить команду `chmod +x xray` в терминале сервера.
 
 ::: tip
-执行 `go tool dist list` 查看所有支持的系统与架构。
+Выполните команду `go tool dist list`, чтобы просмотреть все поддерживаемые системы и архитектуры.
 :::
 
-## 可复现构建：
+## Воспроизводимая сборка:
 
-按照上述步骤，能够编译与 Release 中完全相同的二进制文件。
+Выполнив описанные выше шаги, вы можете собрать бинарный файл, идентичный тому, что находится в релизе.
 
 ::: warning
-请先确认您使用的 Golang 版本与编译 Release 的一致。
+Убедитесь, что вы используете ту же версию Golang, что и для сборки релиза.
 :::
+
+
