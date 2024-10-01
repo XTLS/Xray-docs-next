@@ -18,7 +18,7 @@
     "prettier": "^3.3.2",
     "sass": "^1.51.0",
     "sass-loader": "^14.2.0",
-    "typescript": "^5.5.2",
+    "typescript": "^5.6.2",
     "vue-property-decorator": "^9.1.2",
     "vuepress": "2.0.0-rc.2"
   },
