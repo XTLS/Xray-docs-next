@@ -41,9 +41,13 @@
 }
 ```
 
-> `network`: "tcp" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "splithttp"
+> `network`: "raw" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "splithttp"
 
-连接的数据流所使用的传输方式类型，默认值为 `"tcp"`
+连接的数据流所使用的传输方式类型，默认值为 `"raw"`
+
+::: tip
+v24.9.30 版本后，为了更贴近实际行为，tcp传输方式已更名为raw, 为了兼容性，`"network": "raw"` 和 "network": "tcp", `rawSettings`和`tcpSettings` 互为别名
+:::
 
 ::: tip
 "h2" 可以写成 "http"，"grpc" 可以写成 "gun"，"kcp" 可以写成 "mkcp"。
@@ -70,9 +74,9 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 达到数倍甚至十几倍的性能提升。
 :::
 
-> `tcpSettings`: [TcpObject](./transports/tcp.md)
+> `rawSettings`: [TcpObject](./transports/raw.md)
 
-当前连接的 TCP 配置，仅当此连接使用 TCP 时有效。
+当前连接的 raw 配置，仅当此连接使用 raw 时有效。
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
@@ -82,9 +86,9 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 
 当前连接的 WebSocket 配置，仅当此连接使用 WebSocket 时有效。
 
-> `httpSettings`: [HttpObject](./transports/h2.md)
+> `httpSettings`: [HttpObject](./transports/http.md)
 
-当前连接的 HTTP/2 配置，仅当此连接使用 HTTP/2 时有效。
+当前连接的 HTTP 配置，仅当此连接使用 HTTP 时有效。
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
