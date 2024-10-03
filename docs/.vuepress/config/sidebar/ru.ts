@@ -64,9 +64,9 @@ export const sidebarRu: SidebarConfig = {
       text: 'Транспортный уровень',
       children: [
         '/ru/config/transports/grpc.md',
-        '/ru/config/transports/h2.md',
+        '/ru/config/transports/http.md',
         '/ru/config/transports/mkcp.md',
-        '/ru/config/transports/tcp.md',
+        '/ru/config/transports/raw.md',
         '/ru/config/transports/websocket.md',
         '/ru/config/transports/httpupgrade.md',
         '/ru/config/transports/splithttp.md'
