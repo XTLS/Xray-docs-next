@@ -189,10 +189,6 @@ sudo ip rule add fwmark 1 table 100 # 为路由表 100 设定规则
 nftables 配置与 iptables 配置二选一，不可同时使用。
 :::
 
-<Tabs title="netfilter">
-
-<Tab title="nftables1">
-
 ```nftables
 #!/usr/sbin/nft -f
 
@@ -236,10 +232,6 @@ table ip xray {
 将上述配置写入一个文件（如 `nft.conf`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./nft.conf`）。
 :::
 
-</Tab>
-
-<Tab title="iptables1">
-
 ```bash
 iptables -t mangle -N XRAY
 iptables -t mangle -A XRAY -d 10.0.0.0/8 -j RETURN
@@ -275,19 +267,9 @@ iptables -t mangle -A XRAY_SELF -p udp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j XRAY_SELF
 ```
 
-</Tab>
-
-</Tabs>
-
 配置完成后，将局域网内其它设备的默认网关改为该设备 IP，就可以直接翻墙了。在其它主机和本机皆测试成功后，可进行下一步配置。
 
 ## 配置永久化与开机自启
-
-<br/>
-
-<Tabs title="netfilter2">
-
-<Tab title="nftables2">
 
 首先将已经编辑好的 nftables 配置文件移动到 `/etc` 目录下，并重命名为 `nftables.conf`。然后编辑 `/lib/systemd/system/nftables.service`。
 
@@ -316,10 +298,6 @@ WantedBy=sysinit.target
 
 最后 enable 即可。
 
-</Tab>
-
-<Tab title="iptables2">
-
 关于 iptables 的永久化，建议直接安装 `iptables-persistent`。
 
 安装过程中会提示你选择“是否保存配置”，如果已经将 iptables 配置写入系统，那么此时选择“是”即可；如果尚未写入也没有关系，安装完毕后将配置写入，然后执行 `netfilter-persistent save` 即可（需要 root 权限）。
@@ -345,7 +323,3 @@ ExecStop=/usr/sbin/netfilter-persistent stop ; /usr/sbin/ip route flush dev lo t
 [Install]
 WantedBy=multi-user.target
 ```
-
-</Tab>
-
-</Tabs>
