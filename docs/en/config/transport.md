@@ -13,6 +13,7 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
   "network": "tcp",
   "security": "none",
   "tlsSettings": {},
+  "realitySettings": {},
   "tcpSettings": {},
   "kcpSettings": {},
   "wsSettings": {},

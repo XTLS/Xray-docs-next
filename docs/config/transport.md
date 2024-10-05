@@ -13,6 +13,7 @@
   "network": "tcp",
   "security": "none",
   "tlsSettings": {},
+  "realitySettings"{},
   "tcpSettings": {},
   "kcpSettings": {},
   "wsSettings": {},
