@@ -73,7 +73,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值�
 
 当其为 0 且设置 `"packets": "tlshello"` 时，被分片的 Client Hello 将会在一个TCP包中发送（如果其原始大小未超过MSS或MTU导致被系统自动分片）
 
-> `noise`: array
+> `noises`: array
 
 UDP noise, 用于在发出UDP连接前发出一些随机数据作为“噪声”，出现该结构体则视为启用，可能可以欺骗嗅探器，也可能破坏正常连接。Use at your own risk. 出于这个原因，它会绕过53端口因为这会破坏 DNS
 
