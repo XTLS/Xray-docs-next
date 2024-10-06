@@ -15,6 +15,7 @@
   "network": "raw",
   "security": "none",
   "tlsSettings": {},
+  "realitySettings"{},
   "rawSettings": {},
   "kcpSettings": {},
   "wsSettings": {},
