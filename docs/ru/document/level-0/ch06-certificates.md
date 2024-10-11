@@ -199,10 +199,10 @@
 1. После того, как сертификат получен, его нужно установить в определённое место и указать путь к нему в файле конфигурации:
 
    ```shell
-   vpsadmin@vps-server:~$ acme.sh --installcert -d поддомен.ваш_домен.com --cert-file /путь/к/папке/cert.crt --key-file /путь/к/папке/cert.key --fullchain-file /путь/к/папке/fullchain.crt --ecc
-   [Mon 14 Feb 2022 03:00:25 PM CST] Installing cert to: /etc/xray/cert/cert.crt
+   vpsadmin@vps-server:~$ acme.sh --installcert -d поддомен.ваш_домен.com --cert-file /путь/к/папке/cert.cer --key-file /путь/к/папке/cert.key --fullchain-file /путь/к/папке/fullchain.cer --ecc
+   [Mon 14 Feb 2022 03:00:25 PM CST] Installing cert to: /etc/xray/cert/cert.cer
    [Mon 14 Feb 2022 03:00:25 PM CST] Installing key to: /etc/xray/cert/cert.key
-   [Mon 14 Feb 2022 03:00:25 PM CST] Installing full chain to: /etc/xray/cert/fullchain.crt
+   [Mon 14 Feb 2022 03:00:25 PM CST] Installing full chain to: /etc/xray/cert/fullchain.cer
    ```
 
 ## 6.6 Ваш прогресс
