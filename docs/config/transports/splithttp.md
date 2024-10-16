@@ -99,10 +99,10 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 ```json
 {
-  "maxConcurrency": 16,
-  "maxConnections": 32,
-  "cMaxReuseTimes": 64,
-  "cMaxLifetimeMs": 128
+  "maxConcurrency": "16-32",
+  "maxConnections": 0,
+  "cMaxReuseTimes": "64-128",
+  "cMaxLifetimeMs": 0
 }
 ```
 
