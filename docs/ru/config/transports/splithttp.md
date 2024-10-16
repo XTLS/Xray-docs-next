@@ -101,10 +101,10 @@
 
 ```json
 {
-  "maxConcurrency": 16,
-  "maxConnections": 32,
-  "cMaxReuseTimes": 64,
-  "cMaxLifetimeMs": 128
+  "maxConcurrency": "16-32",
+  "maxConnections": 0,
+  "cMaxReuseTimes": "64-128",
+  "cMaxLifetimeMs": 0
 }
 
 При установке всех значений в 0 или их отсутствии, ядро заполнит их значениями по умолчанию.
