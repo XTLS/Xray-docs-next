@@ -95,18 +95,18 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 <Badge text="v24.9.19+" type="warning"/>
 
-允许用户对 SplitHTTP 在 h2 与 h3 中的多路复用行为进行控制，如不设置，默认行为为将所有请求复用至一条 TCP/QUIC 连接。
+仅客户端，允许用户对 SplitHTTP 在 h2 与 h3 中的多路复用行为进行控制。使用该功能时不要启用 mux.cool。
 
 ```json
 {
-  "maxConcurrency": 0,
-  "maxConnections": 0,
-  "cMaxReuseTimes": 0,
-  "cMaxLifetimeMs": 0
+  "maxConcurrency": 16,
+  "maxConnections": 32,
+  "cMaxReuseTimes": 64,
+  "cMaxLifetimeMs": 128
 }
 ```
 
-由于默认是无限复用，xmux 实际上是对此进行限制。此外不要启用 mux.cool.
+上为全设置为0或者不设置时核心会填入的默认值
 
 术语解释：
 - 流会复用物理连接，像这样 连接1(流1,流2,流3) 连接2(流4,流5,流6) .. 以此类推 在其他地方你可能看到 连接-子连接 这样的描述，都是一样的东西。
