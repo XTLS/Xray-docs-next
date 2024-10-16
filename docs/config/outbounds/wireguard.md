@@ -54,7 +54,7 @@ Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址�
 
 > `mtu`: int
 
-Wireguard 底层 tun 的分片大小。
+Wireguard 底层 tun 的MTU大小。
 
 <details>
 <summary>MTU的计算方法</summary>
@@ -76,15 +76,11 @@ Wireguard 底层 tun 的分片大小。
 
 > `reserved` \[ number \]
 
-Wireguard 保留字节。
-
-Xray-core v1.8.0 新增参数。<br>
-通过 wireguard 连接 warp 时，由于 cloudflare 的限制，香港、洛杉矶部分 IP 需要有 `reserved` 的值才能成功连接。<br>
-`reserved` 的值可使用第三方工具获得，例如：[warp-reg](https://github.com/badafans/warp-reg)、[warp-reg.sh](https://github.com/chise0713/warp-reg.sh)。
+Wireguard 保留字节，按需填写。
 
 > `workers`: int
 
-Wireguard 使用线程数。
+Wireguard 使用线程数，默认为系统的核心数。
 
 > `peers`: \[ [Peers](#peers) \]
 
@@ -92,13 +88,9 @@ Wireguard 服务器列表，其中每一项是一个服务器配置。
 
 > `domainStrategy`: "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4" | "ForceIP"
 
-Xray-core v1.8.6 新增参数。<br>
-若不写此参数，或留空，默认值 `"ForceIP"`。<br>
-当目标地址为域名时，使用 Xray-core [内置 DNS 服务器](../dns.md)查询获取 IP（若没写 `"dns"` 配置，使用系统 DNS），将此 IP 通过 wireguard 发出连接。<br>
+不像绝大多数代理协议，Wireguard不允许传递域名作为目标，所以如果传入目标为一域名需要解析为IP地址后传送，这会经由 Xray 内置DNS处理，此处字段含义见 `Freedom` 出站的 `domainStrategy` ，默认值为 `ForceIP`
 
-::: tip
-若 `domainStrategy` 的值与 `"dns"` 配置中 `"queryStrategy"` 的值产生冲突，会造成网站打开失败。
-:::
+PS: `Freedom` 出站的 `domainStrategy` 包含诸如 `UseIP` 的选项，在这里不提供，因为Wiregiard必须获取一个可用的IP，不能进行 `UseIP` 回落行为。
 
 ```json
     "dns": {
@@ -116,14 +108,6 @@ Xray-core v1.8.6 新增参数。<br>
         "queryStrategy": "UseIP" // 同时查询 A 和 AAAA 记录，若不写此参数，默认值 UseIP，
     },
 ```
-
-当 `domainStrategy: "ForceIPv4"` 时，控制 geosite:openai 域名查询的 DNS 字段使用了 `"queryStrategy": "UseIPv6"`，将会导致 geosite:openai 的网站打开失败。
-
-::: tip
-Xray-core v1.8.0 - v1.8.4 没有 `"domainStrategy"`。<br>
-当目标地址为域名时，使用 Xray-core 内置 DNS 服务器查询获取 IP。使用 `"dns"` 配置中 `"queryStrategy"` 的值控制 IPv4 或 IPv6 优先级。<br>
-若没写 `"dns"` 配置，使用系统 DNS 查询获取 IP，IPv4 或 IPv6 优先级由系统控制。
-:::
 
 ### Peers
 
@@ -143,11 +127,6 @@ Xray-core v1.8.0 - v1.8.4 没有 `"domainStrategy"`。<br>
 
 URL:端口 格式，例如 `engage.cloudflareclient.com:2408`<br>
 IP:端口 格式，例如 `162.159.192.1:2408` 或  `[2606:4700:d0::a29f:c001]:2408`
-
-::: tip
-当目标地址类型为 URL 时，将使用 Xray-core 内置 DNS 查询 URL 以获取 IP，IPv4 或 IPv6 优先级由 `domainStrategy` 的值控制。<br>
-若没写 `"dns"` 配置，使用系统 DNS 查询 URL 以获取 IP，IPv4 或 IPv6 优先级由系统控制。
-:::
 
 > `publicKey`: string
 
