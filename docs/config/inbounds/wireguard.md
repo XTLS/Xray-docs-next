@@ -17,7 +17,6 @@ User-space Wireguard 协议实现。
       "allowedIPs":[""]
     }
   ],
-  "kernelMode": true, // optional, default true if it's supported and permission is sufficient
   "mtu": 1420, // optional, default 1420
 }
 ```
