@@ -40,7 +40,7 @@
     "esbuild": "^0.24.0",
     "jquery": "^3.6.0",
     "markdown-it-footnote": "^4.0.0",
-    "mermaid": "^11.2.1",
+    "mermaid": "^11.4.0",
     "vue": "3.3.13"
   }
 }
