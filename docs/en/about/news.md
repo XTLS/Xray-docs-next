@@ -4,6 +4,66 @@ sidebar: auto
 
 # The Great Chronicles
 
+## 2024.10.31 <badge>[24.10.31](https://github.com/XTLS/Xray-core/releases/tag/v24.10.31)</badge>
+
+Happy Halloween! 🎃
+
+We have a gift with candies for you, come get and open~ 🎁
+
+~~SplitHTTP now evolved into XHTTP, with ability of splitting upstream and downstream to different pathway! It is concrete that XHTTP opens a new era again.~~
+
+## 2024.10.24
+
+Only panels that secure in default are listed here. The plain HTTP issue shouldn’t be taken lightly.
+
+## 2024.10.18
+
+The first Projext X NFT pricing 0.15 ETH has been sold. Thank you for your support! And don't forget that the earlier you purchase the lower the price.
+
+We may have 10,000 REALITY NFT (two of them as a gift) with each pricing 0.01 ETH as a way of normal donation.
+
+## 2024.10.4
+
+Why there is someone use panels with http://ip over Internet? Oh no, oh no, oh no no no no no...
+
+For [data security](https://t.me/projectXtls/358), these tools should use HTTPS or SSH tunneling.
+
+## 2024.10.3
+
+It is almost one day after marking v24.9.30 as the latest version and no one complaints, ~~oh so nobody use the removed obsolote parts~~.
+
+## 2024.9.30 <badge>[24.9.30](https://github.com/XTLS/Xray-core/releases/tag/v24.9.30)</badge>
+
+The first stable release after changing the versioning rule!
+
+As the first stable version of versioning change:
+
+- We have XMUX for SplitHTTP
+- HTTP/3 now in HTTP transport
+- TCP transport renamed to RAW (more sensible)
+- UDP Noises in Freedom outbound
+- **WARNING**: This version has removed lots of obsolote config fields, check the config file carefully before upgrade to prevent unexpected situations.
+
+## 2024.9.28
+
+We all know the entrance question of the group is hell difficult.
+
+But it’s not about the number of people — it’s about quality. The goal is to test one's ability to find answers independently and ~~a bit of luck~~. This way, we can maintain high-quality discussions.
+
+Cherish your place in the group and be sure not to break the rules!
+
+## 2024.9.24
+
+NOTICE: There is ONLY one Project X NFT left with the price 0.1 ETH. The subsequent price starts from 0.15 ETH.
+
+## 2024.9.17
+
+The sister group, Project X, reached 1000 members.
+
+Thank you for the support from non-Chinese world!
+
+- What are XHTTP and XgRPC?
+
 ## 2024.9.12
 
 The Great Chronicles Return to the Scene?!
@@ -15,6 +75,10 @@ First release after abandoning semantic versioning.
 - This time, QUIC and DomainSocket transports were removed, along with two pieces of legacy code.
   - The binary size is 1MB smaller than v1.8.24.
 - As always, there are essential bug fixes.
+
+## 2024.9.6
+
+Can Xray-core use Xray-JSON subscription? The proposal is [over here](https://github.com/XTLS/Xray-core/discussions/3765).
 
 ## 2024.8.30 <Badge>[v1.8.24](https://github.com/XTLS/Xray-core/releases/tag/v1.8.24)</Badge>
 
