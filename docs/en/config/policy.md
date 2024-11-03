@@ -17,6 +17,7 @@ Local policy can be used to set different policy settings for different user lev
         "downlinkOnly": 5,
         "statsUserUplink": false,
         "statsUserDownlink": false,
+        "statsUserOnline": false,
         "bufferSize": 4
       }
     },
@@ -83,6 +84,10 @@ When set to `true`, enables upstream traffic statistics for all users at the cur
 > `statsUserDownlink`: true | false
 
 When set to `true`, enables downstream traffic statistics for all users at the current level.
+
+> `statsUserOnline`: true | false
+
+When set to `true`, enables counting online users for all users at the current level by email.
 
 > `bufferSize`: number
 
