@@ -17,6 +17,7 @@
         "downlinkOnly": 5,
         "statsUserUplink": false,
         "statsUserDownlink": false,
+        "statsUserOnline": false,
         "bufferSize": 4
       }
     },
@@ -83,6 +84,9 @@ Xray 系统级别的策略
 > `statsUserDownlink`: true | false
 
 当值为 `true` 时，开启当前等级的所有用户的下行流量统计。
+
+> `statsUserOnline`: true | false
+当值为 `true` 时，开启当前等级的所有用户的在线数量统计。(在线标准：20秒内有过连接活动)
 
 > `bufferSize`: number
 
