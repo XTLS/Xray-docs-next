@@ -112,6 +112,7 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 - iOS & macOS arm64
   - [FoXray](https://apps.apple.com/app/foxray/id6448898396)
   - [Streisand](https://apps.apple.com/app/streisand/id6450534064)
+  - [Happ](https://apps.apple.com/app/happ-proxy-utility/id6504287215)
 - macOS arm64 & x64
   - [V2rayU](https://github.com/yanue/V2rayU)
   - [V2RayXS](https://github.com/tzmax/V2RayXS)
