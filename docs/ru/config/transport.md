@@ -500,7 +500,7 @@ Reality — это самое безопасное на данный момен�
   "tcpcongestion": "bbr",
   "interface": "wg0",
   "V6Only": false,
-  "tcpWindowClamp": 600
+  "tcpWindowClamp": 600,
   "tcpMptcp": false,
   "tcpNoDelay": false,
   "customSockopt": []
