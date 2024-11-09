@@ -50,38 +50,37 @@ At this moment, probably only an "hehe" can express the mood.
 
 ## 1.5 "Why not just use the airport?"
 
-First of all, I would like to respond to those who ridicule and criticize by asking a question: Is using the airport really a panacea?
+An Airport refers to a pre made solution, where a provider is responsible all technical aspects of hosting and providing the service as mentioned in section 1.4, with the user only paying for the right to use the service.
 
-Secondly, I believe that there is a fundamental difference between "not understanding" and "not wanting to understand". The bad attitude of some people who just want handouts is naturally annoying, but those who sincerely want to learn but don't know how should not be subject to unjustified contempt and discrimination. It is precisely this kind of bad community atmosphere that does not distinguish between newcomers that prompted me to write this article. So without further ado, let's take a look at the advantages and disadvantages of the airport:
+First of all, I would like to respond to critics by asking a question: Is using an airport really a cure all?
 
-1. 稳定性高：机场节点数量多，分布广泛，避免了单点故障的风险，保证了整个网络的稳定性。
-2. 速度快：机场的节点通常采用高速服务器和优化的网络架构，网络速度较快，能够满足用户的高速上网需求。
-3. 安全性高：机场通常会采用严格的安全措施，如流量加密、防火墙等，保护用户数据的安全性。
-4. 稳定性高：机场通常采用专业的运维团队进行管理和维护，保证了服务的稳定性和可靠性。
-5. 服务质量高：机场通常会提供完善的客户服务，及时解决用户的问题和反馈，提升用户的满意度。
+Secondly, I believe that there is a fundamental difference between "not understanding" and "not wanting to understand". The bad attitude of some people who just want handouts is naturally annoying, but those who sincerely want to learn but don't know how should not be subject to unjustified contempt and discrimination. It is precisely this kind of bad community atmosphere that does not distinguish between newcomers that prompted me to write this article. So without further ado, let's take a look at the advantages and disadvantages of using an airport:
 
-The so-called "airport" refers to the "line provider". They are responsible for completing the technical operations and management mentioned in section 1.4, while users pay for the right to use the service. Therefore, its advantages include at least:
-
-1. **Simple User Operation**: Scan code operation, one-click rule addition, etc.
-2. **Multiple Line Options**: Can unlock network services in different countries and regions, such as iplc dedicated line services, game acceleration services, etc.
-3. **Multiple Access Nodes**: Therefore, it has a stronger ability to resist node blocking, if one is blocked, just switch to another one.
+- Advantages of "Airports"
+1. **Stability**: Airports usually feature multiple exit nodes, hence resistance to attempts at blocking these node, if one get block simply switch to another
+2. **Speed**: Airports typically make use of high capacity machines and high throughput network infrastructures, therefore you can expect a higher overall network speed
+3. **Safety**: Airports are generally have good security practices, such as encryption and firewalls to ensure the security of user data
+4. **reliability**: Airports employ a dedicated team to manage their services ensuring they remain online and reliable
+5. **support**: you can generally expect an Airport to have a support team to answer your queries.
+6. **Simplicity**: One-click rule addition, Scannable configurations, etc.
+7. **diverse-exit-nodes**: Useful to access geo-restricted content or to get a lower ping for gaming
 
 - Risks of "Airport"
 
-"The other side of the coin of 'convenience' is 'risk'. Based on the technical characteristics and market conditions of the 'airport', its risks include at least:"
+"The counterpart of convenience in 'internet' security is 'risk', some  risk of 'airports' you can find on the market are"
 
-1. "Airport" can fully obtain user information: All the traces left by users online will inevitably and very likely be stored on their servers for a long time. These records cannot be restricted by any legally binding user privacy agreement. ("Snooping and recording your every move")
-2. "Airport" lacks market management: There are inevitably malicious merchants who target fraud. ("Actively run away")
-3. "Airport" faces regulatory pressure: While large airports are relatively secure, they cannot avoid attracting attention. In 2020, several large airports experienced shutdowns and runaways, seriously disrupting users' normal usage. ("Passively run away")
-4. "Airport" technical level is difficult to determine: The quality of the line varies greatly, and the phenomenon of falsely advertising quality services is common. ("Slow speed, frequent disconnections, unable to connect")
+1. service providers can obtain all infomation that passes through their servers, these data are very likely stored by the providers for a long time with little legal means to stop them
+2. there is little governance on the market for "airports", meaning there are plenty cases of fraud where providers disappear after being paid
+3. Service providers can face regulatory pressures, while large providers are relatively secure, they cannot avoid attention from the government, In 2020 there are many cases where several large airports experience major service disruptions
+4. A providers technical prowess is difficult to determine, the quality of the service provided varies greatly, with false advertising being common
 
-## 1.6 So should you build your own website?
+## 1.6 So should you host your own tunnel?
 
-Now that you have seen the advantages and risks of the airport, please think carefully and make your own decision on what to use. After all, the best plan is the one that suits you best.
+Now that you have seen the advantages and risks of using a service provider, please think carefully and make your own decision on what to use. After all, the best plan is the one that suits you best.
 
 ![It's Your Choice!](./ch01-img01-choice.png)
 
-1. If you decide to use the airport, you can close this article now.
+1. If you decide to use an existing service provider, you can close this article now.
 
 2. If you decide to build it yourself, please continue reading the following chapters!
 
@@ -89,11 +88,11 @@ In short, the goal of this article is to serve as a starting point for users wit
 
 ## 1.7 Some digressions
 
-1. There is a wealth of information outside of the wall, so please learn to think rationally and independently. Don't take sides easily and don't believe in sensational information.
+1. There is a wealth of information beyond the wall, so please learn to think rationally and independently. Don't take sides easily and don't believe in sensational information. (This also serves as an reminder for friends live beyond the wall)
 
-2. We sincerely hope that with a smoother internet, everyone can access fresher knowledge, richer entertainment, experience a better world, and make more like-minded friends, but do not become a scapegoat for anyone with ulterior motives.
+2. We sincerely hope that with a more open internet, everyone can access knowledge in real time, find better entertainment, experience this amazing world, and find like-minded individual to befriend, but do not become a scapegoat for anyone with ulterior motives.
 
-3. Your internet identity is still your identity, and achieving absolute anonymity is extremely difficult. Therefore, please be sure to comply with the relevant laws and regulations in your personal location and the location of your IP address. Self-protection is always the most basic bottom line.
+3. Your internet identity is still your identity, and achieving absolute anonymity is extremely difficult. Therefore, please be sure to comply with the relevant laws and regulations in your personal location and the location of your IP address. Self-preservation should be your highest priority. (TLDR. Please take responsibility for your action on the internet)
 
 ## 1.8 Your Progress
 
