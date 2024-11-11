@@ -123,6 +123,7 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
   "enableSessionResumption": false,
   "fingerprint": "",
   "pinnedPeerCertificateChainSha256": [""],
+  "curvePreferences": [""],
   "masterKeyLog": ""
 }
 ```
@@ -243,6 +244,20 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 如果要在 ssllibs 或者 myssl 获得 A/A+ 等级的评价,
 请参考 [这里](https://github.com/XTLS/Xray-core/discussions/56#discussioncomment-215600).
 :::
+
+> `curvePreferences`: \[ string \]
+
+一个字符串数组，指定 TLS 握手执行ECDHE时偏好的曲线。支持的曲线列表如下（大小写不敏感）
+
+```
+CurveP256
+CurveP384
+CurveP521
+X25519
+x25519Kyber768Draft00
+```
+
+比如设置为 `"curvePreferences":["x25519Kyber768Draft00"]` 可以启用实验性的后量子算法。由于还是草案阶段该字段随时可能变化。
 
 > `masterKeyLog` : string
 
