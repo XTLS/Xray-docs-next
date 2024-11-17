@@ -22,7 +22,7 @@
   "httpSettings": {},
   "grpcSettings": {},
   "httpupgradeSettings": {},
-  "splithttpSettings": {},
+  "xhttpSettings": {},
   "sockopt": {
     "mark": 0,
     "tcpMaxSeg": 1440,
@@ -44,7 +44,7 @@
 }
 ```
 
-> `network`: "raw" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "splithttp"
+> `network`: "raw" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "xhttp"
 
 Тип способа передачи, используемого потоком данных соединения, по умолчанию `"raw"`
 ::: tip
@@ -99,9 +99,9 @@ Reality — это самое безопасное на данный момен�
 
 Конфигурация HTTPUpgrade для текущего соединения, действительна только если это соединение использует HTTPUpgrade.
 
-> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
+> `xhttpSettings`: [XHttpObject](./transports/splithttp.md)
 
-Конфигурация SplitHTTP для текущего соединения, действительна только если это соединение использует SplitHTTP.
+Конфигурация XHTTP для текущего соединения, действительна только если это соединение использует XHTTP.
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 

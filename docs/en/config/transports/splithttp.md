@@ -1,4 +1,4 @@
-# SplitHTTP
+# XHTTP (SplitHTTP)
 
 <Badge text="v1.8.16+" type="warning"/>
 
@@ -13,11 +13,11 @@ above streaming requirement to the CDN so that download can be much faster than
 (v2fly) Meek, close to WebSocket performance. The upload is also optimized, but
 still much more limited than WebSocket.
 
-Like WebSocket transport, SplitHTTP parses the `X-Forwarded-For` header for logging.
+Like WebSocket transport, XHTTP parses the `X-Forwarded-For` header for logging.
 
-## SplitHttpObject
+## XHttpObject
 
-The `SplitHttpObject` corresponds to the `splithttpSettings` section under transport configurations.
+The `XHttpObject` corresponds to the `xhttpSettings` section under transport configurations.
 
 ```json
 {
@@ -150,7 +150,7 @@ Default 0 = infinite. How long can a connection "survive" at most? When the conn
 
 *Added in 1.8.21: HTTP/3 support*
 
-SplitHTTP supports `http/1.1`, `h2` and `h3` ALPN values. If the value is not
+XHTTP supports `http/1.1`, `h2` and `h3` ALPN values. If the value is not
 set, `h2` (prior-knowledge) is assumed when TLS is enabled, and `http/1.1`
 without TLS. If the value is set to `h3`, the client will attempt to connect as
 HTTP/3, so UDP instead of TCP.
@@ -180,7 +180,7 @@ even if the client speaks `h3`.
 
 <Badge text="v1.8.17+" type="warning"/>
 
-If uTLS is not enough, SplitHTTP's TLS can be handled by a browser using [Browser Dialer](../features/browser_dialer.md)
+If uTLS is not enough, XHTTP's TLS can be handled by a browser using [Browser Dialer](../features/browser_dialer.md)
 
 ## Protocol details
 

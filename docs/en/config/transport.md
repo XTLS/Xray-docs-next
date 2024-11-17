@@ -20,7 +20,7 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
   "httpSettings": {},
   "grpcSettings": {},
   "httpupgradeSettings": {},
-  "splithttpSettings": {},
+  "xhttpSettings": {},
   "sockopt": {
     "mark": 0,
     "tcpMaxSeg": 1440,
@@ -42,7 +42,7 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "grpc" | "httpupgrade" | "splithttp"
+> `network`: "tcp" | "kcp" | "ws" | "http" | "grpc" | "httpupgrade" | "xhttp"
 
 The underlying protocol of the transport used by the data stream of the connection, defaulting to `"tcp"`.
 
@@ -90,9 +90,9 @@ Configures the current gRPC connection. Valid only when gRPC is used. Same schem
 
 Configures the current HTTPUpgrade connection. Valid only when HTTPUpgrade is used. Same schema as global.
 
-> `splithttpSettings`: [SplitHttpObject](./transports/splithttp.md)
+> `xhttpSettings`: [XHttpObject](./transports/splithttp.md)
 
-Configures SplitHTTP connections. Valid only when SplitHTTP is used. Same schema as global.
+Configures XHTTP connections. Valid only when XHTTP is used. Same schema as global.
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 

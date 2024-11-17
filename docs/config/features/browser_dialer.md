@@ -11,13 +11,13 @@
 不过目前的浏览器转发有以下缺点：
 * 用户需要手动开浏览器
 * 浏览器发出的连接必须直连 使用 tun 的用户需要特别注意容易形成死循环
-* 浏览器只能发出 HTTP 连接 所以目前仅支持 [WebSocket](../../transports/websocket.md) 与 [SplitHTTP](../../transports/splithttp.md) 传输方式
+* 浏览器只能发出 HTTP 连接 所以目前仅支持 [WebSocket](../../transports/websocket.md) 与 [XHTTP](../../transports/splithttp.md) 传输方式
 * 当浏览器从 `localhost:8080` 页面连接至代理服务端，需要考虑 [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 * 因为中间经过 JS 处理数据，会有一些性能损耗
 * 不能使用自定义 SNI 或者 Host，也就是说 `SNI == host == address`。自定义 HTTP 头以及其它 `tlsSettings` 项会被忽略
 
 ## 配置方法
-1. 准备一份 WebSocket 或 SplitHTTP 配置，注意 address 必须填域名，若需要指定 IP，请配置 DNS 或系统 hosts
+1. 准备一份 WebSocket 或 XHTTP 配置，注意 address 必须填域名，若需要指定 IP，请配置 DNS 或系统 hosts
 2. 使用环境变量启动 Xray `XRAY_BROWSER_DIALER=127.0.0.1:8080`。Windows 上命令为 `set XRAY_BROWSER_DIALER=127.0.0.1:8080` Linux 上命令为 `XRAY_BROWSER_DIALER=127.0.0.1:8080 ./xray -c config.json`
 3. 确保浏览器直连（或者在路由中将服务端地址直接由 `freedom` 发出），打开页面 `localhost:8080`，还可以 `F12` 看 `Console` 和 `Network`
 4. 浏览器会限制发出的连接数，所以建议开启 `Mux.Cool`
@@ -40,10 +40,10 @@
 - 用于浏览器的 early data 编码是 `base64.RawURLEncoding` 而不是 `StdEncoding`，服务端做了兼容。
 - 此外，由于 [Xray-core#375](https://github.com/XTLS/Xray-core/pull/375) 推荐 `?ed=2048`，这个 PR 顺便将服务端一处 `MaxHeaderBytes` 扩至了 4096。 ~~（虽然好像不改也没问题）~~
 
-## SplitHTTP
+## XHTTP
 
 <Badge text="v1.8.19+" type="warning"/>
 
-SplitHTTP 本身支持 QUIC，如果想使用浏览器自己的 QUIC 网络栈，Chrome 可以在 `chrome://flags` 中设定。其它浏览器也有相关选项。
+XHTTP 本身支持 QUIC，如果想使用浏览器自己的 QUIC 网络栈，Chrome 可以在 `chrome://flags` 中设定。其它浏览器也有相关选项。
 
 原理上说 `tlsSettings` 项会被忽略，使用哪个 HTTP 版本将完全由浏览器决定。

@@ -1,4 +1,4 @@
-# SplitHTTP（H2、QUIC H3）
+# XHTTP (SplitHTTP)
 
 <Badge text="v1.8.16+" type="warning"/>
 
@@ -10,11 +10,11 @@
 
 目的与V2fly Meek相同，由于使用了流式响应处理下载，下行速率更为优秀，上行也经过优化但仍非常有限，也因此对 HTTP 中间盒要求更高（见上）。
 
-`SplitHTTP` 也接受 `X-Forwarded-For` header。
+`XHTTP` 也接受 `X-Forwarded-For` header。
 
-## SplitHttpObject
+## XHttpObject
 
-The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
+The `XHttpObject` 对应传输配置的 `xhttpSettings` 项。
 
 ```json
 {
@@ -39,11 +39,11 @@ The `SplitHttpObject` 对应传输配置的 `splithttpSettings` 项。
 
 > `path`: string
 
-SplitHTTP 所使用的 HTTP 协议路径，默认值为 `"/"`。
+XHTTP 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
 > `host`: string
 
-SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值为空时，不验证客户端发送来的host值。
+XHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值为空时，不验证客户端发送来的host值。
 
 当在服务端指定该值，或在 ```headers``` 中指定host，将会校验与客户端请求host是否一致。
 
@@ -95,7 +95,7 @@ SplitHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值�
 
 <Badge text="v24.9.19+" type="warning"/>
 
-仅客户端，允许用户对 SplitHTTP 在 h2 与 h3 中的多路复用行为进行控制。使用该功能时不要启用 mux.cool。
+仅客户端，允许用户对 XHTTP 在 h2 与 h3 中的多路复用行为进行控制。使用该功能时不要启用 mux.cool。
 
 ```json
 {
