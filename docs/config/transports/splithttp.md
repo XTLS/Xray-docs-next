@@ -2,7 +2,7 @@
 
 <Badge text="v1.8.16+" type="warning"/>
 
-使用HTTP分块传输编码流式响应处理下载，使用多个HTTP POST请求进行上传。
+使用HTTP分块传输编码流式响应处理下载，使用多个 HTTP POST 请求（或者流式）进行上传。
 
 可以通过不支持WebSocket的CDN上，但仍有一些要求：
 
@@ -18,6 +18,7 @@ The `XHttpObject` 对应传输配置的 `xhttpSettings` 项。
 
 ```json
 {
+  "mode": "auto",
   "path": "/",
   "host": "xray.com",
   "headers": {
@@ -33,9 +34,32 @@ The `XHttpObject` 对应传输配置的 `xhttpSettings` 项。
     "maxConnections": 0,
     "cMaxReuseTimes": 0,
     "cMaxLifetimeMs": 0
-  }
+  },
+  "downloadSettings": {
+    "address": "example.com",
+    "port": 443,
+    "network": "xhttp",
+    "security": "none",
+    "tlsSettings": {},
+    "realitySettings": {},
+    "xhttpSettings": {
+      "path": "/" // must be the same
+    },
+    "sockopt": {
+      "dialerProxy": "" // just for example
+    }
+  },
+  "extra": {}
 }
 ```
+
+> `mode`: string
+
+XHTTP 上行所使用的模式。默认值为 `"auto"`，客户端与 REALITY 搭配时采用流式上行，否则采用分包上行。服务端同时兼容两种模式。
+
+`"packet-up"`：两端使用分包上行。即将数据包包装为单个 HTTP POST 请求，在服务端重组。可以兼容任意 HTTP 中间盒。
+
+`"stream-up"`：两端使用流式上行。开启一个 HTTP 长连接发送上行数据包，与现有的 H2 / H3 / gRPC 类似。速度快但兼容性低。
 
 > `path`: string
 
@@ -128,6 +152,59 @@ XHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值为空
 
 默认值为 0(即无限) 一个连接最多可以“存活”多久，当连接打开的时间超过该值后核心不会向该连接再分配流，其将在内部最后一条流关闭后断开。
 
+## downloadSettings
+
+用于拆分 XHTTP 下行所使用的连接（可选项，注意拆分的流量必须抵达服务端的同一个入站）
+
+`downloadSettings` 里面是嵌套的 [StreamSettingsObject](../transport.md#streamsettingsobject) ，可以使用 TLS 或者 REALITY 或者 `sockopt` 等各种选项。除此以外独有以下两个选项：
+
+> `address`: address
+
+下行服务端地址，支持域名、IPv4、IPv6。
+
+> `port`: number
+
+下行服务端端口。
+
+## extra
+
+```json
+{
+  "extra": {
+    "headers": {
+      "key": "value"
+    },
+    "scMaxEachPostBytes": 1000000,
+    "scMaxConcurrentPosts": 100,
+    "scMinPostsIntervalMs": 30,
+    "noSSEHeader": false,
+    "xPaddingBytes": "100-1000",
+    "xmux": {
+      "maxConcurrency": 0,
+      "maxConnections": 0,
+      "cMaxReuseTimes": 0,
+      "cMaxLifetimeMs": 0
+    },
+    "downloadSettings": {
+      "address": "example.com",
+      "port": 443,
+      "network": "xhttp",
+      "security": "none",
+      "tlsSettings": {},
+      "realitySettings": {},
+      "xhttpSettings": {
+        "path": "/" // must be the same
+      }
+    }
+  }
+}
+```
+
+`extra` 是嵌套的 `XHttpObject`，用来实现分享原始 Json。`extra` 里面的配置会覆盖外面的配置。
+
+目前以下选项在 `extra` 里面**不生效**:
+
+`host` `path` `mode` `downloadSettings->sockopt` `extra`
 
 ## HTTP 版本
 
