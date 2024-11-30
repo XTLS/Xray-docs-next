@@ -60,9 +60,9 @@ bash -c "$(curl -L warp-reg.vercel.app)"
 ```
 bash -c "$(curl -L wgcf-cli.vercel.app)"
 ```
-2. 运行 `wgcf-cli -r` 进行注册，输出：
+2. 运行 `wgcf-cli register` 进行注册，输出：
 ```json
-❯ wgcf-cli -r
+❯ wgcf-cli register
 {
     "endpoint": {
         "v4": "162.159.192.7:0",
@@ -84,10 +84,10 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 }
 ```
 - 完整文件将会保存到工作目录的 `wgcf.json` 内。
-3. 如果你还拥有一个 warp-plus 的密钥，你还可以运行 `wgcf-cli -l [密钥]` 进行绑定
+3. 如果你还拥有一个 warp-plus 的密钥，你还可以运行 `wgcf-cli license -l [密钥]` 进行绑定
 - （密钥可以在[我们群](https://t.me/projectXray/)里发送 `/keyget@getwarpplusbot` 获取）输出：
 ```json
-❯ wgcf-cli -l 9zs5I61a-l9j8m7T5-4pC6k20X
+❯ wgcf-cli license -l 9zs5I61a-l9j8m7T5-4pC6k20X
 {
     "id": "cd7f4695-e9ef-4bb0-b412-5f4d84919db7",
     "created": "0001-01-01T00:00:00Z",
@@ -100,7 +100,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
     "role": "child"
 }
 ```
-4. 运行 `wgcf-cli -g xray` 来生成一个WireGurad出站，他会将内容保存到 `wgcf.json.xray.json` 内
+4. 运行 `wgcf-cli generate --xray` 来生成一个WireGurad出站，他会将内容保存到 `wgcf.xray.json` 内
 - 示例文件：
 ```json
 {
