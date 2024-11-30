@@ -65,9 +65,9 @@ bash -c "$(curl -L warp-reg.vercel.app)"
 ```
 bash -c "$(curl -L wgcf-cli.vercel.app)"
 ```
-2. Запустите `wgcf-cli -r` для регистрации. Вывод:
+2. Запустите `wgcf-cli register` для регистрации. Вывод:
 ```json
-❯ wgcf-cli -r
+❯ wgcf-cli register
 {
     "endpoint": {
         "v4": "162.159.192.7:0",
@@ -89,11 +89,11 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 }
 ```
 - Полный файл будет сохранен в файле `wgcf.json` в рабочем каталоге.
-3. Если у вас есть ключ Warp+, вы можете привязать его, запустив `wgcf-cli -l [ключ]`.
+3. Если у вас есть ключ Warp+, вы можете привязать его, запустив `wgcf-cli license -l [ключ]`.
 - (Ключ можно получить, отправив `/keyget@getwarpplusbot` в [нашем чате](https://t.me/projectXray/)).  
     Вывод:
 ```json
-❯ wgcf-cli -l 9zs5I61a-l9j8m7T5-4pC6k20X
+❯ wgcf-cli license -l 9zs5I61a-l9j8m7T5-4pC6k20X
 {
     "id": "cd7f4695-e9ef-4bb0-b412-5f4d84919db7",
     "created": "0001-01-01T00:00:00Z",
@@ -106,7 +106,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
     "role": "child"
 }
 ```
-4. Запустите `wgcf-cli -g xray`, чтобы создать исходящий WireGuard.  
+4. Запустите `wgcf-cli generate --xray`, чтобы создать исходящий WireGuard.  
     Содержимое будет сохранено в файле `wgcf.json.xray.json`.
 - Пример файла:
 ```json
