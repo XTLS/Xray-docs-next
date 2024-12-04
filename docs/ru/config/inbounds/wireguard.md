@@ -1,9 +1,9 @@
 # Wireguard
 
-User-space implementation of the Wireguard protocol.
+Реализация протокола Wireguard в пользовательском пространстве.
 
 ::: danger
-**The Wireguard protocol is not specifically designed for circumvention purposes. If used as the outer layer for circumvention, its characteristics may lead to server blocking.**
+**Протокол Wireguard не предназначен  для обхода блокировок. Использование его на внешнем уровне может привести к блокировке сервера из-за характерных признаков.**
 :::
 
 ## InboundConfigurationObject
@@ -17,55 +17,53 @@ User-space implementation of the Wireguard protocol.
       "allowedIPs":[""]
     }
   ],
-  "kernelMode": true, // optional, default true if it's supported and permission is sufficient
-  "mtu": 1420, // optional, default 1420
+  "mtu": 1420 // необязательно, по умолчанию 1420
 }
 ```
 
 > `secretKey`: string
 
-Private key. Required.
+Приватный ключ. Обязательное поле.
 
 > `mtu`: int
 
-Fragmentation size of the underlying Wireguard tun.
+Размер фрагментации уровня tun в Wireguard.
 
 <details>
-<summary>MTU Calculation Method</summary>
+<summary>Метод расчета MTU</summary>
 
-The structure of a Wireguard packet is as follows:
+Структура пакета Wireguard выглядит следующим образом:
 
 ```
-- 20-byte IPv4 header or 40 byte IPv6 header
-- 8-byte UDP header
-- 4-byte type
-- 4-byte key index
-- 8-byte nonce
-- N-byte encrypted data
-- 16-byte authentication tag
+- 20-байтный IPv4-заголовок или 40-байтный IPv6-заголовок
+- 8-байтный UDP-заголовок
+- 4 байта — тип
+- 4 байта — индекс ключа
+- 8 байт — nonce
+- N байт — зашифрованные данные
+- 16 байт — аутентификационный тег
 ```
 
-`N-byte encrypted data` is the MTU value we need. Depending on whether the endpoint is IPv4 or IPv6, the specific values can be 1440 (IPv4) or 1420 (IPv6). If in a special environment, subtract additional bytes accordingly (e.g., subtract 8 more bytes for PPPoE over home broadband).
-
+```N байт — зашифрованные данные``` — это и есть значение MTU, которое зависит от того, используется ли IPv4 или IPv6. Значение может быть 1440 (IPv4) или 1420 (IPv6). В особых условиях значение может быть дополнительно уменьшено (например, для PPPoE — минус 8 байт).
 </details>
 
 > `peers`: \[ [Peers](#peers) \]
 
-List of peer servers, where each entry is a server configuration.
+Список серверов peers, каждая запись представляет конфигурацию одного сервера.
 
 ### Peers
 
 ```json
 {
   "publicKey": "PUBLIC_KEY",
-  "allowedIPs": ["0.0.0.0/0"] // optional, default ["0.0.0.0/0", "::/0"]
+  "allowedIPs": ["0.0.0.0/0"] // необязательно, по умолчанию ["0.0.0.0/0", "::/0"]
 }
 ```
 
 > `publicKey`: string
 
-Public key, used for verification.
+Публичный ключ для верификации.
 
 > `allowedIPs`: string array
 
-Allowed source IPs.
+Разрешенные исходные IP-адреса.
