@@ -71,7 +71,7 @@ export default defaultTheme({
       warning: 'Внимание',             
       danger: 'Предупреждение',              
       lastUpdatedText: 'Последние изменения',     
-      selectLanguageName: 'Русский (WIP)',
+      selectLanguageName: 'Русский',
       selectLanguageText: '🌍 Русский / Change language', 
       selectLanguageAriaLabel: 'Русский / Change language', 
       docsDir: 'docs',            
