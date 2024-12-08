@@ -116,7 +116,7 @@ XHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值为空
 
 > `keepAlivePeriod` int
 
-发送保活请求的时间间隔，单位秒。
+发送保活请求的时间间隔，单位秒，设置为 `-1` 代表禁用该功能。
 
 当使用 H2 和 H3 时分别对应 h2 ping 帧和 QUIC ping 帧。
 
