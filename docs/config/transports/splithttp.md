@@ -29,6 +29,7 @@ The `XHttpObject` 对应传输配置的 `xhttpSettings` 项。
   "scMinPostsIntervalMs": 30,
   "noSSEHeader": false,
   "xPaddingBytes": "100-1000",
+  "keepAlivePeriod": 45,
   "xmux": {
     "maxConcurrency": 0,
     "maxConnections": 0,
@@ -112,6 +113,14 @@ XHTTP 的HTTP请求中所发送的host，默认值为空。若服务端值为空
 设置请求（出站）和响应（入站）的填充大小，用于减少请求指纹。单位byte, 默认为 `"100-1000"` 每次会在该范围中随机选择一个数字。为 [Int32Range](../../development/intro/guide.md#int32range) 类型
 
 设置为 `-1` 将完全禁用填充
+
+> `keepAlivePeriod` int
+
+发送保活请求的时间间隔，单位秒。
+
+当使用 H2 和 H3 时分别对应 h2 ping 帧和 QUIC ping 帧。
+
+默认值为：使用 H2 时 45 秒(Chrome 默认值), 使用 H3 时 10 秒(quic-go 默认值)
 
 > `xmux`: [XmuxObject](#xmuxobject)
 
