@@ -590,7 +590,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 
 默认值 `"AsIs"`。
 
-当目标地址为域名时，配置相应的值，Freedom 的行为模式如下：
+当目标地址为域名时，配置相应的值，Outbound 连接远端服务器的行为模式如下：
 
 - 当使用 `"AsIs"` 时，Xray 将直接使用 go 自带的 Dial 发起连接，优先级固定为 RFC6724 的默认值(不会遵守 gai.conf 等配置) (人话：IPv6 优先)。
 - 当填写其他值时，将使用 Xray-core [内置 DNS 服务器](../dns.md) 服务器进行解析。若不存在DNSObject，则使用系统DNS。若有多个符合条件的IP地址时，核心会随机选择一个IP作为目标IP。
@@ -600,7 +600,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 - 当使用 `"Force"` 开头的选项时，若解析结果不符合要求，则该连接会无法建立。
 
 ::: tip TIP
-当使用 `"UseIP"`、`"ForceIP"` 模式时，并且 [出站连接配置](../outbound.md#outboundobject) 中指定了 `sendThrough` 时，Freedom 会根据 `sendThrough` 的值自动判断所需的 IP 类型，IPv4 或 IPv6。若手动指定了单种IP类型（如UseIPv4），但与 `sendThrough` 指定的本地地址不匹配，将会导致连接失败。
+当使用 `"UseIP"`、`"ForceIP"` 模式时，并且 [出站连接配置](../outbound.md#outboundobject) 中指定了 `sendThrough` 时，核心会根据 `sendThrough` 的值自动判断所需的 IP 类型，IPv4 或 IPv6。若手动指定了单种IP类型（如UseIPv4），但与 `sendThrough` 指定的本地地址不匹配，将会导致连接失败。
 :::
 
 ::: danger
