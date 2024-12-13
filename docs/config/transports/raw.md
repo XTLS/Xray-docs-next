@@ -1,8 +1,8 @@
 # RAW
 
-更名自曾经的tcp传输(原名称稍有歧义) RAW传输出站发送的原始数据，核心不使用其他协议(如 websocket)承载其流量。
+更名自曾经的 TCP 传输层（原名称有歧义），出站 RAW 传输层直接发送经代理协议包装后产生的 TCP、UDP 数据，核心不使用其它传输层（如 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113)）承载其流量。
 
-可以和各种协议有多种组合模式.
+可以和各种协议有多种组合模式。
 
 ## RawObject
 

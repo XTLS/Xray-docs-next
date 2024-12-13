@@ -4,6 +4,10 @@
 
 Подключение WebSocket может быть проксировано другими HTTP-серверами (например, Nginx) и VLESS fallbacks path.
 
+::: danger
+**Рекомендуется переключиться на [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113), чтобы избежать значительных характеристик трафика, таких как WebSocket «ALPN is http/1.1».**
+:::
+
 ::: tip
 WebSocket распознает заголовок X-Forwarded-For в HTTP-запросе для перезаписи исходного адреса трафика, приоритет выше, чем у PROXY protocol.
 :::

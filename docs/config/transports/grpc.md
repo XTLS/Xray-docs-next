@@ -5,6 +5,10 @@
 它基于 HTTP/2 协议，理论上可以通过其它支持 HTTP/2 的服务器（如 Nginx）进行中转。
 gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 mux.cool。
 
+::: danger
+**推荐换用 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113)，其相较于 gRPC 的优势已在 STREAM-UP/ONE 小节中注明。**
+:::
+
 ::: warning ⚠⚠⚠
 
 - gRPC 不支持指定 Host。请在出站代理地址中填写 **正确的域名** ，或在 `(x)tlsSettings` 中填写 `ServerName`，否则无法连接。

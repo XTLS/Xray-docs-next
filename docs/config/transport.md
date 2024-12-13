@@ -10,17 +10,16 @@
 
 ```json
 {
-  "network": "tcp",
+  "network": "raw",
   "security": "none",
   "tlsSettings": {},
   "realitySettings": {},
-  "tcpSettings": {},
-  "kcpSettings": {},
-  "wsSettings": {},
-  "httpSettings": {},
-  "grpcSettings": {},
-  "httpupgradeSettings": {},
+  "rawSettings": {},
   "xhttpSettings": {},
+  "kcpSettings": {},
+  "grpcSettings": {},
+  "wsSettings": {},
+  "httpupgradeSettings": {},
   "sockopt": {
     "mark": 0,
     "tcpMaxSeg": 1440,
@@ -42,16 +41,12 @@
 }
 ```
 
-> `network`: "raw" | "ws" | "h2" | "grpc" | "kcp" | "httpupgrade" | "xhttp"
+> `network`: "raw" | "xhttp" | "kcp" | "grpc" | "ws" | "httpupgrade"
 
-连接的数据流所使用的传输方式类型，默认值为 `"raw"`
-
-::: tip
-v24.9.30 版本后，为了更贴近实际行为，tcp传输方式已更名为raw, 为了兼容性，`"network": "raw"` 和 "network": "tcp", `rawSettings`和`tcpSettings` 互为别名
-:::
+连接的数据流所使用的传输方式类型，默认值为 `"raw"`。
 
 ::: tip
-"h2" 可以写成 "http"，"grpc" 可以写成 "gun"，"kcp" 可以写成 "mkcp"。
+v24.9.30 版本后，为了更贴近实际行为，TCP 传输方式已更名为 RAW。为了兼容性，`"network": "raw"` 和 `"network": "tcp"`，`rawSettings` 和 `tcpSettings` 互为别名。
 :::
 
 > `security`: "none" | "tls" | "reality"
@@ -75,33 +70,29 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 达到数倍甚至十几倍的性能提升。
 :::
 
-> `rawSettings`: [TcpObject](./transports/raw.md)
+> `rawSettings`: [RawObject](./transports/raw.md)
 
-当前连接的 raw 配置，仅当此连接使用 raw 时有效。
+当前连接的 RAW 配置，仅当此连接使用 RAW 时有效。
+
+> `xhttpSettings`: [XHTTP: Beyond REALITY](https://github.com/XTLS/Xray-core/discussions/4113)
+
+当前连接的 XHTTP 配置，仅当此连接使用 XHTTP 时有效。
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
 当前连接的 mKCP 配置，仅当此连接使用 mKCP 时有效。
 
+> `grpcSettings`: [GRPCObject](./transports/grpc.md)
+
+当前连接的 gRPC 配置，仅当此连接使用 gRPC 时有效。
+
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
 当前连接的 WebSocket 配置，仅当此连接使用 WebSocket 时有效。
 
-> `httpSettings`: [HttpObject](./transports/http.md)
-
-当前连接的 HTTP 配置，仅当此连接使用 HTTP 时有效。
-
-> `grpcSettings`: [GRPCObject](./transports/grpc.md)
-
-当前连接的 gRPC 配置，仅当此连接使用 gRPC 时有效。。
-
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
 当前连接的 HTTPUpgrade 配置，仅当此连接使用 HTTPUpgrade 时有效。
-
-> `xhttpSettings`: [XHttpObject](./transports/splithttp.md)
-
-当前连接的 XHTTP 配置，仅当此连接使用 XHTTP 时有效。
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 

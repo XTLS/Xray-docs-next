@@ -4,6 +4,10 @@
 
 WebSocket 连接可以被其它 HTTP 服务器（如 Nginx）分流，也可以被 VLESS fallbacks path 分流。
 
+::: danger
+**推荐换用 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113)，以避免 WebSocket “ALPN 是 http/1.1” 等显著流量特征。**
+:::
+
 ::: tip
 Websocket 会识别 HTTP 请求的 X-Forwarded-For 头来覆写流量的源地址，优先级高于 PROXY protocol。
 :::

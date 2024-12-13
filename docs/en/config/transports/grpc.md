@@ -6,6 +6,10 @@ gRPC is based on the HTTP/2 protocol and can theoretically be relayed by other s
 
 gRPC and HTTP/2 has built-in multiplexing, so it is not recommended to enable `mux.cool` when using gRPC or HTTP/2.
 
+::: danger
+**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113), whose advantages over gRPC are noted in the STREAM-UP/ONE section.**
+:::
+
 ::: warning ⚠⚠⚠
 
 - gRPC doesn't support specifying the Host. Please enter the **correct domain name** in the outbound proxy address, or fill in `ServerName` in `(x)tlsSettings`, otherwise connection cannot be established.

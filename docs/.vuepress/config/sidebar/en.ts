@@ -63,13 +63,12 @@ export const sidebarEn: SidebarConfig = {
     {
       text: 'transport',
       children: [
-        '/en/config/transports/grpc.md',
-        '/en/config/transports/h2.md',
+        '/en/config/transports/raw.md',
+        '/en/config/transports/xhttp.md',
         '/en/config/transports/mkcp.md',
-        '/en/config/transports/tcp.md',
+        '/en/config/transports/grpc.md',
         '/en/config/transports/websocket.md',
         '/en/config/transports/httpupgrade.md',
-        '/en/config/transports/splithttp.md'
       ],
     },
   ],

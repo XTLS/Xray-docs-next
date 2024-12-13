@@ -10,17 +10,16 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
 
 ```json
 {
-  "network": "tcp",
+  "network": "raw",
   "security": "none",
   "tlsSettings": {},
   "realitySettings": {},
-  "tcpSettings": {},
-  "kcpSettings": {},
-  "wsSettings": {},
-  "httpSettings": {},
-  "grpcSettings": {},
-  "httpupgradeSettings": {},
+  "rawSettings": {},
   "xhttpSettings": {},
+  "kcpSettings": {},
+  "grpcSettings": {},
+  "wsSettings": {},
+  "httpupgradeSettings": {},
   "sockopt": {
     "mark": 0,
     "tcpMaxSeg": 1440,
@@ -42,9 +41,13 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
 }
 ```
 
-> `network`: "tcp" | "kcp" | "ws" | "http" | "grpc" | "httpupgrade" | "xhttp"
+> `network`: "raw" | "xhttp" | "kcp" | "grpc" | "ws" | "httpupgrade"
 
-The underlying protocol of the transport used by the data stream of the connection, defaulting to `"tcp"`.
+The underlying protocol of the transport used by the data stream of the connection, defaulting to `"raw"`.
+
+::: tip
+After v24.9.30, the TCP transport has been renamed to RAW to more closely match actual behavior. `"network": "raw"` and `"network": "tcp"`, `rawSettings` and `tcpSettings` are aliases for each other for compatibility.
+:::
 
 > `security`: "none" | "tls" | "reality"
 
@@ -66,33 +69,29 @@ Configures REALITY. REALITY is a piece of advanced encryption technology develop
 REALITY is by far the most secure transport encryption solution, perfectly mimicking normal web browsing when observed. Enabling REALITY with appropriate XTLS Vision flow control schemes has the potential of reaching magnitudes of performance boosts.
 :::
 
-> `tcpSettings`: [TcpObject](./transports/tcp.md)
+> `rawSettings`: [RawObject](./transports/raw.md)
 
-Configures the current TCP connection. Valid only when TCP is used. Same schema as global.
+Configures the current RAW connection. Valid only when RAW is used. Same schema as global.
+
+> `xhttpSettings`: [XHTTP: Beyond REALITY](https://github.com/XTLS/Xray-core/discussions/4113)
+
+Configures XHTTP connections. Valid only when XHTTP is used. Same schema as global.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
 Configures the current mKCP connection. Valid only when mKCP is used. Same schema as global.
 
-> `wsSettings`: [WebSocketObject](./transports/websocket.md)
-
-Configures the current WebSocket connection. Valid only when WebSocket is used. Same schema as global.
-
-> `httpSettings`: [HttpObject](./transports/h2.md)
-
-Configures the current HTTP/2 connection. Valid only when HTTP/2 is used. Same schema as global.
-
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
 Configures the current gRPC connection. Valid only when gRPC is used. Same schema as global.
 
+> `wsSettings`: [WebSocketObject](./transports/websocket.md)
+
+Configures the current WebSocket connection. Valid only when WebSocket is used. Same schema as global.
+
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
 Configures the current HTTPUpgrade connection. Valid only when HTTPUpgrade is used. Same schema as global.
-
-> `xhttpSettings`: [XHttpObject](./transports/splithttp.md)
-
-Configures XHTTP connections. Valid only when XHTTP is used. Same schema as global.
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 

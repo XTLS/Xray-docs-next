@@ -14,7 +14,7 @@ However, there are many drawbacks:
 
 * The user has to launch a browser next to the Xray client just for opening the proxy connection.
 * The browser dialer must not be tunneled through the proxy itself, otherwise there is a loop. TUN users should be cautious.
-* The browser can only speak standard HTTP, which means that only [WebSocket](../../transports/websocket.md) and [XHTTP](../../transports/splithttp.md) are supported
+* The browser can only speak standard HTTP, which means that only [WebSocket](../../transports/websocket.md) and [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) are supported
 * [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) needs to be considered when making requests from one website (`localhost:8080`) to another (`proxy.example.com:443`)
 * The browser tunnels your traffic using JavaScript, so there is a significant performance penalty (or, battery drain)
 * The configuration to be used with browser dialer cannot use custom SNI or host headers. `SNI == host == address`. Custom HTTP headers and `tlsSettings` are ignored entirely.
@@ -48,6 +48,6 @@ According to the browser's needs, the early data mechanism has been adjusted as 
 
 <Badge text="v1.8.19+" type="warning"/>
 
-XHTTP supports QUIC, but the browser's own QUIC stack may be used as well. In Chrome this can be done through `chrome://flags`, in other browsers it may already be enabled or need a different flag.
+[XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) supports QUIC, but the browser's own QUIC stack may be used as well. In Chrome this can be done through `chrome://flags`, in other browsers it may already be enabled or need a different flag.
 
 In general, `tlsSettings` are completely ignored when Browser Dialer is used. Xray does not have any control over which HTTP version the browser selects.

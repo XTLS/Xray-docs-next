@@ -4,6 +4,10 @@ A WebSocket-like transport protocol implementing the HTTP/1.1 upgrade and respon
 
 Standalone usage is not recommended, but rather in conjunction with other security protocols like TLS.
 
+::: danger
+**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) to avoid significant traffic characteristics such as HTTPUpgrade "ALPN is http/1.1".**
+:::
+
 ## HttpUpgradeObject
 
 The `HttpUpgradeObject` corresponds to the `httpupgradeSettings` section under transport configurations.

@@ -4,6 +4,10 @@ Uses standard WebSocket for data transmission.
 
 WebSocket connections can be proxied by other web servers (like NGINX) or by VLESS fallback paths.
 
+::: danger
+**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) to avoid significant traffic characteristics such as WebSocket "ALPN is http/1.1".**
+:::
+
 ::: tip
 WebSocket inbounds will parse the `X-Forwarded-For` header received, overriding the source address with a higher priority than the source address got from PROXY protocol.
 :::

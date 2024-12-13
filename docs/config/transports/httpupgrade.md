@@ -3,6 +3,10 @@
 一个实现了类似于 WebSocket 进行 HTTP 1.1 升级请求和响应的协议，这使得它可以像 WebSocket 一样可以被CDN或者Nginx进行反代，但无需实现 WebSocket 协议的其他部分，所以具有更高的效率。
 其设计不推荐单独使用，而是和TLS等安全协议一起工作。
 
+::: danger
+**推荐换用 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113)，以避免 HTTPUpgrade “ALPN 是 http/1.1” 等显著流量特征。**
+:::
+
 ## HttpUpgradeObject
 
 `HttpUpgradeObject` 对应传输配置的 `httpupgradeSettings` 项。
