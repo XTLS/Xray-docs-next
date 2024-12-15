@@ -5,7 +5,7 @@
 Его дизайн не рекомендуется для самостоятельного использования, а лучше всего работает в сочетании с TLS.
 
 ::: danger
-**Рекомендуется переключиться на [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113), чтобы избежать значительных характеристик трафика, таких как HTTPUpgrade «ALPN is http/1.1».**
+**Рекомендуется переключиться на [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113#discussioncomment-11468947), чтобы избежать значительных характеристик трафика, таких как HTTPUpgrade «ALPN is http/1.1».**
 :::
 
 ## HttpUpgradeObject

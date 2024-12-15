@@ -5,7 +5,7 @@
 gRPC (HTTP/2) имеет встроенное мультиплексирование, не рекомендуется включать mux.cool при использовании gRPC и HTTP/2.
 
 ::: danger
-**Рекомендуется перейти на [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113), преимущества которого перед gRPC отмечены в разделе STREAM-UP/ONE.**
+**Рекомендуется перейти на [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113#discussioncomment-11468947), преимущества которого перед gRPC отмечены в разделе STREAM-UP/ONE.**
 :::
 
 ::: warning ⚠⚠⚠
