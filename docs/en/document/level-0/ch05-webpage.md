@@ -35,16 +35,22 @@ Now let's answer the second question:
    | :------: | :----------------: | :-----------------------: |
    | `cmd-10` | `mkdir` | Create a new folder |
    | `cmd-11` | `systemctl reload` | Reload a specific service |
+   | `cmd-12` | `usermod` | Modify user properties |
 
-2. Basic Linux configuration files for beginners:
+3. Basic Linux configuration files for beginners:
    | No. | Configuration File Location | File Description |
    | :-------: | :-------------------------: | :--------------------: |
    | `conf-02` | `/etc/nginx/nginx.conf` | Nginx program settings |
 
-3. Create a dedicated folder `/home/vpsadmin/www/webpage/` for the website and create the web page file `index.html`
+4. Create a dedicated folder `/home/vpsadmin/www/webpage/` for the website and create the web page file `index.html`
    ```shell
    mkdir -p ~/www/webpage/ && nano ~/www/webpage/index.html
    ```
+5. Add _nginx_ user to _ubuntu_ group:
+   ```shell
+   sudo usermod -aG vpsadmin www-data
+   ```
+   Since _nginx_ user is not part of the vpsadmin (your username) group by default, you'll need to add it explicitly. Otherwise, it will not have a permission to read the path in your home directory.
 
 ::: warning
 If you are not using the username `vpsadmin`, please be sure to understand the meaning of the "~" symbol in this command (this is related to Step 5 content):
@@ -53,7 +59,7 @@ If you are not using the username `vpsadmin`, please be sure to understand the m
 - If it is a **root user**, "~" is equivalent to `/root`
   :::
 
-4. Copy the entire content below, save (`ctrl+o`) and exit (`ctrl+x`).
+5. Copy the entire content below, save (`ctrl+o`) and exit (`ctrl+x`).
 
    ```html
    <html lang="">
@@ -94,7 +100,7 @@ If you are not using the username `vpsadmin`, please be sure to understand the m
    </html>
    ```
 
-5. Modify `nginx.conf` and restart the `Nginx` service, directing the http access on port 80 to the newly created `html` page.
+6. Modify `nginx.conf` and restart the `Nginx` service, directing the http access on port 80 to the newly created `html` page.
 
    1. Modify `nginx.conf`.
 
@@ -140,14 +146,14 @@ Then why do some students still get stuck at this step, and the web page just wo
 I. Two types of issues:
 
 - In `nginx.conf`, the `/home/vpsadmin/www/webpage` does not match the actual file path; `nginx` cannot find the file
-- The path is correct, but `nginx` doesn't have permission to access it
+- The path is correct, but `nginx` doesn't have permission to access it (see Step 4 of Section 5.3)
 
 II. Two reasons:
 
 - Use a **non-root user** but still directly copy the commands in the text without modification. (This is basically like copying the name of another student when copying answers)
 - Insist on using a **root user**
 
-If you encounter any errors, please carefully review the explanations in Steps 3 and 5-2 of Section 5.3.
+If you encounter any errors, please carefully review the explanations in Steps 3, 4 and 6-2 of Section 5.3.
 
 ::: warning
 In the early stages of this article, a lot of space has been devoted to explaining the importance of using a **non-root user** for security, and the entire article is written based on this premise. So, issues caused by using a **root user** are not within the scope of this article.
