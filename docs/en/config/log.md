@@ -4,6 +4,10 @@ Log configuration controls how Xray outputs logs.
 
 Xray has two types of logs: access logs and error logs. You can configure the output method for each type of log separately.
 
+::: tip
+The log configuration is not applied immediately. This means that you may see some log entries made by an unconfigured logger during startup. For example, you may see several `"info"` log entries while you have configured a `"warning"` log level.
+:::
+
 ## LogObject
 
 LogObject corresponds to the `log` item in the configuration file.
@@ -34,17 +38,26 @@ The file path for the error log. The value is a valid file path, such as `"/var/
 
 > `loglevel`: "debug" | "info" | "warning" | "error" | "none"
 
-The log level for error logs, indicating the information that needs to be recorded. The default value is `"warning"`.
+The log level for error logs, indicating the information that needs to be recorded. The default value is `"warning"`. Note that this setting applies to the error log only. It doesn't affect the access log (except for `"none"` value). The access log doesn't have log levels.
 
 - `"debug"`: Output information used for debugging the program. Includes all `"info"` content.
 - `"info"`: Runtime status information, etc., which does not affect normal use. Includes all `"warning"` content.
 - `"warning"`: Information output when there are some problems that do not affect normal operation but may affect user experience. Includes all `"error"` content.
 - `"error"`: Xray encountered a problem that cannot be run normally and needs to be resolved immediately.
-- `"none"`: Do not record any content.
+- `"none"`: Disable all logs.
 
 > `dnsLog`: bool
 
-Whether to enable DNS query logs, for example: `DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`.
+Log DNS queries made by built-in [DNS clients](./dns.md) to the access log. Example log record: `DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`.
+
+::: tip
+1. Xray doesn't perform all DNS queries via its built-in clients. Therefore, enabling this option doesn't mean that all DNS queries performed by Xray will be logged.
+
+2. DNS queries made by built-in [DNS clients](./dns.md) are also logged to the error log (with "Info" level) even if this option is disabled.
+3. 
+4. FakeDNS client queries are never logged to the access log.
+:::
+
 
 > `maskAddress`: "quarter" | "half" | "full"
 
