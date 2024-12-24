@@ -50,45 +50,14 @@ The log level for error logs, indicating the information that needs to be record
 
 Log DNS queries made by built-in [DNS clients](./dns.md) to the access log. Example log record: `DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`.
 
-::: tip TIP 1
-Xray doesn't perform all DNS queries via its built-in clients. Therefore, enabling this option doesn't mean that all DNS queries performed by Xray will be logged.
+::: tip
+1. Xray doesn't perform all DNS queries via its built-in clients. Therefore, enabling this option doesn't mean that all DNS queries performed by Xray will be logged.
+
+2. DNS queries made by built-in [DNS clients](./dns.md) are also logged to the error log (with "Info" level) even if this option is disabled.
+3. 
+4. FakeDNS client queries are never logged to the access log.
 :::
 
-::: tip TIP 2
-DNS queries made by built-in [DNS clients](./dns.md) are also logged to the error log (with "Info" level) even if this option is disabled.
-:::
-
-::: tip TIP 3
-FakeDNS client queries are never logged to the access log.
-:::
-
-Below is a client config example that allows you to see DNS logs. No server needed.
-
-```json
-{
-  "log": {
-    "dnsLog": true
-  },
-  "dns": {
-    "servers": ["https://1.1.1.1/dns-query"]
-  },
-  "inbounds": [
-    {
-      "listen": "0.0.0.0",
-      "port": 1984,
-      "protocol": "socks"
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
-      }
-    }
-  ]
-}
-```
 
 > `maskAddress`: "quarter" | "half" | "full"
 
