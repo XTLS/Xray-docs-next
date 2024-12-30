@@ -220,11 +220,13 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 一个字符串数组，其中每一个字符串将用于和 outbound 标识的前缀匹配。在以下几个 outbound 标识中：`[ "a", "ab", "c", "ba" ]`，`"selector": ["a"]` 将匹配到 `[ "a", "ab" ]`。
 
-如果匹配到多个 outbound，负载均衡器目前会从中随机选出一个作为最终的 outbound。
+一般匹配到多个 outbound，使他们均衡的承担负载。
 
 > `fallbackTag`: string
 
-如果负载均衡器无法选出合适的 outbound，则使用这个配置项指定的 outbound。
+如果根据连接观测结果所有 outbound 都无法连接，则使用这个配置项指定的 outbound。
+
+注意：需要添加 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项
 
 > `strategy`: [StrategyObject](#strategyobject)
 
@@ -239,13 +241,61 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 - `random` 默认值。随机选择匹配到的出站代理。
 - `roundRobin` 按顺序选择匹配到的出站代理。
-- `leastPing` 根据连接观测结果选择延迟最小的匹配到的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 配置项。
-- `leastLoad` 根据连接观测结果选择最稳定的出站代理。需要添加 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
+- `leastPing` 根据连接观测结果选择延迟最小的匹配到的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
+- `leastLoad` 根据连接观测结果选择最稳定的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
 
 > `settings`: [StrategySettingsObject](#strategysettingsobject)
 
 ##### StrategySettingsObject
+
 这是一个可选配置项，不同负载均衡策略的配置格式有所不同。目前只有 `leastLoad` 负载均衡策略可以添加这个配置项。
+
+```json
+{
+    "expected": 2,
+    "maxRTT": "1s",
+    "tolerance": 0.01,
+    "baselines": ["1s"],
+    "costs": [{
+        "regexp": false,
+        "match": "tag",
+        "value": 0.5
+    }]
+}
+```
+
+> `expected`: number
+
+负载均衡器选出最优节点的个数，流量将在这几个节点中随机分配。
+
+> `maxRTT`: string
+
+最高可接受的测速 RTT 时长。
+
+> `tolerance`: float number
+
+最多可接受的测速失败比例，例如 0.01 指可接受百分之一测速失败。（似乎未实现）
+
+> `baselines`: \[ string \]
+
+最高可接受的测速 RTT 标准差时长。
+
+> `costs`: \[ CostObject \]
+
+可选配置项，一个数组，可以给所有出站指定权重。
+
+> `regexp`: true | false
+
+是否用正则表达式选择出站 `Tag`。
+
+> `match`: string
+
+匹配出站 `Tag`。
+
+> `value`: float number
+
+权重值，值越大，对应节点越不易被选中。
+
 
 ### 负载均衡配置示例
 
