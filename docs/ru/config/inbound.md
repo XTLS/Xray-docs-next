@@ -62,7 +62,7 @@
 Если указан только один порт, Xray будет прослушивать входящие подключения на этом порту.  
 Если указан диапазон портов, то фактическое поведение зависит от настройки `allocate`.
 
-> `protocol`: "dokodemo-door" | "http" | "shadowsocks" | "socks" | "vless" | "vmess" | "trojan" | "wireguard"
+> `protocol`: "dokodemo-door" | "http" | "shadowsocks" | "mixed" | "vless" | "vmess" | "trojan" | "wireguard"
 
 Название протокола подключения.  
 Список доступных протоколов см. в разделе "Входящие подключения" в левой части документации.
