@@ -1,4 +1,4 @@
-# Socks
+# Socks (Mixed)
 
 Стандартная реализация протокола Socks, совместимая с [Socks 4](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol), [Socks 4a](https://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4A.protocol) и Socks 5.
 
