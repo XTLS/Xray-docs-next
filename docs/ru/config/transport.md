@@ -576,8 +576,8 @@ x25519Kyber768Draft00
 Если в [Dokodemo-door](./inbounds/dokodemo.md) указано `followRedirect: true` и `tproxy` в настройках Sockopt пуст, то значение `tproxy` в настройках Sockopt будет установлено в `"redirect"`.
 :::
 
-> `domainStrategy`: "AsIs"<br>
-> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"<br>
+> `domainStrategy`: "AsIs"
+> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
 > "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
 

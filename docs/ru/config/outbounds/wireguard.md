@@ -126,7 +126,7 @@ MTU нижнего уровня tun в Wireguard.
 
 Адрес сервера. Обязательное поле.
 
-Формат URL:порт, например, `engage.cloudflareclient.com:2408`.<br>
+Формат URL:порт, например, `engage.cloudflareclient.com:2408`.
 Формат IP:порт, например, `162.159.192.1:2408` или `[2606:4700:d0::a29f:c001]:2408`.
 
 > `publicKey`: string

@@ -25,8 +25,8 @@ Freedom — это исходящий протокол, который можн�
 }
 ```
 
-> `domainStrategy`: "AsIs"<br>
-> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"<br>
+> `domainStrategy`: "AsIs"
+> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
 > "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
 Значение по умолчанию — `"AsIs"`.

@@ -60,7 +60,7 @@
 
 Например, с помощью [luci-app-xray](https://github.com/yichya/luci-app-xray) вы, скорее всего, получите результат, подобный этому (стандартные переменные expvar, такие как `cmdline` и `memstats`, опущены):
 
-<details><summary>Показать</summary><br>
+<details><summary>Показать</summary>
 
 ```json
 {
@@ -156,7 +156,7 @@
 1. Отредактируйте соответствующий файл конфигурации (`sudo /etc/netdata/edit-config python.d/go_expvar.conf`).
 2. Используйте следующий файл конфигурации в качестве примера:
 
-<details><summary>Показать</summary><br>
+<details><summary>Показать</summary>
 
 ```
 xray:

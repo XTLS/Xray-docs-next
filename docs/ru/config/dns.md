@@ -183,10 +183,11 @@ DNS-запросы, отправляемые встроенным DNS-серве
 Если параметр `"queryStrategy"` не указан в дочернем элементе, используется значение глобального параметра `"queryStrategy"`. Поведение аналогично версиям Xray-core до v1.8.6.
 :::
 
-Например:<br>
-Глобальное значение `"queryStrategy": "UseIPv6"` конфликтует с дочерним значением `"queryStrategy": "UseIPv4"`.<br>
-Глобальное значение `"queryStrategy": "UseIPv4"` конфликтует с дочерним значением `"queryStrategy": "UseIPv6"`.<br>
-Глобальное значение `"queryStrategy": "UseIP"` не конфликтует с дочерним значением `"queryStrategy": "UseIPv6"`.<br>
+Например:
+
+Глобальное значение `"queryStrategy": "UseIPv6"` конфликтует с дочерним значением `"queryStrategy": "UseIPv4"`.
+Глобальное значение `"queryStrategy": "UseIPv4"` конфликтует с дочерним значением `"queryStrategy": "UseIPv6"`.
+Глобальное значение `"queryStrategy": "UseIP"` не конфликтует с дочерним значением `"queryStrategy": "UseIPv6"`.
 Глобальное значение `"queryStrategy": "UseIP"` не конфликтует с дочерним значением `"queryStrategy": "UseIPv4"`.
 
 ```json
