@@ -257,6 +257,18 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
 
 当值是 `fakedns` 时，将使用 FakeDNS 功能进行查询。
 
+::: tip 关于 local 模式和 DNS 服务器本身的域名
+由 DNS 模块发出的 DNS 请求有两种情况
+
+local 模式将直接由核心向外连接，这种情况下如果地址是一个域名将交由系统本身进行解析，逻辑较为简单
+
+非 local 默认将视为一个从 tag 为 dns.tag(不知道在哪？ 浏览器 ctrl+f 搜索 `inboundTag`) 的入站进来的请求，将经过正常的核心处理流程，可能会被路由模块分配去本地 freedom 或者其他远端出站，它将被 freedom 的 domainStrategy解析(注意可能的回环) 或者直接以域名的形式被传送到远端根据服务端本身的解析方式解析。
+
+由于普通人可能难以理清其中的逻辑，建议(特别是在透明代理的环境下)，直接在 DNS 模块的 host 选项中直接为带域名的服务器设置它们对应的 IP 防止出现回环。
+
+顺便 DNS 模块非 local 模式发出的 DNS 请求将会自动在路由模块中跳过 IPIfNonMatch 和 IPOnDemand 的解析过程，防止它们的解析会被送回 DNS 模块导致回环。
+:::
+
 > `port`: number
 
 DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH、DOHL、DOQL 模式时该项无效，非标端口应在 URL 中指定。
