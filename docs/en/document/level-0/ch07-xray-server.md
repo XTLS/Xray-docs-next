@@ -544,13 +544,7 @@ sudo systemctl restart xray
 
 If you need more fallback functions, please refer to [《Fallbacks (fallbacks) Functional Analysis》](../level-1/fallbacks-lv1/)
 
-## 7.10 Your progress
-
-Congratulations!! At this point, you already have a server that can access the Internet normally and scientifically, and also have a disguised website that can prevent active detection attacks. Next, just install the appropriate software on your client and you can enjoy a smooth network!
-
-> ⬛⬛⬛⬛⬛⬛⬛⬜ 87.5%
-
-## 7.11 Important errata
+## 7.10 Important errata
 
 1. The folder location of the `Xray` configuration file `config.json` in the first version is wrong. If you have already operated according to the previous location, `Xray` will not start correctly. Therefore, the errata is explained here, please check it yourself, and I am very sorry for the inconvenience!
 
@@ -566,7 +560,12 @@ Affected sections:
 
 - Correct folder location: `root /home/vpsadmin/www/webpage;`
 - Wrong folder location: `root /var/www/website/html`
-
+- 
 Affected sections:
-
 - 7.8 Server Optimization 2 - 4. Add a local port listener at the same level as the `80` port to provide web page display
+
+## 7.11 Your progress
+
+Congratulations!! At this point, you already have a server that can access the Internet normally and scientifically, and also have a disguised website that can prevent active detection attacks. Next, just install the appropriate software on your client and you can enjoy a smooth network!
+
+> ⬛⬛⬛⬛⬛⬛⬛⬜ 87.5%
