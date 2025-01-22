@@ -43,7 +43,7 @@ On your PC (or phone), you need to run Xray with the following configuration:
 {
   "inbounds": [
     {
-      "port": 1080, // SOCKS代理端口，需要在浏览器中配置代理并指向该端口
+      "port": 1080, // SOCKS proxy port, you need to configure the proxy in the browser and point to this port
       "listen": "127.0.0.1",
       "protocol": "socks",
       "settings": {
@@ -57,8 +57,8 @@ On your PC (or phone), you need to run Xray with the following configuration:
       "settings": {
         "vnext": [
           {
-            "address": "server", // 服务器地址，请将其更改为您自己的服务器IP或域名
-            "port": 10086, // 服务器端口
+            "address": "server", // Server address, please change it to your own server IP or domain name
+            "port": 10086, // Server Port
             "users": [
               {
                 "id": "b831381d-6324-4d53-ad4f-8cda48b30811"
