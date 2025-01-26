@@ -68,7 +68,7 @@
   "source": ["10.0.0.1"],
   "user": ["love@xray.com"],
   "inboundTag": ["tag-vmess"],
-  "protocol": ["http", "tls", "bittorrent"],
+  "protocol": ["http", "tls", "quic", "bittorrent"],
   "attrs": { ":method": "GET" },
   "outboundTag": "direct",
   "balancerTag": "balancer",
@@ -159,9 +159,17 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 一个数组，数组内每一项是一个标识。当某一项匹配入站协议的标识时，此规则生效。
 
-> `protocol`: \[ "http" | "tls" | "bittorrent" \]
+> `protocol`: \[ "http" | "tls" | "quic" | "bittorrent" \]
 
 一个数组，数组内每一项表示一种协议。当某一个协议匹配当前连接的协议类型时，此规则生效。
+
+`http` 仅支持 1.0 和 1.1 暂不支持 h2. (明文h2流量也非常少见)
+
+`tls` TLS 1.0 ~ 1.3
+
+`quic` 由于该协议复杂性，嗅探有时可能失效。
+
+`bittorrent` 只有最基础的嗅探，对很多加密和混淆可能不会奏效。
 
 ::: tip
 必须开启入站代理中的 `sniffing` 选项, 才能嗅探出连接所使用的协议类型.
@@ -169,7 +177,7 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 > `attrs`: object
 
-一个 json object，键名字和值皆为字符串，用于检测流量的属性值。当 HTTP headers 包含所有指定的键，并且值包含指定的子字符串，则命中此规则。键大小写不敏感。值支持使用正则表达式。
+一个 json object，键名字和值皆为字符串，用于检测 HTTP 流量的属性值(由于显而易见的原因，只支持 1.0 和 1.1)。当 HTTP headers 包含所有指定的键，并且值包含指定的子字符串，则命中此规则。键大小写不敏感。值支持使用正则表达式。
 
 同时也支持类似 h2 的伪头部 `:method` 和 `:path` 用于匹配方法和路径(尽管在 HTTP/1.1 中是不存在这些 header 的)
 
