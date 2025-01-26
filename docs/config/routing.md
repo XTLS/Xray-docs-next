@@ -68,7 +68,7 @@
   "source": ["10.0.0.1"],
   "user": ["love@xray.com"],
   "inboundTag": ["tag-vmess"],
-  "protocol": ["http", "tls", "bittorrent"],
+  "protocol": ["http", "tls", "bittorrent", "quic"],
   "attrs": { ":method": "GET" },
   "outboundTag": "direct",
   "balancerTag": "balancer",
@@ -159,7 +159,7 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 一个数组，数组内每一项是一个标识。当某一项匹配入站协议的标识时，此规则生效。
 
-> `protocol`: \[ "http" | "tls" | "bittorrent" \]
+> `protocol`: \[ "http" | "tls" | "bittorrent" | "quic" \]
 
 一个数组，数组内每一项表示一种协议。当某一个协议匹配当前连接的协议类型时，此规则生效。
 
