@@ -114,6 +114,8 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 当值是 `"https://host:port/dns-query"` 的形式，如 `"https://dns.google/dns-query"`，Xray 会使用 `DNS over HTTPS` (RFC8484, 简称 DOH) 进行查询。有些服务商拥有 IP 别名的证书，可以直接写 IP 形式，比如 `https://1.1.1.1/dns-query`。也可使用非标准端口和路径，如 `"https://a.b.c.d:8443/my-dns-query"`
 
+当值是 `"h2c://host:port/dns-query"` 的形式，如 `"h2c://dns.google/dns-query"`，Xray 会使用  `DNS over HTTPS` 的请求格式但是将会以明文 h2c 发出请求，不能直接使用，在这种情况下需要自行配置 Freedom 出站 + streamSettings 设置 TLS 为其配置 TLS 以包装成正常的 DOH 请求。用于特殊目的，比如想要自定义 DOH 请求的 SNI 或者使用 utls 的指纹时使用
+
 当值是 `"https+local://host:port/dns-query"` 的形式，如 `"https+local://dns.google/dns-query"`，Xray 会使用 `DOH 本地模式 (DOHL)` 进行查询，即 DOH 请求不会经过路由组件，直接通过 Freedom outbound 对外请求，以降低耗时。一般适合在服务端使用。也可使用非标端口和路径。
 
 当值是 `"quic+local://host"` 的形式，如 `"quic+local://dns.adguard.com"`，Xray 会使用 `DNS over QUIC 本地模式 (DOQL)` 进行查询，即 DNS 请求不会经过路由组件，直接通过 Freedom outbound 对外请求。该方式需要 DNS 服务器支持 DNS over QUIC。默认使用 853 端口进行查询，可以使用非标端口。
