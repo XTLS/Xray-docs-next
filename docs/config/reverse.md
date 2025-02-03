@@ -5,9 +5,18 @@
 反向代理的大致工作原理如下:
 
 - 假设在主机 A 中有一个网页服务器，这台主机没有公网 IP，无法在公网上直接访问。另有一台主机 B，它可以由公网访问。现在我们需要把 B 作为入口，把流量从 B 转发到 A。
-- 在主机 A 中配置 Xray，称为`bridge`，在 B 中也配置 Xray，称为 `portal`。
-- `bridge` 会向 `portal` 主动建立连接，此连接的目标地址可以自行设定。`portal` 会收到两种连接，一是由 `bridge` 发来的连接，二是公网用户发来的连接。`portal` 会自动将两类连接合并。于是 `bridge` 就可以收到公网流量了。
-- `bridge` 在收到公网流量之后，会将其原封不动地发给主机 A 中的网页服务器。当然，这一步需要路由的协作。
+  - 在主机 B 中配置 Xray，接收外部请求，所以称为 `portal` （门户）。
+  - 在主机 A 中配置 Xray，负责将B的转发和网页服务器桥接起来，称为`bridge`。
+
+- `bridge`
+  - `bridge` 会向 `portal` 主动建立连接以注册反向通道，此连接的目标地址（domain）可以自行设定。
+  - `bridge` 在收到`portal`转发过来的公网流量之后，会将其原封不动地发给主机 A 中的网页服务器。当然，这一步需要路由模块的配置。
+  - `bridge` 收到响应后，也会将响应原封不动地返回给`portal`。
+
+- `portal`
+  - `portal` 收到请求且domain匹配，则说明是由 `bridge` 发来的响应数据，这种连接数据会直接返回给请求的公网用户。
+  - `portal` 收到请求，domain不配置，则说明是公网用户发来的连接，这种连接数据会转发给bridge
+
 - `bridge` 会根据流量的大小进行动态的负载均衡。
 
 ::: tip
@@ -22,19 +31,19 @@
 
 `ReverseObject` 对应配置文件的 `reverse` 项。
 
-```json
+```jsonc
 {
   "reverse": {
     "bridges": [
       {
         "tag": "bridge",
-        "domain": "test.xray.com"
+        "domain": "reverse-proxy.xray.internal"
       }
     ],
     "portals": [
       {
         "tag": "portal",
-        "domain": "test.xray.com"
+        "domain": "reverse-proxy.xray.internal"
       }
     ]
   }
@@ -51,10 +60,10 @@
 
 ### BridgeObject
 
-```json
+```jsonc
 {
   "tag": "bridge",
-  "domain": "test.xray.com"
+  "domain": "reverse-proxy.xray.internal"
 }
 ```
 
@@ -64,15 +73,15 @@
 
 > `domain`: string
 
-指定一个域名，`bridge` 向 `portal` 建立的连接，都会使用这个域名进行发送。
+指定一个域名，`bridge` 向 `portal` 建立的连接，都会借助这个域名进行发送。
 这个域名只作为 `bridge` 和 `portal` 的通信用途，不必真实存在。
 
 ### PortalObject
 
-```json
+```jsonc
 {
   "tag": "portal",
-  "domain": "test.xray.com"
+  "domain": "reverse-proxy.xray.internal"
 }
 ```
 
@@ -82,7 +91,7 @@
 
 > `domain`: string
 
-一个域名。当 `portal` 接收到流量时，如果流量的目标域名是此域名，则 `portal` 认为当前连接上 `bridge` 发来的通信连接。而其它流量则会被当成需要转发的流量。`portal` 所做的工作就是把这两类连接进行识别并拼接。
+一个域名。当 `portal` 接收到流量时，如果流量的目标域名是此域名，则 `portal` 认为当前连接上是 `bridge` 发来的通信连接。而其它流量则会被当成需要转发的流量。`portal` 所做的工作就是把这两类连接进行识别并做对应的转发。
 
 ::: tip
 一个 Xray 既可以作为 `bridge`，也可以作为 `portal`，也可以同时两者，以适用于不同的场景需要。
@@ -100,12 +109,12 @@
 
 反向代理配置:
 
-```json
-{
+```jsonc
+"reverse": {
   "bridges": [
     {
       "tag": "bridge",
-      "domain": "test.xray.com"
+      "domain": "reverse-proxy.xray.internal"
     }
   ]
 }
@@ -113,18 +122,20 @@
 
 outbound:
 
-```json
+```jsonc
 {
+  // 转发到网页服务器
   "tag": "out",
   "protocol": "freedom",
   "settings": {
-    "redirect": "127.0.0.1:80" // 将所有流量转发到网页服务器
+    "redirect": "127.0.0.1:80"
   }
 }
 ```
 
-```json
+```jsonc
 {
+  // 转发到 portal
   "protocol": "vmess",
   "settings": {
     "vnext": [
@@ -145,16 +156,20 @@ outbound:
 
 路由配置:
 
-```json
+```jsonc
 {
   "rules": [
     {
+      // 如果是带 bridge 标签，且域名为配置的域名，那么说明流量来自网页服务器，
+      // 则转发到 interconn，即转发给 portal
       "type": "field",
       "inboundTag": ["bridge"],
-      "domain": ["full:test.xray.com"],
+      "domain": ["full:reverse-proxy.xray.internal"],
       "outboundTag": "interconn"
     },
     {
+      // 从 portal 过来的流量，会经过bridge模块，带上bridge标签，且不带上面的domain
+      // 则转发到 out，即转发给网页服务器
       "type": "field",
       "inboundTag": ["bridge"],
       "outboundTag": "out"
@@ -169,12 +184,12 @@ outbound:
 
 反向代理配置:
 
-```json
-{
+```jsonc
+"reverse": {
   "portals": [
     {
       "tag": "portal",
-      "domain": "test.xray.com" // 必须和 bridge 的配置一样
+      "domain": "reverse-proxy.xray.internal" // 必须和 bridge 的配置一样
     }
   ]
 }
@@ -182,8 +197,9 @@ outbound:
 
 inbound:
 
-```json
+```jsonc
 {
+  // 直接接收来自公网的请求
   "tag": "external",
   "port": 80,
   "protocol": "dokodemo-door",
@@ -195,10 +211,11 @@ inbound:
 }
 ```
 
-```json
+```jsonc
 {
-  "port": 1024,
+  // 接收来自 bridge 的请求
   "tag": "interconn",
+  "port": 1024,
   "protocol": "vmess",
   "settings": {
     "clients": [
@@ -212,15 +229,20 @@ inbound:
 
 路由配置:
 
-```json
+```jsonc
 {
   "rules": [
     {
+      // 如果带 external 标签，说明是来自公网的请求，
+      // 则转发到 portal 模块，最终会转发给 bridge
       "type": "field",
       "inboundTag": ["external"],
       "outboundTag": "portal"
     },
     {
+      // 如果带 interconn 标签，说明是来自 bridge 的请求，
+      // 则转发到 portal 模块，最终会转发给对应的公网客户端
+      // 注意：这儿的流量带上了前文配置的domain，所以能够区分
       "type": "field",
       "inboundTag": ["interconn"],
       "outboundTag": "portal"
