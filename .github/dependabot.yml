@@ -13,3 +13,7 @@ updates:
       - dependency-name: "vue" #https://github.com/XTLS/Xray-docs-next/pull/465
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
