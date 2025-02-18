@@ -4,61 +4,42 @@
 
 ## 相关配置
 
-可以在 inbounds 配置中增加一个 metrics 的 inbound
-
-```json
-    "inbounds": [
-        {
-            "listen": "127.0.0.1",
-            "port": 11111,
-            "protocol": "dokodemo-door",
-            "settings": {
-                "address": "127.0.0.1"
-            },
-            "tag": "metrics_in"
-        }
-    ]
-```
-
-在路由配置中增加针对 metrics inbound 的路由规则
-
-```json
-    "routing": {
-        "rules": [
-            {
-                "type": "field",
-                "inboundTag": [
-                    "metrics_in"
-                ],
-                "outboundTag": "metrics_out"
-            }
-        ]
-    }
-```
-
 在基础配置中增加 metrics
 
 ```json
     "metrics": {
-        "tag": "metrics_out"
+        "tag": "Metrics",
+        "listen": "127.0.0.1:11111"
     }
 ```
+
+> `tag`: string
+
+metrics 对应的出站代理 tag, 通过设置任意门入站+路由将任意门指向此出站即可通过该任意门访问。
+
+> `listen`: string
+
+更简单的方法，直接监听一个地址端口提供服务。
+
+设置该字段时若 tag 为空会自动设置为 `Metrics`, 如果二者均未设置核心会启动失败。
 
 ## 使用方法
 
 ### pprof
 
-Access `http://127.0.0.1:11111/debug/pprof/` or use go tool pprof to start profiling or inspect running goroutines.
+访问 `http://127.0.0.1:11111/debug/pprof/` 或者使用 go tool pprof 进行调试。
+
+反馈内存占用过多/内存泄露问题需要提供 `/debug/pprof/heap` 的文件
 
 ### expvars
 
-Access `http://127.0.0.1:11111/debug/vars`
+访问 `http://127.0.0.1:11111/debug/vars`
 
-Variables exported include:
-* `stats` includes statistics about inbounds, outbounds and users
-* `observatory` includes observatory results
+包含的变量:
+* `stats` 包括所有的 inbound outbound user 数据
+* `observatory` 包含了 observatory 观测结果
 
-for example with [luci-app-xray](https://github.com/yichya/luci-app-xray) you are likely to get a result like this (standard expvar things like `cmdline` and `memstats` are omitted)
+例如在 [luci-app-xray](https://github.com/yichya/luci-app-xray) 你可以得到这样的输出 (省略了 cmdline 和 memstats 等标准expvar内容)
 
 <details><summary>点击查看</summary><br>
 
@@ -151,10 +132,10 @@ for example with [luci-app-xray](https://github.com/yichya/luci-app-xray) you ar
 ```
 </details>
 
-To get a better view of these numbers, [Netdata](https://github.com/netdata/netdata) (with python.d plugin) is a great option:
+为了得到更好的可视化输出, 可以使用 [Netdata](https://github.com/netdata/netdata) (with python.d plugin):
 
-1. Edit related configuration file (`sudo /etc/netdata/edit-config python.d/go_expvar.conf`)
-2. Take the following configuration file as an example:
+1. 编辑相关配置文件 (`sudo /etc/netdata/edit-config python.d/go_expvar.conf`)
+2. 使用下面这样的实力配置:
 
 <details><summary>点击查看</summary><br>
 
@@ -265,11 +246,6 @@ xray:
 ```
 </details>
 
-And you will get a nice plot like this:
+你可以得到类似这样的结果:
 
 ![160428235-2988bf69-5d6c-41ec-8267-1bd512508aa8](https://github.com/chika0801/Xray-docs-next/assets/88967758/455e88ce-ced2-4593-a9fa-425bb293215b)
-
-### Additional
-Maybe reusing the empty object `stats` in config file is better than adding `metrics` here?
-
-**Edit:** removed prometheus related things and added usage about expvars
