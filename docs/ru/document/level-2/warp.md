@@ -60,6 +60,7 @@ bash -c "$(curl -L warp-reg.vercel.app)"
 }
 ```
 2. Скопируйте вывод.
+
 #### Метод 3:
 1. Используйте [wgcf-cli](https://github.com/ArchiveNetwork/wgcf-cli).  Запустите следующие команды для установки:
 ```
@@ -89,24 +90,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 }
 ```
 - Полный файл будет сохранен в файле `wgcf.json` в рабочем каталоге.
-3. Если у вас есть ключ Warp+, вы можете привязать его, запустив `wgcf-cli license -l [ключ]`.
-- (Ключ можно получить, отправив `/keyget@getwarpplusbot` в [нашем чате](https://t.me/projectXray/)).  
-    Вывод:
-```json
-❯ wgcf-cli license -l 9zs5I61a-l9j8m7T5-4pC6k20X
-{
-    "id": "cd7f4695-e9ef-4bb0-b412-5f4d84919db7",
-    "created": "0001-01-01T00:00:00Z",
-    "updated": "2023-12-14T12:32:18.689777921Z",
-    "premium_data": 0,
-    "quota": 0,
-    "warp_plus": true,
-    "referral_count": 0,
-    "referral_renewal_countdown": 0,
-    "role": "child"
-}
-```
-4. Запустите `wgcf-cli generate --xray`, чтобы создать исходящий WireGuard.  
+3.  Запустите `wgcf-cli generate --xray`, чтобы создать исходящий WireGuard.  
     Содержимое будет сохранено в файле `wgcf.json.xray.json`.
 - Пример файла:
 ```json
