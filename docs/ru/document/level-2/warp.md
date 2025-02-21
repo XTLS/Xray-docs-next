@@ -48,7 +48,7 @@ bash -c "$(curl -L warp-reg.vercel.app)"
 {
     "endpoint":{
        "v4": "162.159.192.7",
-       "v6": "[2606:4700:d0::a29f:c007]",
+       "v6": "[2606:4700:d0::a29f:c007]"
     },
     "reserved_dec": [35, 74, 190],
     "reserved_hex": "0x234abe",
