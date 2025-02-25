@@ -288,6 +288,12 @@ x25519Kyber768Draft00
 更多信息请参考 [REALITY 项目](https://github.com/XTLS/REALITY).
 :::
 
+::: tip
+Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机的 session id 和自定义证书验证即可，理论上与大多数 TLS 组合完全兼容。
+
+但这并不适用于 QUIC, 因为 Reality 需要修改的 session id 字段在几乎所有 TCP TLS 的实现上出于兼容目的全部是随机数，但是在 QUIC TLS 上该字段为 0 长度，没有修改的空间。
+:::
+
 > `show` : true | false
 
 当值为 `true` 时，输出调试信息。
