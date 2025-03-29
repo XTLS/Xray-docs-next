@@ -276,6 +276,12 @@ x25519Kyber768Draft00
   "maxClientVer": "",
   "maxTimeDiff": 0,
   "shortIds": ["", "0123456789abcdef"],
+  "limitUploadRate": 0,
+  "limitUploadBrust": 0,
+  "limitUploadAfter": 0,
+  "limitDownloadRate": 0,
+  "limitDownloadBrust": 0,
+  "limitDownloadAfter": 0,
   "fingerprint": "chrome",
   "serverName": "",
   "publicKey": "",
@@ -311,7 +317,9 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 ::: warning
 为了伪装的效果考虑，Xray对于鉴权失败（非合法reality请求）的流量，会**直接转发**至 target.
 如果 target 网站的 IP 地址特殊（如使用了 CloudFlare CDN 的网站） 则相当于你的服务器充当了 CloudFlare 的端口转发，可能造成被扫描后偷跑流量的情况。
+
 为了杜绝这种情况，可以考虑前置Nginx等方法过滤掉不符合要求的SNI。
+或者你也考虑配置 `limit****` 相关参数，限制其速率。
 :::
 
 > `xver` : number
@@ -349,6 +357,53 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 格式要求见 `shortId`
 
 若包含空值，客户端 `shortId` 可为空。
+
+::: warning
+警告：对于 REALITY 最佳实践始终是偷同 ASN 的证书，那么你大概率用不到此功能；只有当你迫不得已偷了 CDN 证书时，为避免成为别人加速节点时可考虑开启此功能。
+
+启用限速可能会引入新的特征被GFW探测到！如果您是GUI/面板/一键脚本开发者，请务必让这些参数随机化！
+:::
+
+::: tip
+下列六个 `limit****` 为选填，可对回落的 REALITY 连接限速。默认为 0 即不启用。
+
+原理：当传输了after减去brust字节后开启限速算法。
+限速采用令牌桶算法，桶的容量是brust，每传输一个字节用掉一个token，初始brust是满的。
+每秒以rate个token填充桶，直到容量满。
+
+举例：`after=10485760`, `brust=5242880`, `rate=1048576` 代表传输`10mb`后开始限速为`1mb/s`，如果暂停传输，5秒后能突发到`5mb/s`，然后又恢复到`1mb/s`。
+
+建议：过大的`after`和`brust`将起不到限速效果，过小的`rate`和`brust`则十分容易被探测。
+应结合被偷网站的资源大小合理设置参数，如果不允许突发，可以把`brust`设为和`rate`一样。
+:::
+
+> `limitUploadRate` : number
+
+选填，对回落的 REALITY 连接限速，限制上传基准速率（字节/秒）
+不能大于 `limitUploadBrust`
+
+> `limitUploadBrust` : number
+
+选填，对回落的 REALITY 连接限速，限制上传突发速率（字节/秒）
+不能小于 `limitUploadRate`
+
+> `limitUploadAfter` : number
+
+选填，对回落的 REALITY 连接限速，限制上传指定字节后开始限速。
+
+> `limitDownloadRate` : number
+
+选填，对回落的 REALITY 连接限速，限制下载基准速率（字节/秒）
+不能大于 `limitDownloadBrust`
+
+> `limitDownloadBrust` : number
+
+选填，对回落的 REALITY 连接限速，限制下载突发速率（字节/秒）
+不能小于 `limitDownloadRate`
+
+> `limitDownloadAfter` : number
+
+选填，对回落的 REALITY 连接限速，限制下载指定字节后开始限速。
 
 ::: tip
 以下为**出站**（**客户端**）配置。
