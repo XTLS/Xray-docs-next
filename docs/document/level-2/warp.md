@@ -84,7 +84,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 }
 ```
 - 完整文件将会保存到工作目录的 `wgcf.json` 内。
-3. 运行 `wgcf-cli generate --xray` 来生成一个WireGurad出站，他会将内容保存到 `wgcf.xray.json` 内
+3. 运行 `wgcf-cli generate --xray` 来生成一个WireGuard出站，他会将内容保存到 `wgcf.xray.json` 内
 - 示例文件：
 ```json
 {
@@ -117,7 +117,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 ```
 ## 在服务端分流回国流量至 warp
 
-在现有出站中新增一个 WireGurad 出站
+在现有出站中新增一个 WireGuard 出站
 
 ```json
 {
