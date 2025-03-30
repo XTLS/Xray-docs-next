@@ -230,14 +230,21 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
 
 ```json
 {
+  "tag": "dns-tag",
   "address": "1.2.3.4",
   "port": 5353,
   "domains": ["domain:xray.com"],
   "expectIPs": ["geoip:cn"],
   "skipFallback": false,
-  "clientIP": "1.2.3.4"
+  "clientIP": "1.2.3.4",
+  "timeoutMs": 4000,
+  "allowUnexpectedIPs": false
 }
 ```
+
+> `tag`: string
+
+该 DNS 服务器的 tag, 若设置，将使用该 tag 作为 inbound tag 发起请求(非 local 模式)，覆盖全局 tag 选项
 
 > `address`: address
 
@@ -290,3 +297,11 @@ DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH�
 > `skipFallback`: true | false
 
 `true`，在进行 DNS fallback 查询时将跳过此服务器, 默认为 `false`，即不跳过。
+
+> `timeoutMs`: number
+
+DNS 服务器超时时间，默认 4000 ms
+
+> `allowUnexpectedIPs`: bool
+
+若启用，当 `expectIPs` 过滤完 IP 后，若所有 IP 均不符合条件被过滤，仍然返回 IP，否则视为查询失败
