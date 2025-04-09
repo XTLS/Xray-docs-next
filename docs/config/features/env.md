@@ -34,18 +34,18 @@ Xray 提供以下环境变量以供修改 Xray 的一些底层配置。
 
 ## 其它可用的配置
 
--	xray.location.plugin
--	xray.location.tool
--	xray.location.cert
+- xray.location.plugin
+- xray.location.tool
+- xray.location.cert
 
--	xray.buf.readv
--	xray.buf.splice
--	xray.vmess.padding
--	xray.cone.disabled
+- xray.buf.readv
+- xray.buf.splice
+- xray.vmess.padding
+- xray.cone.disabled
 
--	xray.ray.buffer.size
--	xray.browser.dialer
--	xray.xudp.show
--	xray.xudp.basekey
+- xray.ray.buffer.size
+- xray.browser.dialer
+- xray.xudp.show
+- xray.xudp.basekey
 
 这些选项对高级用户开放，您可以阅读源代码来发现其用途。~PR Welcome~
