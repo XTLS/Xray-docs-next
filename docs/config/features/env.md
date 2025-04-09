@@ -29,3 +29,23 @@ Xray 提供以下环境变量以供修改 Xray 的一些底层配置。
 - 默认值：`""`。
 
 这个目录内的 `.json` 文件会按文件名顺序读取，作为多配置选项。
+
+此项优先级低于启动参数 `confdir`。
+
+## 其它可用的配置
+
+-	xray.location.plugin
+-	xray.location.tool
+-	xray.location.cert
+
+-	xray.buf.readv
+-	xray.buf.splice
+-	xray.vmess.padding
+-	xray.cone.disabled
+
+-	xray.ray.buffer.size
+-	xray.browser.dialer
+-	xray.xudp.show
+-	xray.xudp.basekey
+
+这些选项对高级用户开放，您可以阅读源代码来发现其用途。~PR Welcome~
