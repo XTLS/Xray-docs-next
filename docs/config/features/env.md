@@ -48,4 +48,4 @@ Xray 提供以下环境变量以供修改 Xray 的一些底层配置。
 - xray.xudp.show
 - xray.xudp.basekey
 
-这些选项对高级用户开放，您可以阅读源代码来发现其用途。~PR Welcome~
+这些选项对有特殊需求的用户开放，您可以阅读源代码来发现其用途。~PR Welcome~
