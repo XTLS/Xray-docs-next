@@ -41,6 +41,7 @@ Endpoint = <EndpointIP>:<Port>
 ```
 
 在 `[Interface]` 下添加如下命令：
+
 ```ini
 Table = <table>
 ### fwmark
@@ -59,13 +60,14 @@ PostDown = ip rule del oif %i lookup <table>
 PreUp = ip -6 rule add oif %i lookup <table>
 PostDown = ip -6 rule del oif %i lookup <table>
 ```
+
 ::: tip
+
 - 此配置文件融合了 `fwmark` / `sendThrough` / `sockopt.interface`，表示
-- 送入此设备 `%i` 的连接 / 送入此 `<IPv4/6>` 的连接 / `fwmark` 被标记为 `<mark>` 的连接  
+- 送入此设备 `%i` 的连接 / 送入此 `<IPv4/6>` 的连接 / `fwmark` 被标记为 `<mark>` 的连接
 - 将会使用 wireguard 进行转发
 - `%i` 是 wireguard 配置文件中的占位符，表示在启动时替换为这个设备的名称
-:::
-
+  :::
 
 保存
 
@@ -242,4 +244,5 @@ systemctl start wg-quick@wg0
 ## 感谢
 
 [XTLS/Xray-core](https://github.com/XTLS/Xray-core); [v2fly/v2ray-core](https://github.com/v2fly/v2ray-core); [WireGuard](https://www.wireguard.com/); [@p3terx](https://p3terx.com/); @w; @Hiram; @Luminous; @Ln; @JackChou;
+
 <!--剩下几位大佬我实在找不到他们的地址或Github空间，请大家帮忙找吧-->

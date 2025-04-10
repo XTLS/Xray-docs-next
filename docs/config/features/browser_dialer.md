@@ -9,14 +9,16 @@
 这个方法简洁的实现了真实的浏览器的 TLS 指纹、行为特征。最大程度抗检测与抗封锁。
 
 不过目前的浏览器转发有以下缺点：
-* 用户需要手动开浏览器
-* 浏览器发出的连接必须直连 使用 tun 的用户需要特别注意容易形成死循环
-* 浏览器只能发出 HTTP 连接 所以目前仅支持 [WebSocket](../../transports/websocket.md) 与 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) 传输方式
-* 当浏览器从 `localhost:8080` 页面连接至代理服务端，需要考虑 [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
-* 因为中间经过 JS 处理数据，会有一些性能损耗
-* 不能使用自定义 SNI 或者 Host，也就是说 `SNI == host == address`。自定义 HTTP 头以及其它 `tlsSettings` 项会被忽略
+
+- 用户需要手动开浏览器
+- 浏览器发出的连接必须直连 使用 tun 的用户需要特别注意容易形成死循环
+- 浏览器只能发出 HTTP 连接 所以目前仅支持 [WebSocket](../../transports/websocket.md) 与 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) 传输方式
+- 当浏览器从 `localhost:8080` 页面连接至代理服务端，需要考虑 [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+- 因为中间经过 JS 处理数据，会有一些性能损耗
+- 不能使用自定义 SNI 或者 Host，也就是说 `SNI == host == address`。自定义 HTTP 头以及其它 `tlsSettings` 项会被忽略
 
 ## 配置方法
+
 1. 准备一份 WebSocket 或 XHTTP 配置，注意 address 必须填域名，若需要指定 IP，请配置 DNS 或系统 hosts
 2. 使用环境变量启动 Xray `XRAY_BROWSER_DIALER=127.0.0.1:8080`。Windows 上命令为 `set XRAY_BROWSER_DIALER=127.0.0.1:8080` Linux 上命令为 `XRAY_BROWSER_DIALER=127.0.0.1:8080 ./xray -c config.json`
 3. 确保浏览器直连（或者在路由中将服务端地址直接由 `freedom` 发出），打开页面 `localhost:8080`，还可以 `F12` 看 `Console` 和 `Network`

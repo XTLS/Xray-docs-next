@@ -104,19 +104,19 @@ $ xray run -confdir /etc/xray/confs
 ```json
 {
   "log": {
-    "loglevel": "debug"  // 顶级对象覆盖前者
+    "loglevel": "debug" // 顶级对象覆盖前者
   },
   "inbounds": [
     {
       "tag": "socks", // tag 相同时覆盖前者
       "protocol": "socks",
       "listen": "127.0.0.1",
-      "port": 1080 
+      "port": 1080
     }
   ],
   "outbounds": [
     {
-      "tag": "block",  // outbounds 添加至最前
+      "tag": "block", // outbounds 添加至最前
       "protocol": "blackhole"
     },
     {

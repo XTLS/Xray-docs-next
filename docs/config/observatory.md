@@ -3,11 +3,10 @@
 连接观测组件使用 HTTPing 的方式探测出站代理的连接状态。观测结果可以被其他组件使用，如负载均衡器。目前有 [observatory](#observatoryobject) （后台连接观测）和 [burstObservatory](#burstobservatoryobject) （并发连接观测）两种。按需选择其中之一就行。
 
 ## ObservatoryObject
+
 ```json
 {
-  "subjectSelector":[
-    "outbound"
-  ],
+  "subjectSelector": ["outbound"],
   "probeUrl": "https://www.google.com/generate_204",
   "probeInterval": "10s",
   "enableConcurrency": false
@@ -32,11 +31,10 @@
 - `false` 逐个探测匹配的出站代理，每探测一个出站代理后暂停 `probeInterval` 设定的时间。
 
 ## BurstObservatoryObject
+
 ```json
 {
-  "subjectSelector":[
-    "outbound"
-  ],
+  "subjectSelector": ["outbound"],
   "pingConfig": {}
 }
 ```
@@ -47,8 +45,8 @@
 
 > `pingConfig`: [PingConfigObject](#PingConfigObject)
 
-
 ### PingConfigObject
+
 ```json
 {
   "destination": "https://connectivitycheck.gstatic.com/generate_204",

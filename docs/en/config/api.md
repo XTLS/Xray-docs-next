@@ -34,7 +34,6 @@ The IP and port that the API service listens on. This is an optional configurati
 
 When you omit this item, you need to add inbounds and routing configurations according to the examples in the [relevant configurations below](#related-configuration).
 
-
 > `services`: [string]
 
 List of enabled APIs, optional values can be found in [Supported API List](#supported-api-list).
@@ -84,7 +83,6 @@ Add api to basic configuration
 }
 ```
 
-
 ## Supported API List
 
 ### HandlerService
@@ -102,11 +100,11 @@ APIs that modify the inbound and outbound proxies, with the following available 
 
 API for adding, deleting, and replacing routing rules and querying equalizer statistics. The available functions are as follows:
 
-* `adrules` adds and replaces routing configuration
-* `rmrules` delete routing rules
-* `sib` Disconnect source IP
-* `bi` Query equalizer statistics
-* `bo` Forces the equalizer to select the specified outboundTag
+- `adrules` adds and replaces routing configuration
+- `rmrules` delete routing rules
+- `sib` Disconnect source IP
+- `bi` Query equalizer statistics
+- `bo` Forces the equalizer to select the specified outboundTag
 
 You can use something like `./xray help api bi` to query the specific usage.
 

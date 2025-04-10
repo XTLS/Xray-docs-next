@@ -18,7 +18,7 @@ The `HttpUpgradeObject` corresponds to the `httpupgradeSettings` section under t
   "path": "/",
   "host": "xray.com",
   "headers": {
-  	"key": "value"
+    "key": "value"
   }
 }
 ```
@@ -37,7 +37,7 @@ When `true`, the downstream must first send PROXY protocol version 1 or 2 after 
 
 HTTP path used by the HTTPUpgrade connection. Defaults to `"/"`.
 
-If the `path` property include an `ed` query field (e.g. ```/mypath?ed=2560```), "early data" will be used to decrease latency, with the value defining the threshold of the first packet's size. If the size of the first packet exceeds the defined value, "early data" will not be applied. The recommended value is `2560`.
+If the `path` property include an `ed` query field (e.g. `/mypath?ed=2560`), "early data" will be used to decrease latency, with the value defining the threshold of the first packet's size. If the size of the first packet exceeds the defined value, "early data" will not be applied. The recommended value is `2560`.
 
 > `host`: string
 
@@ -45,7 +45,7 @@ HTTP Host sent by the HTTPUpgrade connection. Empty by default. If this value is
 
 If the `Host` header has been defined on the server in any way, the server will validate if the `Host` header matches.
 
-The current priority of the `Host` header sent by clients: ```host``` > ```headers``` > ```address```
+The current priority of the `Host` header sent by clients: `host` > `headers` > `address`
 
 > `headers`: map \{string: string\}
 

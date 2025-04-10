@@ -42,19 +42,20 @@ Use "xray help <command>" for more information about a command.
 ```
 Run Xray with config, the default command.
 
-The -config=file, -c=file flags set the config files for 
+The -config=file, -c=file flags set the config files for
 Xray. Multiple assign is accepted.
 
 The -confdir=dir flag sets a dir with multiple json config
 
-The -format=json flag sets the format of config files. 
+The -format=json flag sets the format of config files.
 Default "auto".
 
-The -test flag tells Xray to test config files only, 
+The -test flag tells Xray to test config files only,
 without launching the server.
 
 The -dump flag tells Xray to print the merged config.
 ```
+
 `-config=` / `-c=` 用于指定使用的配置文件的位置，支持多文件配置。
 `-confdir=` 用于指定一个包含多个配置文件的文件夹。
 `-format=` 用于指定使用的配置文件的格式。
@@ -117,6 +118,7 @@ The commands are:
 ```
 
 `pb` 子命令使用示例：
+
 ```bash
 # 用法：xray convert pb [-debug] [-type] [json file] [json file] ...
 
@@ -134,6 +136,7 @@ xray help convert pb
 ```
 
 json 子命令使用示例：
+
 ```bash
 # 用法：xray convert json [-type] [stdin:] [typedMessage file]
 
@@ -171,6 +174,7 @@ xray tls <command> [arguments]
 ```
 
 ### xray uuid
+
 生成 UUID。
 
 使用方法:
@@ -180,6 +184,7 @@ xray uuid [-i "example"]
 ```
 
 ### xray x25519
+
 生成 x25519 密钥对。
 
 使用方法:
@@ -189,6 +194,7 @@ xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding ]
 ```
 
 ### xray wg
+
 生成 wireguard curve25519 密钥对。
 
 使用方法:
@@ -203,5 +209,3 @@ xray wg [-i "(base64.StdEncoding)"]
 - 工作目录（Working Directory）
 - [环境变量](../config/features/env.md#资源文件路径)中 `Xray.location.asset` 所指定的路径
   :::
-
-

@@ -7,7 +7,7 @@ This chapter is rather special because it involves monetary transactions. This a
 You need to obtain a healthy VPS with an unblocked IP, and perform the following basic preparations in the management console:
 
 1. Install Debian 10 64 bit Operating System on your VPS.
-2. Note down the IP address of VPS  (this article will use `"100.200.300.400"` as an example, which is an intentionally incorrect and illegal IP address. Please replace it with your real IP address).
+2. Note down the IP address of VPS (this article will use `"100.200.300.400"` as an example, which is an intentionally incorrect and illegal IP address. Please replace it with your real IP address).
 3. Note down the SSH remote login port of VPS.
 4. Note down the username and password for SSH remote login.
 

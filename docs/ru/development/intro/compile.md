@@ -79,5 +79,3 @@ go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 ::: warning
 Убедитесь, что вы используете ту же версию Golang, что и для сборки релиза.
 :::
-
-

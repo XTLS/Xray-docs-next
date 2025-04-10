@@ -9,7 +9,6 @@ export const docsPlugin: Theme = (options, app) => {
     name: "xray-docs-theme",
     extends: "@vuepress/theme-default",
     clientAppEnhanceFiles: path.resolve(__dirname, "clientAppEnhance.ts"),
-
   });
 };
 

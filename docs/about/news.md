@@ -444,9 +444,9 @@ Shadowsocks-2022 是重新设计的全新协议：
 
 现在一个以 Xray-core 为核心的开源、自由的 Android 客户端已经出现——[AnXray](https://github.com/XTLS/AnXray)！由 [@nekohasekai](https://github.com/nekohasekai) 维护。
 
-  - 支持众多协议、插件.
-  - 首席视觉设计师 [@RPRX](https://github.com/RPRX) 设计了 X-style 的 logo、slogan，以及独一无二的 material 黑白主题。
-  - APP 内还有个小彩蛋等你去发现。
+- 支持众多协议、插件.
+- 首席视觉设计师 [@RPRX](https://github.com/RPRX) 设计了 X-style 的 logo、slogan，以及独一无二的 material 黑白主题。
+- APP 内还有个小彩蛋等你去发现。
 
 前两天从早到晚反复打磨细节，希望大家多多 Star、关注。
 

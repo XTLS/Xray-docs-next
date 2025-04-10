@@ -14,13 +14,13 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
     "length": "100-200",
     "interval": "10-20" // 单位ms
   },
-  "noises":[
-  {
-    "type":"base64",
-    "packet":"7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
-    "delay":"10-16"
-  }
-],
+  "noises": [
+    {
+      "type": "base64",
+      "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
+      "delay": "10-16"
+    }
+  ],
   "proxyProtocol": 0
 }
 ```
@@ -87,7 +87,7 @@ UDP noise, 用于在发出UDP连接前发出一些随机数据作为“噪声”
 - 当 `type` 为 str 时，这里指定要发送的字符串
 - 当 `type` 为 hex 时，这里指定以 hex 形式表示的的二进制数据
 - 当 `type` 为 base64 时，这里指定 base64 过的二进制数据
-  
+
 `"delay"`: 延迟，单位毫秒。发送该噪声包后核心会等待该时间后再发送下一个噪声包或真实数据，默认不等待，为 [Int32Range](../../development/intro/guide.md#int32range) 类型
 
 > `proxyProtocol`: number

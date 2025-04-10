@@ -28,6 +28,7 @@ The commands are:
 Use "xray help <command>" for more information about a command.
 
 ```
+
 ### xray run
 
 Specify one or more configuration files and run.
@@ -54,6 +55,7 @@ without launching the server
 
 The -dump flag tells Xray to print the merged config.
 ```
+
 ::: tip
 Except from the default JSON format, config can also use TOML and YAML. It will automatically recognized from file extensions when the `-format` flag is not set.
 :::
@@ -105,6 +107,7 @@ The commands are:
 ```
 
 Sub-command `pb`
+
 ```bash
 # Usage: xray convert pb [-debug] [-type] [json file] [json file] ...
 
@@ -122,6 +125,7 @@ xray help convert pb
 ```
 
 Sub-command JSON
+
 ```bash
 # Usage: xray convert json [-type] [stdin:] [typedMessage file]
 
@@ -169,6 +173,7 @@ xray uuid
 ```
 
 ### xray x25519
+
 Generate x25519 key pair。
 
 Usage:
@@ -178,6 +183,7 @@ xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding]
 ```
 
 ### xray wg
+
 Generate wireguard curve25519 key pair。
 
 Usage:

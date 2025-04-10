@@ -239,12 +239,14 @@ Xray-core v1.8.7 或更高版本可省略该行。
 > `strategy`: [StrategyObject](#strategyobject)
 
 #### StrategyObject
+
 ```json
 {
-    "type": "roundRobin",
-    "settings": {}
+  "type": "roundRobin",
+  "settings": {}
 }
 ```
+
 > `type` : "random" | "roundRobin" | "leastPing" | "leastLoad"
 
 - `random` 默认值。随机选择匹配到的出站代理。
@@ -260,15 +262,17 @@ Xray-core v1.8.7 或更高版本可省略该行。
 
 ```json
 {
-    "expected": 2,
-    "maxRTT": "1s",
-    "tolerance": 0.01,
-    "baselines": ["1s"],
-    "costs": [{
-        "regexp": false,
-        "match": "tag",
-        "value": 0.5
-    }]
+  "expected": 2,
+  "maxRTT": "1s",
+  "tolerance": 0.01,
+  "baselines": ["1s"],
+  "costs": [
+    {
+      "regexp": false,
+      "match": "tag",
+      "value": 0.5
+    }
+  ]
 }
 ```
 
@@ -303,7 +307,6 @@ Xray-core v1.8.7 或更高版本可省略该行。
 > `value`: float number
 
 权重值，值越大，对应节点越不易被选中。
-
 
 ### 负载均衡配置示例
 

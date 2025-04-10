@@ -165,6 +165,7 @@ Like WebSocket, HTTPUpgrade now also has 0-RTT.
 ## 2024.3.11 <Badge>[v1.8.9](https://github.com/XTLS/Xray-core/releases/tag/v1.8.9)</Badge>
 
 Added HTTPUpgrade transport, said to be lighter than WebSocket.
+
 - Already added to the sharing link package.
 
 ## 2024.2.29
@@ -438,9 +439,9 @@ This is a maintenance release. Development continues…
 
 Now, an open-source, free Android client based on Xray-core is available—[AnXray](https://github.com/XTLS/AnXray)! Maintained by [@nekohasekai](https://github.com/nekohasekai).
 
-  - Supports numerous protocols and plugins.
-  - Chief visual designer [@RPRX](https://github.com/RPRX) designed an X-style logo, slogan, and a unique black-and-white material theme.
-  - There's also a small Easter egg waiting to be discovered in the app.
+- Supports numerous protocols and plugins.
+- Chief visual designer [@RPRX](https://github.com/RPRX) designed an X-style logo, slogan, and a unique black-and-white material theme.
+- There's also a small Easter egg waiting to be discovered in the app.
 
 Spent the last few days refining details from morning till night. We hope you'll star and follow the project.
 

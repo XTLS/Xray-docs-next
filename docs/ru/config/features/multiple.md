@@ -104,19 +104,19 @@ $ xray run -confdir /etc/xray/confs
 ```json
 {
   "log": {
-    "loglevel": "debug"  // объект верхнего уровня перезаписывает предыдущий
+    "loglevel": "debug" // объект верхнего уровня перезаписывает предыдущий
   },
   "inbounds": [
     {
       "tag": "socks", // перезапись элемента с тем же tag
       "protocol": "socks",
       "listen": "127.0.0.1",
-      "port": 1080 
+      "port": 1080
     }
   ],
   "outbounds": [
     {
-      "tag": "block",  // добавлено в начало outbounds
+      "tag": "block", // добавлено в начало outbounds
       "protocol": "blackhole"
     },
     {
@@ -134,5 +134,3 @@ $ xray run -confdir /etc/xray/confs
 ::: tip
 Вы можете использовать команду `xray run -confdir=./confs -dump` для просмотра объединенной конфигурации. Однако, поскольку ядро использует формат данных protobuf, формат вывода конфигурации для параметра `-dump` будет отличаться.
 :::
-
-

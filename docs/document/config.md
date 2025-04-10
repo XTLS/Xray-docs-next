@@ -26,7 +26,7 @@
       "settings": {
         "clients": [
           {
-            "id": "b831381d-6324-4d53-ad4f-8cda48b30811"  // 记得替换这个字段，使用 `xray uuid` 或 `uuidgen` 生成
+            "id": "b831381d-6324-4d53-ad4f-8cda48b30811" // 记得替换这个字段，使用 `xray uuid` 或 `uuidgen` 生成
           }
         ]
       }
@@ -68,7 +68,7 @@
             "port": 10086, // 服务器端口
             "users": [
               {
-                "id": "b831381d-6324-4d53-ad4f-8cda48b30811"  // 记得替换这个字段，使用 `xray uuid` 或 `uuidgen` 生成
+                "id": "b831381d-6324-4d53-ad4f-8cda48b30811" // 记得替换这个字段，使用 `xray uuid` 或 `uuidgen` 生成
               }
             ]
           }
@@ -85,13 +85,14 @@
     "rules": [
       {
         "type": "field",
-        "ip": ["geoip:private","geoip:cn"], // 绕过局域网和国内IP段
+        "ip": ["geoip:private", "geoip:cn"], // 绕过局域网和国内IP段
         "outboundTag": "direct"
       }
     ]
   }
 }
 ```
+
 上述配置唯一要更改的地方是你的服务器 IP 和用户 uuid，配置中已注明。上述配置会把除局域网（比如访问路由器）和国内IP段（比如访问bilibili、acfun）以外的所有流量转发至你的服务器。
 
 ## 运行

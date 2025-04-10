@@ -57,6 +57,7 @@ First of all, I would like to respond to critics by asking a question: Is using 
 Secondly, I believe that there is a fundamental difference between "not understanding" and "not wanting to understand". The bad attitude of some people who just want handouts is naturally annoying, but those who sincerely want to learn but don't know how should not be subject to unjustified contempt and discrimination. It is precisely this kind of bad community atmosphere that does not distinguish between newcomers that prompted me to write this article. So without further ado, let's take a look at the advantages and disadvantages of using an airport:
 
 - Advantages of "Airports"
+
 1. **Stability**: Airports usually feature multiple exit nodes, hence resistance to attempts at blocking these node, if one get block simply switch to another
 2. **Speed**: Airports typically make use of high capacity machines and high throughput network infrastructures, therefore you can expect a higher overall network speed
 3. **Safety**: Airports are generally have good security practices, such as encryption and firewalls to ensure the security of user data
@@ -67,7 +68,7 @@ Secondly, I believe that there is a fundamental difference between "not understa
 
 - Risks of "Airport"
 
-"The counterpart of convenience in 'internet' security is 'risk', some  risk of 'airports' you can find on the market are"
+"The counterpart of convenience in 'internet' security is 'risk', some risk of 'airports' you can find on the market are"
 
 1. service providers can obtain all infomation that passes through their servers, these data are very likely stored by the providers for a long time with little legal means to stop them
 2. there is little governance on the market for "airports", meaning there are plenty cases of fraud where providers disappear after being paid

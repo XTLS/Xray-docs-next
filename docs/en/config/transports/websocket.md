@@ -49,7 +49,7 @@ The `Host` header sent in HTTP requests. Defaults to an empty string. Servers wi
 
 If the `Host` header has been defined on the server in any way, the server will validate if the `Host` header matches.
 
-The current priority of the `Host` header sent by clients: ```host``` > ```headers``` > ```address```
+The current priority of the `Host` header sent by clients: `host` > `headers` > `address`
 
 > `headers`: map \{string: string\}
 

@@ -19,7 +19,12 @@ API 接口配置提供了一些基于 [gRPC](https://grpc.io/)的 API 接口供�
   "api": {
     "tag": "api",
     "listen": "127.0.0.1:8080",
-    "services": ["HandlerService", "LoggerService", "StatsService", "RoutingService"]
+    "services": [
+      "HandlerService",
+      "LoggerService",
+      "StatsService",
+      "RoutingService"
+    ]
   }
 }
 ```
@@ -106,7 +111,7 @@ API 服务监听的 IP 和端口。这是一个可选配置项。
 - bi 查询均衡器统计信息
 - bo 强制均衡器选中指定的 outboundTag
 
-可以使用类似于 `./xray help api bi` 这样的命令来查询具体用法。  
+可以使用类似于 `./xray help api bi` 这样的命令来查询具体用法。
 
 ### LoggerService
 

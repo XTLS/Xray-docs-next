@@ -103,7 +103,7 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 ```json
 {
   "serverName": "xray.com",
-  "serverNameToVerify":"",
+  "serverNameToVerify": "",
   "rejectUnknownSni": false,
   "allowInsecure": false,
   "alpn": ["h2", "http/1.1"],
@@ -324,7 +324,7 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 
 一般与target保持一致即可，实际的可选值为服务器所接受的任何SNI（依据 target 本身的配置有所不同），一个参考是所返回证书的 [SAN](https://zh.wikipedia.org/wiki/%E4%B8%BB%E9%A2%98%E5%A4%87%E7%94%A8%E5%90%8D%E7%A7%B0).
 
-其中可包含空值 ```""``` 代表接受没有SNI的连接。
+其中可包含空值 `""` 代表接受没有SNI的连接。
 
 > `privateKey` : string
 
@@ -358,7 +358,7 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 
 服务端 serverNames 之一。
 
-当服务端 ```serverNames``` 中包含空值时，与 TLS 类似可以在客户端使用 ```"serverName": "0.0.0.0"``` 发起无SNI的连接。与TLS不同，REALITY使用这个功能并不需要开启也没有允许不安全选项。当使用此功能时请确保target在接受无SNI的连接时会返回默认证书。
+当服务端 `serverNames` 中包含空值时，与 TLS 类似可以在客户端使用 `"serverName": "0.0.0.0"` 发起无SNI的连接。与TLS不同，REALITY使用这个功能并不需要开启也没有允许不安全选项。当使用此功能时请确保target在接受无SNI的连接时会返回默认证书。
 
 > `fingerprint` : string
 
@@ -590,7 +590,6 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 > "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"<br>
 > "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
-
 在之前的版本中，当 Xray 尝试使用域名建立系统连接时，域名的解析由系统完成，不受 Xray
 控制。这导致了在 [非标准 Linux 环境中无法解析域名](https://github.com/v2ray/v2ray-core/issues/1909) 等问题。为此，Xray 1.3.1 为 Sockopt 引入了 Freedom
 中的 domainStrategy，解决了此问题。
@@ -723,7 +722,7 @@ TCP 拥塞控制算法。仅支持 Linux。
 
 该选项已被删除，因为 golang 默认启用 TCP no delay。 相反地，如果想要禁用，请通过使用 customSockopt 禁用。
 
-> `addressPortStrategy`: "none" | "SrvPortOnly" | "SrvAddressOnly" | "SrvPortAndAddress" | "TxtPortOnly" | "TxtAddressOnly" | "TxtPortAndAddress" 
+> `addressPortStrategy`: "none" | "SrvPortOnly" | "SrvAddressOnly" | "SrvPortAndAddress" | "TxtPortOnly" | "TxtAddressOnly" | "TxtPortAndAddress"
 
 使用 SRV 记录或 TXT 记录指定出站使用的目标地址/端口，默认 `none` 即关闭
 

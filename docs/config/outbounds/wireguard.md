@@ -72,7 +72,8 @@ Wireguard 底层 tun 的MTU大小。
 - 16-byte authentication tag
 ```
 
-```N-byte encrypted data```即为我们需要的MTU的值，根据endpoint是IPv4还是IPv6，具体的值可以是1440(IPv4)或者1420(IPv6)，如果处于特殊环境下再额外减掉即可(如家宽PPPoE额外-8)。
+`N-byte encrypted data`即为我们需要的MTU的值，根据endpoint是IPv4还是IPv6，具体的值可以是1440(IPv4)或者1420(IPv6)，如果处于特殊环境下再额外减掉即可(如家宽PPPoE额外-8)。
+
 </details>
 
 > `reserved` \[ number \]
@@ -127,7 +128,7 @@ PS: `Freedom` 出站的 `domainStrategy` 包含诸如 `UseIP` 的选项，在这
 服务器地址, 必填
 
 URL:端口 格式，例如 `engage.cloudflareclient.com:2408`<br>
-IP:端口 格式，例如 `162.159.192.1:2408` 或  `[2606:4700:d0::a29f:c001]:2408`
+IP:端口 格式，例如 `162.159.192.1:2408` 或 `[2606:4700:d0::a29f:c001]:2408`
 
 > `publicKey`: string
 

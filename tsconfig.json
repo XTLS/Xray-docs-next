@@ -2,19 +2,11 @@
   "compilerOptions": {
     "module": "ESNext",
     "target": "ES2022",
-    "lib": [
-      "DOM",
-      "ES2022"
-    ],
+    "lib": ["DOM", "ES2022"],
     "sourceMap": false,
     "strict": true,
     "moduleResolution": "Bundler",
   },
-  "include": [
-    "./docs/.vuepress/**/*.ts",
-    "./docs/.vuepress/**/*.vue"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["./docs/.vuepress/**/*.ts", "./docs/.vuepress/**/*.vue"],
+  "exclude": ["node_modules"],
 }

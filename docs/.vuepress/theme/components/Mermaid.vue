@@ -14,7 +14,7 @@ import {
   watch,
   reactive,
   nextTick,
-  toRef
+  toRef,
 } from "vue";
 
 import { getDarkmodeStatus } from "../../plugins/mermaid/helpers/darkmode.js";
@@ -43,18 +43,20 @@ export default defineComponent({
         startOnLoad: false,
       });
 
-      mermaid.default.render(chartID.value!, decodeURI(rawGraph.value!)).then(({ svg, bindFunctions }) => {
-        html.innerHtml = svg;
-      });
+      mermaid.default
+        .render(chartID.value!, decodeURI(rawGraph.value!))
+        .then(({ svg, bindFunctions }) => {
+          html.innerHtml = svg;
+        });
     };
 
     onMounted(() => {
-      isDarkmode.value = getDarkmodeStatus()
-      nextTick(renderMermaid)
-    })
+      isDarkmode.value = getDarkmodeStatus();
+      nextTick(renderMermaid);
+    });
 
     // watch darkmode change
-    if (typeof document !== 'undefined') {
+    if (typeof document !== "undefined") {
       useMutationObserver(
         document.documentElement,
         () => {
@@ -67,17 +69,14 @@ export default defineComponent({
       );
     }
 
-
     watch(isDarkmode, () => renderMermaid());
 
     return {
       tag: chartID,
-      payload: html
-    }
-
+      payload: html,
+    };
   },
 });
 </script>
 
 <style scoped></style>
-

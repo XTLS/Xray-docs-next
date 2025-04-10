@@ -42,15 +42,15 @@ Use "xray help <command>" for more information about a command.
 ```
 Run Xray with config, the default command.
 
-The -config=file, -c=file flags set the config files for 
+The -config=file, -c=file flags set the config files for
 Xray. Multiple assign is accepted.
 
 The -confdir=dir flag sets a dir with multiple json config
 
-The -format=json flag sets the format of config files. 
+The -format=json flag sets the format of config files.
 Default "auto".
 
-The -test flag tells Xray to test config files only, 
+The -test flag tells Xray to test config files only,
 without launching the server.
 
 The -dump flag tells Xray to print the merged config.
@@ -119,6 +119,7 @@ The commands are:
 ```
 
 Sub-command `pb`
+
 ```bash
 # Usage: xray convert pb [-debug] [-type] [json file] [json file] ...
 
@@ -136,6 +137,7 @@ xray help convert pb
 ```
 
 Sub-command JSON
+
 ```bash
 # Usage: xray convert json [-type] [stdin:] [typedMessage file]
 
@@ -208,5 +210,3 @@ xray wg [-i "(base64.StdEncoding)"]
 - Рабочий каталог (Working Directory);
 - Путь, указанный в переменной окружения `Xray.location.asset` (см. [Переменные окружения](../config/features/env.md#ресурсные-файлы)).
   :::
-
-

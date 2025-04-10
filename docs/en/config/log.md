@@ -51,13 +51,13 @@ The log level for error logs, indicating the information that needs to be record
 Log DNS queries made by built-in [DNS clients](./dns.md) to the access log. Example log record: `DOH//doh.server got answer: domain.com -> [ip1, ip2] 2.333ms`.
 
 ::: tip
+
 1. Xray doesn't perform all DNS queries via its built-in clients. Therefore, enabling this option doesn't mean that all DNS queries performed by Xray will be logged.
 
 2. DNS queries made by built-in [DNS clients](./dns.md) are also logged to the error log (with "Info" level) even if this option is disabled.
-3. 
+3.
 4. FakeDNS client queries are never logged to the access log.
-:::
-
+   :::
 
 > `maskAddress`: "quarter" | "half" | "full"
 

@@ -4,22 +4,22 @@ import { webpackBundler } from "@vuepress/bundler-webpack";
 import { UserConfig, defineUserConfig } from "vuepress/cli";
 import { searchPlugin } from "@vuepress/plugin-search";
 import markdownItFootnote from "markdown-it-footnote";
-import theme from './theme.js'
-import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
-import process from 'node:process'
+import theme from "./theme.js";
+import { registerComponentsPlugin } from "@vuepress/plugin-register-components";
+import process from "node:process";
 // import { getDirname, path } from '@vuepress/utils'
-import { getDirname, path } from 'vuepress/utils'
-import { MermaidPlugin } from './plugins/mermaid/node/mermaid'
+import { getDirname, path } from "vuepress/utils";
+import { MermaidPlugin } from "./plugins/mermaid/node/mermaid";
 import i18nPlugin from "vuepress-plugin-i18n";
 
-const __dirname = getDirname(import.meta.url)
-console.log('>>> __dirname -> ', __dirname)
+const __dirname = getDirname(import.meta.url);
+console.log(">>> __dirname -> ", __dirname);
 const isProduction = process.env.NODE_ENV === "production";
 const useVite = process.env.XRAY_DOCS_USE_VITE === "true";
 
 console.log(
   "bundler:",
-  isProduction && !useVite ? "@vuepress/webpack" : "@vuepress/vite"
+  isProduction && !useVite ? "@vuepress/webpack" : "@vuepress/vite",
 );
 
 export default defineUserConfig(<UserConfig>{
@@ -31,13 +31,13 @@ export default defineUserConfig(<UserConfig>{
         en: {
           lang: "en-US",
           untranslated: {
-            title: "Untranslated"
+            title: "Untranslated",
           },
           outdated: {
-            title: "Outdated"
-          }
-        }
-      }
+            title: "Outdated",
+          },
+        },
+      },
     }),
     searchPlugin({
       locales: {
@@ -47,7 +47,7 @@ export default defineUserConfig(<UserConfig>{
       },
     }),
     registerComponentsPlugin({
-      componentsDir: path.resolve(__dirname, './theme/components'),
+      componentsDir: path.resolve(__dirname, "./theme/components"),
     }),
   ],
   base: "/",

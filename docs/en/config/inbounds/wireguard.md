@@ -14,11 +14,11 @@ User-space implementation of the Wireguard protocol.
   "peers": [
     {
       "publicKey": "PUBLIC_KEY",
-      "allowedIPs":[""]
+      "allowedIPs": [""]
     }
   ],
   "kernelMode": true, // optional, default true if it's supported and permission is sufficient
-  "mtu": 1420, // optional, default 1420
+  "mtu": 1420 // optional, default 1420
 }
 ```
 

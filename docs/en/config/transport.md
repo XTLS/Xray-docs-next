@@ -609,7 +609,7 @@ Default value `false`, fill in `true` to enable [Multipath TCP](https://en.wikip
 
 Default value `false`, recommended to be enabled with "tcpMptcp": true.
 
->  `customSockopt`: []
+> `customSockopt`: []
 
 An array for advanced users to specify any sockopt. In theory, all the above connection-related settings can be set equivalently here. Naturally, other options that exist in Linux but have not been added to the core can also be set. The example below is equivalent to `"tcpcongestion": "bbr"` in core.
 

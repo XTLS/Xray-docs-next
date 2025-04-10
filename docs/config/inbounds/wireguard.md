@@ -14,10 +14,10 @@ User-space Wireguard 协议实现。
   "peers": [
     {
       "publicKey": "PUBLIC_KEY",
-      "allowedIPs":[""]
+      "allowedIPs": [""]
     }
   ],
-  "mtu": 1420, // optional, default 1420
+  "mtu": 1420 // optional, default 1420
 }
 ```
 
@@ -44,7 +44,8 @@ Wireguard 底层 tun 的分片大小。
 - 16-byte authentication tag
 ```
 
-```N-byte encrypted data```即为我们需要的MTU的值，根据endpoint是IPv4还是IPv6，具体的值可以是1440(IPv4)或者1420(IPv6)，如果处于特殊环境下再额外减掉即可(如家宽PPPoE额外-8)。
+`N-byte encrypted data`即为我们需要的MTU的值，根据endpoint是IPv4还是IPv6，具体的值可以是1440(IPv4)或者1420(IPv6)，如果处于特殊环境下再额外减掉即可(如家宽PPPoE额外-8)。
+
 </details>
 
 > `peers`: \[ [Peers](#peers) \]

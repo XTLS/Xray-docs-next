@@ -15,11 +15,11 @@
 
 > `tag`: string
 
-Тег исходящего прокси для метрик.  Настроив входящее соединение AnyDoor и маршрутизацию AnyDoor на этот исходящий прокси, вы сможете получить доступ к метрикам через AnyDoor.
+Тег исходящего прокси для метрик. Настроив входящее соединение AnyDoor и маршрутизацию AnyDoor на этот исходящий прокси, вы сможете получить доступ к метрикам через AnyDoor.
 
 > `listen`: string
 
-Более простой способ —  просто прослушивать указанный адрес и порт для предоставления сервиса.
+Более простой способ — просто прослушивать указанный адрес и порт для предоставления сервиса.
 
 Если при установке этого поля `tag` пустой, он автоматически устанавливается в `Metrics`. Если оба поля не заданы, ядро не запустится.
 
@@ -36,8 +36,9 @@
 Перейдите по адресу `http://127.0.0.1:11111/debug/vars`.
 
 Содержит следующие переменные:
-* `stats`: включает все данные о входящих и исходящих соединениях, а также о пользователях.
-* `observatory`: содержит результаты наблюдений observatory.
+
+- `stats`: включает все данные о входящих и исходящих соединениях, а также о пользователях.
+- `observatory`: содержит результаты наблюдений observatory.
 
 Например, в [luci-app-xray](https://github.com/yichya/luci-app-xray) вы можете получить следующий вывод (стандартное содержимое expvar, такое как cmdline и memstats, опущено):
 
@@ -45,91 +46,92 @@
 
 ```json
 {
-    "observatory": {
-        "tcp_outbound": {
-            "alive": true,
-            "delay": 782,
-            "outbound_tag": "tcp_outbound",
-            "last_seen_time": 1648477189,
-            "last_try_time": 1648477189
-        },
-        "udp_outbound": {
-            "alive": true,
-            "delay": 779,
-            "outbound_tag": "udp_outbound",
-            "last_seen_time": 1648477191,
-            "last_try_time": 1648477191
-        }
+  "observatory": {
+    "tcp_outbound": {
+      "alive": true,
+      "delay": 782,
+      "outbound_tag": "tcp_outbound",
+      "last_seen_time": 1648477189,
+      "last_try_time": 1648477189
     },
-    "stats": {
-        "inbound": {
-            "api": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "dns_server_inbound_5300": {
-                "downlink": 14286,
-                "uplink": 5857
-            },
-            "http_inbound": {
-                "downlink": 74460,
-                "uplink": 10231
-            },
-            "https_inbound": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "metrics": {
-                "downlink": 6327,
-                "uplink": 1347
-            },
-            "socks_inbound": {
-                "downlink": 19925615,
-                "uplink": 5512
-            },
-            "tproxy_tcp_inbound": {
-                "downlink": 4739161,
-                "uplink": 1568869
-            },
-            "tproxy_udp_inbound": {
-                "downlink": 0,
-                "uplink": 2608142
-            }
-        },
-        "outbound": {
-            "blackhole_outbound": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "direct": {
-                "downlink": 97714548,
-                "uplink": 3234617
-            },
-            "dns_server_outbound": {
-                "downlink": 7116,
-                "uplink": 2229
-            },
-            "manual_tproxy_outbound_tcp_1": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "manual_tproxy_outbound_udp_1": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "tcp_outbound": {
-                "downlink": 23873238,
-                "uplink": 1049595
-            },
-            "udp_outbound": {
-                "downlink": 639282,
-                "uplink": 74634
-            }
-        },
-        "user": {}
+    "udp_outbound": {
+      "alive": true,
+      "delay": 779,
+      "outbound_tag": "udp_outbound",
+      "last_seen_time": 1648477191,
+      "last_try_time": 1648477191
     }
+  },
+  "stats": {
+    "inbound": {
+      "api": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "dns_server_inbound_5300": {
+        "downlink": 14286,
+        "uplink": 5857
+      },
+      "http_inbound": {
+        "downlink": 74460,
+        "uplink": 10231
+      },
+      "https_inbound": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "metrics": {
+        "downlink": 6327,
+        "uplink": 1347
+      },
+      "socks_inbound": {
+        "downlink": 19925615,
+        "uplink": 5512
+      },
+      "tproxy_tcp_inbound": {
+        "downlink": 4739161,
+        "uplink": 1568869
+      },
+      "tproxy_udp_inbound": {
+        "downlink": 0,
+        "uplink": 2608142
+      }
+    },
+    "outbound": {
+      "blackhole_outbound": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "direct": {
+        "downlink": 97714548,
+        "uplink": 3234617
+      },
+      "dns_server_outbound": {
+        "downlink": 7116,
+        "uplink": 2229
+      },
+      "manual_tproxy_outbound_tcp_1": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "manual_tproxy_outbound_udp_1": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "tcp_outbound": {
+        "downlink": 23873238,
+        "uplink": 1049595
+      },
+      "udp_outbound": {
+        "downlink": 639282,
+        "uplink": 74634
+      }
+    },
+    "user": {}
+  }
 }
 ```
+
 </details>
 
 Для лучшей визуализации можно использовать [Netdata](https://github.com/netdata/netdata) (с плагином python.d):
@@ -244,6 +246,7 @@ xray:
            id: udp
            expvar_type: int
 ```
+
 </details>
 
 Вы получите результат, подобный этому:

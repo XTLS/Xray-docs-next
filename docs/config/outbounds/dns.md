@@ -14,7 +14,7 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
   "address": "1.1.1.1",
   "port": 53,
   "nonIPQuery": "drop",
-  "blockTypes":[]
+  "blockTypes": []
 }
 ```
 

@@ -15,7 +15,9 @@ Xray（1.6.5+）新加入了 WireGuard 出站，虽然增加的代码和依赖�
 ## 申请 Warp 账户
 
 ### 感谢 Cloudflare 推动自由的互联网，现在你可以免费使用 Warp 服务，连接的时候会根据出口自动选择最近的服务器
+
 #### 方法 1：
+
 1. 使用一台 vps，下载 [wgcf](https://github.com/ViRb3/wgcf/releases)
 2. 运行 `wgcf register` 生成 `wgcf-account.toml`
 3. 运行 `wgcf generate` 生成 `wgcf-profile.conf` 拷贝内容如下：
@@ -33,34 +35,45 @@ AllowedIPs = 0.0.0.0/0
 AllowedIPs = ::/0
 Endpoint = engage.cloudflareclient.com:2408
 ```
+
 #### 方法 2：
+
 1. 使用 [warp-reg.sh](https://github.com/chise0713/warp-reg.sh)，运行：
+
 ```
 bash -c "$(curl -L warp-reg.vercel.app)"
 ```
+
 - 输出
+
 ```json
 {
-    "endpoint":{
-       "v4": "162.159.192.7",
-       "v6": "[2606:4700:d0::a29f:c007]",
-    },
-    "reserved_dec": [35, 74, 190],
-    "reserved_hex": "0x234abe",
-    "reserved_str": "I0q+",
-    "private_key": "yL0kApRiZW4VFfNkKAQ/nYxnMFT3AH0dfVkj1GAlr1k=",
-    "public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-    "v4": "172.16.0.2",
-    "v6": "2606:4700:110:81f3:2a5b:3cad:9d4:9ea6"
+  "endpoint": {
+    "v4": "162.159.192.7",
+    "v6": "[2606:4700:d0::a29f:c007]"
+  },
+  "reserved_dec": [35, 74, 190],
+  "reserved_hex": "0x234abe",
+  "reserved_str": "I0q+",
+  "private_key": "yL0kApRiZW4VFfNkKAQ/nYxnMFT3AH0dfVkj1GAlr1k=",
+  "public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+  "v4": "172.16.0.2",
+  "v6": "2606:4700:110:81f3:2a5b:3cad:9d4:9ea6"
 }
 ```
+
 2. 拷贝输出的内容
+
 #### 方法 3：
+
 1. 使用[wgcf-cli](https://github.com/ArchiveNetwork/wgcf-cli)，运行以下内容进行安装：
+
 ```
 bash -c "$(curl -L wgcf-cli.vercel.app)"
 ```
+
 2. 运行 `wgcf-cli register` 进行注册，输出：
+
 ```json
 ❯ wgcf-cli register
 {
@@ -83,38 +96,33 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
     }
 }
 ```
+
 - 完整文件将会保存到工作目录的 `wgcf.json` 内。
+
 3. 运行 `wgcf-cli generate --xray` 来生成一个WireGurad出站，他会将内容保存到 `wgcf.xray.json` 内
+
 - 示例文件：
+
 ```json
 {
-    "protocol": "wireguard",
-    "settings": {
-        "secretKey": "6CRVRLgFwGajnikoVOPTDNZnDhx3EydhPsMgpxHfBCY=",
-        "address": [
-            "172.16.0.2/32",
-            "2606:4700:110:857a:6a95:fe27:1870:2a9d/128"
-        ],
-        "peers": [
-            {
-                "publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
-                "allowedIPs": [
-                    "0.0.0.0/0",
-                    "::/0"
-                ],
-                "endpoint": "162.159.192.1:2408"
-            }
-        ],
-        "reserved": [
-            240,
-            25,
-            146
-        ],
-        "mtu": 1280
-    },
-    "tag": "wireguard"
+  "protocol": "wireguard",
+  "settings": {
+    "secretKey": "6CRVRLgFwGajnikoVOPTDNZnDhx3EydhPsMgpxHfBCY=",
+    "address": ["172.16.0.2/32", "2606:4700:110:857a:6a95:fe27:1870:2a9d/128"],
+    "peers": [
+      {
+        "publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+        "allowedIPs": ["0.0.0.0/0", "::/0"],
+        "endpoint": "162.159.192.1:2408"
+      }
+    ],
+    "reserved": [240, 25, 146],
+    "mtu": 1280
+  },
+  "tag": "wireguard"
 }
 ```
+
 ## 在服务端分流回国流量至 warp
 
 在现有出站中新增一个 WireGurad 出站
@@ -131,7 +139,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
         "endpoint": "engage.cloudflareclient.com:2408"
       }
     ],
-    "reserved":[0, 0, 0] // 如果你有的话，粘贴reserved到这里
+    "reserved": [0, 0, 0] // 如果你有的话，粘贴reserved到这里
   },
   "tag": "wireguard-1"
 }

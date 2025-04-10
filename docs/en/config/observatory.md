@@ -8,11 +8,10 @@ components, such as load balancers. There are currently two options:
 You can choose one of them as needed.
 
 ## ObservatoryObject
+
 ```json
 {
-  "subjectSelector":[
-    "outbound"
-  ],
+  "subjectSelector": ["outbound"],
   "probeUrl": "https://www.google.com/generate_204",
   "probeInterval": "10s",
   "enableConcurrency": false
@@ -37,11 +36,10 @@ The interval at which probes are initiated. The time format is a number followed
 - `false`: Probe each matching outbound proxy one by one, pausing for the time set by `probeInterval` after probing each one.
 
 ## BurstObservatoryObject
+
 ```json
 {
-  "subjectSelector":[
-    "outbound"
-  ],
+  "subjectSelector": ["outbound"],
   "pingConfig": {}
 }
 ```
@@ -52,8 +50,8 @@ An array of strings, where each string is used to match the prefix of outbound p
 
 > `pingConfig`: [PingConfigObject](#PingConfigObject)
 
-
 ### PingConfigObject
+
 ```json
 {
   "destination": "https://connectivitycheck.gstatic.com/generate_204",

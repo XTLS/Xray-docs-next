@@ -36,8 +36,9 @@ metrics 对应的出站代理 tag, 通过设置任意门入站+路由将任意�
 访问 `http://127.0.0.1:11111/debug/vars`
 
 包含的变量:
-* `stats` 包括所有的 inbound outbound user 数据
-* `observatory` 包含了 observatory 观测结果
+
+- `stats` 包括所有的 inbound outbound user 数据
+- `observatory` 包含了 observatory 观测结果
 
 例如在 [luci-app-xray](https://github.com/yichya/luci-app-xray) 你可以得到这样的输出 (省略了 cmdline 和 memstats 等标准expvar内容)
 
@@ -45,91 +46,92 @@ metrics 对应的出站代理 tag, 通过设置任意门入站+路由将任意�
 
 ```json
 {
-    "observatory": {
-        "tcp_outbound": {
-            "alive": true,
-            "delay": 782,
-            "outbound_tag": "tcp_outbound",
-            "last_seen_time": 1648477189,
-            "last_try_time": 1648477189
-        },
-        "udp_outbound": {
-            "alive": true,
-            "delay": 779,
-            "outbound_tag": "udp_outbound",
-            "last_seen_time": 1648477191,
-            "last_try_time": 1648477191
-        }
+  "observatory": {
+    "tcp_outbound": {
+      "alive": true,
+      "delay": 782,
+      "outbound_tag": "tcp_outbound",
+      "last_seen_time": 1648477189,
+      "last_try_time": 1648477189
     },
-    "stats": {
-        "inbound": {
-            "api": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "dns_server_inbound_5300": {
-                "downlink": 14286,
-                "uplink": 5857
-            },
-            "http_inbound": {
-                "downlink": 74460,
-                "uplink": 10231
-            },
-            "https_inbound": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "metrics": {
-                "downlink": 6327,
-                "uplink": 1347
-            },
-            "socks_inbound": {
-                "downlink": 19925615,
-                "uplink": 5512
-            },
-            "tproxy_tcp_inbound": {
-                "downlink": 4739161,
-                "uplink": 1568869
-            },
-            "tproxy_udp_inbound": {
-                "downlink": 0,
-                "uplink": 2608142
-            }
-        },
-        "outbound": {
-            "blackhole_outbound": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "direct": {
-                "downlink": 97714548,
-                "uplink": 3234617
-            },
-            "dns_server_outbound": {
-                "downlink": 7116,
-                "uplink": 2229
-            },
-            "manual_tproxy_outbound_tcp_1": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "manual_tproxy_outbound_udp_1": {
-                "downlink": 0,
-                "uplink": 0
-            },
-            "tcp_outbound": {
-                "downlink": 23873238,
-                "uplink": 1049595
-            },
-            "udp_outbound": {
-                "downlink": 639282,
-                "uplink": 74634
-            }
-        },
-        "user": {}
+    "udp_outbound": {
+      "alive": true,
+      "delay": 779,
+      "outbound_tag": "udp_outbound",
+      "last_seen_time": 1648477191,
+      "last_try_time": 1648477191
     }
+  },
+  "stats": {
+    "inbound": {
+      "api": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "dns_server_inbound_5300": {
+        "downlink": 14286,
+        "uplink": 5857
+      },
+      "http_inbound": {
+        "downlink": 74460,
+        "uplink": 10231
+      },
+      "https_inbound": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "metrics": {
+        "downlink": 6327,
+        "uplink": 1347
+      },
+      "socks_inbound": {
+        "downlink": 19925615,
+        "uplink": 5512
+      },
+      "tproxy_tcp_inbound": {
+        "downlink": 4739161,
+        "uplink": 1568869
+      },
+      "tproxy_udp_inbound": {
+        "downlink": 0,
+        "uplink": 2608142
+      }
+    },
+    "outbound": {
+      "blackhole_outbound": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "direct": {
+        "downlink": 97714548,
+        "uplink": 3234617
+      },
+      "dns_server_outbound": {
+        "downlink": 7116,
+        "uplink": 2229
+      },
+      "manual_tproxy_outbound_tcp_1": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "manual_tproxy_outbound_udp_1": {
+        "downlink": 0,
+        "uplink": 0
+      },
+      "tcp_outbound": {
+        "downlink": 23873238,
+        "uplink": 1049595
+      },
+      "udp_outbound": {
+        "downlink": 639282,
+        "uplink": 74634
+      }
+    },
+    "user": {}
+  }
 }
 ```
+
 </details>
 
 为了得到更好的可视化输出, 可以使用 [Netdata](https://github.com/netdata/netdata) (with python.d plugin):
@@ -244,6 +246,7 @@ xray:
            id: udp
            expvar_type: int
 ```
+
 </details>
 
 你可以得到类似这样的结果:

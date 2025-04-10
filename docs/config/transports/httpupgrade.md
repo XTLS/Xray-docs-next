@@ -36,15 +36,15 @@
 
 HTTPUpgrade 所使用的 HTTP 协议路径，默认值为 `"/"`。
 
-如果客户端路径中包含 `ed` 参数(如 ```/mypath?ed=2560```)，将会启用 `Early Data` 以降低延迟，其值为首包长度阈值。如果首包长度超过此值，就不会启用 `Early Data`。建议的值为2560。
+如果客户端路径中包含 `ed` 参数(如 `/mypath?ed=2560`)，将会启用 `Early Data` 以降低延迟，其值为首包长度阈值。如果首包长度超过此值，就不会启用 `Early Data`。建议的值为2560。
 
 > `host`: string
 
 HTTPUpgrade 的HTTP请求中所发送的host，默认值为空。若服务端值为空时，不验证客户端发送来的host值。
 
-当在服务端指定该值，或在 ```headers``` 中指定host，将会校验与客户端请求host是否一致。
+当在服务端指定该值，或在 `headers` 中指定host，将会校验与客户端请求host是否一致。
 
-客户端选择发送的host优先级 ```host``` >  ```headers``` > ```address```
+客户端选择发送的host优先级 `host` > `headers` > `address`
 
 > `headers`: map \{string: string\}
 

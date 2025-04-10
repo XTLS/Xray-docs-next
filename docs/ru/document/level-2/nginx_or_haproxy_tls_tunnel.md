@@ -126,10 +126,7 @@ WantedBy=multi-user.target
       },
       "sniffing": {
         "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
+        "destOverride": ["http", "tls"]
       }
     }
   ],
@@ -153,12 +150,8 @@ WantedBy=multi-user.target
       "1.1.1.1",
       {
         "address": "119.29.29.29",
-        "domains": [
-          "geosite:cn"
-        ],
-        "expectIP": [
-          "geoip:cn"
-        ]
+        "domains": ["geosite:cn"],
+        "expectIP": ["geoip:cn"]
       }
     ],
     "disableFallback": true,
@@ -175,10 +168,7 @@ WantedBy=multi-user.target
       },
       "sniffing": {
         "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
+        "destOverride": ["http", "tls"]
       },
       "streamSettings": {
         "sockopt": {
@@ -194,10 +184,7 @@ WantedBy=multi-user.target
       "protocol": "http",
       "sniffing": {
         "enabled": true,
-        "destOverride": [
-          "http",
-          "tls"
-        ]
+        "destOverride": ["http", "tls"]
       }
     }
   ],
@@ -251,9 +238,7 @@ WantedBy=multi-user.target
     "rules": [
       {
         "type": "field",
-        "domain": [
-          "geosite:category-ads-all"
-        ],
+        "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       {
@@ -264,37 +249,27 @@ WantedBy=multi-user.target
       },
       {
         "type": "field",
-        "ip": [
-          "1.1.1.1"
-        ],
+        "ip": ["1.1.1.1"],
         "outboundTag": "proxy"
       },
       {
         "type": "field",
-        "domain": [
-          "geosite:cn"
-        ],
+        "domain": ["geosite:cn"],
         "outboundTag": "direct"
       },
       {
         "type": "field",
-        "protocol": [
-          "bittorrent"
-        ],
+        "protocol": ["bittorrent"],
         "outboundTag": "direct"
       },
       {
         "type": "field",
-        "ip": [
-          "geoip:private"
-        ],
+        "ip": ["geoip:private"],
         "outboundTag": "direct"
       },
       {
         "type": "field",
-        "inboundTag": [
-          "tproxy-in"
-        ],
+        "inboundTag": ["tproxy-in"],
         "outboundTag": "nginxtls"
       }
     ]

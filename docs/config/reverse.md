@@ -7,15 +7,18 @@
 反向代理的大致工作原理如下:
 
 - 假设在主机 A 中有一个网页服务器，这台主机没有公网 IP，无法在公网上直接访问。另有一台主机 B，它可以由公网访问。现在我们需要把 B 作为入口，把流量从 B 转发到 A。
+
   - 在主机 B 中配置 Xray，接收外部请求，所以称为 `portal` （门户）。
   - 在主机 A 中配置 Xray，负责将B的转发和网页服务器桥接起来，称为`bridge`。
 
 - `bridge`
+
   - `bridge` 会向 `portal` 主动建立连接以注册反向通道，此连接的目标地址（domain）可以自行设定。
   - `bridge` 在收到`portal`转发过来的公网流量之后，会将其原封不动地发给主机 A 中的网页服务器。当然，这一步需要路由模块的配置。
   - `bridge` 收到响应后，也会将响应原封不动地返回给`portal`。
 
 - `portal`
+
   - `portal` 收到请求且domain匹配，则说明是由 `bridge` 发来的响应数据，这条连接会用于建立反向通道。
   - `portal` 收到请求，domain不匹配，则说明是公网用户发来的连接，这种连接数据会转发给bridge.
 
@@ -39,16 +42,16 @@
     "bridges": [
       {
         "tag": "bridge",
-        "domain": "reverse-proxy.xray.internal"
-      }
+        "domain": "reverse-proxy.xray.internal",
+      },
     ],
     "portals": [
       {
         "tag": "portal",
-        "domain": "reverse-proxy.xray.internal"
-      }
-    ]
-  }
+        "domain": "reverse-proxy.xray.internal",
+      },
+    ],
+  },
 }
 ```
 
@@ -65,7 +68,7 @@
 ```jsonc
 {
   "tag": "bridge",
-  "domain": "reverse-proxy.xray.internal"
+  "domain": "reverse-proxy.xray.internal",
 }
 ```
 
@@ -83,7 +86,7 @@
 ```jsonc
 {
   "tag": "portal",
-  "domain": "reverse-proxy.xray.internal"
+  "domain": "reverse-proxy.xray.internal",
 }
 ```
 
@@ -130,8 +133,8 @@ outbound:
   "tag": "out",
   "protocol": "freedom",
   "settings": {
-    "redirect": "127.0.0.1:80"
-  }
+    "redirect": "127.0.0.1:80",
+  },
 }
 ```
 
@@ -146,13 +149,13 @@ outbound:
         "port": 1024,
         "users": [
           {
-            "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
-          }
-        ]
-      }
-    ]
+            "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+          },
+        ],
+      },
+    ],
   },
-  "tag": "interconn"
+  "tag": "interconn",
 }
 ```
 
@@ -167,16 +170,16 @@ outbound:
       "type": "field",
       "inboundTag": ["bridge"],
       "domain": ["full:reverse-proxy.xray.internal"],
-      "outboundTag": "interconn"
+      "outboundTag": "interconn",
     },
     {
       // 从 portal 过来的流量，也会从 bridge 出来，但是不带上面的domain
       // 则路由到 out，即转发给网页服务器
       "type": "field",
       "inboundTag": ["bridge"],
-      "outboundTag": "out"
-    }
-  ]
+      "outboundTag": "out",
+    },
+  ],
 }
 ```
 
@@ -208,8 +211,8 @@ inbound:
   "settings": {
     "address": "127.0.0.1",
     "port": 80,
-    "network": "tcp"
-  }
+    "network": "tcp",
+  },
 }
 ```
 
@@ -222,10 +225,10 @@ inbound:
   "settings": {
     "clients": [
       {
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
-      }
-    ]
-  }
+        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+      },
+    ],
+  },
 }
 ```
 
@@ -239,7 +242,7 @@ inbound:
       // 则路由到 portal, 最终会转发给 bridge
       "type": "field",
       "inboundTag": ["external"],
-      "outboundTag": "portal"
+      "outboundTag": "portal",
     },
     {
       // 如果来自 interconn 入站，说明是来自 bridge 的尝试建立反向隧道请求，
@@ -247,8 +250,8 @@ inbound:
       // 注意：这里进入的请求会带上了前文配置的domain，所以 portal 能够区分两种被路由到 portal 的请求
       "type": "field",
       "inboundTag": ["interconn"],
-      "outboundTag": "portal"
-    }
-  ]
+      "outboundTag": "portal",
+    },
+  ],
 }
 ```

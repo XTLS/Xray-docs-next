@@ -17,7 +17,8 @@ export const getMermaidContent = ({
   content,
   title = "",
 }: MermaidOptions): string => `\
-${title
+${
+  title
     ? `\
 ---
 title: ${title}
@@ -25,20 +26,22 @@ title: ${title}
 
 `
     : ""
-  }\
-${diagram === "mermaid"
+}\
+${
+  diagram === "mermaid"
     ? ""
     : `\
 ${diagram}
 `
-  }\
-${diagram === "mermaid" || diagram === "sankey-beta"
+}\
+${
+  diagram === "mermaid" || diagram === "sankey-beta"
     ? content
     : content
-      .split("\n")
-      .map((line) => (line ? `  ${line}` : ""))
-      .join("\n")
-  }\
+        .split("\n")
+        .map((line) => (line ? `  ${line}` : ""))
+        .join("\n")
+}\
 `;
 
 const getMermaid = (options: MermaidOptions, index: number): string =>
