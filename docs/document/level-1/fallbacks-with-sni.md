@@ -325,7 +325,9 @@ http://blog.example.com:5002 {
 
 ## 引用
 
+<!-- prettier-ignore-start -->
 [^1]: [常见问题 - Let's Encrypt - 免费的 SSL/TLS 证书](https://letsencrypt.org/zh-cn/docs/faq/)
 [^2]: [Proxy Protocol - HAProxy Technologies](https://www.haproxy.com/blog/haproxy/proxy-protocol/)
 [^3]: [proxy protocol 介绍及 nginx 配置 - 简书](https://www.jianshu.com/p/cc8d592582c9)
 [^4]: [v2fly-github-io/vless.md at master · rprx/v2fly-github-io](https://github.com/rprx/v2fly-github-io/blob/master/docs/config/protocols/vless.md)
+<!-- prettier-ignore-end -->
