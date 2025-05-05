@@ -579,7 +579,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 - `"tproxy"`：使用 TProxy 模式的透明代理。支持所有基于 IPv4/6 的 TCP 和 UDP 连接。
 - `"off"`：关闭透明代理。
 
-透明代理需要 Root 或 `CAP\_NET\_ADMIN` 权限。
+透明代理需要 Root 或 `CAP_NET_ADMIN` 权限。
 
 ::: danger
 当 [Dokodemo-door](./inbounds/dokodemo.md) 中指定了 `followRedirect`为`true`，且 Sockopt 设置中的`tproxy` 为空时，Sockopt
