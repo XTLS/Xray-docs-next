@@ -1,4 +1,4 @@
-# XHTTP
+# XHTTP: Beyond REALITY
 
 ## Введение
 
