@@ -93,6 +93,8 @@ APIs that modify the inbound and outbound proxies, with the following available 
 - Add a new outbound proxy;
 - Delete an existing inbound proxy;
 - Delete an existing outbound proxy;
+- List inbound proxies;
+- List outbound proxies;
 - Add a user to an inbound proxy (VMess, VLESS, Trojan, and Shadowsocks(v1.3.0+) only);
 - Delete a user from an inbound proxy (VMess, VLESS, Trojan, and Shadowsocks(v1.3.0+) only);
 
