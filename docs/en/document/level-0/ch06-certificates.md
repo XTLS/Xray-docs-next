@@ -46,12 +46,12 @@ acme.sh --upgrade --auto-upgrade
 
 ## 6.3 Testing Certificate Application
 
-Before officially applying for the certificate, we use the testing command (`--issue --test`) to verify if the application can be successfully submitted. This can avoid repeated failures in applying for a certificate due to incorrect local configuration, exceeding the frequency limit of Let's Encrypt (such as a maximum of 5 failures per hour, per domain, or per user), which may prevent the subsequent steps from being carried out.
+Before officially applying for the certificate, we use the testing command (`--issue --server letsencrypt_test`) to verify if the application can be successfully submitted. This can avoid repeated failures in applying for a certificate due to incorrect local configuration, exceeding the frequency limit of Let's Encrypt (such as a maximum of 5 failures per hour, per domain, or per user), which may prevent the subsequent steps from being carried out.
 
 1. The command to apply for a test certificate is as follows (this article uses ECC certificate as an example, because there is really no reason not to use it nowadays):
 
 ```shell
-acme.sh --issue --server letsencrypt --test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256
+acme.sh --issue --server letsencrypt_test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256
 ```
 
 (Note: This is a command in shell script for obtaining SSL certificate from Let's Encrypt CA using ACME protocol. It specifies the test server, the subdomain for which the certificate is requested, the webroot directory of the subdomain, and the key length to use for the certificate.)
@@ -110,14 +110,18 @@ NZFQWYJLNVf2M9CCJfbEImPYgvctrxl39H6KVYPCw1SAdaj9NneUqmREOQkKoEB0
 x6PmNirbMscHhQPSC0JQaqUgaQFgba1ALmzRYAnYhNb0twkTxWbY7DBkAarxqMIp
 yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPIjw9AKH=
 --END CERTIFICAT--
-[Wed 30 Dec 2022 15:21:52 AM
+[Wed 30 Dec 2022 15:21:52 AM EST] Your cert is in  /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.cer
+[Wed 30 Dec 2022 15:21:52 AM EST] Your cert key is in  /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.key
+[Wed 30 Dec 2022 15:21:52 AM EST] The intermediate CA cert is in  /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/ca.cer
+[Wed 30 Dec 2022 15:21:52 AM EST] And the full chain certs is there:  /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/fullchain.cer
+````
 
 3. Note: The certificate applied for here is a test certificate, which cannot be used directly. It is only used to prove that your domain and configuration are correct. If you observe carefully, you will find that the domain that issues the certificate to you is `https://acme-staging-v02.api.letsencrypt.org`, and this `staging` can be understood as a "test server"!
 
 4. If this step goes wrong, you can run the following command to check the detailed application process and specific errors. If you don't understand, you can hide sensitive information and ask in the Xray group.
 
 ```shell
-acme.sh --issue --server letsencrypt --test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
+acme.sh --issue --server letsencrypt_test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
 ````
 
 (Note: This command is written in Chinese characters, therefore I have translated it into English. The command is used to issue SSL/TLS certificates using acme.sh client with Let's Encrypt CA in test mode for a subdomain of your domain with the specified webroot path, key length and in debug mode.)
@@ -128,7 +132,7 @@ Hmm, that's right. Just added a `--debug` parameter at the end of the command.
 
 ## 6.4 Application for Official Certification
 
-1. The command for applying for an official certificate is as follows (i.e., remove the `--test` parameter and add the `--force` parameter at the end):
+1. The command for applying for an official certificate is as follows (i.e., replace `letsencrypt_test` with `letsencrypt` and add the `--force` parameter at the end):
 
 ```shell
 acme.sh --set-default-ca --server letsencrypt
