@@ -44,12 +44,12 @@
 
 ## 6.3 测试证书申请
 
-在正式申请证书之前，我们先用测试命令(`--issue --test`)来验证是否可以成功申请，这样可以避免在本地配置有误时，反复申请证书失败，超过 Let's Encrypt 的频率上限（比如，每小时、每个域名、每个用户失败最多 5 次），导致后面的步骤无法进行。
+在正式申请证书之前，我们先用测试命令(`--issue --server letsencrypt_test`)来验证是否可以成功申请，这样可以避免在本地配置有误时，反复申请证书失败，超过 Let's Encrypt 的频率上限（比如，每小时、每个域名、每个用户失败最多 5 次），导致后面的步骤无法进行。
 
 1. 测试证书申请的命令如下（本文均以 `ECC` 证书为例，因为时至今日，实在没什么理由不用它）：
 
    ```shell
-   acme.sh --issue --server letsencrypt --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
+   acme.sh --issue --server letsencrypt_test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256
    ```
 
    ::: warning 说明
@@ -118,7 +118,7 @@
 4. 如果这一步出错的话，你可以运行下面的命令，来查看详细的申请过程和具体的错误。（看不懂就隐藏掉敏感信息后，去 Xray 群里问吧）
 
    ```shell
-   acme.sh --issue --server letsencrypt --test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
+   acme.sh --issue --server letsencrypt_test -d 二级域名.你的域名.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
    ```
 
    嗯没错，就是在命令的最后加了一个 `--debug` 参数
@@ -127,7 +127,7 @@
 
 ## 6.4 正式证书申请
 
-1. 申请正式证书的命令如下（即删掉 `--test` 参数，并在最后加入 `--force`参数）：
+1. 申请正式证书的命令如下（即将 `--server letsencrypt_test` 参数修改为 `--server letsencrypt`，并在最后加入 `--force`参数）：
 
    ```shell
    acme.sh --set-default-ca --server letsencrypt
