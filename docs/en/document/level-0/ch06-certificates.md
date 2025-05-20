@@ -63,7 +63,7 @@ In addition, if some websites do need to be compatible with certain old devices,
 
 2. You should eventually see a prompt similar to this:
 
-````log
+```log
 [Wed 30 Dec 2022 04:25:12 AM EST] Using ACME_DIRECTORY: https://acme-staging-v02.api.letsencrypt.org/directory
 [Wed 30 Dec 2022 04:25:13 AM EST] Using CA: https://acme-staging-v02.api.letsencrypt.org/directory
 [Wed 30 Dec 2022 04:25:13 AM EST] Create account key ok.
@@ -114,7 +114,7 @@ yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPIjw9AKH=
 [Wed 30 Dec 2022 15:21:52 AM EST] Your cert key is in  /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.key
 [Wed 30 Dec 2022 15:21:52 AM EST] The intermediate CA cert is in  /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/ca.cer
 [Wed 30 Dec 2022 15:21:52 AM EST] And the full chain certs is there:  /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/fullchain.cer
-````
+```
 
 3. Note: The certificate applied for here is a test certificate, which cannot be used directly. It is only used to prove that your domain and configuration are correct. If you observe carefully, you will find that the domain that issues the certificate to you is `https://acme-staging-v02.api.letsencrypt.org`, and this `staging` can be understood as a "test server"!
 
@@ -122,7 +122,7 @@ yiLKcBFc5H7dgJCImo7us7aJeftC44uWkPIjw9AKH=
 
 ```shell
 acme.sh --issue --server letsencrypt_test -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256 --debug
-````
+```
 
 (Note: This command is written in Chinese characters, therefore I have translated it into English. The command is used to issue SSL/TLS certificates using acme.sh client with Let's Encrypt CA in test mode for a subdomain of your domain with the specified webroot path, key length and in debug mode.)
 
