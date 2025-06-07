@@ -98,8 +98,10 @@ API 服务监听的 IP 和端口。这是一个可选配置项。
 - 添加一个新的出站代理；
 - 删除一个现有的入站代理；
 - 删除一个现有的出站代理；
-- 在一个入站代理中添加一个用户（仅支持 VMess、VLESS、Trojan、Shadowsocks（v1.3.0+））；
-- 在一个入站代理中删除一个用户（仅支持 VMess、VLESS、Trojan、Shadowsocks（v1.3.0+））；
+- 列出出站代理；
+- 列出入站代理
+- 在一个入站代理中添加一个用户（仅支持 VMess、VLESS、Trojan、Shadowsocks）；
+- 在一个入站代理中删除一个用户（仅支持 VMess、VLESS、Trojan、Shadowsocks）；
 
 ### RoutingService
 
