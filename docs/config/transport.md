@@ -276,12 +276,16 @@ x25519Kyber768Draft00
   "maxClientVer": "",
   "maxTimeDiff": 0,
   "shortIds": ["", "0123456789abcdef"],
-  "limitUploadRate": 0,
-  "limitUploadBurst": 0,
-  "limitUploadAfter": 0,
-  "limitDownloadRate": 0,
-  "limitDownloadBurst": 0,
-  "limitDownloadAfter": 0,
+  "limitFallbackUpload": {
+    "afterBytes": 0,
+    "bytesPerSec": 0,
+    "burstBytesPerSec": 0
+  },
+  "limitFallbackDownload": {
+    "afterBytes": 0,
+    "bytesPerSec": 0,
+    "burstBytesPerSec": 0
+  },
   "fingerprint": "chrome",
   "serverName": "",
   "publicKey": "",
@@ -319,7 +323,7 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 如果 target 网站的 IP 地址特殊（如使用了 CloudFlare CDN 的网站） 则相当于你的服务器充当了 CloudFlare 的端口转发，可能造成被扫描后偷跑流量的情况。
 
 为了杜绝这种情况，可以考虑前置Nginx等方法过滤掉不符合要求的SNI。
-或者你也考虑配置 `limit****` 相关参数，限制其速率。
+或者你也考虑配置 `limitFallbackUpload` 和 `limitFallbackDownload`，限制其速率。
 :::
 
 > `xver` : number
@@ -361,49 +365,33 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 ::: warning
 警告：对于 REALITY 最佳实践始终是偷同 ASN 的证书，那么你大概率用不到此功能；只有当你迫不得已偷了 CDN 证书时，为避免成为别人加速节点时可考虑开启此功能。
 
-启用限速可能会引入新的特征被GFW探测到！如果您是GUI/面板/一键脚本开发者，请务必让这些参数随机化！
+回落限速是一种特征，不建议启用，如果您是面板/一键脚本开发者，务必让这些参数随机化。
 :::
 
 ::: tip
-下列六个 `limit****` 为选填，可对回落的 REALITY 连接限速。默认为 0 即不启用。
+`limitFallbackUpload` 和 `limitFallbackDownload` 为选填，可对未通过验证的回落连接限速，`bytesPerSec` 默认为 0 即不启用。
 
-原理：当传输了after减去burst字节后开启限速算法。
-限速采用令牌桶算法，桶的容量是burst，每传输一个字节用掉一个token，初始burst是满的。
-每秒以rate个token填充桶，直到容量满。
+原理：针对每个连接，当传输了afterBytes字节后开启限速算法。
+限速采用令牌桶算法，桶的容量是burstBytesPerSec，每传输一个字节用掉一个令牌，初始burstBytesPerSec是满的。
+每秒以bytesPerSec个令牌填充桶，直到容量满。
 
-举例：`after=10485760`, `burst=5242880`, `rate=1048576` 代表传输`10mb`后开始限速为`1mb/s`，如果暂停传输，5秒后能突发到`5mb/s`，然后又恢复到`1mb/s`。
+举例：`afterBytes=10485760`, `burstBytesPerSec=5242880`, `bytesPerSec=1048576` 代表传输`15mb`后开始限速为`1mb/s`，如果暂停传输，5秒后能突发到`5mb/s`，然后又恢复到`1mb/s`。
 
-建议：过大的`after`和`burst`将起不到限速效果，过小的`rate`和`burst`则十分容易被探测。
-应结合被偷网站的资源大小合理设置参数，如果不允许突发，可以把`burst`设为和`rate`一样。
+建议：过大的`afterBytes`和`burstBytesPerSec`将起不到限速效果，过小的`bytesPerSec`和`burstBytesPerSec`则十分容易被探测。
+应结合被偷网站的资源大小合理设置参数，如果不允许突发，可以把`burstBytesPerSec`设为 0。
 :::
 
-> `limitUploadRate` : number
+> `afterBytes` : number
 
-选填，对回落的 REALITY 连接限速，限制上传基准速率（字节/秒）
-不能大于 `limitUploadBurst`
+选填，对回落的 REALITY 连接限速，限制传输指定字节后开始限速，默认为 0。
 
-> `limitUploadBurst` : number
+> `bytesPerSec` : number
 
-选填，对回落的 REALITY 连接限速，限制上传突发速率（字节/秒）
-不能小于 `limitUploadRate`
+选填，对回落的 REALITY 连接限速，限制基准速率（字节/秒），默认为 0 即不启用限速功能。
 
-> `limitUploadAfter` : number
+> `burstBytesPerSec` : number
 
-选填，对回落的 REALITY 连接限速，限制上传指定字节后开始限速。
-
-> `limitDownloadRate` : number
-
-选填，对回落的 REALITY 连接限速，限制下载基准速率（字节/秒）
-不能大于 `limitDownloadBurst`
-
-> `limitDownloadBurst` : number
-
-选填，对回落的 REALITY 连接限速，限制下载突发速率（字节/秒）
-不能小于 `limitDownloadRate`
-
-> `limitDownloadAfter` : number
-
-选填，对回落的 REALITY 连接限速，限制下载指定字节后开始限速。
+选填，对回落的 REALITY 连接限速，限制突发速率（字节/秒），大于 `bytesPerSec` 时生效。
 
 ::: tip
 以下为**出站**（**客户端**）配置。
