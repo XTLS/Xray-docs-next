@@ -277,10 +277,10 @@ x25519Kyber768Draft00
   "maxTimeDiff": 0,
   "shortIds": ["", "0123456789abcdef"],
   "limitUploadRate": 0,
-  "limitUploadBrust": 0,
+  "limitUploadBurst": 0,
   "limitUploadAfter": 0,
   "limitDownloadRate": 0,
-  "limitDownloadBrust": 0,
+  "limitDownloadBurst": 0,
   "limitDownloadAfter": 0,
   "fingerprint": "chrome",
   "serverName": "",
@@ -367,22 +367,22 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 ::: tip
 下列六个 `limit****` 为选填，可对回落的 REALITY 连接限速。默认为 0 即不启用。
 
-原理：当传输了after减去brust字节后开启限速算法。
-限速采用令牌桶算法，桶的容量是brust，每传输一个字节用掉一个token，初始brust是满的。
+原理：当传输了after减去burst字节后开启限速算法。
+限速采用令牌桶算法，桶的容量是burst，每传输一个字节用掉一个token，初始burst是满的。
 每秒以rate个token填充桶，直到容量满。
 
-举例：`after=10485760`, `brust=5242880`, `rate=1048576` 代表传输`10mb`后开始限速为`1mb/s`，如果暂停传输，5秒后能突发到`5mb/s`，然后又恢复到`1mb/s`。
+举例：`after=10485760`, `burst=5242880`, `rate=1048576` 代表传输`10mb`后开始限速为`1mb/s`，如果暂停传输，5秒后能突发到`5mb/s`，然后又恢复到`1mb/s`。
 
-建议：过大的`after`和`brust`将起不到限速效果，过小的`rate`和`brust`则十分容易被探测。
-应结合被偷网站的资源大小合理设置参数，如果不允许突发，可以把`brust`设为和`rate`一样。
+建议：过大的`after`和`burst`将起不到限速效果，过小的`rate`和`burst`则十分容易被探测。
+应结合被偷网站的资源大小合理设置参数，如果不允许突发，可以把`burst`设为和`rate`一样。
 :::
 
 > `limitUploadRate` : number
 
 选填，对回落的 REALITY 连接限速，限制上传基准速率（字节/秒）
-不能大于 `limitUploadBrust`
+不能大于 `limitUploadBurst`
 
-> `limitUploadBrust` : number
+> `limitUploadBurst` : number
 
 选填，对回落的 REALITY 连接限速，限制上传突发速率（字节/秒）
 不能小于 `limitUploadRate`
@@ -394,9 +394,9 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 > `limitDownloadRate` : number
 
 选填，对回落的 REALITY 连接限速，限制下载基准速率（字节/秒）
-不能大于 `limitDownloadBrust`
+不能大于 `limitDownloadBurst`
 
-> `limitDownloadBrust` : number
+> `limitDownloadBurst` : number
 
 选填，对回落的 REALITY 连接限速，限制下载突发速率（字节/秒）
 不能小于 `limitDownloadRate`
