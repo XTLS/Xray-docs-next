@@ -375,7 +375,7 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 限速采用令牌桶算法，桶的容量是 burstBytesPerSec，每传输一个字节用掉一个令牌，初始 burstBytesPerSec 是满的。
 每秒以 bytesPerSec 个令牌填充桶，直到容量满。
 
-举例：`afterBytes=10485760`, `burstBytesPerSec=5242880`, `bytesPerSec=1048576` 代表传输 `15MB` 后开始限速为 `1MB/s`，如果暂停传输，5 秒后能突发到 `5MB/s`，然后又恢复到 `1MB/s`。
+举例：`afterBytes=10485760`, `burstBytesPerSec=5242880`, `bytesPerSec=1048576` 代表传输 15MB 后开始限速为 1MB/s，如果暂停传输，5 秒后能突发到 5MB/s，然后又恢复到 1MB/s。
 
 建议：过大的 `afterBytes` 和 `burstBytesPerSec` 将起不到限速效果，过小的 `bytesPerSec` 和 `burstBytesPerSec` 则十分容易被探测。
 应结合被偷网站的资源大小合理设置参数，如果不允许突发，可以把 `burstBytesPerSec` 设为 0。
