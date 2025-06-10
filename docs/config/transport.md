@@ -35,8 +35,7 @@
     "interface": "wg0",
     "v6only": false,
     "tcpWindowClamp": 600,
-    "tcpMptcp": false,
-    "tcpNoDelay": false
+    "tcpMptcp": false
   }
 }
 ```
@@ -530,7 +529,6 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "V6Only": false,
   "tcpWindowClamp": 600
   "tcpMptcp": false,
-  "tcpNoDelay": false,
   "addressPortStrategy": "",
   "customSockopt": []
 }
