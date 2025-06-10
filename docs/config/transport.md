@@ -371,7 +371,7 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 ::: tip
 `limitFallbackUpload` 和 `limitFallbackDownload` 为选填，可对未通过验证的回落连接限速，`bytesPerSec` 默认为 0 即不启用。
 
-原理：针对每个连接，当传输了 afterBytes 字节后开启限速算法。
+原理：针对每个未通过验证的回落连接，当传输了 afterBytes 字节后开启限速算法。
 限速采用令牌桶算法，桶的容量是 burstBytesPerSec，每传输一个字节用掉一个令牌，初始 burstBytesPerSec 是满的。
 每秒以 bytesPerSec 个令牌填充桶，直到容量满。
 
