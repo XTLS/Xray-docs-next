@@ -110,11 +110,10 @@
 
 是否开启流量探测。
 
-> `destOverride`: \["http" | "tls" | "quic" | "fakedns" | "fakedns+others" \]
+> `destOverride`: \["http" | "tls" | "quic" | "fakedns"\]
 
 当流量为指定类型时，按其中包括的目标地址重置当前连接的目标。
 
-其中 `["fakedns+others"]` 相当于 `["http", "tls", "quic", "fakedns"]`，当 IP 地址处于 FakeIP 区间内但没有命中域名记录时会使用 `http`、`tls` 和 `quic` 进行匹配。此项仅在 `metadataOnly` 为 `false` 时有效。
 
 ::: tip
 Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进行嗅探用作路由而不想重置目标地址（如使用Tor浏览器时，重置目标地址会导致无法连接），请在这里添加对应的协议并启用 `routeOnly` 。
@@ -122,7 +121,7 @@ Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进
 
 > `metadataOnly`: true | false
 
-当启用时，将仅使用连接的元数据嗅探目标地址。此时，除 `fakedns` 以外的 sniffer 将不能激活（包括 `fakedns+others`）。
+当启用时，将仅使用连接的元数据嗅探目标地址。此时，除 `fakedns` 以外的 sniffer 将不能激活。
 
 如果关闭仅使用元数据推断目标地址，此时客户端必须先发送数据，代理服务器才会实际建立连接。此行为与需要服务器首先发起第一个消息的协议不兼容，如 SMTP 协议。
 
