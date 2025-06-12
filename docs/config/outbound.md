@@ -1,6 +1,6 @@
 # 出站代理（Mux、XUDP）
 
-出站连接用于发送数据，可用的协议请见 [出站协议](./outbounds/)。
+出站连接用于发送数据，可用的协议请见 [出站协议](./outbounds/blackhole.html)。
 
 ## OutboundObject
 
