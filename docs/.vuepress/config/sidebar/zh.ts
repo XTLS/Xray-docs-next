@@ -32,7 +32,7 @@ export const sidebarZh: SidebarConfig = {
       ],
     },
     {
-      text: "入站代理",
+      text: "入站协议",
       children: [
         "/config/inbounds/dokodemo.md",
         "/config/inbounds/http.md",
@@ -45,7 +45,7 @@ export const sidebarZh: SidebarConfig = {
       ],
     },
     {
-      text: "出站代理",
+      text: "出站协议",
       children: [
         "/config/outbounds/blackhole.md",
         "/config/outbounds/dns.md",
