@@ -1,6 +1,6 @@
 # Inbound Proxy
 
-Inbound connections are used to receive incoming data and the available protocols are listed in [inbound protocols](./inbounds/).
+Inbound connections are used to receive incoming data and the available protocols are listed in [inbound protocols](./inbounds/dokodemo.html).
 
 ## InboundObject
 

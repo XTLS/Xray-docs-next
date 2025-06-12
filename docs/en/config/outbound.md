@@ -1,6 +1,6 @@
 # Outbound Proxies
 
-Outbound connections are used for sending data and can use any of the available protocols listed in [outbound protocols](./outbounds/).
+Outbound connections are used for sending data and can use any of the available protocols listed in [outbound protocols](./outbounds/blackhole.html).
 
 ## OutboundObject
 
