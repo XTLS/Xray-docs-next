@@ -76,7 +76,7 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 
 ### Gentoo
 
-目前有三个第三方 Overlay 提供 Portage 安装脚本:
+目前有三个第三方 Overlay 提供 Portage 安装脚本：
 
 - [CHN-beta/touchfish-os](https://github.com/gentoo-mirror/touchfish-os/tree/master/net-proxy/Xray): 个人维护，适用于 systemD 系统
 - [Gentoo-zh](https://github.com/microcai/gentoo-zh): 社区维护，适用于 systemD 系统
@@ -86,14 +86,40 @@ Linuxbrew 包管理器的使用方式与 Homebrew 一致：`brew install xray`
 
 ## Docker 安装方式
 
-- [teddysun/xray](https://hub.docker.com/r/teddysun/xray)
+目前提供两种不同风格的 Docker 映像：
+
+- [teddysun/xray](https://hub.docker.com/r/teddysun/xray) 有 root 权限、有 shell 环境、兼容所有 Alpine 支持的架构。由私人服务器 dl.lamp.sh 编译并构建。使用起来更便捷
+- [ghcr.io/xtls/xray-core](https://ghcr.io/xtls/xray-core) 无 root 权限、无 shell 环境、支持更多的架构。由官方库编译并构建支持追溯。牺牲了便利性来追求更极端的安全性
 
 ### Docker image 的文件结构
 
-- `/etc/xray/config.json`：配置文件
+teddysun/xray 版本映像：
+
 - `/usr/bin/xray`：Xray 主程序
-- `/usr/share/xray/geoip.dat`：IP 数据文件
-- `/usr/share/xray/geosite.dat`：域名数据文件
+- `/etc/xray/config.json`：单一配置文件（其所在目录为挂载点）
+- `/usr/share/xray/`：资源文件目录，存放了 v2fly 版本地理位置数据文件
+  - geoip.dat
+  - geosite.dat
+
+ghcr.io/xtls/xray-core 版本映像：
+
+- `/usr/local/bin/xray`：Xray 主程序（拥有者是 root:root、文件权限 755）
+- `/usr/local/etc/xray/`：配置文件目录（挂载点）（拥有者是 root:root、目录权限 755、文件权限 644）
+  - 01_api.json
+  - 02_dns.json
+  - 03_routing.json
+  - 04_policy.json
+  - 05_inbounds.json
+  - 06_outbounds.json
+  - 07_transport.json
+  - 08_stats.json
+  - 09_reverse.json
+- `/usr/local/share/xray/`：资源文件目录，存放了 Loyalsoldier 版本地理位置数据文件（权限同上）
+  - geoip.dat
+  - geosite.dat
+- `/var/log/xray/`：日志文件目录（挂载点）（目录拥有者是 root:root、权限 755；文件拥有者是 65532:65532、权限 600）
+  - access.log
+  - error.log
 
 # 图形化客户端
 
