@@ -66,28 +66,37 @@ First add [Arch Linux CN](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirr
 
 ### Linuxbrew
 
-The Linuxbrew package manager is used in the same way as Homebrew: `brew install xray`.
+The Linuxbrew package manager is used in the same way as Homebrew: `brew install xray`
 
 ### Debian <Badge text="WIP" type="warning"/>
 
-### Gentoo <Badge text="WIP" type="warning"/>
+### Gentoo
+
+Currently, three third-party Overlays provide Portage installation scripts:
+
+- **[CHN-beta/touchfish-os](https://github.com/gentoo-mirror/touchfish-os/tree/master/net-proxy/Xray)**: Individually maintained, designed for systemD systems
+- **[Gentoo-zh](https://github.com/microcai/gentoo-zh)**: Community-maintained, designed for systemD systems
+- **[JuanCldCmt/Xray-Overlay](https://github.com/JuanCldCmt/Xray-Overlay)**: Individually maintained, designed for openRC systems. Runs under the `xray` user group for enhanced security
+
+Use `layman` or `eselect-repository` to add the Overlay to your local repository, then install.
 
 ## Install via Docker
 
-Currently two different styles of Docker images are provided
-- [teddysun/xray](https://hub.docker.com/r/teddysun/xray): Root privileges, shell environment, compatible with all architectures supported by Alpine. Compiled and built via a private server (dl.lamp.sh). Offers better ease of use.  
-- [ghcr.io/xtls/xray-core](https://ghcr.io/xtls/xray-core): Rootless, no shell environment, supports more architectures. Compiled from the official repository with build provenance. Sacrifices convenience for extreme security.  
+Currently two different styles of Docker images are provided:
+
+- [teddysun/xray](https://hub.docker.com/r/teddysun/xray): Root privileges, shell environment, compatible with all architectures supported by Alpine. Compiled and built via a private server (dl.lamp.sh). Offers better ease of use
+- [ghcr.io/xtls/xray-core](https://ghcr.io/xtls/xray-core): Rootless, no shell environment, supports more architectures. Compiled from the official repository with build provenance. Sacrifices convenience for extreme security
 
 ### Docker Image File Structure
 
-**teddysun/xray image**
+teddysun/xray image:
 - `/usr/bin/xray`: Xray-core executable
 - `/etc/xray/config.json`: Single configuration file (its directory is the mount point)
 - `/usr/share/xray/`: Resource directory containing v2fly geodata files
   - geoip.dat
   - geosite.dat
 
-**ghcr.io/xtls/xray-core image**
+ghcr.io/xtls/xray-core image:
 - `/usr/local/bin/xray`: Xray-core executable (owner: root:root, permissions: 755)
 - `/usr/local/etc/xray/`: Configuration directory (mount point). Owner: root:root, directory permissions: 755, file permissions: 644
   - 00_log.json
