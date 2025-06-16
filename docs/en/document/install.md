@@ -66,20 +66,46 @@ First add [Arch Linux CN](https://www.archlinuxcn.org/archlinux-cn-repo-and-mirr
 
 ### Linuxbrew
 
-The Linuxbrew package manager is used in the same way as Homebrew: `brew install xray`
+The Linuxbrew package manager is used in the same way as Homebrew: `brew install xray`.
 
 ### Debian <Badge text="WIP" type="warning"/>
 
+### Gentoo <Badge text="WIP" type="warning"/>
+
 ## Install via Docker
 
-- [teddysun/xray](https://hub.docker.com/r/teddysun/xray)
+Currently two different styles of Docker images are provided
+- [teddysun/xray](https://hub.docker.com/r/teddysun/xray): Root privileges, shell environment, compatible with all architectures supported by Alpine. Compiled and built via a private server (dl.lamp.sh). Offers better ease of use.  
+- [ghcr.io/xtls/xray-core](https://ghcr.io/xtls/xray-core): Rootless, no shell environment, supports more architectures. Compiled from the official repository with build provenance. Sacrifices convenience for extreme security.  
 
-### The File Structure of the Docker Image
+### Docker Image File Structure
 
-- `/etc/xray/config.json`: configuration file
-- `/usr/bin/xray`: Xray main program
-- `/usr/local/share/xray/geoip.dat`: IP data file
-- `/usr/local/share/xray/geosite.dat`: domain name data file
+**teddysun/xray image**
+- `/usr/bin/xray`: Xray-core executable
+- `/etc/xray/config.json`: Single configuration file (its directory is the mount point)
+- `/usr/share/xray/`: Resource directory containing v2fly geodata files
+  - geoip.dat
+  - geosite.dat
+
+**ghcr.io/xtls/xray-core image**
+- `/usr/local/bin/xray`: Xray-core executable (owner: root:root, permissions: 755)
+- `/usr/local/etc/xray/`: Configuration directory (mount point). Owner: root:root, directory permissions: 755, file permissions: 644
+  - 00_log.json
+  - 01_api.json
+  - 02_dns.json
+  - 03_routing.json
+  - 04_policy.json
+  - 05_inbounds.json
+  - 06_outbounds.json
+  - 07_transport.json
+  - 08_stats.json
+  - 09_reverse.json
+- `/usr/local/share/xray/`: Resource directory containing Loyalsoldier geodata files (same permissions as above)
+  - geoip.dat
+  - geosite.dat
+- `/var/log/xray/`: Log directory (mount point). Directory owner: root:root, permissions: 755. File owner: 65532:65532, permissions: 600
+  - access.log
+  - error.log
 
 # GUI Client
 
