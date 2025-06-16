@@ -105,6 +105,7 @@ ghcr.io/xtls/xray-core 版本映像：
 
 - `/usr/local/bin/xray`：Xray 主程序（拥有者是 root:root、文件权限 755）
 - `/usr/local/etc/xray/`：配置文件目录（挂载点）（拥有者是 root:root、目录权限 755、文件权限 644）
+  - 00_log.json
   - 01_api.json
   - 02_dns.json
   - 03_routing.json
