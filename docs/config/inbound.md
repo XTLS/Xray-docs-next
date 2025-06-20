@@ -38,12 +38,12 @@
 
 `"::"` 等价于`"0.0.0.0"` 两者都会同时监听 IPv6 和 IPv4. 不过如果只想监听IPv6可以将 `sockopt` 的 `v6only` 设置为 true. 如果只想监听ipv4 可以用 `ip a` 等命令查看网卡上的具体 IP (通常直接就是机器的公网 IP 地址或者一个类似 10.x.x.x 的内网地址) 然后监听，当然对于 IPv6 也可以这么做。
 
-注意，因为UDP不是面向连接的，如果入站基于 UDP 且网卡上存在多个IP地址而外部连接的是网卡上的非首选地址，将会导致 Xray 使用错误地使用首选地址而非外部连接的目标作为源地址回复导致连接不通。
+注意，因为UDP不是面向连接的，如果入站基于 UDP 且网卡上存在多个IP地址而外部连接的是网卡上的非首选地址，将会导致 Xray 错误地使用首选地址而非外部连接的目标作为源地址回复导致连接不通。
 解决办法是不要监听 `0.0.0.0` 而是监听网卡上具体的 IP 地址。
 
 支持填写 Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `@` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`@@` 则代表带 padding 的 abstract。
 
-填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，仅适用于基于 TCP 的底层传输，如 `tcp` `websocket` `grpc` 不支持基于 UDP 的传输 如 `mkcp`
+填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，仅适用于基于 TCP 的底层传输，如 `tcp` `websocket` `grpc`. 不支持基于 UDP 的传输，如 `mkcp`.
 
 填写 Unix domain socket 时，填写为形如 `"/dev/shm/domain.socket,0666"` 的形式，即 socket 后加逗号及访问权限指示符，即可指定 socket 的访问权限，可用于解决默认情况下出现的 socket 访问权限问题。
 
