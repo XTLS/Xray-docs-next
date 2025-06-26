@@ -663,18 +663,6 @@ in `freedom` settings when you set `domainStrategy` to `UseIP`/`ForceIP` just a 
 
 :::
 
-::: tip
-
-in `AsIs` domainStrategy, built-in golang happyEyeballs is applied(currently it is RFC-6555) 
-
-:::
-
-::: tip
-
-when `dialerProxy` is set, `happyEyeballs` is not applied, and only a random IP will replace the domain.
-
-:::
-
 ```json
 "happyEyeballs": {
     "tryDelayMs": 250,
