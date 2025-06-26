@@ -26,6 +26,7 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
     "tcpFastOpen": false,
     "tproxy": "off",
     "domainStrategy": "AsIs",
+    "happyEyeballs": {"tryDelayMs": 250},
     "dialerProxy": "",
     "acceptProxyProtocol": false,
     "tcpKeepAliveInterval": 0,
@@ -461,6 +462,7 @@ A string array representing the key content, in the format shown in the example.
   "tcpFastOpen": false,
   "tproxy": "off",
   "domainStrategy": "AsIs",
+  "happyEyeballs": {"tryDelayMs": 250},
   "dialerProxy": "",
   "acceptProxyProtocol": false,
   "tcpKeepAliveInterval": 0,
@@ -643,3 +645,47 @@ The option name of the operation, using decimal (the example here is that the va
 The option value to be set, the example here is set to bbr.
 
 Decimal numbers are required when type is specified as int.
+
+
+> `happyEyeballs`: {}
+
+only TCP, this is RFC-8305 implementation of happyEyeballs, only apply when built-in-dns is used(domainStrategy is `UseIP`/`ForceIP`).
+When we have multiple IPs, this algorithm tries to connect to each IP, the first-stablished-connection is winner connection and selected for sending/receiving data.
+
+::: warning
+
+in `freedom` settings when you set `domainStrategy` to `UseIP`/`ForceIP` just a random IP will replace the domain and `happyEyeballs` does not apply, so for using `happyEyeballs` you should set `sockopt domainStrategy` to `UseIP/ForceIP` not `freedom domainStrategy`.
+
+:::
+
+::: tip
+
+in `AsIs` domainStrategy, built-in golang happyEyeballs is applied(currently it is RFC-6555) 
+
+:::
+
+```json
+"happyEyeballs": {
+    "tryDelayMs": 250,
+    "prioritizeIPv6": false, 
+    "maxConcurrentTry": 4,
+    "interleave": 1
+}
+```
+
+> `tryDelayMs`: number
+
+delay time between each attempt in millisecond, RFC-8305 recommend `250`, default is `0`.
+(if it is `0`, happy-eyeballs is disabled)
+
+> `interleave`: number
+
+ indicate "First Address Family count" in RFC-8305, default is 1.
+
+> `prioritizeIPv6`: bool
+
+ indicate "First Address Family" in RFC-8305, default is false(= prioritizeIPv4)
+
+> `maxConcurrentTry`: number
+
+maximum concurrent attempt (this is only maximum and in most cases our concurrent attempts is less, unless all connection fail to connect) also we can always have a maximum of concurrent-attempt as many IPs as we have, and this option is useful when the number of IPs is too high, and we want to control the number of concurrent-attempts, default is 4. if it is 0, happy-eyeballs is disabled.
