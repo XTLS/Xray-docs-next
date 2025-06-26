@@ -35,12 +35,21 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
 }
 ```
 
-> `domainStrategy`: "AsIs" | "UseIP" | "UseIPv4" | "UseIPv6"
+> `domainStrategy`: "AsIs"
+"UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
+"ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
 When the destination address is a domain name, configure the corresponding value for Freedom's behavior:
 
 - `"AsIs"`: Freedom resolves the domain name using the system DNS server and connects to it.
 - `"UseIP"`, `"UseIPv4"`, and `"UseIPv6"`: Xray resolves the domain name using the built-in [DNS server](../dns.md) and connects to it. The default value is `"AsIs"`.
+- "IPv4" means that you are trying to connect using only IPv4, "IPv4v6" means that you are trying to connect using either IPv4 or IPv6, but for dual-stack domain names, IPv4 is used. (The same applies to the v4v6 switch, so I won't go into details.)
+- When using "Use"the option beginning with , if the resolution result does not meet the requirements (for example, the domain name only has IPv4 resolution results but UseIPv6 is used), it will fall back to AsIs.
+- When using "Force"an option beginning with , if the parsing result does not meet the requirements, the connection cannot be established.
+
+::: warning
+if we have multiple IPs and using `UseIP` or `ForceIP` only a random IP will replace the domain, for using `happyEyeballs` we should use `sockopt domainStrategy` instead.
+:::
 
 ::: tip TIP 1
 When using the `"UseIP"` mode and the `sendThrough` field is specified in the [outbound connection configuration](../outbound.md#outboundobject), Freedom will automatically determine the required IP type, IPv4 or IPv6, based on the value of `sendThrough`.
