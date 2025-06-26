@@ -26,6 +26,7 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
     "tcpFastOpen": false,
     "tproxy": "off",
     "domainStrategy": "AsIs",
+    "happyEyeballs": {"tryDelayMs": 250},
     "dialerProxy": "",
     "acceptProxyProtocol": false,
     "tcpKeepAliveInterval": 0,
@@ -461,6 +462,7 @@ A string array representing the key content, in the format shown in the example.
   "tcpFastOpen": false,
   "tproxy": "off",
   "domainStrategy": "AsIs",
+  "happyEyeballs": {"tryDelayMs": 250},
   "dialerProxy": "",
   "acceptProxyProtocol": false,
   "tcpKeepAliveInterval": 0,
@@ -509,7 +511,9 @@ Transparent proxy requires Root or `CAP\_NET\_ADMIN` permission.
 When `followRedirect` is set to `true` in [Dokodemo-door](./inbounds/dokodemo.md), and `tproxy` in the Sockopt settings is empty, the value of `tproxy` in the Sockopt settings will be set to `"redirect"`.
 :::
 
-> `domainStrategy`: "AsIs" | "UseIP" | "UseIPv4" | "UseIPv6"
+> `domainStrategy`: "AsIs"
+"UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
+"ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
 In previous versions, when Xray attempted to establish a system connection using a domain name, the resolution of the domain name was completed by the system and not controlled by Xray. This led to issues such as the inability to resolve domain names in non-standard Linux environments. To solve this problem, Xray 1.3.1 introduced Freedom's `domainStrategy` into Sockopt.
 
@@ -517,6 +521,9 @@ When the target address is a domain name, the corresponding value is configured,
 
 - `"AsIs"`: Resolve the IP address using the system DNS server and connect to the domain name.
 - `"UseIP"`, `"UseIPv4"`, and `"UseIPv6"`: Resolve the IP address using the [built-in DNS server](./dns.md) and connect to the IP address directly.
+- "IPv4" means that you are trying to connect using only IPv4, "IPv4v6" means that you are trying to connect using either IPv4 or IPv6, but for dual-stack domain names, IPv4 is used. (The same applies to the v4v6 switch, so I won't go into details.)
+- When using "Use" the option beginning with , if the resolution result does not meet the requirements (for example, the domain name only has IPv4 resolution results but UseIPv6 is used), it will fall back to AsIs.
+- When using "Force" an option beginning with , if the parsing result does not meet the requirements, the connection cannot be established.
 
 The default value is `"AsIs"`.
 
@@ -643,3 +650,47 @@ The option name of the operation, using decimal (the example here is that the va
 The option value to be set, the example here is set to bbr.
 
 Decimal numbers are required when type is specified as int.
+
+
+> `happyEyeballs`: {}
+
+only TCP, this is RFC-8305 implementation of happyEyeballs, only apply when built-in-dns is used(domainStrategy is `UseIP`/`ForceIP`).
+When we have multiple IPs, this algorithm tries to connect to each IP, the first-stablished-connection is winner connection and selected for sending/receiving data.
+
+::: warning
+
+in `freedom` settings when you set `domainStrategy` to `UseIP`/`ForceIP` just a random IP will replace the domain and `happyEyeballs` does not apply, so for using `happyEyeballs` you should set `sockopt domainStrategy` to `UseIP/ForceIP` not `freedom domainStrategy`.
+
+:::
+
+```json
+"happyEyeballs": {
+    "tryDelayMs": 250,
+    "prioritizeIPv6": false,
+    "interleave": 1,
+    "maxConcurrentTry": 4,
+}
+```
+
+> `tryDelayMs`: number
+
+delay time between each attempt in millisecond, RFC-8305 recommend `250`, default is `0`.
+(if it is `0`, happy-eyeballs is disabled)
+
+> `prioritizeIPv6`: bool
+
+ indicate "First Address Family" in RFC-8305, default is false(= prioritizeIPv4)
+
+> `interleave`: number
+
+ indicate "First Address Family count" in RFC-8305, default is 1.
+ 
+for example suppose our IP-list is [ip4-1, ip4-2, ip4-3, ip4-4, ip6-1, ip6-2, ip6-3, ip6-4]
+when interleave  is 1 and prioritizeIPv6 is false, the sorted-ip-list is:
+[ip4-1, ip6-1, ip4-2, ip6-2, ip4-3, ip6-3, ip4-4, ip6-4]
+and when for example interleave is 2 and prioritizeIPv6  is true:
+[ip6-1, ip6-2, ip4-1, ip4-2, ip6-3, ip6-4, ip4-3, ip4-4]
+
+> `maxConcurrentTry`: number
+
+maximum concurrent attempt (this is only maximum and in most cases our concurrent attempts is less, unless all connection fail to connect) also we can always have a maximum of concurrent-attempt as many IPs as we have, and this option is useful when the number of IPs is too high, and we want to control the number of concurrent-attempts, default is 4. if it is 0, happy-eyeballs is disabled.
