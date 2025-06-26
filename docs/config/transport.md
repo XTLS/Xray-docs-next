@@ -567,6 +567,7 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
   "tcpFastOpen": false,
   "tproxy": "off",
   "domainStrategy": "AsIs",
+  "happyEyeballs": {},
   "dialerProxy": "",
   "acceptProxyProtocol": false,
   "tcpKeepAliveInterval": 0,
