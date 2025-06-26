@@ -26,6 +26,7 @@
     "tcpFastOpen": false,
     "tproxy": "off",
     "domainStrategy": "AsIs",
+    "happyEyeballs": {},
     "dialerProxy": "",
     "acceptProxyProtocol": false,
     "tcpKeepAliveInterval": 0,
@@ -816,3 +817,39 @@ PS: 如果有正常上网的域名流量被 AsIs 的 freedom 出站送过来，�
 要设置的选项值，此处示例为设置为bbr.
 
 当 type 指定为 int 时需要使用十进制数字。
+
+
+> `happyEyeballs`: {}
+
+RFC-8305 实现的 happyEyeballs 仅适用于 TCP, 当目标为域名时对它们竞速并选择第一个成功的返回，当 `domainStrategy` 被设置为 `UseIP`/`ForceIP` (包括它们的v4/v6/v4v6版本，但这会使可用的IP列表被缩减到仅剩v4或v6，不推荐这么用)
+
+::: warning
+使用这个功能时不要使用 `Freedom` 出站的 `domainStrategy`, 这会导致 `Sockopt` 只能看到被替换完毕的 IP.
+:::
+
+```json
+"happyEyeballs": {
+    "tryDelayMs": 250,
+    "prioritizeIPv6": false,
+    "interleave": 1,
+    "maxConcurrentTry": 4,
+}
+```
+
+> `tryDelayMs`: number
+
+每个竞速请求发起时间的间隔，单位毫秒，默认为0(代表禁用该功能)，推荐值为 250.
+
+> `prioritizeIPv6`: bool
+
+排序 IP 时首个 IP 的类型，默认为 false (即 IPv4 会被排在第一个)
+
+> `interleave`: number
+
+RFC-8305 中的 "First Address Family count", 默认值为 1. 它定义了对不同IP版本进行排序时的交错行为。
+
+比如等待 dial 的 IP 队列会被排序为 46464646 (设置为1) 44664466 (设置为2) (6 代表 IPv6 地址, 4 代表 IPv4 地址).
+
+> `maxConcurrentTry`: number
+
+最大并发数量，用于防止解析出的IP过多且均未成功时候核心也对这些IP产生大量连接。默认为4, 设置为0代表禁用 happyEyeballs.
