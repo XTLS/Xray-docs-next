@@ -511,7 +511,9 @@ Transparent proxy requires Root or `CAP\_NET\_ADMIN` permission.
 When `followRedirect` is set to `true` in [Dokodemo-door](./inbounds/dokodemo.md), and `tproxy` in the Sockopt settings is empty, the value of `tproxy` in the Sockopt settings will be set to `"redirect"`.
 :::
 
-> `domainStrategy`: "AsIs" | "UseIP" | "UseIPv4" | "UseIPv6"
+> `domainStrategy`: "AsIs"
+"UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
+"ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
 In previous versions, when Xray attempted to establish a system connection using a domain name, the resolution of the domain name was completed by the system and not controlled by Xray. This led to issues such as the inability to resolve domain names in non-standard Linux environments. To solve this problem, Xray 1.3.1 introduced Freedom's `domainStrategy` into Sockopt.
 
@@ -519,6 +521,9 @@ When the target address is a domain name, the corresponding value is configured,
 
 - `"AsIs"`: Resolve the IP address using the system DNS server and connect to the domain name.
 - `"UseIP"`, `"UseIPv4"`, and `"UseIPv6"`: Resolve the IP address using the [built-in DNS server](./dns.md) and connect to the IP address directly.
+- "IPv4" means that you are trying to connect using only IPv4, "IPv4v6" means that you are trying to connect using either IPv4 or IPv6, but for dual-stack domain names, IPv4 is used. (The same applies to the v4v6 switch, so I won't go into details.)
+- When using "Use" the option beginning with , if the resolution result does not meet the requirements (for example, the domain name only has IPv4 resolution results but UseIPv6 is used), it will fall back to AsIs.
+- When using "Force" an option beginning with , if the parsing result does not meet the requirements, the connection cannot be established.
 
 The default value is `"AsIs"`.
 
