@@ -27,15 +27,15 @@ If the domain name to be queried:
 
 - Matches the mapping of "domain name - domain name" in the `hosts`, then the value of this mapping (another domain name) will be used as the domain name to be queried, and enter the DNS processing flow until an IP is resolved and returned, or an empty resolution is returned.
 
-- Does not match `hosts`, but matches the `domains` list in one or more DNS servers, then according to the priority of the matching rule, use the DNS server corresponding to the rule to perform the query in sequence. If the DNS server that is hit fails to query or `expectIPs` does not match, then use the next hit DNS server to perform the query. Otherwise, return the resolved IP. If all hit DNS servers fail to query or `expectIPs` does not match, then the DNS component:
+- Does not match `hosts`, but matches the `domains` list in one or more DNS servers, then according to the priority of the matching rule, use the DNS server corresponding to the rule to perform the query in sequence. If the DNS server that is hit fails to query or `expectedIPs` does not match, then use the next hit DNS server to perform the query. Otherwise, return the resolved IP. If all hit DNS servers fail to query or `expectedIPs` does not match, then the DNS component:
 
-  - By default, it will perform "DNS fallback query": use the "DNS server that has not been used in the last failed query and has a default value of `false` for `skipFallback`" to perform the query in sequence. If the query fails or `expectIPs` does not match, return an empty resolution; otherwise, return the resolved IP.
+  - By default, it will perform "DNS fallback query": use the "DNS server that has not been used in the last failed query and has a default value of `false` for `skipFallback`" to perform the query in sequence. If the query fails or `expectedIPs` does not match, return an empty resolution; otherwise, return the resolved IP.
   - If `disableFallback` is set to `true`, "DNS fallback query" will not be performed.
 
 - If neither `hosts` nor the `domains` list in DNS servers matches, then:
 
-  - By default, use the "DNS server that has a default value of `false` for `skipFallback`" to perform the query in sequence. If the first selected DNS server fails to query or `expectIPs` does not match, then use the next selected DNS server to perform the query. Otherwise, return the resolved IP. If all selected DNS servers fail to query or `expectIPs` does not match, return an empty resolution.
-  - If the number of "DNS servers that have a default value of `false` for `skipFallback`" is 0 or `disableFallback` is set to `true`, use the first DNS server in the DNS configuration to perform the query. If the query fails or `expectIPs` does not match, return an empty resolution; otherwise, return the resolved IP.
+  - By default, use the "DNS server that has a default value of `false` for `skipFallback`" to perform the query in sequence. If the first selected DNS server fails to query or `expectedIPs` does not match, then use the next selected DNS server to perform the query. Otherwise, return the resolved IP. If all selected DNS servers fail to query or `expectedIPs` does not match, return an empty resolution.
+  - If the number of "DNS servers that have a default value of `false` for `skipFallback`" is 0 or `disableFallback` is set to `true`, use the first DNS server in the DNS configuration to perform the query. If the query fails or `expectedIPs` does not match, return an empty resolution; otherwise, return the resolved IP.
 
 ## DnsObject
 
@@ -55,7 +55,7 @@ If the domain name to be queried:
         "address": "1.2.3.4",
         "port": 5353,
         "domains": ["domain:xray.com"],
-        "expectIPs": ["geoip:cn"],
+        "expectedIPs": ["geoip:cn"],
         "skipFallback": false,
         "clientIP": "1.2.3.4"
       },
@@ -78,6 +78,7 @@ If the domain name to be queried:
     "disableCache": false,
     "disableFallback": false,
     "disableFallbackIfMatch": false,
+    "useSystemHosts": false,
     "tag": "dns_inbound"
   }
 }
@@ -143,9 +144,11 @@ EDNS Client Subnet support is required for the DNS server.
 You can specify `clientIp` for all DNS servers in [DnsObject](#dnsobject), or specify it for each DNS server in the configuration of [DnsServerObject](#dnsserverobject) (which has higher priority than the configuration in [DnsObject](#dnsobject)).
 :::
 
-> `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6"
+> `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
 
 `UseIPv4` only queries A records; `UseIPv6` only queries AAAA records. The default value is `UseIP`, which queries both A and AAAA records.
+
+`UseSystem`, every time dns-Query call, it check the system-network to see if it supports IPv6(and IPv4) or not, if it support IPv6(or IPv4), the IPv6(or IPv4) is also returned, otherwise not returned.
 
 Xray-core v1.8.6 New feature: `queryStrategy` can be set separately for each `DNS` server.
 
@@ -198,7 +201,9 @@ Subterm geosite:netflix query gets null response due to conflicting `"queryStrat
 
 > `disableCache`: true | false
 
-`true` disables DNS caching, default is `false` which means caching is not disabled.
+`true` disables DNS caching for all DNS servers, default is `false` which means caching is not disabled.
+
+this option has no effect on `localhost` DNS and `localhost` DNS always use system DNS cache.
 
 > `disableFallback`: true | false
 
@@ -207,6 +212,10 @@ Subterm geosite:netflix query gets null response due to conflicting `"queryStrat
 > `disableFallbackIfMatch`: true | false
 
 `true` disables fallback DNS queries when the matching domain list of the DNS server is hit, default is `false` which means fallback queries are not disabled.
+
+> `useSystemHosts`: true | false
+
+if true, system-hosts appends to config-hosts at start, default is false.
 
 > `tag`: string
 
@@ -219,9 +228,16 @@ Traffic generated by built-in DNS, except for `localhost`, `fakedns`, `TCPL`, `D
   "address": "1.2.3.4",
   "port": 5353,
   "domains": ["domain:xray.com"],
-  "expectIPs": ["geoip:cn"],
+  "expectedIPs": ["geoip:cn"],
+  "unexpectedIPs": ["geoip:cloudflare"],
   "skipFallback": false,
-  "clientIP": "1.2.3.4"
+  "clientIP": "1.2.3.4",
+  "queryStrategy": "UseIPv4",
+  "tag": "server-1",
+  "timeoutMs": 4000,
+  "disableCache": false,
+  "finalQuery": false,
+  
 }
 ```
 
@@ -253,14 +269,50 @@ The port number of the DNS server, such as `53`. If not specified, the default i
 
 A list of domain names. The domain names in this list will be queried using this server first. The format of domain names is the same as in [routing configuration](./routing.md#ruleobject).
 
-> `expectIPs`: [string]
+> `expectedIPs`: [string]
 
 A list of IP ranges in the same format as in [routing configuration](./routing.md#ruleobject).
 
-When this item is configured, Xray DNS will verify the returned IP addresses and only return addresses that are included in the `expectIPs` list.
+When this item is configured, Xray DNS will verify the returned IP addresses and only return addresses that are included in the `expectedIPs` list.
 
 If this item is not configured, the IP address will be returned as is.
+
+if you add "*" in this list, the original-IPs still returned if no IP matched.
+
+> `unexpectedIPs`: [string]
+
+reverse of `expectedIPs`, an IP is matched if and only if does not match any of the IP-ranges in the list, in other words:
+`expectedIPs = [0.0.0.0/0, ::/0] - unexpectedIPs.`
+
+if you add "*" in this list, the original-IPs still returned if no IP matched.
 
 > `skipFallback`: true | false
 
 `true` means to skip this server when performing DNS fallback queries, and the default is `false`, which means not to skip.
+
+> `finalQuery`: true | false
+
+if true, the query result is returned in any case(even when IP-list is empty) and no other fallback will be performed.
+
+> `disableCache`: true | false
+
+if true, the cache is disabled only for this DNS server.
+
+this option has no effect on `localhost` DNS and `localhost` DNS always use system DNS cache.
+
+> `timeoutMs`: number
+
+DNS server timeout, default 4000 ms.
+
+this option has no effect on `localhost` DNS and `localhost` DNS always use system DNS timeout.
+
+> `tag`: string
+
+The tag of this DNS server. If set, it will use this tag as the inbound tag to initiate the request (non-local mode), overwriting the global tag option.
+
+> `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
+
+`UseIPv4` only queries A records; `UseIPv6` only queries AAAA records. The default value is `UseIP`, which queries both A and AAAA records.
+
+`UseSystem`, every time dns-Query call, it check the system-network to see if it supports IPv6(and IPv4) or not, if it support IPv6(or IPv4), the IPv6(or IPv4) is also returned, otherwise not returned.
+
