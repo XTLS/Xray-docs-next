@@ -103,6 +103,7 @@ Configures transparent proxies.
 {
   "serverName": "xray.com",
   "rejectUnknownSni": false,
+  "verifyPeerCertInNames": ["xray.com"]
   "allowInsecure": false,
   "alpn": ["h2", "http/1.1"],
   "minVersion": "1.2",
@@ -127,9 +128,15 @@ When the target is specified by domains, like when the domain is received by SOC
 
 When `true`, the server rejects TLS handshakes if the SNI received does not match domains specified in the certificate. The default value is `false`.
 
+> `verifyPeerCertInNames`: [string]
+
+only client, used to verify the SNI used by the certificate, The certificate is verified if and only if it is verified for one of the domains in this list, the default is [serverName].
+for using MitM+domainFronting there is special case "fromMitM", if the list contain "fromMitM" the domain and all subdomain of the real sni(initial sni before change) automatically added to the list.
+
 > `alpn`: [ string ]
 
 An array of strings specifying the ALPN values used in TLS handshakes. Defaults to `["h2", "http/1.1"]`.
+for using MitM+domainFronting, there is special case ["fromMitM"], and this is selected alpn of initial tls request termination.
 
 > `minVersion`: [ string ]
 
