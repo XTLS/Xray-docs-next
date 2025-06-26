@@ -137,6 +137,7 @@ for using MitM+domainFronting there is special case "fromMitM", if the list cont
 
 An array of strings specifying the ALPN values used in TLS handshakes. Defaults to `["h2", "http/1.1"]`.
 for using MitM+domainFronting, there is special case ["fromMitM"], and this is selected alpn of initial tls request termination.
+(also, when using `h2c` dns, this is equal to domain of the URL)
 
 > `minVersion`: [ string ]
 
