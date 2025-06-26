@@ -673,9 +673,9 @@ when `dialerProxy` is set `happyEyeballs` is not applied, and only a random IP w
 ```json
 "happyEyeballs": {
     "tryDelayMs": 250,
-    "prioritizeIPv6": false, 
+    "prioritizeIPv6": false,
+    "interleave": 1,
     "maxConcurrentTry": 4,
-    "interleave": 1
 }
 ```
 
@@ -684,13 +684,19 @@ when `dialerProxy` is set `happyEyeballs` is not applied, and only a random IP w
 delay time between each attempt in millisecond, RFC-8305 recommend `250`, default is `0`.
 (if it is `0`, happy-eyeballs is disabled)
 
-> `interleave`: number
-
- indicate "First Address Family count" in RFC-8305, default is 1.
-
 > `prioritizeIPv6`: bool
 
  indicate "First Address Family" in RFC-8305, default is false(= prioritizeIPv4)
+
+> `interleave`: number
+
+ indicate "First Address Family count" in RFC-8305, default is 1.
+ 
+for example suppose our IP-list is [ip4-1, ip4-2, ip4-3, ip4-4, ip6-1, ip6-2, ip6-3, ip6-4]
+when interleave  is 1 and prioritizeIPv6 is false, the sorted-ip-list is:
+[ip4-1, ip6-1, ip4-2, ip6-2, ip4-3, ip6-3, ip4-4, ip6-4]
+and when for example interleave is 2 and prioritizeIPv6  is true:
+[ip6-1, ip6-2, ip4-1, ip4-2, ip6-3, ip6-4, ip4-3, ip4-4]
 
 > `maxConcurrentTry`: number
 
