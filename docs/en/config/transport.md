@@ -666,7 +666,7 @@ in `AsIs` domainStrategy, built-in golang happyEyeballs is applied(currently it 
 
 ::: tip
 
-when `dialerProxy` is set `happyEyeballs` is not applied, and only a random IP will replace the domain.
+when `dialerProxy` is set, `happyEyeballs` is not applied, and only a random IP will replace the domain.
 
 :::
 
