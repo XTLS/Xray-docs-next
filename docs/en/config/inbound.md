@@ -94,7 +94,7 @@ Specifies the specific settings for port allocation when multiple ports are set 
 ```json
 {
   "enabled": true,
-  "destOverride": ["http", "tls", "quic", "fakedns", "fakedns+others"],
+  "destOverride": ["http", "tls", "quic", "fakedns"],
   "metadataOnly": false,
   "domainsExcluded": [],
   "routeOnly": false
@@ -105,15 +105,14 @@ Specifies the specific settings for port allocation when multiple ports are set 
 
 Whether to enable traffic sniffing.
 
-> `destOverride`: ["http" | "tls" | "quic" | "fakedns" | "fakedns+others" ]
+> `destOverride`: ["http" | "tls" | "quic" | "fakedns" ]
 
 When the traffic is of a specified type, reset the destination of the current connection to the target address included in the list.
 
-`["fakedns+others"]` is equivalent to `["http", "tls", "quic", "fakedns"]`, and when the IP address is in the FakeIP range but no domain records are hit, `http`, `tls`, and `quic` will be used for matching. This option is only effective when `metadataOnly` is set to `false`.
 
 > `metadataOnly`: true | false
 
-When enabled, only use the connection's metadata to sniff the target address. In this case, sniffer other than `fakedns` (including `fakedns+others`) cannot be activated.
+When enabled, only use the connection's metadata to sniff the target address. In this case, sniffer other than `fakedns` cannot be activated.
 
 If metadata-only is disabled, the client must send data before the proxy server actually establishes the connection. This behavior is incompatible with protocols that require the server to initiate the first message, such as the SMTP protocol.
 
