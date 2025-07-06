@@ -226,13 +226,9 @@ Linux 服务器的安全防护是一个纷繁复杂的巨大课题。无数的�
 
    ::: warning
    本图中是以 `2048` 位的 `RSA` 密钥为例的。但实际上，如果要获得与 `EDCSA/Ed25519` 的 `256` 位密钥相同的安全性，你需要使用 `3072` 位的 `RSA` 密钥。（即右下角的数字改成 `3072`）
-   :::
-   2. 你可以给私钥设置密码，增加一层安全性
-   3. 点击 `Save public key` 保存公钥，文件名为 `id_rsa.pub`
-   4. 点击 `Save private key` 保存私钥，文件名为 `id_rsa` (PuTTY 私钥自带`.ppk`后缀)
-   5. 最重要的，将上方红框内的内容，向下滚动全部复制出来并保存，文件名为 `authorized_keys`。（用 vscode 保存，默认会变成带`txt`后缀的文本文件，这没关系，之后上传 VPS 时我们会把后缀名去掉）
+   ::: 2. 你可以给私钥设置密码，增加一层安全性 3. 点击 `Save public key` 保存公钥，文件名为 `id_rsa.pub` 4. 点击 `Save private key` 保存私钥，文件名为 `id_rsa` (PuTTY 私钥自带`.ppk`后缀) 5. 最重要的，将上方红框内的内容，向下滚动全部复制出来并保存，文件名为 `authorized_keys`。（用 vscode 保存，默认会变成带`txt`后缀的文本文件，这没关系，之后上传 VPS 时我们会把后缀名去掉）
 
-      ![保存密钥](./ch04-img09-puttygen-save-keys.png)
+   ![保存密钥](./ch04-img09-puttygen-save-keys.png)
 
 2. 将公钥上传至 VPS 的`vpsadmin`用户下
    1. 这一步就需要用到之前准备的`WinSCP`了。

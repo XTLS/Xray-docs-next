@@ -122,8 +122,7 @@ chmod +r ~/xray_cert/xray.key
 
     In addition, when recording animated images, the script did not include a command to restart `Xray` because `Xray` plans to support the [Certificate Hot Update] function, which means that `Xray` will automatically identify certificate updates and reload certificates without manual restart. After the function is added, I will modify `config.json` appropriately
     to enable this setting and delete the restart command in the script.
-    :::
-    4.  Add [executable] permissions to this file
+    ::: 4. Add [executable] permissions to this file
 
         ```
         chmod +x ~/xray_cert/xray-cert-renew.sh
@@ -177,11 +176,11 @@ First, you can refer to the [official VLESS configuration example](https://githu
 
    ::: warning
    This location is not the standard log file location of `Xray`. It is placed here to avoid permission issues that cause trouble for new users. Once you are familiar with it, it is recommended to return to the default location: `/var/log/xray/access.log` and `/var/log/xray/error.log`.
-   :::
-   4. Because Xray is used by the nobody user by default, we need to allow other users to have "write" permissions (`*.log` means all files with the suffix `log`, and the efficiency advantage of the `CLI` interface gradually appears at this time)
-      ```shell
-      chmod a+w ~/xray_log/*.log
-      ```
+   ::: 4. Because Xray is used by the nobody user by default, we need to allow other users to have "write" permissions (`*.log` means all files with the suffix `log`, and the efficiency advantage of the `CLI` interface gradually appears at this time)
+
+   ```shell
+   chmod a+w ~/xray_log/*.log
+   ```
 
 3. Use `nano` to create the configuration file of `Xray`
 
@@ -409,12 +408,11 @@ If your line really has a very high packet loss rate, the only reliable solution
    This article takes Debian 10 as an example, so there is still no problem using `/etc/apt/sources.list`, but if you are not starting from scratch according to this article, or using other Linux
    distributions, it is recommended that you create a `/etc/apt/sources.list.d/` folder and create your own configuration file in this folder, such as `/etc/apt/sources.list.d/vpsadmin.list`
    , to ensure compatibility and avoid the default file being overwritten in unforeseen circumstances and causing configuration loss.
-   :::
-   2. Then add the following item at the end, save and exit.
+   ::: 2. Then add the following item at the end, save and exit.
 
-      ```
-      deb http://deb.debian.org/debian buster-backports main
-      ```
+   ```
+   deb http://deb.debian.org/debian buster-backports main
+   ```
 
    3. Refresh the software library and query the latest version of the official Debian kernel and install it. Please be sure to install the version corresponding to your VPS (this article takes the more common [amd64] as an example).
 
@@ -430,24 +428,22 @@ If your line really has a very high packet loss rate, the only reliable solution
    - Take a system snapshot before trying, or
    - You have `vnc` to save the day (and you know how to use it)
 
-   :::
-   4. Modify the `kernel` parameter configuration file `sysctl.conf` and specify to enable `BBR`
+   ::: 4. Modify the `kernel` parameter configuration file `sysctl.conf` and specify to enable `BBR`
 
-      ```shell
-      sudo nano /etc/sysctl.conf
-      ```
+   ```shell
+   sudo nano /etc/sysctl.conf
+   ```
 
    ::: warning description
    This article takes Debian 10 as an example, so it is still no problem to use `/etc/sysctl.conf`, but if you are not following this article from scratch, or use other Linux distributions, it is recommended that you create a `/etc/sysctl.d/`
    folder and create your own configuration file in this folder, such as `/etc/sysctl.d/vpsadmin.conf`, to ensure compatibility, because some distributions no longer read parameters from `/etc/sysctl.conf` after `systemd`
    207 ​​version. Using a custom configuration file can also prevent the default file from being overwritten in unexpected circumstances, resulting in configuration loss.
-   :::
-   5. Add the following content
+   ::: 5. Add the following content
 
-      ```
-      net.core.default_qdisc=fq
-      net.ipv4.tcp_congestion_control=bbr
-      ```
+   ```
+   net.core.default_qdisc=fq
+   net.ipv4.tcp_congestion_control=bbr
+   ```
 
    6. Restart the VPS to make the kernel update and `BBR` settings take effect
 
@@ -463,8 +459,7 @@ If your line really has a very high packet loss rate, the only reliable solution
    If you are not sure whether your VPS supports it, please follow the command in step 3 and use the regular kernel `linux-image-amd64`.
    :::
 
-   ![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif)
-   8. Confirm that `BBR` is enabled
+   ![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif) 8. Confirm that `BBR` is enabled
 
 If you want to confirm whether `BBR` is enabled correctly, you can use the following command:
 `shell
