@@ -74,7 +74,7 @@ Add routing rules for the api inbound in the routing configuration.
 
 Add api to basic configuration
 
-```
+```json
 "api": {
   "tag": "api",
   "services": [
