@@ -3,17 +3,16 @@ name: Prettier Action
 on:
   pull_request:
     branches: [main]
+permissions:
+  contents: write
 
 jobs:
   prettier:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Prettify code
