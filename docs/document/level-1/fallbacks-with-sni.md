@@ -169,7 +169,6 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
   Proxy Protocol 是 HaProxy 开发的一种旨在解决代理时容易丢失客户端信息问题的协议，常用于链式代理和反向代理。传统的处理方法往往较为复杂且有诸多限制，而 Proxy Protocol 非常简单地在传输数据时附带上原始连接四元组信息的数据包，解决了这个问题。
 
   凡事皆有利弊，Proxy Protocol 也是如此。
-
   - 有发送必须有接收，反之亦然
   - 同一端口不能既兼容带 Proxy Protocol 数据的连接又兼容不带数据的连接（如：Nginx 同端口的不同虚拟主机（server），本质是上一条）[^2][^3]
 
@@ -186,7 +185,6 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
   在上述配置中，每条回落到 Nginx 的配置都要分成两个。这是因为 h2 是强制 TLS 加密的 HTTP/2 连接，这有益于数据在互联网中传输的安全，但在服务器内部没有必要；而 h2c 是非加密的 HTTP/2 连接，适合该环境。然而，Nginx 不能在同一端口上同时监听 HTTP/1.1 和 h2c，为了解决这个问题，需要在回落中指定 `alpn` 项（是 `fallbacks` 而不是 `tlsSettings` 里面的），以尝试匹配 TLS ALPN 协商结果。
 
   建议 `alpn` 项只按需用两种填法：[^4]
-
   - 省略
   - `"h2"`
 

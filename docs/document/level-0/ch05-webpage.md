@@ -137,7 +137,6 @@
    ```
 
 5. 修改 `nginx.conf` 并重启 `Nginx` 服务，将`80`端口的 http 访问定位到刚才建立的 `html` 页面上
-
    1. 修改 `nginx.conf` 。
 
       ```shell

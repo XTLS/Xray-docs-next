@@ -36,12 +36,10 @@
 ## 2.3 Необходимое программное обеспечение
 
 1. SSH-клиент для удалённого подключения:
-
    - Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
    - macOS/Linux: Terminal
 
 2. Программа для передачи файлов:
-
    - Windows: [WinSCP](https://winscp.net/eng/index.php)
    - macOS/Linux: Terminal
 

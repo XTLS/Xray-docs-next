@@ -11,7 +11,6 @@
 1. APP 要主动或借助转发工具，将数据【流入(`inbounds`)】`Xray` 客户端
 
 2. 流量进入客户端后，会被【客户端路由(`routing`)】按规则处理后，向不同方向【流出`(outbounds)`】`Xray` 客户端。比如：
-
    1. 国内流量直连（`direct`）
    2. 国外流量转发 VPS（`proxy`）
    3. 广告流量屏蔽（`block`）
@@ -52,23 +51,19 @@
 :::
 
 - **v2rayN - 适用于 Windows 平台**
-
   - 请从它的[GitHub 仓库 Release 页面](https://github.com/2dust/v2rayN/releases)获取最新版
   - 请根据该客户端的说明进行设置
 
 - **v2rayNG - 适用于 Android 平台**
-
   - 请从它的[GitHub 仓库 Release 页面](https://github.com/2dust/v2rayNG/releases)获取最新版
   - 请根据该客户端的说明进行设置
 
 - **Shadowrocket - 适用于 iOS, 基于苹果 M 芯片的 macOS**
-
   - 你需要注册一个【非中国区】的 iCloud 账户
   - 你需要通过 App Store 搜索并购买
   - 请根据该客户端的说明进行设置
 
 - **Qv2ray - 跨平台图形界面，适用于 Linux, Windows, macOS**
-
   - 请从它的[GitHub 仓库 Release 页面](https://github.com/Qv2ray/Qv2ray/releases)获取最新版（还可以从它的[GitHub 自动构建仓库](https://github.com/Qv2ray/Qv2ray/actions)寻找更新的版本）
   - 请从它的[项目主页](https://qv2ray.net/)学习文档
   - 请根据该客户端的说明进行设置
@@ -98,7 +93,6 @@
 2. 在合适的文件夹建立空白配置文件：`config.json` （自己常用平台下新建文件大家肯定都会，这就真不用啰嗦了）
 3. 至于什么是“合适的文件夹”？这就取决于具体的平台了~
 4. 填写客户端配置
-
    - 我就以 `8.1` 原理说明里展示的基本三类分流（国内流量直连、国际流量转发 VPS、广告流量屏蔽），结合 `8.2` 的连接要素，写成一个配置文件
    - 请将 `uuid` 替换成与你服务器一致的 `uuid`
    - 请将 `address` 替换成你的真实域名

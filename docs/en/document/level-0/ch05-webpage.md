@@ -95,7 +95,6 @@ If you are not using the username `vpsadmin`, please be sure to understand the m
    ```
 
 5. Modify `nginx.conf` and restart the `Nginx` service, directing the http access on port 80 to the newly created `html` page.
-
    1. Modify `nginx.conf`.
 
       ```shell

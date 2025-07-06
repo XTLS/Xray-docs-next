@@ -36,12 +36,10 @@
 ## 2.3 你本地电脑上需要安装的软件
 
 1. SSH 远程登录工具
-
    - Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
    - macOS/Linux: Terminal
 
 2. 远程文件拷贝工具
-
    - Windows: [WinSCP](https://winscp.net/eng/index.php)
    - macOS/Linux: Terminal
 

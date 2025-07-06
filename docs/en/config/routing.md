@@ -28,7 +28,6 @@ The domain name resolution strategy, which uses different strategies based on di
 - `"AsIs"`: Use only the domain name for routing selection. Default value.
 
 - `"IPIfNonMatch"`: If the domain name does not match any rule, resolve the domain name into an IP address (A record or AAAA record) and match it again;
-
   - When a domain name has multiple A records, it will try to match all A records until one of them matches a rule;
   - The resolved IP only works for routing selection, and the original domain name is still used in the forwarded packets;
 
@@ -117,7 +116,6 @@ An array where each item represents an IP range. This rule will take effect when
 - [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing): In the format of `"10.0.0.0/8"`.
 
 - Predefined IP lists: These lists are included in every Xray installation package under the file name `geoip.dat`. They can be used in the format of `"geoip:cn"`, where `cn` is a two-letter country code. The prefix `geoip:`(all lowercase) must be used, and nearly all countries that have internet access are supported.
-
   - Special value: `"geoip:private"`, which includes all private addresses, such as `127.0.0.1`.
 
 - Loading IP from a file: In the format of `"ext:file:tag"`, where `file` is the file name and `tag` is a label that must exist in the file. The prefix `ext:` (all lowercase) must be used, and the file should be located in the [resource directory](./features/env.md#resource-file-path) with the same format as `geoip.dat`.

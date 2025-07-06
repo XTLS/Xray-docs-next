@@ -90,7 +90,6 @@ chmod +r ~/xray_cert/xray.key
 ![Xray server installation process demonstration](./ch07-img02-xray-cert-install.png)
 
 5.  `acme.sh` will check the certificate every 60 days and automatically renew the expiring certificate. But as far as I know, it does not automatically install the new certificate to `xray-core`, so we need to add a system automatic periodic task to complete this step.
-
     1. Basic Linux commands for beginners:
 
        |  Number  | Command name |          Command description           |
@@ -124,7 +123,6 @@ chmod +r ~/xray_cert/xray.key
     In addition, when recording animated images, the script did not include a command to restart `Xray` because `Xray` plans to support the [Certificate Hot Update] function, which means that `Xray` will automatically identify certificate updates and reload certificates without manual restart. After the function is added, I will modify `config.json` appropriately
     to enable this setting and delete the restart command in the script.
     :::
-
     4.  Add [executable] permissions to this file
 
         ```
@@ -160,7 +158,6 @@ First, you can refer to the [official VLESS configuration example](https://githu
    ```
 
 2. Create log files and folders for backup
-
    1. Basic Linux commands for beginners:
       | Number | Command name | Command description |
       |:--:|:--:|:--:|
@@ -181,7 +178,6 @@ First, you can refer to the [official VLESS configuration example](https://githu
    ::: warning
    This location is not the standard log file location of `Xray`. It is placed here to avoid permission issues that cause trouble for new users. Once you are familiar with it, it is recommended to return to the default location: `/var/log/xray/access.log` and `/var/log/xray/error.log`.
    :::
-
    4. Because Xray is used by the nobody user by default, we need to allow other users to have "write" permissions (`*.log` means all files with the suffix `log`, and the efficiency advantage of the `CLI` interface gradually appears at this time)
       ```shell
       chmod a+w ~/xray_log/*.log
@@ -403,7 +399,6 @@ If your line really has a very high packet loss rate, the only reliable solution
 :::
 
 6. I have said so much because there are too many misconceptions and scam scripts around `BBR` to fool novices. I hope you now have a relatively clear understanding of `BBR`. Next, let's install the latest Debian kernel and enable `BBR`! (It's really simple)
-
    1. Add the official `backports` source to Debian 10 to get the updated software library
 
       ```shell
@@ -415,7 +410,6 @@ If your line really has a very high packet loss rate, the only reliable solution
    distributions, it is recommended that you create a `/etc/apt/sources.list.d/` folder and create your own configuration file in this folder, such as `/etc/apt/sources.list.d/vpsadmin.list`
    , to ensure compatibility and avoid the default file being overwritten in unforeseen circumstances and causing configuration loss.
    :::
-
    2. Then add the following item at the end, save and exit.
 
       ```
@@ -433,12 +427,10 @@ If your line really has a very high packet loss rate, the only reliable solution
    If your VPS supports it, you can try the [cloud server dedicated kernel] `linux-image-cloud-amd64`. The advantages are simplicity and low resource usage. The disadvantage is that some students have reported that forced installation on an unsupported system will cause the system to fail to boot (the kernel cannot be recognized).
 
    To avoid the tragedy of being unable to identify, please make sure:
-
    - Take a system snapshot before trying, or
    - You have `vnc` to save the day (and you know how to use it)
 
    :::
-
    4. Modify the `kernel` parameter configuration file `sysctl.conf` and specify to enable `BBR`
 
       ```shell
@@ -450,7 +442,6 @@ If your line really has a very high packet loss rate, the only reliable solution
    folder and create your own configuration file in this folder, such as `/etc/sysctl.d/vpsadmin.conf`, to ensure compatibility, because some distributions no longer read parameters from `/etc/sysctl.conf` after `systemd`
    207 ​​version. Using a custom configuration file can also prevent the default file from being overwritten in unexpected circumstances, resulting in configuration loss.
    :::
-
    5. Add the following content
 
       ```
@@ -473,7 +464,6 @@ If your line really has a very high packet loss rate, the only reliable solution
    :::
 
    ![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif)
-
    8. Confirm that `BBR` is enabled
 
 If you want to confirm whether `BBR` is enabled correctly, you can use the following command:

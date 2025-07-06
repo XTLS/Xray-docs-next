@@ -23,7 +23,6 @@
 目前已有的统计信息如下：
 
 - 用户数据
-
   - `user>>>[email]>>>traffic>>>uplink`
 
     特定用户的上行流量，单位字节。
@@ -37,7 +36,6 @@
 :::
 
 - 全局数据
-
   - `inbound>>>[tag]>>>traffic>>>uplink`
 
     特定 inbound 的上行流量，单位字节。

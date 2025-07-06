@@ -23,7 +23,6 @@ You can use the `xray api` command to retrieve traffic statistics.
 The current traffic statistics are as follows:
 
 - User Data
-
   - `user>>>[email]>>>traffic>>>uplink`
 
     The uplink traffic of a specific user, in bytes.
@@ -37,7 +36,6 @@ If the corresponding user does not have an email specified, statistics will not 
 :::
 
 - Global Data
-
   - `inbound>>>[tag]>>>traffic>>>uplink`
 
     The uplink traffic of a specific inbound, in bytes.

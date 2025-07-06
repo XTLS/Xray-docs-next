@@ -67,18 +67,15 @@ Welcome to help Xray become stronger!
 ### Telegram
 
 - [Project X Discussion Group](https://t.me/projectXray)
-
   - You can chat freely above the bottom line in the discussion group, don't fight, no abuse of power.
   - Feel free to ask questions, and try to answer those you know.
   - No politics, No NSFW
 
 - [Project VLESS Group](https://t.me/projectVless)
-
   - The official Xray-core group for non-Chinese participants. Sister group of [Project X](https://t.me/projectXray)
   - No advertising, No insults, No politics.
 
 - [Project X Channel](https://t.me/projectXtls)
-
   - Publish the latest news of Project X
 
 ### Thanks

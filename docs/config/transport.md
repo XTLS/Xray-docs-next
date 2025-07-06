@@ -601,7 +601,6 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
 当其值为 `true` 或`正整数`时，启用 TFO；当其值为 `false` 或`负数`时，强制关闭 TFO；当此项不存在或为 `0` 时，使用系统默认设置。 可用于 inbound/outbound。
 
 - 仅在以下版本（或更新版本）的操作系统中可用:
-
   - Linux 3.16：需要通过内核参数 `net.ipv4.tcp_fastopen` 进行设定，此参数是一个 bitmap，`0x1` 代表客户端允许启用，`0x2` 代表服务器允许启用；默认值为 `0x1`，如果服务器要启用
     TFO，请把此内核参数值设为 `0x3`。
   - ~~Windows 10 (1607)~~（实现不正确）
@@ -610,7 +609,6 @@ OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认�
     以及 `net.inet.tcp.fastopen.client_enabled` 设为 `1`。（需要测试）
 
 - 对于 Inbound，此处所设定的`正整数`代表 [待处理的 TFO 连接请求数上限](https://tools.ietf.org/html/rfc7413#section-5.1) ，**注意并非所有操作系统都支持在此设定**：
-
   - Linux / FreeBSD：此处的设定的`正整数`值代表上限，可接受的最大值为 2147483647，为 `true` 时将取 `256`；注意在 Linux，`net.core.somaxconn`
     会限制此值的上限，如果超过了 `somaxconn`，请同时提高 `somaxconn`。
   - Mac OS：此处为 `true` 或`正整数`时，仅代表启用 TFO，上限需要通过内核参数 `net.inet.tcp.fastopen_backlog` 单独设定。

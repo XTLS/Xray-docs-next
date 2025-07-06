@@ -41,12 +41,10 @@ Xray предлагает два способа проверки:
 ### Установочные скрипты
 
 - Скрипты для Linux
-
   - [XTLS/Xray-install](https://github.com/XTLS/Xray-install) (**официальный**)
   - [tempest](https://github.com/team-cloudchaser/tempest) (поддерживает [`systemd`](https://systemd.io) и [OpenRC](https://github.com/OpenRC/openrc); подходит только для Linux)
 
 * Установка одной командой
-
   - [Xray-REALITY](https://github.com/zxcvos/Xray-script), [xray-reality](https://github.com/sajjaddg/xray-reality), [reality-ezpz](https://github.com/aleskxyz/reality-ezpz)
   - [Xray_bash_onekey](https://github.com/hello-yunshu/Xray_bash_onekey), [XTool](https://github.com/LordPenguin666/XTool)
   - [v2ray-agent](https://github.com/mack-a/v2ray-agent), [Xray_onekey](https://github.com/wulabing/Xray_onekey), [ProxySU](https://github.com/proxysu/ProxySU)

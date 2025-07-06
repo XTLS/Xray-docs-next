@@ -5,8 +5,8 @@
     "lib": ["DOM", "ES2022"],
     "sourceMap": false,
     "strict": true,
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Bundler"
   },
   "include": ["./docs/.vuepress/**/*.ts", "./docs/.vuepress/**/*.vue"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

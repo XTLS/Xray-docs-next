@@ -67,18 +67,15 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 ### Telegram
 
 - [Project X 交流群](https://t.me/projectXray)
-
   - 交流群可在底线之上随便水，不要撕逼，没有滥权。
   - 有问题尽管随便问，知道的尽量回答。
   - 禁政治，禁 NSFW
 
 - [Project VLESS Group](https://t.me/projectVless)
-
   - 对非中文参与的官方用户群。 [Project X](https://t.me/projectXray) 的姊妹群。
   - 禁广告，禁人身攻击，禁政治。
 
 - [Project X 频道](https://t.me/projectXtls)
-
   - 发布 Project X 的最新资讯
 
 ### 致谢
