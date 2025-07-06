@@ -250,9 +250,13 @@ Xray-core v1.8.7 或更高版本可省略该行。
 > `type` : "random" | "roundRobin" | "leastPing" | "leastLoad"
 
 - `random` 默认值。随机选择匹配到的出站代理。
-- `roundRobin` 按顺序选择匹配到的出站代理。如果同时设置了fallbackTag和observatory，则可以过滤出健康节点进行轮询。
+- `roundRobin` 按顺序选择匹配到的出站代理。
 - `leastPing` 根据连接观测结果选择延迟最小的匹配到的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
 - `leastLoad` 根据连接观测结果选择最稳定的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
+
+::: tip
+无论哪一种模式，一旦其所有的 `selector` 对应节点同时配置了 `observatory` 或 `burstObservatory`，则可以过滤出健康节点。若没有任何健康节点可用，会尝试 `fallbackTag`
+:::
 
 > `settings`: [StrategySettingsObject](#strategysettingsobject)
 

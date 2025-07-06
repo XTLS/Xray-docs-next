@@ -7,7 +7,7 @@ lang: zh-CN
 
 ## 概述
 
-Xray 的配置文件为 json 格式, 客户端和服务端的配置格式没有区别, 只是实际的配置内容不一样。  
+Xray 的配置文件为 json 格式, 客户端和服务端的配置格式没有区别, 只是实际的配置内容不一样。
 形式如下:
 
 ```json
@@ -89,4 +89,4 @@ metrics 配置。更直接（希望更好）的统计导出方式。
 
 > burstObservatory: [BurstObservatoryObject](./observatory.md#burstobservatoryobject)
 
-并发连接观测。探测出站代理的连接状态。
+突发连接观测。探测出站代理的连接状态。
