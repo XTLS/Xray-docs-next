@@ -26,7 +26,7 @@ Transports specify how to achieve stable data transmission. Both ends of a conne
     "tcpFastOpen": false,
     "tproxy": "off",
     "domainStrategy": "AsIs",
-    "happyEyeballs": {"tryDelayMs": 250},
+    "happyEyeballs": { "tryDelayMs": 250 },
     "dialerProxy": "",
     "acceptProxyProtocol": false,
     "tcpKeepAliveInterval": 0,
@@ -470,7 +470,7 @@ A string array representing the key content, in the format shown in the example.
   "tcpFastOpen": false,
   "tproxy": "off",
   "domainStrategy": "AsIs",
-  "happyEyeballs": {"tryDelayMs": 250},
+  "happyEyeballs": { "tryDelayMs": 250 },
   "dialerProxy": "",
   "acceptProxyProtocol": false,
   "tcpKeepAliveInterval": 0,
@@ -520,8 +520,8 @@ When `followRedirect` is set to `true` in [Dokodemo-door](./inbounds/dokodemo.md
 :::
 
 > `domainStrategy`: "AsIs"
-"UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
-"ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
+> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
+> "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
 In previous versions, when Xray attempted to establish a system connection using a domain name, the resolution of the domain name was completed by the system and not controlled by Xray. This led to issues such as the inability to resolve domain names in non-standard Linux environments. To solve this problem, Xray 1.3.1 introduced Freedom's `domainStrategy` into Sockopt.
 
@@ -659,7 +659,6 @@ The option value to be set, the example here is set to bbr.
 
 Decimal numbers are required when type is specified as int.
 
-
 > `happyEyeballs`: {}
 
 only TCP, this is RFC-8305 implementation of happyEyeballs, only apply when built-in-dns is used(domainStrategy is `UseIP`/`ForceIP`).
@@ -687,16 +686,16 @@ delay time between each attempt in millisecond, RFC-8305 recommend `250`, defaul
 
 > `prioritizeIPv6`: bool
 
- indicate "First Address Family" in RFC-8305, default is false(= prioritizeIPv4)
+indicate "First Address Family" in RFC-8305, default is false(= prioritizeIPv4)
 
 > `interleave`: number
 
- indicate "First Address Family count" in RFC-8305, default is 1.
- 
+indicate "First Address Family count" in RFC-8305, default is 1.
+
 for example suppose our IP-list is [ip4-1, ip4-2, ip4-3, ip4-4, ip6-1, ip6-2, ip6-3, ip6-4]
-when interleave  is 1 and prioritizeIPv6 is false, the sorted-ip-list is:
+when interleave is 1 and prioritizeIPv6 is false, the sorted-ip-list is:
 [ip4-1, ip6-1, ip4-2, ip6-2, ip4-3, ip6-3, ip4-4, ip6-4]
-and when for example interleave is 2 and prioritizeIPv6  is true:
+and when for example interleave is 2 and prioritizeIPv6 is true:
 [ip6-1, ip6-2, ip4-1, ip4-2, ip6-3, ip6-4, ip4-3, ip4-4]
 
 > `maxConcurrentTry`: number

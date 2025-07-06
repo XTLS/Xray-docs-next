@@ -109,7 +109,6 @@ Whether to enable traffic sniffing.
 
 When the traffic is of a specified type, reset the destination of the current connection to the target address included in the list.
 
-
 > `metadataOnly`: true | false
 
 When enabled, only use the connection's metadata to sniff the target address. In this case, sniffer other than `fakedns` cannot be activated.

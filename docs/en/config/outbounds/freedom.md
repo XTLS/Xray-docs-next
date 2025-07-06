@@ -36,8 +36,8 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
 ```
 
 > `domainStrategy`: "AsIs"
-"UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
-"ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
+> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
+> "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
 When the destination address is a domain name, configure the corresponding value for Freedom's behavior:
 

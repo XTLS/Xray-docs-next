@@ -90,6 +90,7 @@ Currently two different styles of Docker images are provided:
 ### Docker Image File Structure
 
 teddysun/xray image:
+
 - `/usr/bin/xray`: Xray-core executable
 - `/etc/xray/config.json`: Single configuration file (its directory is the mount point)
 - `/usr/share/xray/`: Resource directory containing v2fly geodata files
@@ -97,6 +98,7 @@ teddysun/xray image:
   - geosite.dat
 
 ghcr.io/xtls/xray-core image:
+
 - `/usr/local/bin/xray`: Xray-core executable (owner: root:root, permissions: 755)
 - `/usr/local/etc/xray/`: Configuration directory (mount point). Owner: root:root, directory permissions: 755, file permissions: 644
   - 00_log.json

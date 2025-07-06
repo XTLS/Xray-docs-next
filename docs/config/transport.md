@@ -823,7 +823,6 @@ PS: 如果有正常上网的域名流量被 AsIs 的 freedom 出站送过来，�
 
 当 type 指定为 int 时需要使用十进制数字。
 
-
 > `happyEyeballs`: {}
 
 RFC-8305 实现的 happyEyeballs 仅适用于 TCP, 当目标为域名时对它们竞速并选择第一个成功的返回，当 `domainStrategy` 被设置为 `UseIP`/`ForceIP` (包括它们的v4/v6/v4v6版本，但这会使可用的IP列表被缩减到仅剩v4或v6，不推荐这么用)
