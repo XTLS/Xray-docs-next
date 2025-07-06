@@ -125,7 +125,7 @@ FakeDNS будет использовать этот блок IP-адресов 
 ```json
 "sniffing": {
   "enabled": true,
-  "destOverride": ["fakedns"], // Используйте "fakedns" или в сочетании с другими снифферами, или используйте "fakedns+others".
+  "destOverride": ["fakedns"], // Используйте "fakedns" или в сочетании с другими снифферами.
   "metadataOnly": false        // Если этот параметр равен true, то в destOverride можно использовать только fakedns.
 },
 ```

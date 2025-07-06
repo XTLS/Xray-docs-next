@@ -122,7 +122,7 @@ In addition, you need to enable `Sniffing` in the **client** for incoming traffi
 ```json
 "sniffing": {
   "enabled": true,
-  "destOverride": ["fakedns"], // Use "fakedns", or use it with other sniffer, or directly use "fakedns+others".
+  "destOverride": ["fakedns"], // Use "fakedns", or use it with other sniffer.
   "metadataOnly": false        // When this item is true, destOverride can only use fakedns.
 },
 ```
