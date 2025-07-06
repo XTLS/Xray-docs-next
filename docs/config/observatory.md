@@ -1,6 +1,6 @@
 # 连接观测
 
-连接观测组件使用 HTTPing 的方式探测出站代理的连接状态。观测结果可以被其他组件使用，如负载均衡器。目前有 [observatory](#observatoryobject) （后台连接观测）和 [burstObservatory](#burstobservatoryobject) （突发连接观测）两种。按需选择其中之一就行，理论上 `burstobservatoryobject` 特征更不明显。
+连接观测组件使用 HTTPing 的方式探测出站代理的连接状态。观测结果可以被其他组件使用，如负载均衡器。目前有 [observatory](#observatoryobject) （后台连接观测）和 [burstObservatory](#burstobservatoryobject) （突发连接观测）两种。按需选择其中之一就行，理论上 `burstObservatory` 特征更不明显。
 
 ## ObservatoryObject
 
