@@ -38,10 +38,12 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 
 > `blockTypes`: array
 
-为一个int数组，屏蔽数组中的查询类型，如 `"blockTypes":[65,28]` 表示屏蔽type 65(HTTPS) 和 28(AAAA)
+为一个 int 数组，屏蔽数组中的查询类型，如 `"blockTypes":[65,28]` 表示屏蔽 type 65 (HTTPS) 和 28 (AAAA)
 
 由于 `nonIPQuery` 默认 drop 所有非 A 和 AAAA 查询, 所以需要将其设置为 skip 本选项才能进一步发挥作用。当然也可以不修改，单纯用来屏蔽A或者AAAA来屏蔽 ipv4/ipv6 查询, 但非常不推荐那么做，建议在内置DNS的 `queryStrategy` 对相关内容进行设置。
 
-注：当只使用 `blockTypes` 屏蔽 A 或 AAAA 时， 如果 `nonIPQuery` 设置为了 `reject` 那么屏蔽方式也会是返回 DNS reject 而不是丢弃
+注意：当只使用 `blockTypes` 屏蔽 A 或 AAAA 时， 如果 `nonIPQuery` 设置为了 `reject` 那么屏蔽方式也会是返回 DNS reject 而不是丢弃。
+
+提示：现代浏览器会发送 type 65 (HTTPS) 请求，这也是透明代理模式下造成 DNS 泄露的元凶之一。你可以按需屏蔽或者小心处理它。
 
 ## DNS 配置实例 <Badge text="WIP" type="warning"/>
