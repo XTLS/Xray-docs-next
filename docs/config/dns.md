@@ -26,12 +26,12 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 - 命中了 `hosts` 中的「域名 - IP」、「域名 - IP 数组」映射，则将该 IP 或 IP 数组作为 DNS 解析结果返回。
 - 命中了 `hosts` 中的「域名 - 域名」映射，则该映射的值（另一个域名）将作为当前要查询的域名，进入 DNS 处理流程，直到解析出 IP 后返回，或返回空解析。
-- 没有命中 `hosts`，但命中了某（几）个 DNS 服务器中的 `domains` 域名列表，则按照命中的规则的优先级，依次使用该规则对应的 DNS 服务器进行查询。若命中的 DNS 服务器查询失败或 `expectIPs` 不匹配，则使用下一个命中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有命中的 DNS 服务器均查询失败或 `expectIPs` 不匹配，此时 DNS 组件：
-  - 默认会进行 「DNS 回退（fallback）查询」：使用「上一轮失败查询中未被使用的、且 `skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若查询失败或 `expectIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
+- 没有命中 `hosts`，但命中了某（几）个 DNS 服务器中的 `domains` 域名列表，则按照命中的规则的优先级，依次使用该规则对应的 DNS 服务器进行查询。若命中的 DNS 服务器查询失败或 `expectedIPs` 不匹配，则使用下一个命中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有命中的 DNS 服务器均查询失败或 `expectedIPs` 不匹配，此时 DNS 组件：
+  - 默认会进行 「DNS 回退（fallback）查询」：使用「上一轮失败查询中未被使用的、且 `skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若查询失败或 `expectedIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
   - 若 `disableFallback` 设置为 `true`，则不会进行「DNS 回退（fallback）查询」。
 - 既没有命中 `hosts`，又没有命中 DNS 服务器中的 `domains` 域名列表，则：
-  - 默认使用「`skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若第一个被选中的 DNS 服务器查询失败或 `expectIPs` 不匹配，则使用下一个被选中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有被选中的 DNS 服务器均查询失败或 `expectIPs` 不匹配，返回空解析。
-  - 若「`skipFallback` 为默认值 `false` 的 DNS 服务器」数量为 0 或 `disableFallback` 设置为 `true`，则使用 DNS 配置中的第一个 DNS 服务器进行查询。查询失败或 `expectIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
+  - 默认使用「`skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若第一个被选中的 DNS 服务器查询失败或 `expectedIPs` 不匹配，则使用下一个被选中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有被选中的 DNS 服务器均查询失败或 `expectedIPs` 不匹配，返回空解析。
+  - 若「`skipFallback` 为默认值 `false` 的 DNS 服务器」数量为 0 或 `disableFallback` 设置为 `true`，则使用 DNS 配置中的第一个 DNS 服务器进行查询。查询失败或 `expectedIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
 
 ## DnsObject
 
@@ -51,7 +51,7 @@ Xray 内置的 DNS 模块，主要有两大用途：
         "address": "1.2.3.4",
         "port": 5353,
         "domains": ["domain:xray.com"],
-        "expectIPs": ["geoip:cn"],
+        "expectedIPs": ["geoip:cn"],
         "skipFallback": false,
         "clientIP": "1.2.3.4"
       },
@@ -133,19 +133,13 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 用于 DNS 查询时通知服务器以指定 IP 位置。不能是私有地址。
 
-::: tip TIP 1
-需要 DNS 服务器支持 EDNS Client Subnet。
-:::
+需要 DNS 服务器支持 EDNS Client Subnet.
 
-::: tip TIP 2
-可以在 [DnsObject](#dnsobject) 为所有 DNS 服务器指定 clientIp, 也可在每个 DNS 服务器配置的 [DnsServerObject](#dnsserverobject) 为此 DNS 服务器指定 clientIp （优先级高于 [DnsObject](#dnsobject) 的配置）。
-:::
-
-> `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6"
+> `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
 
 默认值 `UseIP` 同时查询 A 和 AAAA 记录。`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。
 
-Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务器中分别设置。
+`UseSystem` 在每次 query 时会分别对 v4 和 v6 尝试 bind 到 peer 为一个远端地址的 udp socket 检查系统是否存在对应的路由，如果成功就会返回类型 IP.
 
 ```json
     "dns": {
@@ -209,6 +203,8 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
 
 `true` 禁用 DNS 缓存，默认为 `false`，即不禁用。
 
+它不会对 `localhost` DNS (系统 DNS) 生效，它总是跟随 golang 的 DNS 缓存行为(cgo 与 pure go 可能略有不同)。
+
 > `disableFallback`: true | false
 
 `true` 禁用 DNS 的 fallback 查询，默认为 `false`，即不禁用。
@@ -229,11 +225,14 @@ Xray-core v1.8.6 新增功能：`queryStrategy` 可以在每一项 `DNS` 服务�
   "address": "1.2.3.4",
   "port": 5353,
   "domains": ["domain:xray.com"],
-  "expectIPs": ["geoip:cn"],
+  "expectedIPs": ["geoip:cn"],
+  "unexpectedIPs": ["geoip:cloudflare"],
   "skipFallback": false,
   "clientIP": "1.2.3.4",
+  "queryStrategy": "UseIPv4",
   "timeoutMs": 4000,
-  "allowUnexpectedIPs": false
+  "disableCache": false,
+  "finalQuery": false
 }
 ```
 
@@ -281,22 +280,44 @@ DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH�
 
 一个域名列表，此列表包含的域名，将优先使用此服务器进行查询。域名格式和 [路由配置](./routing.md#ruleobject) 中相同。
 
-> `expectIPs`:\[string\]
+> `expectedIPs`:\[string\]
 
 一个 IP 范围列表，格式和 [路由配置](./routing.md#ruleobject) 中相同。
 
-当配置此项时，Xray DNS 会对返回的 IP 的进行校验，只返回包含 expectIPs 列表中的地址。
+当配置此项时，配置后，Xray DNS 会对返回的 IP 的进行校验，只返回包含 expectedIPs 列表中的地址。
 
-如果未配置此项，会原样返回 IP 地址。
+如果列表中存在 * 那么如果过滤后不存在 IP, 仍然返回原 IP 使请求不至于失败。
+
+> `unexpectedIPs`: [string]
+
+`expectedIPs` 的反向版本，去掉包含于这个列表的 IP. 星号的作用相同。
 
 > `skipFallback`: true | false
 
 `true`，在进行 DNS fallback 查询时将跳过此服务器, 默认为 `false`，即不跳过。
 
+> `clientIP`: [string]
+
+用于 DNS 查询时通知服务器以指定 IP 位置。不能是私有地址。
+
+需要 DNS 服务器支持 EDNS Client Subnet。
+
+> `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
+
+默认值 `UseIP` 同时查询 A 和 AAAA 记录。`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。
+
+`UseSystem` 在每次 query 时会分别对 v4 和 v6 尝试 bind 到 peer 为一个远端地址的 udp socket 检查系统是否存在对应的路由，如果成功就会返回类型 IP.
+
 > `timeoutMs`: number
 
 DNS 服务器超时时间，默认 4000 ms
 
-> `allowUnexpectedIPs`: bool
+> `disableCache`: true | false
 
-若启用，当 `expectIPs` 过滤完 IP 后，若所有 IP 均不符合条件被过滤，仍然返回 IP，否则视为查询失败
+`true` 禁用 DNS 缓存，默认为 `false`，即不禁用。
+
+它不会对 `localhost` DNS (系统 DNS) 生效，它总是跟随 golang 的 DNS 缓存行为(cgo 与 pure go 可能略有不同)。
+
+> `finalQuery`: true | false
+
+如果设置为真，该 DNS 服务器的请求会是最终尝试，不会触发 fallback 行为。
