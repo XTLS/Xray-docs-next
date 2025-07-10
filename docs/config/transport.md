@@ -433,7 +433,7 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 
 ```json
 {
-  "ocspStapling": 3600,
+  "ocspStapling": 0,
   "oneTimeLoading": false,
   "usage": "encipherment",
   "buildChain": false,
@@ -490,16 +490,15 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 }
 ```
 
+服务端证书，每隔 3600 秒(即一小时)将进行热重载。
+
 > `ocspStapling`: number
 
-OCSP 装订更新，与证书热重载的时间间隔。 单位：秒。默认值为 `3600`，即一小时。
+OCSP 装订更新间隔，单位为秒，默认值为 0. 任意非 0 值将启用 OCSP 装订且覆盖默认的 3600 秒证书热重载时间(重载的同时执行 OCSP 装订)。
 
 > `oneTimeLoading`: true | false
 
-仅加载一次。值为 `true` 时将关闭证书热重载功能与 ocspStapling 功能。
-::: warning
-当值为 `true` 时，将会关闭 OCSP 装订。
-:::
+仅加载一次，默认 false. 值为 `true` 时将关闭证书热重载功能与 OCSP 装订功能。
 
 > `usage`: "encipherment" | "verify" | "issue"
 
