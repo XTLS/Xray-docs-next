@@ -74,6 +74,7 @@ Xray 内置的 DNS 模块，主要有两大用途：
     "disableCache": false,
     "disableFallback": false,
     "disableFallbackIfMatch": false,
+    "useSystemHosts": false,
     "tag": "dns_inbound"
   }
 }
@@ -213,6 +214,10 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 `true` 当 DNS 服务器的优先匹配域名列表命中时，禁用 fallback 查询，默认为 `false`，即不禁用。
 
+> `useSystemHosts`: true | false
+
+如果为真，将系统 hosts 文件附加到内置 DNS 的 hosts 中
+
 > `tag`: string
 
 由内置 DNS 发出的查询流量，除 `localhost`、`fakedns`、`TCPL`、`DOHL` 和 `DOQL` 模式外，都可以用此标识在路由使用 `inboundTag` 进行匹配。
@@ -311,6 +316,8 @@ DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH�
 > `timeoutMs`: number
 
 DNS 服务器超时时间，默认 4000 ms
+
+它不会对 `localhost` DNS (系统 DNS) 生效，它总是跟随 golang 的 DNS 超时行为(cgo 与 pure go 可能略有不同)。
 
 > `disableCache`: true | false
 
