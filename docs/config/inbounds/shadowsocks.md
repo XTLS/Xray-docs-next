@@ -51,7 +51,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 服务端端口**监听**的网络类型。默认值为 `"tcp"`。
 
-注意，这只是监听，主要影响并控制 shadowsocks 的原生 UDP 传输，不代表入站会拒绝 UDP 请求。UDP 请求仍可以被 shadowsocks 出站的 uot 或者 mux.cool 等包装到 TCP 报文中发送到服务端，不受此选项控制。
+注意，这只是监听，主要影响并控制 shadowsocks 的原生 UDP 传输，设置为 `"tcp"` 不代表入站会拒绝代理 UDP 的请求。UDP 代理请求仍可以被 shadowsocks 出站的 uot 或者 mux.cool 等包装到 TCP 报文中发送到服务端，不受此选项控制。
 
 > `method`: string
 
