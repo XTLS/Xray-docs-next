@@ -11,3 +11,5 @@
 [Xray 的工作模式简析](./work.md)
 
 [通过 SNI 回落功能实现伪装与按域名分流](./fallbacks-with-sni.md)
+
+[通过 DNS 模块实现精准的境内外分流](./routing-with-dns.md)
