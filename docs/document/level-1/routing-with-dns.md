@@ -92,18 +92,19 @@ sock、http 入站时，请求的就是域名，到了路由后，路由中非 A
     "tag": "dns-proxy"
   },
   "routing": {
+    "domainStrategy": "具体取决于你的需求",
     "rules": [
       {
-        // DNS模块标记的走直连解析
+        // 为 DNS 查询本身进行路由
         "inboundTag": ["dns-direct"],
         "outboundTag": "direct"
       },
       {
-        // DNS模块标记的走代理解析
+        // 为 DNS 查询本身进行路由
         "inboundTag": ["dns-proxy"],
         "outboundTag": "proxy"
       }
-      // 你的分流规则...
+      // 你的分流规则，按你的需求利用 domain 和/或 ip 来分流...
     ]
   }
   // 其它忽略，按需配置...
@@ -145,18 +146,19 @@ realIp 透明代理环境，你甚至可以在劫持 DNS 后，设置 domainStra
     "tag": "dns-proxy"
   },
   "routing": {
+    "domainStrategy": "必须是非 AsIs，具体取决于你的需求",
     "rules": [
       {
-        // DNS模块标记的走直连解析
+        // 为 DNS 查询本身进行路由
         "inboundTag": ["dns-direct"],
         "outboundTag": "direct"
       },
       {
-        // DNS模块标记的走代理解析
+        // 为 DNS 查询本身进行路由
         "inboundTag": ["dns-proxy"],
         "outboundTag": "proxy"
       }
-      // 你的分流规则...
+      // 你的分流规则，按你的需求利用 domain 和/或 ip 来分流...
     ]
   }
   // 其它忽略，按需配置...
