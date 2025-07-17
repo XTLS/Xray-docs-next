@@ -37,7 +37,6 @@
     "v6only": false,
     "tcpWindowClamp": 600,
     "tcpMptcp": false,
-    "tcpNoDelay": false,
     "addressPortStrategy": "",
     "customSockopt": []
   }
@@ -582,7 +581,6 @@ Reality лишь модифицирует TLS, и для реализации н
   "V6Only": false,
   "tcpWindowClamp": 600,
   "tcpMptcp": false,
-  "tcpNoDelay": false,
   "customSockopt": []
 }
 ```
@@ -764,10 +762,6 @@ Reality лишь модифицирует TLS, и для реализации н
 Обратите внимание, что этот параметр действует только на стороне клиента. В Golang версии 1.24 и выше MPTCP уже включен по умолчанию на стороне сервера (при прослушивании соединений).
 
 Для работы MPTCP требуется Linux с ядром версии 5.6 или новее.
-
-> `tcpNoDelay`: true | false
-
-Этот параметр удален, так как golang по умолчанию включает TCP no delay. Если вы хотите отключить его, используйте customSockopt.
 
 > `addressPortStrategy`: "none" | "SrvPortOnly" | "SrvAddressOnly" | "SrvPortAndAddress" | "TxtPortOnly" | "TxtAddressOnly" | "TxtPortAndAddress"
 
