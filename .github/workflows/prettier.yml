@@ -15,9 +15,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
+          fetch-depth: 2
       - name: Checkout
         if: github.event.pull_request.head.repo.full_name != 'XTLS/Xray-docs-next'
         uses: actions/checkout@v4
+        fetch-depth: 2
 
       - name: Prettify code
         if: github.event.pull_request.head.repo.full_name == 'XTLS/Xray-docs-next'
