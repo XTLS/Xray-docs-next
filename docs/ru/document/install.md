@@ -81,14 +81,39 @@ Xray предлагает два способа проверки:
 
 ## Установка с помощью Docker
 
-- [teddysun/xray](https://hub.docker.com/r/teddysun/xray)
+- [teddysun/xray](https.hub.docker.com/r/teddysun/xray) Имеет root-права, есть оболочка (shell), совместим со всеми архитектурами, поддерживаемыми Alpine. Скомпилирован и собран на частном сервере dl.lamp.sh. Более удобен в использовании.
+- [ghcr.io/xtls/xray-core](https.ghcr.io/xtls/xray-core) Не имеет root-прав, нет оболочки (shell), поддерживает большее количество архитектур. Скомпилирован и собран из официального репозитория с поддержкой отслеживания. Удобство принесено в жертву ради более высокой безопасности.
 
 ### Файловая структура образа Docker
 
-- `/etc/xray/config.json`: файл конфигурации;
-- `/usr/bin/xray`: основная программа Xray;
-- `/usr/share/xray/geoip.dat`: файл данных IP;
-- `/usr/share/xray/geosite.dat`: файл данных доменных имен.
+
+Образ версии teddysun/xray:
+
+- `/usr/bin/xray`: Основная программа Xray
+- `/etc/xray/config.json`: Единый конфигурационный файл (каталог, в котором он находится, является точкой монтирования)
+- `/usr/share/xray/`: Каталог с файлами ресурсов, содержит файлы геолокационных данных от v2fly
+    - geoip.dat
+    - geosite.dat
+
+Образ версии ghcr.io/xtls/xray-core:
+
+- `/usr/local/bin/xray`: Основная программа Xray (владелец root:root, права доступа к файлу 755)
+- `/usr/local/etc/xray/`: Каталог конфигурационных файлов (точка монтирования) (владелец каталога root:root, права доступа к каталогу 755, права доступа к файлам 644)
+    - 01_api.json
+    - 02_dns.json
+    - 03_routing.json
+    - 04_policy.json
+    - 05_inbounds.json
+    - 06_outbounds.json
+    - 07_transport.json
+    - 08_stats.json
+    - 09_reverse.json
+- `/usr/local/share/xray/`: Каталог с файлами ресурсов, содержит файлы геолокационных данных от Loyalsoldier (права доступа те же, что и выше)
+    - geoip.dat
+    - geosite.dat
+- `/var/log/xray/`: Каталог лог-файлов (точка монтирования) (владелец каталога root:root, права доступа 755; владелец файлов 65532:65532, права доступа 600)
+    - access.log
+    - error.log
 
 # Графические клиенты
 
