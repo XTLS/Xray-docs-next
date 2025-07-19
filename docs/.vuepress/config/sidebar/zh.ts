@@ -107,6 +107,7 @@ export const sidebarZh: SidebarConfig = {
         "/document/level-1/routing-lv1-part2.md",
         "/document/level-1/work.md",
         "/document/level-1/fallbacks-with-sni.md",
+        "/document/level-1/routing-with-dns.md",
       ],
     },
     {
