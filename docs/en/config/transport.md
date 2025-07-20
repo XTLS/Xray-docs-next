@@ -659,7 +659,7 @@ The option value to be set, the example here is set to bbr.
 
 Decimal numbers are required when type is specified as int.
 
-> `happyEyeballs`: {}
+> `happyEyeballs`: map
 
 only TCP, this is RFC-8305 implementation of happyEyeballs, only apply when built-in-dns is used(domainStrategy is `UseIP`/`ForceIP`).
 When we have multiple IPs, this algorithm tries to connect to each IP, the first-stablished-connection is winner connection and selected for sending/receiving data.
