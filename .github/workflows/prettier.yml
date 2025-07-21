@@ -11,20 +11,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        if: github.event.pull_request.head.repo.full_name == 'XTLS/Xray-docs-next'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.head_ref }}
-      - name: Checkout
-        if: github.event.pull_request.head.repo.full_name != 'XTLS/Xray-docs-next'
-        uses: actions/checkout@v4
-
       - name: Prettify code
         if: github.event.pull_request.head.repo.full_name == 'XTLS/Xray-docs-next'
         uses: creyD/prettier_action@v4.6
         with:
           prettier_options: --write **/*.{js,ts,md,vue}
-      - name: Prettify code
+      - name: Prettify code dry run
         if: github.event.pull_request.head.repo.full_name != 'XTLS/Xray-docs-next'
         uses: creyD/prettier_action@v4.6
         with:
