@@ -322,12 +322,14 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 
 旧称 dest, 当前版本两个字段互为alias
 
+如果 target 支持后量子密钥交换算法 X25519MLKEM768, 那么 reality 客户端也会自动使用该后量子算法进行密钥协商。具体是否支持可以使用 `xray tls ping cloudflare.com` (网址更改为dest, 可以带端口号) 检查。
+
 ::: warning
 为了伪装的效果考虑，Xray对于鉴权失败（非合法reality请求）的流量，会**直接转发**至 target.
 如果 target 网站的 IP 地址特殊（如使用了 CloudFlare CDN 的网站） 则相当于你的服务器充当了 CloudFlare 的端口转发，可能造成被扫描后偷跑流量的情况。
 
 为了杜绝这种情况，可以考虑前置 Nginx 等方法过滤掉不符合要求的 SNI。
-或者你也考虑配置 `limitFallbackUpload` 和 `limitFallbackDownload`，限制其速率。
+或者也可以考虑配置 `limitFallbackUpload` 和 `limitFallbackDownload`，限制其速率。
 :::
 
 > `xver` : number
