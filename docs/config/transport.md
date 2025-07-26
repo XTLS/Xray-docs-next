@@ -302,6 +302,7 @@ x25519Kyber768Draft00
   "maxClientVer": "",
   "maxTimeDiff": 0,
   "shortIds": ["", "0123456789abcdef"],
+  "mldsa65Seed": "",
   "limitFallbackUpload": {
     "afterBytes": 0,
     "bytesPerSec": 0,
@@ -314,8 +315,9 @@ x25519Kyber768Draft00
   },
   "fingerprint": "chrome",
   "serverName": "",
-  "publicKey": "",
+  "password": "",
   "shortId": "",
+  "mldsa65Verify": "",
   "spiderX": ""
 }
 ```
@@ -390,6 +392,16 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 
 若包含空值，客户端 `shortId` 可为空。
 
+> `mldsa65Seed` : string
+
+仅服务端，为 Reality 客户端返回的证书添加额外的后量子签名所使用的私钥，使用 ML-DSA-65 (如果存在可以破解 x25519 的量子计算机，password 泄露可能导致连接可以被 mitm, 该功能可以防止未来的这种攻击)
+
+使用 `xray mldsa65` 生成使用的公私钥对，服务端配置私钥后只会在证书扩展中添加，不影响旧版客户端或没启用该功能的客户端。
+
+注意，配置该功能后 target 所返回的证书长度**必须**大于 3500, 因为后量子签名会导致 Reality 返回的临时证书变大，为了防止产生特征 target 返回的证书也要很大。 可以使用 `xray tls ping example.com` 进行查看检查。同时为了完美的后量子安全，target 也需要支持后量子密钥交换 X25519MLKEM768, 支持情况一样可以通过前面的命令查看。
+
+> `limitFallbackUpload`/`limitFallbackDownload`
+
 ::: warning
 警告：对于 REALITY 最佳实践始终是偷同 ASN 的证书，那么你大概率用不到此功能；只有当你迫不得已偷了 Cloudflare 这种免费 CDN 的证书时，为避免你服务器成为别人加速节点时可考虑开启此功能。
 
@@ -445,9 +457,13 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 
 0也是偶数，所以若服务端的 `shordIDs` 包含空值 `""` ，客户端也可为空。
 
-> `publicKey` : string
+> `password` : string
 
-必填，服务端私钥对应的公钥。使用 `./xray x25519 -i "服务器私钥"` 生成。
+必填，服务端私钥对应的公钥。使用 `./xray x25519 -i "服务器私钥"` 生成。旧称 publicKey, 为防止误解更名(这个东西地位上确实是 x25519 公钥但是在 Reality 的设计中是客户端持有，不能公开)
+
+> `mldsa65Verify`
+
+可选，mldsa65 签名验证使用的公钥，非空时使用该公钥检查服务端返回的证书，详情见 `"mldsa65Seed"` 的描述。
 
 > `spiderX` : string
 
