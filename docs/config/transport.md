@@ -116,7 +116,9 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
   "fingerprint": "",
   "pinnedPeerCertificateChainSha256": [""],
   "curvePreferences": [""],
-  "masterKeyLog": ""
+  "masterKeyLog": "",
+  "echConfigList": "",
+  "echServerKeys": ""
 }
 ```
 
@@ -265,7 +267,27 @@ x25519Kyber768Draft00
 
 > `masterKeyLog` : string
 
-(Pre)-Master-Secret log 文件路径，可用于Wireshark等软件解密Xray发送的TLS连接，暂不支持与utls一起使用。
+(Pre)-Master-Secret log 文件路径，可用于Wireshark等软件解密Xray发送的TLS连接。
+
+> `echConfigList` : string
+
+仅客户端参数，配置 ECHConfig, 不为空则代表客户端启用 Encrypted Client Hello. 支持两种格式
+
+第一种直接 固定 ECHConfig, 如 `"AF7+DQBaAAAgACA51i3Ssu4wUMV4FNCc8iRX5J+YC4Bhigz9sacl2lCfSQAkAAEAAQABAAIAAQADAAIAAQACAAIAAgADAAMAAQADAAIAAwADAAtleGFtcGxlLmNvbQAA"`
+
+第二种从 DNS 服务器查询，比方说使用 CDN 时可以通过 HTTPS 记录动态获取其配置的 ECHConfig, 且 Xray 会遵守服务器下发的 TTL，查询目标会是配置的 SNI, 或者配置的服务器域名(如果 SNI 为空且目标为一个域名)
+
+基础格式为 `"udp://1.1.1.1"` 表示从 UDP DNS 1.1.1.1 查询，也可以使用 `"https://1.1.1.1/dns-query"` 这样的格式，代表使用 DOH 进行查询(实际使用请替换成当地可用的服务器). 上述两种均支持修改端口号，如 `udp://1.1.1.1:53`，没写会按照协议默认 53/443.
+
+特别地，可以使用指定的域名用于查询 ECHConfig, 格式为 `"example.com+https://1.1.1.1/dns-query"` 这样 Xray 会强制使用 example.com 的 DNS 记录中的 ECHConfig 用于连接，如果你想从 DNS 获取 ECHConfig 但又不想暴露自己在查询这个域名的 HTTPS 记录或者在这个域名下发布 HTTPS 记录时有一些用。
+
+> `echServerKeys` : string
+
+仅服务端参数，用于服务端启用 Encrypted Client Hello.
+
+使用 `xray tls ech --serverName example.com` 生成可用的 ECH Server Key 和对应的 Config, 其中 example.com 是在 SNI 被加密用用于暴露在外部的 SNI, 可以随便填。Server Key 包含了 ECHConfig, 如果你不慎弄丢了客户端用的 Config 可以使用 `xray tls ech -i "你的 server key"` 重新获得。你可以把它发布到 DNS 的 HTTPS 记录中，格式参考[这里](https://dns.google/query?name=encryptedsni.com&rr_type=HTTPS) 或者 RFC 9460
+
+注意服务端配置 ECH 后仍然接受正常的非 ECH 连接，但是客户端配置 ECH 后如果未能正确执行 ECH 握手会直接失败，不会回退到明文 SNI.
 
 ### RealityObject
 
