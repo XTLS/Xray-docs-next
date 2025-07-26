@@ -304,7 +304,7 @@ DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH�
 
 > `clientIP`: [string]
 
-EDNS Client Subnet 扩展中使用的 IP 地址。
+EDNS Client Subnet 扩展中使用的 IP 地址，覆盖全局 clientIP 选项。
 
 需要是一个有效的 IPv4 或者 IPv6. 实际发送时会自动抹掉最后几位，IPv4 和 IPv6 分别以 /24 和 /96 的子网发送。
 
