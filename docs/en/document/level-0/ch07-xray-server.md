@@ -122,7 +122,9 @@ chmod +r ~/xray_cert/xray.key
 
     In addition, when recording animated images, the script did not include a command to restart `Xray` because `Xray` plans to support the [Certificate Hot Update] function, which means that `Xray` will automatically identify certificate updates and reload certificates without manual restart. After the function is added, I will modify `config.json` appropriately
     to enable this setting and delete the restart command in the script.
-    ::: 4. Add [executable] permissions to this file
+    :::
+
+    4. Add [executable] permissions to this file
 
         ```
         chmod +x ~/xray_cert/xray-cert-renew.sh
@@ -176,19 +178,21 @@ First, you can refer to the [official VLESS configuration example](https://githu
 
    ::: warning
    This location is not the standard log file location of `Xray`. It is placed here to avoid permission issues that cause trouble for new users. Once you are familiar with it, it is recommended to return to the default location: `/var/log/xray/access.log` and `/var/log/xray/error.log`.
-   ::: 4. Because Xray is used by the nobody user by default, we need to allow other users to have "write" permissions (`*.log` means all files with the suffix `log`, and the efficiency advantage of the `CLI` interface gradually appears at this time)
+   :::
+
+   4. Because Xray is used by the nobody user by default, we need to allow other users to have "write" permissions (`*.log` means all files with the suffix `log`, and the efficiency advantage of the `CLI` interface gradually appears at this time)
 
    ```shell
    chmod a+w ~/xray_log/*.log
    ```
 
-3. Use `nano` to create the configuration file of `Xray`
+   5. Use `nano` to create the configuration file of `Xray`
 
    ```shell
    sudo nano /usr/local/etc/xray/config.json
    ```
 
-4. Copy all the files below and fill in the previously generated `UUID` into the 61st line `"id": "",`. (After filling in, it will look like `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
+6. Copy all the files below and fill in the previously generated `UUID` into the 61st line `"id": "",`. (After filling in, it will look like `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
    ) This configuration file in this article adds my various verbose comments to help you understand the function of each configuration module.
 
 ```json
@@ -380,6 +384,7 @@ The stability of the kernel is the cornerstone of the stable operation of a serv
 
 ::: warning
 The so-called "leading" of the magic modification `bbr` is very time-sensitive. For example, many `bbrplus` scripts, because they have not been updated for several years, will still change your kernel to `4.19`. You should know that Debian is now stable and it is already the era of `5.9`. Then this script may be a little ahead in January 2018, but it has lost its meaning when 4.19 is released in October 2018. It can even be said to be completely [downgraded] and [degraded] now.
+:::
 
 4. Which of `fq`, `fq_codel`, `fq_pie`, `cake` and other algorithms is better?
 
@@ -391,7 +396,7 @@ In one sentence: **Don't use these! Throw them into the trash can of history! **
 
 It can only solve the problem of packet loss rate. A not very accurate analogy is that you originally used a car to deliver your goods, and sometimes the car broke down halfway (packet loss). After using these, you directly sent out 3 copies of the same goods and let three cars deliver them at the same time. As long as one of them is not broken, it can be delivered. The road is full of your cars, so you can naturally squeeze others out. But it is conceivable that when you squeeze others, others will also squeeze you, and the exit road of the entire computer room is so wide, and it is bound to become a collective traffic jam in the end.
 
-::: warning description
+::: warning Description
 Their principle is not algorithm optimization, not speed-up, most of them are simple and crude **multiple packet delivery**. It may be useful for bad lines with very high packet loss rates, but it has no optimization effect on good lines with low packet loss rates. Instead, it will consume your traffic exponentially, causing unnecessary pressure on the server and your neighbors.
 
 If your line really has a very high packet loss rate, the only reliable solution is to **change the line**.
@@ -404,11 +409,13 @@ If your line really has a very high packet loss rate, the only reliable solution
       sudo nano /etc/apt/sources.list
       ```
 
-   ::: warning description
+   ::: warning Description
    This article takes Debian 10 as an example, so there is still no problem using `/etc/apt/sources.list`, but if you are not starting from scratch according to this article, or using other Linux
    distributions, it is recommended that you create a `/etc/apt/sources.list.d/` folder and create your own configuration file in this folder, such as `/etc/apt/sources.list.d/vpsadmin.list`
    , to ensure compatibility and avoid the default file being overwritten in unforeseen circumstances and causing configuration loss.
-   ::: 2. Then add the following item at the end, save and exit.
+   :::
+
+   2. Then add the following item at the end, save and exit.
 
    ```
    deb http://deb.debian.org/debian buster-backports main
@@ -428,17 +435,21 @@ If your line really has a very high packet loss rate, the only reliable solution
    - Take a system snapshot before trying, or
    - You have `vnc` to save the day (and you know how to use it)
 
-   ::: 4. Modify the `kernel` parameter configuration file `sysctl.conf` and specify to enable `BBR`
+   :::
+
+   4. Modify the `kernel` parameter configuration file `sysctl.conf` and specify to enable `BBR`
 
    ```shell
    sudo nano /etc/sysctl.conf
    ```
 
-   ::: warning description
+   ::: warning Description
    This article takes Debian 10 as an example, so it is still no problem to use `/etc/sysctl.conf`, but if you are not following this article from scratch, or use other Linux distributions, it is recommended that you create a `/etc/sysctl.d/`
    folder and create your own configuration file in this folder, such as `/etc/sysctl.d/vpsadmin.conf`, to ensure compatibility, because some distributions no longer read parameters from `/etc/sysctl.conf` after `systemd`
    207 ​​version. Using a custom configuration file can also prevent the default file from being overwritten in unexpected circumstances, resulting in configuration loss.
-   ::: 5. Add the following content
+   :::
+
+   5. Add the following content
 
    ```
    net.core.default_qdisc=fq
@@ -462,19 +473,16 @@ If your line really has a very high packet loss rate, the only reliable solution
    ![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif) 8. Confirm that `BBR` is enabled
 
 If you want to confirm whether `BBR` is enabled correctly, you can use the following command:
-`shell
-    lsmod | grep bbr
-    `
+`lsmod | grep bbr`
+
 This should return the following result:
-`     tcp_bbr
-    `
+`tcp_bbr`
+
 If you want to confirm whether the `fq` algorithm is enabled correctly, you can use the following command:
-`shell
-    lsmod | grep fq
-    `
+`lsmod | grep fq`
+
 This should return the following result:
-`     sch_fq
-    `
+`sch_fq`
 
 ## 7.8 Server Optimization 2: Enable HTTP to automatically redirect to HTTPS
 
