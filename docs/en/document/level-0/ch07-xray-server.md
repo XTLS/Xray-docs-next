@@ -186,13 +186,13 @@ First, you can refer to the [official VLESS configuration example](https://githu
    chmod a+w ~/xray_log/*.log
    ```
 
-   5. Use `nano` to create the configuration file of `Xray`
+3. Use `nano` to create the configuration file of `Xray`
 
-   ```shell
-   sudo nano /usr/local/etc/xray/config.json
-   ```
+```shell
+sudo nano /usr/local/etc/xray/config.json
+```
 
-6. Copy all the files below and fill in the previously generated `UUID` into the 61st line `"id": "",`. (After filling in, it will look like `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
+4. Copy all the files below and fill in the previously generated `UUID` into the 61st line `"id": "",`. (After filling in, it will look like `"id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid"`
    ) This configuration file in this article adds my various verbose comments to help you understand the function of each configuration module.
 
 ```json
