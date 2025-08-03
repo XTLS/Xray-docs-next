@@ -1,4 +1,4 @@
-# Tunnel(dokodemo)
+# Tunnel(Dokodemo-Door)
 
 Tunnel（隧道），旧称 dokodemo-door（任意门）可以监听一个本地端口，并把所有进入此端口的数据通过 outbound 发送至指定服务器的一个端口，从而达到端口映射的效果。
 
@@ -8,7 +8,11 @@ Tunnel（隧道），旧称 dokodemo-door（任意门）可以监听一个本地
 {
   "address": "8.8.8.8",
   "port": 53,
-  "portMap": [],
+  "portMap": {
+    "5555": "1.1.1.1:7777",
+    "5556": ":8888", // overrides port only
+    "5557": "example.com:" // overrides address only
+  },
   "network": "tcp",
   "followRedirect": false,
   "userLevel": 0
@@ -27,7 +31,7 @@ Tunnel（隧道），旧称 dokodemo-door（任意门）可以监听一个本地
 
 > `portMap`: map[string]string
 
-一个map, 映射本地端口和需要的远程端口(如果 inbound 监听了数个端口), 如果本地端口未包含在其中则按 `port` 设置处理。
+一个map, 映射本地端口和需要的远程地址/端口(如果 inbound 监听了数个端口), 如果本地端口未包含在其中则按 `address`/`port` 设置处理。
 
 > `network`: "tcp" | "udp" | "tcp,udp"
 
