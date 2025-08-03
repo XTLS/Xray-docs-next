@@ -34,7 +34,7 @@ export const sidebarZh: SidebarConfig = {
     {
       text: "入站协议",
       children: [
-        "/config/inbounds/tunnel(dokodemo).md",
+        "/config/inbounds/tunnel.md",
         "/config/inbounds/http.md",
         "/config/inbounds/shadowsocks.md",
         "/config/inbounds/socks.md",

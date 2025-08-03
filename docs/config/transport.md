@@ -683,7 +683,7 @@ OCSP 装订更新间隔，单位为秒，默认值为 0. 任意非 0 值将启�
 透明代理需要 Root 或 `CAP_NET_ADMIN` 权限。
 
 ::: danger
-当 [Dokodemo-door](./inbounds/tunnel(dokodemo).md) 中指定了 `followRedirect`为`true`，且 Sockopt 设置中的`tproxy` 为空时，Sockopt
+当 [Dokodemo-door](./inbounds/tunnel.md) 中指定了 `followRedirect`为`true`，且 Sockopt 设置中的`tproxy` 为空时，Sockopt
 设置中的`tproxy` 的值会被设为 `"redirect"`。
 :::
 
