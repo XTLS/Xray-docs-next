@@ -2,7 +2,7 @@
 
 Xray 支持以下入站协议：
 
-- [Dokodemo-Door](../inbounds/tunnel.md)
+- [Tunnel](../inbounds/tunnel.md)
 - [HTTP](../inbounds/http.md)
 - [Shadowsocks](../inbounds/shadowsocks.md)
 - [Socks](../inbounds/socks.md)
