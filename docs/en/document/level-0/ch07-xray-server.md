@@ -470,19 +470,29 @@ If your line really has a very high packet loss rate, the only reliable solution
    If you are not sure whether your VPS supports it, please follow the command in step 3 and use the regular kernel `linux-image-amd64`.
    :::
 
-   ![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif) 8. Confirm that `BBR` is enabled
+   ![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif) 
+   
+   8. Confirm that `BBR` is enabled
 
 If you want to confirm whether `BBR` is enabled correctly, you can use the following command:
-`lsmod | grep bbr`
+```shell
+lsmod | grep bbr
+```
 
 This should return the following result:
-`tcp_bbr`
+```
+tcp_bbr
+```
 
 If you want to confirm whether the `fq` algorithm is enabled correctly, you can use the following command:
-`lsmod | grep fq`
+```shell
+lsmod | grep fq
+```
 
 This should return the following result:
-`sch_fq`
+```
+sch_fq
+```
 
 ## 7.8 Server Optimization 2: Enable HTTP to automatically redirect to HTTPS
 
