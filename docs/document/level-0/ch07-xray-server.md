@@ -409,7 +409,7 @@ sudo systemctl enable xray
 
 6. 啰嗦了这么多，就是因为围绕 `BBR` 忽悠小白的错误概念和坑人脚本实在是太多了。我希望你们现在对 `BBR` 有了相对清晰的理解。接下来，我们就动手安装最新的 Debian 内核并开启`BBR` 吧！（真的很简单）
 
-1. 给 Debian 10 添加官方 `backports` 源，获取更新的软件库
+7. 给 Debian 10 添加官方 `backports` 源，获取更新的软件库
 
 ```shell
 sudo nano /etc/apt/sources.list
@@ -421,13 +421,13 @@ sudo nano /etc/apt/sources.list
 ，以此保证兼容性，也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
 :::
 
-2.  然后把下面这一条加在最后，并保存退出。
+8.  然后把下面这一条加在最后，并保存退出。
 
 ```
 deb http://archive.debian.org/debian buster-backports main
 ```
 
-3.  刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
+9.  刷新软件库并查询 Debian 官方的最新版内核并安装。请务必安装你的 VPS 对应的版本（本文以比较常见的【amd64】为例）。
 
 ```shell
 sudo apt update && sudo apt -t buster-backports install linux-image-amd64
@@ -444,7 +444,7 @@ sudo apt update && sudo apt -t buster-backports install linux-image-amd64
 
 :::
 
-4.  修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
+10.  修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
 
 ```shell
 sudo nano /etc/sysctl.conf
@@ -456,20 +456,20 @@ sudo nano /etc/sysctl.conf
 207 版本之后便不再从 `/etc/sysctl.conf` 读取参数。使用自定义配置文件也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
 :::
 
-5.  把下面的内容添加进去
+11.  把下面的内容添加进去
 
 ```
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 ```
 
-6.  重启 VPS、使内核更新和`BBR`设置都生效
+12.  重启 VPS、使内核更新和`BBR`设置都生效
 
 ```shell
 sudo reboot
 ```
 
-7.  完整流程演示如下：
+13.  完整流程演示如下：
 
 ::: tip 啰嗦君
 因为我做展示的 VPS 支持云服务器专用内核，所以动图中我用了 `linux-image-cloud-amd64`
@@ -478,7 +478,7 @@ sudo reboot
 
 ![更新Debian内核并开启`BBR`](./ch07-img06-bbr-proper.gif)
 
-8.  确认`BBR`开启
+14.  确认`BBR`开启
 
 如果你想确认 `BBR` 是否正确开启，可以使用下面的命令：
 
