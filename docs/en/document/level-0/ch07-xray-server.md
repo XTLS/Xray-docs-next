@@ -403,76 +403,77 @@ If your line really has a very high packet loss rate, the only reliable solution
 :::
 
 6. I have said so much because there are too many misconceptions and scam scripts around `BBR` to fool novices. I hope you now have a relatively clear understanding of `BBR`. Next, let's install the latest Debian kernel and enable `BBR`! (It's really simple)
-   1. Add the official `backports` source to Debian 10 to get the updated software library
 
-      ```shell
-      sudo nano /etc/apt/sources.list
-      ```
+7. Add the official `backports` source to Debian 10 to get the updated software library
 
-   ::: warning Description
-   This article takes Debian 10 as an example, so there is still no problem using `/etc/apt/sources.list`, but if you are not starting from scratch according to this article, or using other Linux
-   distributions, it is recommended that you create a `/etc/apt/sources.list.d/` folder and create your own configuration file in this folder, such as `/etc/apt/sources.list.d/vpsadmin.list`
-   , to ensure compatibility and avoid the default file being overwritten in unforeseen circumstances and causing configuration loss.
-   :::
+```shell
+sudo nano /etc/apt/sources.list
+```
 
-   2. Then add the following item at the end, save and exit.
+::: warning Description
+This article takes Debian 10 as an example, so there is still no problem using `/etc/apt/sources.list`, but if you are not starting from scratch according to this article, or using other Linux
+distributions, it is recommended that you create a `/etc/apt/sources.list.d/` folder and create your own configuration file in this folder, such as `/etc/apt/sources.list.d/vpsadmin.list`
+, to ensure compatibility and avoid the default file being overwritten in unforeseen circumstances and causing configuration loss.
+:::
 
-   ```
-   deb http://deb.debian.org/debian buster-backports main
-   ```
+8. Then add the following item at the end, save and exit.
 
-   3. Refresh the software library and query the latest version of the official Debian kernel and install it. Please be sure to install the version corresponding to your VPS (this article takes the more common [amd64] as an example).
+```
+deb http://deb.debian.org/debian buster-backports main
+```
 
-      ```shell
-      sudo apt update && sudo apt -t buster-backports install linux-image-amd64
-      ```
+9. Refresh the software library and query the latest version of the official Debian kernel and install it. Please be sure to install the version corresponding to your VPS (this article takes the more common [amd64] as an example).
 
-   ::: warning Note
+  ```shell
+  sudo apt update && sudo apt -t buster-backports install linux-image-amd64
+  ```
 
-   If your VPS supports it, you can try the [cloud server dedicated kernel] `linux-image-cloud-amd64`. The advantages are simplicity and low resource usage. The disadvantage is that some students have reported that forced installation on an unsupported system will cause the system to fail to boot (the kernel cannot be recognized).
+::: warning Note
 
-   To avoid the tragedy of being unable to identify, please make sure:
-   - Take a system snapshot before trying, or
-   - You have `vnc` to save the day (and you know how to use it)
+If your VPS supports it, you can try the [cloud server dedicated kernel] `linux-image-cloud-amd64`. The advantages are simplicity and low resource usage. The disadvantage is that some students have reported that forced installation on an unsupported system will cause the system to fail to boot (the kernel cannot be recognized).
 
-   :::
+To avoid the tragedy of being unable to identify, please make sure:
+- Take a system snapshot before trying, or
+- You have `vnc` to save the day (and you know how to use it)
 
-   4. Modify the `kernel` parameter configuration file `sysctl.conf` and specify to enable `BBR`
+:::
 
-   ```shell
-   sudo nano /etc/sysctl.conf
-   ```
+10. Modify the `kernel` parameter configuration file `sysctl.conf` and specify to enable `BBR`
 
-   ::: warning Description
-   This article takes Debian 10 as an example, so it is still no problem to use `/etc/sysctl.conf`, but if you are not following this article from scratch, or use other Linux distributions, it is recommended that you create a `/etc/sysctl.d/`
-   folder and create your own configuration file in this folder, such as `/etc/sysctl.d/vpsadmin.conf`, to ensure compatibility, because some distributions no longer read parameters from `/etc/sysctl.conf` after `systemd`
-   207 ​​version. Using a custom configuration file can also prevent the default file from being overwritten in unexpected circumstances, resulting in configuration loss.
-   :::
+```shell
+sudo nano /etc/sysctl.conf
+```
 
-   5. Add the following content
+::: warning Description
+This article takes Debian 10 as an example, so it is still no problem to use `/etc/sysctl.conf`, but if you are not following this article from scratch, or use other Linux distributions, it is recommended that you create a `/etc/sysctl.d/`
+folder and create your own configuration file in this folder, such as `/etc/sysctl.d/vpsadmin.conf`, to ensure compatibility, because some distributions no longer read parameters from `/etc/sysctl.conf` after `systemd`
+207 ​​version. Using a custom configuration file can also prevent the default file from being overwritten in unexpected circumstances, resulting in configuration loss.
+:::
 
-   ```
-   net.core.default_qdisc=fq
-   net.ipv4.tcp_congestion_control=bbr
-   ```
+11. Add the following content
 
-   6. Restart the VPS to make the kernel update and `BBR` settings take effect
+```
+net.core.default_qdisc=fq
+net.ipv4.tcp_congestion_control=bbr
+```
 
-      ```shell
-      sudo reboot
-      ```
+12. Restart the VPS to make the kernel update and `BBR` settings take effect
 
-   7. The complete process is demonstrated as follows:
+  ```shell
+  sudo reboot
+  ```
 
-   ::: tip
-   Because the VPS I am demonstrating supports the cloud server-specific kernel, I used `linux-image-cloud-amd64` in the animation.
+13. The complete process is demonstrated as follows:
 
-   If you are not sure whether your VPS supports it, please follow the command in step 3 and use the regular kernel `linux-image-amd64`.
-   :::
+::: tip
+Because the VPS I am demonstrating supports the cloud server-specific kernel, I used `linux-image-cloud-amd64` in the animation.
 
-   ![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif) 
-   
-   8. Confirm that `BBR` is enabled
+If you are not sure whether your VPS supports it, please follow the command in step 3 and use the regular kernel `linux-image-amd64`.
+:::
+
+![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif) 
+
+14. Confirm that `BBR` is enabled
 
 If you want to confirm whether `BBR` is enabled correctly, you can use the following command:
 ```shell
