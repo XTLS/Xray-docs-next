@@ -119,7 +119,8 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
   "masterKeyLog": "",
   "echServerKeys": "",
   "echConfigList": "",
-  "echForceQuery": ""
+  "echForceQuery": "",
+  "echSockopt": {}
 }
 ```
 
