@@ -444,7 +444,7 @@ sudo apt update && sudo apt -t buster-backports install linux-image-amd64
 
 :::
 
-10.  修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
+10. 修改 `kernel` 参数配置文件 `sysctl.conf` 并指定开启 `BBR`
 
 ```shell
 sudo nano /etc/sysctl.conf
@@ -456,20 +456,20 @@ sudo nano /etc/sysctl.conf
 207 版本之后便不再从 `/etc/sysctl.conf` 读取参数。使用自定义配置文件也可避免默认文件在不可预见的情况下被覆盖而导致配置丢失。
 :::
 
-11.  把下面的内容添加进去
+11. 把下面的内容添加进去
 
 ```
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 ```
 
-12.  重启 VPS、使内核更新和`BBR`设置都生效
+12. 重启 VPS、使内核更新和`BBR`设置都生效
 
 ```shell
 sudo reboot
 ```
 
-13.  完整流程演示如下：
+13. 完整流程演示如下：
 
 ::: tip 啰嗦君
 因为我做展示的 VPS 支持云服务器专用内核，所以动图中我用了 `linux-image-cloud-amd64`
@@ -478,7 +478,7 @@ sudo reboot
 
 ![更新Debian内核并开启`BBR`](./ch07-img06-bbr-proper.gif)
 
-14.  确认`BBR`开启
+14. 确认`BBR`开启
 
 如果你想确认 `BBR` 是否正确开启，可以使用下面的命令：
 

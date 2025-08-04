@@ -123,8 +123,7 @@ chmod +r ~/xray_cert/xray.key
     In addition, when recording animated images, the script did not include a command to restart `Xray` because `Xray` plans to support the [Certificate Hot Update] function, which means that `Xray` will automatically identify certificate updates and reload certificates without manual restart. After the function is added, I will modify `config.json` appropriately
     to enable this setting and delete the restart command in the script.
     :::
-
-    4. Add [executable] permissions to this file
+    4.  Add [executable] permissions to this file
 
         ```
         chmod +x ~/xray_cert/xray-cert-renew.sh
@@ -179,7 +178,6 @@ First, you can refer to the [official VLESS configuration example](https://githu
    ::: warning
    This location is not the standard log file location of `Xray`. It is placed here to avoid permission issues that cause trouble for new users. Once you are familiar with it, it is recommended to return to the default location: `/var/log/xray/access.log` and `/var/log/xray/error.log`.
    :::
-
    4. Because Xray is used by the nobody user by default, we need to allow other users to have "write" permissions (`*.log` means all files with the suffix `log`, and the efficiency advantage of the `CLI` interface gradually appears at this time)
 
    ```shell
@@ -424,15 +422,16 @@ deb http://deb.debian.org/debian buster-backports main
 
 9. Refresh the software library and query the latest version of the official Debian kernel and install it. Please be sure to install the version corresponding to your VPS (this article takes the more common [amd64] as an example).
 
-  ```shell
-  sudo apt update && sudo apt -t buster-backports install linux-image-amd64
-  ```
+```shell
+sudo apt update && sudo apt -t buster-backports install linux-image-amd64
+```
 
 ::: warning Note
 
 If your VPS supports it, you can try the [cloud server dedicated kernel] `linux-image-cloud-amd64`. The advantages are simplicity and low resource usage. The disadvantage is that some students have reported that forced installation on an unsupported system will cause the system to fail to boot (the kernel cannot be recognized).
 
 To avoid the tragedy of being unable to identify, please make sure:
+
 - Take a system snapshot before trying, or
 - You have `vnc` to save the day (and you know how to use it)
 
@@ -459,9 +458,9 @@ net.ipv4.tcp_congestion_control=bbr
 
 12. Restart the VPS to make the kernel update and `BBR` settings take effect
 
-  ```shell
-  sudo reboot
-  ```
+```shell
+sudo reboot
+```
 
 13. The complete process is demonstrated as follows:
 
@@ -471,26 +470,30 @@ Because the VPS I am demonstrating supports the cloud server-specific kernel, I 
 If you are not sure whether your VPS supports it, please follow the command in step 3 and use the regular kernel `linux-image-amd64`.
 :::
 
-![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif) 
+![Update Debian kernel and enable `BBR`](./ch07-img06-bbr-proper.gif)
 
 14. Confirm that `BBR` is enabled
 
 If you want to confirm whether `BBR` is enabled correctly, you can use the following command:
+
 ```shell
 lsmod | grep bbr
 ```
 
 This should return the following result:
+
 ```
 tcp_bbr
 ```
 
 If you want to confirm whether the `fq` algorithm is enabled correctly, you can use the following command:
+
 ```shell
 lsmod | grep fq
 ```
 
 This should return the following result:
+
 ```
 sch_fq
 ```
