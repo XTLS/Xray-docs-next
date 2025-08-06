@@ -245,7 +245,6 @@ DNS-запросы, отправляемые встроенным DNS-серве
   "skipFallback": false,
   "clientIP": "1.2.3.4",
   "queryStrategy": "UseIPv4",
-  "tag": "server-1",
   "timeoutMs": 4000,
   "disableCache": false,
   "finalQuery": false
