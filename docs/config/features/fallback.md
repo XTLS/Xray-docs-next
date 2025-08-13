@@ -78,7 +78,9 @@ Fallback 内设置的 `alpn` 是匹配实际协商出的 ALPN，而 Inbound TLS 
 1. TCP，格式为 `"addr:port"`，其中 addr 支持 IPv4、域名、IPv6，若填写域名，也将直接发起 TCP 连接（而不走内置的 DNS）。
 2. Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `@` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`@@` 则代表带 padding 的 abstract。
 
-若只填 port，数字或字符串均可，形如 `80`、`"80"`，通常指向一个明文 http 服务（addr 会被补为 `"127.0.0.1"`）。
+若只填 port，数字或字符串均可，形如 `80`、`"80"`，通常指向一个明文 http 服务（addr 会被补为 `"localhost"`）。
+
+注：v25.7.26 后才将只包含 port 的 dest 指向 localhost, 在此之前都是 127.0.0.1. 修改后实际目标很可能是 ::1 网上抄的部分模板的 webserver 可能也监听 ::1 的同时却只允许 127 进入或者应用 proxy protocol，这可能会导致行为不同。
 
 > `xver`: number
 
