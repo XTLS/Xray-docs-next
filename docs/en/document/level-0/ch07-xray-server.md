@@ -122,8 +122,7 @@ chmod +r ~/xray_cert/xray.key
 
     In addition, when recording animated images, the script did not include a command to restart `Xray` because `Xray` plans to support the [Certificate Hot Update] function, which means that `Xray` will automatically identify certificate updates and reload certificates without manual restart. After the function is added, I will modify `config.json` appropriately
     to enable this setting and delete the restart command in the script.
-    :::
-    4.  Add [executable] permissions to this file
+    ::: 4. Add [executable] permissions to this file
 
         ```
         chmod +x ~/xray_cert/xray-cert-renew.sh
@@ -177,8 +176,7 @@ First, you can refer to the [official VLESS configuration example](https://githu
 
    ::: warning
    This location is not the standard log file location of `Xray`. It is placed here to avoid permission issues that cause trouble for new users. Once you are familiar with it, it is recommended to return to the default location: `/var/log/xray/access.log` and `/var/log/xray/error.log`.
-   :::
-   4. Because Xray is used by the nobody user by default, we need to allow other users to have "write" permissions (`*.log` means all files with the suffix `log`, and the efficiency advantage of the `CLI` interface gradually appears at this time)
+   ::: 4. Because Xray is used by the nobody user by default, we need to allow other users to have "write" permissions (`*.log` means all files with the suffix `log`, and the efficiency advantage of the `CLI` interface gradually appears at this time)
 
    ```shell
    chmod a+w ~/xray_log/*.log
