@@ -520,7 +520,13 @@ sudo nano /etc/nginx/nginx.conf
 3. 在我们设置过的 80 端口 Server 中加入下面的语句，并保存退出（可同时删除`root`和`index`两行）
 
 ```
-return 301 https://$http_host$request_uri;
+location /.well-known/acme-challenge/ {
+   root /home/vpsadmin/www/webpage;
+}
+
+location / {
+   return 301 https://$host$request_uri;
+}
 ```
 
 4. 在与 `80` 端口同级的位置增加一个本地端口监听来提供网页展示。本文以 `8080` 端口做演示。（可以是任意端口）
