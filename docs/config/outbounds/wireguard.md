@@ -45,7 +45,7 @@ Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址�
 
 > `noKernelTun`: true | false
 
-默认情况下核心会检测是否处于 Linux 并且当前用户具有 NET_CAP_ADMIN 权限决定是否启用系统虚拟网卡，否则使用 gvisor, 使用系统虚拟网卡相对性能更高。注意这只是用来处理 IP 包的，和 wireguard kernel module 没有任何关系。
+默认情况下核心会检测是否处于 Linux 并且当前用户具有 CAP_NET_ADMIN 权限决定是否启用系统虚拟网卡，否则使用 gvisor, 使用系统虚拟网卡相对性能更高。注意这只是用来处理 IP 包的，和 wireguard kernel module 没有任何关系。
 
 这个判断不一定准确，比如一些 lxc 虚拟化可能本来就没有 TUN 权限，这会导致出站无法工作，所以可以在这里设置是否手动禁用。
 
