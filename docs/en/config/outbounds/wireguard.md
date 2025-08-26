@@ -98,7 +98,7 @@ When the destination address is a domain name, use the Xray-core [built-in DNS s
             }
         ],
         "queryStrategy": "UseIP" // If this parameter is not written, the default value is UseIP, i.e. both A and AAAA records are queried, optional values are UseIPv4 and UseIPv6, other record types are queried by the system DNS.
-    },
+    }
 ```
 
 **Note 2**：

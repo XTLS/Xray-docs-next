@@ -58,7 +58,7 @@
   "connectivity": "",
   "interval": "5m",
   "sampling": 2,
-  "timeout": "30s",
+  "timeout": "30s"
 }
 ```
 

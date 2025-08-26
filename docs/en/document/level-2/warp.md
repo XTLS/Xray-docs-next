@@ -70,7 +70,7 @@ Add the following to the existing router:
                     "geoip:cn"
                 ],
                 "outboundTag": "wireguard-1"
-            },
+            }
 ```
 
 ## Using Warp Chain Proxy on the Client Side

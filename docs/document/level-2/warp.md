@@ -163,7 +163,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
                     "geoip:cn"
                 ],
                 "outboundTag": "wireguard-1"
-            },
+            }
 ```
 
 ## 客户端使用 warp 链式代理

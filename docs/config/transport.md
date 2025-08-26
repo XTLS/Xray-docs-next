@@ -879,7 +879,7 @@ RFC-8305 实现的 happyEyeballs 仅适用于 TCP, 当目标为域名时对它�
     "tryDelayMs": 250,
     "prioritizeIPv6": false,
     "interleave": 1,
-    "maxConcurrentTry": 4,
+    "maxConcurrentTry": 4
 }
 ```
 

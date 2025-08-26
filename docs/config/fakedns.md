@@ -124,7 +124,7 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
   "enabled": true,
   "destOverride": ["fakedns"], // 使用 "fakedns"，或与其它 sniffer 搭配使用
   "metadataOnly": false        // 此项为 true 时 destOverride 仅可使用 fakedns
-},
+}
 ```
 
 ::: warning

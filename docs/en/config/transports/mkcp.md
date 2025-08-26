@@ -10,7 +10,7 @@ Make sure the firewall on the host is configured correctly.
 
 ## KcpObject
 
-`KcpObject` corresponds to the `kcpSettings` in the [Transport Protocol](../transport.md),
+`KcpObject` corresponds to the `kcpSettings` in the [Transport Protocol](../transport.md)
 
 ```json
 {

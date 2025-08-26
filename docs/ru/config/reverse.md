@@ -39,16 +39,16 @@
     "bridges": [
       {
         "tag": "bridge",
-        "domain": "reverse-proxy.xray.internal",
+        "domain": "reverse-proxy.xray.internal"
       },
     ],
     "portals": [
       {
         "tag": "portal",
-        "domain": "reverse-proxy.xray.internal",
+        "domain": "reverse-proxy.xray.internal"
       },
-    ],
-  },
+    ]
+  }
 }
 ```
 
@@ -65,7 +65,7 @@
 ```jsonc
 {
   "tag": "bridge",
-  "domain": "reverse-proxy.xray.internal",
+  "domain": "reverse-proxy.xray.internal"
 }
 ```
 
@@ -83,7 +83,7 @@
 ```jsonc
 {
   "tag": "portal",
-  "domain": "reverse-proxy.xray.internal",
+  "domain": "reverse-proxy.xray.internal"
 }
 ```
 
@@ -130,8 +130,8 @@ outbound:
   "tag": "out",
   "protocol": "freedom",
   "settings": {
-    "redirect": "127.0.0.1:80",
-  },
+    "redirect": "127.0.0.1:80"
+  }
 }
 ```
 
@@ -146,13 +146,13 @@ outbound:
         "port": 1024,
         "users": [
           {
-            "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+            "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
           },
-        ],
+        ]
       },
-    ],
+    ]
   },
-  "tag": "interconn",
+  "tag": "interconn"
 }
 ```
 
@@ -168,16 +168,16 @@ outbound:
       "type": "field",
       "inboundTag": ["bridge"],
       "domain": ["full:reverse-proxy.xray.internal"],
-      "outboundTag": "interconn",
+      "outboundTag": "interconn"
     },
     {
       // Трафик от portal также будет выходить из bridge, но без указанного выше домена
       // маршрутизируем на out, то есть перенаправляем на веб-сервер
       "type": "field",
       "inboundTag": ["bridge"],
-      "outboundTag": "out",
+      "outboundTag": "out"
     },
-  ],
+  ]
 }
 ```
 
@@ -209,8 +209,8 @@ inbound:
   "settings": {
     "address": "127.0.0.1",
     "port": 80,
-    "network": "tcp",
-  },
+    "network": "tcp"
+  }
 }
 ```
 
@@ -223,10 +223,10 @@ inbound:
   "settings": {
     "clients": [
       {
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+        "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
       },
-    ],
-  },
+    ]
+  }
 }
 ```
 
@@ -240,7 +240,7 @@ inbound:
       // маршрутизируем на portal, который в конечном итоге перенаправит его на bridge
       "type": "field",
       "inboundTag": ["external"],
-      "outboundTag": "portal",
+      "outboundTag": "portal"
     },
     {
       // Если входящее соединение от interconn, значит, это запрос от bridge для установления обратного туннеля,
@@ -249,8 +249,8 @@ inbound:
       // маршрутизируемых на portal.
       "type": "field",
       "inboundTag": ["interconn"],
-      "outboundTag": "portal",
+      "outboundTag": "portal"
     },
-  ],
+  ]
 }
 ```

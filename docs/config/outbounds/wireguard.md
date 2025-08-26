@@ -108,7 +108,7 @@ PS: `Freedom` 出站的 `domainStrategy` 包含诸如 `UseIP` 的选项，在这
             }
         ],
         "queryStrategy": "UseIP" // 同时查询 A 和 AAAA 记录，若不写此参数，默认值 UseIP，
-    },
+    }
 ```
 
 ### Peers

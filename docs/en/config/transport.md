@@ -675,7 +675,7 @@ in `freedom` settings when you set `domainStrategy` to `UseIP`/`ForceIP` just a 
     "tryDelayMs": 250,
     "prioritizeIPv6": false,
     "interleave": 1,
-    "maxConcurrentTry": 4,
+    "maxConcurrentTry": 4
 }
 ```
 

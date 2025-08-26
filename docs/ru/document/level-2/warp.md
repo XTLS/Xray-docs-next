@@ -169,7 +169,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
                     "geoip:cn"
                 ],
                 "outboundTag": "wireguard-1"
-            },
+            }
 ```
 
 ## Использование Warp в качестве прокси-сервера в цепочке на клиенте
