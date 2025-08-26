@@ -881,7 +881,7 @@ PS: Если трафик домена, например, обычный веб-
     "tryDelayMs": 250,
     "prioritizeIPv6": false,
     "interleave": 1,
-    "maxConcurrentTry": 4,
+    "maxConcurrentTry": 4
 }
 ```
 
