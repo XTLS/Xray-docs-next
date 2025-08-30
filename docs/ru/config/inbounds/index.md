@@ -2,7 +2,7 @@
 
 Xray поддерживает следующие входящие протоколы:
 
-- [Dokodemo-Door](../inbounds/tunnel.md)
+- [Tunnel](../inbounds/tunnel.md)
 - [HTTP](../inbounds/http.md)
 - [Shadowsocks](../inbounds/shadowsocks.md)
 - [Socks](../inbounds/socks.md)
