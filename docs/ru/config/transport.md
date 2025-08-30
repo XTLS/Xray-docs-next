@@ -700,7 +700,7 @@ Reality лишь модифицирует TLS, и для реализации н
 Для прозрачного проксирования требуются права root или `CAP_NET_ADMIN`.
 
 ::: danger
-Если в [Dokodemo-door](./inbounds/tunnel(dokodemo).md) указано `followRedirect: true` и `tproxy` в настройках Sockopt пуст, то значение `tproxy` в настройках Sockopt будет установлено в `"redirect"`.
+Если в [Dokodemo-door](./inbounds/tunnel.md) указано `followRedirect: true` и `tproxy` в настройках Sockopt пуст, то значение `tproxy` в настройках Sockopt будет установлено в `"redirect"`.
 :::
 
 > `domainStrategy`: "AsIs"
