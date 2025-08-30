@@ -34,7 +34,7 @@ export const sidebarRu: SidebarConfig = {
     {
       text: "Входящие подключения",
       children: [
-        "/ru/config/inbounds/dokodemo.md",
+        "/ru/config/inbounds/tunnel.md",
         "/ru/config/inbounds/http.md",
         "/ru/config/inbounds/shadowsocks.md",
         "/ru/config/inbounds/socks.md",
