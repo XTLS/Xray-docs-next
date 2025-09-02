@@ -14,7 +14,6 @@
 {
   "routing": {
     "domainStrategy": "AsIs",
-    "domainMatcher": "hybrid",
     "rules": [],
     "balancers": []
   }
