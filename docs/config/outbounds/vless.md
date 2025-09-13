@@ -44,7 +44,8 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
       "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "encryption": "none",
       "flow": "xtls-rprx-vision",
-      "level": 0
+      "level": 0,
+      "reverse": {}
     }
   ]
 }
@@ -69,7 +70,8 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
   "encryption": "none",
   "flow": "xtls-rprx-vision",
-  "level": 0
+  "level": 0,
+  "reverse" {}
 }
 ```
 
@@ -132,3 +134,21 @@ Splice 模式的的使用限制：
 用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
 level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+
+> `reverse`: struct
+
+VLESS 极简反向代理配置，和核心内部自带的的通用反向代理作用相同但是配置更简单。
+
+存在此项代表该出站可以被用作 VLESS 反向代理出站，其会自动向服务端建立连接注册反向代理隧道。
+
+当前写法
+
+```json
+"reverse": {
+  "tag": "r-inbound"
+}
+```
+
+`tag` 为该反向代理的入站代理 tag. 当服务端派发反向代理请求时会从使用这个 tag 的入站进入路由系统，使用路由系统将其路由到你需要的出站。
+
+使用的 UUID 需要是服务端同样配置了 reverse 的 UUID(详见 VLESS 入站).

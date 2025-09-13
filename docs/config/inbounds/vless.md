@@ -17,7 +17,8 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
       "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "level": 0,
       "email": "love@xray.com",
-      "flow": "xtls-rprx-vision"
+      "flow": "xtls-rprx-vision",
+      "reverse": {}
     }
   ],
   "decryption": "none",
@@ -55,7 +56,8 @@ fallbacks 的具体配置请点击 [FallbackObject](../features/fallback.md#fall
   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
   "level": 0,
   "email": "love@xray.com",
-  "flow": "xtls-rprx-vision"
+  "flow": "xtls-rprx-vision",
+  "reverse" {}
 }
 ```
 
@@ -93,3 +95,21 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 - `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充
 
 此外，目前 XTLS 仅支持 TCP+TLS/Reality
+
+> `reverse`: struct
+
+VLESS 极简反向代理配置，和核心内部自带的的通用反向代理作用相同但是配置更简单。
+
+存在此项代表来自该用户的连接可以被用作可以用于建立反向代理隧道。
+
+当前写法
+
+```json
+"reverse": {
+  "tag": "r-outbound"
+}
+```
+
+`tag` 为该反向代理的出站代理 tag. 使用路由将流量路由到该出站将会透过反向代理转发到连入的客户端路由系统中(客户端配置详见 VLESS 出站).
+
+当有多个不同的连接(可以来自不同的设备)接入时核心会对每个请求随机选择一条派发反向代理数据。
