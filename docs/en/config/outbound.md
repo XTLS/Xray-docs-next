@@ -22,7 +22,8 @@ The first element in the list serves as the main outbound. When there is no matc
       "proxySettings": {
         "tag": "another-outbound-tag"
       },
-      "mux": {}
+      "mux": {},
+      "targetStrategy": "AsIs"
     }
   ]
 }
@@ -71,6 +72,16 @@ The outbound proxy configuration. When the outbound proxy takes effect, the
 > `mux`: [MuxObject](#muxobject)
 
 Specific configuration related to Mux.
+
+> `targetStrategy`: "AsIs" |
+> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
+> "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
+
+This strategy is for the final-target, which is transported by the proxy, to select the strategy for proxy-address itself you should use sockopt-domainStrategy.
+
+default is "AsIs", it is not recommended to change it unless you need to use your own trusted dns.
+
+The difference between "Use"/"Force" or "v4"/"v6"/"v4v6"/"v6v4" is also explained in sockopt-domainStrategy/freedom-targetStrategy.
 
 ### ProxySettingsObject
 
