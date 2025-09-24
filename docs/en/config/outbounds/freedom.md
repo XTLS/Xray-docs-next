@@ -12,23 +12,27 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
   "fragment": {
     "packets": "tlshello",
     "length": "100-200",
-    "interval": "10-20" // ms
+    "interval": "10-20", // ms
+    "maxSplit": "300-400"
   },
   "noises": [
     {
       "type": "base64",
       "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
-      "delay": "10-16"
+      "delay": "10-16",
+      "applyTo": "ip"
     },
     {
       "type": "rand",
       "packet": "10-20",
-      "delay": "10-16"
+      "delay": "10-16",
+      "applyTo": "ipv4"
     },
     {
       "type": "str",
       "packet": "hiGFW",
-      "delay": "10-16"
+      "delay": "10-16",
+      "applyTo": "ipv6"
     }
   ],
   "proxyProtocol": 0
@@ -59,6 +63,10 @@ When using the `"UseIP"` mode and the `sendThrough` field is specified in the [o
 When using the `"UseIPv4"` or `"UseIPv6"` mode, Freedom will only use the corresponding IPv4 or IPv6 address. If `sendThrough` specifies a mismatched local address, the connection will fail.
 :::
 
+::: tip TIP 3
+When using the `"UseIP"` or `ForceIP` mode, and when network is UDP, Freedom tries to select the same IP-type as original-target-ip-type(before sniffing), to prevent MTU problems, and prevent detection by GFW.
+:::
+
 > `redirect`: address_port
 
 Freedom will force all data to be sent to the specified address (instead of the address specified in the inbound).
@@ -83,6 +91,8 @@ A key-value map used to control TCP fragmentation，under some circumstances it 
 
 `"interval"`: time between fragments（ms）
 
+`"maxSplit"`: the maximum number of split fragments per packet, for example if we have a packet with 100-bytes size, and we set length to "1", and set maxSplit to "50", we send 49 1-bytes-packet with one 51-bytes-packet.
+
 ::: warning
 ⚠️ "noise":{} is deptecated,only "noises":[{}] is supported in 24.9.16 and later
 :::
@@ -103,6 +113,14 @@ if type is set to "base64" this field will take a base64 encoded string
 `"delay"`：delay before sending real data (ms). can be a string range like "10-20" or a single integer
 
 If not specified, the default value is 0.
+
+`"applyTo"`: three mode are supported: "ipv4"/"ipv6"/"ip", if not specified, the default value is "ip".
+
+if "ipv4", noise is sent only when remote address(after resolving domain to ip) is IPv4.
+
+if "ipv6", noise is sent only when remote address(after resolving domain to ip) is IPv6.
+
+if "ip", noise is always sent.
 
 > `proxyProtocol`: number
 
