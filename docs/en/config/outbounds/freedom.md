@@ -6,7 +6,7 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
 
 ```json
 {
-  "domainStrategy": "AsIs",
+  "targetStrategy": "AsIs",
   "redirect": "127.0.0.1:3366",
   "userLevel": 0,
   "fragment": {
@@ -39,7 +39,7 @@ Freedom is an outbound protocol that can be used to send (normal) TCP or UDP dat
 }
 ```
 
-> `domainStrategy`: "AsIs"
+> `targetStrategy`: "AsIs"
 > "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
 > "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
