@@ -1,3 +1,10 @@
 {
-  "trailingComma": "es5"
+overrides: [
+    {
+        files: ['**/*.jsonc', '**/*.md'],
+        options: {
+            trailingComma: 'none',
+        }
+    }
+]
 }
