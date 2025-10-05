@@ -57,7 +57,7 @@ VLESS - это легкий транспортный протокол без с�
   "level": 0,
   "email": "love@xray.com",
   "flow": "xtls-rprx-vision",
-  "reverse":{}
+  "reverse": {}
 }
 ```
 

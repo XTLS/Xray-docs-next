@@ -46,7 +46,7 @@ VLESS - это легкий транспортный протокол без с�
       "encryption": "none",
       "flow": "xtls-rprx-vision",
       "level": 0,
-      "reverse":{}
+      "reverse": {}
     }
   ]
 }

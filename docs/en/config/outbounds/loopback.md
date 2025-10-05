@@ -27,17 +27,17 @@ If you need to do some more detailed routing for traffics that have been routed 
       "protocol": "loopback",
       "tag": "need-to-split",
       "settings": {
-        "inboundTag": "traffic-input", // This tag will be used as the inboundTag inside the RuleObject
+        "inboundTag": "traffic-input" // This tag will be used as the inboundTag inside the RuleObject
       }
     },
     {
-      "tag": "tcp-output",
+      "tag": "tcp-output"
       // protocol, settings, streamSettings etc.
     },
     {
-      "tag": "udp-output",
+      "tag": "udp-output"
       // protocol, settings, streamSettings etc.
-    },
+    }
   ],
   "routing": {
     "rules": [
@@ -50,7 +50,7 @@ If you need to do some more detailed routing for traffics that have been routed 
         "inboundTag": ["traffic-input"], // tag set in the loopback outbound
         "network": "udp",
         "outboundTag": "udp-output"
-      },
+      }
     ]
   }
 }

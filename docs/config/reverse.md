@@ -40,13 +40,13 @@
       {
         "tag": "bridge",
         "domain": "reverse-proxy.xray.internal"
-      },
+      }
     ],
     "portals": [
       {
         "tag": "portal",
         "domain": "reverse-proxy.xray.internal"
-      },
+      }
     ]
   }
 }
@@ -147,9 +147,9 @@ outbound:
         "users": [
           {
             "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
-          },
+          }
         ]
-      },
+      }
     ]
   },
   "tag": "interconn"
@@ -175,7 +175,7 @@ outbound:
       "type": "field",
       "inboundTag": ["bridge"],
       "outboundTag": "out"
-    },
+    }
   ]
 }
 ```
@@ -223,7 +223,7 @@ inbound:
     "clients": [
       {
         "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
-      },
+      }
     ]
   }
 }
@@ -248,7 +248,7 @@ inbound:
       "type": "field",
       "inboundTag": ["interconn"],
       "outboundTag": "portal"
-    },
+    }
   ]
 }
 ```

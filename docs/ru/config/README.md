@@ -12,7 +12,7 @@ lang: ru-RU
 
 ```json
 {
-  "version":{},
+  "version": {},
   "log": {},
   "api": {},
   "dns": {},
