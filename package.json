@@ -13,7 +13,7 @@
     "@vuepress/bundler-webpack": "2.0.0-rc.2",
     "@vuepress/plugin-back-to-top": "^2.0.0-rc.3",
     "@vuepress/plugin-search": "2.0.0-rc.3",
-    "postcss-loader": "^8.0.0",
+    "postcss-loader": "^8.2.0",
     "prettier": "^3.6.2",
     "sass": "^1.51.0",
     "sass-loader": "^14.2.0",
