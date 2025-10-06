@@ -20,7 +20,7 @@ This tag can be used as `inboundTag` in routing rules, all traffics going throug
 
 If you need to do some more detailed routing for traffics that have been routed by routing rules, like splitting routed traffics to TCP traffics and UDP traffics and send them to different outbounds, this can be done with `loopback` outbound.
 
-```jsonc
+```json
 {
   "outbounds": [
     {

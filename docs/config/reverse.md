@@ -33,7 +33,7 @@
 
 `ReverseObject` 对应配置文件的 `reverse` 项。
 
-```jsonc
+```json
 {
   "reverse": {
     "bridges": [
@@ -62,7 +62,7 @@
 
 ### BridgeObject
 
-```jsonc
+```json
 {
   "tag": "bridge",
   "domain": "reverse-proxy.xray.internal"
@@ -80,7 +80,7 @@
 
 ### PortalObject
 
-```jsonc
+```json
 {
   "tag": "portal",
   "domain": "reverse-proxy.xray.internal"
@@ -111,7 +111,7 @@
 
 反向代理配置:
 
-```jsonc
+```json
 "reverse": {
   "bridges": [
     {
@@ -124,7 +124,7 @@
 
 outbound:
 
-```jsonc
+```json
 {
   // 转发到网页服务器
   "tag": "out",
@@ -135,7 +135,7 @@ outbound:
 }
 ```
 
-```jsonc
+```json
 {
   // 连接到 portal
   "protocol": "vmess",
@@ -158,7 +158,7 @@ outbound:
 
 路由配置:
 
-```jsonc
+```json
 {
   "rules": [
     {
@@ -186,7 +186,7 @@ outbound:
 
 反向代理配置:
 
-```jsonc
+```json
 "reverse": {
   "portals": [
     {
@@ -199,7 +199,7 @@ outbound:
 
 inbound:
 
-```jsonc
+```json
 {
   // 直接接收来自公网的请求
   "tag": "external",
@@ -213,7 +213,7 @@ inbound:
 }
 ```
 
-```jsonc
+```json
 {
   // 接收来自 bridge 尝试建立反向隧道的请求
   "tag": "interconn",
@@ -231,7 +231,7 @@ inbound:
 
 路由配置:
 
-```jsonc
+```json
 {
   "rules": [
     {

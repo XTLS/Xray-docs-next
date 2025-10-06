@@ -150,7 +150,7 @@ You can specify `clientIp` for all DNS servers in [DnsObject](#dnsobject), or sp
 
 Xray-core v1.8.6 New feature: `queryStrategy` can be set separately for each `DNS` server.
 
-```jsonc
+```json
     "dns": {
         "servers": [
             "https://1.1.1.1/dns-query",
@@ -178,7 +178,7 @@ Xray-core v1.8.6 New feature: `queryStrategy` can be set separately for each `DN
 **NOTE：**<br>
 When the `"queryStrategy"` value in the child item conflicts with the global `"queryStrategy"` value, the query for the child item will respond null.
 
-```jsonc
+```json
     "dns": {
         "servers": [
             "https://1.1.1.1/dns-query",

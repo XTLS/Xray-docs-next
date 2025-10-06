@@ -104,7 +104,7 @@ WantedBy=multi-user.target
 
 服务端 xray 配置
 
-```
+```json
 {
 	"log": {
 		"loglevel": "none"
@@ -143,7 +143,7 @@ WantedBy=multi-user.target
 
 客户端 xray 配置，此处以旁路由透明代理为例
 
-```
+```json
 {
     "log": {
         "loglevel": "none"

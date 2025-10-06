@@ -33,7 +33,7 @@
 
 `ReverseObject` соответствует параметру `reverse` в файле конфигурации.
 
-```jsonc
+```json
 {
   "reverse": {
     "bridges": [
@@ -62,7 +62,7 @@
 
 ### BridgeObject
 
-```jsonc
+```json
 {
   "tag": "bridge",
   "domain": "reverse-proxy.xray.internal"
@@ -80,7 +80,7 @@
 
 ### PortalObject
 
-```jsonc
+```json
 {
   "tag": "portal",
   "domain": "reverse-proxy.xray.internal"
@@ -111,7 +111,7 @@
 
 Конфигурация обратного прокси:
 
-```jsonc
+```json
 "reverse": {
   "bridges": [
     {
@@ -124,7 +124,7 @@
 
 outbound:
 
-```jsonc
+```json
 {
   // Переадресация на веб-сервер
   "tag": "out",
@@ -135,7 +135,7 @@ outbound:
 }
 ```
 
-```jsonc
+```json
 {
   // Подключение к portal
   "protocol": "vmess",
@@ -158,7 +158,7 @@ outbound:
 
 Конфигурация маршрутизации:
 
-```jsonc
+```json
 {
   "rules": [
     {
@@ -187,7 +187,7 @@ outbound:
 
 Конфигурация обратного прокси:
 
-```jsonc
+```json
 "reverse": {
   "portals": [
     {
@@ -200,7 +200,7 @@ outbound:
 
 inbound:
 
-```jsonc
+```json
 {
   //  Прямой прием запросов из Интернета
   "tag": "external",
@@ -214,7 +214,7 @@ inbound:
 }
 ```
 
-```jsonc
+```json
 {
   // Прием запросов от bridge для установления обратного туннеля
   "tag": "interconn",
@@ -232,7 +232,7 @@ inbound:
 
 Конфигурация маршрутизации:
 
-```jsonc
+```json
 {
   "rules": [
     {

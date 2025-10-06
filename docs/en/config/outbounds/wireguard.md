@@ -84,7 +84,7 @@ When the destination address is a domain name, use the Xray-core [built-in DNS s
 - Conflicts with `"queryStrategy"` may cause the site to fail to open.
 - For example when `domainStrategy: "ForceIPv4"` is used, geosite:openai's site with `"queryStrategy": "UseIPv6"` will fail to open.
 
-```jsonc
+```json
     "dns": {
         "servers": [
             "https://1.1.1.1/dns-query",
