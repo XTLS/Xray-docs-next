@@ -463,7 +463,7 @@ Reality 只是修改了TLS，客户端的实现只需要轻度修改完全随机
 
 > `fingerprint` : string
 
-必填，同 [TLSObject](#tlsobject)。
+必填，同 [TLSObject](#tlsobject)。 注意：此处不支持使用 `unsafe` 禁用 utls, 因为 REALITY 协议实现使用了该库以操作底层 TLS 参数。
 
 > `shortId` : string
 
