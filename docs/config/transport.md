@@ -197,7 +197,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `fingerprint` : string
 
-此参数用于配置指定 `TLS Client Hello` 的指纹。当其值为空时，表示不启用此功能。启用后，Xray 将通过 uTLS 库 **模拟** `TLS` 指纹，或随机生成。支持三种配置方式：
+此参数用于配置指定 `TLS Client Hello` 的指纹。默认值为 `chrome` 要恢复为原生 go TLS, 请设置为 `unsafe`. 启用后，Xray 将通过 uTLS 库 **模拟** `TLS` 指纹，或随机生成。支持三种配置方式：
 
 1. 常见浏览器最新版本的 TLS 指纹 包括
 
