@@ -22,9 +22,12 @@ The commands are:
         api          Call an API in an Xray process
         convert      Convert configs
         tls          TLS tools
-        uuid         Generate UUIDv4 or UUIDv5
-        x25519       Generate key pair for x25519 key exchange
-        wg           Generate key pair for wireguard key exchange
+        uuid         Generate UUIDv4 or UUIDv5 (VLESS)
+        x25519       Generate key pair for X25519 key exchange (REALITY, VLESS Encryption)
+        wg           Generate key pair for X25519 key exchange (WireGuard)
+        mldsa65      Generate key pair for ML-DSA-65 post-quantum signature (REALITY)
+        mlkem768     Generate key pair for ML-KEM-768 post-quantum key exchange (VLESS Encryption)
+        vlessenc     Generate decryption/encryption json pair (VLESS Encryption)
 
 Use "xray help <command>" for more information about a command.
 ```
@@ -64,6 +67,13 @@ The -dump flag tells Xray to print the merged config.
 ::: tip
 配置文件除了默认的 JSON 格式外，也可以使用 TOML 和 YAML。在不指定格式的前提下会通过文件扩展名识别。
 :::
+
+::: tip
+当 `-config` 没有指定时，Xray 将先后尝试从以下路径加载 `config.json` :
+
+- 工作目录（Working Directory）
+- [环境变量](../config/features/env.md#资源文件路径)中 `Xray.location.asset` 所指定的路径
+  :::
 
 ```
  xray run -dump
@@ -120,10 +130,10 @@ The commands are:
 `pb` 子命令使用示例：
 
 ```bash
-# 用法：xray convert pb [-debug] [-type] [json file] [json file] ...
+# 用法：xray convert pb [-outpbfile out.pb] [-debug] [-type] [json file] [json file] ...
 
 # 把三个配置合并成 mix.pb
-xray convert pb c1.json c2.json c3.json > mix.pb
+xray convert pb -outpbfile mix.pb c1.json c2.json c3.json
 
 # 使用 -debug 选项查看 mix.pb 的内容
 xray convert pb -debug mix.pb
@@ -209,3 +219,33 @@ xray wg [-i "(base64.StdEncoding)"]
 - 工作目录（Working Directory）
 - [环境变量](../config/features/env.md#资源文件路径)中 `Xray.location.asset` 所指定的路径
   :::
+
+### xray mldsa65
+
+生成用于 REALITY 的 MLDSA-65 后量子签名密钥对。
+
+使用方法:
+
+```
+xray mldsa65 [-i "seed (base64.StdEncoding)"]
+```
+
+### xray mlkem768
+
+生成用于 VLESS Encryption 的 ML-KEM-768 后量子密钥交换用密钥对。
+
+使用方法:
+
+```
+xray mlkem768 [-i "seed (base64.StdEncoding)"]
+```
+
+### xray vlessenc
+
+生成可以直接用于 VLESS Encryption 的 encryption/decryption 选项内容。生成配置中 X25519 以及 ML-KEM-768 两种认证方式选一种使用即可，但是服务端及客户端必须采用同一种认证方式。临时密钥交换仍后量子安全，不受认证方式影响。
+
+使用方法:
+
+```
+xray vlessenc
+```

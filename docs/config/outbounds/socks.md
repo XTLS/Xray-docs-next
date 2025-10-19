@@ -10,39 +10,12 @@
 
 ```json
 {
-  "servers": [
-    {
-      "address": "127.0.0.1",
-      "port": 1234,
-      "users": [
-        {
-          "user": "test user",
-          "pass": "test pass",
-          "level": 0
-        }
-      ]
-    }
-  ]
-}
-```
-
-> `servers`: \[ [ServerObject](#serverobject) \]
-
-Socks 服务器列表，其中每一项是一个服务器配置。
-
-### ServerObject
-
-```json
-{
   "address": "127.0.0.1",
   "port": 1234,
-  "users": [
-    {
-      "user": "test user",
-      "pass": "test pass",
-      "level": 0
-    }
-  ]
+  "user": "test user",
+  "pass": "test pass",
+  "level": 0,
+  "email": "love@xray.com"
 }
 ```
 
@@ -56,36 +29,22 @@ Socks 服务器列表，其中每一项是一个服务器配置。
 
 > `port`: number
 
-服务器端口, 必填
-
-> `users`: \[ [UserObject](#userobject) \]
-
-一个数组表示的用户列表，数组中每个元素为一个用户配置。
-
-当列表不为空时，Socks 客户端会使用用户信息进行认证；如未指定，则不进行认证。
-
-默认值为空。
-
-#### UserObject
-
-```json
-{
-  "user": "test user",
-  "pass": "test pass",
-  "level": 0
-}
-```
+服务器端口, 必填。
 
 > `user`: string
 
-用户名，字符串类型。必填。
+用户名，字符串类型。如果对接服务端需要认证则必填，否则不要包含此项。
 
 > `pass`: string
 
-密码，字符串类型。必填。
+密码，字符串类型。如果对接服务端需要认证则必填，否则不要包含此项。
 
 > `level`: number
 
-用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。如果对接服务端需要认证则选填，否则不要包含此项。
 
 userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+
+> `email`: string
+
+邮件地址，用于标识用户。如果对接服务端需要认证则选填，否则不要包含此项。

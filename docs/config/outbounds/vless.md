@@ -8,42 +8,13 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 
 ```json
 {
-  "vnext": [
-    {
-      "address": "example.com",
-      "port": 443,
-      "users": [
-        {
-          "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-          "encryption": "none",
-          "flow": "xtls-rprx-vision",
-          "level": 0
-        }
-      ]
-    }
-  ]
-}
-```
-
-> `vnext`: \[ [ServerObject](#serverobject) \]
-
-一个数组, 表示 VLESS 服务器列表，包含一组指向服务端的配置, 其中每一项是一个服务器配置。
-
-### ServerObject
-
-```json
-{
   "address": "example.com",
   "port": 443,
-  "users": [
-    {
-      "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-      "encryption": "none",
-      "flow": "xtls-rprx-vision",
-      "level": 0,
-      "reverse": {}
-    }
-  ]
+  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+  "encryption": "none",
+  "flow": "xtls-rprx-vision",
+  "level": 0,
+  "reverse": {}
 }
 ```
 
@@ -54,22 +25,6 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 > `port`: number
 
 服务端端口，通常与服务端监听的端口相同。
-
-> `users`: \[ [UserObject](#userobject) \]
-
-数组, 一组服务端认可的用户列表, 其中每一项是一个用户配置
-
-### UserObject
-
-```json
-{
-  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-  "encryption": "none",
-  "flow": "xtls-rprx-vision",
-  "level": 0,
-  "reverse" {}
-}
-```
 
 > `id`: string
 
@@ -160,4 +115,4 @@ VLESS 极简反向代理配置，和核心内部自带的的通用反向代理�
 
 `tag` 为该反向代理的入站代理 tag. 当服务端派发反向代理请求时会从使用这个 tag 的入站进入路由系统，使用路由系统将其路由到你需要的出站。
 
-使用的 UUID 需要是服务端同样配置了 reverse 的 UUID(详见 VLESS 入站).
+使用的 UUID 需要是服务端同样配置了 reverse 的 UUID（详见 VLESS 入站）。

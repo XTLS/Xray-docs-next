@@ -31,29 +31,6 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 ```json
 {
-  "servers": [
-    {
-      "email": "love@xray.com",
-      "address": "127.0.0.1",
-      "port": 1234,
-      "method": "加密方式",
-      "password": "密码",
-      "uot": true,
-      "UoTVersion": 2,
-      "level": 0
-    }
-  ]
-}
-```
-
-> `servers`: \[[ServerObject](#serverobject)\]
-
-一个数组，代表一组 Shadowsocks 服务端设置, 其中每一项是一个 [ServerObject](#serverobject)。
-
-### ServerObject
-
-```json
-{
   "email": "love@xray.com",
   "address": "127.0.0.1",
   "port": 1234,
@@ -79,11 +56,11 @@ Shadowsocks 服务端端口。必填。
 
 > `method`: string
 
-必填。
+Shadowsocks 加密方式，必填。
 
 > `password`: string
 
-必填。
+Shadowsocks 认证密码，必填。
 
 > `uot`: bool
 

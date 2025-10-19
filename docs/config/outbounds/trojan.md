@@ -10,26 +10,6 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 ```json
 {
-  "servers": [
-    {
-      "address": "127.0.0.1",
-      "port": 1234,
-      "password": "password",
-      "email": "love@xray.com",
-      "level": 0
-    }
-  ]
-}
-```
-
-> `servers`: \[ [ServerObject](#serverobject) \]
-
-一个数组，其中每一项是一个 [ServerObject](#serverobject)。
-
-### ServerObject
-
-```json
-{
   "address": "127.0.0.1",
   "port": 1234,
   "password": "password",
