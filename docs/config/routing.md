@@ -151,7 +151,7 @@
 
 类似于域名，其也支持类似 `regexp:` 开头的正则进行匹配。（同样需要替换`\`为`\\`, 见domain部分的解释）
 
-> `vlessRoute` number | string
+> `vlessRoute`: number | string
 
 VLESS 入站会允许配置的 UUID 第七和第八个字节被客户端修改为任何字节，服务端路由会将其作为 vlessRoute 数据，允许用户不更改任何外部字段的情况下根据需求自定义部分服务端路由。
 
