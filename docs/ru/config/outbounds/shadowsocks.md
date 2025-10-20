@@ -31,29 +31,6 @@
 
 ```json
 {
-  "servers": [
-    {
-      "email": "love@xray.com",
-      "address": "127.0.0.1",
-      "port": 1234,
-      "method": "метод_шифрования",
-      "password": "пароль",
-      "uot": true,
-      "UoTVersion": 2,
-      "level": 0
-    }
-  ]
-}
-```
-
-> `servers`: \[[ServerObject](#serverobject)\]
-
-Массив, представляющий собой набор настроек сервера Shadowsocks, каждый элемент которого является [ServerObject](#serverobject).
-
-### ServerObject
-
-```json
-{
   "email": "love@xray.com",
   "address": "127.0.0.1",
   "port": 1234,

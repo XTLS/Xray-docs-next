@@ -17,14 +17,17 @@ Usage:
 
 The commands are:
 
-        run          Run Xray with config, the default command
-        version      Show current version of Xray
-        api          Call an API in an Xray process
-        tls          TLS tools
-        uuid         Generate UUIDv4 or UUIDv5
-        x25519       Generate key pair for x25519 key exchange
-        wg           Generate key pair for wireguard key exchange
-
+        run          Запустить Xray с конфигурацией
+        version      Показать текущую версию Xray
+        api          Вызвать API в процессе Xray
+        tls          Инструменты TLS
+        uuid         Сгенерировать UUIDv4 или UUIDv5 (VLESS)
+        x25519       Сгенерировать ключевую пару для обмена ключами X25519 (REALITY, VLESS Encryption)
+        wg           Сгенерировать ключевую пару для обмена ключами X25519 (WireGuard)
+        mldsa65      Сгенерировать ключевую пару для постквантовой подписи ML-DSA-65 (REALITY)
+        mlkem768     Сгенерировать ключевую пару для постквантового обмена ключами ML-KEM-768 (VLESS Encryption)
+        vlessenc     Сгенерировать пару json для дешифрования/шифрования (VLESS Encryption)
+        
 Use "xray help <command>" for more information about a command.
 
 ```
@@ -64,6 +67,12 @@ The -dump flag tells Xray to print the merged config.
 
 ::: tip
 Помимо формата JSON по умолчанию, файлы конфигурации также могут быть в формате TOML или YAML. Если формат не указан явно, он определяется по расширению файла.
+:::
+
+::: tip
+Когда `-config` не указан, Xray последовательно попытается загрузить `config.json` из следующих путей:
+- Рабочий каталог (Working Directory)
+- Путь, указанный в переменной окружения `Xray.location.asset` в [переменных окружения](../config/features/env.md#Путь-к-файлам-ресурсов)
 :::
 
 ```
@@ -121,10 +130,10 @@ The commands are:
 Sub-command `pb`
 
 ```bash
-# Usage: xray convert pb [-debug] [-type] [json file] [json file] ...
+# Usage: xray convert pb [-outpbfile out.pb] [-debug] [-type] [json file] [json file] ...
 
 # mix three config files to mix.pb
-xray convert pb c1.json c2.json c3.json > mix.pb
+xray convert pb -outpbfile mix.pb c1.json c2.json c3.json
 
 # Use -debug option to view the content of mix.pb
 xray convert pb -debug mix.pb
@@ -210,3 +219,33 @@ xray wg [-i "(base64.StdEncoding)"]
 - Рабочий каталог (Working Directory);
 - Путь, указанный в переменной окружения `Xray.location.asset` (см. [Переменные окружения](../config/features/env.md#ресурсные-файлы)).
   :::
+
+### xray mldsa65
+
+Генерирует пару ключей для постквантовой подписи MLDSA-65, используемой в REALITY.
+
+Использование:
+
+```
+xray mldsa65 [-i "seed (base64.StdEncoding)"]
+```
+
+### xray mlkem768
+
+Генерирует пару ключей для постквантового обмена ключами ML-KEM-768, используемую в VLESS Encryption.
+
+Использование:
+
+```
+xray mlkem768 [-i "seed (base64.StdEncoding)"]
+```
+
+### xray vlessenc
+
+Генерирует содержимое опций `encryption`/`decryption`, которые могут быть непосредственно использованы в VLESS Encryption. В сгенерированной конфигурации достаточно использовать один из двух методов аутентификации: X25519 или ML-KEM-768, но сервер и клиент должны использовать один и тот же метод аутентификации. Обмен временными ключами остается постквантово безопасным, независимо от метода аутентификации.
+
+Использование:
+
+```
+xray vlessenc
+```

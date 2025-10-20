@@ -120,25 +120,41 @@ Xray предлагает два способа проверки:
   - [PassWall](https://github.com/xiaorouji/openwrt-passwall), [PassWall 2](https://github.com/xiaorouji/openwrt-passwall2)
   - [ShadowSocksR Plus+](https://github.com/fw876/helloworld)
   - [luci-app-xray](https://github.com/yichya/luci-app-xray) ([openwrt-xray](https://github.com/yichya/openwrt-xray))
+- Asuswrt-Merlin
+  - [XRAYUI](https://github.com/DanielLavrushin/asuswrt-merlin-xrayui)
 - Windows
+  - [v2rayA](https://github.com/v2rayA/v2rayA)
   - [v2rayN](https://github.com/2dust/v2rayN)
   - [Furious](https://github.com/LorenEteval/Furious)
   - [Invisible Man - Xray](https://github.com/InvisibleManVPN/InvisibleMan-XRayClient)
+  - [AnyPortal](https://github.com/AnyPortal/AnyPortal)
 - Android
   - [v2rayNG](https://github.com/2dust/v2rayNG)
   - [X-flutter](https://github.com/XTLS/X-flutter)
   - [SaeedDev94/Xray](https://github.com/SaeedDev94/Xray)
-- iOS & macOS arm64
+  - [SimpleXray](https://github.com/lhear/SimpleXray)
+  - [AnyPortal](https://github.com/AnyPortal/AnyPortal)
+- iOS & macOS arm64 & tvOS
+  - [Happ](https://apps.apple.com/app/happ-proxy-utility/id6504287215) ([tvOS](https://apps.apple.com/us/app/happ-proxy-utility-for-tv/id6748297274))
   - [FoXray](https://apps.apple.com/app/foxray/id6448898396)
   - [Streisand](https://apps.apple.com/app/streisand/id6450534064)
 - macOS arm64 & x64
+  - [Happ](https://apps.apple.com/app/happ-proxy-utility/id6504287215)
+  - [v2rayA](https://github.com/v2rayA/v2rayA)
+  - [v2rayN](https://github.com/2dust/v2rayN)
   - [V2rayU](https://github.com/yanue/V2rayU)
   - [V2RayXS](https://github.com/tzmax/V2RayXS)
   - [Furious](https://github.com/LorenEteval/Furious)
-  - [FoXray](https://apps.apple.com/app/foxray/id6448898396)
+  - [OneXray](https://github.com/OneXray/OneXray)
+  - [GoXRay](https://github.com/goxray/desktop)
+  - [AnyPortal](https://github.com/AnyPortal/AnyPortal)
 - Linux
   - [v2rayA](https://github.com/v2rayA/v2rayA)
+  - [v2rayN](https://github.com/2dust/v2rayN)
   - [Furious](https://github.com/LorenEteval/Furious)
+  - [GorzRay](https://github.com/ketetefid/GorzRay)
+  - [GoXRay](https://github.com/goxray/desktop)
+  - [AnyPortal](https://github.com/AnyPortal/AnyPortal)
 
 # Генератор UUID
 

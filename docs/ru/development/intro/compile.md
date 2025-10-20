@@ -35,13 +35,13 @@ go env -w GOPROXY=https://goproxy.io,direct
 
 ```powershell
 $env:CGO_ENABLED=0
-go build -o xray.exe -trimpath -ldflags "-s -w -buildid=" ./main
+go build -o xray.exe -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
 ```
 
 ### macOS, Linux:
 
 ```bash
-CGO_ENABLED=0 go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
 ```
 
 Выполнение этих команд создаст исполняемый файл xray в текущем каталоге.
@@ -63,7 +63,7 @@ $env:CGO_ENABLED=0
 $env:GOOS="linux"
 $env:GOARCH="amd64"
 
-go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
+go build -o xray -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
 ```
 
 После загрузки на сервер не забудьте выполнить команду `chmod +x xray` в терминале сервера.
@@ -74,8 +74,22 @@ go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 
 ## Воспроизводимая сборка:
 
-Выполнив описанные выше шаги, вы можете собрать бинарный файл, идентичный тому, что находится в релизе.
+Используйте следующие команды для сборки (`<short commit ID>` следует заменить на соответствующие первые семь символов SHA-256 коммита):
+
+```bash
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="all=-l=4" -ldflags="-X github.com/xtls/xray-core/core.build=<short commit ID> -s -w -buildid=" -v ./main
+```
+
+Для архитектур MIPS/MIPSLE следует использовать:
+
+```bash
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="-l=4" -ldflags="-X github.com/xtls/xray-core/core.build=<short commit ID> -s -w -buildid=" -v ./main
+```
 
 ::: warning
-Убедитесь, что вы используете ту же версию Golang, что и для сборки релиза.
+Пожалуйста, сначала убедитесь, что версия Golang, которую вы используете, соответствует версии, использованной для компиляции релизов.
 :::
+
+## Компиляция версии для Windows 7
+
+Замените инструментарий Golang на версию, предоставленную в [go-win7](https://github.com/XTLS/go-win7), а затем выполните компиляцию, следуя шагам выше.
