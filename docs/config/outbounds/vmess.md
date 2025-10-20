@@ -10,36 +10,12 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 ```json
 {
-  "vnext": [
-    {
-      "address": "127.0.0.1",
-      "port": 37192,
-      "users": [
-        {
-          "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-          "security": "auto",
-          "level": 0,
-          "experiments": ""
-        }
-      ]
-    }
-  ]
-}
-```
-
-> `vnext`：\[ [ServerObject](#serverobject) \]
-
-一个数组，包含一组的服务端配置.
-
-其中每一项是一个服务端配置[ServerObject](#serverobject)。
-
-### ServerObject
-
-```json
-{
   "address": "127.0.0.1",
   "port": 37192,
-  "users": []
+  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+  "security": "auto",
+  "level": 0,
+  "experiments": ""
 }
 ```
 
@@ -50,23 +26,6 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 > `port`: number
 
 服务端监听的端口号, 必填。
-
-> `users`: \[ [UserObject](#userobject) \]
-
-一个数组，代表一组服务端认可的用户.
-
-其中每一项是一个用户[UserObject](#userobject)。
-
-#### UserObject
-
-```json
-{
-  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-  "security": "auto",
-  "level": 0,
-  "experiments": ""
-}
-```
 
 > `id`：string
 
@@ -107,4 +66,4 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 "AuthenticatedLength" 启用认证的数据包长度实验。此实验需要同时在客户端与服务器端同时开启，并运行相同版本的程序。
 
-"NoTerminationSignal" 启用不发送断开连接标致实验。此实验可能会影响被代理的连接的稳定性。
+"NoTerminationSignal" 启用不发送断开连接标志。该特性现默认启用。

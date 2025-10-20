@@ -19,9 +19,6 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
   ],
   "default": {
     "level": 0
-  },
-  "detour": {
-    "to": "tag_to_detour"
   }
 }
 ```
@@ -33,10 +30,6 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 其中每一项是一个用户[ClientObject](#clientobject)。
 
 当此配置用作动态端口时，Xray 会自动创建用户。
-
-> `detour`: [DetourObject](#detourobject)
-
-指示对应的出站协议使用另一个服务器。
 
 > `default`: [DefaultObject](#defaultobject)
 
@@ -78,18 +71,6 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 > `email`: string
 
 用户邮箱地址，用于区分不同用户的流量。
-
-### DetourObject
-
-```json
-{
-  "to": "tag_to_detour"
-}
-```
-
-> `to`: string
-
-一个 inbound 的`tag`, 指定的 inbound 的必须是使用 VMess 协议的 inbound.
 
 ### DefaultObject
 

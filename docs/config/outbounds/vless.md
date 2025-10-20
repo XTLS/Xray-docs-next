@@ -8,42 +8,13 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 
 ```json
 {
-  "vnext": [
-    {
-      "address": "example.com",
-      "port": 443,
-      "users": [
-        {
-          "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-          "encryption": "none",
-          "flow": "xtls-rprx-vision",
-          "level": 0
-        }
-      ]
-    }
-  ]
-}
-```
-
-> `vnext`: \[ [ServerObject](#serverobject) \]
-
-一个数组, 表示 VLESS 服务器列表，包含一组指向服务端的配置, 其中每一项是一个服务器配置。
-
-### ServerObject
-
-```json
-{
   "address": "example.com",
   "port": 443,
-  "users": [
-    {
-      "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-      "encryption": "none",
-      "flow": "xtls-rprx-vision",
-      "level": 0,
-      "reverse": {}
-    }
-  ]
+  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+  "encryption": "none",
+  "flow": "xtls-rprx-vision",
+  "level": 0,
+  "reverse": {}
 }
 ```
 
@@ -54,22 +25,6 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 > `port`: number
 
 服务端端口，通常与服务端监听的端口相同。
-
-> `users`: \[ [UserObject](#userobject) \]
-
-数组, 一组服务端认可的用户列表, 其中每一项是一个用户配置
-
-### UserObject
-
-```json
-{
-  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-  "encryption": "none",
-  "flow": "xtls-rprx-vision",
-  "level": 0,
-  "reverse" {}
-}
-```
 
 > `id`: string
 
@@ -95,10 +50,10 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 - 第2个块为加密方式，可选 `native`/`xorpub`/`random`, 分别对应: 原始格式数据包/原始格式+混淆公钥部分/全随机数（类似 VMESS/Shadows socks）。要求服务端与客户端一致
 - 第3个块为是否会话恢复。选择 `0rtt` 将跟随服务端设置尝试使用先前生成的票据跳过握手快速连接（可被服务端手动禁用），选择 `1rtt` 将强制执行 1RTT 的握手过程。此处与服务端设置含义不同，详见 VLESS 入站 `decryption` 设置。
 
-往后为 padding, 连接建立后客户端发送一些垃圾数据用以混淆长度特征，无需与服务端相同(入站的相同部分为服务端向客户端方向发送的 padding)，属于可变长部分，格式为 `padding.delay.padding`+`(.delay.padding)`*n（可插入多个 padding, 要求两个 padding 块之间必须包含一个 delay 块） 比如可以写一个超长的 `padding.delay.padding.delay.padding.delay.padding.delay.padding.delay.padding`
+往后为 padding, 连接建立后客户端发送一些垃圾数据用以混淆长度特征，无需与服务端相同（入站的相同部分为服务端向客户端方向发送的 padding），属于可变长部分，格式为 `padding.delay.padding`+`(.delay.padding)`×n（可插入多个 padding, 要求两个 padding 块之间必须包含一个 delay 块） 比如可以写一个超长的 `padding.delay.padding.delay.padding.delay.padding.delay.padding.delay.padding`
 
--`padding` 格式为 `probability-min-max` 如 `100-111-1111` 含义为 100% 发送一个长度 111~1111 的padding.
--`delay` 格式同样为 `probability-min-max` 如 `75-0-111` 含义为 75% 的概率等待 0~111 毫秒
+- `padding` 格式为 `probability-min-max` 如 `100-111-1111` 含义为 100% 发送一个长度 111~1111 的padding.
+- `delay` 格式同样为 `probability-min-max` 如 `75-0-111` 含义为 75% 的概率等待 0~111 毫秒
 
 第一个 padding 块存在特殊要求，要求概率为 100% 且最小长度大于 0. 若不存在任何 padding, 核心自动使用 `100-111-1111.75-0-111.50-0-3333` 作为 padding 设置。
 
@@ -160,4 +115,4 @@ VLESS 极简反向代理配置，和核心内部自带的的通用反向代理�
 
 `tag` 为该反向代理的入站代理 tag. 当服务端派发反向代理请求时会从使用这个 tag 的入站进入路由系统，使用路由系统将其路由到你需要的出站。
 
-使用的 UUID 需要是服务端同样配置了 reverse 的 UUID(详见 VLESS 入站).
+使用的 UUID 需要是服务端同样配置了 reverse 的 UUID（详见 VLESS 入站）。

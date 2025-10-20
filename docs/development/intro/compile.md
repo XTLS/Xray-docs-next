@@ -35,13 +35,13 @@ go env -w GOPROXY=https://goproxy.io,direct
 
 ```powershell
 $env:CGO_ENABLED=0
-go build -o xray.exe -trimpath -ldflags "-s -w -buildid=" ./main
+go build -o xray.exe -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
 ```
 
 ### macOS, Linux:
 
 ```bash
-CGO_ENABLED=0 go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
 ```
 
 运行以上命令会在目录下生成 xray 可执行文件。
@@ -63,7 +63,7 @@ $env:CGO_ENABLED=0
 $env:GOOS="linux"
 $env:GOARCH="amd64"
 
-go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
+go build -o xray -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
 ```
 
 上传到服务器后，记得在服务器终端内执行 `chmod +x xray`
@@ -74,8 +74,22 @@ go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
 
 ## 可复现构建：
 
-按照上述步骤，能够编译与 Release 中完全相同的二进制文件。
+使用以下命令进行构建（`<short commit ID>` 应替换为对应的提交 SHA-256 前七位）：
+
+```bash
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="all=-l=4" -ldflags="-X github.com/xtls/xray-core/core.build=<short commit ID> -s -w -buildid=" -v ./main
+```
+
+其中对 MIPS/MIPSLE 架构，应该使用：
+
+```bash
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="-l=4" -ldflags="-X github.com/xtls/xray-core/core.build=<short commit ID> -s -w -buildid=" -v ./main
+```
 
 ::: warning
 请先确认您使用的 Golang 版本与编译 Release 的一致。
 :::
+
+## 编译用于 Windows 7 的版本
+
+将 Golang 工具替换为 [go-win7](https://github.com/XTLS/go-win7) 中提供的版本，再安装上述步骤进行编译。

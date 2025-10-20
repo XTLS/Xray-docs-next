@@ -19,11 +19,6 @@
       "sniffing": {
         "enabled": true,
         "destOverride": ["http", "tls"]
-      },
-      "allocate": {
-        "strategy": "always",
-        "refresh": 5,
-        "concurrency": 3
       }
     }
   ]
@@ -55,7 +50,7 @@
 - 环境变量：以 `"env:"` 开头，后面是一个环境变量的名称，如 `"env:PORT"`。Xray 会以字符串形式解析这个环境变量。
 - 字符串：可以是一个数值类型的字符串，如 `"1234"`；或者一个数值范围，如 `"5-10"` 表示端口 5 到端口 10，这 6 个端口。可以使用逗号进行分段，如 `11,13,15-17` 表示端口 11、端口 13、端口 15 到端口 17 这 5 个端口。
 
-当只有一个端口时，Xray 会在此端口监听入站连接。当指定了一个端口范围时，取决于 `allocate` 设置。
+当只有一个端口时，Xray 会在此端口监听入站连接。当指定了一个端口范围时，范围内的端口都会由 Xray 监听。
 
 注意，监听一个端口是相当昂贵的操作，监听端口范围太大可能造成占用显著提高甚至导致 Xray 无法正常工作，一般来说监听数量接近四位数时可能就会开始出现问题，要使用一个很大的范围请考虑使用 iptables 进行重定向而不是在这里设置。
 
@@ -91,10 +86,6 @@
 因为变成了一个向 abc.com 请求的连接, 就可以做更多的事情, 除了路由域名规则分流, 还能重新做 DNS 解析等其他工作.
 
 当设置了 sniffing 中的 enable 为 true, 还能嗅探出 bittorrent 类型的流量, 然后可以在路由中配置"protocol"项来设置规则处理 BT 流量, 比如服务端用来拦截 BT 流量, 或客户端固定转发 BT 流量到某个 VPS 去等.
-
-> `allocate`: [AllocateObject](#allocateobject)
-
-当设置了多个 port 时, 端口分配的具体设置
 
 ### SniffingObject
 
@@ -159,28 +150,3 @@ Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进
 ::: tip
 在能保证 **被代理连接能得到正确的 DNS 解析** 时，使用 `routeOnly` 且开启 `destOverride` 的同时，将路由匹配策略 `domainStrategy` 设置为 `AsIs` 即可实现全程无 DNS 解析进行域名及 IP 分流。此时遇到 IP 规则匹配时使用的 IP 为域名原始 IP。
 :::
-
-### AllocateObject
-
-```json
-{
-  "strategy": "always",
-  "refresh": 5,
-  "concurrency": 3
-}
-```
-
-> `strategy`: "always" | "random"
-
-端口分配策略。
-
-- `"always"` 表示总是分配所有已指定的端口，`port` 中指定了多少个端口，Xray 就会监听这些端口。
-- `"random"` 表示随机开放端口，每隔 `refresh` 分钟在 `port` 范围中随机选取 `concurrency` 个端口来监听。
-
-> `refresh`: number
-
-随机端口刷新间隔，单位为分钟。最小值为 `2`，建议值为 `5`。这个属性仅当 `strategy` 设置为 `"random"` 时有效。
-
-> `concurrency`: number
-
-随机端口数量。最小值为 `1`，最大值为 `port` 范围的三分之一。建议值为 `3`。
