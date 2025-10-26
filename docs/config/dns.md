@@ -4,7 +4,7 @@
 
 Xray 内置的 DNS 模块，主要有两大用途：
 
-- 在路由阶段, 解析域名为 IP, 并且根据域名解析得到的 IP 进行规则匹配以分流. 是否解析域名及分流和路由配置模块中 `domainStrategy` 的值有关, 只有在设置以下两种值时,才会使用内置 DNS 服务器进行 DNS 查询:
+- 在路由阶段，解析域名为 IP, 并且根据域名解析得到的 IP 进行规则匹配以分流。是否解析域名及分流和路由配置模块中 `domainStrategy` 的值有关，只有在设置以下两种值时，才会使用内置 DNS 服务器进行 DNS 查询:
   - "IPIfNonMatch", 请求一个域名时，进行路由里面的 domain 进行匹配，若无法匹配到结果，则对这个域名使用内置 DNS 服务器进行 DNS 查询，并且使用查询返回的 IP 地址再重新进行 IP 路由匹配。
   - "IPOnDemand", 当匹配时碰到任何基于 IP 的规则，将域名立即解析为 IP 进行匹配。
 
@@ -82,9 +82,9 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 > `hosts`: map{string: address} | map{string: [address]}
 
-静态 IP 列表，其值为一系列的 "域名": "地址" 或 "域名": ["地址 1","地址 2"]。其中地址可以是 IP 或者域名。在解析域名时，如果域名匹配这个列表中的某一项:
+静态 IP 列表，其值为一系列的 "域名": "地址" 或 "域名": ["地址 1","地址 2"]。其中地址可以是 IP 或者域名。在解析域名时，如果域名匹配这个列表中的某一项：
 
-- 当该项的地址为 IP 时，则解析结果为该项的 IP
+- 当该项的地址为 IP 时，则解析结果为该项的 IP.
 - 当该项的地址为域名时，会使用此域名进行 IP 解析，而不使用原始域名。
 - 当地址中同时设置了多个 IP 和域名，则只会返回第一个域名，其余 IP 和域名均被忽略。
 - 当地址中的第一个值为井号后加数字(如 `#3`)时，如果在使用 DNS 出站，核心会返回空的响应以及该数字编号对应的 rcode 以拒绝请求，如果请求来自内部查询则会单纯视为失败。
@@ -111,7 +111,7 @@ Xray 内置的 DNS 模块，主要有两大用途：
 
 当值是 `"https://host:port/dns-query"` 的形式，如 `"https://dns.google/dns-query"`，Xray 会使用 `DNS over HTTPS` (RFC8484, 简称 DOH) 进行查询。有些服务商拥有 IP 别名的证书，可以直接写 IP 形式，比如 `https://1.1.1.1/dns-query`。也可使用非标准端口和路径，如 `"https://a.b.c.d:8443/my-dns-query"`
 
-当值是 `"h2c://host:port/dns-query"` 的形式，如 `"h2c://dns.google/dns-query"`，Xray 会使用 `DNS over HTTPS` 的请求格式但是将会以明文 h2c 发出请求，不能直接使用，在这种情况下需要自行配置 Freedom 出站 + streamSettings 设置 TLS 为其配置 TLS 以包装成正常的 DOH 请求。用于特殊目的，比如想要自定义 DOH 请求的 SNI 或者使用 utls 的指纹时使用
+当值是 `"h2c://host:port/dns-query"` 的形式，如 `"h2c://dns.google/dns-query"`，Xray 会使用 `DNS over HTTPS` 的请求格式但是将会以明文 h2c 发出请求，不能直接使用，在这种情况下需要自行配置 Freedom 出站 + streamSettings 设置 TLS 为其配置 TLS 以包装成正常的 DOH 请求。用于特殊目的，比如想要自定义 DOH 请求的 SNI 或者使用 utls 的指纹时使用。
 
 当值是 `"https+local://host:port/dns-query"` 的形式，如 `"https+local://dns.google/dns-query"`，Xray 会使用 `DOH 本地模式 (DOHL)` 进行查询，即 DOH 请求不会经过路由组件，直接通过 Freedom outbound 对外请求，以降低耗时。一般适合在服务端使用。也可使用非标端口和路径。
 
@@ -139,9 +139,11 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
 
-默认值 `UseIP` 同时向上游 DNS 服务器查询 A 和 AAAA 记录。`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。
+限制 DNS 模块中所有服务器的能力，以及由 Xray 自身发起的 IP 查询类型的默认值。
 
-`UseSystem` 自适应操作系统网络环境。查询前分别检查是否有 IPv4 和 IPv6 的默认网关，如果有就查询对应类型的记录。在图形环境操作系统上实时检查，在命令行环境只检查一次。
+默认值 `UseIP` 允许查询 A + AAAA。由 Xray 自身发起的查询未指定 IP 类型时，同时向上游 DNS 服务器查询 A 和 AAAA 记录。`UseIPv4` 只查询且只允许查询 A 记录；`UseIPv6` 只查询且只允许查询 AAAA 记录。
+
+`UseSystem` 自适应操作系统网络环境。查询前分别检查是否有 IPv4 和 IPv6 的默认网关，如果有就查询且只允许查询对应类型的记录。在图形环境操作系统上实时检查，在命令行环境只检查一次。
 
 ```json
     "dns": {
@@ -217,7 +219,7 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 
 > `useSystemHosts`: true | false
 
-如果为真，将系统 hosts 文件附加到内置 DNS 的 hosts 中
+如果为真，将系统 hosts 文件附加到内置 DNS 的 hosts 中。
 
 > `tag`: string
 
@@ -244,7 +246,7 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 
 > `tag`: string
 
-该 DNS 服务器的 tag, 若设置，将使用该 tag 作为 inbound tag 发起请求(非 local 模式)，覆盖全局 tag 选项
+该 DNS 服务器的 tag, 若设置，将使用该 tag 作为 inbound tag 发起请求(非 local 模式)，覆盖全局 tag 选项。
 
 > `address`: address
 
@@ -267,9 +269,9 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 当值是 `fakedns` 时，将使用 FakeDNS 功能进行查询。
 
 ::: tip 关于 local 模式和 DNS 服务器本身的域名
-由 DNS 模块发出的 DNS 请求有两种情况
+由 DNS 模块发出的 DNS 请求有两种情况：
 
-local 模式将直接由核心向外连接，这种情况下如果地址是一个域名将交由系统本身进行解析，逻辑较为简单
+local 模式将直接由核心向外连接，这种情况下如果地址是一个域名将交由系统本身进行解析，逻辑较为简单。
 
 非 local 默认将视为一个从 tag 为 dns.tag(不知道在哪？ 浏览器 ctrl+f 搜索 `inboundTag`) 的入站进来的请求，将经过正常的核心处理流程，可能会被路由模块分配去本地 freedom 或者其他远端出站，它将被 freedom 的 domainStrategy解析(注意可能的回环) 或者直接以域名的形式被传送到远端根据服务端本身的解析方式解析。
 
@@ -310,13 +312,15 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
 
-默认值 `UseIP` 同时查询 A 和 AAAA 记录。`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。
+限制此服务器的能力，以及由 Xray 自身发起的 IP 查询命中此服务器时查询类型的默认值。
 
-`UseSystem` 在每次 query 时会分别对 v4 和 v6 尝试 bind 到 peer 为一个远端地址的 udp socket 检查系统是否存在对应的路由，如果成功就会返回类型 IP.
+默认值 `UseIP` 允许查询 A + AAAA。由 Xray 自身发起的查询未指定 IP 类型时，同时向上游 DNS 服务器查询 A 和 AAAA 记录。`UseIPv4` 只查询且只允许查询 A 记录；`UseIPv6` 只查询且只允许查询 AAAA 记录。
+
+`UseSystem` 自适应操作系统网络环境。查询前分别检查是否有 IPv4 和 IPv6 的默认网关，如果有就查询且只允许查询对应类型的记录。在图形环境操作系统上实时检查，在命令行环境只检查一次。
 
 > `timeoutMs`: number
 
-DNS 服务器超时时间，默认 4000 ms
+DNS 服务器超时时间，默认 4000 ms.
 
 它不会对 `localhost` DNS (系统 DNS) 生效，它总是跟随 golang 的 DNS 超时行为(cgo 与 pure go 可能略有不同)。
 
