@@ -139,9 +139,9 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
 
-默认值 `UseIP` 同时查询 A 和 AAAA 记录。`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。
+默认值 `UseIP` 同时向上游 DNS 服务器查询 A 和 AAAA 记录。`UseIPv4` 只查询 A 记录；`UseIPv6` 只查询 AAAA 记录。
 
-`UseSystem` 在有图形环境的操作系统上每次 query 时会分别对 v4 和 v6 尝试 bind 到 peer 为一个远端地址的 udp socket 检查系统是否存在对应的路由，如果成功就会返回类型 IP。在命令行环境只执行一次。
+`UseSystem` 自适应操作系统网络环境。查询前分别检查是否有 IPv4 和 IPv6 的默认网关，如果有就查询对应类型的记录。在图形环境操作系统上实时检查，在命令行环境只检查一次。
 
 ```json
     "dns": {
