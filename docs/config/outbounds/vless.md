@@ -69,7 +69,10 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 - `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充 支持 uTLS 模拟客户端指纹
 - `xtls-rprx-vision-udp443`：同 `xtls-rprx-vision`, 但是不会拦截目标为 443 端口的 UDP 流量
 
-此外，目前 XTLS 仅支持 TCP+TLS/Reality。
+XTLS 仅在以下搭配下可用
+
+- TCP+TLS/Reality 此时将直接在底层对拷加密后的数据（若传输的是 TLS 1.3）。
+- VLESS Encryption 无底层传输限制，若底层不支持直接对拷（见上）则仅穿透 Encryption.
 
 <!-- prettier-ignore -->
 ::: tip 关于 xtls-rprx-*-udp443 流控模式

@@ -45,7 +45,7 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
   - 只有一个可执行文件，含 ctl 的功能，run 为默认指令
   - 配置上~~完全~~兼容，环境变量和 API 对应要改为以 XRAY\_ 开头
   - 全平台开放了裸协议的 ReadV
-  - 提供完整的 VLESS & Trojan XTLS 支持，均有 ReadV
+  - 提供完整的 VLESS XTLS 支持，均有 ReadV
   - 提供了 XTLS 多种流控模式, 性能一骑绝尘!
 
 > “配置兼容，整体更好”
