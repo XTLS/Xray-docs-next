@@ -125,3 +125,69 @@ VLESS 极简反向代理配置，和核心内部自带的的通用反向代理�
 `tag` 为该反向代理的出站代理 tag. 使用路由将流量路由到该出站将会透过反向代理转发到连入的客户端路由系统中(客户端配置详见 VLESS 出站).
 
 当有多个不同的连接(可以来自不同的设备)接入时核心会对每个请求随机选择一条派发反向代理数据。
+
+**完整极简配置案例**
+
+公网端配置一个 VLESS 入站，与 UUID 同级配置 `"reverse": { "tag": "xxx" }`，此 tag 视为出站，把流量路由至此即可使用
+
+**所以公网端一定要有一个默认出站比如 direct，不然会有某一个 reverse 成为默认出站、谁都能访问**
+
+方便演示这里用 [VLESS Encryption](https://github.com/XTLS/Xray-core/pull/5067)，实际上你直接过墙的话会用 [REALITY](https://github.com/XTLS/Xray-core/pull/4915)，当然你也可以用 [tunnel](https://github.com/XTLS/Xray-core/pull/4968) 直接暴露内网端口到公网，也就是下面示例配置中直接访问公网的80端口即可访问到内网想要的地址。
+
+```json-comments
+{
+	"inbounds": [
+		{
+			"listen": "0.0.0.0",
+			"port": 443,
+			"protocol": "vless",
+			"settings": {
+				"decryption": "mlkem768x25519plus.native.600s.aCF82eKiK6g0DIbv0_nsjbHC4RyKCc9NRjl-X9lyi0k",
+				"clients": [
+					{
+						"id": "ac04551d-6ebf-4685-86e2-17c12491f7f4", // for establishing reverse connection
+						"flow": "xtls-rprx-vision",
+						"reverse": {
+							"tag": "r-outbound"
+						}
+					},
+					{
+						"id": "e8758aff-d830-4d08-a59e-271df65b995a", // for user
+						"flow": "xtls-rprx-vision",
+						"email": "user@example.com"
+					}
+				]
+			}
+		},
+		{
+			"listen": "0.0.0.0",
+			"port": 80,
+			"protocol": "tunnel",
+			"tag": "t-inbound"
+		}
+	],
+	"routing": {
+		"rules": [
+			{
+				"user": [
+					"user@example.com"
+				],
+				"outboundTag": "r-outbound"
+			},
+			{
+				"inboundTag": [
+					"t-inbound"
+				],
+				"outboundTag": "r-outbound"
+			}
+		]
+	},
+	"outbounds": [
+		{
+			"protocol": "direct" // essential
+		}
+	]
+}
+```
+
+以上配置中的reverse和routing部分已经是完整配置，无须更改即可正常反向代理。
