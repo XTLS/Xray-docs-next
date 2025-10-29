@@ -10,245 +10,121 @@
   - 在主机 B 中配置 Xray，接收外部请求，所以称为 `portal` （门户）。
   - 在主机 A 中配置 Xray，负责将B的转发和网页服务器桥接起来，称为`bridge`。
 
-- `bridge`
-  - `bridge` 会向 `portal` 主动建立连接以注册反向通道，此连接的目标地址（domain）可以自行设定。
-  - `bridge` 在收到`portal`转发过来的公网流量之后，会将其原封不动地发给主机 A 中的网页服务器。当然，这一步需要路由模块的配置。
-  - `bridge` 收到响应后，也会将响应原封不动地返回给`portal`。
+## portal 配置
 
-- `portal`
-  - `portal` 收到请求且domain匹配，则说明是由 `bridge` 发来的响应数据，这条连接会用于建立反向通道。
-  - `portal` 收到请求，domain不匹配，则说明是公网用户发来的连接，这种连接数据会转发给bridge.
+公网端配置一个 VLESS 入站，与 UUID 同级配置 `"reverse": { "tag": "xxx" }`，此 tag 视为出站，把流量路由至此即可使用
 
-- `bridge` 会根据流量的大小进行动态的负载均衡。
+**所以公网端一定要有一个默认出站比如 direct，不然会有某一个 reverse 成为默认出站、谁都能访问**
 
-::: tip
-如上所述，反向代理默认已开启 [Mux](../../development/protocols/muxcool/)，请不要在其用到的 outbound 上再次开启 Mux。
-:::
+方便演示这里用 [VLESS Encryption](https://github.com/XTLS/Xray-core/pull/5067)，实际上你直接过墙的话会用 [REALITY](https://github.com/XTLS/Xray-core/pull/4915)，当然你也可以用 [tunnel](https://github.com/XTLS/Xray-core/pull/4968) 直接暴露内网端口到公网，也就是下面示例配置中直接访问公网的80端口即可访问到内网想要的地址。
 
-::: warning
-反向代理功能尚处于测试阶段，可能会有一些问题。
-:::
-
-## ReverseObject
-
-`ReverseObject` 对应配置文件的 `reverse` 项。
-
-```json
+```json-comments
 {
-  "reverse": {
-    "bridges": [
-      {
-        "tag": "bridge",
-        "domain": "reverse-proxy.xray.internal"
-      }
-    ],
-    "portals": [
-      {
-        "tag": "portal",
-        "domain": "reverse-proxy.xray.internal"
-      }
-    ]
-  }
+	"inbounds": [
+		{
+			"listen": "0.0.0.0",
+			"port": 443,
+			"protocol": "vless",
+			"settings": {
+				"decryption": "mlkem768x25519plus.native.600s.aCF82eKiK6g0DIbv0_nsjbHC4RyKCc9NRjl-X9lyi0k",
+				"clients": [
+					{
+						"id": "ac04551d-6ebf-4685-86e2-17c12491f7f4", // for establishing reverse connection
+						"flow": "xtls-rprx-vision",
+						"reverse": {
+							"tag": "r-outbound"
+						}
+					},
+					{
+						"id": "e8758aff-d830-4d08-a59e-271df65b995a", // for user
+						"flow": "xtls-rprx-vision",
+						"email": "user@example.com"
+					}
+				]
+			}
+		},
+		{
+			"listen": "0.0.0.0",
+			"port": 80,
+			"protocol": "tunnel",
+			"tag": "t-inbound"
+		}
+	],
+	"routing": {
+		"rules": [
+			{
+				"user": [
+					"user@example.com"
+				],
+				"outboundTag": "r-outbound"
+			},
+			{
+				"inboundTag": [
+					"t-inbound"
+				],
+				"outboundTag": "r-outbound"
+			}
+		]
+	},
+	"outbounds": [
+		{
+			"protocol": "direct" // essential
+		}
+	]
 }
 ```
 
-> `bridges`: \[[BridgeObject](#bridgeobject)\]
+以上配置中的reverse和routing部分已经是完整配置，无须更改即可正常反向代理。
 
-数组，每一项表示一个 `bridge`。每个 `bridge` 的配置是一个 [BridgeObject](#bridgeobject)。
+## bridge 配置
 
-> `portals`: \[[PortalObject](#portalobject)\]
+**内网端默认出站 direct 否则回环**，另开一个 VLESS 出站配置 `"reverse": { "tag": "yyy" }` 就会自动连接公网端，无需配置路由
 
-数组，每一项表示一个 `portal`。每个 `portal` 的配置是一个 [PortalObject](#bridgeobject)。
+此 tag 视为入站，可以在内网端的路由等处作为入站 tag 使用，并且它与公网端 reverse 的 tag 没有任何关系，可以不同
 
-### BridgeObject
+这个 PR 顺便删除了 VLESS outbound 的 vnext 和 users 的 json 嵌套以简化配置，因为上一版 Xray 中已限制它们只能有一个成员
 
-```json
+```json-comments
 {
-  "tag": "bridge",
-  "domain": "reverse-proxy.xray.internal"
+	"outbounds": [
+		{
+			"protocol": "direct" // essential
+		},
+		{
+			"protocol": "vless",
+			"settings": {
+				"address": "server.com",
+				"port": 443,
+				"encryption": "mlkem768x25519plus.native.0rtt.2PcBa3Yz0zBdt4p8-PkJMzx9hIj2Ve-UmrnmZRPnpRk",
+				"id": "ac04551d-6ebf-4685-86e2-17c12491f7f4",
+				"flow": "xtls-rprx-vision",
+				"reverse": {
+					"tag": "r-inbound"
+				}
+			}
+		}
+	]
 }
 ```
 
-> `tag`: string
+**内网端可以设 CDN 等多条冗余线路均为 `"reverse": { "tag": "yyy" }` 对应公网端多个相同的 `"reverse": { "tag": "xxx" }`**
 
-所有由 `bridge` 发出的连接，都会带有这个标识。可以在 [路由配置](./routing.md) 中使用 `inboundTag` 进行识别。
+### 安全注意事项
+公网端可以给不同 id 设不同 reverse 穿透至不同的内网设备，**客户端应当用新的 id，不然拿到客户端配置就能劫持你的反向代理**
 
-> `domain`: string
+用于内网穿透的连接即使开了 XTLS Vision，也只是吃到了 padding，并没有裸奔，是否给用于使用的连接开 XTLS 裸奔自行分析
 
-指定一个域名，`bridge` 向 `portal` 建立的连接，都会借助这个域名进行发送。
-这个域名只作为 `bridge` 和 `portal` 的通信用途，不必真实存在。
+内网端 direct 出站可以设置 redirect 以限制访问范围，或者你把默认出站设为 block，只路由允许访问的范围至 direct
 
-### PortalObject
+例如：你只想限制反向代理的目的地是内网设备 `127.0.0.1:8000` 这个地址，那就可以在内网端的直连出口添加以下配置
 
-```json
+```json-comments
 {
-  "tag": "portal",
-  "domain": "reverse-proxy.xray.internal"
-}
-```
-
-> `tag`: string
-
-`portal` 的标识。在 [路由配置](./routing.md) 中使用 `outboundTag` 将流量转发到这个 `portal`。
-
-> `domain`: string
-
-一个域名。当 `portal` 接收到流量时，如果流量的目标域名是此域名，则 `portal` 认为当前连接上是 `bridge` 发来的通信连接。而其它流量则会被当成需要转发的流量。`portal` 所做的工作就是把这两类连接进行识别并做对应的转发。
-
-::: tip
-一个 Xray 既可以作为 `bridge`，也可以作为 `portal`，也可以同时两者，以适用于不同的场景需要。
-:::
-
-## 完整配置样例
-
-::: tip
-在运行过程中，建议先启用 `bridge`，再启用 `portal`。
-:::
-
-### bridge 配置
-
-`bridge` 通常需要两个 outbound，一个用于连接 `portal`，另一个用于发送实际的流量。也就是说，你需要用路由区分两种流量。
-
-反向代理配置:
-
-```json
-"reverse": {
-  "bridges": [
-    {
-      "tag": "bridge",
-      "domain": "reverse-proxy.xray.internal"
+    "protocol": "direct" // essential
+    "settings": {
+        "redirect": "127.0.0.1:8000"
     }
-  ]
 }
 ```
 
-outbound:
-
-```json
-{
-  // 转发到网页服务器
-  "tag": "out",
-  "protocol": "freedom",
-  "settings": {
-    "redirect": "127.0.0.1:80"
-  }
-}
-```
-
-```json
-{
-  // 连接到 portal
-  "protocol": "vmess",
-  "settings": {
-    "vnext": [
-      {
-        "address": "portal 的 IP 地址",
-        "port": 1024,
-        "users": [
-          {
-            "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
-          }
-        ]
-      }
-    ]
-  },
-  "tag": "interconn"
-}
-```
-
-路由配置:
-
-```json
-{
-  "rules": [
-    {
-      // bridge 发出的请求，且域名为配置的域名，那么说明这是尝试向 portal 建立反向隧道的请求，
-      // 则路由到 interconn，即连接到 portal
-      "type": "field",
-      "inboundTag": ["bridge"],
-      "domain": ["full:reverse-proxy.xray.internal"],
-      "outboundTag": "interconn"
-    },
-    {
-      // 从 portal 过来的流量，也会从 bridge 出来，但是不带上面的domain
-      // 则路由到 out，即转发给网页服务器
-      "type": "field",
-      "inboundTag": ["bridge"],
-      "outboundTag": "out"
-    }
-  ]
-}
-```
-
-### portal 配置
-
-`portal` 通常需要两个 inbound，一个用于接收 `bridge` 的连接，另一个用于接收实际的流量。同时你也需要用路由区分两种流量。
-
-反向代理配置:
-
-```json
-"reverse": {
-  "portals": [
-    {
-      "tag": "portal",
-      "domain": "reverse-proxy.xray.internal" // 必须和 bridge 的配置一样
-    }
-  ]
-}
-```
-
-inbound:
-
-```json
-{
-  // 直接接收来自公网的请求
-  "tag": "external",
-  "port": 80,
-  "protocol": "dokodemo-door",
-  "settings": {
-    "address": "127.0.0.1",
-    "port": 80,
-    "network": "tcp"
-  }
-}
-```
-
-```json
-{
-  // 接收来自 bridge 尝试建立反向隧道的请求
-  "tag": "interconn",
-  "port": 1024,
-  "protocol": "vmess",
-  "settings": {
-    "clients": [
-      {
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
-      }
-    ]
-  }
-}
-```
-
-路由配置:
-
-```json
-{
-  "rules": [
-    {
-      // 如果入站是 external，说明是来自公网的请求，
-      // 则路由到 portal, 最终会转发给 bridge
-      "type": "field",
-      "inboundTag": ["external"],
-      "outboundTag": "portal"
-    },
-    {
-      // 如果来自 interconn 入站，说明是来自 bridge 的尝试建立反向隧道请求，
-      // 则路由到 portal, 最终会转发给对应的公网客户端
-      // 注意：这里进入的请求会带上了前文配置的domain，所以 portal 能够区分两种被路由到 portal 的请求
-      "type": "field",
-      "inboundTag": ["interconn"],
-      "outboundTag": "portal"
-    }
-  ]
-}
-```
+**如果你在用别人提供的内网穿透服务或不信任 VPS，内网应开一个 VLESS Encryption 服务端承接流量，确保身份认证及数据安全**
