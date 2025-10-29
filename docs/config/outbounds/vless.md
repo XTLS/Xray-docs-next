@@ -119,3 +119,54 @@ VLESS 极简反向代理配置，和核心内部自带的的通用反向代理�
 `tag` 为该反向代理的入站代理 tag. 当服务端派发反向代理请求时会从使用这个 tag 的入站进入路由系统，使用路由系统将其路由到你需要的出站。
 
 使用的 UUID 需要是服务端同样配置了 reverse 的 UUID（详见 VLESS 入站）。
+
+**完整极简配置案例**
+
+**内网端默认出站 direct 否则回环**，另开一个 VLESS 出站配置 `"reverse": { "tag": "yyy" }` 就会自动连接公网端，无需配置路由
+
+此 tag 视为入站，可以在内网端的路由等处作为入站 tag 使用，并且它与公网端 reverse 的 tag 没有任何关系，可以不同
+
+```json-comments
+{
+	"outbounds": [
+		{
+			"protocol": "direct" // essential
+		},
+		{
+			"protocol": "vless",
+			"settings": {
+				"address": "server.com",
+				"port": 443,
+				"encryption": "mlkem768x25519plus.native.0rtt.2PcBa3Yz0zBdt4p8-PkJMzx9hIj2Ve-UmrnmZRPnpRk",
+				"id": "ac04551d-6ebf-4685-86e2-17c12491f7f4",
+				"flow": "xtls-rprx-vision",
+				"reverse": {
+					"tag": "r-inbound"
+				}
+			}
+		}
+	]
+}
+```
+
+**内网端可以设 CDN 等多条冗余线路均为 `"reverse": { "tag": "yyy" }` 对应公网端多个相同的 `"reverse": { "tag": "xxx" }`**
+
+### 安全注意事项
+公网端可以给不同 id 设不同 reverse 穿透至不同的内网设备，**客户端应当用新的 id，不然拿到客户端配置就能劫持你的反向代理**
+
+用于内网穿透的连接即使开了 XTLS Vision，也只是吃到了 padding，并没有裸奔，是否给用于使用的连接开 XTLS 裸奔自行分析
+
+内网端 direct 出站可以设置 redirect 以限制访问范围，或者你把默认出站设为 block，只路由允许访问的范围至 direct
+
+例如：你只想限制反向代理的目的地是内网设备 `127.0.0.1:8000` 这个地址，那就可以在内网端的直连出口添加以下配置
+
+```json-comments
+{
+    "protocol": "direct" // essential
+    "settings": {
+        "redirect": "127.0.0.1:8000"
+    }
+}
+```
+
+**如果你在用别人提供的内网穿透服务或不信任 VPS，内网应开一个 VLESS Encryption 服务端承接流量，确保身份认证及数据安全**
