@@ -44,10 +44,9 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 - 第2个块为加密方式，可选 `native`/`xorpub`/`random`, 分别对应: 原始格式数据包/原始格式+混淆公钥部分/全随机数（类似 VMESS/Shadows socks）。要求服务端与客户端一致
 - 第3个块为会话恢复票据有效时间。格式为 `600s` 或 `100-500s`. 前者将在该时长和该时长的一半之间随机一个时间(如 `600s`=`300-600s`)，后者则手动指定随即范围
 
-往后为 padding, 连接建立后服务端发送一些垃圾数据用以混淆长度特征，无需与客户端相同(出站的相同部分为客户端向服务端方向发送的 padding)，属于可变长部分，格式为 `padding.delay.padding`+`(.delay.padding)`*n（可插入多个 padding, 要求两个 padding 块之间必须包含一个 delay 块） 比如可以写一个超长的 `padding.delay.padding.delay.padding.delay.padding.delay.padding.delay.padding`
+往后为 padding, 连接建立后服务端发送一些垃圾数据用以混淆长度特征，无需与客户端相同(出站的相同部分为客户端向服务端方向发送的 padding)，属于可变长部分，格式为 `padding.delay.padding`+`(.delay.padding)`\*n（可插入多个 padding, 要求两个 padding 块之间必须包含一个 delay 块） 比如可以写一个超长的 `padding.delay.padding.delay.padding.delay.padding.delay.padding.delay.padding`
 
--`padding` 格式为 `probability-min-max` 如 `100-111-1111` 含义为 100% 发送一个长度 111~1111 的padding.
--`delay` 格式同样为 `probability-min-max` 如 `75-0-111` 含义为 75% 的概率等待 0~111 毫秒
+-`padding` 格式为 `probability-min-max` 如 `100-111-1111` 含义为 100% 发送一个长度 111~1111 的padding. -`delay` 格式同样为 `probability-min-max` 如 `75-0-111` 含义为 75% 的概率等待 0~111 毫秒
 
 第一个 padding 块存在特殊要求，要求概率为 100% 且最小长度大于 0. 若不存在任何 padding, 核心自动使用 `100-111-1111.75-0-111.50-0-3333` 作为 padding 设置。
 
