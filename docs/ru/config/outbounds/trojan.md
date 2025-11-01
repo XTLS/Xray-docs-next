@@ -8,8 +8,6 @@ Trojan предназначен для работы в правильно нас
 
 ## OutboundConfigurationObject
 
-
-
 ```json
 {
   "address": "127.0.0.1",
