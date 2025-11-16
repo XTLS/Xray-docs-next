@@ -27,7 +27,7 @@ The commands are:
         mldsa65      Сгенерировать ключевую пару для постквантовой подписи ML-DSA-65 (REALITY)
         mlkem768     Сгенерировать ключевую пару для постквантового обмена ключами ML-KEM-768 (VLESS Encryption)
         vlessenc     Сгенерировать пару json для дешифрования/шифрования (VLESS Encryption)
-        
+
 Use "xray help <command>" for more information about a command.
 
 ```
@@ -71,9 +71,10 @@ The -dump flag tells Xray to print the merged config.
 
 ::: tip
 Когда `-config` не указан, Xray последовательно попытается загрузить `config.json` из следующих путей:
+
 - Рабочий каталог (Working Directory)
 - Путь, указанный в переменной окружения `Xray.location.asset` в [переменных окружения](../config/features/env.md#Путь-к-файлам-ресурсов)
-:::
+  :::
 
 ```
  xray run -dump
