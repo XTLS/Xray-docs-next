@@ -106,38 +106,35 @@ WantedBy=multi-user.target
 
 ```json
 {
-	"log": {
-		"loglevel": "none"
-	},
-	"inbounds": [
-		{
-			"listen": "/dev/shm/vless.sock,0666",
-			"protocol": "vless",
-			"settings": {
-				"clients": [
-					{
-						"id": "uuid"
-					}
-				],
-				"decryption": "none"
-			},
-			"streamSettings": {
-				"network": "tcp"
-			},
-			"sniffing": {
-				"enabled": true,
-				"destOverride": [
-					"http",
-					"tls"
-				]
-			}
-		}
-	],
-	"outbounds": [
-		{
-			"protocol": "freedom"
-		}
-	]
+  "log": {
+    "loglevel": "none"
+  },
+  "inbounds": [
+    {
+      "listen": "/dev/shm/vless.sock,0666",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "uuid"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    }
+  ]
 }
 ```
 
@@ -145,160 +142,138 @@ WantedBy=multi-user.target
 
 ```json
 {
-    "log": {
-        "loglevel": "none"
-    },
-    "dns": {
-        "servers": [
-            "1.1.1.1",
-            {
-                "address": "119.29.29.29",
-                "domains": [
-                    "geosite:cn"
-                ],
-                "expectIP": [
-                    "geoip:cn"
-                ]
-            }
-        ],
-        "disableFallback": true,
-        "disableFallbackIfMatch": true
-    },
-    "inbounds": [
-        {
-            "tag": "tproxy-in",
-            "port": 12345,
-            "protocol": "dokodemo-door",
-            "settings": {
-                "network": "tcp,udp",
-                "followRedirect": true
-            },
-            "sniffing": {
-                "enabled": true,
-                "destOverride": [
-                    "http",
-                    "tls"
-                ]
-            },
-            "streamSettings": {
-                "sockopt": {
-                    "tproxy": "tproxy",
-                    "mark": 255
-                }
-            }
-        },
-        {
-            "tag": "http",
-            "port": 10808,
-            "listen": "127.0.0.1",
-            "protocol": "http",
-            "sniffing": {
-                "enabled": true,
-                "destOverride": [
-                    "http",
-                    "tls"
-                ]
-            }
-        }
+  "log": {
+    "loglevel": "none"
+  },
+  "dns": {
+    "servers": [
+      "1.1.1.1",
+      {
+        "address": "119.29.29.29",
+        "domains": ["geosite:cn"],
+        "expectIP": ["geoip:cn"]
+      }
     ],
-    "outbounds": [
-        {
-            "tag": "nginxtls",
-            "protocol": "vless",
-            "settings": {
-                "vnext": [
-                    {
-                        "address": "127.0.0.1",
-                        "port": 6666,
-                        "users": [
-                            {
-                                "id": "uuid",
-                                "encryption": "none"
-                            }
-                        ]
-                    }
-                ]
-            },
-            "streamSettings": {
-                "sockopt": {
-                    "mark": 255
-                },
-                "network": "tcp"
-            }
-        },
-        {
-            "tag": "direct",
-            "protocol": "freedom",
-            "streamSettings": {
-                "sockopt": {
-                    "mark": 255
-                }
-            }
-        },
-        {
-            "tag": "block",
-            "protocol": "blackhole",
-            "settings": {
-                "response": {
-                    "type": "http"
-                }
-            }
+    "disableFallback": true,
+    "disableFallbackIfMatch": true
+  },
+  "inbounds": [
+    {
+      "tag": "tproxy-in",
+      "port": 12345,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tproxy": "tproxy",
+          "mark": 255
         }
-    ],
-    "routing": {
-        "domainMatcher": "mph",
-        "domainStrategy": "AsIs",
-        "rules": [
-            {
-                "type": "field",
-                "domain": [
-                    "geosite:category-ads-all"
-                ],
-                "outboundTag": "block"
-            },
-            {
-                "type": "field",
-                "port": 123,
-                "network": "udp",
-                "outboundTag": "direct"
-            },
-            {
-                "type": "field",
-                "ip": [
-                    "1.1.1.1"
-                ],
-                "outboundTag": "proxy"
-            },
-            {
-                "type": "field",
-                "domain": [
-                    "geosite:cn"
-                ],
-                "outboundTag": "direct"
-            },
-            {
-                "type": "field",
-                "protocol": [
-                    "bittorrent"
-                ],
-                "outboundTag": "direct"
-            },
-            {
-                "type": "field",
-                "ip": [
-                    "geoip:private"
-                ],
-                "outboundTag": "direct"
-            },
-            {
-                "type": "field",
-                "inboundTag": [
-                    "tproxy-in"
-                ],
-                "outboundTag": "nginxtls"
-            }
-        ]
+      }
+    },
+    {
+      "tag": "http",
+      "port": 10808,
+      "listen": "127.0.0.1",
+      "protocol": "http",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      }
     }
+  ],
+  "outbounds": [
+    {
+      "tag": "nginxtls",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "127.0.0.1",
+            "port": 6666,
+            "users": [
+              {
+                "id": "uuid",
+                "encryption": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        },
+        "network": "tcp"
+      }
+    },
+    {
+      "tag": "direct",
+      "protocol": "freedom",
+      "streamSettings": {
+        "sockopt": {
+          "mark": 255
+        }
+      }
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole",
+      "settings": {
+        "response": {
+          "type": "http"
+        }
+      }
+    }
+  ],
+  "routing": {
+    "domainMatcher": "mph",
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "domain": ["geosite:category-ads-all"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "port": 123,
+        "network": "udp",
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": ["1.1.1.1"],
+        "outboundTag": "proxy"
+      },
+      {
+        "type": "field",
+        "domain": ["geosite:cn"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "protocol": ["bittorrent"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "ip": ["geoip:private"],
+        "outboundTag": "direct"
+      },
+      {
+        "type": "field",
+        "inboundTag": ["tproxy-in"],
+        "outboundTag": "nginxtls"
+      }
+    ]
+  }
 }
 ```
 
