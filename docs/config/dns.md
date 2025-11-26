@@ -101,6 +101,7 @@ Xray 内置的 DNS 模块，主要有三大用途：
 - 完整匹配：由 `"full:"` 开始，余下部分是一个域名。当此域名完整匹配目标域名时，该规则生效。例如 "full:xray.com" 匹配 "xray.com" 但不匹配 "www.xray.com"。
 - 无点域名：由 `"dotless:"` 开头，余下部分是一个不能含有 `.` 的字符串。当域名不含 `.` 且此字符串匹配目标域名中任意部分，该规则生效。例如 "dotless:pc-" 可以匹配 "pc-alice"、"mypc-alice"，适用于内网 NetBIOS 域等。大小写敏感。
 - 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](./routing.md#预定义域名列表)。
+- 从文件中加载域名：形如 `"ext:file:tag"`，必须以 `ext:`（小写）开头，后面跟文件名和标签，文件存放在 [资源目录](./features/env.md#资源文件路径) 中，文件格式与 `geosite.dat` 相同，标签必须在文件中存在。
 
 > `servers`: \[string | [DnsServerObject](#dnsserverobject) \]
 
