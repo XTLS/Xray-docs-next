@@ -90,14 +90,16 @@ Xray 内置的 DNS 模块，主要有三大用途：
 - 当该项的地址为域名时，会使用此域名进行 IP 解析，而不使用原始域名。
 - 当地址中同时设置了多个 IP 和域名，则只会返回第一个域名，其余 IP 和域名均被忽略。
 - 当地址中的第一个值为井号后加数字(如 `#3`)时，如果在使用 DNS 出站，核心会返回空的响应以及该数字编号对应的 rcode 以拒绝请求，如果请求来自内部查询则会单纯视为失败。
+- 当被解析域名匹配列表中多个域名时，所有关联的 IP 都会被返回。
 
 域名的格式有以下几种形式：
 
-- 纯字符串：当此字符串完整匹配目标域名时，该规则生效。例如 "xray.com" 匹配 "xray.com"，但不匹配 "www.xray.com"。
-- 正则表达式：由 `"regexp:"` 开始，余下部分是一个正则表达式。当此正则表达式匹配目标域名时，该规则生效。例如 "regexp:\\\\.goo.\*\\\\.com\$" 匹配 "www.google.com"、"fonts.googleapis.com"，但不匹配 "google.com"。
+- 纯字符串（默认）：当此字符串完整匹配目标域名时，该规则生效。例如 "xray.com" 匹配 "xray.com"，但不匹配 "www.xray.com"。
+- 正则表达式：由 `"regexp:"` 开始，余下部分是一个正则表达式。当此正则表达式匹配目标域名时，该规则生效。例如 "regexp:\\\\.goo.\*\\\\.com\$" 匹配 "www.google.com"、"fonts.googleapis.com"，但不匹配 "google.com"。大小写敏感。
 - 子域名 (推荐)：由 `"domain:"` 开始，余下部分是一个域名。当此域名是目标域名或其子域名时，该规则生效。例如 "domain:xray.com" 匹配 "www.xray.com" 与 "xray.com"，但不匹配 "wxray.com"。
-- 子串：由 `"keyword:"` 开始，余下部分是一个字符串。当此字符串匹配目标域名中任意部分，该规则生效。比如 "keyword:sina.com" 可以匹配 "sina.com"、"sina.com.cn" 和 "www.sina.com"，但不匹配 "sina.cn"。
+- 子串：由 `"keyword:"` 开始，余下部分是一个字符串。当此字符串匹配目标域名中任意部分，该规则生效。例如 "keyword:sina.com" 可以匹配 "sina.com"、"sina.com.cn" 和 "www.sina.com"，但不匹配 "sina.cn"。
 - 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](./routing.md#预定义域名列表)。
+- 无点域名：由 `"dotless:"` 开头，余下部分是一个不能有 `.` 的字符串。当域名不含 `.` 且此字符串匹配目标域名中任意部分，该规则生效。例如 "dotless:pc-" 可以匹配 "pc-alice"、"mypc-alice"，适用于内网 NetBIOS 域等。大小写敏感。
 
 > `servers`: \[string | [DnsServerObject](#dnsserverobject) \]
 
