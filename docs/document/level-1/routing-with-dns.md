@@ -23,7 +23,7 @@
 
 这无疑给分流带来困扰，如果你的规则更新的不及时，你可能会出现本应走直连的流量被代理、甚至一些网站会打不开的现象。
 
-未知的域名假如在中国有服务器，希望尽可能直连，但一顿操作后遇到了传说中的 DNS Leak 怎么办？
+未知的域名假如在中国有服务器，希望尽可能直连，但一顿操作后遇到了传说中的 [DNS Leak](https://github.com/XTLS/BBS/issues/3#issuecomment-3505661189) 怎么办？
 
 那么有没有什么办法能做到 100% 安全又精准的分流呢？
 
@@ -31,18 +31,18 @@
 
 ## 利用 Xray-core DNS 模块实现精准分流
 
-合理利用 Xray ~~如轮椅般~~强大的内置 DNS 自带的回落、EDNS、IP 过滤、打 Tag 等功能，精心调整它们的顺序。如此你便得到了最精确的 IP 作为分流条件。
+合理利用 Xray ~~如轮椅般~~强大的内置 DNS 自带的回落、ECS、IP 过滤、打 Tag 等功能，精心调整它们的顺序。如此你便得到了最精确的 IP 作为分流条件。
 
 在继续阅读本文之前，你需要充分阅读并理解“入门技巧：路由 (routing) 功能简析[上篇](./routing-lv1-part1.html)、[下篇](./routing-lv1-part2.html)”。
 与此同时你已经快要把官方配置指南给翻烂了，因此你完全理解了路由和出站中的 domainStrategy、入站中 sniffing 各选项的作用、以及其不同值的组合下产生的行为。
 
 一切就绪？请试着理解下面这段内容：
 
-sock、http 入站时，请求的就是域名，到了路由后，路由中非 AsIs 的 domainStrategy 可以利用内置 DNS 解析出 IP 临时用于路由匹配。到了本地 direct 出站时，出站中非 AsIs 的 domainStrategy 可以利用内置 DNS 再次解析出 IP 用于出站。发往 Xray 服务器的请求只有域名，具体访问哪个 IP 取决于服务器的 direct 出站。
+socks、http 入站时，请求的就是域名，到了路由后，路由中非 AsIs 的 domainStrategy 可以利用内置 DNS 解析出 IP 临时用于路由匹配。到了本地 direct 出站时，出站中非 AsIs 的 domainStrategy 可以利用内置 DNS 再次解析出 IP 用于出站。发往 Xray 服务器的请求只有域名，具体访问哪个 IP 取决于服务器的 direct 出站。
 
 透明代理时情况变得更加复杂，入站 sniffing 开启，且 destOverride 有 [http, tls]：
 
-- 若 routeOnly = false 则请求的 IP 将被抹掉，后面的流程跟 sock 入站一样。
+- 若 routeOnly = false 则请求的 IP 将被抹掉，后面的流程跟 socks 入站一样。
 - 若 routeOnly = true 则同时有域名和 IP，到了路由后，可以直接匹配域名和 IP 规则，本地 direct 出站也会用此 IP。发往 Xray 服务器的请求只有 IP，服务器如何处理？再把刚才的流程走一遍。
 
 遇到困难？你需要继续反复阅读官方指南并尝试理解。否则你很难利用到下面示例中 DNS 模块的解析结果来正确分流。
@@ -55,41 +55,91 @@ sock、http 入站时，请求的就是域名，到了路由后，路由中非 A
 {
   "dns": {
     "servers": [
+      // 防止谷歌人机验证卡住、防止谷歌中国被监控（因为大量三方网站可能加载谷歌字体之类的）
       {
-        // 我们不完全信任geosite:cn，但如果一个域名已经存在于此列表
-        // 就优先试着解析一下，如果返回中国IP代表它没被墙，反之高度疑似被墙，回落到8.8.8.8重新解析，解决可能的DNS污染（这可能会导致代理流量浪费）
-        // 优先让它解析的原因是100%CDN友好，你无法保证所有权威都支持EDNS，而且快
+        "address": "1.1.1.1",
+        "skipFallback": true,
+        "domains": ["geosite:google", "geosite:google-cn"]
+      },
+      {
+        "address": "8.8.8.8",
+        "skipFallback": true,
+        "domains": ["geosite:google", "geosite:google-cn"],
+        "finalQuery": true // 终结查询链
+      },
+      // 通过直连解析社区认为在中国有节点的域，若非预期结果可能是被墙或退出中国
+      // 通过代理解析社区认为在中国有节点的域，供被墙或退出中国时回落
+      {
         "tag": "dns-direct",
-        "address": "223.5.5.5",
-        "port": 53,
+        "address": "114.114.114.114",
         "skipFallback": true,
         "domains": ["geosite:cn"],
         "expectIPs": ["geoip:cn"]
       },
       {
-        // 同上
-        // 我们不完全信任geosite:geolocation-!cn，但如果一个域名已经存在于此列表
-        // 就优先试着用代理解析一下，如果返回中国IP代表它在国内有服务器，回落到8.8.8.8带上clientIp重新解析，尽可能优化直连，因为不是所有权威都支持EDNS
+        "tag": "dns-direct",
+        "address": "223.5.5.5",
+        "skipFallback": true,
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      {
+        "address": "1.1.1.1",
+        "skipFallback": true,
+        "domains": ["geosite:cn"]
+      },
+      {
         "address": "8.8.8.8",
-        "port": 53,
+        "skipFallback": true,
+        "domains": ["geosite:cn"],
+        "finalQuery": true // 终结查询链
+      },
+      // 通过代理解析社区认为非中国本土的域，若非预期结果则尝试优化直连
+      {
+        "address": "1.1.1.1",
         "skipFallback": true,
         "domains": ["geosite:geolocation-!cn"],
         "expectIPs": ["geoip:!cn"]
       },
       {
-        // 如果一个域名既不存在于geosite:geolocation-!cn也不存在于geosite:cn，或者是上面的规则回落下来的，就会使用此服务器
-        // 未知域名默认交给代理解析的理由是防止访问意图泄露给国内，这也是传说中有争议的dns泄露部分
-        // 这里利用EDNS尝试获取中国的A/AAAA记录
-        // 若没有，则按顺序请求之后的默认DNS，以获取代理节点CDN优化的记录
         "address": "8.8.8.8",
-        "port": 53,
-        "clientIp": "222.85.85.85", // 提供当地ISP的IP地址以获取直连优化的A/AAAA记录，比如你是河南电信，就可以使用荷兰电信DNS，不能保证100%中国CDN友好，因为不是所有权威都支持EDNS
-        "skipFallback": false,
+        "skipFallback": true,
+        "domains": ["geosite:geolocation-!cn"],
+        "expectIPs": ["geoip:!cn"]
+      },
+      {
+        "address": "8.8.8.8",
+        "clientIp": "222.85.85.85", // 提供你当地ISP的IP地址以获取直连优化的A/AAAA记录
+        // 比如你是河南电信，就可以使用荷兰电信DNS
+        // 不能保证100%中国CDN友好，因为不是所有权威都支持ECS
+        "skipFallback": true,
+        "domains": ["geosite:geolocation-!cn"]
+      },
+      {
+        "address": "8.8.4.4",
+        "clientIp": "222.85.85.85", // 同上
+        "skipFallback": true,
+        "domains": ["geosite:geolocation-!cn"],
+        "finalQuery": true // 终结查询链
+        // 看到这里你可能会有疑惑：这4条规则和上面4条感觉有点冗余？可以精简吗？
+        // 其实不然，这是为了追求更极致的速度，以及一些权威DNS不支持ECS
+      },
+      // 未知域名，中国优先，若非预期结果则尝试优化代理
+      {
+        "address": "8.8.8.8",
+        "clientIp": "222.85.85.85", // 同上
         "expectIPs": ["geoip:cn"]
       },
+      {
+        "address": "8.8.4.4",
+        "clientIp": "222.85.85.85", // 同上
+        "expectIPs": ["geoip:cn"]
+      },
+      "1.1.1.1",
       "8.8.8.8"
     ],
-    "tag": "dns-proxy"
+    "tag": "dns-proxy",
+    "enableParallelQuery": true // 智能并行：全部并行，智能分组，组内竞速
   },
   "routing": {
     "domainStrategy": "具体取决于你的需求",
@@ -104,7 +154,8 @@ sock、http 入站时，请求的就是域名，到了路由后，路由中非 A
         "inboundTag": ["dns-proxy"],
         "outboundTag": "proxy"
       }
-      // 你的个性化分流规则，按你的需求利用 domain 和/或 ip 来分流...
+      // 你的个性化分流规则
+      // 对于流媒体解锁等你应用 domain 分流，对于境内外分流你始终应用 ip 来分流
     ]
   }
   // 其它忽略，按需配置...
@@ -115,31 +166,41 @@ sock、http 入站时，请求的就是域名，到了路由后，路由中非 A
 
 realIp 透明代理环境，你甚至可以在劫持 DNS 后，设置 domainStrategy=AsIs、routeOnly=true 做全程无二次 DNS 解析。
 
+> 注意：这里说的 CDN 友好，境外部分是针对你代理服务器所在位置做的优化，如果你是仅黑名单走代理，而非全部境外流量都走代理，需要自行调整规则。
+
 ---
 
-#### 例子 2：此配置解析出正确，但不保证国外 CDN 友好的地址，保证无 DNS Leak 的同时，只要中国有服务器节点就能优先解析出来，适合 fakeIp 透明代理、sock、http 入站等场景。
+#### 例子 2：此配置解析出正确，但不保证国外 CDN 友好的地址，保证无 DNS Leak 的同时，只要中国有服务器节点就能优先解析出来，适合 fakeIp 透明代理、socks、http 入站等场景。
 
 ```json
 {
   "dns": {
     "servers": [
+      // 防止谷歌人机验证卡住、防止谷歌中国被监控（因为大量三方网站可能加载谷歌字体之类的）
+      {
+        "address": "1.1.1.1",
+        "skipFallback": true,
+        "domains": ["geosite:google", "geosite:google-cn"],
+        "finalQuery": true // 终结查询链
+      },
       {
         // 我们不完全信任geosite:cn，但如果一个域名已经存在于此列表
-        // 就优先试着解析一下，如果返回中国IP代表它没被墙，反之高度疑似被墙，回落到8.8.8.8重新解析，解决可能的DNS污染（这可能会导致代理流量浪费）
+        // 就优先试着解析一下，如果返回中国IP代表它没被墙
+        // 反之高度疑似被墙，回落到8.8.8.8重新解析，解决可能的DNS污染
         // 优先让它解析的原因是代价极小，走直连只需要十几毫秒
         "tag": "dns-direct",
         "address": "223.5.5.5",
-        "port": 53,
         "skipFallback": true,
         "domains": ["geosite:cn"],
         "expectIPs": ["geoip:cn"]
       },
       {
         // 如果一个域名不存在于geosite:cn，或者是上面的规则回落下来的，就会使用此服务器
-        // 这里利用EDNS尝试获取中国的A/AAAA记录
+        // 这里利用ECS尝试获取中国的A/AAAA记录
         "address": "8.8.8.8",
-        "port": 53,
-        "clientIp": "222.85.85.85", // 提供当地ISP的IP地址以获取直连优化的A/AAAA记录，比如你是河南电信，就可以使用荷兰电信DNS，不能保证100%中国CDN友好，因为不是所有权威都支持EDNS
+        "clientIp": "222.85.85.85", // 提供当地ISP的IP地址以获取直连优化的A/AAAA记录
+        // 比如你是河南电信，就可以使用荷兰电信DNS
+        // 不能保证100%中国CDN友好，因为不是所有权威都支持ECS
         "skipFallback": false
       }
     ],
@@ -158,7 +219,8 @@ realIp 透明代理环境，你甚至可以在劫持 DNS 后，设置 domainStra
         "inboundTag": ["dns-proxy"],
         "outboundTag": "proxy"
       }
-      // 你的个性化分流规则，按你的需求利用 domain 和/或 ip 来分流...
+      // 你的个性化分流规则
+      // 对于流媒体解锁等你应用 domain 分流，对于境内外分流你始终应用 ip 来分流
     ]
   }
   // 其它忽略，按需配置...
@@ -167,7 +229,8 @@ realIp 透明代理环境，你甚至可以在劫持 DNS 后，设置 domainStra
 
 此场景下由于发给 Xray 服务器的请求全部都是域名，因此没有必要利用 DNS 反复试探最优结果，只需要快速识别域是否被污染，尽可能解析出中国的 CDN 友好的 IP 即可。
 
-此示例中 DNS 模块解析出的中国 IP 已经是 99% 中国 CDN 友好的，因此你可以在 direct 出站中 `domainStrategy` 设为**非** AsIs 以利用缓存；如果你追求 100% 的中国 CDN 友好，可设为 AsIs 利用操作系统设置的 DNS 再解析一次，额外耗时约 1 ~ 数百毫秒。
+此示例中 DNS 模块解析出的中国 IP 已经是 99% 中国 CDN 友好的，因此你可以在 direct 出站中 `domainStrategy` 设为**非** AsIs 以利用缓存，如果你需要的话；<br>
+如果你追求 100% 的中国 CDN 友好，可设为 AsIs 利用操作系统设置的 DNS 再解析一次，额外耗时约 1 ~ 数百毫秒，建议开启乐观缓存以进一步降低延迟。
 
 ## 写在后面
 
