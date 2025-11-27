@@ -248,7 +248,7 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 
 > `tag`: string
 
-该 DNS 服务器的 tag, 若设置，将使用该 tag 作为 inbound tag 发起请求 (非 local 模式)，覆盖全局 tag 选项。
+该 DNS 服务器的 tag, 默认继承自全局，若设置，将使用该 tag 作为 inbound tag 发起请求 (非 local 模式)，覆盖全局 tag 选项。
 
 > `address`: address
 
@@ -308,7 +308,7 @@ DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH�
 
 > `clientIP`: [string]
 
-EDNS Client Subnet 扩展中使用的 IP 地址，覆盖全局 `clientIP` 选项。
+EDNS Client Subnet 扩展中使用的 IP 地址，默认继承自全局，若设置则覆盖全局 `clientIP` 选项。
 
 需要是一个有效的 IPv4 或者 IPv6. 实际发送时会自动抹掉最后几位，IPv4 和 IPv6 分别以 /24 和 /96 的子网发送。
 
@@ -328,7 +328,7 @@ DNS 服务器超时时间，默认 4000 ms.
 
 > `disableCache`: true | false
 
-`true` 禁用 DNS 缓存，覆盖全局 `disableCache` 选项。
+`true` 禁用 DNS 缓存，默认继承自全局，若设置则覆盖全局 `disableCache` 选项。
 
 它不会对 `localhost` DNS (系统 DNS) 生效，它总是跟随 golang 的 DNS 缓存行为(cgo 与 pure go 可能略有不同)。
 
