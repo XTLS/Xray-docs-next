@@ -75,17 +75,18 @@
 
 > `sniffing`: [SniffingObject](#sniffingobject)
 
-流量探测主要作用于在透明代理等用途.
-比如一个典型流程如下:
+流量探测主要作用于在透明代理等用途，比如一个典型流程如下：
 
-1. 如有一个设备上网,去访问 abc.com,首先设备通过 DNS 查询得到 abc.com 的 IP 是 1.2.3.4,然后设备会向 1.2.3.4 去发起连接.
-2. 如果不设置嗅探,Xray 收到的连接请求是 1.2.3.4,并不能用于域名规则的路由分流.
-3. 当设置了 sniffing 中的 enable 为 true,Xray 处理此连接的流量时,会从流量的数据中,嗅探出域名,即 abc.com
-4. Xray 会把 1.2.3.4 重置为 abc.com.路由就可以根据域名去进行路由的域名规则的分流
+1. 如有一个设备上网，去访问 abc.com，首先设备通过 DNS 查询得到 abc.com 的 IP 是 1.2.3.4, 然后设备会向 1.2.3.4 去发起连接。
+2. 如果不设置嗅探，Xray 收到的连接请求是 1.2.3.4, 并不能用于域名规则的路由分流。
+3. 当设置了 sniffing 中的 enable 为 true，Xray 处理此连接的流量时，会从流量的数据中，嗅探出域名，即 abc.com。
+4. Xray 会把 1.2.3.4 重置为 abc.com。路由就可以根据域名去进行路由的域名规则的分流。
 
-因为变成了一个向 abc.com 请求的连接, 就可以做更多的事情, 除了路由域名规则分流, 还能重新做 DNS 解析等其他工作.
+因为变成了一个向 abc.com 请求的连接，就可以做更多的事情，除了路由域名规则分流，还能重新做 DNS 解析等其他工作。
 
-当设置了 sniffing 中的 enable 为 true, 还能嗅探出 bittorrent 类型的流量, 然后可以在路由中配置"protocol"项来设置规则处理 BT 流量, 比如服务端用来拦截 BT 流量, 或客户端固定转发 BT 流量到某个 VPS 去等.
+当设置了 sniffing 中的 enable 为 true，还能嗅探出 bittorrent 类型的流量，然后可以在路由中配置 "protocol" 项来设置规则处理未加密的 BT 流量，比如服务端用来拦截未加密的 BT 流量，或客户端固定转发 BT 流量到某个 VPS 去等。
+
+注意：随着 [ECH 标准](https://blog.cloudflare.com/zh-cn/announcing-encrypted-client-hello/) 的逐步应用，一些网站需要你劫持 DNS 后 [屏蔽 QType 65](./outbounds/dns.md) 才能被正确嗅探出来域名。
 
 ### SniffingObject
 
