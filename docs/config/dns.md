@@ -29,8 +29,8 @@ Xray 内置的 DNS 模块，主要有三大用途：
 - 命中了 `hosts` 中的「域名 - IP」、「域名 - IP 数组」映射，则将该 IP 或 IP 数组作为 DNS 解析结果返回。
 - 命中了 `hosts` 中的「域名 - 域名」映射，则该映射的值（另一个域名）将作为当前要查询的域名，进入 DNS 处理流程，直到解析出 IP 后返回，或返回空解析。
 - 没有命中 `hosts`，但命中了某（几）个 DNS 服务器中的 `domains` 域名列表，则按照命中的规则的优先级，依次使用该规则对应的 DNS 服务器进行查询。若命中的 DNS 服务器查询失败或 `expectedIPs` 不匹配，则使用下一个命中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有命中的 DNS 服务器均查询失败或 `expectedIPs` 不匹配，此时 DNS 组件：
-  - 默认会进行 「DNS 回退（fallback）查询」：使用「上一轮失败查询中未被使用的、且 `skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若查询失败或 `expectedIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
-  - 若 `disableFallback` 设置为 `true`，则不会进行「DNS 回退（fallback）查询」。
+  - 默认会进行 「DNS 回落（fallback）查询」：使用「上一轮失败查询中未被使用的、且 `skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若查询失败或 `expectedIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
+  - 若 `disableFallback` 设置为 `true`，则不会进行「DNS 回落（fallback）查询」。
 - 既没有命中 `hosts`，又没有命中 DNS 服务器中的 `domains` 域名列表，则：
   - 默认使用「`skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若第一个被选中的 DNS 服务器查询失败或 `expectedIPs` 不匹配，则使用下一个被选中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有被选中的 DNS 服务器均查询失败或 `expectedIPs` 不匹配，返回空解析。
   - 若「`skipFallback` 为默认值 `false` 的 DNS 服务器」数量为 0 或 `disableFallback` 设置为 `true`，则使用 DNS 配置中的第一个 DNS 服务器进行查询。查询失败或 `expectedIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
@@ -78,6 +78,7 @@ Xray 内置的 DNS 模块，主要有三大用途：
     "serveExpiredTTL": 0,
     "disableFallback": false,
     "disableFallbackIfMatch": false,
+    "enableParallelQuery": false,
     "useSystemHosts": false,
     "tag": "dns_inbound"
   }
@@ -227,6 +228,20 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 > `disableFallbackIfMatch`: true | false
 
 `true` 当 DNS 服务器的优先匹配域名列表命中时，禁用 fallback 查询，默认为 `false`，即不禁用。
+
+> `enableParallelQuery`: true | false
+
+`true` 启用并行查询，默认为 `false`，即不启用。
+
+DNS 回退（failover）默认是串行的，即默认仅在选中的 DNS 服务器查询失败或 `expectedIPs` 和 `unexpectedIPs` 不匹配后才向下一台服务器发起查询。
+
+启用并行查询后，会预先向所有被选中的 DNS 服务器异步发起查询，并执行“动态分组，组内竞速，组间回退”的策略。
+
+动态分组，被选中的服务器列表中**相邻**的服务器如果 `clientIP` `skipFallback` `queryStrategy` `tag` `domains` `expectedIPs` `unexpectedIPs` **完全**一样，被视为同一个组。
+
+组内竞速，同组内只要任意一 DNS 服务器查询成功且 `expectedIPs` 和 `unexpectedIPs` 匹配到了 IP，则本组视为成功，同时忽略本组其它服务器的结果。
+
+组间回退，若第一个组还在查询，则等待。若第一个组成功，则返回 IP。若第一个组所有服务器都查询失败或 IP 不匹配，则回退到下一个组。最终若所有组都失败，则返回空解析。
 
 > `useSystemHosts`: true | false
 
