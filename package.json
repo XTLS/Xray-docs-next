@@ -35,7 +35,7 @@
     "@vuepress/plugin-shiki": "2.0.0-rc.3",
     "@vuepress/theme-default": "2.0.0-rc.3",
     "@vueuse/core": "^11.2.0",
-    "anywhere": "^1.6.0",
+    "anywhere": "^1.7.0",
     "bootstrap": "^5.2.0",
     "esbuild": "^0.25.3",
     "jquery": "^3.6.0",
