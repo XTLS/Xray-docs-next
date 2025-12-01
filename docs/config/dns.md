@@ -5,12 +5,10 @@
 Xray 内置的 DNS 模块，主要有三大用途：
 
 - 在路由阶段，解析域名为 IP, 并且根据域名解析得到的 IP 进行规则匹配以分流。是否解析域名及分流和路由配置模块中 `domainStrategy` 的值有关，只有在设置以下两种值时，才会使用内置 DNS 服务器进行 DNS 查询：
-
   - "IPIfNonMatch", 请求一个域名时，进行路由里面的 domain 进行匹配，若无法匹配到结果，则对这个域名使用内置 DNS 服务器进行 DNS 查询，并且使用查询返回的 IP 地址再重新进行 IP 路由匹配。
   - "IPOnDemand", 当匹配时碰到任何基于 IP 的规则，将域名立即解析为 IP 进行匹配。
 
-- 解析目标地址进行连接。
-
+- 解析目标地址进行连接：
   - 如 在 `freedom` 出站中，将 `domainStrategy` 设置为 `UseIP`, 由此出站发出的请求, 会先将域名通过内置服务器解析成 IP, 然后进行连接。
   - 如 在 `sockopt` 中，将 `domainStrategy` 设置为 `UseIP`, 此出站发起的系统连接，将先由内置服务器解析为 IP, 然后进行连接。
 
@@ -76,6 +74,8 @@ Xray 内置的 DNS 模块，主要有三大用途：
     "clientIp": "1.2.3.4",
     "queryStrategy": "UseIP",
     "disableCache": false,
+    "serveStale": false,
+    "serveExpiredTTL": 0,
     "disableFallback": false,
     "disableFallbackIfMatch": false,
     "useSystemHosts": false,
@@ -208,6 +208,18 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 
 它不会对 `localhost` DNS (系统 DNS) 生效，它总是跟随 golang 的 DNS 缓存行为(cgo 与 pure go 可能略有不同)。
 
+> `serveStale`: true | false
+
+`true` 启用 DNS 乐观缓存，默认为 `false`，即不启用。
+
+仅服务器启用 DNS 缓存时才有效，也就是此选项受 `disableCache` 的约束。
+
+> `serveExpiredTTL`: number
+
+乐观缓存有效期，单位是秒，默认为 0 即永不过期。
+
+若服务器已启用了缓存，并开启了乐观缓存。当缓存已过期，但乐观缓存未过期时，立即返回缓存中陈旧的 DNS 记录，并后台刷新缓存。这样可以降低延迟。
+
 > `disableFallback`: true | false
 
 `true` 禁用 DNS 的 fallback 查询，默认为 `false`，即不禁用。
@@ -321,3 +333,7 @@ DNS 服务器超时时间，默认 4000 ms.
 > `clientIP`: [string]
 
 > `disableCache`: true | false
+
+> `serveStale`: true | false
+
+> `serveExpiredTTL`: number
