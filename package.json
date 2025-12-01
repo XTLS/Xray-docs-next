@@ -14,7 +14,7 @@
     "@vuepress/plugin-back-to-top": "^2.0.0-rc.3",
     "@vuepress/plugin-search": "2.0.0-rc.3",
     "postcss-loader": "^8.2.0",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.3",
     "sass": "^1.51.0",
     "sass-loader": "^14.2.0",
     "typescript": "^5.9.2",
