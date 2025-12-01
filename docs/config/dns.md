@@ -5,10 +5,12 @@
 Xray 内置的 DNS 模块，主要有三大用途：
 
 - 在路由阶段，解析域名为 IP, 并且根据域名解析得到的 IP 进行规则匹配以分流。是否解析域名及分流和路由配置模块中 `domainStrategy` 的值有关，只有在设置以下两种值时，才会使用内置 DNS 服务器进行 DNS 查询：
+
   - "IPIfNonMatch", 请求一个域名时，进行路由里面的 domain 进行匹配，若无法匹配到结果，则对这个域名使用内置 DNS 服务器进行 DNS 查询，并且使用查询返回的 IP 地址再重新进行 IP 路由匹配。
   - "IPOnDemand", 当匹配时碰到任何基于 IP 的规则，将域名立即解析为 IP 进行匹配。
 
 - 解析目标地址进行连接。
+
   - 如 在 `freedom` 出站中，将 `domainStrategy` 设置为 `UseIP`, 由此出站发出的请求, 会先将域名通过内置服务器解析成 IP, 然后进行连接。
   - 如 在 `sockopt` 中，将 `domainStrategy` 设置为 `UseIP`, 此出站发起的系统连接，将先由内置服务器解析为 IP, 然后进行连接。
 
@@ -90,8 +92,9 @@ Xray 内置的 DNS 模块，主要有三大用途：
 - 当该项的地址为域名时，会使用此域名进行 IP 解析，而不使用原始域名。
 - 当地址中同时设置了多个 IP 和域名，则只会返回第一个域名，其余 IP 和域名均被忽略。
 - 当地址中的第一个值为井号后加数字(如 `#3`)时，如果在使用 DNS 出站，核心会返回空的响应以及该数字编号对应的 rcode 以拒绝请求，如果请求来自内部查询则会单纯视为失败。
+- 当被解析域名匹配列表中多个域名时，所有关联的 IP 都会被返回。
 
-其匹配格式（`domian:` `full:` 等等）同常用的 [路由系统](./routing.html#ruleobject) 中的 domain. 不同的是无前缀时此处默认使用 `full:` 前缀（类似常见的 hosts 文件写法） 
+其匹配格式（`domian:` `full:` 等等）同常用的 [路由系统](./routing.html#ruleobject) 中的 domain. 不同的是无前缀时此处默认使用 `full:` 前缀（类似常见的 hosts 文件写法）
 
 > `servers`: \[string | [DnsServerObject](#dnsserverobject) \]
 
@@ -264,7 +267,7 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 
 local 模式将直接由核心向外连接，这种情况下如果地址是一个域名将交由系统本身进行解析，逻辑较为简单。
 
-非 local 默认将视为一个从 tag 为 dns.tag(不知道在哪？ 浏览器 ctrl+f 搜索 `inboundTag`) 的入站进来的请求，将经过正常的核心处理流程，可能会被路由模块分配去本地 freedom 或者其他远端出站，它将被 freedom 的 domainStrategy解析(注意可能的回环) 或者直接以域名的形式被传送到远端根据服务端本身的解析方式解析。
+非 local 默认将视为一个从 tag 为 dns.tag(不知道在哪？ 浏览器 ctrl+f 搜索 `inboundTag`) 的入站进来的请求，将经过正常的核心处理流程，可能会被路由模块分配去本地 freedom 或者其他远端出站，它将被 freedom 的 domainStrategy 解析(注意可能的回环) 或者直接以域名的形式被传送到远端根据服务端本身的解析方式解析。
 
 由于普通人可能难以理清其中的逻辑，建议(特别是在透明代理的环境下)，直接在 DNS 模块的 host 选项中直接为带域名的服务器设置它们对应的 IP 防止出现回环。
 
@@ -305,12 +308,16 @@ DNS 服务器超时时间，默认 4000 ms.
 
 如果设置为真，该 DNS 服务器的请求会是最终尝试，不会触发 fallback 行为。
 
+> `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
+
+若未指定，将继承自全局配置；若指定，则允许更进一步限制此服务器能力，以及设置由 Xray 自身发起的 IP 查询类型的默认值。
+
+注意：它始终受全局 `queryStrategy` 的约束。
+
 ### 以下配置项若未指定，将继承自全局配置，也可以在这里覆盖全局配置
 
 > `tag`: string
 
 > `clientIP`: [string]
-
-> `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
 
 > `disableCache`: true | false
