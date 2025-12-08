@@ -1,3 +1,1830 @@
-# XHTTP: Beyond REALITY
+# XHTTP - Подробная документация
 
-See [XHTTP: Beyond REALITY](https://github.com/XTLS/Xray-core/discussions/4113#discussioncomment-11468947)
+## Содержание
+
+1. [Введение](#введение)
+2. [Архитектура и принципы работы](#архитектура-и-принципы-работы)
+3. [Поддерживаемые версии HTTP](#поддерживаемые-версии-http)
+4. [Режимы работы](#режимы-работы)
+5. [Конфигурация](#конфигурация)
+6. [XMUX - Мультиплексирование соединений](#xmux---мультиплексирование-соединений)
+7. [Механизмы загрузки и скачивания](#механизмы-загрузки-и-скачивания)
+8. [Безопасность и обфускация](#безопасность-и-обфускация)
+9. [Примеры конфигурации](#примеры-конфигурации)
+10. [Лучшие практики](#лучшие-практики)
+11. [Отладка и решение проблем](#отладка-и-решение-проблем)
+
+---
+
+## Введение
+
+**XHTTP** (также известный как **SplitHTTP**) - это современный транспортный протокол для Xray-core, который использует стандартные HTTP/1.1, HTTP/2 и HTTP/3 протоколы для передачи данных. XHTTP был разработан как улучшенная альтернатива устаревшим транспортам, таким как WebSocket, gRPC и QUIC, предоставляя лучшую производительность, безопасность и обфускацию трафика.
+
+### Ключевые преимущества XHTTP:
+
+- **Полная совместимость с HTTP**: Трафик выглядит как обычный веб-трафик
+- **Поддержка нескольких версий HTTP**: HTTP/1.1, HTTP/2 и HTTP/3
+- **Гибкие режимы работы**: Различные стратегии для разных сценариев
+- **Встроенное мультиплексирование**: XMUX для эффективного использования соединений
+- **Продвинутая обфускация**: Случайные заголовки, паддинг, валидация
+- **Оптимизация производительности**: Батчинг запросов, переиспользование соединений
+
+### История и статус
+
+XHTTP был представлен как замена для:
+- **gRPC** (устаревший, с ненужными накладными расходами)
+- **WebSocket** (с ALPN http/1.1)
+- **HTTPUpgrade** (с ALPN http/1.1)
+- **HTTP transport** (без паддинга заголовков)
+- **QUIC transport** (без веб-сервиса)
+
+---
+
+## Архитектура и принципы работы
+
+### Основная концепция
+
+XHTTP разделяет передачу данных на два независимых канала:
+1. **Канал загрузки (Upload)**: От клиента к серверу
+2. **Канал скачивания (Download)**: От сервера к клиенту
+
+Это разделение позволяет оптимизировать каждый канал независимо и использовать разные HTTP-методы и стратегии.
+
+### Компоненты системы
+
+#### 1. Клиентская сторона (Dialer)
+
+**Файл**: `transport/internet/splithttp/dialer.go`
+
+Клиентская сторона отвечает за:
+- Создание HTTP-соединений к серверу
+- Выбор версии HTTP (1.1, 2, 3)
+- Управление режимами работы
+- Отправку данных через POST-запросы
+- Получение данных через GET-запросы
+- Управление XMUX-соединениями
+
+**Основные функции**:
+- `Dial()`: Создает новое соединение с сервером
+- `createHTTPClient()`: Создает HTTP-клиент для конкретной версии протокола
+- `decideHTTPVersion()`: Определяет версию HTTP на основе конфигурации
+
+#### 2. Серверная сторона (Listener)
+
+**Файл**: `transport/internet/splithttp/hub.go`
+
+Серверная сторона отвечает за:
+- Прослушивание входящих HTTP-запросов
+- Обработку POST и GET запросов
+- Управление сессиями
+- Маршрутизацию данных к соответствующим обработчикам
+- Валидацию запросов (хост, путь, паддинг)
+
+**Основные компоненты**:
+- `requestHandler`: Обрабатывает HTTP-запросы
+- `httpSession`: Управляет состоянием сессии
+- `uploadQueue`: Очередь для переупорядочивания пакетов
+
+#### 3. Управление соединениями
+
+**Файл**: `transport/internet/splithttp/connection.go`
+
+`splitConn` - это структура, которая представляет виртуальное соединение:
+```go
+type splitConn struct {
+    writer     io.WriteCloser  // Для записи данных
+    reader     io.ReadCloser   // Для чтения данных
+    remoteAddr net.Addr        // Адрес удаленного узла
+    localAddr  net.Addr        // Локальный адрес
+    onClose    func()          // Callback при закрытии
+}
+```
+
+### Поток данных
+
+#### Режим packet-up (по умолчанию)
+
+1. **Инициализация**:
+   - Клиент генерирует уникальный UUID для сессии
+   - Создается URL: `{path}/{sessionId}`
+   - Клиент открывает GET-запрос для получения данных
+
+2. **Загрузка данных (Upload)**:
+   - Данные буферизуются в pipe с ограничением размера
+   - Каждый пакет отправляется отдельным POST-запросом: `POST {path}/{sessionId}/{seq}`
+   - Последовательность (seq) увеличивается для каждого запроса
+   - Сервер помещает пакеты в очередь и переупорядочивает их по seq
+
+3. **Скачивание данных (Download)**:
+   - Сервер отправляет данные через GET-ответ
+   - Используется Server-Sent Events (SSE) формат для лучшей совместимости
+   - Заголовки `X-Accel-Buffering: no` и `Cache-Control: no-store` предотвращают буферизацию
+
+#### Режим stream-one
+
+1. **Инициализация**:
+   - Клиент открывает POST-запрос с телом запроса
+   - Сервер отвечает через тот же поток
+   - Оба направления используют одно соединение
+
+2. **Передача данных**:
+   - Данные передаются напрямую через тело HTTP-запроса/ответа
+   - Нет разделения на пакеты
+   - Подходит для REALITY и других сценариев, требующих низкой задержки
+
+#### Режим stream-up
+
+1. **Инициализация**:
+   - Клиент открывает GET-запрос для получения данных
+   - Отдельно открывается POST-запрос для отправки данных
+   - Используется `downloadSettings` для разделения каналов
+
+2. **Передача данных**:
+   - Upload: через POST-запрос (stream)
+   - Download: через GET-запрос (stream)
+   - Оба канала работают независимо
+
+---
+
+## Поддерживаемые версии HTTP
+
+### HTTP/1.1
+
+**Характеристики**:
+- Базовый протокол, работает везде
+- Поддерживает Keep-Alive, но с ограничениями
+- Использует отдельные соединения для каждого POST-запроса в режиме packet-up
+- Пулинг соединений для оптимизации
+
+**Когда используется**:
+- Если TLS не настроен
+- Если явно указан `nextProtocol: ["http/1.1"]`
+- Для обратной совместимости
+
+**Особенности реализации**:
+- Для HTTP/1.1 в режиме packet-up используется пул соединений (`uploadRawPool`)
+- Каждое POST-запрос может переиспользовать соединение из пула
+- При ошибке соединение удаляется из пула и создается новое
+
+### HTTP/2
+
+**Характеристики**:
+- Мультиплексирование потоков в одном соединении
+- Сжатие заголовков (HPACK)
+- Server Push (не используется в XHTTP)
+- Keep-Alive с настраиваемым периодом
+
+**Когда используется**:
+- По умолчанию при использовании TLS без явного указания версии
+- При использовании REALITY (только H2)
+- Если указан `nextProtocol: ["h2"]`
+
+**Особенности реализации**:
+- Использует `golang.org/x/net/http2.Transport`
+- Настраиваемый `ReadIdleTimeout` для keep-alive
+- Автоматическое мультиплексирование запросов
+
+### HTTP/3 (QUIC)
+
+**Характеристики**:
+- Работает поверх UDP вместо TCP
+- Встроенное шифрование (TLS 1.3)
+- Мультиплексирование без блокировок
+- Улучшенная производительность при потере пакетов
+
+**Когда используется**:
+- Если указан `nextProtocol: ["h3"]`
+- Требует поддержки QUIC на обеих сторонах
+
+**Особенности реализации**:
+- Использует `github.com/quic-go/quic-go/http3`
+- Автоматическое переключение на UDP
+- Настраиваемый `KeepAlivePeriod`
+
+### Автоматический выбор версии
+
+Функция `decideHTTPVersion()` определяет версию следующим образом:
+
+1. Если используется REALITY → HTTP/2
+2. Если TLS не настроен → HTTP/1.1
+3. Если `nextProtocol` не указан или содержит несколько значений → HTTP/2
+4. Если `nextProtocol[0] == "http/1.1"` → HTTP/1.1
+5. Если `nextProtocol[0] == "h3"` → HTTP/3
+6. Иначе → HTTP/2
+
+---
+
+## Режимы работы
+
+### Режим `packet-up` (по умолчанию)
+
+**Описание**: Раздельная передача данных через отдельные POST-запросы для загрузки и GET-запрос для скачивания.
+
+**Как работает**:
+
+1. **Инициализация**:
+   ```
+   GET /path/{sessionId} HTTP/1.1
+   Host: example.com
+   ```
+
+2. **Загрузка данных**:
+   ```
+   POST /path/{sessionId}/0 HTTP/1.1
+   Host: example.com
+   Content-Length: {size}
+   
+   {data}
+   ```
+
+   Каждый пакет отправляется отдельным POST-запросом с последовательным номером в пути.
+
+3. **Скачивание данных**:
+   Данные приходят в теле GET-ответа:
+   ```
+   HTTP/1.1 200 OK
+   Content-Type: text/event-stream
+   X-Accel-Buffering: no
+   Cache-Control: no-store
+   
+   {data}
+   ```
+
+**Преимущества**:
+- Хорошая производительность
+- Переупорядочивание пакетов на сервере
+- Гибкость в управлении размером пакетов
+
+**Недостатки**:
+- Больше HTTP-запросов
+- Накладные расходы на заголовки
+
+**Когда использовать**:
+- По умолчанию для большинства случаев
+- Когда нужна максимальная совместимость
+
+### Режим `stream-one`
+
+**Описание**: Одно соединение для обоих направлений, данные передаются напрямую.
+
+**Как работает**:
+
+1. **Инициализация и передача**:
+   ```
+   POST /path HTTP/1.1
+   Host: example.com
+   Content-Type: application/grpc
+   
+   {upload data}
+   ```
+   
+   Сервер отвечает в том же потоке:
+   ```
+   HTTP/1.1 200 OK
+   Content-Type: text/event-stream
+   
+   {download data}
+   ```
+
+**Преимущества**:
+- Минимальная задержка
+- Меньше HTTP-запросов
+- Идеально для REALITY
+
+**Недостатки**:
+- Меньше гибкости
+- Нет переупорядочивания пакетов
+
+**Когда использовать**:
+- С REALITY (автоматически выбирается)
+- Когда нужна минимальная задержка
+- Для интерактивных приложений
+
+### Режим `stream-up`
+
+**Описание**: Раздельные соединения для загрузки и скачивания, но оба используют streaming.
+
+**Как работает**:
+
+1. **Инициализация**:
+   - GET-запрос для скачивания (через `downloadSettings`)
+   - POST-запрос для загрузки (основное соединение)
+
+2. **Передача данных**:
+   - Upload: непрерывный поток через POST
+   - Download: непрерывный поток через GET
+
+**Преимущества**:
+- Оптимизация для асимметричных каналов
+- Возможность использовать разные серверы для upload/download
+
+**Недостатки**:
+- Требует настройки `downloadSettings`
+- Более сложная конфигурация
+
+**Когда использовать**:
+- С REALITY и настроенным `downloadSettings`
+- Когда нужна оптимизация для разных каналов
+
+### Режим `auto`
+
+**Описание**: Автоматический выбор режима на основе конфигурации.
+
+**Логика выбора**:
+
+```go
+if mode == "" || mode == "auto" {
+    mode = "packet-up"  // По умолчанию
+    if realityConfig != nil {
+        mode = "stream-one"  // С REALITY
+        if transportConfiguration.DownloadSettings != nil {
+            mode = "stream-up"  // С REALITY и downloadSettings
+        }
+    }
+}
+```
+
+---
+
+## Конфигурация
+
+### Базовая структура конфигурации
+
+```json
+{
+  "network": "xhttp",
+  "xhttpSettings": {
+    "host": "example.com",
+    "path": "/path/to/service",
+    "mode": "auto",
+    "headers": {
+      "User-Agent": "Mozilla/5.0..."
+    },
+    "xPaddingBytes": {
+      "from": 100,
+      "to": 1000
+    },
+    "noGRPCHeader": false,
+    "noSSEHeader": false,
+    "scMaxEachPostBytes": {
+      "from": 1000000,
+      "to": 1000000
+    },
+    "scMinPostsIntervalMs": {
+      "from": 30,
+      "to": 30
+    },
+    "scMaxBufferedPosts": 30,
+    "scStreamUpServerSecs": {
+      "from": 20,
+      "to": 80
+    },
+    "xmux": {
+      "maxConcurrency": {
+        "from": 0,
+        "to": 0
+      },
+      "maxConnections": {
+        "from": 0,
+        "to": 0
+      },
+      "cMaxReuseTimes": {
+        "from": 0,
+        "to": 0
+      },
+      "hMaxRequestTimes": {
+        "from": 0,
+        "to": 0
+      },
+      "hMaxReusableSecs": {
+        "from": 0,
+        "to": 0
+      },
+      "hKeepAlivePeriod": 0
+    },
+    "downloadSettings": {
+      "network": "xhttp",
+      "xhttpSettings": {
+        // Конфигурация для канала скачивания
+      }
+    }
+  }
+}
+```
+
+### Параметры конфигурации
+
+#### Основные параметры
+
+##### `host` (string, опционально)
+
+**Описание**: Host-заголовок для HTTP-запросов.
+
+**Использование**:
+- Если не указан, используется `serverName` из TLS/REALITY конфигурации
+- Если и это не указано, используется IP-адрес сервера
+- Используется для валидации на сервере
+
+**Пример**:
+```json
+"host": "cdn.example.com"
+```
+
+##### `path` (string, обязательный)
+
+**Описание**: Путь для HTTP-запросов.
+
+**Нормализация**:
+- Если путь не начинается с `/`, он добавляется автоматически
+- Если путь не заканчивается на `/`, он добавляется автоматически
+- Query-параметры извлекаются отдельно
+
+**Пример**:
+```json
+"path": "/api/v1/service"
+// Нормализуется в: "/api/v1/service/"
+```
+
+**Формат URL**:
+- Для сессий: `{path}/{sessionId}`
+- Для пакетов: `{path}/{sessionId}/{seq}`
+- Для stream-one: `{path}`
+
+##### `mode` (string, опционально)
+
+**Описание**: Режим работы XHTTP.
+
+**Возможные значения**:
+- `"auto"` или `""`: Автоматический выбор
+- `"packet-up"`: Раздельные POST-запросы для каждого пакета
+- `"stream-one"`: Одно соединение для обоих направлений
+- `"stream-up"`: Раздельные соединения с streaming
+
+**По умолчанию**: `"auto"`
+
+##### `headers` (map[string]string, опционально)
+
+**Описание**: Дополнительные HTTP-заголовки для запросов.
+
+**Особенности**:
+- Заголовки добавляются к каждому запросу
+- Используются для обфускации (например, User-Agent)
+- `Referer` заголовок генерируется автоматически с паддингом
+
+**Пример**:
+```json
+"headers": {
+  "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+}
+```
+
+#### Параметры обфускации
+
+##### `xPaddingBytes` (RangeConfig, опционально)
+
+**Описание**: Диапазон случайных байтов для паддинга в заголовках.
+
+**По умолчанию**: `{from: 100, to: 1000}`
+
+**Как работает**:
+- Паддинг добавляется в query-параметр `x_padding` в Referer заголовке
+- Используется символ 'X' для паддинга (оптимизирован для HPACK/QPACK)
+- Сервер валидирует длину паддинга
+
+**Пример**:
+```json
+"xPaddingBytes": {
+  "from": 200,
+  "to": 500
+}
+```
+
+**Валидация на сервере**:
+```go
+if int32(paddingLength) < validRange.From || int32(paddingLength) > validRange.To {
+    writer.WriteHeader(http.StatusBadRequest)
+    return
+}
+```
+
+##### `noGRPCHeader` (bool, опционально)
+
+**Описание**: Отключает добавление `Content-Type: application/grpc` для POST-запросов.
+
+**По умолчанию**: `false`
+
+**Когда использовать**:
+- Если нужно избежать подозрительных заголовков
+- Для лучшей обфускации
+
+##### `noSSEHeader` (bool, опционально)
+
+**Описание**: Отключает добавление `Content-Type: text/event-stream` для GET-ответов.
+
+**По умолчанию**: `false`
+
+**Когда использовать**:
+- Если промежуточные прокси блокируют SSE
+- Для лучшей совместимости
+
+#### Параметры производительности
+
+##### `scMaxEachPostBytes` (RangeConfig, опционально)
+
+**Описание**: Максимальный размер каждого POST-запроса в режиме packet-up.
+
+**По умолчанию**: `{from: 1000000, to: 1000000}` (1 МБ)
+
+**Важно**:
+- Должен быть больше размера буфера (`buf.Size`, обычно 32 КБ)
+- Используется для батчинга нескольких `Write()` вызовов в один POST
+
+**Как работает**:
+1. Данные буферизуются в pipe с ограничением размера
+2. Когда буфер заполняется или достигается таймаут, отправляется POST
+3. Больший размер = меньше запросов, но больше задержка
+
+**Пример**:
+```json
+"scMaxEachPostBytes": {
+  "from": 2000000,
+  "to": 5000000
+}
+```
+
+##### `scMinPostsIntervalMs` (RangeConfig, опционально)
+
+**Описание**: Минимальный интервал между POST-запросами в миллисекундах.
+
+**По умолчанию**: `{from: 30, to: 30}` (30 мс)
+
+**Как работает**:
+- Если с последнего POST прошло меньше времени, клиент ждет
+- Используется для ограничения частоты запросов
+- Случайное значение в диапазоне для обфускации
+
+**Пример**:
+```json
+"scMinPostsIntervalMs": {
+  "from": 50,
+  "to": 100
+}
+```
+
+##### `scMaxBufferedPosts` (int, опционально)
+
+**Описание**: Максимальное количество пакетов в очереди на сервере.
+
+**По умолчанию**: `30`
+
+**Как работает**:
+- Сервер буферизует пакеты перед переупорядочиванием
+- Если очередь переполняется, соединение закрывается
+- Используется для ограничения использования памяти
+
+**Пример**:
+```json
+"scMaxBufferedPosts": 50
+```
+
+##### `scStreamUpServerSecs` (RangeConfig, опционально)
+
+**Описание**: Интервал отправки паддинга сервером в режиме stream-up (в секундах).
+
+**По умолчанию**: `{from: 20, to: 80}`
+
+**Как работает**:
+- В режиме stream-up сервер периодически отправляет паддинг
+- Используется только если есть Referer заголовок
+- Помогает поддерживать соединение активным
+
+**Пример**:
+```json
+"scStreamUpServerSecs": {
+  "from": 30,
+  "to": 60
+}
+```
+
+#### Параметры XMUX
+
+См. раздел [XMUX - Мультиплексирование соединений](#xmux---мультиплексирование-соединений)
+
+#### Параметры раздельных каналов
+
+##### `downloadSettings` (StreamConfig, опционально)
+
+**Описание**: Отдельная конфигурация для канала скачивания.
+
+**Когда используется**:
+- В режиме `stream-up`
+- Когда нужны разные настройки для upload/download
+- Когда upload и download идут на разные серверы
+
+**Структура**:
+```json
+"downloadSettings": {
+  "network": "xhttp",
+  "security": "tls",
+  "tlsSettings": {
+    "serverName": "download.example.com"
+  },
+  "xhttpSettings": {
+    "host": "download.example.com",
+    "path": "/download",
+    "mode": "stream-down"
+  }
+}
+```
+
+**Особенности**:
+- Может использовать другой сервер, порт, TLS-конфигурацию
+- Автоматически наследует `socketSettings` если `penetrate: true`
+
+---
+
+## XMUX - Мультиплексирование соединений
+
+### Обзор
+
+**XMUX** (Xray Multiplexing) - это система для эффективного переиспользования HTTP-соединений между несколькими логическими соединениями XHTTP. Это позволяет уменьшить количество TCP/TLS handshakes и улучшить производительность.
+
+### Архитектура XMUX
+
+#### Компоненты
+
+1. **XmuxManager**: Управляет пулом XMUX-клиентов
+2. **XmuxClient**: Представляет одно переиспользуемое соединение
+3. **XmuxConn**: Интерфейс для HTTP-клиента (DialerClient)
+
+#### Структура данных
+
+```go
+type XmuxManager struct {
+    xmuxConfig  XmuxConfig      // Конфигурация
+    concurrency int32           // Максимальная конкурентность на соединение
+    connections int32           // Максимальное количество соединений
+    newConnFunc func() XmuxConn // Функция создания нового соединения
+    xmuxClients []*XmuxClient   // Пул активных клиентов
+}
+
+type XmuxClient struct {
+    XmuxConn     XmuxConn       // HTTP-клиент
+    OpenUsage    atomic.Int32   // Текущее количество открытых использований
+    leftUsage    int32          // Оставшееся количество использований
+    LeftRequests atomic.Int32   // Оставшееся количество запросов
+    UnreusableAt time.Time      // Время, после которого нельзя переиспользовать
+}
+```
+
+### Параметры конфигурации
+
+#### `maxConcurrency` (RangeConfig)
+
+**Описание**: Максимальное количество одновременных использований одного соединения.
+
+**По умолчанию**: `{from: 0, to: 0}` (без ограничений)
+
+**Как работает**:
+- Если `OpenUsage >= maxConcurrency`, соединение не используется
+- Создается новое соединение, если все существующие перегружены
+- 0 означает отсутствие ограничений
+
+**Пример**:
+```json
+"xmux": {
+  "maxConcurrency": {
+    "from": 4,
+    "to": 8
+  }
+}
+```
+
+#### `maxConnections` (RangeConfig)
+
+**Описание**: Максимальное количество соединений в пуле.
+
+**По умолчанию**: `{from: 0, to: 0}` (без ограничений)
+
+**Как работает**:
+- Если количество соединений меньше `maxConnections`, создается новое
+- Используется для ограничения общего количества соединений
+- 0 означает отсутствие ограничений
+
+**Пример**:
+```json
+"xmux": {
+  "maxConnections": {
+    "from": 2,
+    "to": 4
+  }
+}
+```
+
+#### `cMaxReuseTimes` (RangeConfig)
+
+**Описание**: Максимальное количество раз, которое соединение может быть переиспользовано.
+
+**По умолчанию**: `{from: 0, to: 0}` (без ограничений)
+
+**Как работает**:
+- При каждом использовании `leftUsage` уменьшается
+- Когда `leftUsage` достигает 0, соединение удаляется
+- 0 означает отсутствие ограничений
+
+**Пример**:
+```json
+"xmux": {
+  "cMaxReuseTimes": {
+    "from": 10,
+    "to": 20
+  }
+}
+```
+
+#### `hMaxRequestTimes` (RangeConfig)
+
+**Описание**: Максимальное количество HTTP-запросов на одно соединение.
+
+**По умолчанию**: `{from: 0, to: 0}` (без ограничений)
+
+**Как работает**:
+- При каждом запросе `LeftRequests` уменьшается
+- Когда `LeftRequests <= 0`, соединение удаляется
+- 0 означает отсутствие ограничений
+
+**Пример**:
+```json
+"xmux": {
+  "hMaxRequestTimes": {
+    "from": 100,
+    "to": 200
+  }
+}
+```
+
+#### `hMaxReusableSecs` (RangeConfig)
+
+**Описание**: Максимальное время жизни соединения в секундах.
+
+**По умолчанию**: `{from: 0, to: 0}` (без ограничений)
+
+**Как работает**:
+- При создании устанавливается `UnreusableAt = now + hMaxReusableSecs`
+- Когда текущее время превышает `UnreusableAt`, соединение удаляется
+- 0 означает отсутствие ограничений
+
+**Пример**:
+```json
+"xmux": {
+  "hMaxReusableSecs": {
+    "from": 300,
+    "to": 600
+  }
+}
+```
+
+#### `hKeepAlivePeriod` (int64)
+
+**Описание**: Период keep-alive для HTTP-соединений в секундах.
+
+**По умолчанию**: `0` (используются значения по умолчанию)
+
+**Значения по умолчанию**:
+- HTTP/2: 30 секунд (Chrome H2 keep-alive)
+- HTTP/3: 20 секунд (quic-go H3 keep-alive)
+
+**Как работает**:
+- Отправляет ping/padding для поддержания соединения
+- Предотвращает закрытие соединения из-за неактивности
+
+**Пример**:
+```json
+"xmux": {
+  "hKeepAlivePeriod": 45
+}
+```
+
+### Алгоритм выбора соединения
+
+Функция `GetXmuxClient()` выбирает соединение следующим образом:
+
+1. **Очистка невалидных соединений**:
+   - Удаляются соединения, где `IsClosed() == true`
+   - Удаляются соединения, где `leftUsage == 0`
+   - Удаляются соединения, где `LeftRequests <= 0`
+   - Удаляются соединения, где `time.Now() > UnreusableAt`
+
+2. **Создание нового соединения, если пул пуст**:
+   ```go
+   if len(m.xmuxClients) == 0 {
+       return m.newXmuxClient()
+   }
+   ```
+
+3. **Создание нового соединения, если не достигнут лимит**:
+   ```go
+   if m.connections > 0 && len(m.xmuxClients) < int(m.connections) {
+       return m.newXmuxClient()
+   }
+   ```
+
+4. **Фильтрация по конкурентности**:
+   ```go
+   if m.concurrency > 0 {
+       // Выбираются только соединения с OpenUsage < maxConcurrency
+   }
+   ```
+
+5. **Случайный выбор из доступных**:
+   ```go
+   i, _ := rand.Int(rand.Reader, big.NewInt(int64(len(xmuxClients))))
+   return xmuxClients[i.Int64()]
+   ```
+
+### Управление жизненным циклом
+
+#### Открытие использования
+
+```go
+if xmuxClient != nil {
+    xmuxClient.OpenUsage.Add(1)  // Увеличиваем счетчик
+}
+```
+
+#### Закрытие использования
+
+```go
+if xmuxClient != nil {
+    xmuxClient.OpenUsage.Add(-1)  // Уменьшаем счетчик
+}
+```
+
+#### Использование запроса
+
+```go
+if xmuxClient != nil {
+    xmuxClient.LeftRequests.Add(-1)  // Уменьшаем счетчик запросов
+}
+```
+
+### Примеры использования
+
+#### Базовое использование (без ограничений)
+
+```json
+"xmux": {}
+```
+
+#### Ограничение конкурентности
+
+```json
+"xmux": {
+  "maxConcurrency": {
+    "from": 4,
+    "to": 4
+  }
+}
+```
+
+#### Полная конфигурация
+
+```json
+"xmux": {
+  "maxConcurrency": {
+    "from": 4,
+    "to": 8
+  },
+  "maxConnections": {
+    "from": 2,
+    "to": 4
+  },
+  "cMaxReuseTimes": {
+    "from": 10,
+    "to": 20
+  },
+  "hMaxRequestTimes": {
+    "from": 100,
+    "to": 200
+  },
+  "hMaxReusableSecs": {
+    "from": 300,
+    "to": 600
+  },
+  "hKeepAlivePeriod": 45
+}
+```
+
+---
+
+## Механизмы загрузки и скачивания
+
+### Загрузка данных (Upload)
+
+#### Режим packet-up
+
+**Архитектура**:
+
+1. **Буферизация**:
+   ```go
+   uploadPipeReader, uploadPipeWriter := pipe.New(pipe.WithSizeLimit(maxUploadSize - buf.Size))
+   ```
+   - Данные буферизуются в pipe с ограничением размера
+   - Несколько `Write()` вызовов автоматически батчатся
+
+2. **Отправка пакетов**:
+   ```go
+   chunk, err := uploadPipeReader.ReadMultiBuffer()
+   // Отправка через POST
+   httpClient.PostPacket(ctx, url, chunk, size)
+   ```
+
+3. **Последовательность**:
+   - Каждый пакет получает последовательный номер (seq)
+   - URL: `{path}/{sessionId}/{seq}`
+   - Сервер переупорядочивает пакеты по seq
+
+4. **Интервалы**:
+   ```go
+   if scMinPostsIntervalMs.From > 0 {
+       time.Sleep(time.Duration(scMinPostsIntervalMs.rand())*time.Millisecond - time.Since(lastWrite))
+   }
+   ```
+
+**Особенности HTTP/1.1**:
+- Используется пул соединений (`uploadRawPool`)
+- Каждый POST может переиспользовать соединение
+- При ошибке соединение удаляется из пула
+
+**Особенности HTTP/2 и HTTP/3**:
+- Автоматическое мультиплексирование
+- Переиспользование одного соединения
+- Параллельная отправка пакетов
+
+#### Режим stream-up
+
+**Архитектура**:
+- Открывается POST-запрос с телом запроса
+- Данные передаются напрямую через поток
+- Нет батчинга и переупорядочивания
+
+**Реализация**:
+```go
+_, _, _, err = httpClient.OpenStream(ctx, requestURL.String(), reader, true)
+```
+
+#### Режим stream-one
+
+**Архитектура**:
+- POST-запрос с телом запроса
+- Данные передаются напрямую
+- Ответ приходит в том же потоке
+
+### Скачивание данных (Download)
+
+#### Режим packet-up и stream-up
+
+**Архитектура**:
+
+1. **Инициализация**:
+   ```go
+   conn.reader, conn.remoteAddr, conn.localAddr, err = httpClient.OpenStream(ctx, requestURL.String(), nil, false)
+   ```
+   - Открывается GET-запрос
+   - Ответ приходит в виде потока
+
+2. **Заголовки ответа**:
+   ```
+   X-Accel-Buffering: no
+   Cache-Control: no-store
+   Content-Type: text/event-stream
+   ```
+
+3. **Чтение данных**:
+   - Данные читаются напрямую из тела ответа
+   - Flush после каждой записи для минимизации задержки
+
+#### Режим stream-one
+
+**Архитектура**:
+- Ответ приходит в том же потоке, что и запрос
+- Нет разделения на отдельные запросы
+
+### Очередь загрузки (Upload Queue)
+
+**Файл**: `transport/internet/splithttp/upload_queue.go`
+
+**Назначение**: Переупорядочивание пакетов по последовательному номеру.
+
+**Структура**:
+```go
+type uploadQueue struct {
+    reader          io.ReadCloser
+    nomore          bool
+    pushedPackets   chan Packet
+    writeCloseMutex sync.Mutex
+    heap            uploadHeap
+    nextSeq         uint64
+    closed          bool
+    maxPackets      int
+}
+```
+
+**Алгоритм**:
+
+1. **Добавление пакета**:
+   ```go
+   err = currentSession.uploadQueue.Push(Packet{
+       Payload: payload,
+       Seq:     seqInt,
+   })
+   ```
+
+2. **Чтение в правильном порядке**:
+   ```go
+   if packet.Seq == h.nextSeq {
+       // Читаем пакет
+       h.nextSeq = packet.Seq + 1
+   } else {
+       // Сохраняем в кучу для последующего чтения
+       heap.Push(&h.heap, packet)
+   }
+   ```
+
+3. **Обработка неупорядоченных пакетов**:
+   - Пакеты с `Seq > nextSeq` сохраняются в кучу (heap)
+   - Когда `nextSeq` достигает нужного значения, пакет извлекается
+   - Если куча слишком большая, соединение закрывается
+
+**Особенности**:
+- Использует min-heap для эффективного переупорядочивания
+- Ограничение размера для предотвращения переполнения памяти
+- Поддержка потокового чтения через `Reader`
+
+---
+
+## Безопасность и обфускация
+
+### Валидация запросов
+
+#### Валидация хоста
+
+**На сервере**:
+```go
+if len(h.host) > 0 && !internet.IsValidHTTPHost(request.Host, h.host) {
+    writer.WriteHeader(http.StatusNotFound)
+    return
+}
+```
+
+**Конфигурация**:
+```json
+"xhttpSettings": {
+  "host": "cdn.example.com"
+}
+```
+
+#### Валидация пути
+
+**На сервере**:
+```go
+if !strings.HasPrefix(request.URL.Path, h.path) {
+    writer.WriteHeader(http.StatusNotFound)
+    return
+}
+```
+
+**Конфигурация**:
+```json
+"xhttpSettings": {
+  "path": "/api/v1/service"
+}
+```
+
+#### Валидация паддинга
+
+**На сервере**:
+```go
+validRange := h.config.GetNormalizedXPaddingBytes()
+paddingLength := len(referrerURL.Query().Get("x_padding"))
+
+if int32(paddingLength) < validRange.From || int32(paddingLength) > validRange.To {
+    writer.WriteHeader(http.StatusBadRequest)
+    return
+}
+```
+
+**Конфигурация**:
+```json
+"xhttpSettings": {
+  "xPaddingBytes": {
+    "from": 100,
+    "to": 1000
+  }
+}
+```
+
+### Обфускация трафика
+
+#### Случайные заголовки
+
+**Генерация Referer с паддингом**:
+```go
+u.RawQuery = "x_padding=" + strings.Repeat("X", int(c.GetNormalizedXPaddingBytes().rand()))
+header.Set("Referer", u.String())
+```
+
+**Пользовательские заголовки**:
+```json
+"xhttpSettings": {
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br"
+  }
+}
+```
+
+#### Случайные интервалы
+
+**Интервалы между запросами**:
+```json
+"scMinPostsIntervalMs": {
+  "from": 30,
+  "to": 100
+}
+```
+
+**Случайный размер пакетов**:
+```json
+"scMaxEachPostBytes": {
+  "from": 1000000,
+  "to": 2000000
+}
+```
+
+#### Паддинг ответов
+
+**На сервере**:
+```go
+writer.Header().Set("X-Padding", strings.Repeat("X", int(c.GetNormalizedXPaddingBytes().rand())))
+```
+
+### Интеграция с TLS/REALITY
+
+#### TLS
+
+**Конфигурация**:
+```json
+{
+  "network": "xhttp",
+  "security": "tls",
+  "tlsSettings": {
+    "serverName": "example.com",
+    "alpn": ["h2", "http/1.1"]
+  },
+  "xhttpSettings": {
+    "host": "example.com",
+    "path": "/path"
+  }
+}
+```
+
+**Особенности**:
+- Автоматическое определение версии HTTP из ALPN
+- Поддержка fingerprint для обфускации TLS
+- SNI из `serverName` или `host`
+
+#### REALITY
+
+**Конфигурация**:
+```json
+{
+  "network": "xhttp",
+  "security": "reality",
+  "realitySettings": {
+    "serverName": "example.com",
+    "shortId": "...",
+    "publicKey": "..."
+  },
+  "xhttpSettings": {
+    "host": "example.com",
+    "path": "/path",
+    "mode": "stream-one"
+  }
+}
+```
+
+**Особенности**:
+- Автоматически использует HTTP/2
+- Рекомендуется режим `stream-one`
+- Максимальная обфускация трафика
+
+### Защита от обнаружения
+
+#### Имитация веб-трафика
+
+1. **Реалистичные заголовки**:
+   - User-Agent от реальных браузеров
+   - Accept заголовки как у браузеров
+   - Referer с реальными доменами
+
+2. **Правильные HTTP-коды**:
+   - 200 OK для успешных запросов
+   - Правильная обработка ошибок
+
+3. **Временные паттерны**:
+   - Случайные интервалы между запросами
+   - Не слишком регулярные паттерны
+
+#### Избежание DPI
+
+1. **HPACK/QPACK оптимизация**:
+   - Использование символа 'X' для паддинга (8-битный код в HPACK)
+   - Минимизация изменений размера заголовков
+
+2. **Размеры пакетов**:
+   - Вариация размеров пакетов
+   - Избежание фиксированных размеров
+
+3. **Частота запросов**:
+   - Случайные интервалы
+   - Не слишком высокая частота
+
+---
+
+## Примеры конфигурации
+
+### Пример 1: Базовая конфигурация с TLS
+
+**Клиент**:
+```json
+{
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "server.example.com",
+            "port": 443,
+            "users": [{"id": "uuid"}]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "server.example.com",
+          "alpn": ["h2"]
+        },
+        "xhttpSettings": {
+          "host": "server.example.com",
+          "path": "/api/v1"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Сервер**:
+```json
+{
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [{"id": "uuid"}]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/path/to/cert.pem",
+              "keyFile": "/path/to/key.pem"
+            }
+          ]
+        },
+        "xhttpSettings": {
+          "host": "server.example.com",
+          "path": "/api/v1"
+        }
+      }
+    }
+  ]
+}
+```
+
+### Пример 2: Конфигурация с REALITY
+
+**Клиент**:
+```json
+{
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "server.example.com",
+            "port": 443,
+            "users": [{"id": "uuid"}]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "reality",
+        "realitySettings": {
+          "serverName": "www.microsoft.com",
+          "shortId": "abcd1234",
+          "publicKey": "base64-public-key",
+          "fingerprint": "chrome"
+        },
+        "xhttpSettings": {
+          "host": "www.microsoft.com",
+          "path": "/",
+          "mode": "stream-one",
+          "headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+**Сервер**:
+```json
+{
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [{"id": "uuid"}]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "reality",
+        "realitySettings": {
+          "dest": "www.microsoft.com:443",
+          "serverNames": ["www.microsoft.com"],
+          "privateKey": "base64-private-key",
+          "shortIds": ["abcd1234"]
+        },
+        "xhttpSettings": {
+          "host": "www.microsoft.com",
+          "path": "/",
+          "mode": "stream-one"
+        }
+      }
+    }
+  ]
+}
+```
+
+### Пример 3: Продвинутая конфигурация с XMUX
+
+**Клиент**:
+```json
+{
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "server.example.com",
+            "port": 443,
+            "users": [{"id": "uuid"}]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "server.example.com",
+          "alpn": ["h2"]
+        },
+        "xhttpSettings": {
+          "host": "server.example.com",
+          "path": "/api/v1",
+          "mode": "packet-up",
+          "xPaddingBytes": {
+            "from": 200,
+            "to": 500
+          },
+          "scMaxEachPostBytes": {
+            "from": 2000000,
+            "to": 5000000
+          },
+          "scMinPostsIntervalMs": {
+            "from": 50,
+            "to": 100
+          },
+          "scMaxBufferedPosts": 50,
+          "xmux": {
+            "maxConcurrency": {
+              "from": 4,
+              "to": 8
+            },
+            "maxConnections": {
+              "from": 2,
+              "to": 4
+            },
+            "cMaxReuseTimes": {
+              "from": 10,
+              "to": 20
+            },
+            "hMaxRequestTimes": {
+              "from": 100,
+              "to": 200
+            },
+            "hMaxReusableSecs": {
+              "from": 300,
+              "to": 600
+            },
+            "hKeepAlivePeriod": 45
+          },
+          "headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+### Пример 4: Конфигурация с раздельными каналами
+
+**Клиент**:
+```json
+{
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "upload.example.com",
+            "port": 443,
+            "users": [{"id": "uuid"}]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "upload.example.com",
+          "alpn": ["h2"]
+        },
+        "xhttpSettings": {
+          "host": "upload.example.com",
+          "path": "/upload",
+          "mode": "stream-up",
+          "downloadSettings": {
+            "network": "xhttp",
+            "security": "tls",
+            "tlsSettings": {
+              "serverName": "download.example.com",
+              "alpn": ["h2"]
+            },
+            "xhttpSettings": {
+              "host": "download.example.com",
+              "path": "/download"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+### Пример 5: HTTP/3 конфигурация
+
+**Клиент**:
+```json
+{
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "server.example.com",
+            "port": 443,
+            "users": [{"id": "uuid"}]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "server.example.com",
+          "alpn": ["h3"]
+        },
+        "xhttpSettings": {
+          "host": "server.example.com",
+          "path": "/api/v1"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Сервер**:
+```json
+{
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [{"id": "uuid"}]
+      },
+      "streamSettings": {
+        "network": "xhttp",
+        "security": "tls",
+        "tlsSettings": {
+          "certificates": [
+            {
+              "certificateFile": "/path/to/cert.pem",
+              "keyFile": "/path/to/key.pem"
+            }
+          ],
+          "alpn": ["h3"]
+        },
+        "xhttpSettings": {
+          "host": "server.example.com",
+          "path": "/api/v1"
+        }
+      }
+    }
+  ]
+}
+```
+
+---
+
+## Лучшие практики
+
+### Выбор режима
+
+1. **packet-up** (по умолчанию):
+   - Для большинства случаев
+   - Когда нужна максимальная совместимость
+   - Для обычного TLS
+
+2. **stream-one**:
+   - С REALITY
+   - Когда нужна минимальная задержка
+   - Для интерактивных приложений
+
+3. **stream-up**:
+   - С REALITY и раздельными каналами
+   - Когда нужна оптимизация для разных каналов
+
+### Настройка производительности
+
+1. **Размер пакетов**:
+   - Больше размер = меньше запросов, но больше задержка
+   - Рекомендуется: 1-5 МБ для packet-up
+   - Для stream-one размер не важен
+
+2. **Интервалы между запросами**:
+   - Слишком маленькие → подозрительно
+   - Слишком большие → высокая задержка
+   - Рекомендуется: 30-100 мс
+
+3. **XMUX настройки**:
+   - `maxConcurrency`: 4-8 для баланса
+   - `maxConnections`: 2-4 для ограничения ресурсов
+   - `hKeepAlivePeriod`: 30-60 секунд
+
+### Безопасность
+
+1. **Валидация**:
+   - Всегда настраивайте `host` и `path` на сервере
+   - Используйте валидацию паддинга
+
+2. **Обфускация**:
+   - Используйте реалистичные заголовки
+   - Вариация размеров пакетов и интервалов
+   - Используйте REALITY для максимальной обфускации
+
+3. **TLS**:
+   - Используйте актуальные сертификаты
+   - Настройте правильный ALPN
+   - Используйте fingerprint для обфускации
+
+### Оптимизация для разных сценариев
+
+#### Высокая пропускная способность
+
+```json
+"xhttpSettings": {
+  "scMaxEachPostBytes": {
+    "from": 5000000,
+    "to": 10000000
+  },
+  "scMinPostsIntervalMs": {
+    "from": 10,
+    "to": 30
+  },
+  "xmux": {
+    "maxConcurrency": {
+      "from": 8,
+      "to": 16
+    }
+  }
+}
+```
+
+#### Низкая задержка
+
+```json
+"xhttpSettings": {
+  "mode": "stream-one",
+  "scMaxEachPostBytes": {
+    "from": 100000,
+    "to": 500000
+  },
+  "scMinPostsIntervalMs": {
+    "from": 0,
+    "to": 10
+  }
+}
+```
+
+#### Максимальная обфускация
+
+```json
+"xhttpSettings": {
+  "mode": "stream-one",
+  "xPaddingBytes": {
+    "from": 500,
+    "to": 2000
+  },
+  "scMinPostsIntervalMs": {
+    "from": 100,
+    "to": 500
+  },
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "DNT": "1",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1"
+  }
+}
+```
+
+---
+
+## Отладка и решение проблем
+
+### Общие проблемы
+
+#### Проблема: Соединение не устанавливается
+
+**Возможные причины**:
+1. Неправильный `host` или `path`
+2. Проблемы с TLS/REALITY
+3. Блокировка на уровне сети
+
+**Решение**:
+1. Проверьте логи на обеих сторонах
+2. Убедитесь, что `host` и `path` совпадают
+3. Проверьте TLS-сертификаты
+4. Попробуйте без TLS для тестирования
+
+#### Проблема: Низкая производительность
+
+**Возможные причины**:
+1. Слишком маленький `scMaxEachPostBytes`
+2. Слишком большие интервалы
+3. Неоптимальные настройки XMUX
+
+**Решение**:
+1. Увеличьте `scMaxEachPostBytes`
+2. Уменьшите `scMinPostsIntervalMs`
+3. Настройте XMUX для переиспользования соединений
+
+#### Проблема: Высокая задержка
+
+**Возможные причины**:
+1. Использование packet-up вместо stream-one
+2. Слишком большой батчинг
+3. Проблемы с сетью
+
+**Решение**:
+1. Используйте `mode: "stream-one"` для REALITY
+2. Уменьшите `scMaxEachPostBytes`
+3. Проверьте сетевую задержку
+
+#### Проблема: Ошибки валидации
+
+**Возможные причины**:
+1. Неправильная длина паддинга
+2. Несовпадение `host` или `path`
+
+**Решение**:
+1. Убедитесь, что `xPaddingBytes` совпадает на клиенте и сервере
+2. Проверьте `host` и `path` на обеих сторонах
+
+### Логирование
+
+#### Включение отладочных логов
+
+**Клиент**:
+```json
+{
+  "log": {
+    "loglevel": "debug"
+  }
+}
+```
+
+**Важные сообщения**:
+- `XHTTP is dialing to ...` - Установка соединения
+- `XHTTP is downloading from ...` - Использование downloadSettings
+- `XMUX: creating xmuxClient ...` - Создание XMUX соединения
+- `failed to send upload` - Ошибки загрузки
+
+#### Мониторинг производительности
+
+1. **Количество соединений**:
+   - Следите за созданием новых XMUX-соединений
+   - Слишком много созданий → увеличьте лимиты
+
+2. **Частота запросов**:
+   - Следите за интервалами между POST-запросами
+   - Регулируйте `scMinPostsIntervalMs`
+
+3. **Размеры пакетов**:
+   - Следите за размером POST-запросов
+   - Регулируйте `scMaxEachPostBytes`
+
+### Тестирование
+
+#### Тест базового соединения
+
+1. Настройте простую конфигурацию без XMUX
+2. Проверьте установку соединения
+3. Проверьте передачу данных
+
+#### Тест производительности
+
+1. Используйте инструменты для измерения пропускной способности
+2. Тестируйте с разными настройками
+3. Оптимизируйте на основе результатов
+
+#### Тест обфускации
+
+1. Проверьте трафик через Wireshark
+2. Убедитесь, что трафик выглядит как обычный HTTP
+3. Проверьте заголовки и паттерны
+
+---
+
+## Заключение
+
+XHTTP - это мощный и гибкий транспортный протокол, который предоставляет отличную производительность, безопасность и обфускацию. Понимание его архитектуры и правильная настройка позволяют достичь оптимальных результатов для различных сценариев использования.
+
+### Ключевые моменты:
+
+1. **Выбор режима**: Зависит от ваших требований (производительность, задержка, обфускация)
+2. **Настройка XMUX**: Критически важно для производительности при множественных соединениях
+3. **Обфускация**: Правильная настройка заголовков и паддинга для избежания обнаружения
+4. **Мониторинг**: Регулярная проверка логов и производительности для оптимизации
+
+### Дополнительные ресурсы:
+
+- [Официальный репозиторий Xray-core](https://github.com/XTLS/Xray-core)
+- [Обсуждение XHTTP](https://github.com/XTLS/Xray-core/discussions/4113)
+- [Telegram канал Project XHTTP](https://t.me/projectXhttp)
+
+---
+
+**Версия документации**: 1.0  
+**Последнее обновление**: 2024  
+**Автор**: Документация основана на анализе исходного кода Xray-core
+
