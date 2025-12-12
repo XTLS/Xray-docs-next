@@ -43,9 +43,9 @@
 
 和入站介绍的一样，因为 UDP 的无连接特性 Xray 无从得知这个请求进入核心的原目标IP(举个例子，在同一个 QUIC 连接里它甚至可能变动)，所以这个功能无法生效。
 
-> `protocol`: string
+> `protocol`: "blackhole" | "dns" | "freedom" | "http" | "loopback" | "shadowsocks" | "socks" | "trojan" | "vless" | "vmess" | "wireguard"
 
-连接协议名称，可选的协议列表见左侧 出站代理。
+连接协议名称，可选的协议列表见左侧 [出站协议](./outbounds/)。
 
 > `settings`: OutboundConfigurationObject
 

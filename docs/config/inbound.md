@@ -56,7 +56,7 @@
 
 > `protocol`: "dokodemo-door" | "http" | "shadowsocks" | "socks" | "vless" | "vmess" | "trojan" | "wireguard"
 
-连接协议名称，可选的协议列表见左侧 入站代理。
+连接协议名称，可选的协议列表见左侧 [入站协议](./inbounds/)。
 
 > `settings`: InboundConfigurationObject
 
