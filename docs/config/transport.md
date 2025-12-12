@@ -870,13 +870,17 @@ PS: 如果有正常上网的域名流量被 AsIs 的 freedom 出站送过来，�
 
 当 type 指定为 int 时需要使用十进制数字。
 
-> `happyEyeballs`: map
+> `happyEyeballs`: [HappyEyeballsObject](#happyeyeballsobject)
 
-RFC-8305 实现的 happyEyeballs 仅适用于 TCP, 当目标为域名时对它们竞速并选择第一个成功的返回，当 `domainStrategy` 被设置为 `UseIP`/`ForceIP` (包括它们的v4/v6/v4v6版本，但这会使可用的IP列表被缩减到仅剩v4或v6，不推荐这么用)
+RFC-8305 实现的 happyEyeballs，仅适用于 TCP。当目标为域名时对它们竞速并选择第一个成功的返回，仅当 `Sockopt.domainStrategy` 被设置为非 `AsIs` 时生效。
+
+注意：`UseIPv4v6` / `ForceIPv4v6` 会使可用的 IP 列表被缩减到仅剩 IPv4，仅查询失败时才会回退查询 IPv6。不推荐这么用。建议使用 UseIP / ForceIP 配合 `HappyEyeballs.interleave`。
 
 ::: warning
 使用这个功能时不要使用 `Freedom` 出站的 `domainStrategy`, 这会导致 `Sockopt` 只能看到被替换完毕的 IP.
 :::
+
+#### HappyEyeballsObject
 
 ```json
 "happyEyeballs": {
