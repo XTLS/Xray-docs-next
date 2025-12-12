@@ -41,7 +41,7 @@
 
 > `address`: string array
 
-Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址，支持 IPv6
+Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址，支持 IPv6。
 
 > `noKernelTun`: true | false
 
@@ -58,9 +58,9 @@ Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址�
 Wireguard 底层 tun 的MTU大小。
 
 <details>
-<summary>MTU的计算方法</summary>
+<summary>MTU 的计算方法</summary>
 
-一个wireguard数据包的结构如下
+一个 Wireguard 数据包的结构如下
 
 ```
 - 20-byte IPv4 header or 40 byte IPv6 header
@@ -72,7 +72,7 @@ Wireguard 底层 tun 的MTU大小。
 - 16-byte authentication tag
 ```
 
-`N-byte encrypted data`即为我们需要的MTU的值，根据endpoint是IPv4还是IPv6，具体的值可以是1440(IPv4)或者1420(IPv6)，如果处于特殊环境下再额外减掉即可(如家宽PPPoE额外-8)。
+`N-byte encrypted data` 即为我们需要的 MTU 的值，根据 endpoint 是 IPv4 还是 IPv6，具体的值可以是 1440(IPv4) 或者 1420(IPv6)，如果处于特殊环境下再额外减掉即可 (如家宽 PPPoE 额外 -8)。
 
 </details>
 
@@ -90,26 +90,12 @@ Wireguard 服务器列表，其中每一项是一个服务器配置。
 
 > `domainStrategy`: "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4" | "ForceIP"
 
-不像绝大多数代理协议，Wireguard不允许传递域名作为目标，所以如果传入目标为一域名需要解析为IP地址后传送，这会经由 Xray 内置DNS处理，此处字段含义见 `Freedom` 出站的 `domainStrategy` ，默认值为 `ForceIP`
+当 Wireguard 服务器地址为域名、被代理流量目标地址是域名时，控制它们的域名解析策略。
 
-PS: `Freedom` 出站的 `domainStrategy` 包含诸如 `UseIP` 的选项，在这里不提供，因为Wiregiard必须获取一个可用的IP，不能进行 `UseIP` 回落行为。
+不像绝大多数代理协议，Wireguard 不允许传递域名作为目标，所以如果传入目标为一域名需要解析为 IP 地址后传送，这会经由 Xray 内置DNS处理，此处字段含义见 `Freedom` 出站的 `domainStrategy`，默认值为 `ForceIP`。
 
-```json
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://1.1.1.1/dns-query",
-                "domains": [
-                    "geosite:openai"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // 只查询 AAAA 记录
-            }
-        ],
-        "queryStrategy": "UseIP" // 同时查询 A 和 AAAA 记录，若不写此参数，默认值 UseIP，
-    }
-```
+`Freedom` 出站的 `domainStrategy` 包含诸如 `UseIP` 的选项，在这里不提供，因为 Wiregiard 必须获取一个可用的 IP，不能执行 `UseIP` 解析失败后回落为域名的行为。<br>
+此选项还受 `address` 选项的约束，比如你设置了 ForceIPv6v4 但是 address 中没有设置 IPv6 地址，尽管目标域名有 AAAA 记录也不会解析。
 
 ### Peers
 
@@ -125,23 +111,23 @@ PS: `Freedom` 出站的 `domainStrategy` 包含诸如 `UseIP` 的选项，在这
 
 > `endpoint`: address
 
-服务器地址, 必填
+服务器地址, 必填。
 
-URL:端口 格式，例如 `engage.cloudflareclient.com:2408`<br>
-IP:端口 格式，例如 `162.159.192.1:2408` 或 `[2606:4700:d0::a29f:c001]:2408`
+URL: 端口 格式，例如 `engage.cloudflareclient.com:2408`<br>
+IP: 端口 格式，例如 `162.159.192.1:2408` 或 `[2606:4700:d0::a29f:c001]:2408`
 
 > `publicKey`: string
 
-服务器公钥，用于验证, 必填
+服务器公钥，用于验证, 必填。
 
 > `preSharedKey`: string
 
-额外的对称加密密钥
+额外的对称加密密钥。
 
 > `keepAlive`: int
 
-心跳包时间间隔，单位为秒，默认为 0 表示无心跳
+心跳包时间间隔，单位为秒，默认为 0 表示无心跳。
 
 > `allowedIPs`: string array
 
-Wireguard 仅允许特定源 IP 的流量
+Wireguard 仅允许特定源 IP 的流量。
