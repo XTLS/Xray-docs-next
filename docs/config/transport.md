@@ -704,7 +704,7 @@ OCSP 装订更新间隔，单位为秒，默认值为 0. 任意非 0 值将启�
 
 当目标地址为域名时，配置相应的值，Outbound 连接远端服务器的行为模式如下：
 
-- 当使用 `"AsIs"` 时，Xray 将直接使用 go 自带的 Dial 发起连接，优先级固定为 RFC6724 的默认值 (不会遵守 gai.conf 等配置) (人话：IPv6 优先)。出于一些原因，UDP 连接如果使用域名会无视系统设置优先 IPv4。
+- 当使用 `"AsIs"` 时，Xray 将直接使用 go 自带的 Dial 解析域名并发起连接，优先级固定为 RFC6724 的默认值 (不会遵守 gai.conf 等配置) (人话：IPv6 优先)。出于一些原因，UDP 连接如果使用域名会无视系统设置优先 IPv4。
 - 当填写其他值时，将使用 Xray-core [内置 DNS 服务器](dns.md) 服务器进行解析。若不存在 DNSObject，则使用系统 DNS。若有多个符合条件的 IP 地址时，默认情况下核心会随机选择一个 IP 作为目标 IP，但如果启用了 `happyEyeballs` 则不会随机而是将由它选择 IP。
 - `"IPv4"` 代表尝试仅使用 IPv4 进行连接，`"IPv4v6"` 代表尝试使用 IPv4 或 IPv6 连接，但对于双栈域名，使用 IPv4。（v4v6 调换后同理，不再赘述）
 - 当在内置 DNS 设置了 `"queryStrategy"` 后，实际行为将会与这个选项取并，只有都被包含的 IP 类型才会被解析，如 `"queryStrategy": "UseIPv4"` `"domainStrategy": "UseIP"`，实际上等同于 `"domainStrategy": "UseIPv4"`。
