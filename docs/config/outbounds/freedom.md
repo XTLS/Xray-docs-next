@@ -33,11 +33,11 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
 
 当目标地址为域名时，配置相应的值，Freedom 的行为模式如下：
 
-- 当使用 `"AsIs"` 时，Xray 将直接使用 golang 默认的连接优先级。出于一些原因，UDP连接如果使用域名会无视系统设置优先IPv4。
-- 当填写其他值时，将使用 Xray-core [内置 DNS 服务器](../dns.md) 服务器进行解析。若不存在DNSObject，则使用系统DNS。若有多个符合条件的IP地址时，核心会随机选择一个IP作为目标IP。
-- `"IPv4"` 代表尝试仅使用 IPv4 进行连接，`"IPv4v6"` 代表尝试使用 IPv4 或 IPv6 连接，但对于双栈域名，使用 IPv4。（v4v6调换后同理，不再赘述）
-- 当在内置DNS设置了 `"queryStrategy"` 后，实际行为将会与这个选项取并，只有都被包含的IP类型才会被解析，如 `"queryStrategy": "UseIPv4"` `"domainStrategy": "UseIP"`，实际上等同于 `"domainStrategy": "UseIPv4"`。
-- 当使用 `"Use"` 开头的选项时，若解析结果不符合要求（如，域名只有IPv4解析结果但使用了UseIPv6），则会回落回AsIs。
+- 当使用 `"AsIs"` 时，Xray 将遵循 `streamSettings.sockopt` 中 `domainStrategy` 和 `happyEyeballs` 的设置。若它们也都是默认值，则优先级固定为 RFC6724 的默认值 (不会遵守 gai.conf 等配置) (人话：IPv6 优先)。出于一些原因，UDP 连接如果使用域名会无视系统设置优先 IPv4。
+- 当填写其他值时，将使用 Xray-core [内置 DNS 服务器](../dns.md) 服务器进行解析。若不存在 DNSObject，则使用系统 DNS。若有多个符合条件的 IP 地址时，核心会随机选择一个 IP 作为目标 IP。这也就意味着一旦解析成功则 `streamSettings.sockopt` 中 `domainStrategy` 和 `happyEyeballs` 的设置会失效，因为它们看不到域名了。
+- `"IPv4"` 代表尝试仅使用 IPv4 进行连接，`"IPv4v6"` 代表尝试使用 IPv4 或 IPv6 连接，但对于双栈域名，使用 IPv4。（v4v6 调换后同理，不再赘述）
+- 当在内置 DNS 设置了 `"queryStrategy"` 后，实际行为将会与这个选项取并，只有都被包含的 IP 类型才会被解析，如 `"queryStrategy": "UseIPv4"` `"domainStrategy": "UseIP"`，实际上等同于 `"domainStrategy": "UseIPv4"`。
+- 当使用 `"Use"` 开头的选项时，若解析结果不符合要求（如，域名只有 IPv4 解析结果但使用了 UseIPv6），则会回落回 AsIs。
 - 当使用 `"Force"` 开头的选项时，若解析结果不符合要求，则该连接会无法建立。
 
 ::: tip TIP 1
