@@ -36,11 +36,11 @@
 ## 2.3 Необходимое программное обеспечение
 
 1. SSH-клиент для удалённого подключения:
-   - Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
+   - Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html), но лучше WSL - полноценный Linux внутри Windows 11. Ubuntu 24.04: https://apps.microsoft.com/detail/9NZ3KLHXDJP5?hl=en-us&gl=RU&ocid=pdpshare Там же есть Debian и другие дистрибутивы. 
    - macOS/Linux: Terminal
 
 2. Программа для передачи файлов:
-   - Windows: [WinSCP](https://winscp.net/eng/index.php)
+   - Windows: [WinSCP](https://winscp.net/eng/index.php), но лучше WSL - полноценный Linux внутри Windows 11. Ubuntu 24.04: https://apps.microsoft.com/detail/9NZ3KLHXDJP5?hl=en-us&gl=RU&ocid=pdpshare Там же есть Debian и другие дистрибутивы. 
    - macOS/Linux: Terminal
 
 3. Хороший текстовый редактор:
