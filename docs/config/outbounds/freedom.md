@@ -31,18 +31,11 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
 
 默认值 `"AsIs"`。
 
-当目标地址为域名时，配置相应的值，Freedom 的行为模式如下：
+所有参数含义均约等于 [sockopt](../transport.md#sockoptobject) 中的 domainStrategy. 
 
-- 当使用 `"AsIs"` 时，Xray 将直接使用 golang 默认的连接优先级。出于一些原因，UDP连接如果使用域名会无视系统设置优先IPv4。
-- 当填写其他值时，将使用 Xray-core [内置 DNS 服务器](../dns.md) 服务器进行解析。若不存在DNSObject，则使用系统DNS。若有多个符合条件的IP地址时，核心会随机选择一个IP作为目标IP。
-- `"IPv4"` 代表尝试仅使用 IPv4 进行连接，`"IPv4v6"` 代表尝试使用 IPv4 或 IPv6 连接，但对于双栈域名，使用 IPv4。（v4v6调换后同理，不再赘述）
-- 当在内置DNS设置了 `"queryStrategy"` 后，实际行为将会与这个选项取并，只有都被包含的IP类型才会被解析，如 `"queryStrategy": "UseIPv4"` `"domainStrategy": "UseIP"`，实际上等同于 `"domainStrategy": "UseIPv4"`。
-- 当使用 `"Use"` 开头的选项时，若解析结果不符合要求（如，域名只有IPv4解析结果但使用了UseIPv6），则会回落回AsIs。
-- 当使用 `"Force"` 开头的选项时，若解析结果不符合要求，则该连接会无法建立。
+在这里使用 AsIs 才可以把域名交给后面的 sockopt 模块，如果在这里设置非 AsIs 导致域名被解析为具体 IP 会使后续的 sockopt.domainStrategy 以及其相关的 happyEyeballs 失效。（如果不调整这两个设置则没有负面影响）
 
-::: tip TIP 1
-当使用 `"UseIP"`、`"ForceIP"` 模式时，并且 [出站连接配置](../outbound.md#outboundobject) 中指定了 `sendThrough` 时，Freedom 会根据 `sendThrough` 的值自动判断所需的 IP 类型，IPv4 或 IPv6。若手动指定了单种IP类型（如UseIPv4），但与 `sendThrough` 指定的本地地址不匹配，将会导致连接失败。
-:::
+Freedom 在发送 UDP 时出于一些原因无视 sockopt 中的 domainStrategy 并在默认状态下强制偏好 IPv4.
 
 > `redirect`: address_port
 
