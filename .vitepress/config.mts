@@ -25,21 +25,17 @@ export default defineConfig({
             tokenize: (str) => str.split(/[\s,，。、]+/),
           },
         },
-        locales: {
-          root: {
-            translations: {
-              button: {
-                buttonText: "搜索",
-                buttonAriaLabel: "搜索",
-              },
-              modal: {
-                noResultsText: "无法找到相关结果",
-                resetButtonTitle: "清除查询条件",
-                footer: {
-                  selectText: "选择",
-                  navigateText: "切换",
-                },
-              },
+        translations: {
+          button: {
+            buttonText: "搜索",
+            buttonAriaLabel: "搜索",
+          },
+          modal: {
+            noResultsText: "无法找到相关结果",
+            resetButtonTitle: "清除查询条件",
+            footer: {
+              selectText: "选择",
+              navigateText: "切换",
             },
           },
         },
@@ -678,21 +674,17 @@ export default defineConfig({
                     .filter(Boolean),
               },
             },
-            locales: {
-              ru: {
-                translations: {
-                  button: {
-                    buttonText: "Поиск",
-                    buttonAriaLabel: "Поиск",
-                  },
-                  modal: {
-                    noResultsText: "Результаты не найдены",
-                    resetButtonTitle: "Очистить запрос",
-                    footer: {
-                      selectText: "Выбрать",
-                      navigateText: "Переключить",
-                    },
-                  },
+            translations: {
+              button: {
+                buttonText: "Поиск",
+                buttonAriaLabel: "Поиск",
+              },
+              modal: {
+                noResultsText: "Результаты не найдены",
+                resetButtonTitle: "Очистить запрос",
+                footer: {
+                  selectText: "Выбрать",
+                  navigateText: "Переключить",
                 },
               },
             },
