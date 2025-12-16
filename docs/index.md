@@ -1,40 +1,41 @@
 ---
-home: true
-heroImage: /LogoX2.png
-heroText: Project X
-tagline: 不畏浮云遮望眼 · 金睛如炬耀苍穹
-actions:
-  - text: 由此开始 →
-    link: /document/
-    type: primary
-  - text: 配置指南 →
-    link: /config/
-    type: secondary
+# https://vitepress.dev/reference/default-theme-home-page
+layout: home
+
+hero:
+  name: Project X
+  # text: Xray-core
+  tagline: 不畏浮云遮望眼 · 金睛如炬耀苍穹
+  image:
+    src: /LogoX2.png
+    alt: Xray, Penetrates Everything
+  actions:
+    - theme: brand
+      text: 由此开始 →
+      link: /document/
+    - theme: alt
+      text: 配置指南 →
+      link: /config/
+
 features:
   - title: 极速协议
+    # icon: 🚀
     details: 原创 VLESS 与 XTLS 协议，摆脱冗余加密，释放CPU算力
-
   - title: 自由组合
-    details: |
-      完善的回落机制，有效防止主动探测，多服务共享端口
-
+    # icon: 🧩
+    details: 完善的回落机制，有效防止主动探测，多服务共享端口
   - title: 超低占用
-    details: |
-      OpenWRT RaspberryPi 等各种精简设备皆可使用
-
+    # icon: 🌱
+    details: OpenWRT RaspberryPi 等各种精简设备皆可使用
   - title: 强大路由
-    details: |
-      高可定制化的路由系统，满足各类使用需求，充分发挥网络性能
-
+    # icon: ⚙️
+    details: 高可定制化的路由系统，满足各类使用需求，充分发挥网络性能
   - title: 完整兼容
-    details: |
-      完整兼容 v2ray-core 配置文件与 API 调用
-
+    # icon: 🤝
+    details: 完整兼容 v2ray-core 配置文件与 API 调用
   - title: 亲和力
-    details: |
-      活跃的社区讨论及贡献，MPL 2.0 开源许可协议
-
-footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
+    # icon: 💖
+    details: 活跃的社区讨论及贡献，MPL 2.0 开源许可协议
 ---
 
 ## XTLS ? Xray ? V2Ray ?
@@ -67,11 +68,13 @@ footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
 ### Telegram
 
 - [Project X 交流群](https://t.me/projectXray)
+
   - 交流群可在底线之上随便水，不要撕逼，没有滥权。
   - 有问题尽管随便问，知道的尽量回答。
   - 禁政治，禁 NSFW
 
 - [Project VLESS Group](https://t.me/projectVless)
+
   - 对非中文参与的官方用户群。 [Project X](https://t.me/projectXray) 的姊妹群。
   - 禁广告，禁人身攻击，禁政治。
 
