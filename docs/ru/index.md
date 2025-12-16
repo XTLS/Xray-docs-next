@@ -99,4 +99,4 @@ features:
 
 ### Динамика звезд на GitHub
 
-[![Stargazers over time](https://starchart.cc/XTLS/Xray-core.svg)](https://starchart.cc/XTLS/Xray-core)
+[![Stargazers over time](https://starchart.cc/XTLS/Xray-core.svg?variant=adaptive)](https://starchart.cc/XTLS/Xray-core)
