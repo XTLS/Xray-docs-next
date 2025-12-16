@@ -28,7 +28,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: "github", link: "https://github.com/vuejs/vitepress" },
+      { icon: "github", link: "https://github.com/XTLS/Xray-core" },
     ],
 
     footer: {
@@ -42,11 +42,11 @@ export default defineConfig({
       label: "简体中文",
       lang: "cn",
     },
+
     en: {
       label: "English",
       lang: "en",
       themeConfig: {
-        // https://vitepress.dev/reference/default-theme-config
         nav: [
           { text: "Homepage", link: "/en" },
           { text: "The Great Chronicles", link: "/en/about/news.md" },
@@ -65,21 +65,17 @@ export default defineConfig({
           },
         ],
 
-        socialLinks: [
-          { icon: "github", link: "https://github.com/vuejs/vitepress" },
-        ],
-
         footer: {
           message: "Licensed under CC-BY-SA 4.0",
           copyright: "Copyright © 2020-Present Project X Community",
         },
       },
     },
+
     ru: {
       label: "Русский",
       lang: "ru",
       themeConfig: {
-        // https://vitepress.dev/reference/default-theme-config
         nav: [
           { text: "Главная", link: "/ru" },
           { text: "История сайта", link: "/ru/about/news.md" },
@@ -96,10 +92,6 @@ export default defineConfig({
               { text: "Runtime API Examples", link: "/api-examples" },
             ],
           },
-        ],
-
-        socialLinks: [
-          { icon: "github", link: "https://github.com/vuejs/vitepress" },
         ],
 
         footer: {
