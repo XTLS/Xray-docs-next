@@ -17,6 +17,35 @@ export default defineConfig({
       { text: "开发指南", link: "/development/" },
     ],
 
+    search: {
+      provider: "local",
+      options: {
+        miniSearch: {
+          options: {
+            tokenize: (str) => str.split(/[\s,，。、]+/),
+          },
+        },
+        locales: {
+          root: {
+            translations: {
+              button: {
+                buttonText: "搜索",
+                buttonAriaLabel: "搜索",
+              },
+              modal: {
+                noResultsText: "无法找到相关结果",
+                resetButtonTitle: "清除查询条件",
+                footer: {
+                  selectText: "选择",
+                  navigateText: "切换",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+
     outline: {
       level: [2, 4],
       label: "页面导航",
@@ -268,7 +297,7 @@ export default defineConfig({
   locales: {
     root: {
       label: "简体中文",
-      lang: "cn",
+      lang: "zh",
     },
 
     en: {
@@ -282,6 +311,19 @@ export default defineConfig({
           { text: "Quick Start", link: "/en/document/" },
           { text: "Developer Guide", link: "/en/development/" },
         ],
+
+        search: {
+          options: {
+            miniSearch: {
+              options: {
+                tokenize: (str) =>
+                  str
+                    .split(/[\s.,;!?'"(){}[\]\-_+=&%$#@~`^<>|\\]+/)
+                    .filter(Boolean),
+              },
+            },
+          },
+        },
 
         outline: {
           label: "On this page",
@@ -616,6 +658,37 @@ export default defineConfig({
           { text: "Быстрый старт", link: "/ru/document/" },
           { text: "Руководство разработчика", link: "/ru/development/" },
         ],
+
+        search: {
+          options: {
+            miniSearch: {
+              options: {
+                tokenize: (str) =>
+                  str
+                    .split(/[\s.,;!?'"(){}[\]\-_+=&%$#@~`^<>|\\]+/)
+                    .filter(Boolean),
+              },
+            },
+            locales: {
+              ru: {
+                translations: {
+                  button: {
+                    buttonText: "Поиск",
+                    buttonAriaLabel: "Поиск",
+                  },
+                  modal: {
+                    noResultsText: "Результаты не найдены",
+                    resetButtonTitle: "Очистить запрос",
+                    footer: {
+                      selectText: "Выбрать",
+                      navigateText: "Переключить",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
 
         outline: {
           label: "Содержание страницы",
