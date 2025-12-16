@@ -288,6 +288,11 @@ export default defineConfig({
       { icon: "github", link: "https://github.com/XTLS/Xray-core" },
     ],
 
+    editLink: {
+      pattern: "https://github.com/xtls/Xray-docs-nex/edit/main/docs/:path",
+      text: "帮助我们改善此页面！",
+    },
+
     footer: {
       message: "根据 CC-BY-SA 4.0 许可协议授权",
       copyright: "版权所有 © 2020-至今 Project X 社区",
@@ -638,6 +643,10 @@ export default defineConfig({
               ],
             },
           ],
+        },
+
+        editLink: {
+          text: "Help us improve this page on GitHub!",
         },
 
         footer: {
@@ -1003,6 +1012,10 @@ export default defineConfig({
               ],
             },
           ],
+        },
+
+        editLink: {
+          text: "Помогите нам улучшить эту страницу!",
         },
 
         footer: {
