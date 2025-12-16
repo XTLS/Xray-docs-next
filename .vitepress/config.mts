@@ -17,6 +17,11 @@ export default defineConfig({
       { text: "开发指南", link: "/development/" },
     ],
 
+    outline: {
+      level: [2, 4],
+      label: "页面导航",
+    },
+
     sidebar: {
       "/config/": [
         {
@@ -277,6 +282,10 @@ export default defineConfig({
           { text: "Quick Start", link: "/en/document/" },
           { text: "Developer Guide", link: "/en/development/" },
         ],
+
+        outline: {
+          label: "On this page",
+        },
 
         sidebar: {
           "/en/config/": [
@@ -607,6 +616,10 @@ export default defineConfig({
           { text: "Быстрый старт", link: "/ru/document/" },
           { text: "Руководство разработчика", link: "/ru/development/" },
         ],
+
+        outline: {
+          label: "Содержание страницы",
+        },
 
         sidebar: {
           "/ru/config/": [
