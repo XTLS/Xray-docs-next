@@ -43,6 +43,14 @@ export default defineConfig({
       },
     },
 
+    darkModeSwitchLabel: "深色模式",
+    darkModeSwitchTitle: "切换至深色主题",
+    lightModeSwitchTitle: "切换至浅色主题",
+    sidebarMenuLabel: "目录",
+    returnToTopLabel: "返回至顶部",
+
+    externalLinkIcon: true,
+
     outline: {
       level: [2, 4],
       label: "页面导航",
@@ -334,6 +342,12 @@ export default defineConfig({
             },
           },
         },
+
+        darkModeSwitchLabel: "Appearance",
+        darkModeSwitchTitle: "Switch to dark theme",
+        lightModeSwitchTitle: "Switch to light theme",
+        sidebarMenuLabel: "Menu",
+        returnToTopLabel: "Return to top",
 
         outline: {
           label: "On this page",
@@ -707,6 +721,12 @@ export default defineConfig({
             },
           },
         },
+
+        darkModeSwitchLabel: "Внешний вид",
+        darkModeSwitchTitle: "Переключиться на тёмную тему",
+        lightModeSwitchTitle: "Переключиться на светлую тему",
+        sidebarMenuLabel: "Меню",
+        returnToTopLabel: "Вернуться наверх",
 
         outline: {
           label: "Содержание страницы",
