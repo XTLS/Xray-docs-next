@@ -7,6 +7,7 @@ export default defineConfig({
   title: "Project X",
   description: "Xray-core",
   head: [["link", { rel: "icon", href: "/logo.png" }]],
+  lastUpdated: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -287,6 +288,14 @@ export default defineConfig({
     editLink: {
       pattern: "https://github.com/xtls/Xray-docs-nex/edit/main/docs/:path",
       text: "帮助我们改善此页面！",
+    },
+
+    lastUpdated: {
+      text: "最近更改",
+      formatOptions: {
+        dateStyle: "short",
+        timeStyle: "short",
+      },
     },
 
     footer: {
@@ -643,6 +652,14 @@ export default defineConfig({
 
         editLink: {
           text: "Help us improve this page on GitHub!",
+        },
+
+        lastUpdated: {
+          text: "Last Updated",
+          formatOptions: {
+            dateStyle: "short",
+            timeStyle: "short",
+          },
         },
 
         footer: {
@@ -1008,6 +1025,14 @@ export default defineConfig({
 
         editLink: {
           text: "Помогите нам улучшить эту страницу!",
+        },
+
+        lastUpdated: {
+          text: "Последние изменения",
+          formatOptions: {
+            dateStyle: "short",
+            timeStyle: "short",
+          },
         },
 
         footer: {
