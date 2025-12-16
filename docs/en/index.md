@@ -1,40 +1,41 @@
 ---
-home: true
-heroImage: /LogoX2.png
-heroText: Project X
-tagline: Fear not the clouds that obscure the view, golden eyes like a torch brighten the sky
-actions:
-  - text: Start here →
-    link: /en/document/
-    type: primary
-  - text: Configuration guide →
-    link: /en/config/
-    type: secondary
+# https://vitepress.dev/reference/default-theme-home-page
+layout: home
+
+hero:
+  name: Project X
+  # text: Xray-core
+  tagline: Fear not the clouds that obscure the view, golden eyes like a torch brighten the sky
+  image:
+    src: /LogoX2.png
+    alt: Xray, Penetrates Everything
+  actions:
+    - theme: brand
+      text: Start here →
+      link: /en/document/
+    - theme: alt
+      text: Configuration guide →
+      link: /en/config/
+
 features:
   - title: High-speed protocol
+    # icon: 🚀
     details: Original VLESS and XTLS protocols, free from redundant encryption, release CPU power
-
   - title: Free combination
-    details: |
-      Perfect fallback mechanism, effectively prevent active detection, multi-service sharing ports
-
+    # icon: 🧩
+    details: Perfect fallback mechanism, effectively prevent active detection, multi-service sharing ports
   - title: Ultra-low occupancy
-    details: |
-      OpenWRT RaspberryPi and other simplified devices can be used
-
+    # icon: 🌱
+    details: OpenWRT RaspberryPi and other simplified devices can be used
   - title: Powerful routing
-    details: |
-      Highly customizable routing system to meet various usage requirements and fully exploit network performance
-
+    # icon: ⚙️
+    details: Highly customizable routing system to meet various usage requirements and fully exploit network performance
   - title: Full compatibility
-    details: |
-      Fully compatible with v2ray-core configuration files and API calls
-
+    # icon: 🤝
+    details: Fully compatible with v2ray-core configuration files and API calls
   - title: Affinity
-    details: |
-      Active community discussions and contributions, MPL 2.0 open source license
-
-footer: Licensed under CC-BY-SA 4.0 | Copyright 2020-Present Project X Community
+    # icon: 💖
+    details: Active community discussions and contributions, MPL 2.0 open source license
 ---
 
 ## XTLS? Xray? V2Ray?
@@ -67,11 +68,13 @@ Welcome to help Xray become stronger!
 ### Telegram
 
 - [Project X Discussion Group](https://t.me/projectXray)
+
   - You can chat freely above the bottom line in the discussion group, don't fight, no abuse of power.
   - Feel free to ask questions, and try to answer those you know.
   - No politics, No NSFW
 
 - [Project VLESS Group](https://t.me/projectVless)
+
   - The official Xray-core group for non-Chinese participants. Sister group of [Project X](https://t.me/projectXray)
   - No advertising, No insults, No politics.
 
