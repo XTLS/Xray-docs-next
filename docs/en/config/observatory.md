@@ -48,7 +48,7 @@ The interval at which probes are initiated. The time format is a number followed
 
 An array of strings, where each string is used to match the prefix of outbound proxy identifiers. Among the following outbound proxy identifiers: `["a", "ab", "c", "ba"]`, `"subjectSelector": ["a"]` will match `["a", "ab"]`.
 
-> `pingConfig`: [PingConfigObject](#PingConfigObject)
+> `pingConfig`: [PingConfigObject](#pingconfigobject)
 
 ### PingConfigObject
 
