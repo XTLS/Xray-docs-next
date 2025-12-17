@@ -12,6 +12,10 @@ export default defineConfig({
 
   ignoreDeadLinks: true, // TODO: cleanup dead links
 
+  sitemap: {
+    hostname: "https://xtls.github.io",
+  },
+
   markdown: {
     config(md) {
       md.use(MermaidMarkdown);
