@@ -327,7 +327,7 @@ export default defineConfig({
     ],
 
     editLink: {
-      pattern: "https://github.com/xtls/Xray-docs-nex/edit/main/docs/:path",
+      pattern: "https://github.com/XTLS/Xray-docs-next/edit/main/docs/:path",
       text: "帮助我们改善此页面！",
     },
 
