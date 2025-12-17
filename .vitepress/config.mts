@@ -55,11 +55,14 @@ export default defineConfig({
             buttonAriaLabel: "搜索",
           },
           modal: {
-            noResultsText: "无法找到相关结果",
+            displayDetails: "显示详细列表",
             resetButtonTitle: "清除查询条件",
+            backButtonTitle: "关闭搜索",
+            noResultsText: "无法找到相关结果",
             footer: {
               selectText: "选择",
               navigateText: "切换",
+              closeText: "关闭",
             },
           },
         },
@@ -366,6 +369,23 @@ export default defineConfig({
                   str
                     .split(/[\s.,;!?'"(){}[\]\-_+=&%$#@~`^<>|\\]+/)
                     .filter(Boolean),
+              },
+            },
+            translations: {
+              button: {
+                buttonText: "Search",
+                buttonAriaLabel: "Search",
+              },
+              modal: {
+                displayDetails: "Show detailed list",
+                resetButtonTitle: "Clear search query",
+                backButtonTitle: "Close search",
+                noResultsText: "No results found for",
+                footer: {
+                  selectText: "Select",
+                  navigateText: "Navigate",
+                  closeText: "Close",
+                },
               },
             },
           },
@@ -744,11 +764,14 @@ export default defineConfig({
                 buttonAriaLabel: "Поиск",
               },
               modal: {
-                noResultsText: "Результаты не найдены",
+                displayDetails: "Показать подробный список",
                 resetButtonTitle: "Очистить запрос",
+                backButtonTitle: "Закрыть поиск",
+                noResultsText: "Результаты не найдены",
                 footer: {
                   selectText: "Выбрать",
                   navigateText: "Переключить",
+                  closeText: "Закрыть",
                 },
               },
             },
