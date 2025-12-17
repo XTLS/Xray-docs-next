@@ -6,8 +6,8 @@
     "vitepress-plugin-mermaid": "^2.0.17"
   },
   "scripts": {
-    "docs:dev": "node scripts/gen-contributors.mjs && vitepress dev",
-    "docs:build": "node scripts/gen-contributors.mjs && vitepress build",
-    "docs:preview": "node scripts/gen-contributors.mjs && vitepress preview"
+    "docs:dev": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress dev",
+    "docs:build": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress build",
+    "docs:preview": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress preview"
   }
 }

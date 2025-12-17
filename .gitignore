@@ -4,4 +4,4 @@ node_modules/
 # VitePress
 .vitepress/dist/
 .vitepress/cache/
-.vitepress/.generated/contributors.json
+.vitepress/.generated/
