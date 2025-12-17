@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import { MermaidMarkdown, MermaidPlugin } from "vitepress-plugin-mermaid";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -8,6 +9,22 @@ export default defineConfig({
   description: "Xray-core",
   head: [["link", { rel: "icon", href: "/logo.png" }]],
   lastUpdated: true,
+
+  markdown: {
+    config(md) {
+      md.use(MermaidMarkdown);
+    },
+  },
+  vite: {
+    plugins: [MermaidPlugin()],
+    optimizeDeps: {
+      include: ["mermaid"],
+    },
+    ssr: {
+      noExternal: ["mermaid"],
+    },
+  },
+
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
