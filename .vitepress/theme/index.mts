@@ -9,6 +9,7 @@ import { onMounted, watch, nextTick } from "vue";
 import { useRoute } from "vitepress";
 
 import { h } from "vue";
+import TranslationNotice from "./components/TranslationNotice.vue";
 import PageContributors from "./components/PageContributors.vue";
 
 export default {
@@ -31,6 +32,7 @@ export default {
 
   Layout() {
     return h(DefaultTheme.Layout, null, {
+      "doc-before": () => h(TranslationNotice),
       "doc-after": () => h(PageContributors),
     });
   },
