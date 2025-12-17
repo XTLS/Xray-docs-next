@@ -329,6 +329,11 @@ export default defineConfig({
       },
     },
 
+    docFooter: {
+      prev: "上一页",
+      next: "下一页",
+    },
+
     footer: {
       message: "根据 CC-BY-SA 4.0 许可协议授权",
       copyright: "版权所有 © 2020-至今 Project X 社区",
@@ -697,6 +702,11 @@ export default defineConfig({
             dateStyle: "short",
             timeStyle: "short",
           },
+        },
+
+        docFooter: {
+          prev: "Previous page",
+          next: "Next page",
         },
 
         footer: {
@@ -1076,6 +1086,11 @@ export default defineConfig({
             dateStyle: "short",
             timeStyle: "short",
           },
+        },
+
+        docFooter: {
+          prev: "Предыдущая страница",
+          next: "Следующая страница",
         },
 
         footer: {
