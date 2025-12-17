@@ -19,6 +19,11 @@ export default defineConfig({
   markdown: {
     lineNumbers: true,
 
+    theme: {
+      dark: "dark-plus",
+      light: "light-plus",
+    },
+
     config(md) {
       md.use(MermaidMarkdown);
     },
