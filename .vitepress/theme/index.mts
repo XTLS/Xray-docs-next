@@ -8,6 +8,9 @@ import mediumZoom from "medium-zoom";
 import { onMounted, watch, nextTick } from "vue";
 import { useRoute } from "vitepress";
 
+import { h } from "vue";
+import PageContributors from "./components/PageContributors.vue";
+
 export default {
   extends: DefaultTheme,
 
@@ -24,5 +27,11 @@ export default {
       () => route.path,
       () => nextTick(() => initZoom())
     );
+  },
+
+  Layout() {
+    return h(DefaultTheme.Layout, null, {
+      "doc-after": () => h(PageContributors),
+    });
   },
 };
