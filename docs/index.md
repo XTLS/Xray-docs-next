@@ -4,37 +4,37 @@ layout: home
 
 hero:
   name: Project X
-  # text: Xray-core
+  text: Xray-core
   tagline: 不畏浮云遮望眼 · 金睛如炬耀苍穹
   image:
     src: /LogoX2.png
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand
-      text: 由此开始 →
+      text: 由此开始
       link: /document/
     - theme: alt
-      text: 配置指南 →
+      text: 配置指南
       link: /config/
 
 features:
   - title: 极速协议
-    # icon: 🚀
+    icon: 🚀
     details: 原创 VLESS 与 XTLS 协议，摆脱冗余加密，释放CPU算力
   - title: 自由组合
-    # icon: 🧩
+    icon: 🧩
     details: 完善的回落机制，有效防止主动探测，多服务共享端口
   - title: 超低占用
-    # icon: 🌱
+    icon: 🌱
     details: OpenWRT RaspberryPi 等各种精简设备皆可使用
   - title: 强大路由
-    # icon: ⚙️
+    icon: ⚙️
     details: 高可定制化的路由系统，满足各类使用需求，充分发挥网络性能
   - title: 完整兼容
-    # icon: 🤝
+    icon: 🤝
     details: 完整兼容 v2ray-core 配置文件与 API 调用
   - title: 亲和力
-    # icon: 💖
+    icon: 💖
     details: 活跃的社区讨论及贡献，MPL 2.0 开源许可协议
 ---
 

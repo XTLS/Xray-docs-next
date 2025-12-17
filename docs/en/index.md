@@ -1,40 +1,39 @@
 ---
-# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
   name: Project X
-  # text: Xray-core
+  text: Xray-core
   tagline: Fear not the clouds that obscure the view, golden eyes like a torch brighten the sky
   image:
     src: /LogoX2.png
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand
-      text: Start here →
+      text: Start here
       link: /en/document/
     - theme: alt
-      text: Configuration guide →
+      text: Configuration guide
       link: /en/config/
 
 features:
   - title: High-speed protocol
-    # icon: 🚀
+    icon: 🚀
     details: Original VLESS and XTLS protocols, free from redundant encryption, release CPU power
   - title: Free combination
-    # icon: 🧩
+    icon: 🧩
     details: Perfect fallback mechanism, effectively prevent active detection, multi-service sharing ports
   - title: Ultra-low occupancy
-    # icon: 🌱
+    icon: 🌱
     details: OpenWRT RaspberryPi and other simplified devices can be used
   - title: Powerful routing
-    # icon: ⚙️
+    icon: ⚙️
     details: Highly customizable routing system to meet various usage requirements and fully exploit network performance
   - title: Full compatibility
-    # icon: 🤝
+    icon: 🤝
     details: Fully compatible with v2ray-core configuration files and API calls
   - title: Affinity
-    # icon: 💖
+    icon: 💖
     details: Active community discussions and contributions, MPL 2.0 open source license
 ---
 
