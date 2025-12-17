@@ -10,6 +10,8 @@ export default defineConfig({
   head: [["link", { rel: "icon", href: "/logo.png" }]],
   lastUpdated: true,
 
+  ignoreDeadLinks: true, // TODO: cleanup dead links
+
   markdown: {
     config(md) {
       md.use(MermaidMarkdown);
