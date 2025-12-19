@@ -1,4 +1,5 @@
 import { defineConfig } from "vitepress";
+import llmstxt from "vitepress-plugin-llms";
 import { MermaidMarkdown, MermaidPlugin } from "vitepress-plugin-mermaid";
 
 // https://vitepress.dev/reference/site-config
@@ -29,7 +30,7 @@ export default defineConfig({
     },
   },
   vite: {
-    plugins: [MermaidPlugin()],
+    plugins: [llmstxt({ ignoreFiles: ["en/**", "ru/**"] }), MermaidPlugin()],
     optimizeDeps: {
       include: ["mermaid"],
     },
