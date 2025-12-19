@@ -9,6 +9,7 @@ export default defineConfig({
   title: "Project X",
   description: "Xray-core",
   head: [["link", { rel: "icon", href: "/logo.png" }]],
+
   lastUpdated: true,
 
   ignoreDeadLinks: true, // TODO: cleanup dead links
@@ -111,7 +112,8 @@ export default defineConfig({
       "/config/": [
         {
           text: "特性详解",
-          collapsed: false,
+          link: "/config/features/",
+          collapsed: true,
           items: [
             { text: "XTLS 深度剖析", link: "/config/features/xtls.md" },
             { text: "Fallback 回落", link: "/config/features/fallback.md" },
@@ -125,9 +127,9 @@ export default defineConfig({
         },
         {
           text: "基础配置",
+          link: "/config/",
           collapsed: true,
           items: [
-            { text: "配置文件", link: "/config/" },
             { text: "日志配置", link: "/config/log.md" },
             { text: "API 接口", link: "/config/api.md" },
             { text: "内置 DNS 服务器", link: "/config/dns.md" },
@@ -145,6 +147,7 @@ export default defineConfig({
         },
         {
           text: "入站协议",
+          link: "/config/inbounds/",
           collapsed: true,
           items: [
             {
@@ -165,6 +168,7 @@ export default defineConfig({
         },
         {
           text: "出站协议",
+          link: "/config/outbounds/",
           collapsed: true,
           items: [
             { text: "Blackhole", link: "/config/outbounds/blackhole.md" },
@@ -188,6 +192,7 @@ export default defineConfig({
         },
         {
           text: "底层传输",
+          link: "/config/transports/",
           collapsed: true,
           items: [
             { text: "RAW", link: "/config/transports/raw.md" },
@@ -259,8 +264,8 @@ export default defineConfig({
         },
         {
           text: "入门技巧",
-          collapsed: true,
           link: "/document/level-1/",
+          collapsed: true,
           items: [
             {
               text: "回落 (fallbacks) 功能简析",
@@ -287,8 +292,8 @@ export default defineConfig({
         },
         {
           text: "进阶技巧",
-          collapsed: true,
           link: "/document/level-2/",
+          collapsed: true,
           items: [
             {
               text: "透明代理入门",
@@ -316,8 +321,8 @@ export default defineConfig({
       "/development/": [
         {
           text: "开发指南",
-          collapsed: true,
           link: "/development/",
+          collapsed: true,
           items: [
             { text: "编译", link: "/development/intro/compile.md" },
             { text: "设计目标", link: "/development/intro/design.md" },
@@ -326,7 +331,7 @@ export default defineConfig({
         },
         {
           text: "协议详解",
-          collapsed: true,
+          collapsed: false,
           items: [
             { text: "VLESS 协议", link: "/development/protocols/vless.md" },
             { text: "VMess 协议", link: "/development/protocols/vmess.md" },
@@ -450,7 +455,8 @@ export default defineConfig({
           "/en/config/": [
             {
               text: "Feature Details",
-              collapsed: false,
+              link: "/en/config/features/",
+              collapsed: true,
               items: [
                 {
                   text: "In-depth Analysis of XTLS",
@@ -476,9 +482,9 @@ export default defineConfig({
             },
             {
               text: "Basic Configuration",
+              link: "/en/config/",
               collapsed: true,
               items: [
-                { text: "Configuration File", link: "/en/config/" },
                 { text: "Log Configuration", link: "/en/config/log.md" },
                 { text: "API Interface", link: "/en/config/api.md" },
                 { text: "Built-in DNS Server", link: "/en/config/dns.md" },
@@ -505,6 +511,7 @@ export default defineConfig({
             },
             {
               text: "Inbound Protocols",
+              link: "/en/config/inbounds/",
               collapsed: true,
               items: [
                 {
@@ -528,6 +535,7 @@ export default defineConfig({
             },
             {
               text: "Outbound Protocols",
+              link: "/en/config/outbounds/",
               collapsed: true,
               items: [
                 {
@@ -560,6 +568,7 @@ export default defineConfig({
             },
             {
               text: "Underlying Transports",
+              link: "/en/config/transports/",
               collapsed: true,
               items: [
                 { text: "RAW", link: "/en/config/transports/raw.md" },
@@ -643,8 +652,8 @@ export default defineConfig({
             },
             {
               text: "Beginner Tips",
-              collapsed: true,
               link: "/en/document/level-1/",
+              collapsed: true,
               items: [
                 {
                   text: "Brief Analysis of Fallbacks",
@@ -674,8 +683,8 @@ export default defineConfig({
             },
             {
               text: "Advanced Tips",
-              collapsed: true,
               link: "/en/document/level-2/",
+              collapsed: true,
               items: [
                 {
                   text: "Introduction to Transparent Proxy",
@@ -715,8 +724,8 @@ export default defineConfig({
           "/en/development/": [
             {
               text: "Development Guide",
-              collapsed: true,
               link: "/en/development/",
+              collapsed: true,
               items: [
                 {
                   text: "Compilation",
@@ -734,7 +743,7 @@ export default defineConfig({
             },
             {
               text: "Protocol Details",
-              collapsed: true,
+              collapsed: false,
               items: [
                 {
                   text: "VLESS Protocol",
@@ -857,7 +866,8 @@ export default defineConfig({
           "/ru/config/": [
             {
               text: "Подробности функций",
-              collapsed: false,
+              link: "/config/features/",
+              collapsed: true,
               items: [
                 {
                   text: "Глубокий анализ XTLS",
@@ -883,9 +893,9 @@ export default defineConfig({
             },
             {
               text: "Базовая конфигурация",
+              link: "/ru/config/",
               collapsed: true,
               items: [
-                { text: "Файл конфигурации", link: "/ru/config/" },
                 { text: "Настройка логов", link: "/ru/config/log.md" },
                 { text: "API интерфейс", link: "/ru/config/api.md" },
                 { text: "Встроенный DNS-сервер", link: "/ru/config/dns.md" },
@@ -912,6 +922,7 @@ export default defineConfig({
             },
             {
               text: "Входящие протоколы",
+              link: "/ru/config/inbounds/",
               collapsed: true,
               items: [
                 {
@@ -935,6 +946,7 @@ export default defineConfig({
             },
             {
               text: "Исходящие протоколы",
+              link: "/ru/config/outbounds/",
               collapsed: true,
               items: [
                 {
@@ -967,6 +979,7 @@ export default defineConfig({
             },
             {
               text: "Нижние транспорты",
+              link: "/ru/config/transports/",
               collapsed: true,
               items: [
                 { text: "RAW", link: "/ru/config/transports/raw.md" },
@@ -1050,8 +1063,8 @@ export default defineConfig({
             },
             {
               text: "Советы для начинающих",
-              collapsed: true,
               link: "/ru/document/level-1/",
+              collapsed: true,
               items: [
                 {
                   text: "Краткий анализ функции Fallbacks",
@@ -1081,8 +1094,8 @@ export default defineConfig({
             },
             {
               text: "Продвинутые советы",
-              collapsed: true,
               link: "/ru/document/level-2/",
+              collapsed: true,
               items: [
                 {
                   text: "Введение в прозрачный прокси",
@@ -1122,8 +1135,8 @@ export default defineConfig({
           "/ru/development/": [
             {
               text: "Руководство разработчика",
-              collapsed: true,
               link: "/ru/development/",
+              collapsed: true,
               items: [
                 {
                   text: "Компиляция",
@@ -1141,7 +1154,7 @@ export default defineConfig({
             },
             {
               text: "Детали протоколов",
-              collapsed: true,
+              collapsed: false,
               items: [
                 {
                   text: "Протокол VLESS",
