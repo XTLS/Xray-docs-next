@@ -44,8 +44,25 @@ export default defineConfig({
     nav: [
       { text: "首页", link: "/" },
       { text: "大史记", link: "/about/news.md" },
-      { text: "配置指南", link: "/config/" },
-      { text: "使用指南", link: "/document/" },
+      {
+        text: "配置指南",
+        items: [
+          { text: "特性详解", link: "/config/features/" },
+          { text: "基础配置", link: "/config/" },
+          { text: "入站协议", link: "/config/inbounds/" },
+          { text: "出站协议", link: "/config/outbounds/" },
+          { text: "底层传输", link: "/config/transports/" },
+        ],
+      },
+      {
+        text: "使用指南",
+        items: [
+          { text: "快速入门", link: "/document/" },
+          { text: "小小白白话文", link: "/document/level-0/" },
+          { text: "入门技巧", link: "/document/level-1/" },
+          { text: "进阶技巧", link: "/document/level-2/" },
+        ],
+      },
       { text: "开发指南", link: "/development/" },
     ],
 
@@ -364,8 +381,28 @@ export default defineConfig({
         nav: [
           { text: "Homepage", link: "/en" },
           { text: "The Great Chronicles", link: "/en/about/news.md" },
-          { text: "Config Reference", link: "/en/config/" },
-          { text: "Quick Start", link: "/en/document/" },
+          {
+            text: "Configuration Guide",
+            items: [
+              { text: "Feature Details", link: "/en/config/features/" },
+              { text: "Basic Configuration", link: "/en/config/" },
+              { text: "Inbound Protocols", link: "/en/config/inbounds/" },
+              { text: "Outbound Protocols", link: "/en/config/outbounds/" },
+              { text: "Underlying Transports", link: "/en/config/transports/" },
+            ],
+          },
+          {
+            text: "Usage Guide",
+            items: [
+              { text: "Quick Start", link: "/en/document/" },
+              {
+                text: "Beginner's Plain Language Guide",
+                link: "/en/document/level-0/",
+              },
+              { text: "Beginner Tips", link: "/en/document/level-1/" },
+              { text: "Advanced Tips", link: "/en/document/level-2/" },
+            ],
+          },
           { text: "Developer Guide", link: "/en/development/" },
         ],
 
@@ -751,8 +788,28 @@ export default defineConfig({
         nav: [
           { text: "Главная", link: "/ru" },
           { text: "История сайта", link: "/ru/about/news.md" },
-          { text: "Справочник по конфигурации", link: "/ru/config/" },
-          { text: "Быстрый старт", link: "/ru/document/" },
+          {
+            text: "Руководство по конфигурации",
+            items: [
+              { text: "Подробности функций", link: "/ru/config/features/" },
+              { text: "Базовая конфигурация", link: "/ru/config/" },
+              { text: "Входящие протоколы", link: "/ru/config/inbounds/" },
+              { text: "Исходящие протоколы", link: "/ru/config/outbounds/" },
+              { text: "Нижние транспорты", link: "/ru/config/transports/" },
+            ],
+          },
+          {
+            text: "Руководство по использованию",
+            items: [
+              { text: "Быстрый старт", link: "/ru/document/" },
+              {
+                text: "Руководство для новичков простым языком",
+                link: "/ru/document/level-0/",
+              },
+              { text: "Советы для начинающих", link: "/ru/document/level-1/" },
+              { text: "Продвинутые советы", link: "/ru/document/level-2/" },
+            ],
+          },
           { text: "Руководство разработчика", link: "/ru/development/" },
         ],
 
