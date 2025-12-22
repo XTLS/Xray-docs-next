@@ -5,3 +5,10 @@ node_modules/
 .vitepress/dist/
 .vitepress/cache/
 .vitepress/.generated/
+
+# VuePress build output
+**/.vuepress/dist
+
+# VuePress cache
+**/.vuepress/.cache
+**/.vuepress/.temp
