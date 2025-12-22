@@ -29,7 +29,7 @@ metrics 对应的出站代理 tag, 通过设置任意门入站+路由将任意�
 
 访问 `http://127.0.0.1:11111/debug/pprof/` 或者使用 go tool pprof 进行调试。
 
-反馈内存占用过多/内存泄露问题需要提供 `/debug/pprof/heap` 的文件
+反馈内存占用过多/内存泄露问题需要提供 `/debug/pprof/heap` 和 `/debug/pprof/goroutine` 的文件
 
 ### expvars
 
