@@ -549,7 +549,7 @@ The documentation site is quietly undergoing some mysterious changes..., 🙊�
 ## 2021.01.15 <Badge>[1.2.2](https://github.com/XTLS/Xray-core/releases/tag/v1.2.2)</Badge>
 
 - Fallback routing has unlocked a new strange trick! You can now route based on SNI in the fallback!
-- The previously announced UUID modification is officially live. ([Scroll down, scroll down](#2021.01.12))
+- The previously announced UUID modification is officially live. ([Scroll down, scroll down](#_2021-01-12))
 - The logs now look a bit more pleasing to the eye than last time.
 - Remote DOH has learned to use routing just like other DNS modes.
 - And of course, various other little candies. (Just update and taste them)
@@ -594,7 +594,7 @@ The documentation site is quietly undergoing some mysterious changes..., 🙊�
 
 🎁 In the last few minutes of New Year's Day, v1.2.0 arrived, continuing the tradition of Friday updates, bringing the hard work of all contributors and the dark circles of @rprxx—living up to expectations!
 
-- The New Year's gift 🎁 following the Christmas gift [v1.1.5](#20201225), a great benefit for gamers, full FullCone support.
+- The New Year's gift 🎁 following the Christmas gift [v1.1.5](#_2020-12-25-1-1-5), a great benefit for gamers, full FullCone support.
 - (UDP will continue to be enhanced!)
 - If you’ve already opened your Christmas gift, this time there’s an even more beautifully wrapped package and little candies. (As always, no need to ask, just update and taste it)
 - (No, what's below is not an ad, but a milestone.)
