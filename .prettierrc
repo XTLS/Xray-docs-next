@@ -1,0 +1,10 @@
+{
+overrides: [
+    {
+        files: ['**/*.jsonc', '**/*.md'],
+        options: {
+            trailingComma: 'none',
+        }
+    }
+]
+}
