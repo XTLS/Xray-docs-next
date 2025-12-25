@@ -87,7 +87,7 @@ iptables -t mangle -A OUTPUT -j XRAY_SELF
 iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF
 ```
 
-3. 修改运行 Xray 的方式，使其运行在 uid 为 0，gid 为 23333 的用户上，参考[这里](#3-配置最大文件打开数运行xray客户端)。
+3. 修改运行 Xray 的方式，使其运行在 uid 为 0，gid 为 23333 的用户上，参考[这里](#_3-配置最大文件打开数-运行-xray-客户端)。
 
 ## 下面提供一个实现 tproxy 全局代理的完整配置过程
 

@@ -2,11 +2,11 @@
 
 Xray supports the following inbound protocols:
 
-- [Dokodemo-Door](../inbounds/dokodemo.md)
-- [HTTP](../inbounds/http.md)
-- [Shadowsocks](../inbounds/shadowsocks.md)
-- [Socks](../inbounds/socks.md)
-- [Trojan](../inbounds/trojan.md)
-- [VLESS (XTLS Vision Seed)](../inbounds/vless.md)
-- [VMess](../inbounds/vmess.md)
-- [WireGuard](../inbounds/wireguard.md)
+- [Dokodemo-Door](dokodemo.md)
+- [HTTP](http.md)
+- [Shadowsocks](shadowsocks.md)
+- [Socks](socks.md)
+- [Trojan](trojan.md)
+- [VLESS (XTLS Vision Seed)](vless.md)
+- [VMess](vmess.md)
+- [WireGuard](wireguard.md)

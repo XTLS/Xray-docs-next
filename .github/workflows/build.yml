@@ -1,48 +1,42 @@
-name: Deploy Vuepress
+name: Deploy VitePress
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
     branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: "18"
-      - name: Install yarn and pnpm
-        run: |
-          npm install yarn@1.22.19 -g
-          npm install -g pnpm
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v5
-        id: yarn-cache
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Install
-        run: pnpm install
-      - name: Build for Main Repository
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096 --openssl-legacy-provider"
-        run: |
-          yarn docs:build
-      - name: Deploy to main Repository
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build documentation site
+        run: pnpm run docs:build
+
+      - name: Deploy to GitHub Pages
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
         with:
           personal_token: ${{ secrets.ACTION_PERSONAL_TOKEN }}
-          publish_dir: docs/.vuepress/dist
+          publish_dir: .vitepress/dist
           external_repository: XTLS/XTLS.github.io
           publish_branch: gh-pages-next

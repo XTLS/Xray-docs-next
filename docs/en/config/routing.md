@@ -89,7 +89,7 @@ An array where each item is a domain match. There are several forms:
 - Substring: Begins with `"keyword:"`, the remainder is a string. This rule applies when this string matches any part of the target domain. For example, "keyword:sina.com" can match "sina.com", "sina.com.cn", and "www.sina.com", but not "sina.cn".
 - Exact match: Starts with `"full:"` followed by a domain. When this domain is an exact match for the target domain, the rule takes effect. For example, "full:xray.com" matches "xray.com" but not "www.xray.com".
 - Dotless domain name: Begins with `"dotless:"`, followed by a string that cannot contain periods (.). This rule applies when the domain name does not contain periods (.) and this string matches any part of the target domain name. For example, "dotless:pc-" can match "pc-alice" and "mypc-alice", suitable for internal NetBIOS domains, etc. Case sensitive.
-- Predefined domain list: Starts with `"geosite:"` followed by a name such as `geosite:google` or `geosite:cn`. The names and domain lists are listed in [Predefined Domain List](#predefined-domain-list).
+- Predefined domain list: Starts with `"geosite:"` followed by a name such as `geosite:google` or `geosite:cn`. The names and domain lists are listed in [Predefined Domain List](#predefined-domain-lists).
 - Load domains from a file: Formatted as `"ext:file:tag"`, where the file is stored in the [resource directory](./features/env.md#resource-file-path) and has the same format as `geosite.dat`. The tag must exist in the file.
 
 ::: tip
