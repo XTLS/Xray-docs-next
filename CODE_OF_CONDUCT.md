@@ -25,7 +25,8 @@ Project X 的文档托管在 [GitHub](https://github.com/XTLS/Xray-docs-next) �
 
 4. 在新分支上做修改。
 
-   注：推荐 [中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)
+   注：推荐使用自动格式 [prettier](https://prettier.io/docs/install)
+   以及 [中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)
 
 5. 修改完成后，VSCode 插件会自动格式化您的更改，本仓库已经预先配置好了所有 VSCode 所需插件您只要根据 VSCode 提示一键安装即可。
 
