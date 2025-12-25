@@ -52,7 +52,9 @@ onUnmounted(() => {
   line-height: 1;
 
   opacity: 0.8;
-  transition: opacity 0.2s, transform 0.2s;
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
 }
 
 .vp-back-to-top:hover {
