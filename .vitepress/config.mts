@@ -798,13 +798,13 @@ export default defineConfig({
           { text: "Главная", link: "/ru" },
           { text: "История сайта", link: "/ru/about/news.md" },
           {
-            text: "Руководство по конфигурации",
+            text: "Описание функций",
             items: [
-              { text: "Подробности функций", link: "/ru/config/features/" },
+              { text: "Обзор", link: "/ru/config/features/" },
               { text: "Базовая конфигурация", link: "/ru/config/" },
-              { text: "Входящие протоколы", link: "/ru/config/inbounds/" },
-              { text: "Исходящие протоколы", link: "/ru/config/outbounds/" },
-              { text: "Нижние транспорты", link: "/ru/config/transports/" },
+              { text: "Входящие подключения", link: "/ru/config/inbounds/" },
+              { text: "Исходящие подключения", link: "/ru/config/outbounds/" },
+              { text: "Транспортный уровень", link: "/ru/config/transports/" },
             ],
           },
           {
@@ -812,11 +812,11 @@ export default defineConfig({
             items: [
               { text: "Быстрый старт", link: "/ru/document/" },
               {
-                text: "Руководство для новичков простым языком",
+                text: "Простыми словами",
                 link: "/ru/document/level-0/",
               },
-              { text: "Советы для начинающих", link: "/ru/document/level-1/" },
-              { text: "Продвинутые советы", link: "/ru/document/level-2/" },
+              { text: "Базовые навыки", link: "/ru/document/level-1/" },
+              { text: "Продвинутые навыки", link: "/ru/document/level-2/" },
             ],
           },
           { text: "Руководство разработчика", link: "/ru/development/" },
@@ -865,7 +865,7 @@ export default defineConfig({
         sidebar: {
           "/ru/config/": [
             {
-              text: "Подробности функций",
+              text: "Обзор",
               link: "/config/features/",
               collapsed: true,
               items: [
@@ -874,7 +874,7 @@ export default defineConfig({
                   link: "/ru/config/features/xtls.md",
                 },
                 {
-                  text: "Fallback (Возврат)",
+                  text: "Fallback",
                   link: "/ru/config/features/fallback.md",
                 },
                 {
@@ -896,32 +896,32 @@ export default defineConfig({
               link: "/ru/config/",
               collapsed: true,
               items: [
-                { text: "Настройка логов", link: "/ru/config/log.md" },
-                { text: "API интерфейс", link: "/ru/config/api.md" },
+                { text: "Настройка журнала", link: "/ru/config/log.md" },
+                { text: "API", link: "/ru/config/api.md" },
                 { text: "Встроенный DNS-сервер", link: "/ru/config/dns.md" },
                 { text: "FakeDNS", link: "/ru/config/fakedns.md" },
-                { text: "Входящий прокси", link: "/ru/config/inbound.md" },
+                { text: "Входящие подключения", link: "/ru/config/inbound.md" },
                 {
-                  text: "Исходящий прокси (Mux, XUDP)",
+                  text: "Исходящие подключения",
                   link: "/ru/config/outbound.md",
                 },
-                { text: "Локальная политика", link: "/ru/config/policy.md" },
+                { text: "Локальные политики", link: "/ru/config/policy.md" },
                 { text: "Обратный прокси", link: "/ru/config/reverse.md" },
                 { text: "Маршрутизация", link: "/ru/config/routing.md" },
                 { text: "Статистика", link: "/ru/config/stats.md" },
                 {
-                  text: "Транспорт (uTLS, REALITY)",
+                  text: "Способы передачи",
                   link: "/ru/config/transport.md",
                 },
                 { text: "Метрики", link: "/ru/config/metrics.md" },
                 {
-                  text: "Наблюдение за соединениями",
+                  text: "Мониторинг подключений",
                   link: "/ru/config/observatory.md",
                 },
               ],
             },
             {
-              text: "Входящие протоколы",
+              text: "Входящие подключения",
               link: "/ru/config/inbounds/",
               collapsed: true,
               items: [
@@ -945,7 +945,7 @@ export default defineConfig({
               ],
             },
             {
-              text: "Исходящие протоколы",
+              text: "Исходящие подключения",
               link: "/ru/config/outbounds/",
               collapsed: true,
               items: [
@@ -978,7 +978,7 @@ export default defineConfig({
               ],
             },
             {
-              text: "Нижние транспорты",
+              text: "Способы передачи",
               link: "/ru/config/transports/",
               collapsed: true,
               items: [
@@ -1007,7 +1007,7 @@ export default defineConfig({
               collapsed: true,
               items: [
                 {
-                  text: "Скачать и установить",
+                  text: "Загрузка и установка",
                   link: "/ru/document/install.md",
                 },
                 { text: "Настройка и запуск", link: "/ru/document/config.md" },
@@ -1019,7 +1019,7 @@ export default defineConfig({
               ],
             },
             {
-              text: "Руководство для новичков простым языком",
+              text: "Простыми словами",
               link: "/ru/document/level-0/",
               collapsed: true,
               items: [
@@ -1143,7 +1143,7 @@ export default defineConfig({
                   link: "/ru/development/intro/compile.md",
                 },
                 {
-                  text: "Цели дизайна",
+                  text: "Дизайн",
                   link: "/ru/development/intro/design.md",
                 },
                 {
