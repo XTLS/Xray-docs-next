@@ -2,7 +2,7 @@
 
 Xray supports the following inbound protocols:
 
-- [Dokodemo-Door](dokodemo.md)
+- [Tunnel](tunnel.md)
 - [HTTP](http.md)
 - [Shadowsocks](shadowsocks.md)
 - [Socks](socks.md)
