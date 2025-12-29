@@ -22,7 +22,7 @@
       "streamSettings": {},
       "proxySettings": {
         "tag": "another-outbound-tag",
-         "transportLayer": false
+        "transportLayer": false
       },
       "mux": {}
     }
@@ -79,8 +79,8 @@ Xray будет использовать случайный IP-адрес из �
 
 ```json
 {
-   "tag": "another-outbound-tag",
-   "transportLayer": false
+  "tag": "another-outbound-tag",
+  "transportLayer": false
 }
 ```
 
