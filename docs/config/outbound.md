@@ -77,7 +77,7 @@ Mux 相关的具体配置。
 
 最终目标地址的域名解析策略。例如，目标地址是 `google.com`，这个策略会决定由谁解析域名 (代理服务器还是[内置 DNS 服务器](./dns.md))，并如何对待解析出来的 IPv4 和 IPv6。
 
-默认值为 “AsIs”。所有参数含义均约等于 [sockopt](./transport.md#sockoptobject) 中的 domainStrategy。
+默认值为 `AsIs`。所有参数含义均约等于 [sockopt](./transport.md#sockoptobject) 中的 domainStrategy。
 
 ::: danger
 除非您需要使用自己可信的 DNS 服务器，否则不建议更改此设置。
