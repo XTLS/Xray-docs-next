@@ -10,11 +10,11 @@ hero:
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand
-      text: Start here
-      link: /en/document/
-    - theme: alt
       text: Configuration guide
       link: /en/config/
+    - theme: alt
+      text: Sponsor & Donation & NFTs
+      link: /en/about/sponsor.html
 
 features:
   - title: High-speed protocol

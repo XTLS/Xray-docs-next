@@ -11,11 +11,11 @@ hero:
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand
-      text: 由此开始
-      link: /document/
-    - theme: alt
       text: 配置指南
       link: /config/
+    - theme: alt
+      text: 赞助 & 捐款 & NFTs
+      link: /about/sponsor.html
 
 features:
   - title: 极速协议

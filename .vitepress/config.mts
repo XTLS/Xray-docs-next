@@ -44,7 +44,7 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: "首页", link: "/" },
-      { text: "大史记", link: "/about/news.md" },
+      { text: "赞助 & 捐款 & NFTs", link: "/about/sponsor.md" },
       {
         text: "配置指南",
         items: [
@@ -385,7 +385,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: "Homepage", link: "/en" },
-          { text: "The Great Chronicles", link: "/en/about/news.md" },
+          { text: "Sponsor & Donation & NFTs", link: "/en/about/sponsor.md" },
           {
             text: "Configuration Guide",
             items: [
@@ -796,7 +796,7 @@ export default defineConfig({
       themeConfig: {
         nav: [
           { text: "Главная", link: "/ru" },
-          { text: "История сайта", link: "/ru/about/news.md" },
+          { text: "Sponsor & Donation & NFTs", link: "/ru/about/sponsor.md" },
           {
             text: "Описание функций",
             items: [
