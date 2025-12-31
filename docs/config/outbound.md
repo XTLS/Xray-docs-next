@@ -23,7 +23,8 @@
         "tag": "another-outbound-tag",
         "transportLayer": false
       },
-      "mux": {}
+      "mux": {},
+      "targetStrategy": "AsIs"
     }
   ]
 }
@@ -71,6 +72,20 @@
 > `mux`: [MuxObject](#muxobject)
 
 Mux 相关的具体配置。
+
+> `targetStrategy`: "AsIs" | "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4" | "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
+
+最终目标地址的域名解析策略。例如，目标地址是 `google.com`，这个策略会决定由谁解析 `google.com` (代理服务器还是[内置 DNS 服务器](./dns.md))，并如何对待解析出来的 IPv4 和 IPv6 地址。
+
+默认值为 `AsIs`。所有参数含义均约等于 [sockopt](./transport.md#sockoptobject) 中的 `domainStrategy`。
+
+::: danger
+除非您需要使用自己可信的 DNS 服务器，否则不建议更改此设置。
+:::
+
+::: tip
+如果您出站代理服务器的地址是域名，并需要为这个域名本身选择解析策略，则应配置 [sockopt](./transport.md#sockoptobject) 中的 `domainStrategy`。
+:::
 
 ### ProxySettingsObject
 
