@@ -637,7 +637,7 @@ OCSP 装订更新间隔，单位为秒，默认值为 0. 任意非 0 值将启�
   "tcpcongestion": "bbr",
   "interface": "wg0",
   "V6Only": false,
-  "tcpWindowClamp": 600
+  "tcpWindowClamp": 600,
   "tcpMptcp": false,
   "addressPortStrategy": "",
   "customSockopt": []
