@@ -34,7 +34,7 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 
 控制非 IP 查询（非 A 和 AAAA），`"drop"` 丢弃; `"skip"` 不由内置 DNS 服务器处理，将转发给目标; `"reject"` 返回一个 DNS reject 响应，直接显式拒绝请求，相比 `"drop"` 可以避免应用程序消耗过长时间等待 DNS 响应到超时。
 
-默认值为 `"drop"`。
+默认值为 `"reject"`。
 
 > `blockTypes`: array
 
