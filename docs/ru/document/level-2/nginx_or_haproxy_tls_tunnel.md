@@ -237,38 +237,31 @@ WantedBy=multi-user.target
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       {
-        "type": "field",
         "port": 123,
         "network": "udp",
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "ip": ["1.1.1.1"],
         "outboundTag": "proxy"
       },
       {
-        "type": "field",
         "domain": ["geosite:cn"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "protocol": ["bittorrent"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "ip": ["geoip:private"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "inboundTag": ["tproxy-in"],
         "outboundTag": "nginxtls"
       }

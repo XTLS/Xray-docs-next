@@ -70,8 +70,7 @@ API 服务监听的 IP 和端口。这是一个可选配置项。
       "inboundTag": [
         "api"
       ],
-      "outboundTag": "api",
-      "type": "field"
+      "outboundTag": "api"
     }
   ]
 }

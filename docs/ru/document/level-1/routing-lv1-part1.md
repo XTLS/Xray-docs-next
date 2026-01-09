@@ -125,7 +125,6 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "inboundTag": ["inbound-10808"],
         "outboundTag": "proxy-out-vless"
       }
@@ -140,18 +139,16 @@
 
 Обратите внимание на конфигурацию маршрутизации. Мы видим несколько новых терминов:
 
-1. `"domainStrategy": "AsIs"`
-2. `“rules”`
-3. `"type": "field"`
-4. `"inboundTag": ["inbound-10808"]`
-5. `"outboundTag": "proxy-out-vless"`
+1. "domainStrategy": "AsIs"
+2. “rules”
+3. "inboundTag": ["inbound-10808"]
+4. "outboundTag": "proxy-out-vless"
 
 Пока оставим `domainStrategy` в стороне и кратко объясним остальные:
 
 | Название параметра | Значение параметра                                                                                                                                                                    | Описание параметра                                                                                                                                                               |
 | :----------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `“rules”`          | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Внутри этого параметра находятся подробные настройки **правил маршрутизации**.                                                                                                   |
-| `"type"`           | `"field"`                                                                                                                                                                             | На данный момент этот параметр не имеет особого значения, но его нельзя опускать, поэтому просто укажите его.                                                                    |
 | `"inboundTag"`     | `["inbound-10808"]`                                                                                                                                                                   | **Критерий** фильтрации трафика - это **тег входящего трафика**, а **условие** сейчас только одно: **источник входящего трафика - `inbound-10808`**.                             |
 | `"outboundTag"`    | `"proxy-out-vless"`                                                                                                                                                                   | Если указанное выше условие фильтрации выполняется (т.е. входящий трафик имеет `[tag]="inbound-10808"`), `Xray` направит трафик на исходящий трафик с `[tag]="proxy-out-vless"`. |
 
@@ -242,17 +239,14 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       {
-        "type": "field",
         "domain": ["geosite:cn"],
         "outboundTag": "direct-out"
       },
       {
-        "type": "field",
         "domain": ["geosite:geolocation-!cn"],
         "outboundTag": "proxy-out-vless"
       }

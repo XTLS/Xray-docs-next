@@ -105,7 +105,6 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
   "routing": {
     "rules": [
       {
-        "type": "field",
         "inboundTag": ["dns-in"], // 劫持来自 DNS 查询入口的 DNS 流量，或劫持来自透明代理入站的 DNS 流量。
         "port": 53,
         "outboundTag": "dns-out"

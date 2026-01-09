@@ -151,31 +151,26 @@
        "rules": [
          // 3.1 广告域名屏蔽
          {
-           "type": "field",
            "domain": ["geosite:category-ads-all"],
            "outboundTag": "block"
          },
          // 3.2 国内域名直连
          {
-           "type": "field",
            "domain": ["geosite:cn"],
            "outboundTag": "direct"
          },
          // 3.3 国外域名代理
          {
-           "type": "field",
            "domain": ["geosite:geolocation-!cn"],
            "outboundTag": "proxy"
          },
          // 3.4 走国内"223.5.5.5"的DNS查询流量分流走direct出站
          {
-           "type": "field",
            "ip": ["223.5.5.5"],
            "outboundTag": "direct"
          },
          // 3.5 国内IP直连
          {
-           "type": "field",
            "ip": ["geoip:cn", "geoip:private"],
            "outboundTag": "direct"
          }

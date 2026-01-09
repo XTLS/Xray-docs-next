@@ -74,8 +74,7 @@ IP-адрес и порт, на котором прослушивает API-се
       "inboundTag": [
         "api"
       ],
-      "outboundTag": "api",
-      "type": "field"
+      "outboundTag": "api"
     }
   ]
 }

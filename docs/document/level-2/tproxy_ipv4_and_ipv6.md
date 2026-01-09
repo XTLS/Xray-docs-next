@@ -154,51 +154,42 @@ title: TProxy 透明代理 (ipv4 and ipv6)
     "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
-        "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       {
-        "type": "field",
         "inboundTag": ["all-in"],
         "port": 123,
         "network": "udp",
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "inboundTag": ["all-in"],
         "port": 53,
         "network": "udp",
         "outboundTag": "dns-out"
       },
       {
-        "type": "field",
         "ip": ["119.29.29.29", "223.5.5.5"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "protocol": ["bittorrent"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "ip": ["geoip:private", "geoip:cn"], //此处可加入 VPS IP 避免 ssh 时被代理
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "domain": ["geosite:cn"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "ip": ["1.1.1.1", "8.8.8.8"],
         "outboundTag": "proxy"
       },
       {
-        "type": "field",
         "domain": [
           "geosite:geolocation-!cn",
           "domain:googleapis.cn",
@@ -223,7 +214,6 @@ title: TProxy 透明代理 (ipv4 and ipv6)
     "rules": [
       {
         //阻止 cnip 提高安全性，或者可以将 cn 流量导入 warp 中，详见https://xtls.github.io/document/level-2/warp.html
-        "type": "field",
         "ip": ["geoip:cn"],
         "outboundTag": "block"
       }

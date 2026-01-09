@@ -221,7 +221,6 @@ sudo nano /usr/local/etc/xray/config.json
     "rules": [
       // 3.1 Prevent local server flow problems: such as intranet attacks or abuse, incorrect local loopbacks, etc.
       {
-        "type": "field",
         "ip": [
           "geoip:private" // Diversion condition: In the geoip file, the rule named "private" (local)
         ],
@@ -229,13 +228,11 @@ sudo nano /usr/local/etc/xray/config.json
       },
       {
         // 3.2 Prevent the server from connecting directly to China
-        "type": "field",
         "ip": ["geoip:cn"],
         "outboundTag": "block"
       },
       // 3.3 Block ads
       {
-        "type": "field",
         "domain": [
           "geosite:category-ads-all" // Diversion conditions: In the geosite file, the rule named "category-ads-all" (various advertising domain names)
         ],

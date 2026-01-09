@@ -182,11 +182,9 @@ lsmod | grep wireguard
         "inboundTag": [
           "api"
         ],
-        "outboundTag": "api",
-        "type": "field"
+        "outboundTag": "api"
       },
       {
-        "type": "field",
         "outboundTag": "wg0",
         "inboundTag": [
           "<inboundTag>"
@@ -197,8 +195,7 @@ lsmod | grep wireguard
         "outboundTag": "blocked",
         "protocol": [
           "bittorrent"
-        ],
-        "type": "field"
+        ]
       }
     ]
   },

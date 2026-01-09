@@ -57,19 +57,16 @@
     "rules": [
       // Прямое подключение для определенного поддомена
       {
-        "type": "field",
         "domain": ["full:direct.yourdomain.com"],
         "outboundTag": "direct-out"
       },
       // Проксирование для определенного поддомена
       {
-        "type": "field",
         "domain": ["full:proxy.yourdomain.com"],
         "outboundTag": "proxy-out-vless"
       },
       // Проксирование для всех поддоменов
       {
-        "type": "field",
         "domain": ["yourdomain.com"],
         "outboundTag": "proxy-out-vless"
       }
@@ -95,13 +92,11 @@
     "rules": [
       // Прямое подключение для локальных и внутренних IP-адресов
       {
-        "type": "field",
         "ip": ["geoip:private"],
         "outboundTag": "direct-out"
       },
       // Прямое подключение для китайских IP-адресов
       {
-        "type": "field",
         "ip": ["geoip:cn"],
         "outboundTag": "direct-out"
       }
@@ -124,13 +119,11 @@
     "rules": [
       // Прямое подключение для определенного IP-адреса
       {
-        "type": "field",
         "ip": ["223.5.5.5"],
         "outboundTag": "direct-out"
       },
       // Проксирование для определенного IP-адреса
       {
-        "type": "field",
         "ip": ["1.1.1.1"],
         "outboundTag": "proxy-out-vless"
       }
@@ -154,7 +147,6 @@
     "rules": [
       // Прямое подключение для торрент-трафика
       {
-        "type": "field",
         "protocol": ["bittorrent"],
         "outboundTag": "direct-out"
       }
@@ -203,33 +195,28 @@
       // [1-block Блокировка рекламы]
       // 1.1 Блокировка рекламных доменов
       {
-        "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       // [2-direct Прямое подключение к внутренним ресурсам]
       // 2.1 Прямое подключение для китайских доменов и определенного поддомена
       {
-        "type": "field",
         "domain": ["geosite:cn", "full:direct.yourdomain.com"],
         "outboundTag": "direct-out"
       },
       // 2.2 Прямое подключение для локальных, внутренних, китайских и определенных IP-адресов
       {
-        "type": "field",
         "ip": ["geoip:private", "geoip:cn", "223.5.5.5"],
         "outboundTag": "direct-out"
       },
       // 2.3 Прямое подключение для торрент-трафика
       {
-        "type": "field",
         "protocol": ["bittorrent"],
         "outboundTag": "direct-out"
       },
       // [3-proxy Проксирование для внешних ресурсов]
       // 3.1 Проксирование для иностранных доменов, определенного поддомена и всех поддоменов
       {
-        "type": "field",
         "domain": [
           "geosite:geolocation-!cn",
           "full:proxy.yourdomain.com",
@@ -239,7 +226,6 @@
       },
       // 3.2 Проксирование для определенного IP-адреса
       {
-        "type": "field",
         "ip": ["1.1.1.1"],
         "outboundTag": "proxy-out-vless"
       }
@@ -310,7 +296,6 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "ip": ["223.5.5.5"],
         "domain": ["full:direct.yourdomain.com"],
         "outboundTag": "direct-out"
@@ -340,12 +325,10 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "ip": ["223.5.5.5"],
         "outboundTag": "direct-out"
       },
       {
-        "type": "field",
         "domain": ["full:direct.yourdomain.com"],
         "outboundTag": "direct-out"
       }

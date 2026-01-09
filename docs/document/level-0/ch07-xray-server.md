@@ -228,7 +228,6 @@
         "rules": [
           // 3.1 防止服务器本地流转问题：如内网被攻击或滥用、错误的本地回环等
           {
-            "type": "field",
             "ip": [
               "geoip:private" // 分流条件：geoip 文件内，名为"private"的规则（本地）
             ],
@@ -236,13 +235,11 @@
           },
           {
             // 3.2 防止服务器直连国内
-            "type": "field",
             "ip": ["geoip:cn"],
             "outboundTag": "block"
           },
           // 3.3 屏蔽广告
           {
-            "type": "field",
             "domain": [
               "geosite:category-ads-all" // 分流条件：geosite 文件内，名为"category-ads-all"的规则（各种广告域名）
             ],

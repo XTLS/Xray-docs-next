@@ -168,7 +168,6 @@ outbound:
     {
       // bridge 发出的请求，且域名为配置的域名，那么说明这是尝试向 portal 建立反向隧道的请求，
       // 则路由到 interconn，即连接到 portal
-      "type": "field",
       "inboundTag": ["bridge"],
       "domain": ["full:reverse-proxy.xray.internal"],
       "outboundTag": "interconn"
@@ -176,7 +175,6 @@ outbound:
     {
       // 从 portal 过来的流量，也会从 bridge 出来，但是不带上面的domain
       // 则路由到 out，即转发给网页服务器
-      "type": "field",
       "inboundTag": ["bridge"],
       "outboundTag": "out"
     }
@@ -241,7 +239,6 @@ inbound:
     {
       // 如果入站是 external，说明是来自公网的请求，
       // 则路由到 portal, 最终会转发给 bridge
-      "type": "field",
       "inboundTag": ["external"],
       "outboundTag": "portal"
     },
@@ -249,7 +246,6 @@ inbound:
       // 如果来自 interconn 入站，说明是来自 bridge 的尝试建立反向隧道请求，
       // 则路由到 portal, 最终会转发给对应的公网客户端
       // 注意：这里进入的请求会带上了前文配置的domain，所以 portal 能够区分两种被路由到 portal 的请求
-      "type": "field",
       "inboundTag": ["interconn"],
       "outboundTag": "portal"
     }

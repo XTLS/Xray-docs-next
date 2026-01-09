@@ -26,7 +26,6 @@ And add routing rules regarding the metrics inbound in the routing configuration
     "routing": {
         "rules": [
             {
-                "type": "field",
                 "inboundTag": [
                     "metrics_in"
                 ],

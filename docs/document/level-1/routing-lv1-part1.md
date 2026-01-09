@@ -125,7 +125,6 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "inboundTag": ["inbound-10808"],
         "outboundTag": "proxy-out-vless"
       }
@@ -140,18 +139,16 @@
 
 注意观察路由配置，我们可以看到几个新名词：
 
-1. `"domainStrategy": "AsIs"`
-2. `“rules”`
-3. `"type": "field"`
-4. `"inboundTag": ["inbound-10808"]`
-5. `"outboundTag": "proxy-out-vless"`
+1. "domainStrategy": "AsIs"
+2. “rules”
+3. "inboundTag": ["inbound-10808"]
+4. "outboundTag": "proxy-out-vless"
 
 其中 `domainStrategy` 我们暂且按下不表，先简单说明后面几个：
 
 |    配置名称     |                                                                                        配置值                                                                                         | 配置说明                                                                                                         |
 | :-------------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------- |
 |    `“rules”`    | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | 它的内层就是【路由规则】的明细设置                                                                               |
-|    `"type"`     |                                                                                       `"field"`                                                                                       | 该项暂时没有特别定义，但是不能省略，所以记得写上就好                                                             |
 | `"inboundTag"`  |                                                                                  `["inbound-10808"]`                                                                                  | 筛选流量的 **【依据】** 是【入站 Tag】，具体 **【条件】** 现在只有一个：【入站来源是 `inbound-10808`】           |
 | `"outboundTag"` |                                                                                  `"proxy-out-vless"`                                                                                  | 当上面的筛选条件成立时（即入站`[tag]="inbound-10808"`时 ），`Xray` 会将流量导入 `[tag]="proxy-out-vless"` 的出站 |
 
@@ -242,17 +239,14 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       {
-        "type": "field",
         "domain": ["geosite:cn"],
         "outboundTag": "direct-out"
       },
       {
-        "type": "field",
         "domain": ["geosite:geolocation-!cn"],
         "outboundTag": "proxy-out-vless"
       }

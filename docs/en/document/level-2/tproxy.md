@@ -142,28 +142,23 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
     "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
-        "type": "field",
         "inboundTag": ["all-in"],
         "port": 53,
         "outboundTag": "dns-out"
       },
       {
-        "type": "field",
         "ip": ["8.8.8.8", "1.1.1.1"],
         "outboundTag": "proxy"
       },
       {
-        "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       {
-        "type": "field",
         "domain": ["geosite:geolocation-!cn"],
         "outboundTag": "proxy"
       },
       {
-        "type": "field",
         "ip": ["geoip:telegram"],
         "outboundTag": "proxy"
       }

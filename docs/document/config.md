@@ -84,7 +84,6 @@
     "domainStrategy": "IPOnDemand",
     "rules": [
       {
-        "type": "field",
         "ip": ["geoip:private", "geoip:cn"], // 绕过局域网和国内IP段
         "outboundTag": "direct"
       }

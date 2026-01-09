@@ -148,13 +148,11 @@ Routing Configuration:
 {
   "rules": [
     {
-      "type": "field",
       "inboundTag": ["bridge"],
       "domain": ["full:test.xray.com"],
       "outboundTag": "interconn"
     },
     {
-      "type": "field",
       "inboundTag": ["bridge"],
       "outboundTag": "out"
     }
@@ -215,12 +213,10 @@ Routing Configuration:
 {
   "rules": [
     {
-      "type": "field",
       "inboundTag": ["external"],
       "outboundTag": "portal"
     },
     {
-      "type": "field",
       "inboundTag": ["interconn"],
       "outboundTag": "portal"
     }

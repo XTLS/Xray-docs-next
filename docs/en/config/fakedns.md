@@ -105,7 +105,6 @@ Only by routing DNS queries to FakeDNS can it be effective.
   "routing": {
     "rules": [
       {
-        "type": "field",
         "inboundTag": ["dns-in"], // Intercept DNS traffic from DNS query inbound or from inbound traffic of transparent proxies.
         "port": 53,
         "outboundTag": "dns-out"

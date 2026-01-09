@@ -159,51 +159,42 @@ title: Прозрачное проксирование TProxy (ipv4 и ipv6)
     "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
-        "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       {
-        "type": "field",
         "inboundTag": ["all-in"],
         "port": 123,
         "network": "udp",
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "inboundTag": ["all-in"],
         "port": 53,
         "network": "udp",
         "outboundTag": "dns-out"
       },
       {
-        "type": "field",
         "ip": ["119.29.29.29", "223.5.5.5"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "protocol": ["bittorrent"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "ip": ["geoip:private", "geoip:cn"], // Здесь можно добавить IP-адрес VPS, чтобы избежать проксирования трафика SSH.
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "domain": ["geosite:cn"],
         "outboundTag": "direct"
       },
       {
-        "type": "field",
         "ip": ["1.1.1.1", "8.8.8.8"],
         "outboundTag": "proxy"
       },
       {
-        "type": "field",
         "domain": [
           "geosite:geolocation-!cn",
           "domain:googleapis.cn",
@@ -229,7 +220,6 @@ title: Прозрачное проксирование TProxy (ipv4 и ipv6)
       {
         // Блокировка китайских IP-адресов для повышения безопасности.
         // Также можно направить китайский трафик через Warp, см. https://xtls.github.io/document/level-2/warp.html
-        "type": "field",
         "ip": ["geoip:cn"],
         "outboundTag": "block"
       }

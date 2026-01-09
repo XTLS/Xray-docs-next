@@ -57,19 +57,16 @@
     "rules": [
       // 指定子域名直连
       {
-        "type": "field",
         "domain": ["full:direct.yourdomain.com"],
         "outboundTag": "direct-out"
       },
       // 指定子域名转发VPS
       {
-        "type": "field",
         "domain": ["full:proxy.yourdomain.com"],
         "outboundTag": "proxy-out-vless"
       },
       // 指定泛域名转发VPS
       {
-        "type": "field",
         "domain": ["yourdomain.com"],
         "outboundTag": "proxy-out-vless"
       }
@@ -95,13 +92,11 @@
     "rules": [
       // 本机内部地址、局域网地址直连
       {
-        "type": "field",
         "ip": ["geoip:private"],
         "outboundTag": "direct-out"
       },
       // 国内IP集直连
       {
-        "type": "field",
         "ip": ["geoip:cn"],
         "outboundTag": "direct-out"
       }
@@ -126,13 +121,11 @@
     "rules": [
       // 指定IP地址直连
       {
-        "type": "field",
         "ip": ["223.5.5.5"],
         "outboundTag": "direct-out"
       },
       // 指定IP地址转发VPS
       {
-        "type": "field",
         "ip": ["1.1.1.1"],
         "outboundTag": "proxy-out-vless"
       }
@@ -156,7 +149,6 @@
     "rules": [
       // 指定 BT 协议直连
       {
-        "type": "field",
         "protocol": ["bittorrent"],
         "outboundTag": "direct-out"
       }
@@ -205,33 +197,28 @@
       // [1-block 广告流量屏蔽]
       // 1.1  广告域名集屏蔽
       {
-        "type": "field",
         "domain": ["geosite:category-ads-all"],
         "outboundTag": "block"
       },
       // [2-direct 国内流量直连]
       // 2.1 国内域名集、指定子域名直连
       {
-        "type": "field",
         "domain": ["geosite:cn", "full:direct.yourdomain.com"],
         "outboundTag": "direct-out"
       },
       // 2.2 本机内部地址+局域网、国内IP、指定IP直连
       {
-        "type": "field",
         "ip": ["geoip:private", "geoip:cn", "223.5.5.5"],
         "outboundTag": "direct-out"
       },
       // 2.3 BT协议流量直连
       {
-        "type": "field",
         "protocol": ["bittorrent"],
         "outboundTag": "direct-out"
       },
       // [3-proxy 国外流量转发VPS]
       // 3.1 国外域名集、指定子域名、指定泛域名转发VPS
       {
-        "type": "field",
         "domain": [
           "geosite:geolocation-!cn",
           "full:proxy.yourdomain.com",
@@ -241,7 +228,6 @@
       },
       // 3.2 指定IP转发VPS
       {
-        "type": "field",
         "ip": ["1.1.1.1"],
         "outboundTag": "proxy-out-vless"
       }
@@ -312,7 +298,6 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "ip": ["223.5.5.5"],
         "domain": ["full:direct.yourdomain.com"],
         "outboundTag": "direct-out"
@@ -342,12 +327,10 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "type": "field",
         "ip": ["223.5.5.5"],
         "outboundTag": "direct-out"
       },
       {
-        "type": "field",
         "domain": ["full:direct.yourdomain.com"],
         "outboundTag": "direct-out"
       }

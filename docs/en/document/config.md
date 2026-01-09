@@ -77,7 +77,6 @@ On your PC (or phone), you need to run Xray with the following configuration:
     "domainStrategy": "IPOnDemand",
     "rules": [
       {
-        "type": "field",
         "ip": ["geoip:private"],
         "outboundTag": "direct"
       }

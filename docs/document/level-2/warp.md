@@ -151,14 +151,12 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 
 ```json
             {
-                "type": "field",
                 "domain": [
                     "geosite:cn"
                 ],
                 "outboundTag": "wireguard-1"
             },
             {
-                "type": "field",
                 "ip": [
                     "geoip:cn"
                 ],

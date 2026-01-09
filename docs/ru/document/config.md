@@ -84,7 +84,6 @@
     "domainStrategy": "IPOnDemand",
     "rules": [
       {
-        "type": "field",
         "ip": ["geoip:private", "geoip:cn"], // Исключить локальную сеть и диапазоны IP-адресов Китая
         "outboundTag": "direct"
       }

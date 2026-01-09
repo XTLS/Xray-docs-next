@@ -65,8 +65,7 @@ Add routing rules for the api inbound in the routing configuration.
       "inboundTag": [
         "api"
       ],
-      "outboundTag": "api",
-      "type": "field"
+      "outboundTag": "api"
     }
   ]
 }

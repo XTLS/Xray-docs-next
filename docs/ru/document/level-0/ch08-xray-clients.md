@@ -150,31 +150,26 @@
         "rules": [
           // 3.1 Блокировка рекламных доменов
           {
-            "type": "field",
             "domain": ["geosite:category-ads-all"],
             "outboundTag": "block"
           },
           // 3.2 Прямое подключение к китайским доменам
           {
-            "type": "field",
             "domain": ["geosite:cn"],
             "outboundTag": "direct"
           },
           // 3.3 Проксирование трафика на зарубежные домены
           {
-            "type": "field",
             "domain": ["geosite:geolocation-!cn"],
             "outboundTag": "proxy"
           },
           // 3.4 Трафик, который идёт на DNS-сервер 223.5.5.5, отправляем напрямую
           {
-            "type": "field",
             "ip": ["223.5.5.5"],
             "outboundTag": "direct"
           },
           // 3.5 Прямое подключение к китайским IP-адресам
           {
-            "type": "field",
             "ip": ["geoip:cn", "geoip:private"],
             "outboundTag": "direct"
           }

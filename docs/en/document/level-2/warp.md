@@ -58,14 +58,12 @@ Add the following to the existing router:
 
 ```json
             {
-                "type": "field",
                 "domain": [
                     "geosite:cn"
                 ],
                 "outboundTag": "wireguard-1"
             },
             {
-                "type": "field",
                 "ip": [
                     "geoip:cn"
                 ],
