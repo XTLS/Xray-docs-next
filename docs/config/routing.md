@@ -69,6 +69,7 @@
   "inboundTag": ["tag-vmess"],
   "protocol": ["http", "tls", "quic", "bittorrent"],
   "attrs": { ":method": "GET" },
+  "process": ["curl"],
   "outboundTag": "direct",
   "balancerTag": "balancer",
   "ruleTag": "rule name"
@@ -193,6 +194,25 @@ xxxxxxxx-xxxx-0000-xxxx-xxxxxxxxxxxx
 - 检测 HTTP GET：`{":method": "GET"}`
 - 检测 HTTP Path：`{":path": "/test"}`
 - 检测 Content Type：`{"accept": "text/html"}`
+
+> `process`: \[string\]
+
+如果连接来自本机，匹配其进程。如果不来自本机则直接视作匹配失败。仅支持 Windows 和 Linux.
+
+该选项为一个数组，数组内每一项有三种匹配模式。
+
+1. 不包含斜杠，匹配进程名字。
+2. 包含斜杠，不以斜杠结尾，匹配绝对路径。
+3. 包含斜杠，以斜杠结尾，匹配文件夹，该文件夹下的进程都视为命中。
+
+注：
+- 所有选项均大小写敏感。
+- Windows 上使用反斜杠 `\` 表示路径，这里统一要求使用普通斜杠 `/`，如：`C:/Windows/System32/curl.exe`，因为反斜杠在 json 中会被视作转义符，使用不便（除非你选择把出现的反斜杠写两遍，如果这么做也可以正常识别）。
+- 使用进程名匹配时核心会自动删去 `.exe` 后缀，同样的 `["curl"]` 可以在 Linux 和 Windows 上都命中 curl，使用绝对路径时仍不能忽略 `.exe` 后缀。
+
+特殊语法糖
+- `self/` 用于匹配当前核心进程，对于避免回环路由非常有用。
+- `xray/` 会被替换为当前核心所在的绝对路径，将会命中所有从该二进制启动的 Xray 进程。
 
 > `outboundTag`: string
 
