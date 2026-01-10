@@ -360,14 +360,14 @@ xxxxxxxx-xxxx-0000-xxxx-xxxxxxxxxxxx
                 "tag": "round"
             }
         ]
-    }
+    },
 
     "inbounds": [
         {
             // 入站配置
             "tag": "in"
         }
-    ]
+    ],
 
     "outbounds": [
         {

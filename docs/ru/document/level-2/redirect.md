@@ -137,7 +137,7 @@ lsmod | grep wireguard
       "settings": {
         "domainStrategy": "UseIPv6"
       }
-    }  // Трафик с меткой fwmark, равной <mark>, будет направлен через UseIPv6/UseIPv4.
+    },  // Трафик с меткой fwmark, равной <mark>, будет направлен через UseIPv6/UseIPv4.
     //            <--Выберите один из вариантов-->   Вариант 2: sendThrough
     {
       "tag": "wg0",

@@ -138,7 +138,7 @@ lsmod | grep wireguard
       "settings": {
         "domainStrategy": "UseIPv6"
       }
-    }  //设置fwmark为<mark>的用户走指定方式”UseIPv6””UseIPv4”
+    },  //设置fwmark为<mark>的用户走指定方式”UseIPv6””UseIPv4”
     //            <--请在不同的方案中选择-->   方案2：sendThrough
     {
       "tag": "wg0",

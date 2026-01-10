@@ -25,7 +25,7 @@ Wireguard is a standard implementation of the Wireguard protocol.
   ],
   "mtu": 1420, // optional, default 1420
   "reserved": [1, 2, 3],
-  "workers": 2 // optional, default runtime.NumCPU()
+  "workers": 2, // optional, default runtime.NumCPU()
   "domainStrategy": "ForceIP"
 }
 ```

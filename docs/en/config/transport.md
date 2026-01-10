@@ -104,7 +104,7 @@ Configures transparent proxies.
 {
   "serverName": "xray.com",
   "rejectUnknownSni": false,
-  "verifyPeerCertInNames": ["xray.com"]
+  "verifyPeerCertInNames": ["xray.com"],
   "allowInsecure": false,
   "alpn": ["h2", "http/1.1"],
   "minVersion": "1.2",
