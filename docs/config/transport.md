@@ -114,7 +114,7 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
   "disableSystemRoot": false,
   "enableSessionResumption": false,
   "fingerprint": "",
-  "pinnedPeerCertificateChainSha256": [""],
+  "pinnedPeerCertSha256": "",
   "curvePreferences": [""],
   "masterKeyLog": "",
   "echServerKeys": "",
@@ -225,24 +225,19 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 ::: tip
 当使用此功能时，TLS 的部分影响TLS指纹的选项将被 utls 库覆盖不再生效，列如ALPN。
 会被传递的参数有
-`"serverName" "allowInsecure" "disableSystemRoot" "pinnedPeerCertificateChainSha256" "masterKeyLog"`
+`"serverName" "allowInsecure" "disableSystemRoot" "pinnedPeerCertSha256" "masterKeyLog"`
 :::
 
-> `pinnedPeerCertificateChainSha256`: \[string\]
+> `pinnedPeerCertSha256`: string
 
-用于指定远程服务器的证书链 SHA256 散列值，使用标准编码格式。仅有当服务器端证书链散列值符合设置项中之一时才能成功建立 TLS 连接。
+用于指定远程服务器的证书 SHA256 散列值，使用 hex 且大小写不敏感。如 `e8e2d387fdbffeb38e9c9065cf30a97ee23c0e3d32ee6f78ffae40966befccc9`. 该编码与 Chrome 证书查看器 SHA-256 证书指纹，以及 crt.sh 的 Certificate Fingerprints SHA-256	格式均相同。也可以使用 `xray tls leafCertHash --cert <cert.pem>` 进行计算。可以使用 `-` 连接更多的散列值，匹配到任何一个即通过验证。
 
-注意：只有验证证书有效后，核心才会进行此检查，比如如果自签证书并在此指定，核心在验证证书失败后会直接断开连接而不会进行这个检查，如有类似需求可以考虑开启 `allowInsecure` 跳过签名验证然后便可以正常工作
+该验证在正常证书验证成功后才会调用，分为两种情况。
 
-在连接因为此配置失败时，会展示远程服务器证书散列值。
+- 1.当核心找到匹配的散列值为叶子证书，验证直接通过。
+- 2.当核心找到匹配的值为 CA 证书（可以是根证书也可以是中级证书），将验证叶子证书上的签名是否来自该 CA 授权。
 
-::: danger
-不建议使用这种方式获得证书链散列值，因为在这种情况下将没有机会验证此时服务器提供的证书是否为真实证书，进而不保证获得的证书散列值为期望的散列值。
-:::
-
-::: tip
-如果需要获得证书的散列值，应在命令行中运行 `xray tls certChainHash --cert <cert.pem>` 来获取，`<cert.pem>` 应替换为实际证书文件路径。
-:::
+在该验证前会先执行正常的证书验证，故自签证书可以考虑开启 `allowInsecure` 并在此配置散列，而自签 CA 可以在这里 pin CA 并设置 `verifyPeerCertInNames` （其验证流程使用的 CA 证书将会被这里找到的 CA 证书替换）
 
 > `certificates`: \[ [CertificateObject](#certificateobject) \]
 
