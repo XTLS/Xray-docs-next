@@ -164,6 +164,7 @@ export default defineConfig({
             },
             { text: "VMess", link: "/config/inbounds/vmess.md" },
             { text: "Wireguard", link: "/config/inbounds/wireguard.md" },
+            { text: "TUN", link: "/config/inbounds/tun.md" },
           ],
         },
         {
