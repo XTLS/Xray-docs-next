@@ -28,7 +28,7 @@ Hysteria2 的底层 QUIC 传输的 Xray 实现，通常需要搭配 [hysteria2 �
 
 > `version`: number
 
-Hysteria 版本，必须位 2。
+Hysteria 版本，必须为 2。
 
 > `auth`: string
 

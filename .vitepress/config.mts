@@ -189,7 +189,7 @@ export default defineConfig({
             },
             { text: "VMess", link: "/config/outbounds/vmess.md" },
             { text: "Wireguard", link: "/config/outbounds/wireguard.md" },
-            { text: "Hysteria2", link: "/config/outbounds/hysteria2.md" },
+            { text: "Hysteria", link: "/config/outbounds/hysteria.md" },
           ],
         },
         {
