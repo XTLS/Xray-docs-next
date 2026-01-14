@@ -977,6 +977,10 @@ export default defineConfig({
                   text: "Wireguard",
                   link: "/ru/config/outbounds/wireguard.md",
                 },
+                {
+                  text: "Hysteria 2",
+                  link: "/ru/config/outbounds/hysteria2.md",
+                },
               ],
             },
             {
@@ -998,6 +1002,10 @@ export default defineConfig({
                 {
                   text: "HTTPUpgrade",
                   link: "/ru/config/transports/httpupgrade.md",
+                },
+                {
+                  text: "Hysteria",
+                  link: "/ru/config/transports/hysteria.md",
                 },
               ],
             },
