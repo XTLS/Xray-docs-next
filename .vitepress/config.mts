@@ -189,6 +189,7 @@ export default defineConfig({
             },
             { text: "VMess", link: "/config/outbounds/vmess.md" },
             { text: "Wireguard", link: "/config/outbounds/wireguard.md" },
+            { text: "Hysteria2", link: "/config/outbounds/hysteria2.md" },
           ],
         },
         {
@@ -205,6 +206,7 @@ export default defineConfig({
             { text: "gRPC", link: "/config/transports/grpc.md" },
             { text: "WebSocket", link: "/config/transports/websocket.md" },
             { text: "HTTPUpgrade", link: "/config/transports/httpupgrade.md" },
+            { text: "Hysteria", link: "/config/transports/hysteria.md" },
           ],
         },
       ],

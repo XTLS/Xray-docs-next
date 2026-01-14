@@ -41,7 +41,7 @@
 }
 ```
 
-> `network`: "raw" | "xhttp" | "kcp" | "grpc" | "ws" | "httpupgrade"
+> `network`: "raw" | "xhttp" | "kcp" | "grpc" | "ws" | "httpupgrade" | "hysteria"
 
 连接的数据流所使用的传输方式类型，默认值为 `"raw"`。
 
@@ -93,6 +93,10 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 > `httpupgradeSettings`: [HttpUpgradeObject](./transports/httpupgrade.md)
 
 当前连接的 HTTPUpgrade 配置，仅当此连接使用 HTTPUpgrade 时有效。
+
+> `hysteriaSettings`: [HysteriaObject](./transports/hysteria.md)
+
+当前连接的 Hysteria 配置，仅当此连接使用 Hysteria 时有效。
 
 > `sockopt`: [SockoptObject](#sockoptobject)
 

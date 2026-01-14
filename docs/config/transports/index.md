@@ -8,3 +8,4 @@ Xray 支持以下传输层：
 - [gRPC](grpc.md)
 - [WebSocket](websocket.md)
 - [HTTPUpgrade](httpupgrade.md)
+- [Hysteria](hysteria.md)
