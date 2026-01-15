@@ -22,13 +22,13 @@ LogObject 对应配置文件的 `log` 项。
 
 > `access`: string
 
-访问日志的文件地址，其值是一个合法的文件地址，如`"/var/log/Xray/access.log"`（Linux）或者`"C:\\Temp\\Xray\\_access.log"`（Windows）。当此项不指定或为空值时，表示将日志输出至 stdout。
+访问日志的文件地址，其值是一个合法的文件地址，如`"/var/log/xray/access.log"`（Linux）或者`"C:\\Temp\\Xray\\_access.log"`（Windows）。当此项不指定或为空值时，表示将日志输出至 stdout。
 
 - 特殊值`none`，即关闭 access log。
 
 > `error`: string
 
-错误日志的文件地址，其值是一个合法的文件地址，如`"/var/log/Xray/error.log"`（Linux）或者`"C:\\Temp\\Xray\\_error.log"`（Windows）。当此项不指定或为空值时，表示将日志输出至 stdout。
+错误日志的文件地址，其值是一个合法的文件地址，如`"/var/log/xray/error.log"`（Linux）或者`"C:\\Temp\\Xray\\_error.log"`（Windows）。当此项不指定或为空值时，表示将日志输出至 stdout。
 
 - 特殊值`none`，即关闭 error log。
 
