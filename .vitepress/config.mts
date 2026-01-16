@@ -26,6 +26,8 @@ export default defineConfig({
       light: "light-plus",
     },
 
+    attrs: { leftDelimiter: "{:" },
+
     config(md) {
       md.use(MermaidMarkdown);
     },
