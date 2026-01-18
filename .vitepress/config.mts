@@ -983,7 +983,7 @@ export default defineConfig({
                 },
                 {
                   text: "Hysteria 2",
-                  link: "/ru/config/outbounds/hysteria2.md",
+                  link: "/ru/config/outbounds/hysteria.md",
                 },
               ],
             },

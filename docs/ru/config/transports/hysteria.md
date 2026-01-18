@@ -1,6 +1,6 @@
 # Hysteria
 
-Реализация низкоуровневого транспорта QUIC для Hysteria2 в Xray. Обычно используется в сочетании с [исходящим протоколом hysteria2](../outbounds/hysteria2.md).
+Реализация низкоуровневого транспорта QUIC для Hysteria2 в Xray. Обычно используется в сочетании с [исходящим протоколом hysteria2](../outbounds/hysteria.md).
 
 ## HysteriaObject
 
@@ -14,7 +14,7 @@
   "down": "0",
   "udphop": {
     "port": "1145-1919",
-    "interval": "30s"
+    "interval": "30"
   },
   "initStreamReceiveWindow": 8388608,
   "maxStreamReceiveWindow": 8388608,
@@ -50,7 +50,7 @@
 
 Обратите внимание на относительность: загрузка (upload) сервера — это скачивание (download) клиента, а скачивание (download) сервера — это загрузка (upload) клиента.
 
-> `udphop`: {"port": string, "interval": string}
+> `udphop`: {"port": string, "interval": number}
 
 Конфигурация скачков портов UDP (UDP port hopping).
 

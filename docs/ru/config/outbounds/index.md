@@ -13,3 +13,4 @@ Xray поддерживает следующие исходящие проток
 - [VLESS (XTLS Vision Seed)](vless.md)
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
+- [Hysteria2](hysteria.md)

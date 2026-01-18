@@ -8,3 +8,4 @@ Xray поддерживает следующие транспортные сло
 - [gRPC](grpc.md)
 - [WebSocket](websocket.md)
 - [HTTPUpgrade](httpupgrade.md)
+- [Hysteria](hysteria.md)
