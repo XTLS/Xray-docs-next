@@ -12,7 +12,7 @@
 
 - 用户需要手动开浏览器
 - 浏览器发出的连接必须直连 使用 tun 的用户需要特别注意容易形成死循环
-- 浏览器只能发出 HTTP 连接 所以目前仅支持 [WebSocket](../../transports/websocket.md) 与 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) 传输方式
+- 浏览器只能发出 HTTP 连接 所以目前仅支持 [WebSocket](../transports/websocket.md) 与 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) 传输方式
 - 当浏览器从 `localhost:8080` 页面连接至代理服务端，需要考虑 [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
 - 因为中间经过 JS 处理数据，会有一些性能损耗
 - 不能使用自定义 SNI 或者 Host，也就是说 `SNI == host == address`。自定义 HTTP 头以及其它 `tlsSettings` 项会被忽略

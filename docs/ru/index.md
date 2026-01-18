@@ -14,7 +14,7 @@ hero:
       link: /ru/config/
     - theme: alt
       text: Sponsor & Donation & NFTs
-      link: /ru/about/sponsor.html
+      link: /ru/about/sponsor.md
 
 features:
   - title: Высокоскоростной протокол

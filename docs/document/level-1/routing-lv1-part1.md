@@ -296,7 +296,7 @@
 
 之后，随着 V 姐突然消失导致 `Project V` 的原项目开发陷入停滞，`v2fly` 社区维护并持续更新了社区版本的 [`domain-list-community`](https://github.com/v2fly/domain-list-community)；
 
-同时，[@Loyalsoldier](Loyalsoldier) 维护了其个人修改增强的路由规则文件 [v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat)，提供了诸多不同的选择和分类逻辑；
+同时，Loyalsoldier 维护了其个人修改增强的路由规则文件 [v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat)，提供了诸多不同的选择和分类逻辑；
 
 另外，`Project X` 也计划于未来定制维护更适合 `Xray` 使用的路由规则文件 [Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat)。~~(你们看，文件夹都建好了，所以快了快了)~~
 

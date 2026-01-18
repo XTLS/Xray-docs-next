@@ -130,7 +130,7 @@ Project X 文档迎来了俄语版！感谢 [@iambabyninja](https://github.com/i
 
 ## 2024.7.15
 
-通过已知信息以及努力，Xray-core 现在重新支持 Windows 7！在后续的发版中，Windows 7 用户下载名为 Xray-win7-32.zip 或 Xray-win7-64.zip 的压缩包解压即可享受，感谢大家的支持！具体使用方式请点[这里](../document/install.html)
+通过已知信息以及努力，Xray-core 现在重新支持 Windows 7！在后续的发版中，Windows 7 用户下载名为 Xray-win7-32.zip 或 Xray-win7-64.zip 的压缩包解压即可享受，感谢大家的支持！具体使用方式请点[这里](../document/install.md)
 
 虽然日后随着各方面升级 Windows 7 最终会离开，但是现在还是可以让这个时间来得稍微晚一些。
 
@@ -525,7 +525,7 @@ Shadowsocks-2022 是重新设计的全新协议：
 ## 2021.01.25
 
 - 全互联网最好最详细的秘籍入门篇同学们练熟了吗? 🍉 老师开始连载[秘籍第一层](../document/level-1/)咯...
-- [英文版文档网站](../en)逐渐增加内容 ing, 感谢各位大佬的辛苦付出~!
+- [英文版文档网站](/en/)逐渐增加内容 ing, 感谢各位大佬的辛苦付出~!
 
 ## 2021.01.22 <Badge>[1.2.3](https://github.com/XTLS/Xray-core/releases/tag/v1.2.3)</Badge>
 
@@ -549,7 +549,7 @@ Shadowsocks-2022 是重新设计的全新协议：
 ## 2021.01.17
 
 - 辛苦的翻译工作开始了, 感谢 [@玖柒 Max](https://github.com/jiuqi9997)和其他所有的翻译大佬们.
-- [English version](https://xtls.github.io/en/)
+- [English version](/en/)
 
 ## 2021.01.15 <Badge>[1.2.2](https://github.com/XTLS/Xray-core/releases/tag/v1.2.2)</Badge>
 

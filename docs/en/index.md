@@ -14,7 +14,7 @@ hero:
       link: /en/config/
     - theme: alt
       text: Sponsor & Donation & NFTs
-      link: /en/about/sponsor.html
+      link: /en/about/sponsor.md
 
 features:
   - title: High-speed protocol

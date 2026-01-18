@@ -559,7 +559,7 @@ sudo systemctl restart xray
 
 ## 7.9 服务器优化之三：更丰富的回落
 
-如果你需要更丰富的回落功能，可以参考 [《回落 (fallbacks) 功能简析》](../level-1/fallbacks-lv1/)
+如果你需要更丰富的回落功能，可以参考 [《回落 (fallbacks) 功能简析》](../level-1/fallbacks-lv1.md)
 
 ## 7.10 你的进度
 

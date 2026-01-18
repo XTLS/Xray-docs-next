@@ -1,6 +1,6 @@
 # Configure and Run
 
-After [downloading and installing Xray](./install/), you need to configure it.
+After [downloading and installing Xray](./install.md), you need to configure it.
 
 For demonstration purposes, only a simple configuration method is introduced here. For more templates, please refer to [Xray-examples](https://github.com/XTLS/Xray-examples).
 

@@ -15,7 +15,7 @@ hero:
       link: /config/
     - theme: alt
       text: 赞助 & 捐款 & NFTs
-      link: /about/sponsor.html
+      link: /about/sponsor.md
 
 features:
   - title: 极速协议

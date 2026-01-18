@@ -68,7 +68,7 @@ The result displayed should be uid 0 and gid 23333.
 
 ### 3. Configure and run Xray, and configure iptables rules
 
-In the existing transparent proxy configuration(**[New V2Ray vernacular tutorial on transparent proxy](https://guide.v2fly.org/app/transparent_proxy.html)** 、 **[New V2Ray vernacular tutorial on transparent proxy (TProxy)](https://guide.v2fly.org/app/tproxy.html)** 、 **[Transparent proxy（TProxy）configuration tutorial](../tproxy)**)tutorials, modify:
+In the existing transparent proxy configuration(**[New V2Ray vernacular tutorial on transparent proxy](https://guide.v2fly.org/app/transparent_proxy.html)** 、 **[New V2Ray vernacular tutorial on transparent proxy (TProxy)](https://guide.v2fly.org/app/tproxy.html)** 、 **[Transparent proxy（TProxy）configuration tutorial](./tproxy.md)**)tutorials, modify:
 
 1. Modify the json configuration file: remove mark-related content
 

@@ -13,4 +13,4 @@ Xray 支持以下出站协议：
 - [VLESS (XTLS Vision Seed)](vless.md)
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
-- [Hysteria2](hysteria2.md)
+- [Hysteria](hysteria.md)

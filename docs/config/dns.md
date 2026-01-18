@@ -95,7 +95,7 @@ Xray 内置的 DNS 模块，主要有三大用途：
 - 当地址中的第一个值为井号后加数字(如 `#3`)时，如果在使用 DNS 出站，核心会返回空的响应以及该数字编号对应的 rcode 以拒绝请求，如果请求来自内部查询则会单纯视为失败。
 - 当被解析域名匹配列表中多个域名时，所有关联的 IP 都会被返回。
 
-其匹配格式（`domian:` `full:` 等等）同常用的 [路由系统](./routing.html#ruleobject) 中的 domain. 不同的是无前缀时此处默认使用 `full:` 前缀（类似常见的 hosts 文件写法）
+其匹配格式（`domian:` `full:` 等等）同常用的 [路由系统](./routing.md#ruleobject) 中的 domain. 不同的是无前缀时此处默认使用 `full:` 前缀（类似常见的 hosts 文件写法）
 
 > `servers`: \[string | [DnsServerObject](#dnsserverobject) \]
 

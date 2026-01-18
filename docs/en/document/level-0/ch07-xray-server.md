@@ -550,7 +550,7 @@ sudo systemctl restart xray
 
 ## 7.9 Server Optimization 3: More Fallbacks
 
-If you need more fallback functions, please refer to [《Fallbacks (fallbacks) Functional Analysis》](../level-1/fallbacks-lv1/)
+If you need more fallback functions, please refer to [《Fallbacks (fallbacks) Functional Analysis》](../level-1/fallbacks-lv1.md)
 
 ## 7.10 Your progress
 

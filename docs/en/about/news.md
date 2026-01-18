@@ -128,7 +128,7 @@ Project X documentation now has a Russian version! Thanks to [@iambabyninja](htt
 
 ## 2024.7.15
 
-Through known information and efforts, Xray-core now supports Windows 7 again! In subsequent releases, Windows 7 users can enjoy it by downloading and extracting the Xray-win7-32.zip or Xray-win7-64.zip packages. Thank you for your support! For specific usage, please click [here](../document/install.html)
+Through known information and efforts, Xray-core now supports Windows 7 again! In subsequent releases, Windows 7 users can enjoy it by downloading and extracting the Xray-win7-32.zip or Xray-win7-64.zip packages. Thank you for your support! For specific usage, please click [here](../document/install.md)
 
 Although Windows 7 will eventually be phased out with future upgrades, we can now delay that time a little.
 
@@ -520,7 +520,7 @@ The documentation site is quietly undergoing some mysterious changes..., 🙊�
 ## 2021.01.25
 
 - Have you mastered the most detailed beginner's guide on the entire internet? 🍉 The teacher has started serializing [Level One of the Guide](../document/level-1/)...
-- The [English version of the documentation site](../en) is gradually being updated, thanks to the hard work of everyone involved!
+- The [English version of the documentation site](/en/) is gradually being updated, thanks to the hard work of everyone involved!
 
 ## 2021.01.22 <Badge>[1.2.3](https://github.com/XTLS/Xray-core/releases/tag/v1.2.3)</Badge>
 
@@ -544,7 +544,7 @@ The documentation site is quietly undergoing some mysterious changes..., 🙊�
 ## 2021.01.17
 
 - The hard work of translation has begun, thanks to [@玖柒 Max](https://github.com/jiuqi9997) and all the other translation contributors.
-- [English version](https://xtls.github.io/en/)
+- [English version](/en/)
 
 ## 2021.01.15 <Badge>[1.2.2](https://github.com/XTLS/Xray-core/releases/tag/v1.2.2)</Badge>
 

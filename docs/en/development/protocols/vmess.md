@@ -16,7 +16,7 @@ VMess is a TCP-based protocol where all data is transmitted over TCP.
 
 An ID is equivalent to a [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier), which is a 16-byte long random number. Its function is similar to a token. An ID looks like: `de305d54-75b4-431b-adb2-eb6b9e546014`, it is almost entirely random and can be generated using any UUID generator, such as [this one](https://www.uuidgenerator.net/).
 
-User ID can be specified in the [configuration file](../../config).
+User ID can be specified in the [configuration file](../../config/).
 
 ### Functions
 

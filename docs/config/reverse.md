@@ -26,7 +26,7 @@
 - `bridge` 会根据流量的大小进行动态的负载均衡。
 
 ::: tip
-如上所述，反向代理默认已开启 [Mux](../../development/protocols/muxcool/)，请不要在其用到的 outbound 上再次开启 Mux。
+如上所述，反向代理默认已开启 [Mux](../development/protocols/muxcool.md)，请不要在其用到的 outbound 上再次开启 Mux。
 :::
 
 ::: warning
