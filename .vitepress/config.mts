@@ -12,7 +12,7 @@ export default defineConfig({
 
   lastUpdated: true,
 
-  ignoreDeadLinks: true, // TODO: cleanup dead links
+  ignoreDeadLinks: false,
 
   sitemap: {
     hostname: "https://xtls.github.io",
