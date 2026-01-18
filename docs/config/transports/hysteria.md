@@ -1,6 +1,6 @@
 # Hysteria
 
-Hysteria2 的底层 QUIC 传输的 Xray 实现，通常需要搭配 [hysteria2 出站](../outbounds/hysteria2.md) 使用。
+Hysteria2 的底层 QUIC 传输的 Xray 实现，通常需要搭配 [hysteria2 出站](../outbounds/hysteria.md) 使用。
 
 ## HysteriaObject
 
