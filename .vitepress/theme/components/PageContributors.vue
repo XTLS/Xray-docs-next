@@ -59,10 +59,13 @@ const t = computed(() => {
           </div>
 
           <div class="sub">
-            <a v-if="c.email" class="link" :href="`mailto:${c.email}`">{{
-              c.email
-            }}</a>
-            <span v-if="c.github" class="sep">·</span>
+            <a
+              v-if="c.email && !c.github"
+              class="link"
+              :href="`mailto:${c.email}`"
+            >
+              {{ c.email }}
+            </a>
             <a
               v-if="c.github"
               class="link"
