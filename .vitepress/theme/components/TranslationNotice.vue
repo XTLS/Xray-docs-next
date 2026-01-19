@@ -29,11 +29,15 @@ const text = computed(() => {
     en: {
       title: "Translation notice",
       body: "This translation may be outdated. Please refer to the Chinese original.",
+      missing:
+        "This page is not translated yet. Please refer to the Chinese original.",
       go: "View Chinese original",
     },
     ru: {
       title: "Уведомление о переводе",
       body: "Этот перевод может быть устаревшим. Пожалуйста, обратитесь к оригинальной китайской версии.",
+      missing:
+        "Эта страница ещё не переведена. Пожалуйста, обратитесь к оригинальной версии на китайском языке.",
       go: "Посмотреть оригинальную китайскую версию",
     },
   };
@@ -55,10 +59,15 @@ const text = computed(() => {
         {{ text.body }}
       </span>
       <span v-else>
-        This page is not translated yet. Please refer to the Chinese original.
+        {{ text.missing }}
       </span>
       <br />
-      <a :href="info.zhRoute" class="link">
+      <a
+        :href="info.zhRoute"
+        class="link"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
         {{ text.go }}
       </a>
     </p>

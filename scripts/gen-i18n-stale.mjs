@@ -38,6 +38,14 @@ function toRouteFromDocsRel(relToDocs) {
     return route;
 }
 
+function ensureEmptyPlaceholder(locale, relNoLocale) {
+    const tAbs = path.join(DOCS_DIR, locale, relNoLocale); // docs/en/xxx.md
+    if (fs.existsSync(tAbs)) return;
+
+    fs.mkdirSync(path.dirname(tAbs), { recursive: true });
+    fs.writeFileSync(tAbs, "", "utf8");
+}
+
 const zhFiles = walk(DOCS_DIR).filter((p) => {
     const rel = path.relative(DOCS_DIR, p).replaceAll("\\", "/");
     return !LOCALES.some((l) => rel.startsWith(l + "/"));
@@ -96,6 +104,7 @@ for (const [zhRel, zhAbs] of zhByRel.entries()) {
                 tLastUpdated: null,
                 zhLastUpdated: zhISO,
             };
+            ensureEmptyPlaceholder(locale, zhRel);
         }
     }
 }
