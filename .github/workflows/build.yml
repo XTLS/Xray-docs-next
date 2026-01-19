@@ -40,3 +40,4 @@ jobs:
           publish_dir: .vitepress/dist
           external_repository: XTLS/XTLS.github.io
           publish_branch: gh-pages-next
+          force_orphan: true
