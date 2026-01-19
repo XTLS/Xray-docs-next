@@ -72,6 +72,7 @@ export default defineConfig({
     search: {
       provider: "local",
       options: {
+        detailedView: true,
         miniSearch: {
           options: {
             tokenize: (str) => str.split(/[\s,，。、]+/),
