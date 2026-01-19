@@ -32,6 +32,27 @@ The configuration file of Xray is in JSON format, and the configuration format f
 If you are new to Xray, you can first click to view [configuration and running in the Quick Start guide](../document/install.md), to learn the most basic configuration method, and then refer to the contents of this section to master all the configuration methods of Xray.
 :::
 
+::: details Click to expand: How to make AI generate the correct configuration directly
+Copy the following prompt to ensure the AI generates the correct configuration:
+
+```text
+[https://xtls.github.io/llms-full.txt](https://xtls.github.io/llms-full.txt) This link contains the full official documentation for Xray-core.
+
+[Role]
+You are an expert in network protocols and Xray-core configuration.
+
+[Instructions]
+1. Knowledge Base: Crawl and fully comprehend the content of the link. Use it as your SOLE source of truth.
+2. NO Hallucinations: Absolutely DO NOT fabricate any fields not mentioned in the documentation.
+3. Default Format: While Xray supports multiple formats, please default to standard JSON output (unless I explicitly request YAML or TOML), with comments for key parameters.
+4. Error Handling: If you cannot access the link, explicitly notify me and ask me to manually download and upload the document to you.
+
+Please answer my questions in English.
+:::
+
+
+
+
 ## Basic Configuration Modules
 
 > log:[LogObject](./log.md)
@@ -89,3 +110,4 @@ Background connection observation. Detect the connection status of outbound prox
 > burstObservatory: [BurstObservatoryObject](./observatory.md#burstobservatoryobject)
 
 Concurrent connection observation. Detect the connection status of outbound proxies.
+```
