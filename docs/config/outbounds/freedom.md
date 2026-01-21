@@ -35,7 +35,8 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
 
 在这里使用 AsIs 才可以把域名交给后面的 sockopt 模块，如果在这里设置非 AsIs 导致域名被解析为具体 IP 会使后续的 sockopt.domainStrategy 以及其相关的 happyEyeballs 失效。（如果不调整这两个设置则没有负面影响）
 
-Freedom 在发送 UDP 时出于一些原因无视 sockopt 中的 domainStrategy 并在默认状态下强制偏好 IPv4.
+Freedom 在发送 UDP 时出于一些原因无视 sockopt 中的 domainStrategy 并在默认状态下强制偏好 IPv4.<br>
+如果这里是 AsIs 且 sockopt.domainStrategy 为非 AsIs 并且 udp 目标是域名，会出现一系列不可预测的行为。
 
 > `redirect`: address_port
 
