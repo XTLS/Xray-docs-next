@@ -234,7 +234,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 > `pinnedPeerCertSha256`: string
 
-用于指定远程服务器的证书 SHA256 散列值，使用 hex 且大小写不敏感。如 `e8e2d387fdbffeb38e9c9065cf30a97ee23c0e3d32ee6f78ffae40966befccc9`. 该编码与 Chrome 证书查看器 SHA-256 证书指纹，以及 crt.sh 的 Certificate Fingerprints SHA-256	格式均相同。也可以使用 `xray tls leafCertHash --cert <cert.pem>` 进行计算。可以使用 `~` 连接更多的散列值，匹配到任何一个即通过验证。
+用于指定远程服务器的证书 SHA256 散列值，使用 hex 且大小写不敏感。如 `e8e2d387fdbffeb38e9c9065cf30a97ee23c0e3d32ee6f78ffae40966befccc9`. 该编码与 Chrome 证书查看器 SHA-256 证书指纹，以及 crt.sh 的 Certificate Fingerprints SHA-256 格式均相同。也可以使用 `xray tls leafCertHash --cert <cert.pem>` 进行计算。可以使用 `~` 连接更多的散列值，匹配到任何一个即通过验证。
 
 该验证在正常证书验证成功后才会调用，分为两种情况。
 

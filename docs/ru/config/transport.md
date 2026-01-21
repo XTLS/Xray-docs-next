@@ -45,7 +45,7 @@
 }
 ```
 
-> `network`: "raw" | "xhttp" | "kcp" | "grpc" | "ws" | "httpupgrade"  | "hysteria"
+> `network`: "raw" | "xhttp" | "kcp" | "grpc" | "ws" | "httpupgrade" | "hysteria"
 
 Тип способа передачи, используемого потоком данных соединения, по умолчанию `"raw"`.
 

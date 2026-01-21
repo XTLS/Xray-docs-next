@@ -20,7 +20,6 @@
 
 接口的 MTU 默认值 `1500`
 
-
 > `userLevel`: number
 
 用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
