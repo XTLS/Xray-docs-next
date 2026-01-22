@@ -17,7 +17,7 @@ Hysteria 协议的客户端实现。
 
 > `version`: number
 
-Hysteria 版本，必须位 2。
+Hysteria 版本，必须为 2。
 
 > `address`: string
 
