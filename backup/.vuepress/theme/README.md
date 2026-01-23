@@ -1,1 +1,0 @@
-# Xray-docs-next theme
