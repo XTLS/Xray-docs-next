@@ -1,45 +1,60 @@
-# Contribute to Project X's Document
+# Contributing to Project X Documentation
 
-Contributions to Project X's Document are welcome, and we appreciate every Contributor's contribution! You guys make Xray stronger!
+Welcome to contribute to the Project X documentation. We appreciate every contributor! It is you who make Xray more powerful!
 
-## Improve Document
+## Improve the Documentation
 
-Document for Project X is hosted on [GitHub](https://github.com/XTLS/Xray-docs-next).
+Project X documentation is hosted on [GitHub](https://github.com/XTLS/Xray-docs-next).
 
-You can submit your changes to the Document by following these steps:
+You can submit your changes to the documentation by following these steps:
 
-1. Open the repository from [Project X Document](https://github.com/XTLS/Xray-docs-next), click fork in the upper right corner, fork a mirror image of the document repository to your own GitHub repository.
+1. Open the [Project X Documentation Repository](https://github.com/XTLS/Xray-docs-next) and click **Fork** in the top right corner to fork a copy of the repository to your own GitHub account.
 
-2. Get a clone of the docs from the repository you cloned using whatever tool you like, like:
+2. For simple edits, you can complete them directly on the GitHub website.<br>
+   However, for complex edits, please use VSCode. Clone the documentation from your forked repository, for example:
 
-```
-git clone https://github.com/XTLS/Xray-docs-next.git
-```
+   ```bash
+   git clone [https://github.com/your-github-username/Xray-docs-next.git](https://github.com/your-github-username/Xray-docs-next.git)
+   ```
 
-3. Create a new branch based on the main branch, such as:
+3. Create a new branch based on the `main` branch, for example:
 
-```
-git checkout -b your-branch
-```
+   ```bash
+   git checkout -b your-branch
+   ```
 
-4. Make changes on the new branch.
+4. Make your changes on the new branch.
 
-5. After modification, please use [Prettier](https://prettier.io/docs/en/install.html)Format your changes.
+   Note: We recommend using automatic formatting with [prettier](https://prettier.io/docs/install) and following the [Google Developer Documentation Style Guide](https://developers.google.com/style).
 
-   Note: Pull requests with formatting issues may be rejected.
+5. After editing, VSCode extensions will automatically format your changes. This repository is pre-configured with all necessary VSCode extensions; simply follow the VSCode prompts to install them with one click.
 
-6. Submit the changes and push them to your repository
+   Note: PRs with formatting issues may be rejected.
 
-```
-git push -u origin your-branch
-```
+6. Commit your changes and push them to your repository:
 
-6. Open GitHub, click 'Pull request' to submit a pull request to [Project X Document](https://github.com/XTLS/Xray-docs-next).
+   ```bash
+   git push -u origin your-branch
+   ```
 
-7. Please outline the new/modified content of this pull request in the title and body of the pull request;
+7. Open GitHub and click **'Pull request'** to submit a PR to the [Project X Documentation Repository](https://github.com/XTLS/Xray-docs-next).
 
-8. Waiting for a response, if the pull request is merged, your changes will be directly displayed on [Project X Document Website](https://xtls.github.io).
+8. Please summarize the additions/changes of this PR in the title and body.
 
-## Found Problems?
+9. Wait for a response. If your PR is merged, your changes will appear directly on the [Project X Documentation Website](https://xtls.github.io).
 
-If you find an error in the document, you can improve the documentation or submit an issue.
+10. Want to preview the full effect locally?
+    1. Install [Node.JS](https://nodejs.org/en/download)
+    2. Install [pnpm](https://pnpm.io/installation)
+    3. Restart VSCode and open this project
+    4. Press `Ctrl` + `` ` `` to open the VSCode integrated terminal
+    5. Run the following commands in the terminal:
+
+       ```bash
+       pnpm install
+       pnpm run docs:dev
+       ```
+
+## Found an Issue?
+
+If you find errors in the documentation, you can improve the documentation or submit an Issue.
