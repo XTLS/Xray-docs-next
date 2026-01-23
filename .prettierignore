@@ -1,1 +1,7 @@
+# Node.JS
 node_modules/
+
+# VitePress
+.vitepress/dist/
+.vitepress/cache/
+.vitepress/.generated/

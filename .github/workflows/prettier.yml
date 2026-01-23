@@ -1,8 +1,11 @@
 name: Prettier Action
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
+
 permissions:
   contents: write
 
@@ -11,24 +14,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        if: github.event.pull_request.head.repo.full_name == 'XTLS/Xray-docs-next'
+        if: github.event_name == 'push'
         uses: actions/checkout@v6
         with:
           ref: ${{ github.head_ref }}
       - name: Checkout
-        if: github.event.pull_request.head.repo.full_name != 'XTLS/Xray-docs-next'
+        if: github.event_name == 'pull_request'
         uses: actions/checkout@v6
         with:
           fetch-depth: 2
       - name: Prettify code
-        if: github.event.pull_request.head.repo.full_name == 'XTLS/Xray-docs-next'
+        if: github.event_name == 'push'
         uses: creyD/prettier_action@v4.6
         with:
-          prettier_options: --write **/*.{js,ts,md,vue}
+          prettier_options: --write **/*.{mjs,mts,css,vue,md}
       - name: Prettify code dry run
-        if: github.event.pull_request.head.repo.full_name != 'XTLS/Xray-docs-next'
+        if: github.event_name == 'pull_request'
         uses: creyD/prettier_action@v4.6
         with:
-          prettier_options: --write **/*.{js,ts,md,vue}
+          prettier_options: --write **/*.{mjs,mts,css,vue,md}
           only_changed: true
           dry: true
