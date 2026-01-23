@@ -68,7 +68,7 @@ When `interval` is 0 and `"packets": "tlshello"` is set, the fragmented Client H
 
 > `noises`: array
 
-UDP noise, used to send some random data as "noise" before sending a UDP connection. Presence of this structure implies enablement. It might deceive sniffers, or it might disrupt normal connections. *Use at your own risk.* For this reason, it bypasses port 53 because that breaks DNS.
+UDP noise, used to send some random data as "noise" before sending a UDP connection. Presence of this structure implies enablement. It might deceive sniffers, or it might disrupt normal connections. _Use at your own risk._ For this reason, it bypasses port 53 because that breaks DNS.
 
 It is an array where multiple noise packets to be sent can be defined. A single element in the array is defined as follows:
 

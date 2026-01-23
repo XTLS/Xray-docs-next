@@ -143,108 +143,108 @@ To get better visualization output, you can use [Netdata](https://github.com/net
 
 ```yaml
 xray:
-  name: 'xray'
+  name: "xray"
   update_every: 2
-  url: 'http://127.0.0.1:11111/debug/vars'
+  url: "http://127.0.0.1:11111/debug/vars"
   collect_memstats: false
   extra_charts:
-     - id: 'inbounds'
-       options:
-         name: 'inbounds'
-         title: 'Xray System Inbounds'
-         units: bytes
-         family: xray
-         context: xray.inbounds
-         chart_type: line
-       lines:
-         - expvar_key: stats.inbound.tproxy_tcp_inbound.downlink
-           id: 'tcp.downlink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.tproxy_udp_inbound.downlink
-           id: 'udp.downlink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.http_inbound.downlink
-           id: 'http.downlink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.https_inbound.downlink
-           id: 'https.downlink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.socks_inbound.downlink
-           id: 'socks.downlink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.tproxy_tcp_inbound.uplink
-           id: 'tcp.uplink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.tproxy_udp_inbound.uplink
-           id: 'udp.uplink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.http_inbound.uplink
-           id: 'http.uplink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.https_inbound.uplink
-           id: 'https.uplink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.inbound.socks_inbound.uplink
-           id: 'socks.uplink'
-           algorithm: incremental
-           expvar_type: int
-     - id: 'outbounds'
-       options:
-         name: 'outbounds'
-         title: 'Xray System Outbounds'
-         units: bytes
-         family: xray
-         context: xray.outbounds
-         chart_type: line
-       lines:
-         - expvar_key: stats.outbound.tcp_outbound.downlink
-           id: 'tcp.downlink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.outbound.udp_outbound.downlink
-           id: 'udp.downlink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.outbound.direct.downlink
-           id: 'direct.downlink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.outbound.tcp_outbound.uplink
-           id: 'tcp.uplink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.outbound.udp_outbound.uplink
-           id: 'udp.uplink'
-           algorithm: incremental
-           expvar_type: int
-         - expvar_key: stats.outbound.direct.uplink
-           id: 'direct.uplink'
-           algorithm: incremental
-           expvar_type: int
-     - id: 'observatory'
-       options:
-         name: 'observatory'
-         title: 'Xray Observatory Metrics'
-         units: milliseconds
-         family: xray
-         context: xray.observatory
-         chart_type: line
-       lines:
-         - expvar_key: observatory.tcp_outbound.delay
-           id: tcp
-           expvar_type: int
-         - expvar_key: observatory.udp_outbound.delay
-           id: udp
-           expvar_type: int
+    - id: "inbounds"
+      options:
+        name: "inbounds"
+        title: "Xray System Inbounds"
+        units: bytes
+        family: xray
+        context: xray.inbounds
+        chart_type: line
+      lines:
+        - expvar_key: stats.inbound.tproxy_tcp_inbound.downlink
+          id: "tcp.downlink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.tproxy_udp_inbound.downlink
+          id: "udp.downlink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.http_inbound.downlink
+          id: "http.downlink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.https_inbound.downlink
+          id: "https.downlink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.socks_inbound.downlink
+          id: "socks.downlink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.tproxy_tcp_inbound.uplink
+          id: "tcp.uplink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.tproxy_udp_inbound.uplink
+          id: "udp.uplink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.http_inbound.uplink
+          id: "http.uplink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.https_inbound.uplink
+          id: "https.uplink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.inbound.socks_inbound.uplink
+          id: "socks.uplink"
+          algorithm: incremental
+          expvar_type: int
+    - id: "outbounds"
+      options:
+        name: "outbounds"
+        title: "Xray System Outbounds"
+        units: bytes
+        family: xray
+        context: xray.outbounds
+        chart_type: line
+      lines:
+        - expvar_key: stats.outbound.tcp_outbound.downlink
+          id: "tcp.downlink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.outbound.udp_outbound.downlink
+          id: "udp.downlink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.outbound.direct.downlink
+          id: "direct.downlink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.outbound.tcp_outbound.uplink
+          id: "tcp.uplink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.outbound.udp_outbound.uplink
+          id: "udp.uplink"
+          algorithm: incremental
+          expvar_type: int
+        - expvar_key: stats.outbound.direct.uplink
+          id: "direct.uplink"
+          algorithm: incremental
+          expvar_type: int
+    - id: "observatory"
+      options:
+        name: "observatory"
+        title: "Xray Observatory Metrics"
+        units: milliseconds
+        family: xray
+        context: xray.observatory
+        chart_type: line
+      lines:
+        - expvar_key: observatory.tcp_outbound.delay
+          id: tcp
+          expvar_type: int
+        - expvar_key: observatory.udp_outbound.delay
+          id: udp
+          expvar_type: int
 ```
 
 </details>

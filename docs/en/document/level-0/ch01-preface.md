@@ -66,7 +66,7 @@ A so-called "Airport" is a "Line Provider" (VPN/Proxy Service). They handle the 
 
 The other side of the "convenience" coin is "risk." Based on the technical characteristics and market situation of "Airports," the risks are at least:
 
-1. **"Airports" can fully access user information**: All user traces on the Internet *inevitably* pass through and are *very likely* stored on their servers for a long time. These records are not bound by any legally effective user privacy agreements (**peeping, recording your every move**).
+1. **"Airports" can fully access user information**: All user traces on the Internet _inevitably_ pass through and are _very likely_ stored on their servers for a long time. These records are not bound by any legally effective user privacy agreements (**peeping, recording your every move**).
 2. **"Airports" lack market regulation**: There are inevitably malicious merchants aiming at fraud (**active exit scams/running away**).
 3. **"Airports" face regulatory pressure**: While big airports are relatively secure, they cannot avoid attracting attention. In 2020, several large airports suspended operations or ran away, severely interfering with users' normal usage (**passive exit scams/forced shutdown**).
 4. **"Airport" technical levels are hard to determine**: Line quality varies greatly, and deceptive practices are common (**slow speeds, frequent drops, inability to connect**).

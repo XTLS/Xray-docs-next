@@ -8,8 +8,6 @@ Transport specifies a stable method for data transmission. Generally, both ends 
 
 `StreamSettingsObject` corresponds to the `streamSettings` item in inbound or outbound configurations. Each inbound or outbound can be configured with different transport settings independently, and `streamSettings` can be set to perform some transport configurations.
 
-
-
 ```json
 {
   "network": "raw",
@@ -104,8 +102,6 @@ Hysteria configuration for the current connection. Only valid when this connecti
 Specific configurations related to transparent proxying.
 
 ### TLSObject
-
-
 
 ```json
 {
@@ -311,7 +307,10 @@ Adjusts the underlying socket options of the connection used when querying ECH r
   "show": false,
   "target": "example.com:443",
   "xver": 0,
-  "serverNames": ["example.com", "[www.example.com](https://www.example.com)"],
+  "serverNames": [
+    "example.com",
+    "[www.example.com](https://www.example.com)"
+  ],
   "privateKey": "",
   "minClientVer": "",
   "maxClientVer": "",
@@ -712,6 +711,7 @@ TL;DR: Connecting to server requires waiting for DNS result; finishing DNS query
 > Tony: Chicken or egg first?
 
 Detailed explanation:
+
 1. Trigger: Proxy server (`proxy.com`). Built-in DNS server, non-Local mode.
 2. Xray attempts to establish TCP connection to `proxy.com`. **Before** that, query `proxy.com` via built-in DNS.
 3. Built-in DNS connects to `dns.com` to query IP of `proxy.com`.
@@ -723,6 +723,7 @@ Detailed explanation:
 9. Good Game!
 
 Solutions:
+
 - Change traffic splitting for built-in DNS server.
 - Use Hosts.
 - ~~If you still don't know the solution, don't use this feature.~~
@@ -770,10 +771,11 @@ TCP congestion control algorithm. Linux only.
 Not configuring means using system default.
 
 ::: tip Common Algorithms
+
 - bbr (Recommended)
 - cubic
 - reno
-:::
+  :::
 
 ::: tip
 Run `sysctl net.ipv4.tcp_congestion_control` to get system default.

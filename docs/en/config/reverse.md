@@ -21,7 +21,7 @@ The general working principle of the reverse proxy is as follows:
 
 - `portal`
   - If the `portal` receives a request and the domain matches, it indicates response data sent by the `bridge`. This connection will be used to establish the reverse tunnel.
-  - If the `portal` receives a request and the domain does *not* match, it indicates a connection from a public user. This connection data will be forwarded to the bridge.
+  - If the `portal` receives a request and the domain does _not_ match, it indicates a connection from a public user. This connection data will be forwarded to the bridge.
 
 - The `bridge` performs dynamic load balancing based on traffic volume.
 

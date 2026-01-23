@@ -58,7 +58,7 @@ Encryption method. The client will use the configured encryption method to send 
 
 It is not recommended to use `"none"` or `"zero"` pseudo-encryption methods without enabling TLS encryption and enforcing certificate verification. Regardless of the encryption method used, the VMess packet header is protected by encryption and authentication.
 
-Note: `"auto"` only determines the AES hardware acceleration support status of the *client*. If the *server* does not support AES hardware acceleration, you still need to manually set it to `chacha20-poly1305`. This is very important because Chacha20-Poly1305 takes about 48% more time than AES-128-GCM on platforms supporting AES acceleration, but on platforms *without* AES acceleration, AES-128-GCM takes over 2000% more time than Chacha20-Poly1305.
+Note: `"auto"` only determines the AES hardware acceleration support status of the _client_. If the _server_ does not support AES hardware acceleration, you still need to manually set it to `chacha20-poly1305`. This is very important because Chacha20-Poly1305 takes about 48% more time than AES-128-GCM on platforms supporting AES acceleration, but on platforms _without_ AES acceleration, AES-128-GCM takes over 2000% more time than Chacha20-Poly1305.
 
 > `experiments`: string
 

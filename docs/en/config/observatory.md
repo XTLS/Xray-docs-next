@@ -91,7 +91,7 @@ The number of recent probe results to keep.
 Probe timeout. Format is the same as `interval` above.
 
 ::: tip
-The working principle of Burst Observatory is to immediately schedule probe tasks for each matched outbound at every `interval` * `sampling` (hereinafter referred to as the probe cycle). However, within each task's cycle, the probe is executed at a random time. This means compared to `observatory` (Background Connection Observatory), the fingerprint of this detector is less obvious. But if `interval` is set too small, or `sampling` is too large causing frequent probing, the fingerprint will be more obvious.
+The working principle of Burst Observatory is to immediately schedule probe tasks for each matched outbound at every `interval` \* `sampling` (hereinafter referred to as the probe cycle). However, within each task's cycle, the probe is executed at a random time. This means compared to `observatory` (Background Connection Observatory), the fingerprint of this detector is less obvious. But if `interval` is set too small, or `sampling` is too large causing frequent probing, the fingerprint will be more obvious.
 
 `interval` and `sampling` jointly affect the sensitivity of failover and recovery. When a node fails probes continuously, it takes at fastest 1 probe cycle to mark the node as faulty, and at slowest 2 probe cycles. Recovering from failure requires one successful probe, which depends on the probe density; at slowest, it takes 1 probe cycle.
 :::

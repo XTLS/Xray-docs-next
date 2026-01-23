@@ -4,7 +4,7 @@ In the process of using Xray, you must have heard about the **[Fallback]** funct
 
 ## 1. Reviewing Fallbacks in the "Beginner's Guide"
 
-If you used the [Xray Configuration](../level-0/ch07-xray-server.md#_7-4-configuration-xray) from the *Beginner's Guide* and completed the [HTTP to HTTPS Redirection Optimization](../level-0/ch07-xray-server.md#_7-8-server-optimization-part-2-enable-http-automatic-jump-to-https), then you already have a simple fallback based on the `VLESS` protocol:
+If you used the [Xray Configuration](../level-0/ch07-xray-server.md#_7-4-configuration-xray) from the _Beginner's Guide_ and completed the [HTTP to HTTPS Redirection Optimization](../level-0/ch07-xray-server.md#_7-8-server-optimization-part-2-enable-http-automatic-jump-to-https), then you already have a simple fallback based on the `VLESS` protocol:
 
 ```json
 {
@@ -35,53 +35,53 @@ How do we explain this configuration in plain language?
 
 1. **Xray's `[inbound port]` is `443`**
 
-    This means `Xray` is responsible for listening to `HTTPS` traffic on port `443`.
+   This means `Xray` is responsible for listening to `HTTPS` traffic on port `443`.
 
 2. **Xray's `[inbound protocol]` is `vless`**
 
-    Only traffic using the `vless` protocol will flow into `Xray` for further processing.
+   Only traffic using the `vless` protocol will flow into `Xray` for further processing.
 
-    ::: warning
-    **Note:** The `VLESS` lightweight protocol was originally developed to introduce the fallback function to cores like `xray` and `v2fly`, while reducing redundant verification/encryption. (Of course, as of now, the `trojan` protocol in `xray` also fully supports the fallback function.)
-    :::
+   ::: warning
+   **Note:** The `VLESS` lightweight protocol was originally developed to introduce the fallback function to cores like `xray` and `v2fly`, while reducing redundant verification/encryption. (Of course, as of now, the `trojan` protocol in `xray` also fully supports the fallback function.)
+   :::
 
 3. **The `[fallback dest]` is `8080`**
 
-    After `Xray` accepts traffic on port `443`, traffic belonging to the `vless` protocol is processed internally by `Xray` and forwarded to the outbound module. Traffic that is *not* `vless` protocol is forwarded to port `8080`.
+   After `Xray` accepts traffic on port `443`, traffic belonging to the `vless` protocol is processed internally by `Xray` and forwarded to the outbound module. Traffic that is _not_ `vless` protocol is forwarded to port `8080`.
 
-    ::: warning
-    **Q: Is it singular or plural?**
+   ::: warning
+   **Q: Is it singular or plural?**
 
-    A: Some sharp students may have noticed that in the configuration file, the keys are plural (`inbounds`, `fallbacks`), but when I explain them, I use the singular (`inbound`, `fallback`). Why?
+   A: Some sharp students may have noticed that in the configuration file, the keys are plural (`inbounds`, `fallbacks`), but when I explain them, I use the singular (`inbound`, `fallback`). Why?
 
-    Because the plural form in the configuration file indicates that `xray` supports N elements of the same level (i.e., N inbounds, M fallbacks, etc.). In the example analysis above, we are referring to just one of them, so I used the singular.
-    :::
+   Because the plural form in the configuration file indicates that `xray` supports N elements of the same level (i.e., N inbounds, M fallbacks, etc.). In the example analysis above, we are referring to just one of them, so I used the singular.
+   :::
 
 4. **Traffic falling back to port `8080` is handled by a subsequent program**
 
-    In the example from the *Beginner's Guide*, port `8080` is handled by `Nginx`, which finds and displays the Red Panda webpage based on its configuration.
+   In the example from the _Beginner's Guide_, port `8080` is handled by `Nginx`, which finds and displays the Red Panda webpage based on its configuration.
 
 5. **Summary: The complete data route for the simplest fallback in the Beginner's Guide is as follows:**
 
-    ```mermaid
-    graph LR;
+   ```mermaid
+   graph LR;
 
-    W(External HTTP:80 Request) --> N80(HTTP:80)
+   W(External HTTP:80 Request) --> N80(HTTP:80)
 
-    subgraph Nginx External Listener
-    N80 -.- N301(301 Redirect) -.- N443(HTTPS:443)
-    end
+   subgraph Nginx External Listener
+   N80 -.- N301(301 Redirect) -.- N443(HTTPS:443)
+   end
 
-    N443 --> X(Xray Listener 443) .- X1{Inbound Judgment}
-    X1 --> |Receive VLESS Traffic| X2(Xray Internal Rules)
-    X2 --> O(Xray Outbounds)
-    X1 ==> |Fallback Non-VLESS Traffic| N8080(Nginx:8080)
-    N8080:::nginxclass ==> H(index.html)
+   N443 --> X(Xray Listener 443) .- X1{Inbound Judgment}
+   X1 --> |Receive VLESS Traffic| X2(Xray Internal Rules)
+   X2 --> O(Xray Outbounds)
+   X1 ==> |Fallback Non-VLESS Traffic| N8080(Nginx:8080)
+   N8080:::nginxclass ==> H(index.html)
 
-    H:::nginxclass
-    classDef nginxclass fill:#FFFFDE
+   H:::nginxclass
+   classDef nginxclass fill:#FFFFDE
 
-    ```
+   ```
 
 ## 2. Re-understanding Fallbacks (WHAT, HOW `v1`)
 
@@ -191,169 +191,169 @@ How do we explain this configuration in plain language?
 
 1. **Xray's `[inbound port]` is `443`**
 
-    This means `Xray` is responsible for listening to `HTTPS` traffic on port `443` and uses the `TLS` certificate set under `certificates` for verification.
+   This means `Xray` is responsible for listening to `HTTPS` traffic on port `443` and uses the `TLS` certificate set under `certificates` for verification.
 
 2. **Xray's `[inbound protocol]` is `vless`**
 
-    `vless` protocol traffic flows directly into `Xray` for subsequent processing.
+   `vless` protocol traffic flows directly into `Xray` for subsequent processing.
 
 3. **Non-`VLESS` protocol traffic has 4 different fallback targets:**
-    1. Traffic with `path` as `/websocket` falls back to port `1234` for processing.
-    2. Traffic with `path` as `/vmesstcp` falls back to port `2345` for processing.
-    3. Traffic with `path` as `/vmessws` falls back to port `3456` for processing.
-    4. All other traffic falls back to port `1310` for processing.
+   1. Traffic with `path` as `/websocket` falls back to port `1234` for processing.
+   2. Traffic with `path` as `/vmesstcp` falls back to port `2345` for processing.
+   3. Traffic with `path` as `/vmessws` falls back to port `3456` for processing.
+   4. All other traffic falls back to port `1310` for processing.
 
 4. **`xver` set to `1` means enabling the `proxy protocol` function to pass the real source IP backwards.**
 
 5. **The fallback structure described above is shown in the diagram below:**
 
-    ```mermaid
-    graph LR;
+   ```mermaid
+   graph LR;
 
-    W443(External HTTP:443 Request) --> X443(Xray-inbound: 443) .- X1{Inbound Judgment}
-    X1 --> |Protocol = VLESS Traffic| X2(Xray Internal Rules)
-    X2 --> O(Xray Outbounds)
+   W443(External HTTP:443 Request) --> X443(Xray-inbound: 443) .- X1{Inbound Judgment}
+   X1 --> |Protocol = VLESS Traffic| X2(Xray Internal Rules)
+   X2 --> O(Xray Outbounds)
 
-    X1 --> |path = /websocket Traffic| X1234(Xray-inbound:1234)
-    X1 --> |path = /vmesstcp Traffic| X2345(Xray-inbound:2345)
-    X1 --> |path = /vmessws Traffic| X3456(Xray-inbound:3456)
-    X1 --> |All Other Traffic| X1310(Xray-inbound:1310)
+   X1 --> |path = /websocket Traffic| X1234(Xray-inbound:1234)
+   X1 --> |path = /vmesstcp Traffic| X2345(Xray-inbound:2345)
+   X1 --> |path = /vmessws Traffic| X3456(Xray-inbound:3456)
+   X1 --> |All Other Traffic| X1310(Xray-inbound:1310)
 
-    ```
+   ```
 
 6. **The Web Page Fallback is missing!**
 
-    That's right, clever students must have noticed that the `nginx fallback` for defending against [Active Probing] is gone!!! Why is that? Is it insecure? Don't worry, let's continue analyzing:
+   That's right, clever students must have noticed that the `nginx fallback` for defending against [Active Probing] is gone!!! Why is that? Is it insecure? Don't worry, let's continue analyzing:
 
 ### 5.2 The configuration segments for subsequent listening processing are as follows
 
 1. Traffic falling back to port `1310` is verified and processed according to the configuration below:
 
-    ```json
-    {
-      "port": 1310,
-      "listen": "127.0.0.1",
-      "protocol": "trojan",
-      "settings": {
-        "clients": [
-          {
-            "password": "", // Fill in your password
-            "level": 0,
-            "email": "love@example.com"
-          }
-        ],
-        "fallbacks": [
-          {
-            "dest": 80 // Or fallback to another probe-resistant proxy
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "acceptProxyProtocol": true
-        }
-      }
-    }
-    ```
+   ```json
+   {
+     "port": 1310,
+     "listen": "127.0.0.1",
+     "protocol": "trojan",
+     "settings": {
+       "clients": [
+         {
+           "password": "", // Fill in your password
+           "level": 0,
+           "email": "love@example.com"
+         }
+       ],
+       "fallbacks": [
+         {
+           "dest": 80 // Or fallback to another probe-resistant proxy
+         }
+       ]
+     },
+     "streamSettings": {
+       "network": "tcp",
+       "security": "none",
+       "tcpSettings": {
+         "acceptProxyProtocol": true
+       }
+     }
+   }
+   ```
 
-    Look, something magical happened. A new `fallbacks` section appeared here in the `trojan` protocol. As mentioned before, the `trojan` protocol in `xray` also has full fallback capabilities. So, at this point, the `trojan` protocol can perform judgment and fallback again (this is the legendary "Nested/Matryoshka" fallback):
-    - All `trojan` protocol traffic flows into `Xray` for subsequent processing.
-    - All non-`trojan` protocol traffic is forwarded to port `80`. The defense against [Active Probing] is complete!
+   Look, something magical happened. A new `fallbacks` section appeared here in the `trojan` protocol. As mentioned before, the `trojan` protocol in `xray` also has full fallback capabilities. So, at this point, the `trojan` protocol can perform judgment and fallback again (this is the legendary "Nested/Matryoshka" fallback):
+   - All `trojan` protocol traffic flows into `Xray` for subsequent processing.
+   - All non-`trojan` protocol traffic is forwarded to port `80`. The defense against [Active Probing] is complete!
 
 2. Traffic falling back to port `1234`. Look closely! It is actually `vless+ws`:
 
-    ```json
-    {
-      "port": 1234,
-      "listen": "127.0.0.1",
-      "protocol": "vless",
-      "settings": {
-        "clients": [
-          {
-            "id": "", // Fill in your UUID
-            "level": 0,
-            "email": "love@example.com"
-          }
-        ],
-        "decryption": "none"
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": true, // Reminder: Delete this line if using Nginx/Caddy to reverse proxy WS
-          "path": "/websocket" // Must be changed to custom PATH, matching the shunting path
-        }
-      }
-    }
-    ```
+   ```json
+   {
+     "port": 1234,
+     "listen": "127.0.0.1",
+     "protocol": "vless",
+     "settings": {
+       "clients": [
+         {
+           "id": "", // Fill in your UUID
+           "level": 0,
+           "email": "love@example.com"
+         }
+       ],
+       "decryption": "none"
+     },
+     "streamSettings": {
+       "network": "ws",
+       "security": "none",
+       "wsSettings": {
+         "acceptProxyProtocol": true, // Reminder: Delete this line if using Nginx/Caddy to reverse proxy WS
+         "path": "/websocket" // Must be changed to custom PATH, matching the shunting path
+       }
+     }
+   }
+   ```
 
 3. Traffic falling back to port `2345`. Look closely! It is actually `vmess direct connection`:
 
-    ```json
-    {
-      "port": 2345,
-      "listen": "127.0.0.1",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "", // Fill in your UUID
-            "level": 0,
-            "email": "love@example.com"
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "security": "none",
-        "tcpSettings": {
-          "acceptProxyProtocol": true,
-          "header": {
-            "type": "http",
-            "request": {
-              "path": [
-                "/vmesstcp" // Must be changed to custom PATH, matching the shunting path
-              ]
-            }
-          }
-        }
-      }
-    }
-    ```
+   ```json
+   {
+     "port": 2345,
+     "listen": "127.0.0.1",
+     "protocol": "vmess",
+     "settings": {
+       "clients": [
+         {
+           "id": "", // Fill in your UUID
+           "level": 0,
+           "email": "love@example.com"
+         }
+       ]
+     },
+     "streamSettings": {
+       "network": "tcp",
+       "security": "none",
+       "tcpSettings": {
+         "acceptProxyProtocol": true,
+         "header": {
+           "type": "http",
+           "request": {
+             "path": [
+               "/vmesstcp" // Must be changed to custom PATH, matching the shunting path
+             ]
+           }
+         }
+       }
+     }
+   }
+   ```
 
 4. Traffic falling back to port `3456`. Look closely again! It is actually `vmess+ws(+cdn)`.
 
-    ::: warning Explanation
-    You read that right. This is one of the combinations previously recommended by v2fly, and it fully supports `CDN`. It is now included in the perfect fallback package!
-    :::
+   ::: warning Explanation
+   You read that right. This is one of the combinations previously recommended by v2fly, and it fully supports `CDN`. It is now included in the perfect fallback package!
+   :::
 
-    ```json
-    {
-      "port": 3456,
-      "listen": "127.0.0.1",
-      "protocol": "vmess",
-      "settings": {
-        "clients": [
-          {
-            "id": "", // Fill in your UUID
-            "level": 0,
-            "email": "love@example.com"
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "none",
-        "wsSettings": {
-          "acceptProxyProtocol": true, // Reminder: Delete this line if using Nginx/Caddy to reverse proxy WS
-          "path": "/vmessws" // Must be changed to custom PATH, matching the shunting path
-        }
-      }
-    }
-    ```
+   ```json
+   {
+     "port": 3456,
+     "listen": "127.0.0.1",
+     "protocol": "vmess",
+     "settings": {
+       "clients": [
+         {
+           "id": "", // Fill in your UUID
+           "level": 0,
+           "email": "love@example.com"
+         }
+       ]
+     },
+     "streamSettings": {
+       "network": "ws",
+       "security": "none",
+       "wsSettings": {
+         "acceptProxyProtocol": true, // Reminder: Delete this line if using Nginx/Caddy to reverse proxy WS
+         "path": "/vmessws" // Must be changed to custom PATH, matching the shunting path
+       }
+     }
+   }
+   ```
 
 5. **With this, we can draw the complete fallback route for the template:**
 

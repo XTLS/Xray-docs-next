@@ -17,7 +17,7 @@ Use the following environment variables in Linux to enable a global HTTP proxy f
 
 - `export http_proxy=http://127.0.0.1:8080/` (Address must be changed to your configured HTTP inbound proxy address)
 - `export https_proxy=$http_proxy`
-:::
+  :::
 
 ## InboundConfigurationObject
 

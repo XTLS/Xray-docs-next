@@ -110,7 +110,10 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
   "protocol": "wireguard",
   "settings": {
     "secretKey": "6CRVRLgFwGajnikoVOPTDNZnDhx3EydhPsMgpxHfBCY=",
-    "address": ["172.16.0.2/32", "2606:4700:110:857a:6a95:fe27:1870:2a9d/128"],
+    "address": [
+      "172.16.0.2/32",
+      "2606:4700:110:857a:6a95:fe27:1870:2a9d/128"
+    ],
     "peers": [
       {
         "publicKey": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
@@ -134,7 +137,10 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
   "protocol": "wireguard",
   "settings": {
     "secretKey": "Секретный ключ",
-    "address": ["172.16.0.2/32", "2606:4700:110:8949:fed8:2642:a640:c8e1/128"],
+    "address": [
+      "172.16.0.2/32",
+      "2606:4700:110:8949:fed8:2642:a640:c8e1/128"
+    ],
     "peers": [
       {
         "publicKey": "Публичный ключ Warp",

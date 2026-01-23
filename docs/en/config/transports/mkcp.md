@@ -140,7 +140,7 @@ Used with the camouflage type `"dns"`. You can fill in any domain name.
 
 The native KCP protocol uses a fixed header of 24 bytes, while mKCP modifies this to 18 bytes for data packets and 16 bytes for acknowledgement (ACK) packets. Smaller headers help evade characteristic detection and increase transmission speed.
 
-Additionally, native KCP's single ACK packet can only acknowledge the receipt of one data packet. This means that when KCP needs to acknowledge the receipt of 100 data packets, it sends 24 *100 = 2400 bytes of data. This includes a large amount of repetitive header data, causing bandwidth waste. mKCP compresses multiple ACK packets; 100 ACK packets require only 16 + 2 + 100* 4 = 418 bytes, which is equivalent to one-sixth of the native size.
+Additionally, native KCP's single ACK packet can only acknowledge the receipt of one data packet. This means that when KCP needs to acknowledge the receipt of 100 data packets, it sends 24 _100 = 2400 bytes of data. This includes a large amount of repetitive header data, causing bandwidth waste. mKCP compresses multiple ACK packets; 100 ACK packets require only 16 + 2 + 100_ 4 = 418 bytes, which is equivalent to one-sixth of the native size.
 
 ### ACK Packet Retransmission
 

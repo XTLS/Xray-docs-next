@@ -8,9 +8,9 @@ You need to obtain a healthy VPS whose IP is not blocked, and complete the follo
 
 1. Install the **Debian 10 64bit** system in the VPS management panel.
 2. Make a note of the VPS IP address (this article will use `"100.200.300.400"` to represent it).
-    ::: tip
-    This is a deliberately written illegal IP; please replace it with your real IP.
-    :::
+   ::: tip
+   This is a deliberately written illegal IP; please replace it with your real IP.
+   :::
 3. Make a note of the VPS SSH remote login port.
 4. Make a note of the SSH remote login username and password.
 
@@ -36,15 +36,15 @@ This is **not** a real, usable URL; please replace it with your real URL.
 ## 2.3 Software to Install on Your Local Computer
 
 1. **SSH Remote Login Tool**
-    * Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
-    * macOS/Linux: Terminal
+   - Windows: [PuTTY](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
+   - macOS/Linux: Terminal
 
 2. **Remote File Copy Tool**
-    * Windows: [WinSCP](https://winscp.net/eng/index.php)
-    * macOS/Linux: Terminal
+   - Windows: [WinSCP](https://winscp.net/eng/index.php)
+   - macOS/Linux: Terminal
 
 3. **Reliable Text Editor**
-    * Windows/macOS/Linux: [VSCode](https://code.visualstudio.com)
+   - Windows/macOS/Linux: [VSCode](https://code.visualstudio.com)
 
 ## 2.4 Your Progress
 

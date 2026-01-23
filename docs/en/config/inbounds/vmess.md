@@ -54,7 +54,7 @@ A custom string and its mapped UUID are equivalent. This means you can identify 
 
 - Write `"id": "我爱🍉老师1314"`,
 - Or write `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (This UUID is the UUID mapping of `我爱🍉老师1314`)
-:::
+  :::
 
 The mapping standard is described in [VLESS UUID Mapping Standard: Mapping Custom Strings to UUIDv5](https://github.com/XTLS/Xray-core/issues/158).
 

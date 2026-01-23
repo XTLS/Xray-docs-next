@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue"
 
-const visible = ref(false);
-const THRESHOLD = 300;
+const visible = ref(false)
+const THRESHOLD = 300
 
 function onScroll() {
-  visible.value = window.scrollY > THRESHOLD;
+  visible.value = window.scrollY > THRESHOLD
 }
 
 function backToTop() {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: "smooth" })
 }
 
 onMounted(() => {
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
-});
+  onScroll()
+  window.addEventListener("scroll", onScroll, { passive: true })
+})
 
 onUnmounted(() => {
-  window.removeEventListener("scroll", onScroll);
-});
+  window.removeEventListener("scroll", onScroll)
+})
 </script>
 
 <template>

@@ -4,12 +4,12 @@ VLESS is a stateless lightweight transport protocol that serves as a bridge betw
 
 ## Request & Response
 
-| 1 Byte | 16 Bytes | 1 Byte | M Bytes | 1 Byte | 2 Bytes | 1 Byte | S Bytes | X Bytes |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Protocol Version | Equivalent UUID | Addons Length M | Addons ProtoBuf | Command | Port | Address Type | Address | Request Data |
+| 1 Byte           | 16 Bytes        | 1 Byte          | M Bytes         | 1 Byte  | 2 Bytes | 1 Byte       | S Bytes | X Bytes      |
+| :--------------- | :-------------- | :-------------- | :-------------- | :------ | :------ | :----------- | :------ | :----------- |
+| Protocol Version | Equivalent UUID | Addons Length M | Addons ProtoBuf | Command | Port    | Address Type | Address | Request Data |
 
-| 1 Byte | 1 Byte | N Bytes | Y Bytes |
-| :--- | :--- | :--- | :--- |
+| 1 Byte                            | 1 Byte          | N Bytes         | Y Bytes       |
+| :-------------------------------- | :-------------- | :-------------- | :------------ |
 | Protocol Version, same as request | Addons Length N | Addons ProtoBuf | Response Data |
 
 VLESS has had the above structure since the second alpha version, ALPHA 2 (BETA is the fifth test version):
@@ -37,7 +37,7 @@ It seems only VLESS allows optional embedded ProtoBuf. It is a data exchange for
 The origin was an article I read stating that SS has some shortcomings, such as lacking an error reporting mechanism design, meaning clients cannot take further actions based on different errors.
 (I don't agree that all errors should be reported; otherwise, active probing cannot be prevented. In the next beta, the server can return a string of custom information.)
 So I realized an extensible structure is important. In the future, it could also carry things like dynamic port commands. Not just responses, requests also need a similar structure.
-I originally planned to design TLV myself, but then realized ProtoBuf *is* this structure, a ready-made wheel perfectly suitable for this task, with good language support.
+I originally planned to design TLV myself, but then realized ProtoBuf _is_ this structure, a ready-made wheel perfectly suitable for this task, with good language support.
 
 Currently, "Addons" only contain Scheduler and SchedulerV, which replace MessName and MessSeed. **When you don't need them, "Addons Length" is 0, so there is no ProtoBuf serialization/deserialization overhead.** Actually, I prefer to call this process "splicing" because that's what pb effectively does in principle, with minimal overhead. The spliced bytes are very compact, hardly different from the ALPHA scheme. Those interested can output and compare them separately.
 

@@ -36,7 +36,7 @@ Let's review: what happens when the situations above cannot be matched? That's r
 
 - When your first outbound is `[direct-out]`: **Everything needing direct connection is correct, but everything needing proxy is wrong.**
 - When your first outbound is `[proxy-out-vless]`: **Everything needing proxy is correct, but everything needing direct connection is wrong.**
-:::
+  :::
 
 Therefore, we need a way to have our cake and eat it too. Does such a way exist? **Of course!** All we need are more **[Shunting Judgment Criteria]** beyond just **[Domain]**.
 

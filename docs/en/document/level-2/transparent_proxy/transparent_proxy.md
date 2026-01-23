@@ -171,7 +171,7 @@ iptables -t mangle -A PREROUTING -j XRAY
 
 Then you will find that although the SSH connection is disconnected, the transparent proxy is now available. As long as we change the system DNS to a public DNS, we can surf the Internet normally (because the gateway itself cannot be accessed now, setting the DNS to the gateway won't work).
 
-At this point, Stage 1 is complete. The reason the gateway cannot be accessed is that the proxy rules cover *all* traffic, including traffic accessing the gateway. Imagine trying to access your local gateway on a VPS; it certainly won't work. So, we need to make this part of the traffic direct. Please see Stage 2.
+At this point, Stage 1 is complete. The reason the gateway cannot be accessed is that the proxy rules cover _all_ traffic, including traffic accessing the gateway. Imagine trying to access your local gateway on a VPS; it certainly won't work. So, we need to make this part of the traffic direct. Please see Stage 2.
 
 ### Stage 2
 

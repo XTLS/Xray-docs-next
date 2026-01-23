@@ -27,9 +27,9 @@ At the time of writing, the installation script has a few small bugs when using 
 
 1.  Linux 101 - Basic Commands:
 
-    | Number | Command Name | Command Description |
-    | :---: | :---: | :---: |
-    | `cmd-14` | `rm` | Delete command |
+    |  Number  | Command Name | Command Description |
+    | :------: | :----------: | :-----------------: |
+    | `cmd-14` |     `rm`     |   Delete command    |
 
 2.  Download the installation script locally:
 
@@ -86,13 +86,11 @@ Although we have already applied for TLS certificates earlier, according to the 
     ![Xray Certificate Install Demo](./ch07-img02-xray-cert-install.png)
 
 5.  `acme.sh` checks the certificate every 60 days and automatically renews it if it's close to expiration. However, as far as I know, it does not automatically install the new certificate to `xray-core`, so we need to add a system automatic periodic task to complete this step.
-
     1.  Linux 101 - Basic Commands:
 
-    | Number | Command Name | Command Description |
-    | :---: | :---: | :---: |
+    |  Number  | Command Name |           Command Description           |
+    | :------: | :----------: | :-------------------------------------: |
     | `cmd-15` | `crontab -e` | Edit the current user's scheduled tasks |
-
     2.  Create a script file (`xray-cert-renew.sh`):
 
         ```shell
@@ -156,9 +154,9 @@ First, various configurations can refer to the [official VLESS configuration exa
 2.  Create log files and folders for later use.
     1.  Linux 101 - Basic Commands:
 
-        | Number | Command Name | Command Description |
-        | :---: | :---: | :---: |
-        | `cmd-16` | `touch` | Create a blank file |
+        |  Number  | Command Name | Command Description |
+        | :------: | :----------: | :-----------------: |
+        | `cmd-16` |   `touch`    | Create a blank file |
 
     2.  Create a [Log Dedicated Folder] inside the `vpsadmin` folder.
 
@@ -421,7 +419,7 @@ So far, we have used `systemctl` related commands like `start`, `status`, `reloa
     To avoid the tragedy of being unable to recognize the kernel, please ensure:
     - Take a system snapshot before trying, or
     - You have `vnc` to save the situation (and you know how to use it)
-    :::
+      :::
 
 10. Modify the `kernel` parameter configuration file `sysctl.conf` and specify enabling `BBR`.
 
@@ -548,18 +546,16 @@ Congratulations!! At this step, you already possess a server capable of proper s
 ## 7.11 Important Errata
 
 1.  In the first edition, the `Xray` configuration file `config.json` folder location was incorrect. If you operated according to the previous location, `Xray` would not start correctly. Therefore, the correction is explained here. Please check yourself. Sorry for the inconvenience!
-
-    -   Correct location: `/usr/local/etc/xray/config.json`
-    -   Incorrect location: `/usr/local/etc/config.json`
+    - Correct location: `/usr/local/etc/xray/config.json`
+    - Incorrect location: `/usr/local/etc/config.json`
 
     Affected sections:
-    -   7.4 Configuring `Xray` - 3. Use `nano` to create the `Xray` configuration file
-    -   7.8 Server Optimization 2 - 6. Modify `Xray`'s fallback settings
+    - 7.4 Configuring `Xray` - 3. Use `nano` to create the `Xray` configuration file
+    - 7.8 Server Optimization 2 - 6. Modify `Xray`'s fallback settings
 
 2.  In the first edition, when modifying the `Nginx` configuration file `nginx.conf`, the content was incorrect (webpage folder location error). If you operated according to the previous location, `Nginx` would not find the correct website. Please check yourself. Sorry for the inconvenience!
-
-    -   Correct folder location: `root /home/vpsadmin/www/webpage;`
-    -   Incorrect folder location: `root /var/www/website/html`
+    - Correct folder location: `root /home/vpsadmin/www/webpage;`
+    - Incorrect folder location: `root /var/www/website/html`
 
     Affected sections:
-    -   7.8 Server Optimization 2 - 4. Add a local port listener at the same level as port `80` to provide webpage display
+    - 7.8 Server Optimization 2 - 4. Add a local port listener at the same level as port `80` to provide webpage display

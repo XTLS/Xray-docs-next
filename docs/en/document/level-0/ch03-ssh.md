@@ -24,7 +24,7 @@ Now, follow me step by step.
 Any setting updates in PuTTY must be manually saved to the Session again, otherwise, they will be lost when you close the program.
 :::
 
-1. Click `Open` to enter the SSH connection window. Enter your username and password as shown below to connect to your VPS. (This article assumes the default username is `root`. Also, when typing passwords in Linux, **no asterisks `******` will appear**. This prevents password length leakage—your keyboard isn't broken!)
+1. Click `Open` to enter the SSH connection window. Enter your username and password as shown below to connect to your VPS. (This article assumes the default username is `root`. Also, when typing passwords in Linux, **no asterisks `\*\*\*\***` will appear\*\*. This prevents password length leakage—your keyboard isn't broken!)
 
    ![SSH Remote Login](./ch03-img04-ssh-login.png)
 
@@ -56,10 +56,10 @@ Any setting updates in PuTTY must be manually saved to the Session again, otherw
 
 3. Basic Linux commands for beginners:
 
-   | Code | Command Name | Description |
-   | :---: | :---: | :---: |
-   | `cmd-01` | `apt update` | Check for software updates |
-   | `cmd-02` | `apt upgrade` | Execute software updates |
+   |   Code   | Command Name  |        Description         |
+   | :------: | :-----------: | :------------------------: |
+   | `cmd-01` | `apt update`  | Check for software updates |
+   | `cmd-02` | `apt upgrade` |  Execute software updates  |
 
 4. Now enter the first command to fetch update information:
 

@@ -28,8 +28,8 @@ mKCP is a UDP-based protocol; all communication is transmitted using UDP.
 
 ### Packet
 
-| 4 Bytes | 2 Bytes | L Bytes |
-| :--- | :--- | :--- |
+| 4 Bytes          | 2 Bytes       | L Bytes      |
+| :--------------- | :------------ | :----------- |
 | Authentication A | Data Length L | Segment Part |
 
 Where:
@@ -39,9 +39,9 @@ Where:
 
 ### Data Segment
 
-| 2 Bytes | 1 Byte | 1 Byte | 4 Bytes | 4 Bytes | 4 Bytes | 2 Bytes | Len Bytes |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Identifier Conv | Command Cmd | Option Opt | Timestamp Ts | Sequence Sn | Unacknowledged Una | Length Len | Data |
+| 2 Bytes         | 1 Byte      | 1 Byte     | 4 Bytes      | 4 Bytes     | 4 Bytes            | 2 Bytes    | Len Bytes |
+| :-------------- | :---------- | :--------- | :----------- | :---------- | :----------------- | :--------- | :-------- |
+| Identifier Conv | Command Cmd | Option Opt | Timestamp Ts | Sequence Sn | Unacknowledged Una | Length Len | Data      |
 
 Where:
 
@@ -56,9 +56,9 @@ Where:
 
 ### ACK Segment
 
-| 2 Bytes | 1 Byte | 1 Byte | 4 Bytes | 4 Bytes | 4 Bytes | 2 Bytes | Len * 4 Bytes |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Identifier Conv | Command Cmd | Option Opt | Window Wnd | Next Receive Sn | Timestamp Ts | Length Len | Received Sns |
+| 2 Bytes         | 1 Byte      | 1 Byte     | 4 Bytes    | 4 Bytes         | 4 Bytes      | 2 Bytes    | Len \* 4 Bytes |
+| :-------------- | :---------- | :--------- | :--------- | :-------------- | :----------- | :--------- | :------------- |
+| Identifier Conv | Command Cmd | Option Opt | Window Wnd | Next Receive Sn | Timestamp Ts | Length Len | Received Sns   |
 
 Where:
 
@@ -76,8 +76,8 @@ Note:
 
 ### Ping (Heartbeat) Segment
 
-| 2 Bytes | 1 Byte | 1 Byte | 4 Bytes | 4 Bytes | 4 Bytes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
+| 2 Bytes         | 1 Byte      | 1 Byte     | 4 Bytes            | 4 Bytes         | 4 Bytes     |
+| :-------------- | :---------- | :--------- | :----------------- | :-------------- | :---------- |
 | Identifier Conv | Command Cmd | Option Opt | Unacknowledged Una | Next Receive Sn | Latency Rto |
 
 Where:

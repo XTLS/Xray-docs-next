@@ -1,4 +1,4 @@
-import type { DefaultTheme } from "vitepress";
+import type { DefaultTheme } from "vitepress"
 
 export const sidebar: DefaultTheme.Config["sidebar"] = {
   "/en/config/": [
@@ -11,14 +11,17 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Fallback", link: "/en/config/features/fallback.md" },
         {
           text: "Browser Dialer",
-          link: "/en/config/features/browser_dialer.md",
+          link: "/en/config/features/browser_dialer.md"
         },
-        { text: "Environment Variables", link: "/en/config/features/env.md" },
+        {
+          text: "Environment Variables",
+          link: "/en/config/features/env.md"
+        },
         {
           text: "Multiple Configurations",
-          link: "/en/config/features/multiple.md",
-        },
-      ],
+          link: "/en/config/features/multiple.md"
+        }
+      ]
     },
     {
       text: "Basic Configuration",
@@ -35,10 +38,13 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Reverse Proxy", link: "/en/config/reverse.md" },
         { text: "Routing", link: "/en/config/routing.md" },
         { text: "Statistics", link: "/en/config/stats.md" },
-        { text: "Transport (uTLS, REALITY)", link: "/en/config/transport.md" },
+        {
+          text: "Transport (uTLS, REALITY)",
+          link: "/en/config/transport.md"
+        },
         { text: "Metrics", link: "/en/config/metrics.md" },
-        { text: "Observatory", link: "/en/config/observatory.md" },
-      ],
+        { text: "Observatory", link: "/en/config/observatory.md" }
+      ]
     },
     {
       text: "Inbound Protocols",
@@ -47,20 +53,23 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       items: [
         {
           text: "Tunnel (dokodemo-door)",
-          link: "/en/config/inbounds/tunnel.md",
+          link: "/en/config/inbounds/tunnel.md"
         },
         { text: "HTTP", link: "/en/config/inbounds/http.md" },
-        { text: "Shadowsocks", link: "/en/config/inbounds/shadowsocks.md" },
+        {
+          text: "Shadowsocks",
+          link: "/en/config/inbounds/shadowsocks.md"
+        },
         { text: "Socks", link: "/en/config/inbounds/socks.md" },
         { text: "Trojan", link: "/en/config/inbounds/trojan.md" },
         {
           text: "VLESS (XTLS Vision Seed)",
-          link: "/en/config/inbounds/vless.md",
+          link: "/en/config/inbounds/vless.md"
         },
         { text: "VMess", link: "/en/config/inbounds/vmess.md" },
         { text: "Wireguard", link: "/en/config/inbounds/wireguard.md" },
-        { text: "TUN", link: "/en/config/inbounds/tun.md" },
-      ],
+        { text: "TUN", link: "/en/config/inbounds/tun.md" }
+      ]
     },
     {
       text: "Outbound Protocols",
@@ -71,21 +80,24 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "DNS", link: "/en/config/outbounds/dns.md" },
         {
           text: "Freedom (fragment, noises)",
-          link: "/en/config/outbounds/freedom.md",
+          link: "/en/config/outbounds/freedom.md"
         },
         { text: "HTTP", link: "/en/config/outbounds/http.md" },
         { text: "Loopback", link: "/en/config/outbounds/loopback.md" },
-        { text: "Shadowsocks", link: "/en/config/outbounds/shadowsocks.md" },
+        {
+          text: "Shadowsocks",
+          link: "/en/config/outbounds/shadowsocks.md"
+        },
         { text: "Socks", link: "/en/config/outbounds/socks.md" },
         { text: "Trojan", link: "/en/config/outbounds/trojan.md" },
         {
           text: "VLESS (XTLS Vision Seed)",
-          link: "/en/config/outbounds/vless.md",
+          link: "/en/config/outbounds/vless.md"
         },
         { text: "VMess", link: "/en/config/outbounds/vmess.md" },
         { text: "Wireguard", link: "/en/config/outbounds/wireguard.md" },
-        { text: "Hysteria", link: "/en/config/outbounds/hysteria.md" },
-      ],
+        { text: "Hysteria", link: "/en/config/outbounds/hysteria.md" }
+      ]
     },
     {
       text: "Transports",
@@ -95,15 +107,18 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "RAW", link: "/en/config/transports/raw.md" },
         {
           text: "XHTTP: Beyond REALITY",
-          link: "/en/config/transports/xhttp.md",
+          link: "/en/config/transports/xhttp.md"
         },
         { text: "mKCP", link: "/en/config/transports/mkcp.md" },
         { text: "gRPC", link: "/en/config/transports/grpc.md" },
         { text: "WebSocket", link: "/en/config/transports/websocket.md" },
-        { text: "HTTPUpgrade", link: "/en/config/transports/httpupgrade.md" },
-        { text: "Hysteria", link: "/en/config/transports/hysteria.md" },
-      ],
-    },
+        {
+          text: "HTTPUpgrade",
+          link: "/en/config/transports/httpupgrade.md"
+        },
+        { text: "Hysteria", link: "/en/config/transports/hysteria.md" }
+      ]
+    }
   ],
   "/en/document/": [
     {
@@ -114,8 +129,11 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Installation", link: "/en/document/install.md" },
         { text: "Configuration & Run", link: "/en/document/config.md" },
         { text: "Command Arguments", link: "/en/document/command.md" },
-        { text: "Contribute to Project X", link: "/en/document/document.md" },
-      ],
+        {
+          text: "Contribute to Project X",
+          link: "/en/document/document.md"
+        }
+      ]
     },
     {
       text: "Absolute Beginner's Guide",
@@ -124,41 +142,41 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       items: [
         {
           text: "[Chapter 1] Preface",
-          link: "/en/document/level-0/ch01-preface.md",
+          link: "/en/document/level-0/ch01-preface.md"
         },
         {
           text: "[Chapter 2] Preparation",
-          link: "/en/document/level-0/ch02-preparation.md",
+          link: "/en/document/level-0/ch02-preparation.md"
         },
         {
           text: "[Chapter 3] Remote Login (SSH)",
-          link: "/en/document/level-0/ch03-ssh.md",
+          link: "/en/document/level-0/ch03-ssh.md"
         },
         {
           text: "[Chapter 4] Security",
-          link: "/en/document/level-0/ch04-security.md",
+          link: "/en/document/level-0/ch04-security.md"
         },
         {
           text: "[Chapter 5] Website Building",
-          link: "/en/document/level-0/ch05-webpage.md",
+          link: "/en/document/level-0/ch05-webpage.md"
         },
         {
           text: "[Chapter 6] Certificate Management",
-          link: "/en/document/level-0/ch06-certificates.md",
+          link: "/en/document/level-0/ch06-certificates.md"
         },
         {
           text: "[Chapter 7] Xray Server",
-          link: "/en/document/level-0/ch07-xray-server.md",
+          link: "/en/document/level-0/ch07-xray-server.md"
         },
         {
           text: "[Chapter 8] Xray Clients",
-          link: "/en/document/level-0/ch08-xray-clients.md",
+          link: "/en/document/level-0/ch08-xray-clients.md"
         },
         {
           text: "[Chapter 9] Appendix",
-          link: "/en/document/level-0/ch09-appendix.md",
-        },
-      ],
+          link: "/en/document/level-0/ch09-appendix.md"
+        }
+      ]
     },
     {
       text: "Beginner Skills",
@@ -167,26 +185,29 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       items: [
         {
           text: "Analysis of Fallbacks",
-          link: "/en/document/level-1/fallbacks-lv1.md",
+          link: "/en/document/level-1/fallbacks-lv1.md"
         },
         {
           text: "Analysis of Routing (Part 1)",
-          link: "/en/document/level-1/routing-lv1-part1.md",
+          link: "/en/document/level-1/routing-lv1-part1.md"
         },
         {
           text: "Analysis of Routing (Part 2)",
-          link: "/en/document/level-1/routing-lv1-part2.md",
+          link: "/en/document/level-1/routing-lv1-part2.md"
         },
-        { text: "Working Modes of Xray", link: "/en/document/level-1/work.md" },
+        {
+          text: "Working Modes of Xray",
+          link: "/en/document/level-1/work.md"
+        },
         {
           text: "SNI Fallback",
-          link: "/en/document/level-1/fallbacks-with-sni.md",
+          link: "/en/document/level-1/fallbacks-with-sni.md"
         },
         {
           text: "Traffic Splitting via DNS",
-          link: "/en/document/level-1/routing-with-dns.md",
-        },
-      ],
+          link: "/en/document/level-1/routing-with-dns.md"
+        }
+      ]
     },
     {
       text: "Advanced Skills",
@@ -195,38 +216,38 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       items: [
         {
           text: "Transparent Proxy Basics",
-          link: "/en/document/level-2/transparent_proxy/transparent_proxy.md",
+          link: "/en/document/level-2/transparent_proxy/transparent_proxy.md"
         },
         {
           text: "TProxy Transparent Proxy",
-          link: "/en/document/level-2/tproxy.md",
+          link: "/en/document/level-2/tproxy.md"
         },
         {
           text: "TProxy (IPv4 and IPv6)",
-          link: "/en/document/level-2/tproxy_ipv4_and_ipv6.md",
+          link: "/en/document/level-2/tproxy_ipv4_and_ipv6.md"
         },
         {
           text: "Hide Fingerprint with Nginx/Haproxy TLS Tunnel",
-          link: "/en/document/level-2/nginx_or_haproxy_tls_tunnel.md",
+          link: "/en/document/level-2/nginx_or_haproxy_tls_tunnel.md"
         },
         {
           text: "GID Transparent Proxy",
-          link: "/en/document/level-2/iptables_gid.md",
+          link: "/en/document/level-2/iptables_gid.md"
         },
         {
           text: "Outbound Traffic Redirection",
-          link: "/en/document/level-2/redirect.md",
+          link: "/en/document/level-2/redirect.md"
         },
         {
           text: "Enhance Security with Cloudflare Warp",
-          link: "/en/document/level-2/warp.md",
+          link: "/en/document/level-2/warp.md"
         },
         {
           text: "Traffic Statistics",
-          link: "/en/document/level-2/traffic_stats.md",
-        },
-      ],
-    },
+          link: "/en/document/level-2/traffic_stats.md"
+        }
+      ]
+    }
   ],
   "/en/development/": [
     {
@@ -238,22 +259,31 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Design Goals", link: "/en/development/intro/design.md" },
         {
           text: "Development Guidelines",
-          link: "/en/development/intro/guide.md",
-        },
-      ],
+          link: "/en/development/intro/guide.md"
+        }
+      ]
     },
     {
       text: "Protocol Details",
       collapsed: false,
       items: [
-        { text: "VLESS Protocol", link: "/en/development/protocols/vless.md" },
-        { text: "VMess Protocol", link: "/en/development/protocols/vmess.md" },
+        {
+          text: "VLESS Protocol",
+          link: "/en/development/protocols/vless.md"
+        },
+        {
+          text: "VMess Protocol",
+          link: "/en/development/protocols/vmess.md"
+        },
         {
           text: "Mux.Cool Protocol",
-          link: "/en/development/protocols/muxcool.md",
+          link: "/en/development/protocols/muxcool.md"
         },
-        { text: "mKCP Protocol", link: "/en/development/protocols/mkcp.md" },
-      ],
-    },
-  ],
-};
+        {
+          text: "mKCP Protocol",
+          link: "/en/development/protocols/mkcp.md"
+        }
+      ]
+    }
+  ]
+}

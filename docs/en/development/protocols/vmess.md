@@ -43,9 +43,9 @@ VMess uses an asymmetric format, meaning the request sent by the client and the 
 
 ## Client Request
 
-| 16 bytes           | X bytes        | Remaining part |
-| ------------------ | -------------- | -------------- |
-| Authentication Info| Command Section| Data Section   |
+| 16 bytes            | X bytes         | Remaining part |
+| ------------------- | --------------- | -------------- |
+| Authentication Info | Command Section | Data Section   |
 
 ### Authentication Info
 
@@ -63,15 +63,15 @@ The command section is encrypted using AES-128-CFB:
 - Key: MD5(User ID + []byte('c48619fe-8f02-49e0-b9e9-edf763e17e21'))
 - IV: MD5(X + X + X + X), where X = []byte(Time used for generating authentication info) (8 bytes, Big Endian)
 
-| 1 byte | 16 bytes | 16 bytes | 1 byte | 1 byte | 4 bits | 4 bits | 1 byte | 1 byte | 2 bytes | 1 byte | N bytes | P bytes | 4 bytes |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| Version Ver | Data Encryption IV | Data Encryption Key | Response Auth V | Option Opt | Margin P | Encryption Sec | Reserved | Command Cmd | Port | Address Type T | Address A | Random Value | Checksum F |
+|   1 byte    |      16 bytes      |      16 bytes       |     1 byte      |   1 byte   |  4 bits  |     4 bits     |  1 byte  |   1 byte    | 2 bytes |     1 byte     |  N bytes  |   P bytes    |  4 bytes   |
+| :---------: | :----------------: | :-----------------: | :-------------: | :--------: | :------: | :------------: | :------: | :---------: | :-----: | :------------: | :-------: | :----------: | :--------: |
+| Version Ver | Data Encryption IV | Data Encryption Key | Response Auth V | Option Opt | Margin P | Encryption Sec | Reserved | Command Cmd |  Port   | Address Type T | Address A | Random Value | Checksum F |
 
 Option Opt details: (When a bit is 1, the option is enabled)
 
-| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |
 | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
-| X | X | X | X | X | M | R | S |
+|  X  |  X  |  X  |  X  |  X  |  M  |  R  |  S  |
 
 Where:
 
@@ -111,8 +111,8 @@ Where:
 
 When Opt(S) is enabled, the data section uses this format. The actual request data is split into several small chunks, each formatted as follows. The server verifies all small chunks before forwarding them according to the basic format.
 
-| 2 bytes | L bytes |
-| :---: | :---: |
+| 2 bytes  |   L bytes   |
+| :------: | :---------: |
 | Length L | Data Packet |
 
 Where:
@@ -141,8 +141,8 @@ Depending on the encryption method, the data packet format is as follows:
 
 The response header data is encrypted using AES-128-CFB, with IV being MD5(Data Encryption IV) and Key being MD5(Data Encryption Key). The actual response data varies depending on encryption settings.
 
-| 1 byte | 1 byte | 1 byte | 1 byte | M bytes | Remaining part |
-| :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 byte          | 1 byte     | 1 byte      | 1 byte           | M bytes         | Remaining part       |
+| :-------------- | :--------- | :---------- | :--------------- | :-------------- | :------------------- |
 | Response Auth V | Option Opt | Command Cmd | Command Length M | Command Content | Actual Response Data |
 
 Where:
@@ -159,9 +159,9 @@ Where:
 
 ### Dynamic Port Command
 
-| 1 byte | 2 bytes | 16 bytes | 2 bytes | 1 byte | 1 byte |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| Reserved | Port | User ID | AlterID | User Level | Validity Time T |
+| 1 byte   | 2 bytes | 16 bytes | 2 bytes | 1 byte     | 1 byte          |
+| :------- | :------ | :------- | :------ | :--------- | :-------------- |
+| Reserved | Port    | User ID  | AlterID | User Level | Validity Time T |
 
 Where:
 

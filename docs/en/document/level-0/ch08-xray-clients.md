@@ -11,16 +11,16 @@ The key points are:
 1. Apps must, either actively or via a forwarding tool, send data so it **[flows in (`inbounds`)]** to the `Xray` client.
 
 2. After traffic enters the client, it is processed by the **[Client Routing (`routing`)]** according to rules, and then sent to **[flow out (`outbounds`)]** of the `Xray` client in different directions. For example:
-    1. Domestic traffic connects directly (`direct`).
-    2. Foreign traffic is forwarded to the VPS (`proxy`).
-    3. Ad traffic is blocked (`block`).
+   1. Domestic traffic connects directly (`direct`).
+   2. Foreign traffic is forwarded to the VPS (`proxy`).
+   3. Ad traffic is blocked (`block`).
 
 3. Foreign traffic forwarded to the VPS will cross the firewall and **[flow in (`inbounds`)]** to the `Xray` server-side.
 
 4. After traffic enters the server-side, just like on the client, it is processed by the **[Server Routing (`routing`)]** according to rules, and then sent to **[flow out (`outbounds`)]** in different directions:
-    1. Since it is already outside the firewall, traffic connects directly by default, allowing you to access those "non-existent" websites (`direct`).
-    2. If you need to perform chained forwarding between different VPSs, you can continue to configure forwarding rules (`proxy`).
-    3. You can continue to disable various traffic you want to ban on the server side, such as ads, BitTorrent downloads, etc. (`block`).
+   1. Since it is already outside the firewall, traffic connects directly by default, allowing you to access those "non-existent" websites (`direct`).
+   2. If you need to perform chained forwarding between different VPSs, you can continue to configure forwarding rules (`proxy`).
+   3. You can continue to disable various traffic you want to ban on the server side, such as ads, BitTorrent downloads, etc. (`block`).
 
 :::warning Note
 
@@ -258,23 +258,23 @@ Secondly, what we need to do is [make `xray` find and read the configuration fil
 
 1. On Windows, assuming your `Xray` program location is `C:\Xray-windows-64\xray.exe` and the configuration file location is `C:\Xray-windows-64\config.json`, the correct startup command is:
 
-    ```shell
-    C:\Xray-windows-64\xray.exe -c C:\Xray-windows-64\config.json
-    ```
+   ```shell
+   C:\Xray-windows-64\xray.exe -c C:\Xray-windows-64\config.json
+   ```
 
-    :::tip Explanation
-    The `-c` here is the parameter to specify the configuration file path, telling `xray` to look for the configuration file at the location following it.
-    :::
+   :::tip Explanation
+   The `-c` here is the parameter to specify the configuration file path, telling `xray` to look for the configuration file at the location following it.
+   :::
 
 2. Similarly, on Linux and macOS, assuming your `Xray` program location is `/usr/local/bin/xray` and the configuration file location is `/usr/local/etc/xray/config.json`, the correct startup command is:
 
-    ```shell
-    /usr/local/bin/xray -c /usr/local/etc/xray/config.json
-    ```
+   ```shell
+   /usr/local/bin/xray -c /usr/local/etc/xray/config.json
+   ```
 
-    :::tip Explanation
-    Every system has system path variables, so you don't necessarily have to write the absolute path when typing the `Xray` program. But writing it is definitely not wrong, so I demonstrated it that way.
-    :::
+   :::tip Explanation
+   Every system has system path variables, so you don't necessarily have to write the absolute path when typing the `Xray` program. But writing it is definitely not wrong, so I demonstrated it that way.
+   :::
 
 ## 8.5 Bonus Task 3: Auto-start `xray-core` on PC Boot
 

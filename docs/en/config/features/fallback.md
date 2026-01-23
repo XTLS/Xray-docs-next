@@ -59,7 +59,7 @@ Usage: Solves the issue where Nginx's h2c service cannot be compatible with http
 Note: When `fallbacks` `alpn` contains `"h2"`, [Inbound TLS](../transport.md#tlsobject) needs to set `"alpn":["h2","http/1.1"]` to support h2 access.
 
 ::: tip
-The `alpn` set in Fallback matches the *actually negotiated* ALPN, whereas the `alpn` set in Inbound TLS is the list of *optional* ALPNs during the handshake. The meanings are different.
+The `alpn` set in Fallback matches the _actually negotiated_ ALPN, whereas the `alpn` set in Inbound TLS is the list of _optional_ ALPNs during the handshake. The meanings are different.
 :::
 
 > `path`: string

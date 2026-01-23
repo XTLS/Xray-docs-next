@@ -1,45 +1,45 @@
 <script setup lang="ts">
-import contributorsMap from "../../.generated/contributors.json";
-import { useRoute, useData } from "vitepress";
-import { computed } from "vue";
+import contributorsMap from "../../.generated/contributors.json"
+import { useRoute, useData } from "vitepress"
+import { computed } from "vue"
 
-type Contributor = { name: string; email?: string; commits: number };
+type Contributor = { name: string; email?: string; commits: number }
 
-const route = useRoute();
-const { lang } = useData();
+const route = useRoute()
+const { lang } = useData()
 
 const list = computed(() => {
-  const map = contributorsMap as Record<string, Contributor[]>;
+  const map = contributorsMap as Record<string, Contributor[]>
 
-  const raw = route.path;
+  const raw = route.path
 
-  const candidates = new Set<string>();
+  const candidates = new Set<string>()
 
-  const noHtml = raw.replace(/\.html$/, "");
-  candidates.add(raw);
-  candidates.add(noHtml);
+  const noHtml = raw.replace(/\.html$/, "")
+  candidates.add(raw)
+  candidates.add(noHtml)
 
   // /foo -> /foo/ and /foo/ -> /foo
   for (const p of [raw, noHtml]) {
-    if (p.endsWith("/")) candidates.add(p.slice(0, -1));
-    else candidates.add(p + "/");
+    if (p.endsWith("/")) candidates.add(p.slice(0, -1))
+    else candidates.add(p + "/")
   }
 
   for (const key of candidates) {
-    if (map[key]?.length) return map[key];
+    if (map[key]?.length) return map[key]
   }
-  return [];
-});
+  return []
+})
 
 const t = computed(() => {
-  const l = (lang.value || "en").toLowerCase();
+  const l = (lang.value || "en").toLowerCase()
   const dict = {
     en: { contributors: "Contributors", commits: "commits" },
     zh: { contributors: "贡献者", commits: "次提交" },
-    ru: { contributors: "Участники", commits: "коммитов" },
-  } as const;
-  return (dict as any)[l] || (dict as any)[l.split("-")[0]] || dict.en;
-});
+    ru: { contributors: "Участники", commits: "коммитов" }
+  } as const
+  return (dict as any)[l] || (dict as any)[l.split("-")[0]] || dict.en
+})
 </script>
 
 <template>
@@ -51,7 +51,12 @@ const t = computed(() => {
 
     <ul class="list">
       <li v-for="c in list" :key="c.email || c.name" class="item">
-        <img class="avatar" :src="c.avatarUrl" :alt="c.name" loading="lazy" />
+        <img
+          class="avatar"
+          :src="c.avatarUrl"
+          :alt="c.name"
+          loading="lazy"
+        />
         <div class="main">
           <div class="row">
             <span class="name">{{ c.name }}</span>
