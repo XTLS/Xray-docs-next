@@ -10,3 +10,4 @@ Xray 支持以下入站协议：
 - [VLESS (XTLS Vision Seed)](vless.md)
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
+- [TUN](tun.md)

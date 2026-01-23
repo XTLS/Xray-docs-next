@@ -10,3 +10,4 @@ Xray supports the following inbound protocols:
 - [VLESS (XTLS Vision Seed)](vless.md)
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
+- [TUN](tun.md)
