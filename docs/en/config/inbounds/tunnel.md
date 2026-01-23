@@ -1,6 +1,8 @@
-# Tunnel(Dokodemo-Door)
+# Tunnel (dokodemo-door)
 
-Tunnel, formerly known as dokodemo-door, listens on multiple local ports and forwards all incoming data through an outbound to a specified server port, achieving the effect of port mapping.
+Tunnel, formerly known as dokodemo-door (Arbitrary Door), can listen on multiple local ports and send all received data to a specific port on a specified server via an outbound, thereby achieving the effect of port mapping.
+
+[Image of port forwarding diagram]
 
 ## InboundConfigurationObject
 
@@ -21,41 +23,39 @@ Tunnel, formerly known as dokodemo-door, listens on multiple local ports and for
 
 > `address`: address
 
-The address to forward the traffic to. It can be an IP address like `"1.2.3.4"` or a domain name like `"xray.com"`. It is a string type, default `"localhost"`.
-
-When `followRedirect` (see below) is set to `true`, `address` can be empty.
+Forward traffic to this address. It can be an IP address, like `"1.2.3.4"`, or a domain name, like `"xray.com"`. String type, defaults to `"localhost"`.
 
 > `port`: number
 
-The specified port on the destination address to forward the traffic to, range \[0, 65535\], numeric type. If not filled or set to 0, it defaults to the listening port.
+Forward traffic to the specified port of the target address. Range \[0, 65535\], numeric type. If omitted or 0, it defaults to the listening port.
 
 > `portMap`: map[string]string
 
-A map maps local ports and required remote addresses/ports (if the inbound listens on several ports). If a local port is not included, handles according to `address`/`port` setting.
+A map mapping local ports to required remote addresses/ports (if the inbound listens on multiple ports). If the local port is not included in this map, it is handled according to the `address`/`port` settings.
 
 > `network`: "tcp" | "udp" | "tcp,udp"
 
-The supported network protocol type. For example, when specified as `"tcp"`, it will only receive TCP traffic. The default value is `"tcp"`.
+Accepted network protocol types. For example, when specified as `"tcp"`, only TCP traffic will be received. Default value is `"tcp"`.
 
 > `followRedirect`: true | false
 
-When set to `true`, dokodemo-door will recognize data forwarded by iptables and forward it to the corresponding destination address.
+When set to `true`, dokodemo-door will recognize data forwarded by iptables and forward it to the corresponding target address.
 
-Refer to the `tproxy` setting in the [Transport Configuration](../transport.md#sockoptobject) for more information.
+Please refer to the `tproxy` setting in [Transport Configuration](../transport.md#sockoptobject).
 
 > `userLevel`: number
 
-The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
+User level. Connections will use the [Local Policy](../policy.md#levelpolicyobject) corresponding to this user level.
 
-The value of `userLevel` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
+The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, it defaults to 0.
 
 ## Usage
 
-Dokodemo-door can be used as Transparent proxy (in the next section) and can be used to map a port.
+The "Arbitrary Door" has two main uses: one is for transparent proxy (see below), and the other is for mapping a port.
 
-Some services do not support proxy likes Socks5, but using Tun or Tproxy could be too complicated. If these services only communicate with a single IP address and port (example: iperf, Minecraft server, Wireguard endpoint), dokodemo-door can be used.
+Sometimes some services do not support forward proxies like Socks5, and using Tun or Tproxy is overkill. If these services only communicate with a single IP and port (e.g., iperf, Minecraft server, Wireguard endpoint), you can use dokodemo-door.
 
-Below is an example config (if the default outbound is an effective proxy):
+For example, the following Config (assuming the default outbound is a valid proxy):
 
 ```json
 {
@@ -73,8 +73,8 @@ Below is an example config (if the default outbound is an effective proxy):
 }
 ```
 
-The core will listen at `127.0.0.1:25565`, and the traffic coming in through this inbound will be send to `mc.hypixel.net:25565` (a Minecraft server) through the default outbound. Then you can connect the Minecraft client to the Hypixel server through the proxy by set the game server to `127.0.0.1:25565` in the Minecraft client.
+In this case, the core will listen on 127.0.0.1:25565 and forward it to mc.hypixel.net:25565 (a MC server) via the default outbound. Connecting the Minecraft client to 127.0.0.1:25565 is equivalent to connecting to the Hypixel server via a proxy.
 
 ## Transparent Proxy Configuration Example
 
-Please refer to the [Transparent Proxy (TProxy) Configuration Tutorial](../../document/level-2/tproxy) for this section.
+For this section, please refer to [Transparent Proxy (TProxy) Configuration Tutorial](../../document/level-2/tproxy).

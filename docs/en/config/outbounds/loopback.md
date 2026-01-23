@@ -1,6 +1,6 @@
 # Loopback
 
-Loopback is an outbound protocol. It can send traffics through corresponding outbound to routing inbound, thus rerouting traffics to other routing rules without leaving Xray-core.
+Loopback is an outbound data protocol. Its function is to re-inject data sent through this outbound back into the routing inbound, allowing the data to be processed by the routing system again without leaving Xray-core.
 
 ## OutboundConfigurationObject
 
@@ -12,13 +12,13 @@ Loopback is an outbound protocol. It can send traffics through corresponding out
 
 > `inboundTag`: string
 
-Use as an inbound tag for routing.
+The inbound protocol identifier used for re-routing.
 
-This tag can be used as `inboundTag` in routing rules, all traffics going through this outbound can be rerouted with routing rules with corresponding inbound tag.
+This identifier can be used for `inboundTag` in routing rules, indicating that data from this outbound can be processed again by the corresponding routing rules.
 
 ### How to use?
 
-If you need to do some more detailed routing for traffics that have been routed by routing rules, like splitting routed traffics to TCP traffics and UDP traffics and send them to different outbounds, this can be done with `loopback` outbound.
+If you need to perform finer-grained splitting on traffic that has already been split by routing rules—for example, if TCP traffic and UDP traffic split by the same group of routing rules need to go through different outbounds—you can use the `loopback` outbound to achieve this.
 
 ```json
 {
@@ -27,27 +27,27 @@ If you need to do some more detailed routing for traffics that have been routed 
       "protocol": "loopback",
       "tag": "need-to-split",
       "settings": {
-        "inboundTag": "traffic-input" // This tag will be used as the inboundTag inside the RuleObject
+        "inboundTag": "traffic-input" // This tag is used for the inboundTag of RuleObject below
       }
     },
     {
       "tag": "tcp-output"
-      // protocol, settings, streamSettings etc.
+      // settings like protocol, settings, streamSettings
     },
     {
       "tag": "udp-output"
-      // protocol, settings, streamSettings etc.
+      // settings like protocol, settings, streamSettings
     }
   ],
   "routing": {
     "rules": [
       {
-        "inboundTag": ["traffic-input"], // tag set in the loopback outbound setting
+        "inboundTag": ["traffic-input"], // tag set in loopback
         "network": "tcp",
         "outboundTag": "tcp-output"
       },
       {
-        "inboundTag": ["traffic-input"], // tag set in the loopback outbound
+        "inboundTag": ["traffic-input"], // tag set in loopback
         "network": "udp",
         "outboundTag": "udp-output"
       }

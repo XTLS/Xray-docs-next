@@ -1,5 +1,5 @@
-# Deep analysis of XTLS
+# XTLS Deep Dive
 
-> **"XTLS is the original black technology of Xray, and also the core driving force that makes Xray's performance far superior."**
+> **XTLS is Xray's original cutting-edge technology and the core driving force behind its unmatched performance.**
 
 <Badge text="WIP" type="warning"/>

@@ -1,66 +1,48 @@
 # Metrics
 
-A more straightforward (and hopefully better) way to export metrics.
+A more direct (and hopefully better) way to export statistics.
 
-## Related configurations
+## Relevant Configuration
 
-It's possible to add a metrics inbound among inbounds.
-
-```json
-    "inbounds": [
-        {
-            "listen": "127.0.0.1",
-            "port": 11111,
-            "protocol": "dokodemo-door",
-            "settings": {
-                "address": "127.0.0.1"
-            },
-            "tag": "metrics_in"
-        }
-    ]
-```
-
-And add routing rules regarding the metrics inbound in the routing configuration.
-
-```json
-    "routing": {
-        "rules": [
-            {
-                "inboundTag": [
-                    "metrics_in"
-                ],
-                "outboundTag": "metrics_out"
-            }
-        ]
-    }
-```
-
-Then finally, enable metrics under the root object.
+Add `metrics` to the basic configuration:
 
 ```json
     "metrics": {
-        "tag": "metrics_out"
+        "tag": "Metrics",
+        "listen": "127.0.0.1:11111"
     }
 ```
+
+> `tag`: string
+
+The outbound proxy tag corresponding to metrics. You can access it by setting up a dokodemo-door inbound + routing rules that point the dokodemo-door to this outbound.
+
+> `listen`: string
+
+A simpler method: directly listen on an address and port to provide the service.
+
+When setting this field, if `tag` is empty, it will automatically be set to `Metrics`. If neither (`tag` nor `listen`) is set, the core will fail to start.
 
 ## Usage
 
 ### pprof
 
-Access `http://127.0.0.1:11111/debug/pprof/` or use go tool pprof to start profiling or inspect running goroutines.
+Visit `http://127.0.0.1:11111/debug/pprof/` or use `go tool pprof` for debugging.
+
+To report excessive memory usage/memory leak issues, please provide files from `/debug/pprof/heap` and `/debug/pprof/goroutine`.
 
 ### expvars
 
-Access `http://127.0.0.1:11111/debug/vars`
+Visit `http://127.0.0.1:11111/debug/vars`
 
-Variables exported include:
+Variables included:
 
-- `stats` includes statistics about inbounds, outbounds and users
-- `observatory` includes observatory results
+- `stats`: Includes all inbound, outbound, and user data.
+- `observatory`: Includes observatory results.
 
-for example with [luci-app-xray](https://github.com/yichya/luci-app-xray) you are likely to get a result like this (standard expvar things like `cmdline` and `memstats` are omitted)
+For example, in [luci-app-xray](https://github.com/yichya/luci-app-xray), you can get output like this (standard expvar content like cmdline and memstats are omitted):
 
-<details><summary>Click to expand</summary><br>
+<details><summary>Click to view</summary><br>
 
 ```json
 {
@@ -152,14 +134,14 @@ for example with [luci-app-xray](https://github.com/yichya/luci-app-xray) you ar
 
 </details>
 
-To get a better view of these numbers, [Netdata](https://github.com/netdata/netdata) (with python.d plugin) is a great option:
+To get better visualization output, you can use [Netdata](https://github.com/netdata/netdata) (with python.d plugin):
 
-1. Edit related configuration file (`sudo /etc/netdata/edit-config python.d/go_expvar.conf`)
-2. Take the following configuration file as an example:
+1. Edit the relevant configuration file (`sudo /etc/netdata/edit-config python.d/go_expvar.conf`).
+2. Use the example configuration below:
 
-<details><summary>Click to expand</summary><br>
+<details><summary>Click to view</summary><br>
 
-```
+```yaml
 xray:
   name: 'xray'
   update_every: 2
@@ -267,12 +249,6 @@ xray:
 
 </details>
 
-And you will get a nice plot like this:
+You can get results similar to this:
 
 ![160428235-2988bf69-5d6c-41ec-8267-1bd512508aa8](https://github.com/chika0801/Xray-docs-next/assets/88967758/455e88ce-ced2-4593-a9fa-425bb293215b)
-
-### Additional
-
-Maybe reusing the empty object `stats` in config file is better than adding `metrics` here?
-
-**Edit:** removed prometheus related things and added usage about expvars

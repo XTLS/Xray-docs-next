@@ -1,14 +1,14 @@
 # Fallback
 
-> **Fallback is one of the most powerful features of Xray, which can effectively prevent active probing and allows you to use one port for multiple services**
+> **Fallback is one of Xray's most powerful features, effectively preventing active probing and allowing multiple services to share common ports.**
 
-Fallback provides Xray with high-strength anti-active probing capabilities and has a unique first-packet fallback mechanism.
+Fallback provides Xray with high-strength resistance against active probing and features a unique first-packet fallback mechanism.
 
-Fallback can also divide traffic of different types based on path for multi-service sharing on a single port.
+Fallback can also split different types of traffic based on `path`, allowing a single port to be shared by multiple services.
 
-Currently, you can use the fallback feature by configuring fallbacks when using VLESS or Trojan protocols, thus creating an unimaginable combo of services becomes REALITY.
+Currently, you can use the fallback feature by configuring `fallbacks` when using VLESS or Trojan protocols, allowing for very rich configuration combinations.
 
-## fallbacks configuration
+## Fallbacks Configuration
 
 ```json
   "fallbacks": [
@@ -20,7 +20,7 @@ Currently, you can use the fallback feature by configuring fallbacks when using 
 
 > `fallbacks`: \[ [FallbackObject](#fallbackobject) \]
 
-**`fallbacks` is an array, and here is an example configuration of one of its child elements.**
+An array containing a series of powerful fallback distribution configurations.
 
 ### FallbackObject
 
@@ -34,65 +34,69 @@ Currently, you can use the fallback feature by configuring fallbacks when using 
 }
 ```
 
-The `fallbacks` object is optional and can only be used for the `TCP+TLS` transport combination.
+**`fallbacks` is an array; this is the configuration description for one of its child elements.**
 
-- When `fallbacks` configure with any child elements，`"alpn":["http/1.1"]` needs to be configured in [Inbound TLS](../transport.md#tlsobject).
+The `fallbacks` item is optional and can only be used with the TCP+TLS transport combination.
 
-Usually, you need to set up a default fallback with both `alpn` and `path` omitted or empty, and then configure other routing rules as needed.
+- When this item has child elements, [Inbound TLS](../transport.md#tlsobject) must set `"alpn":["http/1.1"]`.
 
-VLESS will forward traffic with TLS decrypted first packet length <18, invalid protocol version, or failed authentication to the address specified by `dest`.
+Usually, you need to first set a default fallback with both `alpn` and `path` omitted or empty, and then configure other traffic splitting as needed.
 
-For other transport combinations, you must remove the `fallbacks` object or all its child elements. At this point, no `fallbacks` will be enabled, and VLESS will wait until it reads enough data. If the protocol version is invalid or authentication fails, the connection will be terminated directly.
+VLESS will forward traffic to the address specified by `dest` if, after TLS decryption, the first packet length is < 18, the protocol version is invalid, or authentication fails.
+
+For other transport combinations, the `fallbacks` item or all child elements must be deleted. In this case, Fallback will not be enabled. VLESS will wait to read the required length, and if the protocol version is invalid or authentication fails, it will directly disconnect.
 
 > `name`: string
 
-Attempt to match the TLS SNI (Server Name Indication), where an empty value matches any SNI. The default value is `""`, which means empty value.
+Attempts to match TLS SNI (Server Name Indication). Empty means any. Default is `""`.
 
 > `alpn`: string
 
-Attempt to match the result of TLS ALPN negotiation, where an empty value matches any ALPN result. The default value is `""` , which means empty value.
+Attempts to match the TLS ALPN negotiation result. Empty means any. Default is `""`.
 
-VLESS will read the TLS ALPN negotiation result only when necessary. If successful, it will output `realAlpn =` info to the log.
-Purpose: To solve the problem of Nginx's inability to simultaneously support http/1.1 and h2c services. Nginx needs to write two lines of listen, one for 1.1 and one for h2c.
-Note: When `"h2"` is included in fallbacks alpn, the Inbound TLS needs to be set as `"alpn":["h2","http/1.1"]` to support `h2` access.
+Xray will only attempt to read the TLS ALPN negotiation result when necessary. If successful, it outputs `realAlpn =` to the info log.
+Usage: Solves the issue where Nginx's h2c service cannot be compatible with http/1.1 simultaneously. Nginx would require two `listen` lines, for 1.1 and h2c respectively.
+Note: When `fallbacks` `alpn` contains `"h2"`, [Inbound TLS](../transport.md#tlsobject) needs to set `"alpn":["h2","http/1.1"]` to support h2 access.
 
 ::: tip
-The `alpn` set in the Fallback is used to match the actual negotiated ALPN, while the `alpn` set in the Inbound TLS represents the list of optional ALPNs during the handshake. These two have different meanings.
+The `alpn` set in Fallback matches the *actually negotiated* ALPN, whereas the `alpn` set in Inbound TLS is the list of *optional* ALPNs during the handshake. The meanings are different.
 :::
 
 > `path`: string
 
-Attempt to match the first packet HTTP PATH, where an empty value matches any PATH and a default value is empty. If non-empty, it must start with `/`, and h2c is not supported.
+Attempts to match the HTTP PATH of the first packet. Empty means any. Default is empty. If non-empty, it must start with `/`. h2c is not supported.
 
-Smart: VLESS will only attempt to check the PATH (no more than 55 bytes; the fastest algorithm that does not fully parse HTTP) when necessary. If successful, it will output `realPath =` in the INFO log.
-Purpose: To route other inbound WebSocket traffic or HTTP disguised traffic, without additional processing, purely forwarding traffic, and theoretically better performance than Nginx.
+Smart: Xray will only attempt to peek at the PATH when necessary (not exceeding 55 bytes; uses the fastest algorithm, does not fully parse HTTP). If successful, it outputs the INFO log `realPath =`.
+Usage: Offloading WebSocket traffic or HTTP camouflage traffic from other inbounds. It performs pure traffic forwarding without extra processing. Theoretical performance is stronger than Nginx.
 
-Note: **The inbound where fallbacks is located must be TCP+TLS**. This is for routing to other WebSocket inbound, while the inbound being routed doesn't need to configure TLS.
+Note: **The inbound where fallbacks is located must itself be TCP+TLS**. This is used for offloading to other WS inbounds; the offloaded inbound does not need to configure TLS.
 
 > `dest`: string | number
 
-Determines the destination of decrypted TLS TCP traffic, which currently supports two types of addresses: (this field is required, otherwise it cannot be started)
+Decides the destination of the TCP traffic after TLS decryption. Currently supports two types of addresses: (This item is mandatory, otherwise it will not start)
 
-1. TCP, in the format of `"addr:port"`, where addr supports IPv4, domain names, and IPv6. If a domain name is entered, a direct TCP connection will be made (rather than using the built-in DNS resolver).
-2. Unix domain socket, in the format of an absolute path, such as `"/dev/shm/domain.socket"`, which can be prefixed with `@` to represent [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html), and `@@` to represent padded abstract.
+1. TCP, formatted as `"addr:port"`, where `addr` supports IPv4, domain name, and IPv6. If a domain name is filled, a TCP connection will be initiated directly (without going through the built-in DNS).
+2. Unix domain socket, formatted as an absolute path, like `"/dev/shm/domain.socket"`. Can handle [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html) by adding `@` at the beginning, or `@@` for abstract with padding.
 
-If only the port is specified, both numbers and strings are accepted, such as `80` or `"80"`. This usually points to a plaintext HTTP service (and the addr will be filled in as `"127.0.0.1"`).
+If only `port` is filled, it can be a number or a string, like `80` or `"80"`. It usually points to a cleartext http service (`addr` will be filled as `"localhost"`).
+
+Note: Only after v25.7.26 does a `dest` containing only a port point to `localhost`. Before this, it was `127.0.0.1`. After the change, the actual target is likely `::1`. Some webserver templates copied online might listen on `::1` but only allow `127` to enter or apply the proxy protocol, which may lead to different behaviors.
 
 > `xver`: number
 
-Sends the [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) protocol, which is used to transmit the real source IP and port of the request. The version can be set to `1` or `2`, with a default value of `0`, which means no PROXY protocol is sent. Version `1` is recommended if needed.
+Sends [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt), specifically used to pass the real source IP and port. Fill 1 or 2. Default is 0, meaning it is not sent. It is recommended to fill 1 if needed.
 
-Currently, versions `1` and `2` have the same functionality but different structures, where version `1` is printable while version 2 is `binary`. Xray's `TCP` and `WebSocket` inbound already support receiving the PROXY protocol.
+Currently, filling 1 or 2 functions identically, only the structure differs (the former is printable, the latter is binary). Both TCP and WS inbounds in Xray support receiving PROXY protocol.
 
 ::: warning
-If you are [configuring Nginx to receive the PROXY protocol](https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/#configuring-nginx-to-accept-the-proxy-protocol), you need to not only set `proxy_protocol`, but also `set_real_ip_from` to avoid potential issues.
+If you are [configuring Nginx to accept PROXY protocol](https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/#configuring-nginx-to-accept-the-proxy-protocol), besides setting `proxy_protocol`, you also need to set `set_real_ip_from`, otherwise issues may occur.
 :::
 
-### Additional Information
+### Supplementary Explanation
 
-- Matches the most precise sub-element, regardless of the order of arrangement of the sub-elements. If several sub-elements have the same `alpn` and `path` configurations, the last one specified will be used.
-- Fallback routing is performed at the decrypted TCP layer rather than the HTTP layer, and the first packet PATH is only checked when necessary.
-- You can learn more about tips and experiences in using Fallbacks by visiting
-  - [An Analysis of Fallback Functionality.](../../document/level-1/fallbacks-lv1)
+- It will match the most precise child element, regardless of the order of child elements. If several child elements with identical `alpn` and `path` are configured, the last one will prevail.
+- Fallback offloading is forwarding at the decrypted TCP layer, not the HTTP layer. It only checks the first packet's PATH when necessary.
+- You can view more tips and insights on using Fallbacks here:
+  - [Analysis of Fallbacks Features](../../document/level-1/fallbacks-lv1)
 
-## Fallbacks design theory <Badge text="WIP" type="warning"/>
+## Fallbacks Design Theory <Badge text="WIP" type="warning"/>

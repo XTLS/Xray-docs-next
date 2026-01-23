@@ -2,22 +2,22 @@
 
 HTTP protocol.
 
-::: warning
-**The HTTP protocol does not provide encryption for transmission and is not suitable for transmission over public networks, as it can easily be used as a target for attacks.**
+::: danger
+**The HTTP protocol does not encrypt traffic and is not suitable for transmission over the public internet. Using it exposes you to the risk of becoming a zombie for attacks.**
 :::
 
-The more meaningful use of `http` inbound is to listen in a local network or on the local machine to provide local services for other programs.
+A more meaningful usage of `http` inbound is to listen within a LAN or on the local machine to provide local services for other programs.
 
 ::: tip TIP 1
-`http proxy` can only proxy the TCP protocol and cannot handle protocols based on UDP.
+`http proxy` can only proxy the TCP protocol; UDP-based protocols are not supported.
 :::
 
 ::: tip TIP 2
-In Linux, you can use the following environment variables to enable global HTTP proxy for the current session (many software support this setting, but some may not).
+Use the following environment variables in Linux to enable a global HTTP proxy for the current session (supported by many software, but not all).
 
-- `export http_proxy=http://127.0.0.1:8080/` (Change the address to the configured inbound HTTP proxy address)
+- `export http_proxy=http://127.0.0.1:8080/` (Address must be changed to your configured HTTP inbound proxy address)
 - `export https_proxy=$http_proxy`
-- :::
+:::
 
 ## InboundConfigurationObject
 
@@ -36,23 +36,23 @@ In Linux, you can use the following environment variables to enable global HTTP 
 
 > `accounts`: \[[AccountObject](#accountobject)\]
 
-An array where each element represents a user account. The default value is an empty array.
+An array where each element is a user account. Default value is empty.
 
-When `accounts` is not empty, the HTTP proxy will perform Basic Authentication verification for inbound connections.
+When `accounts` is not empty, the HTTP proxy will perform Basic Authentication on inbound connections.
 
 > `allowTransparent`: true | false
 
-When set to `true`, it will forward all HTTP requests instead of just proxy requests.
+When set to `true`, all HTTP requests will be forwarded, not just proxy requests.
 
 ::: tip
-Enabling this option without proper configuration may cause an infinite loop.
+If configured improperly, enabling this option can cause infinite loops.
 :::
 
 > `userLevel`: number
 
-The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
+User level. Connections will use the [Local Policy](../policy.md#levelpolicyobject) corresponding to this user level.
 
-The value of `userLevel` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
+The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, the default is 0.
 
 ### AccountObject
 
@@ -65,8 +65,8 @@ The value of `userLevel` corresponds to the value of `level` in the [policy](../
 
 > `user`: string
 
-The username. It is a string and is required.
+Username, string type. Required.
 
 > `pass`: string
 
-The password. It is a string and is required.
+Password, string type. Required.

@@ -1,28 +1,28 @@
 # Development Guide
 
-## Compile Documentation
+## Compilation Documentation
 
-Xray supports multiple platforms, and you can perform cross-compilation on various platforms by yourself.
+Xray supports a wide range of platforms, allowing you to perform cross-compilation on various systems yourself.
 
-Please click [Compile Documentation](./intro/compile.md) to view specific compile-related content.
+Please click [Compilation Documentation](./intro/compile.md) to view specific compilation-related content.
 
-## Design Concept
+## Design Philosophy
 
-Xray kernel provides a platform for secondary development.
+The Xray kernel provides a platform upon which secondary development can be conducted.
 
-This section explains the design goals and architecture of Xray.
+This chapter expounds on Xray's design goals and architecture.
 
-Please click [Design Principles](./intro/design.md) to learn about the design goals and architecture of Xray.
+Please click [Design Philosophy](./intro/design.md) to understand Xray's design goals and architecture.
 
-## Development Standards
+## Development Guidelines
 
-This section outlines the guidelines to follow when obtaining code, developing, submitting PRs, as well as the relevant coding standards.
+This chapter explains the guidelines to follow during the process of obtaining code, conducting development, and submitting PRs, as well as relevant coding conventions.
 
-Please click [Development Specification](./intro/guide.md) to view the guidelines that should be followed during Xray development.
+Please click [Development Guidelines](./intro/guide.md) to view the criteria to be followed in Xray development.
 
 ## Protocol Details
 
-Xray uses many protocols, and you can obtain a detailed description of each protocol through various means.
+Xray utilizes many types of protocols. You can obtain detailed descriptions of these protocols through various channels.
 
 ### [VLESS Protocol](./protocols/vless.md)
 
@@ -30,12 +30,12 @@ VLESS is a stateless lightweight transport protocol that can serve as a bridge b
 
 ### [VMess Protocol](./protocols/vmess.md)
 
-VMess is an encrypted transport protocol that can act as a bridge between Xray clients and servers.
+VMess is an encrypted transport protocol that can serve as a bridge between Xray clients and servers.
 
 ### [Mux.Cool Protocol](./protocols/muxcool.md)
 
-Mux.Cool protocol is a multiplexing transport protocol used to transmit multiple independent data streams within an established data stream.
+The Mux.Cool protocol is a multiplexing transport protocol used to transmit multiple independent data streams within a single established data stream.
 
 ### [mKCP Protocol](./protocols/mkcp.md)
 
-mKCP is a stream transmission protocol modified from the [KCP protocol](https://github.com/skywind3000/kcp) that can transmit arbitrary data streams in order.
+mKCP is a stream transport protocol, modified from the [KCP Protocol](https://github.com/skywind3000/kcp), capable of transmitting arbitrary data streams in order.

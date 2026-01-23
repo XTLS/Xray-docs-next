@@ -2,88 +2,83 @@
 
 ## 3.1 Remote Login to VPS (PuTTY)
 
-First of all, considering that the user base of Windows is the largest among the zero-based population, this article uses Windows as an example for demonstration.
+First, given that Windows has the largest user base among beginners, this article will use Windows as an example.
 
-Secondly, although PowerShell and WSL after Windows 10 can also achieve a good SSH operation experience, not all versions of Windows have the latest components. Therefore, this article uses the classic PuTTY as an example to provide a detailed explanation of SSH remote login operation. (If you use other tools, the operations after the SSH login are the same.)
+Secondly, although modern Windows 10 and later versions feature PowerShell and WSL which offer a great SSH experience, not all versions of Windows have the latest components. Therefore, we will use the classic tool **PuTTY** for this detailed SSH tutorial. (If you use other tools, the operations after logging in are identical.)
 
-Follow me step by step and let's start the operation.
+Now, follow me step by step.
 
-1. Go to the [official website](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) of PuTTY and download the version that suits your operating system (this article uses the 64-bit version as an example).
+1. Go to PuTTY's [official website](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html) and download the version suitable for your operating system (this article uses the 64-bit version).
 
-![Download PuTTY](./ch03-img01-putty-download.png)
+   ![Download PuTTY](./ch03-img01-putty-download.png)
 
-2. After installation and running, you will see the main interface of PuTTY. Now please take out your notebook from the previous chapter where you wrote down the **IP address (VPS IP)** and **port (VPS PORT)** of your VPS in the corresponding positions of the following figure. In order to save time and avoid repeatedly entering these details in the future, we can save the session (Saved Sessions), and simply load it in the future with one click.
+2. After installation, open PuTTY. Now, take out the [notebook](./ch02-preparation.md#21-getting-a-vps) where you jotted things down in the previous chapter. Fill in your VPS **IP Address** and **Port** in the corresponding fields shown below. To avoid typing this every time, we can save the session. Just click `Save` under Saved Sessions, and in the future, click `Load` to restore settings instantly.
 
-![PuTTY Settings](./ch03-img02-putty-settings.png)
+   ![Configure PuTTY](./ch03-img02-putty-settings.png)
 
-3. I suggest setting `keepalive` to `60` seconds in the `Connection` to prevent SSH from automatically disconnecting after a period of inactivity. Be sure to save the settings again.
+3. I suggest setting `Seconds between keepalives` under `Connection` to `60`. This prevents SSH from automatically disconnecting due to inactivity. **Make sure to save your session settings again.**
 
-![Prevent frequent disconnection](./ch03-img03-putty-keepalive.png)
+   ![Prevent frequent disconnections](./ch03-img03-putty-keepalive.png)
 
-::: warning Attention
-Any update to the PuTTY configuration needs to be manually saved to the session again. Otherwise, it will be lost after closing.
+::: warning Note
+Any setting updates in PuTTY must be manually saved to the Session again, otherwise, they will be lost when you close the program.
 :::
 
-4. Click on Open to enter the SSH connection window, then enter the username and password corresponding to the following figure to establish a connection with your VPS remote host. (This article assumes that the default username is `root`. Also, when entering a password in the Linux system, there will be no prompt like `******`, which can avoid password length leakage. It's not that your keyboard is broken!)
+1. Click `Open` to enter the SSH connection window. Enter your username and password as shown below to connect to your VPS. (This article assumes the default username is `root`. Also, when typing passwords in Linux, **no asterisks `******` will appear**. This prevents password length leakage—your keyboard isn't broken!)
 
-![SSH Remote Login](./ch03-img04-ssh-login.png)
+   ![SSH Remote Login](./ch03-img04-ssh-login.png)
 
-## 3.2 Successfully Logging in SSH! Introduction to Command Line Interface!
+## 3.2 Successfully Logged into SSH! Meet the Command Line Interface
 
-1. If you have filled in your information correctly, you will see a similar interface as the picture below, indicating that you have successfully logged in:
+1. If you entered everything correctly, you will see a screen similar to the one below, indicating a successful login:
 
-![Logging in to VPS for the first time](./ch03-img05-ssh-login-success.png)
+   ![First Login to VPS](./ch03-img05-ssh-login-success.png)
 
-This interface is equivalent to the "desktop" of a remote server, but it does not have familiar icons and a mouse, nor does it have colorful graphics. Instead, all you see is simple text. This is the "**Command Line Interface**" - shortened as `CLI`.
+   This interface is the remote server's [Desktop], but without the icons, mouse, or colorful graphics you are used to. It's just simple text. This is the **Command Line Interface** (CLI).
 
-All the following operations require you to act like a hacker in a movie and complete them in this command-line interface. Maybe you will feel unfamiliar, but please believe me, using the command-line interface is neither scary nor mysterious. In the end, it just turns your familiar mouse operations into textual commands, **you say it, it does it**.
+   All subsequent operations require you to work in this interface, just like a hacker in the movies. It might feel strange, but trust me, the command line is neither scary nor mysterious. Ultimately, it just turns your mouse clicks into text commands: **You say it, it does it**.
 
-2. Now, you can observe and familiarize yourself with the command line environment a little bit. This interface has actually provided you with some useful information, such as the system kernel version (e.g. `4.19.37-5` in the picture), last login time and IP address. Of course, depending on the VPS, the interface you see may be slightly different.
+2. Now, look around and get familiar with the CLI environment. This interface actually tells you some useful info, like the system kernel version (e.g., `4.19.37-5` in the image), last login time, and IP. Of course, depending on your VPS, what you see might differ slightly.
 
-3. Please pay attention to the line at the bottom of the command line, to the left of the flashing cursor, there is a string of characters. The one shown in the figure is `root@vps-server:~#`. How to understand this string? It's very simple:
+3. Pay attention to the last line, to the left of the flashing cursor. There is a string of characters. In the image, it shows `root@vps-server:~#`. How should you understand this? Simple:
+   - The current user is `root`
+   - The server `root` is on is `vps-server`
+   - The folder `root` is currently in is `~`
+   - The `#` indicates where you can type commands
 
-- The current user is `root`
-- The server where `root` is located is `vps-server`
-- The current directory where `root` is located is `~`
-- After `#` is the place where you can input commands.
+   The first two are intuitive. The third is about the Linux file system; for now, just know that "`~`" is the [Current User's Home Base]. The fourth, the prompt `#`, doesn't need much thought. Just know that in future articles, commands you need to type will start with `#` or `$`, indicating **where** you start typing. (So when copying commands, **only copy the content after this symbol**, do not copy the prompt itself.)
 
-The first two are pretty straightforward, no need to explain further. The third one is about the folder system in Linux. You don't need to go too deep into it for now. Just know that "`~`" represents **the home directory of the current user**. As for the fourth one, the prompt symbol "`#`", you don't need to worry about it either. Just know that in future articles, there will be some commands that you need to input, and they will be preceded by "`#`" or "`$`" to indicate **where you should input the command**. (So when you copy the command, **just copy the content after the prompt symbol** and don't copy the prompt symbol itself.)
+## 3.3 Updating Linux Software for the First Time
 
-## 3.3 Updating software on Linux for the first time!
+1. Just like your phone (Android or iPhone) checks the App Store for updates (security patches and new features), Linux has a very similar update logic. If you can update apps on your phone, you can update Linux software!
 
-1. Just like your phone, whether it's Android or iPhone, in order to keep your apps up-to-date (to get security patches and new features), you will occasionally receive update notifications from the app store, telling you how many apps need to be updated. Linux systems also have a similar update mechanism that works logically. So as long as you know how to update phone apps, you can learn how to update Linux software!
+2. In Linux, every app is called a "package". The program that manages apps is naturally called the "Package Manager". You can install, update, and uninstall software, or even update the Linux system itself through it. The package manager is powerful, but for now, you only need to know that the Debian system's manager is called `apt`. Next, let's use `apt` to perform a full software update to get familiar with it.
 
-2. In Linux, each application is called a "package". The program that manages the applications is naturally called a "package manager". You can use it to install, update, and uninstall various software, and even update the Linux system itself. Package managers in Linux are very powerful, but we won't go into details here. For now, you only need to know that the package manager for the Debian system is called `apt`. Next, we will first use `apt` to do a comprehensive update of the software to familiarize you with its basic operations.
+3. Basic Linux commands for beginners:
 
-3. Tiny White Linux Basic Commands:
+   | Code | Command Name | Description |
+   | :---: | :---: | :---: |
+   | `cmd-01` | `apt update` | Check for software updates |
+   | `cmd-02` | `apt upgrade` | Execute software updates |
 
-|  Number  | Command Name  |   Command Description    |
-| :------: | :-----------: | :----------------------: |
-| `cmd-01` | `apt update`  |  Query software updates  |
-| `cmd-02` | `apt upgrade` | Perform software updates |
+4. Now enter the first command to fetch update information:
 
-4. Now, please enter the first command to get update information.
+   ```shell
+   apt update
+   ```
 
-```shell
-apt update
-```
+5. Then enter the second command. When asked whether to continue `(Y/n)`, type `y` and hit Enter to start the installation:
 
-This is a command used in a Linux terminal to update the package list from the repositories configured on the system.
+   ```shell
+   apt upgrade
+   ```
 
-5. Then enter the second command, and when asked if you want to continue installing `(Y/n)`, type `y` and press enter to confirm and start the installation.
+6. The complete process is demonstrated below:
 
-```shell
-apt upgrade
-```
-
-This is a command in the shell terminal to upgrade the installed packages on a Debian or Ubuntu Linux system.
-
-6. The complete demonstration of the process is as follows:
-
-![Demonstration of the software update process for the first time](./ch03-img06-apt-upgrade-full.gif)
+   ![First Software Update Demo](./ch03-img06-apt-upgrade-full.gif)
 
 ## 3.4 Your Progress
 
-**Congratulations on taking another solid step!** Now, you can log in to your remote server via SSH! After logging in, besides upgrading the software, what else should you do? Please enter the next chapter to find out!
+**Congratulations on taking another solid step!** Now, you can log in to your remote server via SSH! After logging in and updating software, what should you do next? Head to the next chapter to find out!
 
 > ⬛⬛⬛⬜⬜⬜⬜⬜ 37.5%

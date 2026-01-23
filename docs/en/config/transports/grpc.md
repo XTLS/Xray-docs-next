@@ -1,47 +1,48 @@
 # gRPC
 
-An modified transport protocol based on gRPC.
+A transport protocol based on gRPC.
 
-gRPC is based on the HTTP/2 protocol and can theoretically be relayed by other servers that support HTTP/2, such as Nginx.
-
-gRPC and HTTP/2 has built-in multiplexing, so it is not recommended to enable `mux.cool` when using gRPC or HTTP/2.
+It is based on the HTTP/2 protocol and, theoretically, can be relayed through other servers that support HTTP/2 (such as Nginx).
+gRPC (HTTP/2) has built-in multiplexing. It is not recommended to enable mux.cool when using gRPC and HTTP/2.
 
 ::: danger
-**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113), whose advantages over gRPC are noted in the STREAM-UP/ONE section.**
+**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113). Its advantages over gRPC are noted in the STREAM-UP/ONE section.**
 :::
 
 ::: warning ⚠⚠⚠
 
-- gRPC doesn't support specifying the Host. Please enter the **correct domain name** in the outbound proxy address, or fill in `ServerName` in `(x)tlsSettings`, otherwise connection cannot be established.
-- gRPC doesn't support fallback to other services.
-- gRPC services are at risk of being actively probed. It is recommended to use reverse proxy tools such as Caddy or Nginx to perform path-based routing.
+- gRPC does not support specifying Host. Please fill in the **correct domain name** in the outbound proxy address, or fill in `ServerName` in `(x)tlsSettings`, otherwise the connection will fail.
+- gRPC does not support falling back to other services.
+- gRPC services are at risk of active probing. It is recommended to use reverse proxy tools such as Caddy or Nginx to split traffic via Path prefix.
   :::
 
 ::: tip
-If you are using a reverse proxy such as Caddy or Nginx, please note the following:
+If you use reverse proxies like Caddy or Nginx, please note the following:
 
-- Make sure that the reverse proxy server has enabled HTTP/2.
+- Ensure the reverse proxy server has enabled HTTP/2.
 - Use HTTP/2 or h2c (Caddy), grpc_pass (Nginx) to connect to Xray.
-- The path for regular mode is `/${serviceName}/Tun`, and for Multi mode it is `/${serviceName}/TunMulti`.
-- If you need to receive the client IP address, you can use the `X-Real-IP` header sent by Caddy / Nginx to pass the client IP.
+- The Path for normal mode is `/${serviceName}/Tun`, and for Multi mode is `/${serviceName}/TunMulti`.
+- If you need to receive the client IP, you can pass the client IP by having Caddy / Nginx send the `X-Real-IP` header.
   :::
 
 ::: tip
 If you are using fallback, please note the following:
 
-- Fallback to gRPC is not recommended, as there is a risk of being actively probed.
-- Please make sure that `h2` is the first priority in `(x)tlsSettings.alpn`, otherwise gRPC (HTTP/2) may not be able to complete TLS handshake.
-- gRPC cannot perform path-based routing by Xray.
+- Falling back to gRPC is not recommended due to the risk of active probing.
+- Please ensure `h2` is in the first position in (x)tlsSettings.alpn, otherwise gRPC (HTTP/2) may fail to complete the TLS handshake.
+- gRPC cannot be split by Path.
   :::
 
 ## GRPCObject
 
-`GRPCObject` corresponds to the `grpcSettings` item.
+`GRPCObject` corresponds to the `grpcSettings` item in the transport configuration.
 
 ```json
 {
+  "authority": "grpc.example.com",
   "serviceName": "name",
   "multiMode": false,
+  "user_agent": "custom user agent",
   "idle_timeout": 60,
   "health_check_timeout": 20,
   "permit_without_stream": false,
@@ -49,65 +50,80 @@ If you are using fallback, please note the following:
 }
 ```
 
+> `authority`: string
+
+A string. Can be used as Host to achieve some other purposes.
+
 > `serviceName`: string
 
-A string that specifies the service name, similar to the `path` in HTTP/2.
+A string. Specifies the service name, **similar to** Path in HTTP/2.
+The client uses this name for communication, and the server verifies if the service name matches.
 
-The client will use this name for communication, and the server will verify whether the service name matches.
+::: tip
+When `serviceName` starts with a slash, you can customize the path. It requires at least two slashes.<br>
+For example, fill in `"serviceName": "/my/sample/path1|path2"` on the server side, and the client can fill in `"serviceName": "/my/sample/path1"` or `"/my/sample/path2"`.
+:::
+
+> `user_agent`: string
+
+::: tip
+**Only** needs to be configured on **outbound** (**client**).
+:::
+
+Set the User-Agent for gRPC. This may prevent some CDNs from blocking gRPC traffic.
 
 > `multiMode`: true | false <Badge text="BETA" type="warning"/>
 
-`true` enables `multiMode`, with a default value of `false`.
+`true` enables `multiMode`. Default value: `false`.
 
-This is an **experimental** option that may not be retained for the long term, and cross-version compatibility is not guaranteed. This mode can bring about a performance improvement of around 20% in **test environments**, but actual effects may vary depending on the transmission rate.
+This is an **experimental** option. It may not be kept long-term and cross-version compatibility is not guaranteed. This mode can bring about a 20% performance improvement in **test environments**, but actual results vary depending on transfer rates.
 
 ::: tip
-**Only need to be configured** in `outbound` **(client)**.
+**Only** needs to be configured on **outbound** (**client**).
 :::
 
 > `idle_timeout`: number
 
-The health check is performed when no data transmission occurs for a certain period of time, measured in seconds. If this value is set to less than `10`, `10` will be used as the minimum value.
+Unit: seconds. When there is no data transmission during this period, a health check will be performed. If this value is set below `10`, `10` will be used (the minimum value).
 
 ::: tip
-If you are not using reverse proxy tools such as Caddy or Nginx (**which is usually the case**), if this value is set to less than `60`, the server may send "unexpected h2 GOAWAY" frames to close existing connections.
+If you are not using reverse proxy tools like Caddy or Nginx (**usually not**), and set this below `60`, the server might send unexpected h2 GOAWAY frames to close existing connections.
 :::
 
-By default, the health check is **not enabled**.
+Health checks are **disabled** by default.
 
 ::: tip
-**Only need to be configured** in `outbound` **(client)**.
+**Only** needs to be configured on **outbound** (**client**).
 :::
 
 ::: tip
-Enabling health checks may help solve some "connection drop" issues.
+May resolve some "disconnection" issues.
 :::
 
 > `health_check_timeout`: number
 
-The timeout for the health check, measured in seconds. If the health check is not completed within this time period, it is considered to have failed.
-The default value is `20`
+Unit: seconds. The timeout for health checks. If the health check is not completed within this time, and there is still no data transmission, the health check is considered failed. Default value is `20`.
 
 ::: tip
-**Only need to be configured** in `outbound` **(client)**.
+**Only** needs to be configured on **outbound** (**client**).
 :::
 
 > `permit_without_stream`: true | false
 
-`true` allows health checks to be performed when there are no sub-connections. The default value is `false`.
+`true` allows health checks when there are no sub-connections (streams). Default value is `false`.
 
 ::: tip
-**Only need to be configured** in `outbound` **(client)**.
+**Only** needs to be configured on **outbound** (**client**).
 :::
 
 > `initial_windows_size`: number
 
-The initial window size of the h2 stream. When the value is less than or equal to `0`, this feature does not take effect. When the value is greater than `65535`, the Dynamic Window mechanism will be disabled. The default value is `0`, which means it is not effective.
+Initial window size for h2 Stream. When the value is less than or equal to `0`, this feature does not take effect. When the value is greater than `65535`, the Dynamic Window mechanism will be disabled. Default value is `0` (disabled).
 
 ::: tip
-**Only need to be configured** in `outbound` **(client)**.
+**Only** needs to be configured on **outbound** (**client**).
 :::
 
 ::: tip
-When using Cloudflare CDN, set the value to `35536` or higher to disable the Dynamic Window mechanism and prevent Cloudflare CDN from sending "unexpected h2 GOAWAY" frames to close existing connections.
+When going through Cloudflare CDN, you can set the value to `65536` or higher (disabling Dynamic Window) to prevent Cloudflare CDN from sending unexpected h2 GOAWAY frames to close existing connections.
 :::

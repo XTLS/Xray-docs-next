@@ -1,25 +1,32 @@
 # Configure and Run
 
-After [downloading and installing Xray](./install.md), you need to configure it.
+After you have [downloaded and installed](./install) Xray, you need to configure it.
 
-For demonstration purposes, only a simple configuration method is introduced here. For more templates, please refer to [Xray-examples](https://github.com/XTLS/Xray-examples).
+For demonstration purposes, only simple configuration methods are introduced here. For more templates: [Xray-examples](https://github.com/XTLS/Xray-examples)
 
-If you need to set up more advanced features, please refer to the relevant instructions in the more detailed [configuration file](../config/).
+To configure more complex features, please refer to the detailed instructions in [Configuration](../config/).
+
+::: danger
+To avoid your traffic being decrypted,<br>
+You should use `xray uuid` or `uuidgen` to generate a unique UUID.<br>
+On the server side, put it in `inbounds[0].settings.clients[0].id`.<br>
+On the client side, put it in `outbounds[0].settings.vnext[0].users[0].id`.<br>
+:::
 
 ## Server Configuration
 
-You need a server outside the firewall to run server-side Xray. The configuration is as follows:
+You need a server outside the firewall to run the server-side Xray. The configuration is as follows:
 
 ```json
 {
   "inbounds": [
     {
-      "port": 10086, // The port on which the server is listening
+      "port": 10086, // Server listening port
       "protocol": "vmess",
       "settings": {
         "clients": [
           {
-            "id": "b831381d-6324-4d53-ad4f-8cda48b30811"
+            "id": "b831381d-6324-4d53-ad4f-8cda48b30811" // Remember to replace this field, generate using `xray uuid` or `uuidgen`
           }
         ]
       }
@@ -33,17 +40,17 @@ You need a server outside the firewall to run server-side Xray. The configuratio
 }
 ```
 
-In server configuration, it is necessary to ensure that the `id` and port are consistent with the client in order to establish a normal connection.
+Ensure that the `id` and port in the server configuration match the client's, and you will be able to connect normally.
 
 ## Client Configuration
 
-On your PC (or phone), you need to run Xray with the following configuration:
+On your PC (or mobile phone), you need to run Xray with the following configuration:
 
 ```json
 {
   "inbounds": [
     {
-      "port": 1080, // SOCKS代理端口，需要在浏览器中配置代理并指向该端口
+      "port": 1080, // SOCKS proxy port. You need to configure the proxy in the browser to point to this port.
       "listen": "127.0.0.1",
       "protocol": "socks",
       "settings": {
@@ -57,11 +64,11 @@ On your PC (or phone), you need to run Xray with the following configuration:
       "settings": {
         "vnext": [
           {
-            "address": "server", // 服务器地址，请将其更改为您自己的服务器IP或域名
-            "port": 10086, // 服务器端口
+            "address": "server", // Server address. Please change to your own server IP or domain name.
+            "port": 10086, // Server port
             "users": [
               {
-                "id": "b831381d-6324-4d53-ad4f-8cda48b30811"
+                "id": "b831381d-6324-4d53-ad4f-8cda48b30811" // Remember to replace this field, generate using `xray uuid` or `uuidgen`
               }
             ]
           }
@@ -77,7 +84,7 @@ On your PC (or phone), you need to run Xray with the following configuration:
     "domainStrategy": "IPOnDemand",
     "rules": [
       {
-        "ip": ["geoip:private"],
+        "ip": ["geoip:private", "geoip:cn"], // Bypass LAN and mainland China IPs
         "outboundTag": "direct"
       }
     ]
@@ -85,14 +92,14 @@ On your PC (or phone), you need to run Xray with the following configuration:
 }
 ```
 
-The only thing you need to modify in the above configuration is your server's IP address, which is indicated in the configuration. This configuration will redirect all traffic to your server, except for traffic on the local area network (such as the access router).
+The only places you need to change in the above configuration are your server IP and user UUID, as noted in the configuration. The above configuration will forward all traffic to your server except for LAN (e.g., accessing the router) and mainland China IP ranges (e.g., accessing Bilibili, AcFun).
 
 ## Run
 
-- On Windows and macOS, the configuration files are usually named `config.json`.
-  - To start Xray, simply run `Xray` or `Xray.exe`.
-- On Linux, the configuration files are usually located in `/etc/xray/` or `/usr/local/etc/xray/`.
-  - To start Xray, run the command `xray run -c /etc/xray/config.json`.
-  - Alternatively, you can use a tool like systemd to run Xray as a background service.
+- In Windows and macOS, the configuration file is usually the `config.json` file in the same directory as Xray.
+  - Simply run `Xray` or `Xray.exe`.
+- In Linux, the configuration file is usually located in the `/etc/xray/` or `/usr/local/etc/xray/` directory.
+  - Run `xray run -c /etc/xray/config.json`.
+  - Or use tools like systemd to run Xray as a service in the background.
 
-For more detailed instructions, please refer to the [Configuration](../config/) Document and [Layman's Terms](./level-0/).
+For more detailed instructions, please refer to [Configuration Documentation](../config/) and [Project X for Dummies](./level-0/).

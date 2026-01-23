@@ -1,80 +1,96 @@
-# Compile the document
+# Compilation Documentation
 
-## Preparatory Work
+## Prerequisites
 
-Xray uses [Golang](https://golang.org/) as its programming language, so you need to install the latest version of Golang first in order to compile.
+Xray uses [Golang](https://golang.org/) as its programming language. You need to install the latest version of Golang to compile it.
 
 ::: tip TIP
 Install Golang: [golang.org/doc/install](https://golang.org/doc/install)
 :::
 
-If you happen to use Windows, please **make sure** to use Powershell.
+> If you are unfortunately using Windows, please **be sure** to use PowerShell.
 
-## Pull Xray source code
+## Pull Xray Source Code
 
 ```bash
-git clone https://github.com/XTLS/Xray-core.git
+git clone [https://github.com/XTLS/Xray-core.git](https://github.com/XTLS/Xray-core.git)
 cd Xray-core && go mod download
 ```
 
-If you have free time, you can try GitHub's official tool: `gh repo clone XTLS/Xray-core`
+> If you have nothing better to do, you can try the GitHub official tool: `gh repo clone XTLS/Xray-core`
 
-Note: In a network environment where Google cannot be accessed normally, dependencies cannot be pulled normally, and `GOPROXY` needs to be set first:
+Note: In network environments where Google cannot be accessed normally, dependencies cannot be pulled correctly. You need to set `GOPROXY` first:
 
 ```bash
-go env -w GOPROXY=https://goproxy.io,direct
+go env -w GOPROXY=[https://goproxy.io](https://goproxy.io),direct
 ```
 
 ## Build Binary
 
 :::warning
-This command needs to be executed within Xray root directory.
+The commands in this section need to be run inside the Xray root directory.
 :::
 
-### Windows(Powershell):
+### Windows (Powershell)
 
 ```powershell
 $env:CGO_ENABLED=0
-go build -o xray.exe -trimpath -ldflags "-s -w -buildid=" ./main
+go build -o xray.exe -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
 ```
 
-### macOS, Linux:
+### macOS, Linux
 
 ```bash
-CGO_ENABLED=0 go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
 ```
 
-Running the above command will generate an xray executable file in the directory.
+Running the above commands will generate the `xray` executable file in the directory.
 
 ::: tip
-If you need to compile a program that can be debugged, i.e., you can use dlv to attach to the running program for debugging, please remove the '-w -s' options from the ldflags.
+If you need to compile a debuggable program (i.e., you can attach `dlv` to the running program for debugging), please remove the `-w -s` options from `ldflags`.
 
-- w option disables the generation of debug information. After using this option, gdb cannot be used for debugging.
-- s option disables the symbol table.
-  PS: Actually, debugging with vscode or other IDEs seems to be more convenient.
+- `-w`: Disable DWARF generation (debug info). After using this option, you cannot use gdb for debugging.
+- `-s`: Disable the symbol table.
 
-## Cross compilation:
+PS: Actually, debugging with VSCode or other IDEs seems more convenient.
+:::
 
-Here, we take the example of compiling to a Linux server in a Windows (Powershell) environment:
+## Cross Compilation
+
+Here is an example of compiling for a Linux server in a Windows (Powershell) environment:
 
 ```powershell
 $env:CGO_ENABLED=0
 $env:GOOS="linux"
 $env:GOARCH="amd64"
-```
 
-go build -o xray -trimpath -ldflags "-s -w -buildid=" ./main```
+go build -o xray -trimpath -buildvcs=false -ldflags "-s -w -buildid=" ./main
+```
 
 After uploading to the server, remember to execute `chmod +x xray` in the server terminal.
 
 ::: tip
-Execute `go tool dist list` to view all supported systems and architectures.
+Run `go tool dist list` to view all supported systems and architectures.
 :::
 
-## Reproducible Build:
+## Reproducible Build
 
-Following the above steps, it is possible to compile and release an identical binary file as the one in Release.
+Use the following command to build (`<short commit ID>` should be replaced with the first seven characters of the corresponding commit SHA-256):
+
+```bash
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="all=-l=4" -ldflags="-X [github.com/xtls/xray-core/core.build=](https://github.com/xtls/xray-core/core.build=)<short commit ID> -s -w -buildid=" -v ./main
+```
+
+For MIPS/MIPSLE architectures, you should use:
+
+```bash
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="-l=4" -ldflags="-X [github.com/xtls/xray-core/core.build=](https://github.com/xtls/xray-core/core.build=)<short commit ID> -s -w -buildid=" -v ./main
+```
 
 ::: warning
-Please confirm that you are using the same Golang version as the one used to compile the release.
+Please ensure that the Golang version you are using is consistent with the one used to compile the Release.
 :::
+
+## Compiling for Windows 7
+
+Replace the Golang tools with the version provided in [go-win7](https://github.com/XTLS/go-win7), and then proceed with the compilation steps above.

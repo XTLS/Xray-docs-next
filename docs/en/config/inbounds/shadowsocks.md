@@ -1,31 +1,30 @@
 # Shadowsocks
 
-The [Shadowsocks](https://en.wikipedia.org/wiki/Shadowsocks) protocol is compatible with most other implementations of Shadowsocks. The server supports TCP and UDP packet forwarding, with an option to selectively disable UDP.
+The [Shadowsocks](https://zh.wikipedia.org/wiki/Shadowsocks) protocol, compatible with most other version implementations.
 
-### Supported Encryption Methods
+Current compatibility is as follows:
 
-The currently supported methods are following:
-
+- Supports TCP and UDP packet forwarding, where UDP can be optionally disabled;
 - Recommended encryption methods:
-  - `2022-blake3-aes-128-gcm`
-  - `2022-blake3-aes-256-gcm`
-  - `2022-blake3-chacha20-poly1305`
+  - 2022-blake3-aes-128-gcm
+  - 2022-blake3-aes-256-gcm
+  - 2022-blake3-chacha20-poly1305
 - Other encryption methods:
-  - `aes-256-gcm`
-  - `aes-128-gcm`
-  - `chacha20-poly1305`/`chacha20-ietf-poly1305`
-  - `xchacha20-poly1305`/`xchacha20-ietf-poly1305`
-  - `none`/`plain`
+  - aes-256-gcm
+  - aes-128-gcm
+  - chacha20-poly1305 (or chacha20-ietf-poly1305)
+  - xchacha20-poly1305 (or xchacha20-ietf-poly1305)
+  - none (or plain)
 
-The Shadowsocks 2022 new protocol format improves performance and includes complete replay protection, addressing the following security issues in the old protocol:
+The Shadowsocks 2022 new protocol format improves performance and includes complete replay protection, resolving the following security issues of the old protocol:
 
-- [Serious vulnerabilities in Shadowsocks AEAD encryption, which cannot guarantee the integrity of the communication content](https://github.com/shadowsocks/shadowsocks-org/issues/183)
-- Increasing false positive rate of the original TCP replay filter over time
-- Lack of UDP replay protection
-- TCP behaviors that can be used for active probing
+- [Severe vulnerabilities in the design of Shadowsocks AEAD encryption, unable to guarantee communication reliability](https://github.com/shadowsocks/shadowsocks-org/issues/183)
+- The false positive rate of the original TCP replay filter increases over time
+- No UDP replay protection
+- TCP behavior that can be used for active probing
 
 ::: danger
-Traffic transmitted without encryption using the "none" method will be in plain text. **Do not use it on public networks** for security reasons.
+Under the "none" encryption method, traffic will be transmitted in plain text. To ensure security, do not use it on public networks.
 :::
 
 ## InboundConfigurationObject
@@ -33,69 +32,79 @@ Traffic transmitted without encryption using the "none" method will be in plain 
 ```json
 {
   "settings": {
-    "clients": [],
-    "password": "password",
+    "network": "tcp,udp",
     "method": "aes-256-gcm",
+    "password": "114514",
     "level": 0,
     "email": "love@xray.com",
-    "network": "tcp,udp"
+    "clients": [
+      {
+        "password": "1919810",
+        "method": "aes-128-gcm"
+      }
+    ]
   }
 }
 ```
 
-> `clients`: a list of [`ClientObject`](#clientobject), empty list considered valid
-
-The `password` parameter can be specified for the server at all, but also in the [`ClientObject`](#clientobject) being dedicated to the given user. Server-level `password` is not guaranteed to override the client-specific one.
-
 > `network`: "tcp" | "udp" | "tcp,udp"
 
-The supported network protocol type. For example, when specified as `"tcp"`, it will only handle TCP traffic. The default value is `"tcp"`.
+The network type that the server port **listens** on. The default value is `"tcp"`.
+
+Note that this is only for listening; it mainly affects and controls the native UDP transmission of Shadowsocks. Setting it to `"tcp"` does not mean the inbound will reject UDP proxy requests. UDP proxy requests can still be wrapped into TCP packets by Shadowsocks outbound features like UoT or mux.cool and sent to the server, and are not controlled by this option.
+
+> `method`: string
+
+Encryption method. See above for options.
+
+> `password`: string
+
+Required.
+
+- Shadowsocks 2022
+
+Uses a pre-shared key similar to WireGuard as the password.
+
+Use `openssl rand -base64 <length>` to generate a key compatible with shadowsocks-rust. The length depends on the encryption method used.
+
+| Encryption Method             | Key Length |
+| ----------------------------- | ---------: |
+| 2022-blake3-aes-128-gcm       |         16 |
+| 2022-blake3-aes-256-gcm       |         32 |
+| 2022-blake3-chacha20-poly1305 |         32 |
+
+In the Go implementation, 32-byte keys always work.
+
+- Other encryption methods
+
+Any string. There is no limit on password length, but short passwords are more likely to be cracked. It is recommended to use passwords of 16 characters or longer.
+
+> `level`: number
+
+User level. The connection will use the [local policy](../policy.md#levelpolicyobject) corresponding to this user level.
+The value of `level` corresponds to the `level` value in [policy](../policy.md#levelpolicyobject). If not specified, the default is 0.
+
+> `email`: string
+
+User email, used to distinguish traffic from different users (logs, statistics).
 
 ## ClientObject
 
 ```json
 {
-  "password": "密码",
+  "password": "1919810",
   "method": "aes-256-gcm",
   "level": 0,
   "email": "love@xray.com"
 }
 ```
 
-> `method`: string
+When this option exists, it indicates that multi-user mode is enabled.
 
-Required, any of the [supported methods](#supported-encryption-methods)
+When the `method` in `InboundConfigurationObject` is not an SS2022 option, you can specify `"method"` for each user here (only non-SS2022 options are supported in `"method"`) along with `"password"` (at the same time, the `"password"` set in `InboundConfigurationObject` will be ignored).
 
-> `password`: string
+When the `method` in `InboundConfigurationObject` is an SS2022 option, for security reasons, setting `"method"` for individual users is no longer supported. It is unified to the `"method"` specified in `InboundConfigurationObject`.
 
-Required. For **Shadowsocks 2022** a pre-shared `base64` random key similar to WireGuard's keys should be used as the password. The command
+Note that SS2022 does not ignore the upper-level `"password"` like the old SS did. The correct password format for the client should be `ServerPassword:UserPassword`. For example: `"password": "114514:1919810"`.
 
-```sh
-openssl rand -base64 <length>
-```
-
-could used to generate a key. The length of the required key for `shadowsocks-rust` implementation depends on the encryption method:
-
-| Encryption Method               | Key Length |
-| ------------------------------- | ---------: |
-| `2022-blake3-aes-128-gcm`       |         16 |
-| `2022-blake3-aes-256-gcm`       |         32 |
-| `2022-blake3-chacha20-poly1305` |         32 |
-
-In the `go-shadowsocks` implementation written in Golang, a 32-byte key always works.
-
-For **any other encryption method** _any string_ could be used. There is no limitation on the password length, but shorter passwords are more susceptible to cracking. It is recommended to use a random-generated password of 16 characters or longer. The following example generates 40-characters length password:
-
-```sh
-sudo strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 40 | tr -d '\n'; echo
-```
-
-> `level`: number
-
-The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
-
-The value of `level` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
-
-> `email`: string
-
-The user's email, used to differentiate traffic from different users for logs or statistics.
+The remaining options have the same meaning as in `InboundConfigurationObject`.

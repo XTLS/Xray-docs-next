@@ -1,9 +1,9 @@
 # Trojan
 
-The [Trojan](https://trojan-gfw.github.io/trojan/protocol) protocol.
+[Trojan](https://trojan-gfw.github.io/trojan/protocol) protocol.
 
 ::: danger
-Trojan is designed to work with correctly configured encrypted TLS tunnels.
+Trojan is designed to work over correctly configured encrypted TLS tunnels.
 :::
 
 ## InboundConfigurationObject
@@ -27,16 +27,18 @@ Trojan is designed to work with correctly configured encrypted TLS tunnels.
 
 > `clients`: \[ [ClientObject](#clientobject) \]
 
-An array representing a group of users approved by the server.
+An array representing a group of users accepted by the server.
 
-Each item in the array is a user [ClientObject](#clientobject).
+Each item is a [ClientObject](#clientobject).
 
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
-An array that contains a series of powerful fallback configurations (optional). The specific configuration for `fallbacks` can be found in the [FallbackObject](../features/fallback.md#fallbacks-configuration) documentation.
+An array containing a series of powerful fallback configurations (optional).
+For specific configuration of fallbacks, please click [FallbackObject](../features/fallback.md#fallbackobject).
 
 ::: tip
-Xray's Trojan has full support for fallbacks, and the configuration is identical. The conditions triggering fallback are similar to VLESS: first packet length < 58 or the 57th byte is not `\r` (because Trojan does not have a protocol version) or authentication failure.
+Xray's Trojan has complete support for fallbacks, and the configuration method is exactly the same as VLESS.
+The conditions for triggering fallback are also similar to VLESS: the length of the first packet < 58, OR the 57th byte is not `\r` (because Trojan has no protocol version), OR authentication fails.
 :::
 
 ### ClientObject
@@ -51,18 +53,18 @@ Xray's Trojan has full support for fallbacks, and the configuration is identical
 
 > `password`: string
 
-Required. Any string.
+Required, any string.
 
 > `email`: string
 
-Email address. Optional. Used to identify the user.
+Email address, optional, used to identify the user.
 
 ::: danger
-If there are multiple `ClientObject`s, please make sure that the email addresses are not duplicated.
+If there are multiple ClientObjects, please note that emails must not be duplicated.
 :::
 
 > `level`: number
 
-The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
+User level. Connections will use the [Local Policy](../policy.md#levelpolicyobject) corresponding to this user level.
 
-The value of `level` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
+The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, it defaults to 0.

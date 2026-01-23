@@ -1,35 +1,35 @@
 # Advanced Documentation
 
-**This chapter contains experience sharing of using Xray at an advanced level. If you are already familiar with Xray, the experience shared here can help you unleash the full power of Xray.**
+**This section contains advanced insights into using Xray. If you are already familiar with Xray, the experiences shared here will help you further unleash its full potential.**
 
-[Beginner's Guide to Transparent Proxies](./transparent_proxy/transparent_proxy.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
+[Introduction to Transparent Proxy](./transparent_proxy/transparent_proxy.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
 
-An Introduction to Transparent Proxies.
+An introductory chapter on Transparent Proxy.
 
-[TProxy Configuration Tutorial](./tproxy.md) by <img src="https://avatars2.githubusercontent.com/u/41363844?s=32" width="32" height="32" alt="a"/> [@BioniCosmos](https://github.com/BioniCosmos)
+[Transparent Proxy (TProxy) Configuration Tutorial](./tproxy.md) by <img src="https://avatars2.githubusercontent.com/u/41363844?s=32" width="32" height="32" alt="a"/> [@BioniCosmos](https://github.com/BioniCosmos)
 
-Complete tutorial on configuring transparent proxy (TProxy) based on Xray.
+A complete tutorial on configuring Transparent Proxy (TProxy) based on Xray.
 
 [TProxy Transparent Proxy (IPv4 and IPv6) Configuration Tutorial](./tproxy_ipv4_and_ipv6.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
 
-Xray-based TProxy Transparent Proxy (IPv4 and IPv6) Configuration Tutorial
+Configuration tutorial for Xray-based TProxy Transparent Proxy (IPv4 and IPv6).
 
-[Nginx_TLS Tunnel Hidden Fingerprint](./nginx_or_haproxy_tls_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
+[Using Nginx or HAProxy to Build TLS Tunnels to Hide Fingerprints](./nginx_or_haproxy_tls_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="32" height="32" alt="a"/> [@SQLimit](https://github.com/SQLimit)
 
-Use Nginx_TLS tunnel on both ends to hide the fingerprint.
+Using Nginx or HAProxy on both ends to build a TLS tunnel for fingerprint hiding.
 
-[[Transparent Proxy] Avoiding Xray Traffic Through gid](./iptables_gid.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
+[[Transparent Proxy] Bypassing Xray Traffic via GID](./iptables_gid.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="32" height="32" alt="a"/> [@kirin](https://github.com/kirin10000)
 
-A new way of bypassing Xray traffic in transparent proxy implemented by iptables/nftables.
+A new method to bypass Xray traffic in transparent proxies implemented via iptables/nftables.
 
-[Redirect Specific Traffic to Specific Gateway using Xray to Achieve Global Routing "Load Balancing"](./redirect.md) by <img src="https://avatars.githubusercontent.com/u/28607089?s=32" width="32" height="32" alt="a"/> [@Zzz3m](https://github.com/Zzz3m)
+[Directing Specific Traffic to Specific Exits via Xray for Global Routing "Traffic Splitting"](./redirect.md) by <img src="https://avatars.githubusercontent.com/u/28607089?s=32" width="32" height="32" alt="a"/> [@Zzz3m](https://github.com/Zzz3m)
 
-Play Xray to the fullest: Implement "load balancing" based on fwmark or sendThrough.
+Getting creative with Xray: Achieving "traffic splitting" based on fwmark, sendThrough, or sockopt.interface.
 
-[Enhancing Proxy Security with Cloudflare Warp](./warp.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
+[Enhancing Proxy Security via Cloudflare Warp](./warp.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
 
-Introduction to using WireGuard for outbound traffic added in Xray v1.6.5.
+Introduction to the use of the WireGuard outbound added in Xray v1.6.5.
 
 [Xray Traffic Statistics](./traffic_stats.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
 
-Adapt traffic statistics and scripts compatible with Xray.
+Traffic statistics and scripts adapted for Xray.

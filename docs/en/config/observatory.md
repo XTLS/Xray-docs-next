@@ -1,11 +1,6 @@
-# Connection Monitoring
+# Observatory
 
-The connection monitoring component uses HTTPing to detect the connection
-status of outbound proxies. The monitoring results can be used by other
-components, such as load balancers. There are currently two options:
-[observatory](#observatoryobject) (background connection monitoring) and
-[burstObservatory](#burstobservatoryobject) (concurrent connection monitoring).
-You can choose one of them as needed.
+The Observatory component uses HTTPing to probe the connection status of outbound proxies. The observation results can be used by other components, such as the Load Balancer. Currently, there are two types: [observatory](#observatoryobject) (Background Connection Observatory) and [burstObservatory](#burstobservatoryobject) (Burst Connection Observatory). Choose one according to your needs.
 
 ## ObservatoryObject
 
@@ -20,20 +15,22 @@ You can choose one of them as needed.
 
 > `subjectSelector`: \[ string \]
 
-An array of strings, where each string is used to match the prefix of outbound proxy identifiers. Among the following outbound proxy identifiers: `["a", "ab", "c", "ba"]`, `"subjectSelector": ["a"]` will match `["a", "ab"]`.
+An array of strings, where each string is used for prefix matching against outbound proxy tags. Given the following outbound proxy tags: `[ "a", "ab", "c", "ba" ]`, `"subjectSelector": ["a"]` will match `[ "a", "ab" ]`.
 
 > `probeUrl`: string
 
-The URL used to detect the connection status of the outbound proxy.
+The URL used to probe the connection status of the outbound proxy.
 
 > `probeInterval`: string
 
-The interval at which probes are initiated. The time format is a number followed by a unit, such as `"10s"`, `"2h45m"`. Supported time units include `ns`, `us`, `ms`, `s`, `m`, `h`, corresponding to nanoseconds, microseconds, milliseconds, seconds, minutes, and hours, respectively.
+The interval for initiating probes. The time format is number + unit, such as `"10s"`, `"2h45m"`. Supported time units are `ns`, `us`, `ms`, `s`, `m`, `h`, corresponding to nanoseconds, microseconds, milliseconds, seconds, minutes, and hours respectively.
+
+Note that since the request interval is fixed, periodic fixed requests might lead to behavioral fingerprinting. Using protocols with multiplexing or enabling `mux` can alleviate this issue.
 
 > `enableConcurrency`: true | false
 
-- `true`: Concurrently probe all matching outbound proxies, then pause for the time set by `probeInterval`.
-- `false`: Probe each matching outbound proxy one by one, pausing for the time set by `probeInterval` after probing each one.
+- `true`: Probe all matched outbound proxies concurrently. Pauses for the time set in `probeInterval` after all are completed.
+- `false`: Probe matched outbound proxies one by one. Pauses for the time set in `probeInterval` after each outbound proxy is probed.
 
 ## BurstObservatoryObject
 
@@ -46,7 +43,7 @@ The interval at which probes are initiated. The time format is a number followed
 
 > `subjectSelector`: \[ string \]
 
-An array of strings, where each string is used to match the prefix of outbound proxy identifiers. Among the following outbound proxy identifiers: `["a", "ab", "c", "ba"]`, `"subjectSelector": ["a"]` will match `["a", "ab"]`.
+An array of strings, where each string is used for prefix matching against outbound proxy tags. Given the following outbound proxy tags: `[ "a", "ab", "c", "ba" ]`, `"subjectSelector": ["a"]` will match `[ "a", "ab" ]`.
 
 > `pingConfig`: [PingConfigObject](#pingconfigobject)
 
@@ -54,30 +51,47 @@ An array of strings, where each string is used to match the prefix of outbound p
 
 ```json
 {
+  // For each outbound, probe 2 times within 10 minutes; specific probe times are random.
+  // If they all fail, it will be marked as a faulty node within 10 ~ 20 minutes.
+  // After failure, a single successful probe will mark it as a healthy node; at slowest, it takes 10 minutes.
   "destination": "https://connectivitycheck.gstatic.com/generate_204",
   "connectivity": "",
-  "interval": "1h",
-  "sampling": 3,
+  "interval": "5m",
+  "sampling": 2,
   "timeout": "30s"
 }
 ```
 
 > `destination`: string
 
-The URL used to detect the connection status of the outbound proxy. This URL should return an HTTP 204 success status code.
+The URL used to probe the connection status of the outbound proxy. This URL should return an HTTP 204 success status code.
 
 > `connectivity`: string
 
-The URL used to check local network connectivity. An empty string means that local network connectivity is not checked.
+The URL used to check local network connectivity. This URL should return an HTTP 204 success status code.
+
+An empty string indicates no local network connectivity check.
+
+This probe is executed only when the `destination` probe fails. This makes the cause of network failure clearer in the logs.
+
+Note: In transparent proxy mode, this request might be captured by the transparent proxy and re-enter Xray for routing (depending on your configuration). You need to use extra means to ensure it is not captured by the transparent proxy, such as bypassing based on the URL IP, or using cgroup/pid routing to completely prevent Xray's requests from being captured. Alternatively, you can choose a URL that matches a direct connection rule and allow this request to be captured by the transparent proxy.
 
 > `interval`: string
 
-Within the specified time, probe all matching outbound proxies, probing each proxy `sampling + 1` times. The time format is a number followed by a unit, such as `"10s"`, `"2h45m"`. Supported time units include `ns`, `us`, `ms`, `s`, `m`, `h`, corresponding to nanoseconds, microseconds, milliseconds, seconds, minutes, and hours, respectively.
+The expected **average** probe interval for each outbound proxy.
+
+The time format is number + unit, such as `"10s"`, `"2h45m"`. Supported time units are `ns`, `us`, `ms`, `s`, `m`, `h`, corresponding to nanoseconds, microseconds, milliseconds, seconds, minutes, and hours respectively.
 
 > `sampling`: number
 
-The number of recent probe results to retain.
+The number of recent probe results to keep.
 
 > `timeout`: string
 
-The probe timeout period. The format is the same as the `interval` above.
+Probe timeout. Format is the same as `interval` above.
+
+::: tip
+The working principle of Burst Observatory is to immediately schedule probe tasks for each matched outbound at every `interval` * `sampling` (hereinafter referred to as the probe cycle). However, within each task's cycle, the probe is executed at a random time. This means compared to `observatory` (Background Connection Observatory), the fingerprint of this detector is less obvious. But if `interval` is set too small, or `sampling` is too large causing frequent probing, the fingerprint will be more obvious.
+
+`interval` and `sampling` jointly affect the sensitivity of failover and recovery. When a node fails probes continuously, it takes at fastest 1 probe cycle to mark the node as faulty, and at slowest 2 probe cycles. Recovering from failure requires one successful probe, which depends on the probe density; at slowest, it takes 1 probe cycle.
+:::

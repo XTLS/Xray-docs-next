@@ -4,94 +4,94 @@
 
 ### Version Control
 
-Project X's code is hosted on GitHub:
+Project X code is hosted on GitHub:
 
-- Xray Core [xray-core](https://github.com/XTLS/Xray-core)
-- Installation script [Xray-install](https://github.com/XTLS/Xray-install)
-- Configuration template [Xray-examples](https://github.com/XTLS/Xray-examples)
-- Xray documentation [Xray-docs-next](https://github.com/XTLS/Xray-docs-next)
+- Xray Core: [Xray-core](https://github.com/XTLS/Xray-core)
+- Install Script: [Xray-install](https://github.com/XTLS/Xray-install)
+- Configuration Templates: [Xray-examples](https://github.com/XTLS/Xray-examples)
+- Xray Documentation: [Xray-docs-next](https://github.com/XTLS/Xray-docs-next)
 
-You can use [Git](https://git-scm.com/) to get the code.
+You can use [Git](https://git-scm.com/) to fetch the code.
 
-### Branch
+### Branches
 
-- The main branch is the backbone of this project.
-- The main branch is also the release branch of this project.
-- It is necessary to ensure that main can be compiled and used normally at any time.
-- If you need to develop new features, please create a new branch for development. After development and sufficient testing, merge it back to the main branch.
-- Please delete branches that have been merged into the main branch and are no longer necessary.
+- The trunk branch of this project is `main`.
+- The release branch of this project is also `main`.
+- Ensure that `main` is compilable and usable at any given time.
+- If you need to develop new features, please create a new branch for development. After development is complete and fully tested, merge it back into the trunk branch.
+- Branches that have already been merged into the trunk and are no longer necessary should be deleted.
 
 ### Release
 
-<Badge text="WIP" type="warning"/> (Note: this is not translatable as it is a technical tag)
+<Badge text="WIP" type="warning"/>
 
-- Create two release channels: one for the beta version and another for the stable version.
-  - The beta version, also known as the daily build, is mainly used for specific testing, experimentation, and instant feedback and improvement.
-  - The stable version, updated regularly (e.g. monthly), merges stable modifications and releases them.
+- Establish two release channels: Bleeding Edge and Stable.
+  - Bleeding Edge: Can be daily builds, mainly used for specific testing scenarios, trying out new features, and obtaining immediate feedback for further improvement.
+  - Stable: Scheduled updates (e.g., monthly), merging stable changes and releasing.
 
-### Citing other projects
+### Referencing Other Projects
 
 - Golang
-  - It is recommended to use the Golang standard library and libraries under [golang.org/x/](https://pkg.go.dev/search?q=golang.org%2Fx) for product code;
-  - If you need to reference other projects, please create an issue for discussion beforehand;
-- Other
-  - Tools that do not violate the agreement of both parties and are helpful to the project can be used.
+  - For product code, it is recommended to use the Golang standard library and libraries under [golang.org/x/](https://pkg.go.dev/search?limit=25&m=package&q=golang.org%2Fx).
+  - If you need to reference other projects, please create an issue for discussion beforehand.
+- Others
+  - Tools that do not violate the agreements of either party and are helpful to the project can be used.
 
 ## Development Process
 
 ### Before Writing Code
 
-If you encounter any issues or have any ideas for the project, please create an [issue](https://github.com/XTLS/Xray-core/issues) for discussion to reduce redundant work and save time spent on coding.
-
-### Modify the code
-
-- Golang
-  - Please refer to [Effective Go](https://golang.org/doc/effective_go.html);
-  - Run `go generate core/format.go` before each push;
-  - If you need to modify protobuf, such as adding new configuration items, please run: `go generate core/proto.go`;
-  - It is recommended to pass the test before submitting a pull request: `go test ./...`;
-  - It is recommended to have more than 70% code coverage for newly added code before submitting pull requests.
-- Other
-  - Please pay attention to the readability of the code.
-
-### Pull Request
-
-- Before submitting a PR, please run `git pull https://github.com/xray/xray-core.git` to ensure that the merge can proceed smoothly;
-- One PR only does one thing. If there are fixes for multiple bugs, please submit a PR for each bug;
-- Due to Golang's special requirements (Package path), the PR process for Go projects is different from other projects. The recommended process is as follows:
-  1. Fork this project first and create your own `github.com/<your_name>/Xray-core.git` repository;
-  2. Clone your own Xray repository to your local machine: `git clone https://github.com/<your_name>/Xray-core.git`;
-  3. Create a new branch based on the `main` branch, for example `git branch issue24 main`;
-  4. Make changes on the new branch and commit the changes;
-  5. Before pushing the modified branch to your own repository, switch to the `main` branch, and run `git pull https://github.com/xray/xray-core.git` to pull the latest remote code;
-  6. If new remote code is obtained in the previous step, switch to the branch you created earlier and run `git rebase main` to perform branch merging. If there is a file conflict, you need to resolve the conflict;
-  7. After the previous step is completed, you can push the branch you created to your own repository: `git push -u origin your-branch`
-  8. Finally, send a PR from your new pushed branch in your own repository to the `main` branch of `xtls/Xray-core`;
-  9. Please fully describe the purpose of this PR, including the problem solved, the new feature added, or the modifications made in the title and body of the PR;
-  10. Please be patient and wait for the developer's response.
+If you find any issues or have any ideas for the project, please create an [issue](https://github.com/XTLS/Xray-core/issues) for discussion to reduce repetitive work and time spent on code.
 
 ### Modifying Code
 
-#### Functional issue
+- Golang
+  - Please refer to [Effective Go](https://golang.org/doc/effective_go.html).
+  - Before every push, please run: `go generate core/format.go`.
+  - If you need to modify protobuf, such as adding new configuration items, please run: `go generate core/proto.go`.
+  - Before submitting a pull request, it is recommended to pass tests: `go test ./...`.
+  - Before submitting a pull request, it is recommended that new code has over 70% code coverage.
+- Others
+  - Please pay attention to code readability.
 
-Please submit at least one test case to verify changes to existing functionality.
+### Pull Request
+
+- Before submitting a PR, please run `git pull https://github.com/XTLS/Xray-core.git` to ensure the merge can proceed smoothly.
+- One PR should do one thing. If there are fixes for multiple bugs, please submit a separate PR for each bug.
+- Due to the special requirements of Golang (Package path), the PR process for Go projects differs from other projects. The recommended process is as follows:
+  1. Fork this project first and create your own `github.com/<your_name>/Xray-core.git` repository.
+  2. Clone your own Xray repository locally: `git clone https://github.com/<your_name>/Xray-core.git`.
+  3. Create a new branch based on the `main` branch, e.g., `git branch issue24 main`.
+  4. Make changes and commit them on the newly created branch.
+  5. Before pushing the completed branch to your own repository, switch to the `main` branch and run `git pull https://github.com/XTLS/Xray-core.git` to pull the latest remote code.
+  6. If new remote code was pulled in the previous step, switch back to the branch you created and run `git rebase main` to perform the branch merge operation. If you encounter file conflicts, you need to resolve them.
+  7. After the previous step is completed, you can push your created branch to your own repository: `git push -u origin your-branch`.
+  8. Finally, send a PR from the newly pushed branch in your repository to the `main` branch of `XTLS/Xray-core`.
+  9. In the title and body of the PR, please fully describe the problem solved / new feature added / intention of the code changes, etc.
+  10. Wait patiently for the developers' response.
+
+### Changes to Code
+
+#### Functional Issues
+
+Please submit at least one Test Case to verify changes to existing functions.
 
 #### Performance Related
 
-Please provide the necessary test data to demonstrate performance issues in existing code or performance improvements in new code.
+Please submit necessary test data to prove performance defects in existing code or performance improvements in new code.
 
-#### New Feature
+#### New Features
 
-- If the new feature does not affect the existing functionality, please provide a toggle (such as a flag) that can be turned on/off, and keep the new feature disabled by default.
-- For major new features (such as adding a new protocol), please submit an issue for discussion before development.
+- If the new feature does not affect existing features, please provide a switch (e.g., flag) that can turn it on/off, and keep the new feature off by default.
+- Before developing large new features (such as adding a new protocol), please submit an issue first and proceed with development after discussion.
 
-#### Other
+#### Others
 
-It depends on the specific situation.
+To be determined based on the specific situation.
 
-## Xray Coding Guidelines
+## Xray Coding Standards
 
-The following content is applicable to Golang code in Xray.
+The following applies to Golang code in Xray.
 
 ### Code Structure
 
@@ -100,7 +100,7 @@ Xray-core
 ├── app        // Application module
 │   ├── router // Router
 ├── common     // Common code
-├── proxy      // Communication protocol
+├── proxy      // Communication protocols
 │   ├── blackhole
 │   ├── dokodemo-door
 │   ├── freedom
@@ -111,21 +111,41 @@ Xray-core
 
 ### Coding Standards
 
-Basic practices are consistent with the recommendations of the official Golang, with a few exceptions. Written here to help everyone familiarize themselves with Golang.
+Basically consistent with the practices recommended by official Golang documentation, with some exceptions. Written here to help everyone get familiar with Golang.
 
 #### Naming
 
-- Use a single English word for file and directory names, such as hello.go;
-  - If not possible, use a hyphen for directories / underscore for files to connect two (or more) words, such as hello-world/hello_again.go;
-  - Use \_test.go to name test code files;
-- Use PascalCase for types, such as ConnectionHandler;
-  - Do not force lowercase for abbreviations, i.e. HTML does not need to be written as Html;
-- Use PascalCase for public member variables;
-- Use camelCase for private member variables, such as `privateAttribute`;
-- For easy refactoring, it is recommended to use PascalCase for all methods;
-  - Place completely private types in `internal`.
+- Try to use single English words for file and directory names, such as `hello.go`.
+  - If unavoidable, use hyphens for directories / underscores for filenames to connect two (or more) words, e.g., `hello-world/hello_again.go`.
+  - Test code should end with `_test.go`.
+- Use PascalCase for types, such as `ConnectionHandler`.
+  - Abbreviations are not forced to be lowercase, i.e., `HTML` does not need to be written as `Html`.
+- Public member variables also use PascalCase.
+- Private member variables use [lowerCamelCase](https://en.wikipedia.org/wiki/Camel_case), such as `privateAttribute`.
+- To facilitate refactoring, it is recommended to use PascalCase for all methods.
+  - Put completely private types into `internal`.
 
 #### Content Organization
 
-- A file contains a main type and its related private functions;
-- Testing-related files, such as Mock tools, should be placed in the testing subdirectory.
+- A file contains one main type and its related private functions, etc.
+- Test-related files, such as Mock utility classes, should be placed in the `testing` subdirectory.
+
+#### Int32Range
+
+**For end user**
+
+A value representing an optional range, which can be written in the following ways:
+
+- A single number or range enclosed in quotes:
+  - `""` (Treated as 0. Note: Not setting a field at all and setting it to empty might be two different concepts for some fields.)
+  - `"114"`
+  - `"114-514"`
+
+- An independent int (in this case, it can only be a single number):
+  - `114`
+
+**For dev**
+
+If you need to include a range in the configuration file, please use the `Int32Range` type.
+
+Use `.From` and `.To` to get values. When From > To (e.g., 1919-810), the values will be automatically swapped to ensure From is less than To. If you want to get the raw values, you can use `.Left` and `.Right`.

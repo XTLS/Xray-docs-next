@@ -1,9 +1,9 @@
-# Wireguard
+# WireGuard
 
-User-space implementation of the Wireguard protocol.
+User-space WireGuard protocol implementation.
 
 ::: danger
-**The Wireguard protocol is not specifically designed for circumvention purposes. If used as the outer layer for circumvention, its characteristics may lead to server blocking.**
+**The WireGuard protocol is not designed specifically for bypassing firewalls. If used as the outer layer to cross the firewall, its distinct characteristics may lead to the server being blocked.**
 :::
 
 ## InboundConfigurationObject
@@ -17,7 +17,6 @@ User-space implementation of the Wireguard protocol.
       "allowedIPs": [""]
     }
   ],
-  "kernelMode": true, // optional, default true if it's supported and permission is sufficient
   "mtu": 1420 // optional, default 1420
 }
 ```
@@ -28,12 +27,12 @@ Private key. Required.
 
 > `mtu`: int
 
-Fragmentation size of the underlying Wireguard tun.
+The MTU size of the underlying WireGuard TUN.
 
 <details>
-<summary>MTU Calculation Method</summary>
+<summary>Method to Calculate MTU</summary>
 
-The structure of a Wireguard packet is as follows:
+The structure of a WireGuard packet is as follows:
 
 ```
 - 20-byte IPv4 header or 40 byte IPv6 header
@@ -45,13 +44,13 @@ The structure of a Wireguard packet is as follows:
 - 16-byte authentication tag
 ```
 
-`N-byte encrypted data` is the MTU value we need. Depending on whether the endpoint is IPv4 or IPv6, the specific values can be 1440 (IPv4) or 1420 (IPv6). If in a special environment, subtract additional bytes accordingly (e.g., subtract 8 more bytes for PPPoE over home broadband).
+`N-byte encrypted data` is the MTU value we need. Depending on whether the endpoint is IPv4 or IPv6, the specific value can be 1440 (IPv4) or 1420 (IPv6). If you are in a special network environment, you may need to subtract more (e.g., home broadband PPPoE requires an extra -8).
 
 </details>
 
 > `peers`: \[ [Peers](#peers) \]
 
-List of peer servers, where each entry is a server configuration.
+List of peers, where each item is a peer configuration.
 
 ### Peers
 

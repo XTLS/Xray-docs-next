@@ -1,146 +1,100 @@
 ---
-title: 出站流量重定向
+title: Outbound Traffic Redirection
 ---
 
-# 基于 fwmark 或 sendThrough 的流量重定向
+# Traffic Redirection Based on fwmark or sendThrough
 
-通过 Xray 将特定的流量指向特定出口，实现全局路由“分流”
+Direct specific traffic to specific exits via Xray to achieve global routing "traffic splitting".
 
-## 前言
+## Foreword
 
-之前在网络上看到许多代理或者 VPN 会接管全局路由，如果与 Xray 同时安装，会导致 Xray 失效。参考了网络上许多教程，及时分流，也是通过维护一张或者多张 CIDR
-路由表来实现的。这种情况下并不优雅，如果我想可以任意替换，实现按需分流，那有没有更好的办法呢？有！
+Previously, I noticed that many proxies or VPNs take over the global routing table. If installed alongside Xray, this causes Xray to fail. I referred to many tutorials online, and even immediate traffic splitting was achieved by maintaining one or more CIDR routing tables. This approach is not elegant. If I want to be able to replace interfaces arbitrarily and achieve on-demand splitting, is there a better way? Yes!
 
-通过 fwmark 或 Xray 的 sendThrough，再简单配合路由表功能即可实现：
+By using `fwmark` or Xray's `sendThrough`/`sockopt.interface`, combined simply with routing table functions, we can achieve:
 
-1. Xray 可设置指定的 Tag、域名等走指定接口。如果您的接口是双栈的，可以指定 IPV4 或者 IPV6
-2. 其余用户则走原 IPV4 或者 IPV6
+1. Xray can set specific Tags, domains, etc., to go through a specific interface. If your interface is dual-stack, you can specify IPv4 or IPv6.
+2. The rest of the users will use the original IPv4 or IPv6.
 
-具体设置如下（以 Debian10 为例）：
+The specific settings are as follows (using Debian 10 as an example):
 
-## 1、安装代理或者 VPN 软件（例如 Wireguard、IPsec 等）
+## 1. Install Proxy or VPN Software (e.g., WireGuard, IPsec, etc.)
 
-根据不同系统和不同软件，请参考官方安装方法
+Please refer to the official installation methods for different systems and software.
 
-## 2、编辑 VPN 配置文件（以 WireGuard 为例）
+## 2. Edit VPN Configuration File (Using WireGuard as an example)
 
-原始文件：
-
-<Tabs title="if-config">
-
-<Tab title="fwmark1">
+Original file:
 
 ```ini
 [Interface]
-PrivateKey = xxxxxxxxxxxxxxxxxxxx
-Address = "your wg0 v4 address"
-Address = "your wg0 v6 address"
+PrivateKey = <PriKey>
+Address = <IPv4>
+Address = <IPv6>
 DNS = 8.8.8.8
 MTU = 1280
 [Peer]
-PublicKey = xxxxxxxxxxxxxxxxxxxxx
+PublicKey = <Pubkey>
 AllowedIPs = ::/0
 AllowedIPs = 0.0.0.0/0
-Endpoint = "ip:port"
+Endpoint = <EndpointIP>:<Port>
 ```
 
-在 `[Interface]` 下添加如下命令：
+Add the following commands under `[Interface]`:
 
 ```ini
-Table = off
-PostUP = ip -4 rule add fwmark <mark> lookup <table>
-PostUP = ip -4 route add default dev <接口名称> table <table>
-PostUP = ip -4 rule add table main suppress_prefixlength 0
+Table = <table>
+### fwmark
+PostUP = ip rule add fwmark <mark> lookup <table>
+PostDown = ip rule del fwmark <mark> lookup <table>
 PostUP = ip -6 rule add fwmark <mark> lookup <table>
-PostUP = ip -6 rule add not fwmark <table> table <table>
-PostUP = ip -6 route add ::/0 dev <接口名称> table <table>
-PostUP = ip -6 rule add table main suppress_prefixlength 0
-PostDown = ip -4 rule delete fwmark <mark> lookup <table>
-PostDown = ip -4 rule delete table main suppress_prefixlength 0
-PostDown = ip -6 rule delete fwmark <mark> lookup <table>
-PostDown = ip -6 rule delete not fwmark <table> table <table>
-PostDown = ip -6 rule delete table main suppress_prefixlength 0
+PostDown = ip -6 rule del fwmark <mark> lookup <table>
+## sendThrough
+PreUp = ip rule add from <IPv4> lookup <table>
+PostDown = ip rule del from <IPv4> lookup <table>
+PreUp = ip -6 rule add from <IPv6> lookup <table>
+PostDown = ip -6 rule del from <IPv6> lookup <table>
+## sockopt.interface
+PreUp = ip rule add oif %i lookup <table>
+PostDown = ip rule del oif %i lookup <table>
+PreUp = ip -6 rule add oif %i lookup <table>
+PostDown = ip -6 rule del oif %i lookup <table>
 ```
 
 ::: tip
 
-- 此命令表示 IPv4 中 fwmark 为 `<mark>`，IPv6 中 fwmark 为`<mark>`，::/0 全局 v6 走 WireGuard
-- 可根据自己需求增删命令，mark 值要与 Xray-core 中设置为相同，table 值自定
-- 如果不支持配置文件，可以在系统中修改路由表
+- This configuration integrates `fwmark` / `sendThrough` / `sockopt.interface`, meaning:
+- Connections sent to this device `%i` / Connections sent to this `<IPv4/6>` / Connections marked with `fwmark` `<mark>`
+- Will be forwarded using WireGuard.
+- `%i` is a placeholder in the WireGuard configuration file, which represents the device name to be replaced at startup.
   :::
 
-</Tab>
+Save it.
 
-<Tab title="sendThrough1">
+You can also install this handy tool:
 
-```ini
-[Interface]
-PrivateKey = xxxxxxxxxxxxxxxxxxxx
-Address = "your wg0 v4 address"
-Address = "your wg0 v6 address"
-DNS = 8.8.8.8
-MTU = 1280
-[Peer]
-PublicKey = xxxxxxxxxxxxxxxxxxxxx
-AllowedIPs = ::/0
-AllowedIPs = 0.0.0.0/0
-Endpoint = "ip:port"
-```
-
-在 `[Interface]` 下添加如下命令：
-
-```ini
-Table = off
-PostUP = ip -4 rule add from "your wg0 v4 address" lookup <table>
-PostUP = ip -4 route add default dev wg0 table <table>
-PostUP = ip -4 rule add table main suppress_prefixlength 0
-PostUP = ip -6 rule add not fwmark <table> table <table>
-PostUP = ip -6 route add ::/0 dev wg0 table <table>
-PostUP = ip -6 rule add table main suppress_prefixlength 0
-PostDown = ip -4 rule delete from "your wg0 v4 address" lookup <table>
-PostDown = ip -4 rule delete table main suppress_prefixlength 0
-PostDown = ip -6 rule delete not fwmark <table> table <table>
-PostDown = ip -6 rule delete table main suppress_prefixlength 0
-```
-
-::: tip
-
-- 此命令表示 IPV4 中来自 `your wg0 v4 address` 地址的走 WireGuard，IPv6 中::/0 全局 v6 走 WireGuard）
-- 可根据自己需求增删命令，实现 v6 分流，也可以与 fwmark 融合
-- 如果不支持配置文件，可以在系统中修改路由表
-  :::
-
-</Tab>
-
-</Tabs>
-
-保存
-
-可顺手安装
+::: warning
+If the `DNS` field in `[Interface]` is used, this program is required.
+:::
 
 ```bash
 apt install openresolv
 ```
 
-## 3、启用 WireGuard 网络接口
+## 3. Enable WireGuard Network Interface
 
-加载内核模块
+Load the kernel module:
 
 ```bash
 modprobe wireguard
 ```
 
-检查 WG 模块加载是否正常
+Check if the WG module is loaded correctly:
 
 ```bash
 lsmod | grep wireguard
 ```
 
-## 4、Xray-core 配置文件修改
-
-<Tabs title="xray-config">
-
-<Tab title="fwmark2">
+## 4. Xray-core Configuration Modification
 
 ```json
 {
@@ -167,105 +121,48 @@ lsmod | grep wireguard
     {
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "UseIPv6"
-        //设置默认用户走指定方式”UseIPv6”或者”UseIPv4”
+        "domainStrategy": "UseIPv4"
       }
+      // Modify here, can be v4 or v6
     },
+    //            <--Please choose between different schemes-->   Scheme 1: fwmark
     {
       "protocol": "freedom",
       "tag": "wg0",
       "streamSettings": {
         "sockopt": {
-          "mark": <mark>
+          "mark": // <mark>
         }
       },
       "settings": {
         "domainStrategy": "UseIPv6"
       }
-      //设置fwmark为<mark>的用户走指定方式”UseIPv6””UseIPv4”
-    },
-    {
-      "protocol": "blackhole",
-      "settings": {},
-      "tag": "blocked"
-    }
-  ],
-  "policy": {
-    "system": {
-      "statsInboundDownlink": true,
-      "statsInboundUplink": true
-    }
-  },
-  "routing": {
-    "rules": [
-      {
-        "inboundTag": [
-          "api"
-        ],
-        "outboundTag": "api"
-      },
-      {
-        "outboundTag": "wg0",
-        "inboundTag": [
-          "<inboundTag>"
-          //需要之前在inbound中指定好Tag，我这里是api生成的,还可以添加域名等等
-        ]
-      },
-      {
-        "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ]
-      }
-    ]
-  },
-  "stats": {}
-}
-```
-
-</Tab>
-
-<Tab title="sendThrough2">
-
-```json
-{
-  "api": {
-    "services": [
-      "HandlerService",
-      "LoggerService",
-      "StatsService"
-    ],
-    "tag": "api"
-  },
-  "inbounds": [
-    {
-      "listen": "127.0.0.1",
-      "port": <port>,
-      "protocol": "dokodemo-door",
-      "settings": {
-        "address": "127.0.0.1"
-      },
-      "tag": "api"
-    }
-  ],
-  "outbounds": [
-    {
-      "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
-      }
-      //修改此处，可v4或者v6
-    },
+    },  // Users with fwmark set to <mark> use the specified strategy "UseIPv6" or "UseIPv4"
+    //            <--Please choose between different schemes-->   Scheme 2: sendThrough
     {
       "tag": "wg0",
       "protocol": "freedom",
       "sendThrough": "your wg0 v4 address",
-      //修改此处，可v4或者v6
+      // Modify here, can be v4 or v6
       "settings": {
         "domainStrategy": "UseIPv4"
       }
-      //修改此处，可v4或者v6
+      // Modify here, can be v4 or v6
     },
+    //            <--Please choose between different schemes-->   Scheme 3: sockopt.interface
+    {
+      "tag": "wg0",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4"
+      },
+      "streamSettings": {
+        "sockopt": {
+          "interface": "wg0"
+        }
+      }
+    },
+    //            <--Please choose between different schemes-->   End
     {
       "protocol": "blackhole",
       "settings": {},
@@ -290,7 +187,7 @@ lsmod | grep wireguard
         "outboundTag": "wg0",
         "inboundTag": [
           "<inboundTag>"
-          //需要之前在 inbound 中指定好 Tag，我这里是 api 生成的,还可以添加域名等等
+          // Need to specify the Tag in inbound beforehand; here it's generated by api, domains can also be added, etc.
         ]
       },
       {
@@ -305,43 +202,43 @@ lsmod | grep wireguard
 }
 ```
 
-</Tab>
-
-</Tabs>
-
 ::: tip
-可以通过修改 "domainStrategy": "UseIPv6"来控制对应用户的访问方式 实测优先级要高于系统本身的 gai.config
+You can control the access method for corresponding users by modifying `"domainStrategy": "UseIPv6"`. Actual tests show priority is higher than the system's own `gai.config`.
 :::
 
-## 5、系统设置配置
+## 5. System Settings Configuration
 
 ::: tip
-需要打开系统的 ip_forward
+You need to enable the system's `ip_forward`.
+`sysctl -w net.ipv4.ip_forward=1`
+`sysctl -w net.ipv6.conf.all.forwarding=1`
 :::
 
-## 6、完成 WireGuard 相关设置
+## 6. Complete WireGuard Settings
 
-开启隧道
+Start the tunnel:
 
 ```bash
 wg-quick up wg0
 ```
 
-开机自启
+Enable auto-start on boot:
 
 ```bash
 systemctl enable wg-quick@wg0
 systemctl start wg-quick@wg0
 ```
 
-验证 IPv4/IPv6
+Verify IPv4/IPv6:
 
-> 自行验证 Google 搜索 myip
+> Run `curl ip-api.com -4/-6` on the proxy / Visit ip-api.com via browser
 
-## 后记
+## Postscript
 
-本文本意是可以避免的多余的流量浪费，将路由和分流的功能交给 Xray 处理。避免了维护路由表的繁琐工作。顺便技术提升 UP。
+The intention of this article is to avoid unnecessary waste of traffic by handing over the routing and splitting functions to Xray. This avoids the tedious work of maintaining routing tables. It also serves to level up your technical skills.
 
-## 感谢
+## Acknowledgments
 
-@Xray-core @V2ray-core @WireGuard @p3terx @w @Hiram @Luminous @Ln @JackChou
+[XTLS/Xray-core](https://github.com/XTLS/Xray-core); [v2fly/v2ray-core](https://github.com/v2fly/v2ray-core); [WireGuard](https://www.wireguard.com/); [@p3terx](https://p3terx.com/); @w; @Hiram; @Luminous; @Ln; @JackChou;
+
+<!--剩下几位大佬我实在找不到他们的地址或Github空间，请大家帮忙找吧-->

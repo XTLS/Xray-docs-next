@@ -1,9 +1,9 @@
 # FakeDNS
 
-FakeDNS is used to obtain target domain names by forging DNS, which can reduce the delay in DNS queries and work with transparent proxies to obtain target domain names.
+FakeDNS obtains target domain names by forging DNS responses. It can reduce latency during DNS queries and assist transparent proxies in acquiring target domain names.
 
 ::: warning
-FakeDNS may contaminate the local DNS and cause "network unreachable" after Xray is closed.
+FakeDNS may pollute the local DNS cache, causing "no network access" after Xray is closed.
 :::
 
 ## FakeDNSObject
@@ -17,7 +17,7 @@ FakeDNS may contaminate the local DNS and cause "network unreachable" after Xray
 }
 ```
 
-`FakeDnsObject` can also be configured as an array containing multiple FakeIP Pools. When a DNS query request is received, FakeDNS returns a group of FakeIPs obtained by multiple FakeIP Pools at the same time.
+`FakeDnsObject` can also be configured as an array containing multiple FakeIP Pools. When a DNS query request is received, FakeDNS will return a set of FakeIPs derived from multiple FakeIP Pools simultaneously.
 
 ```json
 [
@@ -34,20 +34,20 @@ FakeDNS may contaminate the local DNS and cause "network unreachable" after Xray
 
 > `ipPool`: CIDR
 
-FakeDNS will use the IP block specified by this option to allocate addresses.
+FakeDNS will allocate addresses using the IP block specified in this option.
 
 > `poolSize`: int
 
-Specifies the maximum number of domain name-IP mappings stored by FakeDNS. When the number of mappings exceeds this value, mappings will be eliminated according to the LRU rule. The default is 65535.
+Specifies the maximum number of Domain-IP mappings stored by FakeDNS. When the number of mappings exceeds this value, mappings will be evicted according to LRU rules. Default is 65535.
 
 ::: warning
-`poolSize` must be less than or equal to the total number of addresses corresponding to `ipPool`.
+`poolSize` must be less than or equal to the total number of addresses in the `ipPool`.
 :::
 
 ::: tip
-If the `dns` item in the configuration file sets `fakedns`, but the configuration file does not set `FakeDNSObject`, Xray will initialize `FakeDNSObject` based on the `queryStrategy` of the DNS component.
+If `fakedns` is set in the `dns` item of the configuration file but `FakeDnsObject` is not configured, Xray will initialize `FakeDnsObject` based on the `queryStrategy` of the DNS component.
 
-When `queryStrategy` is set to `UseIP`, the initialized FakeIP Pool is equivalent to
+When `queryStrategy` is `UseIP`, the initialized FakeIP Pool is equivalent to:
 
 ```json
 [
@@ -62,7 +62,7 @@ When `queryStrategy` is set to `UseIP`, the initialized FakeIP Pool is equivalen
 ]
 ```
 
-When `queryStrategy` is set to `UseIPv4`, the initialized FakeIP Pool is equivalent to
+When `queryStrategy` is `UseIPv4`, the initialized FakeIP Pool is equivalent to:
 
 ```json
 {
@@ -71,7 +71,7 @@ When `queryStrategy` is set to `UseIPv4`, the initialized FakeIP Pool is equival
 }
 ```
 
-When `queryStrategy` is set to `UseIPv6`, the initialized FakeIP Pool is equivalent to
+When `queryStrategy` is `UseIPv6`, the initialized FakeIP Pool is equivalent to:
 
 ```json
 {
@@ -84,9 +84,9 @@ When `queryStrategy` is set to `UseIPv6`, the initialized FakeIP Pool is equival
 
 ### How to use?
 
-FakeDNS is essentially a [DNS server](./dns.md#serverobject) that can be used in conjunction with any DNS rules.
+FakeDNS is essentially a [DNS Server](./dns.md#serverobject) that can be used in conjunction with any DNS rules.
 
-Only by routing DNS queries to FakeDNS can it be effective.
+It only works when DNS queries are routed to FakeDNS.
 
 ```json
 {
@@ -105,7 +105,7 @@ Only by routing DNS queries to FakeDNS can it be effective.
   "routing": {
     "rules": [
       {
-        "inboundTag": ["dns-in"], // Intercept DNS traffic from DNS query inbound or from inbound traffic of transparent proxies.
+        "inboundTag": ["dns-in"], // Hijack DNS traffic from DNS query entry points, or hijack DNS traffic from transparent proxy inbounds.
         "port": 53,
         "outboundTag": "dns-out"
       }
@@ -114,27 +114,27 @@ Only by routing DNS queries to FakeDNS can it be effective.
 }
 ```
 
-When external DNS requests enter the FakeDNS component, it will return IP addresses within its own `ipPool` as the virtual resolution results of the domain name, and record the mapping relationship between the domain name and the virtual resolution results.
+When an external DNS request enters the FakeDNS component, it returns an IP address within its `ipPool` as the fictitious resolution result for the domain and records the mapping between the domain and the fictitious IP.
 
-In addition, you need to enable `Sniffing` in the **client** for incoming traffic that needs to be proxied, and use the `fakedns` target address reset.
+Additionally, you need to enable `Sniffing` on the inbound of the **client** that receives traffic to be proxied, and use `fakedns` for destination address resetting.
 
 ```json
 "sniffing": {
   "enabled": true,
-  "destOverride": ["fakedns"], // Use "fakedns", or use it with other sniffer.
-  "metadataOnly": false        // When this item is true, destOverride can only use fakedns.
+  "destOverride": ["fakedns"], // Use "fakedns", or combine with other sniffers
+  "metadataOnly": false        // When this is true, destOverride can only use fakedns
 }
 ```
 
 ::: warning
-If the FakeIP is not correctly restored to the domain name, the server will not be accessible.
+If the FakeIP is not correctly reverted to the domain name, connection to the server will fail.
 :::
 
-### Using with other types of DNS
+### Using with other DNS types
 
-#### Coexistence with DNS shunting
+#### Coexisting with DNS Routing
 
-When using DNS shunting, to give `fakedns` a higher priority, you need to add the same `domains` as other types of DNS.
+When using DNS routing (traffic splitting), to ensure `fakedns` has high priority, you need to add the same `domains` to it as you would for other DNS types.
 
 ```json
 {
@@ -142,7 +142,7 @@ When using DNS shunting, to give `fakedns` a higher priority, you need to add th
     {
       "address": "fakedns",
       "domains": [
-        // consistent with the content used in the shunt below
+        // Consistent with the content used for routing below
         "geosite:cn",
         "domain:example.com"
       ]
@@ -161,9 +161,9 @@ When using DNS shunting, to give `fakedns` a higher priority, you need to add th
 }
 ```
 
-#### FakeDNS blacklist
+#### FakeDNS Blacklist
 
-If you do not want certain domain names to use FakeDNS, you can add `domains` configuration in other types of DNS configurations so that when the specified domain names are matched, other DNS servers have a higher priority than FakeDNS, thereby achieving the FakeDNS blacklist mechanism.
+If you do not want certain domains to use FakeDNS, you can add `domains` configuration to other types of DNS servers. This gives other DNS servers higher priority than FakeDNS when matching specific domains, thereby implementing a FakeDNS blacklist mechanism.
 
 ```json
 {
@@ -177,9 +177,9 @@ If you do not want certain domain names to use FakeDNS, you can add `domains` co
 }
 ```
 
-#### FakeDNS whitelist
+#### FakeDNS Whitelist
 
-If you only want certain domain names to use FakeDNS, you can add `domains` configuration to `fakedns` so that when the specified domain names are matched, `fakedns` has a higher priority than other DNS servers, thereby achieving the FakeDNS whitelist mechanism.
+If you want only certain domains to use FakeDNS, you can add `domains` configuration to `fakedns`. This gives `fakedns` higher priority than other DNS servers when matching specific domains, thereby implementing a FakeDNS whitelist mechanism.
 
 ```json
 {

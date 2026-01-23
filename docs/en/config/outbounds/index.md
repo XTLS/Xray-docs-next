@@ -1,4 +1,4 @@
-# Xray Outbound Protocols List
+# Xray Outbound Protocols
 
 Xray supports the following outbound protocols:
 
@@ -13,3 +13,4 @@ Xray supports the following outbound protocols:
 - [VLESS (XTLS Vision Seed)](vless.md)
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
+- [Hysteria](hysteria.md)

@@ -1,82 +1,62 @@
 # HTTP
 
-HTTP is a protocol that is used for communication over the internet. Please note that HTTP does not provide encryption for data transmission and is not suitable for transmitting sensitive information over public networks, as it can be easily targeted for attacks.
+HTTP protocol.
 
 ::: danger
-**The HTTP protocol does not provide encryption for transmission, making it unsuitable for transmitting over public networks and more susceptible to being used as a compromised host for attacks.**
+**The HTTP protocol does not encrypt transmission, so it is not suitable for transmission over the public internet. It makes it easier to become a "zombie" (bot) used for attacks.**
 :::
 
 ::: tip
-HTTP can only proxy TCP protocols, and cannot handle UDP-based protocols.
+`http` can only proxy the TCP protocol; UDP-based protocols cannot pass through.
 :::
 
 ## OutboundConfigurationObject
 
 ```json
 {
-  "servers": [
-    {
-      "address": "192.168.108.1",
-      "port": 3128,
-      "users": [
-        {
-          "user": "my-username",
-          "pass": "my-password"
-        }
-      ]
-    }
-  ]
+  "address": "192.168.108.1",
+  "port": 3128,
+  "user": "my-username",
+  "pass": "my-password",
+  "level": 0,
+  "email": "love@xray.com",
+  "headers": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36",
+    "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"
+  }
 }
 ```
 
 ::: tip
-Currently, in the HTTP outbound protocol, the `streamSettings` configuration with `security` and `tlsSettings` is effective.
+Currently, `security` and `tlsSettings` in `streamSettings` are effective in the HTTP outbound protocol.
 :::
-
-> `servers`: \[ [ServerObject](#serverobject) \]
-
-A list of HTTP servers, where each item represents a server configuration. If multiple servers are configured, they will be used in a round-robin manner.
-
-### ServerObject
-
-```json
-{
-  "address": "192.168.108.1",
-  "port": 3128,
-  "users": [
-    {
-      "user": "my-username",
-      "pass": "my-password"
-    }
-  ]
-}
-```
 
 > `address`: string
 
-The address of the HTTP proxy server. Required.
+HTTP proxy server address. Required.
 
 > `port`: int
 
-The port of the HTTP proxy server. Required.
-
-> `user`: \[[AccountObject](#accountobject)\]
-
-An array of user accounts. Default value is an empty array.
-
-#### AccountObject
-
-```json
-{
-  "user": "my-username",
-  "pass": "my-password"
-}
-```
+HTTP proxy server port. Required.
 
 > `user`: string
 
-The username. Required.
+Username, string type. Required if the remote server requires authentication; otherwise, do not include this item.
 
 > `pass`: string
 
-The password. Required.
+Password, string type. Required if the remote server requires authentication; otherwise, do not include this item.
+
+> `level`: number
+
+User level. The connection will use the [local policy](../policy.md#levelpolicyobject) corresponding to this user level. Optional if the remote server requires authentication; otherwise, do not include this item.
+
+The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, the default is 0.
+
+> `email`: string
+
+Email address, used to identify the user. Optional if the remote server requires authentication; otherwise, do not include this item.
+
+> `headers`: map{ string, string }
+
+HTTP headers, a map of key-value pairs. Each key represents the name of an HTTP header. All key-value pairs will be attached to every request.

@@ -1,13 +1,15 @@
-# Beginner's Tips
+# Beginner Skills
 
-**This chapter is an introductory level guide on using Xray, mainly sharing the principles of some commonly used functional modules in Xray.**
+**This section shares beginner-level insights on using Xray, focusing primarily on explaining the principles behind some of Xray's commonly used functional modules.**
 
-[Analysis of Fallbacks Function](./fallbacks-lv1.md)
+[Analysis of the Fallbacks Feature](./fallbacks-lv1.md)
 
-[Analysis of Routing Function (Part 1)](./routing-lv1-part1.md)
+[Analysis of the Routing Feature (Part 1)](./routing-lv1-part1.md)
 
-[Analysis of Routing Function (Part 2)](./routing-lv1-part2.md)
+[Analysis of the Routing Feature (Part 2)](./routing-lv1-part2.md)
 
-[Analysis of Xray's Working Mode](./work.md)
+[Analysis of Xray's Working Modes](./work.md)
 
-[Fallbacks with SNI for Disguising and Domain-based Routing](./fallbacks-with-sni.md)
+[Camouflage and Routing by Domain via SNI Fallback](./fallbacks-with-sni.md)
+
+[Accurate Traffic Splitting (Domestic/Foreign) via DNS Module](./routing-with-dns.md)

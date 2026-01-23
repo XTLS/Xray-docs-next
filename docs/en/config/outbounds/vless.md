@@ -1,135 +1,111 @@
-# VLESS
+# VLESS (XTLS Vision Seed)
 
-::: danger
-Currently, VLESS does not have built-in encryption, please use it on a reliable channel, such as TLS.
-:::
+VLESS is a stateless lightweight transport protocol. It consists of inbound and outbound parts and can serve as a bridge between the Xray client and server.
 
-VLESS is a stateless lightweight transport protocol, which is divided into inbound and outbound parts, and can be used as a bridge between Xray clients and servers.
-
-Unlike [VMess](./vmess.md), VLESS does not rely on system time, and the authentication method is also UUID.
+Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentication method is also UUID.
 
 ## OutboundConfigurationObject
 
 ```json
 {
-  "vnext": [
-    {
-      "address": "example.com",
-      "port": 443,
-      "users": [
-        {
-          "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-          "encryption": "none",
-          "flow": "xtls-rprx-vision",
-          "level": 0
-        }
-      ]
-    }
-  ]
-}
-```
-
-> `vnext`: \[ [ServerObject](#serverobject) \]
-
-An array, representing the VLESS server list, containing a set of configurations pointing to the server, each of which is a server configuration.
-
-### ServerObject
-
-```json
-{
   "address": "example.com",
   "port": 443,
-  "users": [
-    {
-      "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-      "encryption": "none",
-      "flow": "xtls-rprx-vision",
-      "level": 0
-    }
-  ]
+  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+  "encryption": "none",
+  "flow": "xtls-rprx-vision",
+  "level": 0,
+  "reverse": {}
 }
 ```
 
 > `address`: address
 
-Server address, pointing to the server, supporting domain names, IPv4, and IPv6.
+Server address, points to the server. Supports domain names, IPv4, and IPv6.
 
 > `port`: number
 
-Server port, usually the same as the port listened by the server.
-
-> `users`: \[ [UserObject](#userobject) \]
-
-Array, a list of users recognized by the server, each of which is a user configuration.
-
-### UserObject
-
-```json
-{
-  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-  "encryption": "none",
-  "flow": "xtls-rprx-vision",
-  "level": 0
-}
-```
+Server port, usually the same as the port the server is listening on.
 
 > `id`: string
 
-The user ID of VLESS, which can be any string less than 30 bytes, or a valid UUID.
-Custom strings and their mapped UUIDs are equivalent, which means you can write an id in the configuration file to identify the same user, i.e.
+User ID for VLESS. It can be any string less than 30 bytes, or a valid UUID.
+A custom string and its mapped UUID are equivalent. This means you can identify the same user in the configuration file by writing the ID in either way:
 
-- Write `"id": "I love 🍉 teacher 1314"`,
-- Or write `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (this UUID is the UUID mapping of `I love 🍉 teacher 1314`)
+- Write `"id": "我爱🍉老师1314"`,
+- Or write `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (This UUID is the UUID mapping of `我爱🍉老师1314`)
 
-The mapping standard is in [VLESS UUID mapping standard: mapping custom strings to a UUIDv5](https://github.com/XTLS/Xray-core/issues/158)
+The mapping standard is described in [VLESS UUID Mapping Standard: Mapping Custom Strings to UUIDv5](https://github.com/XTLS/Xray-core/issues/158).
 
-You can use the command `xray uuid -i "custom string"` to generate the UUID mapped by the custom string, or use the command `xray uuid` to generate a random UUID.
+You can use the command `xray uuid -i "custom string"` to generate the UUID mapped from a custom string, or use the command `xray uuid` to generate a random UUID.
 
 > `encryption`: "none"
 
-Need to fill in `"none"`, cannot be left empty.
+[VLESS Encryption](https://github.com/XTLS/Xray-core/pull/5067) settings. Cannot be left empty; to disable, explicitly set to `"none"`.
 
-This requirement is to remind users that there is no encryption and to prevent users from filling in the wrong attribute name or location, causing exposure when encryption methods come out in the future.
+It is recommended for most users to use `./xray vlessenc` to automatically generate this field to ensure no errors in writing. The detailed configuration below is recommended only for advanced users.
 
-If the value of encryption is not set correctly, an error message will be received when using Xray or -test.
+Its format is a detailed configuration string of fields connected by `.`. For example: `mlkem768x25519plus.native.0rtt.100-111-1111.75-0-111.50-0-3333.ptjHQxBQxTJ9MWr2cd5qWIflBSACHOevTauCQwa_71U`. This document will refer to the separate parts separated by dots as "blocks".
+
+- **The 1st block** is the handshake method. Currently, there is only `mlkem768x25519plus`. Requires consistency between server and client.
+- **The 2nd block** is the encryption method. Options are `native`/`xorpub`/`random`, corresponding to: raw format packet / raw format + obfuscated public key part / fully random numbers (similar to VMESS/Shadowsocks). Requires consistency between server and client.
+- **The 3rd block** is session resumption. Choosing `0rtt` will follow the server settings to attempt to use previously generated tickets to skip the handshake for fast connection (can be manually disabled by the server). Choosing `1rtt` will force a 1-RTT handshake process. The meaning here differs from the server setting; see VLESS Inbound `decryption` settings for details.
+
+Following blocks are **padding**. After the connection is established, the client sends some garbage data to obfuscate length characteristics. It does not need to be the same as the server (the corresponding part in the inbound is the padding sent from the server to the client). It is a variable-length part with the format `padding.delay.padding` + `(.delay.padding)` × n (multiple padding blocks can be inserted, requiring a delay block between two padding blocks). For example, you can write a very long `padding.delay.padding.delay.padding.delay.padding.delay.padding.delay.padding`.
+
+- `padding` format is `probability-min-max`. E.g., `100-111-1111` means 100% probability to send a padding of length 111~1111.
+- `delay` format is also `probability-min-max`. E.g., `75-0-111` means 75% probability to wait 0~111 milliseconds.
+
+The first padding block has special requirements: probability must be 100% and minimum length greater than 0. If no padding exists, the core automatically uses `100-111-1111.75-0-111.50-0-3333` as the padding setting.
+
+**The last block** will be recognized by the core as the parameter used to authenticate the server. It can be generated by `./xray x25519` (using the Password part) or `./xray mlkem768` (using the Client part). It must correspond to the server. `mlkem768` belongs to post-quantum algorithms, preventing (future) client parameter leaks from allowing quantum computers to crack the private key and impersonate the server. This parameter is only used for verification; the handshake process is post-quantum secure regardless, and existing encrypted data cannot be decrypted by future quantum computers.
 
 > `flow`: string
 
 Flow control mode, used to select the XTLS algorithm.
 
-Currently, there are the following flow control modes available in the outbound protocol:
+Currently, the following flow control modes are available in the outbound protocol:
 
-- No `flow` or empty string: Use regular TLS proxy.
-- `xtls-rprx-vision`: using the new XTLS mode includes inner handshake random padding supports uTLS client fingerprint simulation
-- `xtls-rprx-vision-udp443`: same as `xtls-rprx-vision`, but allows UDP traffic with a destination of port 443
+- **No `flow` or empty string**: Use standard TLS proxy.
+- **`xtls-rprx-vision`**: Use XTLS, including inner handshake random padding. Will intercept UDP traffic targeting port 443 (QUIC) to force browsers to use standard HTTPS, increasing traffic that can be Spliced.
+- **`xtls-rprx-vision-udp443`**: Same as `xtls-rprx-vision`, but does not intercept UDP 443. Used when a program forces the use of QUIC and would fail to work if intercepted.
 
-Additionally, XTLS currently only supports TCP+TLS/Reality.
+XTLS is available only in the following combinations:
 
-<!-- prettier-ignore -->
-::: tip About xtls-rprx-*-udp443 flow control mode
+- **TCP+TLS/Reality**: In this case, if transmitting TLS 1.3, the core will attempt to Splice encrypted data at the bottom layer. If successful, it saves all core IO overhead.
+- **VLESS Encryption**: No underlying transport restrictions. If the underlying transport is not TCP, it only attempts to penetrate Encryption, saving Encryption overhead. If it is TCP, it will still attempt to perform Splice.
 
-When using Xray-core's XTLS, traffic to UDP port 443 is blocked by default (generally for QUIC), so the application will use TLS instead of QUIC, and XTLS will take effect. In fact, QUIC itself is not suitable for proxying because it has its own TCP functionality. When it is transmitted as UDP traffic through the VLESS protocol, the underlying protocol is TCP, which is equivalent to two layers of TCP.
+::: tip About Splice
+Splice is a function provided by the Linux Kernel. The system kernel forwards TCP directly, no longer passing through Xray's memory, greatly reducing data copying and CPU context switching.
 
-If you do not need to block it, please fill in `xtls-rprx-*-udp443` on the client side and do not change the server side.
-:::
+When using Vision mode, Splice is automatically enabled if the following conditions are met:
 
-::: tip About Splice mode
-Splice is a function provided by the Linux Kernel. The system kernel directly forwards TCP without going through Xray's memory, greatly reducing the number of data copies and CPU context switches.
+- Linux environment.
+- Inbound protocol is a pure TCP connection like `Dokodemo door`, `Socks`, `HTTP`, or other inbound protocols using XTLS.
+- Outbound protocol is VLESS + XTLS.
 
-The usage restrictions of Splice mode are:
-
-- Linux environment
-- Inbound protocols are `Dokodemo door`, `Socks`, `HTTP`, etc., pure TCP connections, or other inbound protocols that use XTLS
-- Outbound protocol is VLESS + XTLS
-- It is worth noting that when using the mKCP protocol, Splice will not be used (yes, although there is no error, it is not used at all)
-
-In addition, when using Splice, the speed display will lag behind, which is a feature, not a bug.
-
-Using Vision mode will automatically enable Splice if the above conditions are met.
+When using Splice, the network speed display will lag and will only be counted after the connection is disconnected because the core cannot know the traffic situation while the kernel takes over the connection.
 :::
 
 > `level`: number
 
-User level, the connection will use the [local policy](../policy.md#levelpolicyobject) corresponding to this user level.
+User level. The connection will use the [Local Policy](../policy.md#levelpolicyobject) corresponding to this user level.
 
-The value of level corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, the default is 0.
+The value of `level` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, it defaults to 0.
+
+> `reverse`: struct
+
+VLESS minimalist reverse proxy configuration. It functions the same as the core's built-in generic reverse proxy but is simpler to configure.
+
+The existence of this item indicates that this outbound can be used as a VLESS reverse proxy outbound, and it will automatically establish a connection to the server to register the reverse proxy tunnel.
+
+Current syntax:
+
+```json
+"reverse": {
+  "tag": "r-inbound"
+}
+```
+
+`tag` is the inbound proxy tag for this reverse proxy. When the server dispatches a reverse proxy request, it enters the routing system from the inbound using this tag, and the routing system routes it to the outbound you need.
+
+The UUID used needs to be a UUID that is also configured with reverse on the server side (see VLESS Inbound for details).

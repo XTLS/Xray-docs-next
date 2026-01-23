@@ -1,16 +1,18 @@
 ---
-title: Configurations
+title: Configuration File
 lang: en-US
 ---
 
-> **This section will tell you all the details of Xray configuration. By mastering these contents, Xray will unleash its full power in your hands.**
+> **This chapter will tell you all the details of Xray configuration. Mastering this content will allow you to unleash the greater power of Xray.**
 
 ## Overview
 
-The configuration file of Xray is in JSON format, and the configuration format for the client and server is the same, except for the actual configuration content. It takes the following form:
+The configuration file for Xray is in JSON format. There is no difference in the configuration format between the client and the server; only the actual configuration content differs.
+The format is as follows:
 
 ```json
 {
+  "vsersion": {},
   "log": {},
   "api": {},
   "dns": {},
@@ -29,85 +31,96 @@ The configuration file of Xray is in JSON format, and the configuration format f
 ```
 
 ::: warning
-If you are new to Xray, you can first click to view [configuration and running in the Quick Start guide](../document/install.md), to learn the most basic configuration method, and then refer to the contents of this section to master all the configuration methods of Xray.
+If you are new to Xray, you can click to view [Configuration & Run in Quick Start](../document/install.md) first to learn the most basic configuration methods, and then check the content of this chapter to master all configuration methods of Xray.
 :::
 
-::: details Click to expand: How to make AI generate the correct configuration directly
-Copy the following prompt to ensure the AI generates the correct configuration:
+::: details Click to expand: Learn how to make AI write the correct configuration file directly
+It is recommended to copy the following content and send it to the AI, which can significantly improve the usability of the generated configuration:
 
 ```text
-[https://xtls.github.io/llms-full.txt](https://xtls.github.io/llms-full.txt) This link contains the full official documentation for Xray-core.
+[https://xtls.github.io/llms-full.txt](https://xtls.github.io/llms-full.txt) This link is the official full documentation of Xray-core.
 
-[Role]
-You are an expert in network protocols and Xray-core configuration.
+【Role Setting】
+You are an expert proficient in network protocols and Xray-core configuration.
 
-[Instructions]
-1. Knowledge Base: Crawl and fully comprehend the content of the link. Use it as your SOLE source of truth.
-2. NO Hallucinations: Absolutely DO NOT fabricate any fields not mentioned in the documentation.
-3. Default Format: While Xray supports multiple formats, please default to standard JSON output (unless I explicitly request YAML or TOML), with comments for key parameters.
-4. Error Handling: If you cannot access the link, explicitly notify me and ask me to manually download and upload the document to you.
+【Task Requirements】
+1. Knowledge Base: Please read and deeply understand the content of this link, and use it as the sole basis for answering questions and writing configurations.
+2. No Hallucinations: Absolutely do not fabricate fields that do not exist in the documentation. If the documentation does not mention it, please tell me directly "Documentation does not mention".
+3. Default Format: Although Xray supports multiple formats, please output standard JSON format configuration by default (unless I explicitly request YAML or TOML), and add key comments.
+4. Exception Handling: If you cannot access this link, please inform me clearly and prompt me to manually download the documentation and upload it to you.
+```
 
-Please answer my questions in English.
 :::
-
-
-
 
 ## Basic Configuration Modules
 
+> version
+
+Optional. Controls the version on which this config can run. This prevents accidental running on unexpected client versions when sharing the config. The client will check if the current version matches this requirement at runtime.
+
+```json
+"version": {
+    "min": "25.8.3",
+    "max": ""
+}
+```
+
+Both `min` and `max` are optional. Not setting them or leaving them empty means no restrictions. It does not need to be an actual existing version, as long as it complies with the Xray version syntax x.y.z.
+
+25.8.3 is the version where Xray added this feature. Setting a version lower than this is meaningless (older versions will not check it).
+
 > log:[LogObject](./log.md)
 
-Log configurations, controlling how Xray emits logs.
+Log configuration, controls how Xray outputs logs.
 
 > api:[ApiObject](./api.md)
 
-Configures how Xray provides API interfaces for calling remotely.
+Provides some API interfaces for remote calls.
 
 > dns: [DnsObject](./dns.md)
 
-Configures the built-in DNS server. System DNS will be used if not configured.
+Built-in DNS server. If this item is not configured, the system DNS settings are used.
 
 > routing: [RoutingObject](./routing.md)
 
-Configures routing. Specify rules to route connections through different outbounds.
+Routing function. You can set rules to divert data to be sent out from different outbounds.
 
 > policy: [PolicyObject](./policy.md)
 
-Local policy configurations, specifying different user levels and corresponding policies.
+Local policy. You can set different user levels and corresponding policy settings.
 
 > inbounds: \[ [InboundObject](./inbound.md) \]
 
-An array of inbound connection configurations.
+An array. Each element is an inbound connection configuration.
 
 > outbounds: \[ [OutboundObject](./outbound.md) \]
 
-An array of outbound connection configurations.
+An array. Each element is an outbound connection configuration.
 
 > transport: [TransportObject](./transport.md)
 
-Configures how Xray establishes and uses network connections to other servers.
+Used to configure how Xray establishes and uses network connections with other servers.
 
 > stats: [StatsObject](./stats.md)
 
-Configures traffic statistics.
+Used to configure traffic statistics.
 
 > reverse: [ReverseObject](./reverse.md)
 
-Configures the built-in reverse proxy. You can forward server traffic to the client, effectively achieving reverse proxying.
+Reverse proxy. Can forward server-side traffic to the client, i.e., reverse traffic forwarding.
 
 > fakedns: [FakeDnsObject](./fakedns.md)
 
-FakeDNS configuration. Can be used with a transparent proxy to obtain the actual domains.
+FakeDNS configuration. Can be used with transparent proxies to obtain the actual domain name.
 
 > metrics: [metricsObject](./metrics.md)
 
-Metrics configuration. A more straightforward (and hopefully better) way to export metrics.
+Metrics configuration. A more direct (hopefully better) way to export statistics.
 
 > observatory: [ObservatoryObject](./observatory.md#observatoryobject)
 
-Background connection observation. Detect the connection status of outbound proxies.
+Background connection observatory. Detects the connection status of outbound proxies.
 
 > burstObservatory: [BurstObservatoryObject](./observatory.md#burstobservatoryobject)
 
-Concurrent connection observation. Detect the connection status of outbound proxies.
-```
+Burst connection observatory. Detects the connection status of outbound proxies.

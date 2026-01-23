@@ -9,7 +9,7 @@ export const nav: DefaultTheme.Config["nav"] = [
       { text: "Basic Configuration", link: "/en/config/" },
       { text: "Inbound Protocols", link: "/en/config/inbounds/" },
       { text: "Outbound Protocols", link: "/en/config/outbounds/" },
-      { text: "Underlying Transports", link: "/en/config/transports/" },
+      { text: "Transports", link: "/en/config/transports/" },
     ],
   },
   {
@@ -17,11 +17,11 @@ export const nav: DefaultTheme.Config["nav"] = [
     items: [
       { text: "Quick Start", link: "/en/document/" },
       {
-        text: "Beginner's Plain Language Guide",
+        text: "Absolute Beginner's Plain Guide",
         link: "/en/document/level-0/",
       },
-      { text: "Beginner Tips", link: "/en/document/level-1/" },
-      { text: "Advanced Tips", link: "/en/document/level-2/" },
+      { text: "Beginner Skills", link: "/en/document/level-1/" },
+      { text: "Advanced Skills", link: "/en/document/level-2/" },
     ],
   },
   { text: "Developer Guide", link: "/en/development/" },

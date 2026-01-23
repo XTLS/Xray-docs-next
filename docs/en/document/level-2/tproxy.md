@@ -1,24 +1,24 @@
 ---
-title: TProxy 透明代理
+title: TProxy Transparent Proxy
 ---
 
-# 透明代理（TProxy）配置教程
+# Transparent Proxy (TProxy) Configuration Tutorial
 
-本配置基于[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)，加入了 Xray 的新特性，使用 VLESS + XTLS Vision 方案，并将旧教程中默认出站代理的分流方式改为默认出站直连，使用者请按照实际情况进行修改。
+This configuration is based on the [New V2Ray Plain Guide for Transparent Proxy (TProxy)](https://guide.v2fly.org/app/tproxy.html), adding new features from Xray. It utilizes the VLESS + XTLS Vision scheme. Unlike the old tutorial which defaulted to proxying outbound traffic, this configuration defaults to direct connection for outbound traffic. Users should adjust this according to their actual needs.
 
-本文中所有配置已在 Raspberry Pi 2B、Ubuntu 20.04 环境下测试成功，如在其它环境中使用请自行调整配置。
+All configurations in this article have been successfully tested on Raspberry Pi 2B and Ubuntu 20.04. If you are using a different environment, please adjust the configuration accordingly.
 
-## 开始之前
+## Before You Start
 
-请检查您的设备是否有可用的网络连接，且服务端已经配置成功，客户端已经安装完毕。
+Please check that your device has an active network connection, the server-side is successfully configured, and the client is installed.
 
-需注意的是，目前很多透明代理教程都会将 Linux 系统的 IP 转发打开，但这样会导致 Splice 性能下降。详情请参考[大案牍术破案纪实第三篇--我们是如何破解 Splice 性能下降甚至低于 Direct 之谜的](https://github.com/XTLS/Xray-core/discussions/59)。
+It is worth noting that many transparent proxy tutorials instruct you to enable IP Forwarding on Linux. However, doing so can degrade `Splice` performance. For details, please refer to [Detective Story Part 3: How we solved the mystery of Splice performance dropping even below Direct](https://github.com/XTLS/Xray-core/discussions/59).
 
-这里我想要补充的是，很多透明代理教程会使用 Netfilter 进行分流，使直连流量直接发出而不经过 Xray，这时必须开启 IP 转发；也有的教程，如本文，会将所有流量导入 Xray 之中，由 Xray 的路由模块进行分流，这时无需开启 IP 转发。
+I would like to add that many transparent proxy tutorials use Netfilter for traffic splitting (routing), allowing direct traffic to go out without passing through Xray. In that case, IP Forwarding must be enabled. However, some tutorials, like this one, direct *all* traffic into Xray, and the routing module within Xray handles the splitting. In this scenario, IP Forwarding does **not** need to be enabled.
 
-## Xray 配置
+## Xray Configuration
 
-为了更好的分流体验，请替换默认路由规则文件为 [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat)，否则 Xray-core 将无法加载本配置。
+For a better routing experience, please replace the default routing rule files with [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat); otherwise, Xray-core will not be able to load this configuration.
 
 ```bash
 sudo curl -oL /usr/local/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
@@ -71,7 +71,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
       "settings": {
         "vnext": [
           {
-            "address": "服务端域名",
+            "address": "Server_Domain",
             "port": 443,
             "users": [
               {
@@ -118,7 +118,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
   ],
   "dns": {
     "hosts": {
-      "服务端域名": "服务端 IP"
+      "Server_Domain": "Server_IP"
     },
     "servers": [
       {
@@ -168,25 +168,21 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
 ```
 
 ::: tip TIP
-本配置会劫持所有发往 53 端口的流量以解决 DNS 污染问题，所以客户端和本机的 DNS 服务器的地址可以随意配置。
+This configuration hijacks all traffic sent to port 53 to solve DNS pollution issues, so the DNS server addresses on the client and the local machine can be configured arbitrarily.
 :::
 
-## 策略路由配置
+## Policy Routing Configuration
 
+```bash
+sudo ip route add local default dev lo table 100 # Add routing table 100
+sudo ip rule add fwmark 1 table 100 # Set rules for routing table 100
 ```
-sudo ip route add local default dev lo table 100 # 添加路由表 100
-sudo ip rule add fwmark 1 table 100 # 为路由表 100 设定规则
-```
 
-## Netfilter 配置
+## Netfilter Configuration
 
-::: warning 注意
-nftables 配置与 iptables 配置二选一，不可同时使用。
+::: warning Note
+Choose either **nftables** or **iptables** configuration. Do not use both simultaneously.
 :::
-
-<Tabs title="netfilter">
-
-<Tab title="nftables1">
 
 ```nftables
 #!/usr/sbin/nft -f
@@ -226,14 +222,10 @@ table ip xray {
 }
 ```
 
-::: tip 使用方法
+::: tip Usage
 
-将上述配置写入一个文件（如 `nft.conf`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./nft.conf`）。
+Write the above configuration to a file (e.g., `nft.conf`), then give the file executable permissions, and finally execute the file with root privileges (`# ./nft.conf`).
 :::
-
-</Tab>
-
-<Tab title="iptables1">
 
 ```bash
 iptables -t mangle -N XRAY
@@ -270,21 +262,11 @@ iptables -t mangle -A XRAY_SELF -p udp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j XRAY_SELF
 ```
 
-</Tab>
+After the configuration is complete, change the default gateway of other devices in the LAN to the IP of this device to bypass the firewall directly. After successfully testing on both other hosts and the local machine, you can proceed to the next step.
 
-</Tabs>
+## Persistence and Auto-start
 
-配置完成后，将局域网内其它设备的默认网关改为该设备 IP，就可以直接翻墙了。在其它主机和本机皆测试成功后，可进行下一步配置。
-
-## 配置永久化与开机自启
-
-<br/>
-
-<Tabs title="netfilter2">
-
-<Tab title="nftables2">
-
-首先将已经编辑好的 nftables 配置文件移动到 `/etc` 目录下，并重命名为 `nftables.conf`。然后编辑 `/lib/systemd/system/nftables.service`。
+First, move the edited `nftables` configuration file to the `/etc` directory and rename it to `nftables.conf`. Then edit `/lib/systemd/system/nftables.service`.
 
 ```ini
 [Unit]
@@ -309,17 +291,13 @@ ExecStop=/usr/sbin/nft flush ruleset ; /usr/sbin/ip route del local default dev 
 WantedBy=sysinit.target
 ```
 
-最后 enable 即可。
+Finally, enable it.
 
-</Tab>
+For persistence with `iptables`, it is recommended to install `iptables-persistent` directly.
 
-<Tab title="iptables2">
+During the installation process, you will be prompted to "Save current IPv4 rules?". If you have already applied the iptables configuration to the system, select "Yes". If not, it doesn't matter; after installation, apply the configuration and then execute `netfilter-persistent save` (root privileges required).
 
-关于 iptables 的永久化，建议直接安装 `iptables-persistent`。
-
-安装过程中会提示你选择“是否保存配置”，如果已经将 iptables 配置写入系统，那么此时选择“是”即可；如果尚未写入也没有关系，安装完毕后将配置写入，然后执行 `netfilter-persistent save` 即可（需要 root 权限）。
-
-之后编辑 `/lib/systemd/system/netfilter-persistent.service`。
+After that, edit `/lib/systemd/system/netfilter-persistent.service`.
 
 ```ini
 [Unit]
@@ -340,7 +318,3 @@ ExecStop=/usr/sbin/netfilter-persistent stop ; /usr/sbin/ip route flush dev lo t
 [Install]
 WantedBy=multi-user.target
 ```
-
-</Tab>
-
-</Tabs>

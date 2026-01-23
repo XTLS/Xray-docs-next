@@ -1,46 +1,51 @@
 # API Interface
 
-API interface configuration provides a set of APIs based on [gRPC](https://grpc.io/) for remote invocation.
+The API interface configuration provides [gRPC](https://grpc.io/)-based API interfaces for remote procedure calls.
 
-The interface can be enabled through the api configuration module. When the api configuration is enabled, Xray will create an outbound proxy automatically. All incoming API connections need to be manually routed to this outbound proxy through [routing rule configuration](./routing.md).
+You can enable the interface through the `api` configuration module. When the `api` configuration is enabled, Xray will automatically build an outbound proxy with the same name as the `tag`. You must manually route all API inbound connections to this outbound proxy via [Routing Configuration](./routing.md). Please refer to [Relevant Configuration](#relevant-configuration) in this section.
 
-Please refer to the [related configuration](#related-configuration) in this section.
+Since [v1.8.12](https://github.com/XTLS/Xray-core/releases/tag/v1.8.12), a simplified configuration mode is supported. You only need to configure the `ApiObject`, without needing to configure `inbounds` and `routing`. However, when using the simplified configuration, the traffic statistics feature does not count the traffic of API inbound connections.
 
 ::: warning
-Most users do not need to use this API. Novices can ignore this page entirely.
+Most users will not need this API; beginners can skip this section.
 :::
 
 ## ApiObject
 
-`ApiObject` corresponds to the `api` item in the configuration file.
+`ApiObject` corresponds to the `api` field in the configuration file.
 
 ```json
 {
   "api": {
     "tag": "api",
     "listen": "127.0.0.1:8080",
-    "services": ["HandlerService", "LoggerService", "StatsService"]
+    "services": [
+      "HandlerService",
+      "LoggerService",
+      "StatsService",
+      "RoutingService"
+    ]
   }
 }
 ```
 
 > `tag`: string
 
-Outbound proxy identifier.
+The identifier of the outbound proxy.
 
 > `listen`: string
 
-The IP and port that the API service listens on. This is an optional configuration item.
+The IP and port for the API service to listen on. This is an optional configuration item.
 
-When you omit this item, you need to add inbounds and routing configurations according to the examples in the [relevant configurations below](#related-configuration).
+If this item is omitted, you need to add `inbounds` and `routing` configurations according to the example in [Relevant Configuration](#relevant-configuration) below.
 
-> `services`: [string]
+> `services`: \[string\]
 
-List of enabled APIs, optional values can be found in [Supported API List](#supported-api-list).
+The list of enabled APIs. See [API List](#supported-api-list) for available values.
 
-## Related Configuration
+## Relevant Configuration
 
-An api inbound can be added to the inbounds configuration.
+You can add an `api` inbound in the `inbounds` configuration:
 
 ```json
 "inbounds": [
@@ -56,7 +61,7 @@ An api inbound can be added to the inbounds configuration.
 ]
 ```
 
-Add routing rules for the api inbound in the routing configuration.
+Add a routing rule for the `api` inbound in the `routing` configuration:
 
 ```json
 "routing": {
@@ -71,7 +76,7 @@ Add routing rules for the api inbound in the routing configuration.
 }
 ```
 
-Add api to basic configuration
+Add `api` in the basic configuration:
 
 ```json
 "api": {
@@ -86,40 +91,40 @@ Add api to basic configuration
 
 ### HandlerService
 
-APIs that modify the inbound and outbound proxies, with the following available functions:
+APIs for modifying inbound and outbound proxies. Available functions are as follows:
 
-- Add a new inbound proxy;
-- Add a new outbound proxy;
-- Delete an existing inbound proxy;
-- Delete an existing outbound proxy;
-- List inbound proxies;
-- List outbound proxies;
-- Add a user to an inbound proxy (VMess, VLESS, Trojan, and Shadowsocks(v1.3.0+) only);
-- Delete a user from an inbound proxy (VMess, VLESS, Trojan, and Shadowsocks(v1.3.0+) only);
+- Add a new inbound;
+- Add a new outbound;
+- Remove an existing inbound;
+- Remove an existing outbound;
+- List outbounds;
+- List inbounds;
+- Add a user to an inbound (supports VMess, VLESS, Trojan, Shadowsocks only);
+- Remove a user from an inbound (supports VMess, VLESS, Trojan, Shadowsocks only);
 
-## RoutingService
+### RoutingService
 
-API for adding, deleting, and replacing routing rules and querying equalizer statistics. The available functions are as follows:
+APIs for adding, removing, replacing routing rules, and querying balancer statistics. Available functions are as follows:
 
-- `adrules` adds and replaces routing configuration
-- `rmrules` delete routing rules
-- `sib` Disconnect source IP
-- `bi` Query equalizer statistics
-- `bo` Forces the equalizer to select the specified outboundTag
+- `adrules`: Add or replace routing configuration
+- `rmrules`: Remove routing rules
+- `sib`: Disconnect connections from a source IP
+- `bi`: Query balancer statistics
+- `bo`: Force balancer to select a specific `outboundTag`
 
-You can use something like `./xray help api bi` to query the specific usage.
+You can use commands like `./xray help api bi` to query specific usage.
 
 ### LoggerService
 
-Supports restarting the built-in logger, which can be used in conjunction with logrotate to perform operations on log files.
+Supports restarting the built-in Logger, which can be used with `logrotate` to perform operations on log files.
 
 ### StatsService
 
-Built-in data statistics service, see [Statistics Information](./stats.md) for details.
+Built-in data statistics service. See [Statistics](./stats.md) for details.
 
 ### ReflectionService
 
-Supports gRPC clients to obtain the list of APIs from the server.
+Allows gRPC clients to retrieve the list of APIs on the server.
 
 ```bash
 $ grpcurl -plaintext localhost:10085 list
@@ -130,6 +135,6 @@ xray.app.proxyman.command.HandlerService
 xray.app.stats.command.StatsService
 ```
 
-## API Calling Example
+## API Call Examples
 
 [Xray-API-documents](https://github.com/XTLS/Xray-API-documents) @crossfw

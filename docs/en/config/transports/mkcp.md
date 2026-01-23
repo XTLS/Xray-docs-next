@@ -1,16 +1,16 @@
 # mKCP
 
-mKCP uses UDP to emulate TCP connections.
+mKCP uses UDP to simulate TCP connections.
 
-mKCP sacrifices bandwidth to reduce latency. To transmit the same content, mKCP generally consumes more data than TCP.
+mKCP sacrifices bandwidth to reduce latency. To transmit the same amount of content, mKCP generally consumes more traffic than TCP.
 
 ::: tip
-Make sure the firewall on the host is configured correctly.
+Please ensure that the firewall configuration on the host is correct.
 :::
 
 ## KcpObject
 
-`KcpObject` corresponds to the `kcpSettings` in the [Transport Protocol](../transport.md)
+`KcpObject` corresponds to the `kcpSettings` item in the transport configuration.
 
 ```json
 {
@@ -22,7 +22,8 @@ Make sure the firewall on the host is configured correctly.
   "readBufferSize": 1,
   "writeBufferSize": 1,
   "header": {
-    "type": "none"
+    "type": "none",
+    "domain": "example.com"
   },
   "seed": "Password"
 }
@@ -30,112 +31,123 @@ Make sure the firewall on the host is configured correctly.
 
 > `mtu`: number
 
-Maximum transmission unit. It indicates the maxium bytes that an UDP packet can carry. Recommended value is between `576` and `1460`
+Maximum Transmission Unit.
+Please select a value between 576 and 1460.
 
-The default value is `1350`
+The default value is `1350`.
 
 > `tti`: number
 
-Transmission time interval, measured in milliseconds (ms), determines how often mKCP sends data. Please choose a value between `10` and `100`
+Transmission Time Interval, in milliseconds (ms). mKCP will send data at this frequency.
+Please select a value between 10 and 100.
 
-The default value is `50`
+The default value is `50`.
 
 > `uplinkCapacity`: number
 
-Uplink capacity refers to the maximum bandwidth used by the host to send data, measured in MB/s (note: Byte, not bit). It can be set to 0, indicating a very small bandwidth.
+Uplink capacity, i.e., the maximum bandwidth used by the host to send data. The unit is MB/s. Note that it is Byte, not bit.
+Can be set to 0, representing a very small bandwidth.
 
-The default value is `5`
+The default value is `5`.
 
 > `downlinkCapacity`: number
 
-Downlink capacity refers to the maximum bandwidth used by the host to receive data, measured in MB/s (note: Byte, not bit). It can be set to 0, indicating a very small bandwidth.
+Downlink capacity, i.e., the maximum bandwidth used by the host to receive data. The unit is MB/s. Note that it is Byte, not bit.
+Can be set to 0, representing a very small bandwidth.
 
-The default value is `20`
+The default value is `20`.
 
 ::: tip
-`uplinkCapacity` and `downlinkCapacity` determine the transmission speed of mKCP. For example, when a client sends data, the client's `uplinkCapacity` specifies the speed of sending data, while the server's `downlinkCapacity` specifies the speed of receiving data. The value used is the smaller of the two.
+`uplinkCapacity` and `downlinkCapacity` determine the transmission speed of mKCP.
+Taking a client sending data as an example, the client's `uplinkCapacity` specifies the speed of sending data, while the server's `downlinkCapacity` specifies the speed of receiving data. The actual speed will be the smaller of the two values.
 
-It is recommended to set `downlinkCapacity` to a larger value, such as `100`, and set `uplinkCapacity` to the actual network speed. If the speed is insufficient, gradually increase the value of `uplinkCapacity` until it is about twice the bandwidth.
+It is recommended to set `downlinkCapacity` to a larger value, such as 100, and set `uplinkCapacity` to the actual network speed. When the speed is insufficient, you can gradually increase the value of `uplinkCapacity` until it is about twice the bandwidth.
 :::
 
 > `congestion`: true | false
 
-Whether or not to enable congestion control.
-When congestion control is enabled, Xray will detect network quality. It will send less packets when packet loss is severe, or more packets when network is not fully filled.
+Whether to enable congestion control.
 
-The default value is `false`
+When congestion control is enabled, Xray automatically monitors network quality. When packet loss is severe, it automatically reduces throughput; when the network is smooth, it appropriately increases throughput.
+
+The default value is `false`.
 
 > `readBufferSize`: number
 
-The read buffer size for a single connection, measured in `MB`
+The read buffer size for a single connection, in MB.
 
-The default value is `2`
+The default value is `2`.
 
 > `writeBufferSize`: number
 
-The write buffer size for a single connection, measured in `MB`
+The write buffer size for a single connection, in MB.
 
-The default value is `2`
+The default value is `2`.
 
 ::: tip
-`readBufferSize` and `writeBufferSize` specify the memory size used by a single connection. When high-speed transmissions are required, specifying larger values for `readBufferSize` and `writeBufferSize` can improve speed to some extent, but it will also consume more memory.
+`readBufferSize` and `writeBufferSize` specify the memory size used by a single connection.
+When high-speed transmission is required, specifying larger `readBufferSize` and `writeBufferSize` will improve speed to a certain extent, but it will also use more memory.
 
-When the network speed is no more than `20 MB/s`, the default value of `1MB` is sufficient; after exceeding this limit, you can increase the values of `readBufferSize` and `writeBufferSize` appropriately and then manually balance the relationship between speed and memory.
+When the network speed does not exceed 20MB/s, the default value of 1MB can meet the demand; beyond that, you can appropriately increase the values of `readBufferSize` and `writeBufferSize`, and then manually balance the relationship between speed and memory.
 :::
 
 > `header`: [HeaderObject](#headerobject)
 
-Configuration for packet header obfuscation.
+Packet header camouflage settings.
 
 > `seed`: string
 
-An optional obfuscation seed is used to obfuscate traffic data using the `AES-128-GCM` algorithm. The client and server need to use the same seed.
+Optional obfuscation password. Uses the AES-128-GCM algorithm to obfuscate traffic data. Must be consistent between the client and the server.
 
-This obfuscation mechanism cannot ensure the security of the content, but it may be able to resist some blocking.
+This obfuscation mechanism cannot be used to guarantee the security of communication content, but it may help mitigate some forms of blocking.
 
-::: tip NOTE
-Currently, in the testing environment, enabling this setting has not resulted in the original unobfuscated version being blocked by ports.
-:::
+> Currently, in test environments, no port blocking phenomena have been observed after enabling this setting compared to the original unobfuscated version.
 
 ### HeaderObject
 
 ```json
 {
-  "type": "none"
+  "type": "none",
+  "domain": "example.com"
 }
 ```
 
 > `type`: string
 
-Type of obfuscation. Corresponding inbound and outbound must have the same value. Choices are:
+Camouflage type. Optional values are:
 
-- `"none"`：Default value. No obfuscation is used.
-- `"srtp"`：Obfuscated as SRTP traffic. It may be recognized as video calls such as Facetime.
-- `"utp"`：Obfuscated as uTP traffic. It may be recognized as Bittorrent traffic.
-- `"wechat-video"`：Obfuscated to WeChat traffic.
-- `"dtls"`：Obfuscated as DTLS 1.2 packets.
-- `"wireguard"`：Obfuscated as WireGuard packets. (NOT true WireGuard protocol)
+- `"none"`: Default value. No camouflage is performed; sent data is a packet without characteristics.
+- `"srtp"`: Disguised as SRTP packets, recognized as video call data (e.g., FaceTime).
+- `"utp"`: Disguised as uTP packets, recognized as BT download data.
+- `"wechat-video"`: Disguised as WeChat video call packets.
+- `"dtls"`: Disguised as DTLS 1.2 packets.
+- `"wireguard"`: Disguised as WireGuard packets. (Not the real WireGuard protocol).
+- `"dns"`: Some campus networks allow DNS queries without logging in. Adding a DNS header to KCP allows traffic to be disguised as DNS requests, potentially bypassing login requirements on some campus networks.
 
-## Special Thanks
+> `domain`: string
 
-- [@skywind3000](https://github.com/skywind3000) Credit for inventing and implementing the original KCP protocol in C.
-- [@xtaci](https://github.com/xtaci) Credit for re-implementing KCP protocol in Go.
-- [@xiaokangwang](https://github.com/xiaokangwang) Credit for testing the integration of KCP with Xray and submitting the initial PR.
+Used with the camouflage type `"dns"`. You can fill in any domain name.
 
-## Improvements to the KCP protocol
+## Credits
 
-### smaller protocol header
+- [@skywind3000](https://github.com/skywind3000) Invented and implemented the KCP protocol.
+- [@xtaci](https://github.com/xtaci) Ported KCP from C implementation to Go.
+- [@xiaokangwang](https://github.com/xiaokangwang) Tested the integration of KCP with Xray and submitted the initial PR.
 
-The original KCP protocol uses a fixed header of 24 bytes, while mKCP modifies it to 18 bytes for data packets and 16 bytes for acknowledgement (ACK) packets. A smaller header helps evade feature detection and speeds up transmission.
+## Improvements to the KCP Protocol
 
-In addition, the original KCP can only confirm that one packet has been received with a single ACK packet. This means that when KCP needs to confirm that 100 packets have been received, it will send out 2400 bytes of data (24 x 100), including a large amount of repeated header information that wastes bandwidth. mKCP compresses multiple ACK packets, so 100 ACK packets only require 418 bytes (16 + 2 + 100 x 4), which is equivalent to one-sixth of the original KCP.
+### Smaller Protocol Header
 
-### ACK packet retransmission
+The native KCP protocol uses a fixed header of 24 bytes, while mKCP modifies this to 18 bytes for data packets and 16 bytes for acknowledgement (ACK) packets. Smaller headers help evade characteristic detection and increase transmission speed.
 
-In the original KCP protocol, an ACK packet is only sent once. If an ACK packet is lost, it will cause unnecessary bandwidth waste due to data retransmission. In contrast, mKCP retransmits ACK packets at a certain frequency until they are confirmed by the sender. The size of a single ACK packet is 22 bytes, much smaller than the data packets which are over 1000 bytes. Therefore, the cost of retransmitting ACK packets is much lower.
+Additionally, native KCP's single ACK packet can only acknowledge the receipt of one data packet. This means that when KCP needs to acknowledge the receipt of 100 data packets, it sends 24 *100 = 2400 bytes of data. This includes a large amount of repetitive header data, causing bandwidth waste. mKCP compresses multiple ACK packets; 100 ACK packets require only 16 + 2 + 100* 4 = 418 bytes, which is equivalent to one-sixth of the native size.
 
-### Connection state control
+### ACK Packet Retransmission
 
-mKCP can effectively initiate and close connections. When the remote host initiates disconnection, the connection will be released within two seconds. When the remote host lost connection, the connection will be released within a maximum of 30 seconds.
+The native KCP protocol sends acknowledgement (ACK) packets only once. If an ACK packet is lost, it inevitably leads to data retransmission, causing unnecessary bandwidth waste. mKCP retransmits ACK packets at a certain frequency until the sender confirms receipt. The size of a single ACK packet is 22 bytes, which is much smaller than the cost of retransmitting a data packet of over 1000 bytes.
 
-The original KCP does not support this scenario.
+### Connection State Control
+
+mKCP can effectively open and close connections. When the remote host actively closes the connection, the connection is released within two seconds; when the remote host disconnects, the connection is released within a maximum of 30 seconds.
+
+Native KCP does not support this scenario.

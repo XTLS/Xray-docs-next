@@ -1,9 +1,9 @@
-# Xray Feature Details
+# Xray Features in Detail
 
-Xray offers the following features:
+Xray has the following features:
 
-- [Deep Dive into XTLS](xtls.md)
+- [XTLS Deep Dive](xtls.md)
 - [Fallback](fallback.md)
 - [Browser Dialer](browser_dialer.md)
 - [Environment Variables](env.md)
-- [Multi-file Configuration](multiple.md)
+- [Multiple File Configuration](multiple.md)

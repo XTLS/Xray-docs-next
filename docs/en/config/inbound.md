@@ -1,10 +1,10 @@
 # Inbound Proxy
 
-Inbound connections are used to receive incoming data and the available protocols are listed in [inbound protocols](./inbounds/).
+Inbound connections are used to receive incoming data. For available protocols, please refer to [Inbound Protocols](./inbounds/).
 
 ## InboundObject
 
-The `InboundObject` corresponds to a subelement of the `inbounds` item in the configuration file.
+`InboundObject` corresponds to a child element of the `inbounds` item in the configuration file.
 
 ```json
 {
@@ -19,11 +19,6 @@ The `InboundObject` corresponds to a subelement of the `inbounds` item in the co
       "sniffing": {
         "enabled": true,
         "destOverride": ["http", "tls"]
-      },
-      "allocate": {
-        "strategy": "always",
-        "refresh": 5,
-        "concurrency": 3
       }
     }
   ]
@@ -32,40 +27,46 @@ The `InboundObject` corresponds to a subelement of the `inbounds` item in the co
 
 > `listen`: address
 
-The listening address, either an IP address or a Unix domain socket. The default value is `"0.0.0.0"`, which means accepting connections on all network interfaces.
+The listening address, which can be an IP address or a Unix domain socket. The default value is `"0.0.0.0"`, which means listening on all network interfaces.
 
-An available system IP address can be specified.
+You can specify an IP address available on the system.
 
-Unix domain socket can also be specified by providing the absolute path in the form of `"/dev/shm/domain.socket"`. The `@` symbol can be added at the beginning to represent [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html), and `@@` represents padded abstract.
+`"::"` is equivalent to `"0.0.0.0"`; both will listen on IPv6 and IPv4 simultaneously. However, if you only want to listen on IPv6, you can set `v6only` in `sockopt` to true. If you only want to listen on IPv4, you can use commands like `ip a` to view the specific IP on the network card (usually the machine's public IP address or a private network address like 10.x.x.x) and listen on that. Of course, you can do the same for IPv6.
 
-When Unix domain socket is specified, `port` and `allocate` will be ignored. The protocol currently supports VLESS, VMess, and Trojan. The transport methods available are TCP, WebSocket, HTTP/2, and gRPC.
+Note that because UDP is not connection-oriented, if the inbound is based on UDP and there are multiple IP addresses on the network card, and the external connection is to a non-preferred address on the card, Xray might incorrectly use the preferred address as the source address for the reply instead of the target of the external connection, causing the connection to fail.
+The solution is not to listen on `0.0.0.0` but to listen on the specific IP address on the network card.
 
-When specifying a Unix domain socket, you can add a comma and an access permission indicator after the socket, such as `"/dev/shm/domain.socket,0666"`, to specify the access permission of the socket. This can be used to solve the socket access permission issue that occurs by default.
+Supports Unix domain sockets in absolute path format, such as `"/dev/shm/domain.socket"`. You can add `@` at the beginning to represent [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html), and `@@` for abstract with padding.
+
+When filling in a Unix domain socket, `port` and `allocate` will be ignored. The protocol can currently be VLESS, VMess, or Trojan, and applies only to TCP-based underlying transports, such as `tcp`, `websocket`, `grpc`. UDP-based transports like `mkcp` are not supported.
+
+When filling in a Unix domain socket, you can use the format `"/dev/shm/domain.socket,0666"`, i.e., adding a comma and access permission indicators after the socket, to specify the access permissions of the socket. This can be used to solve socket permission issues that occur by default.
 
 > `port`: number | "env:variable" | string
 
-Port. The accepted formats are:
+Port. Accepted formats are as follows:
 
-- Integer: the actual port number.
-- Environment variable: starts with `"env:"`, followed by the name of an environment variable, such as `"env:PORT"`. Xray will parse this environment variable as a string.
-- String: can be a numeric string, such as `"1234"`, or a range of port numbers, such as `"5-10"` which represents ports 5 through 10, a total of 6 ports. You can use commas to separate multiple ranges, such as `11,13,15-17`, which represents ports 11, 13, and 15 through 17, a total of 5 ports.
+- Integer value: The actual port number.
+- Environment variable: Starts with `"env:"`, followed by the name of an environment variable, such as `"env:PORT"`. Xray will parse this environment variable as a string.
+- String: Can be a numeric string, such as `"1234"`; or a numerical range, such as `"5-10"` indicating ports 5 to 10 (6 ports in total). Commas can be used for segmentation, such as `11,13,15-17` indicating port 11, port 13, and ports 15 to 17 (5 ports in total).
 
-When only one port is specified, Xray listens for inbound connections on that port. When a range of ports is specified, it depends on the `allocate` setting.
+When only one port is specified, Xray will listen for inbound connections on this port. When a port range is specified, Xray will listen on all ports within the range.
+
+Note that listening on a port is a relatively expensive operation. Listening on a port range that is too large may cause a significant increase in resource usage or even cause Xray to fail to work properly. Generally speaking, problems may begin to appear when the number of listening ports approaches four digits. If you need to use a very large range, please consider using iptables for redirection instead of setting it here.
 
 > `protocol`: "dokodemo-door" | "http" | "shadowsocks" | "socks" | "vless" | "vmess" | "trojan" | "wireguard"
 
-The connection protocol name. The optional protocol types are listed in [inbound protocols](./inbounds/).
+Connection protocol name. See the list of available [Inbound Protocols](./inbounds/) on the left.
 
 > `settings`: InboundConfigurationObject
 
-The specific configuration content depends on the protocol. See `InboundConfigurationObject` in each protocol for details.
+Specific configuration content, which varies by protocol. See `InboundConfigurationObject` in each protocol section for details.
 
 > `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
 
-The underlying transport method is how the current Xray node interfaces with other nodes.
+Underlying transport method (transport) is the way the current Xray node connects with other nodes.
 
 > `tag`: string
->
 > The identifier of this inbound connection, used to locate this connection in other configurations.
 
 ::: danger
@@ -74,27 +75,25 @@ When it is not empty, its value must be **unique** among all `tag`s.
 
 > `sniffing`: [SniffingObject](#sniffingobject)
 
-Traffic sniffing is mainly used in transparent proxies, for example:
+Traffic sniffing is mainly used for transparent proxies and similar purposes. A typical flow is as follows:
 
-1. If a device wants to access `abc.com` while connected to the internet, it will first query the IP address of `abc.com` via DNS and get `1.2.3.4`. Then the device will initiate a connection to `1.2.3.4`.
-2. If sniffing is not set up, Xray will receive a connection request for `1.2.3.4`, which cannot be used for routing based on domain rules.
-3. When `enable` in `sniffing` is set to `true`, Xray will sniff the domain name, `abc.com`, from the traffic data when processing the traffic of this connection.
-4. Xray will reset `1.2.3.4` to `abc.com`. Routing can then be based on domain rules.
+1. If a device accesses the internet and visits abc.com, the device first queries DNS to get the IP of abc.com as 1.2.3.4, and then the device initiates a connection to 1.2.3.4.
+2. If sniffing is not configured, the connection request received by Xray is for 1.2.3.4, which cannot be used for routing traffic based on domain rules.
+3. When `enabled` in sniffing is set to `true`, Xray will sniff the domain name, i.e., abc.com, from the traffic data when processing this connection.
+4. Xray will reset 1.2.3.4 to abc.com. The routing can then divert traffic according to the domain rules.
 
-Since the connection is now to `abc.com`, more can be done, such as routing based on domain rules, and even re-resolving the DNS.
+Because it becomes a connection requesting abc.com, more things can be done. Besides routing domain rule diversion, it can also re-perform DNS resolution and other tasks.
 
-When `enable` in `sniffing` is set to `true`, it can also sniff out bittorrent traffic and then configure the "protocol" item in routing rules to handle bittorrent traffic, such as intercepting bittorrent traffic on the server or forwarding bittorrent traffic to a VPS on the client side.
+When `enabled` in sniffing is set to `true`, it can also sniff Bittorrent type traffic. Then you can configure the "protocol" item in routing to set rules for handling unencrypted BT traffic. For example, the server side can be used to intercept unencrypted BT traffic, or the client side can fixedly forward BT traffic to a certain VPS, etc.
 
-> `allocate`: [AllocateObject](#allocateobject)
-
-Specifies the specific settings for port allocation when multiple ports are set up.
+Note: Newer browsers may use ECH to encrypt the Client Hello. In this case, Xray can only see the domain in the Outer Hello. You may need to consider hijacking DNS or manually disabling ECH in the browser configuration.
 
 ### SniffingObject
 
 ```json
 {
   "enabled": true,
-  "destOverride": ["http", "tls", "quic", "fakedns"],
+  "destOverride": ["http", "tls", "fakedns"],
   "metadataOnly": false,
   "domainsExcluded": [],
   "routeOnly": false
@@ -105,55 +104,49 @@ Specifies the specific settings for port allocation when multiple ports are set 
 
 Whether to enable traffic sniffing.
 
-> `destOverride`: ["http" | "tls" | "quic" | "fakedns" ]
+> `destOverride`: \["http" | "tls" | "quic" | "fakedns"\]
 
-When the traffic is of a specified type, reset the destination of the current connection to the target address included in the list.
+When the traffic is of the specified type, reset the destination of the current connection based on the destination address contained within it.
+
+::: tip
+Xray will only sniff the domains of protocols in `destOverride` for routing purposes. If you only want to sniff for routing but do not want to reset the destination address (e.g., resetting the destination address when using the Tor browser will cause connection failure), please add the corresponding protocol here and enable `routeOnly`.
+:::
 
 > `metadataOnly`: true | false
 
-When enabled, only use the connection's metadata to sniff the target address. In this case, sniffer other than `fakedns` cannot be activated.
+When enabled, only the connection metadata will be used to sniff the destination address. At this time, sniffers other than `fakedns` will not be activated.
 
-If metadata-only is disabled, the client must send data before the proxy server actually establishes the connection. This behavior is incompatible with protocols that require the server to initiate the first message, such as the SMTP protocol.
+If disabled (using more than just metadata to infer the destination address), the client must send data first before the proxy server actually establishes a connection. This behavior is incompatible with protocols where the server must initiate the first message, such as the SMTP protocol.
 
 > `domainsExcluded`: [string] <Badge text="WIP" type="warning"/>
 
-A list of domain names. If the traffic sniffing result matches a domain name in this list, the target address will **not** be reset.
+A list of domains. If the result of traffic sniffing is in this list, the destination address will **not** be reset.
+
+Supports direct domains (exact match), or strings starting with `regexp:` followed by a regular expression.
+
+::: tip
+Filling in some domains may solve issues with iOS push notifications, Mijia smart devices, and voice chat in certain games (Rainbow Six).<br>
+If you need to troubleshoot the cause of certain problems, you can test by disabling `"sniffing"` or enabling `"routeOnly"`.
+:::
+
+```json
+"domainsExcluded": [
+    "courier.push.apple.com", // iOS push notifications
+    "Mijia Cloud", // Mijia smart devices
+    "dlg.io.mi.com"
+]
+```
 
 ::: warning
-Currently, `domainsExcluded` does not support domain name matching in the routing sense. This option may change in the future and cross-version compatibility is not guaranteed.
+Currently, `domainsExcluded` does not support the domain matching methods used in routing. This option may change in the future and cross-version compatibility is not guaranteed.
 :::
 
 > `routeOnly`: true | false
 
-Use the sniffed domain name for routing only, and keep the target address as the IP address. The default value is `false`.
+Use the sniffed domain only for routing; the proxy destination address remains the IP. The default value is `false`.
 
-This option requires `destOverride` to be enabled.
+This item requires `destOverride` to be enabled to work.
 
 ::: tip
-When it is possible to ensure that **the proxied connection can obtain correct DNS resolution**, by using `routeOnly` and enabling `destOverride`, and setting the routing matching strategy `domainStrategy` to `AsIs`, it is possible to achieve domain and IP separation without DNS resolution throughout the process. The IP used when encountering an IP rule match is the original IP of the domain.
+When it is guaranteed that **the proxied connection can obtain correct DNS resolution**, using `routeOnly` while enabling `destOverride`, and setting the routing matching strategy `domainStrategy` to `AsIs`, allows for domain and IP traffic splitting without DNS resolution throughout the process. In this case, the IP used when matching IP rules is the original IP of the domain name.
 :::
-
-### AllocateObject
-
-```json
-{
-  "strategy": "always",
-  "refresh": 5,
-  "concurrency": 3
-}
-```
-
-> `strategy`: "always" | "random"
-
-The port allocation strategy.
-
-- `"always"` means all specified ports in `port` will be allocated, and Xray will listen on these ports.
-- `"random"` means ports will be randomly selected from the `port` range every `refresh` minutes, and `concurrency` ports will be listened on.
-
-> `refresh`: number
-
-The interval for refreshing randomly allocated ports in minutes. The minimum value is `2`, and it is recommended to set to `5`. This property is only effective when `strategy` is set to `"random"`.
-
-> `concurrency`: number
-
-The number of randomly allocated ports. The minimum value is `1`, and the maximum value is one-third of the `port` range. It is recommended to set to `3`.

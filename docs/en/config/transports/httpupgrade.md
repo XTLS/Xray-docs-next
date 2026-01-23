@@ -1,16 +1,15 @@
 # HTTPUpgrade
 
-A WebSocket-like transport protocol implementing the HTTP/1.1 upgrade and response, allowing it to be reverse proxied by web servers or CDNs just like WebSocket, but without the need to implement the remaining portions of the WebSocket protocol, yielding better performance.
-
-Standalone usage is not recommended, but rather in conjunction with other security protocols like TLS.
+A protocol that implements HTTP 1.1 upgrade requests and responses similar to WebSocket. This allows it to be reverse-proxied by CDNs or Nginx just like WebSocket, but without the need to implement other parts of the WebSocket protocol, resulting in higher efficiency.
+Its design is not recommended for standalone use; instead, it is intended to work with security protocols like TLS.
 
 ::: danger
-**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) to avoid significant traffic characteristics such as HTTPUpgrade "ALPN is http/1.1".**
+**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) to avoid significant traffic fingerprints such as HTTPUpgrade's "ALPN is http/1.1".**
 :::
 
 ## HttpUpgradeObject
 
-The `HttpUpgradeObject` corresponds to the `httpupgradeSettings` section under transport configurations.
+`HttpUpgradeObject` corresponds to the `httpupgradeSettings` item in transport configuration.
 
 ```json
 {
@@ -25,28 +24,30 @@ The `HttpUpgradeObject` corresponds to the `httpupgradeSettings` section under t
 
 > `acceptProxyProtocol`: true | false
 
-For inbounds only. Specifies whether to accept the PROXY protocol.
+Only used for inbound; indicates whether to accept PROXY protocol.
 
-The [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is used to pass the real IP address and port of a connection along. **Ignore it if you have no knowledge regarding this**.
+[PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is dedicated to passing the real source IP and port of the request. **If you don't know what it is, please ignore this item for now.**
 
-Common reverse proxies (e.g. HAProxy, NGINX) and VLESS fallbacks xver can be configured for its inclusion.
+Common reverse proxy software (such as HAProxy, Nginx) can be configured to send it. VLESS fallbacks xver can also send it.
 
-When `true`, the downstream must first send PROXY protocol version 1 or 2 after establishing the underlying TCP connection, or the connection will be closed.
+When set to `true`, after the underlying TCP connection is established, the requester must send PROXY protocol v1 or v2 first; otherwise, the connection will be closed.
 
 > `path`: string
 
-HTTP path used by the HTTPUpgrade connection. Defaults to `"/"`.
+The HTTP path used by HTTPUpgrade. Default value is `"/"`.
 
-If the `path` property include an `ed` query field (e.g. `/mypath?ed=2560`), "early data" will be used to decrease latency, with the value defining the threshold of the first packet's size. If the size of the first packet exceeds the defined value, "early data" will not be applied. The recommended value is `2560`.
+If the client path contains the `ed` parameter (e.g., `/mypath?ed=2560`), `Early Data` will be enabled to reduce latency. The value represents the threshold for the first packet length. If the first packet length exceeds this value, `Early Data` will not be enabled. The recommended value is 2560.
 
 > `host`: string
 
-HTTP Host sent by the HTTPUpgrade connection. Empty by default. If this value is empty on the server, the host header sent by clients will not be validated.
+The host sent in the HTTP request of HTTPUpgrade. Default value is empty. If the server-side value is empty, the host value sent by the client is not verified.
 
-If the `Host` header has been defined on the server in any way, the server will validate if the `Host` header matches.
+When this value is specified on the server, or specified in `headers`, it will verify whether it is consistent with the host requested by the client.
 
-The current priority of the `Host` header sent by clients: `host` > `headers` > `address`
+Priority of the host sent by the client: `host` > `headers` > `address`
 
 > `headers`: map \{string: string\}
 
-Customized HTTP headers defined in key-value pairs. Defaults to empty.
+Client-only. Custom HTTP headers. A key-value pair, where each key represents the name of an HTTP header, and the corresponding value is a string.
+
+Default value is empty.

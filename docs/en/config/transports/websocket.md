@@ -1,20 +1,20 @@
 # WebSocket
 
-Uses standard WebSocket for data transmission.
+Uses standard WebSocket to transport data.
 
-WebSocket connections can be proxied by other web servers (like NGINX) or by VLESS fallback paths.
+WebSocket connections can be routed by other HTTP servers (such as Nginx) or by VLESS fallbacks path.
 
 ::: danger
-**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) to avoid significant traffic characteristics such as WebSocket "ALPN is http/1.1".**
+**It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) to avoid significant traffic characteristics like WebSocket "ALPN is http/1.1".**
 :::
 
 ::: tip
-WebSocket inbounds will parse the `X-Forwarded-For` header received, overriding the source address with a higher priority than the source address got from PROXY protocol.
+WebSocket will recognize the `X-Forwarded-For` header in HTTP requests to overwrite the source address of the traffic, which has higher priority than the PROXY protocol.
 :::
 
 ## WebSocketObject
 
-`WebSocketObject` corresponds to the `wsSettings` property of the transport configs.
+`WebSocketObject` corresponds to the `wsSettings` item in the transport configuration.
 
 ```json
 {
@@ -23,38 +23,45 @@ WebSocket inbounds will parse the `X-Forwarded-For` header received, overriding 
   "host": "xray.com",
   "headers": {
     "key": "value"
-  }
+  },
+  "heartbeatPeriod": 10
 }
 ```
 
 > `acceptProxyProtocol`: true | false
 
-Only used by inbounds. Indicates whether to accept the PROXY protocol.
+Only used for inbound, indicating whether to receive PROXY protocol.
 
-The [PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is used to transmit the real source IP and port of connections. **If you are not familiar with this, leave it alone.**
+[PROXY protocol](https://www.haproxy.org/download/2.2/doc/proxy-protocol.txt) is specifically used to pass the real source IP and port of the request. **If you don't understand it, please ignore this item.**
 
-Commonplace reverse proxy software solutions (like HAProxy and NGINX) can be configured to have source IPs and ports sent with PROXY protocol. Same goes to VLESS fallbacks `xver`.
+Common reverse proxy software (such as HAProxy, Nginx) can be configured to send it, and VLESS fallbacks xver can also send it.
 
-When `true`, after the underlying TCP connection is established, the downstream must first send the source IPs and ports in PROXY protocol v1 or v2, or the connection will be terminated.
+When set to `true`, after the underlying TCP connection is established, the requester must send PROXY protocol v1 or v2 first; otherwise, the connection will be closed.
 
 > `path`: string
 
-The HTTP path used by the WebSocket connection. Defaults to `"/"`.
+The HTTP protocol path used by WebSocket. The default value is `"/"`.
 
-If `path` contains the `ed` query parameter, `early data` will be activated for latency reduction, and its value will be the length threshold of the first packet. If the length of the first packet exceeds this value, `early data` won't be activated. The recommended value is 2560, with a maximum of 8192. Compatibility problems can occur when the value is set too high. Try lowering the threshold when encountering such problems.
+If the client path contains the `ed` parameter (e.g., `/mypath?ed=2560`), `Early Data` will be enabled to reduce latency. It uses the `Sec-WebSocket-Protocol` header to carry the first packet data during the upgrade, where the value represents the first packet length threshold. If the length of the first packet exceeds this value, `Early Data` will not be enabled. The recommended value is 2560, and the maximum value is 8192. Excessively large values may cause some compatibility issues. If you encounter compatibility issues, try lowering the threshold.
 
 > `host`: string
 
-The `Host` header sent in HTTP requests. Defaults to an empty string. Servers will not validate the `Host` header sent by clients when left blank.
+The host sent in the WebSocket HTTP request. Default value is empty. If the server-side value is empty, the host value sent by the client is not verified.
 
-If the `Host` header has been defined on the server in any way, the server will validate if the `Host` header matches.
+When this value is specified on the server side, or `host` is specified in `headers`, it will verify whether it matches the client request host.
 
-The current priority of the `Host` header sent by clients: `host` > `headers` > `address`
+Client priority for sending host: `host` > `headers` > `address`.
 
 > `headers`: map \{string: string\}
 
-Customized HTTP headers defined in key-value pairs. Defaults to empty.
+Client only. Custom HTTP headers, key-value pairs. Each key represents the name of an HTTP header, and the corresponding value is a string.
+
+Default is empty.
+
+> `heartbeatPeriod`: int
+
+Specifies a fixed time interval to send a Ping message to keep the connection alive. If not specified or set to 0, no Ping message is sent, which is the current default behavior.
 
 ## Browser Dialer
 
-Use the browser to handle TLS, see [Browser Dialer](../features/browser_dialer.md)
+Use a browser to handle TLS. See [Browser Dialer](../features/browser_dialer.md) for details.

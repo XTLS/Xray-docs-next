@@ -1,13 +1,13 @@
-# Outbound Proxies
+# Outbound Proxy (Mux, XUDP)
 
-Outbound connections are used for sending data and can use any of the available protocols listed in [outbound protocols](./outbounds/).
+Outbound connections are used to send data. For available protocols, please see [Outbound Protocols](./outbounds/).
 
 ## OutboundObject
 
-The `OutboundObject` corresponds to a sub-element of the `outbounds` item in the configuration file.
+`OutboundObject` corresponds to a sub-element of the `outbounds` item in the configuration file.
 
 ::: tip
-The first element in the list serves as the main outbound. When there is no match or no successful match for the routing, the traffic is sent out by the main outbound.
+The first element in the list serves as the primary outbound. When a routing match does not exist or fails, traffic is sent via the primary outbound.
 :::
 
 ```json
@@ -15,12 +15,13 @@ The first element in the list serves as the main outbound. When there is no matc
   "outbounds": [
     {
       "sendThrough": "0.0.0.0",
-      "protocol": "protocol name",
+      "protocol": "protocol_name",
       "settings": {},
       "tag": "identifier",
       "streamSettings": {},
       "proxySettings": {
-        "tag": "another-outbound-tag"
+        "tag": "another-outbound-tag",
+        "transportLayer": false
       },
       "mux": {},
       "targetStrategy": "AsIs"
@@ -31,129 +32,125 @@ The first element in the list serves as the main outbound. When there is no matc
 
 > `sendThrough`: address
 
-The IP address used to send data. It is effective when the host has multiple IP addresses, and the default value is `"0.0.0.0"`.
+The IP address used to send data. This is effective when the host has multiple IP addresses. The default value is `"0.0.0.0"`.
 
-It is allowed to fill in the IPv6 CIDR block (such as `114:514:1919:810::/64`),
-and Xray will use the random IP address in the address block to initiate
-external connections. Network access, routing tables, and kernel parameters
-need to be configured correctly to allow Xray to bind to any IP within the
-address block.
+You can enter an IPv6 CIDR block (e.g., `114:514:1919:810::/64`), and Xray will use a random IP address from the address block to initiate external connections.
+You need to correctly configure the network access method, routing table, and kernel parameters to allow Xray to bind to any IP within the address block.
 
-For networks that use ndp to access, it is not recommended to set a subnet
-smaller than `/120`, otherwise it may cause NDP flood and a series of problems
-such as the router neighbor cache being filled up.
+For networks using NDP access, it is not recommended to set a subnet smaller than `/120`. Otherwise, it may cause issues such as NDP flooding, leading to the router's neighbor cache becoming full.
 
-> `protocol`: string
+Special value `origin`: If this value is used, the request will be sent using the IP address of the local machine that received the connection.
 
-The name of the connection protocol. For a list of optional protocols, see
-Outbound Proxy in the left sidebar.
+For example, if the machine has a full IPv4 range `11.4.5.0/24` and listens on `0.0.0.0` (all IPv4 and IPv6 on the network interface), if a client connects to the local machine via `11.4.5.14`, the outbound request will also be sent via `11.4.5.14`. If the client connects via `11.4.5.10`, the outbound request will be sent via `11.4.5.10`. This also applies to cases where the machine has a full range/multiple IPv6 addresses.
+
+As mentioned in the inbound introduction, because of the connectionless nature of UDP, Xray cannot know the original destination IP where the request entered the core (for example, in the same QUIC connection, it might even change), so this feature cannot take effect for UDP.
+
+> `protocol`: "blackhole" | "dns" | "freedom" | "http" | "loopback" | "shadowsocks" | "socks" | "trojan" | "vless" | "vmess" | "wireguard"
+
+The connection protocol name. For the list of optional protocols, see [Outbound Protocols](./outbounds/) on the left.
 
 > `settings`: OutboundConfigurationObject
 
-The specific configuration content varies depending on the protocol. See `OutboundConfigurationObject` in each protocol for details.
+Specific configuration content, which varies by protocol. See `OutboundConfigurationObject` in each protocol for details.
 
 > `tag`: string
 
-The identifier of this outbound connection, used to locate this connection in other configurations.
+The identifier for this outbound connection, used to locate this connection in other configurations.
 
 ::: danger
-When it is not empty, its value must be **unique** among all `tag`s.
+When not empty, its value must be **unique** among all `tag`s.
 :::
 
 > `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
 
-The underlying transport method is the way the current Xray connects with other nodes.
+The underlying transport method is the way the current Xray node connects with other nodes.
 
 > `proxySettings`: [ProxySettingsObject](#proxysettingsobject)
 
-The outbound proxy configuration. When the outbound proxy takes effect, the
-`streamSettings` of this outbound will not work.
+Outbound proxy configuration.
 
 > `mux`: [MuxObject](#muxobject)
 
 Specific configuration related to Mux.
 
-> `targetStrategy`: "AsIs" |
-> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"
-> "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
+> `targetStrategy`: "AsIs" | "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4" | "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
-This strategy is for the final-target, which is transported by the proxy, to select the strategy for proxy-address itself you should use sockopt-domainStrategy.
+If this outbound attempts to send a domain request, this controls whether it is resolved/how it is resolved to an IP before sending.
 
-default is "AsIs", it is not recommended to change it unless you need to use your own trusted dns.
+The default value is `AsIs`, meaning it is sent to the remote server as is. All parameter meanings are roughly equivalent to `domainStrategy` in [sockopt](./transport.md#sockoptobject).
 
-The difference between "Use"/"Force" or "v4"/"v6"/"v4v6"/"v6v4" is also explained in sockopt-domainStrategy/freedom-targetStrategy.
+::: tip
+This controls **proxied requests**. If the address of the outbound proxy server is a domain name, and you need to select a resolution strategy for the domain name itself, you should configure `domainStrategy` in [sockopt](./transport.md#sockoptobject).
+:::
 
 ### ProxySettingsObject
 
 ```json
 {
-  "tag": "another-outbound-tag"
+  "tag": "another-outbound-tag",
+  "transportLayer": false
 }
 ```
 
 > `tag`: string
 
-When specifying the identifier of another outbound, data emitted by this outbound will be forwarded to the specified outbound.
+When the identifier of another outbound is specified, data sent by this outbound will be forwarded to the specified outbound for transmission.
 
 ::: danger
-This forwarding method does **not go through** the underlying transport. If you need to use forwarding that supports the underlying transport, please use [SockOpt.dialerProxy](./transport.md#sockoptobject).
+This option conflicts with [SockOpt.dialerProxy](./transport.md#sockoptobject). Choose one as needed.
+
+By default, this forwarding method **does not go through** the underlying transport method (REALITY/XHTTP/gRPC...), meaning the `streamSettings` of this outbound will not take effect.<br>
+If you need forwarding that supports underlying transport methods, please use `SockOpt.dialerProxy` instead or set `transportLayer` to `true`.
 :::
 
-::: danger
-This option is incompatible with SockOpt.dialerProxy.
-:::
+> `transportLayer`: true | false
 
-::: tip
-Compatible with v2fly/v2ray-core's configuration [transportLayer](https://www.v2fly.org/config/outbounds.html#proxysettingsobject).
-:::
+`true` converts this setting to `SockOpt.dialerProxy` to support forwarding via underlying transport methods. The default is `false`, meaning no conversion.
 
 ### MuxObject
 
-The Mux feature distributes the data of multiple TCP connections on a single TCP connection. For implementation details, see [Mux.Cool](../development/protocols/muxcool.md). Mux is designed to reduce the latency of TCP handshake, not to increase the throughput of connections. Using Mux for watching videos, downloading, or speed testing usually has negative effects. Mux only needs to be enabled on the client side, and the server side automatically adapts. Mux has an additional function: to run multiple UDP connections, i.e. XUDP.
+The Mux function distributes data from multiple TCP connections over a single TCP connection. For implementation details, see [Mux.Cool](../development/protocols/muxcool.md). Mux is designed to reduce TCP handshake latency, not to increase connection throughput. Using Mux for watching videos, downloading, or speed testing usually has a negative effect. Mux only needs to be enabled on the client side; the server side adapts automatically. The second use of Mux is to distribute multiple UDP connections, i.e., XUDP.
 
 `MuxObject` corresponds to the `mux` item in `OutboundObject`.
 
 ```json
 {
-  "enabled": false,
-  "concurrency": 8
+  "enabled": true,
+  "concurrency": 8,
+  "xudpConcurrency": 16,
+  "xudpProxyUDP443": "reject"
 }
 ```
 
 > `enabled`: true | false
 
-Whether to enable Mux forwarding requests, default is `false`.
+Whether to enable Mux for forwarding requests. Default is `false`.
 
 > `concurrency`: number
 
-Maximum concurrent connections. Minimum value is `1`, maximum value is `1024`.
-If this parameter is omitted or equal to `0`, the value will be `8`.
+Maximum concurrent connections. Minimum `1`, maximum `128`. If omitted or set to `0`, it equals `8`. Values greater than `128` are treated as 128, because once a connection reaches the maximum reuse count of 128, it will no longer be assigned any new sub-connections.
 
-This value represents the maximum number of Mux connections that can be carried on a TCP connection. For example, when `concurrency=8` is set, if the client sends 8 TCP requests, Xray will only send one actual TCP connection, and all 8 requests from the client will be transmitted through this TCP connection.
+This value represents the maximum number of sub-connections carried on a single TCP connection. For example, if `concurrency=8` is set, when the client issues 8 TCP requests, Xray will only issue one actual TCP connection, and all 8 requests from the client are transmitted over this TCP connection.
+
+When the maximum sub-connection capacity of all Mux connections is fully occupied, the core will initiate new connections to carry sub-connections. If a large number of sub-connections are concurrent in a short time and subsequently decrease, the internal scheduler of the core will tend to distribute requests to 2 connections alternately and leave other connections idle, waiting for all their sub-connections to end naturally before closing them to save resources. If the total number of sub-connections continues to be lower than `concurrency` for a long time, after one of the connections reaches the maximum reuse count, the core will revert to a single connection state.
 
 ::: tip
-When filling in a negative number, such as `-1`, the mux module is not loaded.
+When set to a negative number, such as `-1`, the Mux module is not used to carry TCP traffic.
 :::
 
 > `xudpConcurrency`: number
 
-Use a new XUDP aggregate tunnel (that is, another Mux connection) to proxy UDP
-traffic and fill in the maximum number of concurrent sub-UoTs. minimum value
-`1`, the maximum value `1024`. If this parameter is omitted or equal to `0`,
-UDP traffic will use the same path as TCP traffic.
+Use a new XUDP aggregation tunnel (i.e., another Mux connection) to proxy UDP traffic. Fill in the maximum number of concurrent sub-UoT. Minimum `1`, maximum `1024`.
+If omitted or set to `0`, it will follow the same path as TCP traffic, which is the traditional behavior.
 
 ::: tip
-When filling in negative numbers, such as `-1`, UDP will not be transmitted via
-Mux. The original UDP transmission method of the proxy protocol will be used.
-For example, Shadowsocks will use native UDP, VLESS will use UoT.
+When set to a negative number, such as `-1`, the Mux module is not used to carry UDP traffic. The proxy protocol's original UDP transmission method will be used. For example, `Shadowsocks` will use native UDP, and `VLESS` will use UoT.
 :::
 
 > `xudpProxyUDP443`: string
 
-Control how Mux handles proxied UDP/443 (QUIC) traffic:
+Controls how Mux handles proxied UDP/443 (QUIC) traffic:
 
-- Default `reject`: Deny traffic (generaly, browsers will fall back to to TCP HTTP/2)
-- `allow`: Allow connections.
-- `skip`: The Mux module is not used to carry UDP 443 traffic. The original UDP
-  transmission method of the proxy protocol will be used. For example,
-  Shadowsocks will use native UDP, VLESS will use UoT.
+- Default `reject`: Rejects traffic (browsers typically fall back to TCP HTTP2 automatically).
+- `allow`: Allows traffic to go through the Mux connection.
+- `skip`: Does not use the Mux module to carry UDP 443 traffic. The proxy protocol's original UDP transmission method will be used. For example, `Shadowsocks` will use native UDP, and `VLESS` will use UoT.

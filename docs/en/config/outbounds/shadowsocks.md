@@ -1,10 +1,10 @@
 # Shadowsocks
 
-[Shadowsocks](https://en.wikipedia.org/wiki/Shadowsocks) protocol is compatible with most other implementations.
+The [Shadowsocks](https://en.wikipedia.org/wiki/Shadowsocks) protocol, compatible with most other version implementations.
 
-Here are the features and compatibility of Shadowsocks:
+Current compatibility is as follows:
 
-- It supports TCP and UDP packet forwarding, with the option to disable UDP.
+- Supports TCP and UDP packet forwarding, where UDP can be optionally disabled;
 - Recommended encryption methods:
   - 2022-blake3-aes-128-gcm
   - 2022-blake3-aes-256-gcm
@@ -12,85 +12,71 @@ Here are the features and compatibility of Shadowsocks:
 - Other encryption methods:
   - aes-256-gcm
   - aes-128-gcm
-  - chacha20-poly1305 (also known as chacha20-ietf-poly1305)
-  - none or plain
+  - chacha20-poly1305 (or chacha20-ietf-poly1305)
+  - xchacha20-poly1305 (or xchacha20-ietf-poly1305)
+  - none (or plain)
 
-The new protocol format of Shadowsocks 2022 improves performance and includes full replay protection, addressing security issues present in the old protocol:
+The Shadowsocks 2022 new protocol format improves performance and includes complete replay protection, resolving the following security issues of the old protocol:
 
-- [Serious vulnerabilities in Shadowsocks AEAD encryption methods that compromise the integrity of communications](https://github.com/shadowsocks/shadowsocks-org/issues/183)
-- Increasing false-positive rate of TCP replay filters over time
-- Lack of replay protection for UDP
-- TCP behaviors that can be used for active probing
+- [Severe vulnerabilities in the design of Shadowsocks AEAD encryption, unable to guarantee communication reliability](https://github.com/shadowsocks/shadowsocks-org/issues/183)
+- The false positive rate of the original TCP replay filter increases over time
+- No UDP replay protection
+- TCP behavior that can be used for active probing
 
 ::: danger
-Using the "none" encryption method will transmit traffic in plaintext. It is not recommended to use "none" encryption on public networks to ensure security.
+Under the "none" encryption method, traffic will be transmitted in plain text. To ensure security, do not use it on public networks.
 :::
 
 ## OutboundConfigurationObject
 
 ```json
 {
-  "servers": [
-    {
-      "email": "love@xray.com",
-      "address": "127.0.0.1",
-      "port": 1234,
-      "method": "encryption method",
-      "password": "password",
-      "uot": true,
-      "level": 0
-    }
-  ]
-}
-```
-
-> `servers`: \[[ServerObject](#serverobject)\]
-
-An array representing a group of Shadowsocks server settings, where each item is a [ServerObject](#serverobject).
-
-### ServerObject
-
-```json
-{
   "email": "love@xray.com",
   "address": "127.0.0.1",
   "port": 1234,
-  "method": "encryption method",
-  "password": "password",
+  "method": "Encryption Method",
+  "password": "Password",
   "uot": true,
+  "UoTVersion": 2,
   "level": 0
 }
 ```
 
 > `email`: string
 
-Email address (optional) used to identify the user.
+Email address, optional, used to identify the user.
 
 > `address`: address
 
-The address of the Shadowsocks server, supporting IPv4, IPv6, and domain names. Required.
+Shadowsocks server address. Supports IPv4, IPv6, and domain names. Required.
 
 > `port`: number
 
-The port of the Shadowsocks server. Required.
+Shadowsocks server port. Required.
 
 > `method`: string
 
-Encryption method. Required.
+Shadowsocks encryption method. Required.
 
 > `password`: string
 
-Password. Required.
+Shadowsocks authentication password. Required.
 
 > `uot`: bool
 
-When enabled, UDP over TCP (UOT) will be used.
+Enable `udp over tcp`.
+
+> `UoTVersion`: number
+
+Implementation version of `UDP over TCP`.
+
+Current optional values: `1`, `2`.
 
 - Shadowsocks 2022
 
-Use a pre-shared key (PSK) similar to WireGuard as the password.
+Uses a pre-shared key similar to WireGuard as the password.
 
-To generate a compatible key with shadowsocks-rust, use `openssl rand -base64 <length>`, where the length depends on the encryption method used.
+Use `openssl rand -base64 <length>` to generate a key compatible with shadowsocks-rust. The length depends on the encryption method used.
 
 | Encryption Method             | Key Length |
 | ----------------------------- | ---------: |
@@ -98,14 +84,14 @@ To generate a compatible key with shadowsocks-rust, use `openssl rand -base64 <l
 | 2022-blake3-aes-256-gcm       |         32 |
 | 2022-blake3-chacha20-poly1305 |         32 |
 
-In the Go implementation, a 32-byte key always works.
+In the Go implementation, 32-byte keys always work.
 
 - Other encryption methods
 
-Any string can be used as a password. There is no limit on the password length, but shorter passwords are more susceptible to cracking. It is recommended to use a password of 16 characters or longer.
+Any string. There is no limit on password length, but short passwords are more likely to be cracked. It is recommended to use passwords of 16 characters or longer.
 
 > `level`: number
 
-User level. Connections will use the corresponding [local policy](../policy.md#levelpolicyobject) associated with this user level.
+User level. The connection will use the [local policy](../policy.md#levelpolicyobject) corresponding to this user level.
 
-The `level` value corresponds to the `level` value in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
+The value of `level` corresponds to the `level` value in [policy](../policy.md#policyobject). If not specified, the default is 0.

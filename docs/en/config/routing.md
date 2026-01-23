@@ -1,10 +1,10 @@
 # Routing
 
-The routing module can send inbound data through different outbound connections according to different rules to achieve on-demand proxying.
+The routing module can send inbound data through different outbound connections based on different rules, achieving the purpose of on-demand proxying.
 
-A common use case is to split domestic and foreign traffic. Xray can use its internal mechanisms to determine the traffic from different regions and then send them to different outbound proxies.
+A common usage is splitting traffic between domestic and foreign destinations. Xray can determine the region of the traffic through internal mechanisms and then send them to different outbound proxies.
 
-For a more detailed analysis of the routing function, please refer to [Routing Function Analysis](../document/level-1/routing-lv1-part1.md).
+For a more detailed analysis of the routing function: [Analysis of Routing (Part 1)](../document/level-1/routing-lv1-part1.md).
 
 ## RoutingObject
 
@@ -22,35 +22,35 @@ For a more detailed analysis of the routing function, please refer to [Routing F
 
 > `domainStrategy`: "AsIs" | "IPIfNonMatch" | "IPOnDemand"
 
-The domain name resolution strategy, which uses different strategies based on different settings.
+Domain resolution strategy. Different strategies are used based on different settings.
 
-- `"AsIs"`: No additional processing is performed. The domain name from the destination address or the sniffed domain is used for routing selection. Default value.
-- `"IPIfNonMatch"`: After a full round of matching, if no rule is matched, the domain name is resolved to an IP address and a second matching pass is performed;
-- `"IPOnDemand"`: Before starting the matching process, directly resolve the domain name to the IP address for matching;
+- `"AsIs"`: No extra operation. Uses the domain in the destination address or the sniffed domain. Default value.
+- `"IPIfNonMatch"`: When no rule is matched after a full round of matching, resolve the domain to an IP and perform a second round of matching.
+- `"IPOnDemand"`: Before starting matching, resolve the domain to an IP immediately for matching.
 
-The actual resolution action is deferred until the first encounter with an IP rule to reduce latency. The result will include both IPv4 and IPv6 (you can further restrict this using the built-in DNS's `queryStrategy`). When a domain name resolves to multiple IPs, each rule will try all IPs sequentially; a rule is considered a hit if any IP matches the requirement.
+Actual resolution behavior will be delayed until the first IP rule is encountered to reduce latency. The result will contain both IPv4 and IPv6 (you can further restrict this via `queryStrategy` in the built-in DNS). When a domain resolves to multiple IPs, each rule will try all IPs in turn. If any IP meets the requirement, the rule is considered matched.
 
-When `sniff + routeOnly` is enabled, allowing the routing system to see both the IP and the domain name simultaneously, if the above resolution occurs, the routing system will only see the IP resolved from the domain name and not the original target IP, unless the resolution fails.
+When `sniff` + `routeOnly` is enabled, allowing the routing system to see both IP and domain, if the aforementioned resolution occurs, the routing system can only see the IP resolved from the domain and cannot see the original destination IP, unless resolution fails.
 
-When two domains exist (target domain + sniff result), the sniff result always has higher priority, whether used for resolution or domain name matching.
+When two domains exist (target domain + sniffed result), the priority of the sniffed result is always higher, whether for resolution or domain matching.
 
-Regardless of whether the resolution is performed or not, the routing system does not affect the actual target address; the requested target remains the original target.
+Regardless of whether resolution occurs, the routing system will not affect the actual destination address. The requested target remains the original target.
 
-> `rules`: [[RuleObject](#ruleobject)]
+> `rules`: \[[RuleObject](#ruleobject)\]
 
-An array corresponding to a list of rules.
+Corresponds to an array, where each item is a rule.
 
-For each connection, the routing will judge these rules from top to bottom in order. When it encounters the first effective rule, it will forward the connection to the `outboundTag` or `balancerTag` specified by the rule.
+For each connection, routing will judge these rules from top to bottom. When the first effective rule is encountered, the connection is forwarded to the `outboundTag` or `balancerTag` specified by it.
 
 ::: tip
-When no rules match, the traffic is sent out by the first outbound by default.
+When no rule is matched, traffic is sent via the first outbound by default.
 :::
 
-> `balancers`: [ [BalancerObject](#balancerobject) ]
+> `balancers`: \[ [BalancerObject](#balancerobject) \]
 
-An array corresponding to a list of load balancers.
+An array, where each item is a load balancer configuration.
 
-When a rule points to a load balancer, Xray selects an outbound through this load balancer, and then it forwards the traffic through it.
+When a rule points to a load balancer, Xray will select an outbound through this load balancer and then forward traffic using it.
 
 ### RuleObject
 
@@ -69,6 +69,7 @@ When a rule points to a load balancer, Xray selects an outbound through this loa
   "inboundTag": ["tag-vmess"],
   "protocol": ["http", "tls", "quic", "bittorrent"],
   "attrs": { ":method": "GET" },
+  "process": ["curl"],
   "outboundTag": "direct",
   "balancerTag": "balancer",
   "ruleTag": "rule name"
@@ -76,149 +77,166 @@ When a rule points to a load balancer, Xray selects an outbound through this loa
 ```
 
 ::: danger
-When multiple attributes are specified at the same time, these attributes need to be satisfied **simultaneously** in order for the current rule to take effect.
+When multiple attributes are specified simultaneously, these attributes must be satisfied **simultaneously** for the current rule to take effect.
 :::
 
-> `domain`: [string]
-
-An array where each item is a domain match. There are several forms:
-
-- Plain string: Same as the substring below, but the "keyword:" prefix can be omitted.
-- Regular expression: Starts with `"regexp:"` followed by a regular expression. When this regular expression matches the target domain, the rule takes effect. For example, "regexp:\\\\.goo.\*\\\\.com$" matches "www.google.com" and "fonts.googleapis.com", but not "google.com". Case sensitive.
-- Subdomain (recommended): Starts with `"domain:"` followed by a domain. When this domain is the target domain or a subdomain of the target domain, the rule takes effect. For example, "domain:xray.com" matches "www.xray.com" and "xray.com", but not "wxray.com".
-- Substring: Begins with `"keyword:"`, the remainder is a string. This rule applies when this string matches any part of the target domain. For example, "keyword:sina.com" can match "sina.com", "sina.com.cn", and "www.sina.com", but not "sina.cn".
-- Exact match: Starts with `"full:"` followed by a domain. When this domain is an exact match for the target domain, the rule takes effect. For example, "full:xray.com" matches "xray.com" but not "www.xray.com".
-- Dotless domain name: Begins with `"dotless:"`, followed by a string that cannot contain periods (.). This rule applies when the domain name does not contain periods (.) and this string matches any part of the target domain name. For example, "dotless:pc-" can match "pc-alice" and "mypc-alice", suitable for internal NetBIOS domains, etc. Case sensitive.
-- Predefined domain list: Starts with `"geosite:"` followed by a name such as `geosite:google` or `geosite:cn`. The names and domain lists are listed in [Predefined Domain List](#predefined-domain-lists).
-- Load domains from a file: Formatted as `"ext:file:tag"`, where the file is stored in the [resource directory](./features/env.md#resource-file-path) and has the same format as `geosite.dat`. The tag must exist in the file.
+- **Pure string**: Same as substring below, but the `"keyword:"` prefix can be omitted.
+- **Regular expression**: Starts with `"regexp:"`, the rest is a regular expression. The rule takes effect when the regular expression matches the target domain. For example, "regexp:\\\\.goo.\*\\\\.com\$" matches "www.google.com" and "fonts.googleapis.com", but not "google.com". Case sensitive.
+- **Subdomain (Recommended)**: Starts with `"domain:"`, the rest is a domain name. The rule takes effect when the domain is the target domain or its subdomain. For example, "domain:xray.com" matches "www.xray.com" and "xray.com", but not "wxray.com".
+- **Substring**: Starts with `"keyword:"`, the rest is a string. The rule takes effect when this string matches any part of the target domain. For example, "keyword:sina.com" matches "sina.com", "sina.com.cn", and "www.sina.com", but not "sina.cn".
+- **Full match**: Starts with `"full:"`, the rest is a domain name. The rule takes effect when this domain exactly matches the target domain. For example, "full:xray.com" matches "xray.com" but not "www.xray.com".
+- **Dotless domain**: Starts with `"dotless:"`, the rest is a string that cannot contain `.`. The rule takes effect when the domain contains no `.` and this string matches any part of the target domain. For example, "dotless:pc-" matches "pc-alice", "mypc-alice". Suitable for intranet NetBIOS domains, etc. Case sensitive.
+- **Predefined domain list**: Starts with `"geosite:"`, the rest is a name, such as `geosite:google` or `geosite:cn`. Refer to [Predefined Domain List](#predefined-domain-list) for names and domain lists.
+- **Load domains from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by filename and tag. The file is stored in the [Resource Directory](./features/env.md#resource-file-path). The file format is the same as `geosite.dat`, and the tag must exist in the file.
 
 ::: tip
 `"ext:geoip.dat:cn"` is equivalent to `"geoip:cn"`
 :::
 
-`ip`: [string]
+> `ip`: \[string\]
 
-An array where each item represents an IP range. This rule will take effect when the target IP matches any of the IP ranges in the array. There are several types of IP ranges:
+An array, where each item represents an IP range. The rule takes effect when an item matches the target IP. Available forms:
 
-- IP: In the format of `"127.0.0.1"`.
-- [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing): In the format of `"10.0.0.0/8"`, or you can use `"0.0.0.0/0"` `::/0"` to specify all IPv4 or IPv6.
-- Predefined IP lists: These lists are included in every Xray installation package under the file name `geoip.dat`. They can be used in the format of `"geoip:cn"`, where `cn` is a two-letter country code. The prefix `geoip:`(all lowercase) must be used, and nearly all countries that have internet access are supported.
-  - Special value: `"geoip:private"`, which includes all private addresses, such as `127.0.0.1`.
-  - The `!` function negates the selection; `"geoip:!cn"` represents results other than those in `geoip:cn`. Multiple negations are related by `AND`, while positive options, positive options, and all negations are related by `OR`. For example, `ip: ["geoip:!cn", "geoip:!us", "geoip:telegram"]` matches IPs that are neither in the US nor China, or IPs from Telegram.
-- Loading IP from a file: In the format of `"ext:file:tag"`, where `file` is the file name and `tag` is a label that must exist in the file. The prefix `ext:` (all lowercase) must be used, and the file should be located in the [resource directory](./features/env.md#resource-file-path) with the same format as `geoip.dat`.
+- **IP**: Like `"127.0.0.1"`.
+- **[CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)**: Like `"10.0.0.0/8"`. You can also use `"0.0.0.0/0"` or `"::/0"` to specify all IPv4 or IPv6.
+- **Predefined IP list**: This list is pre-installed in every Xray installation package, named `geoip.dat`. Usage is like `"geoip:cn"`. Must start with `geoip:` (lowercase), followed by a two-character country code. Supports almost all countries with internet access.
+  - **Special value**: `"geoip:private"`, includes all private addresses, such as `127.0.0.1`.
+  - **Inverse selection `!`**: `"geoip:!cn"` means results not in geoip:cn. Multiple inverse options have an `AND` relationship, while positive options, or positive options and all inverse options, have an `OR` relationship. For example, `ip: ["geoip:!cn", "geoip:!us", "geoip:telegram"]` matches IPs that are not from the US AND not from China, OR are Telegram IPs.
+- **Load IPs from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by filename and tag. The file is stored in the [Resource Directory](./features/env.md#resource-file-path). The file format is the same as `geoip.dat`, and the tag must exist in the file.
 
 > `port`: number | string
 
-The target port range, which can take on three forms:
+Target port range. Three forms:
 
-- `"a-b"`: `a` and `b` are both positive integers less than 65536. This range is a closed interval, and this rule will take effect when the target port falls within this range.
-- `a`: `a` is a positive integer less than 65536. This rule will take effect when the target port is `a`.
+- `"a-b"`: a and b are positive integers less than 65536. This is a closed interval. The rule takes effect when the target port falls within this range.
+- `a`: a is a positive integer less than 65536. The rule takes effect when the target port is a.
 - A mixture of the above two forms, separated by commas ",". For example: `"53,443,1000-2000"`.
 
 > `sourcePort`: number | string
 
-The source port, which can take on three forms:
+Source port. Three forms:
 
-- `"a-b"`: `a` and `b` are both positive integers less than 65536. This range is a closed interval, and this rule will take effect when the source port falls within this range.
-- `a`: `a` is a positive integer less than 65536. This rule will take effect when the source port is `a`.
+- `"a-b"`: a and b are positive integers less than 65536. This is a closed interval. The rule takes effect when the source port falls within this range.
+- `a`: a is a positive integer less than 65536. The rule takes effect when the source port is a.
 - A mixture of the above two forms, separated by commas ",". For example: `"53,443,1000-2000"`.
 
-> `localPort`：number | string
+> `localPort`: number | string
 
-The local inbound port, in the same format as `port`/`sourcePort`, may be useful when listening on a range of inbound ports.
+Local inbound port. Format matches `port`/`sourcePort`. Useful when the inbound listens on a port range.
 
 > `network`: "tcp" | "udp" | "tcp,udp"
 
-This can be "tcp", "udp", or "tcp,udp". This rule will take effect when the connection method is the specified one.
+Optional values are "tcp", "udp", or "tcp,udp". The rule takes effect when the connection method matches.
 
-Since the core clearly supports only two Layer-4 protocols, TCP and UDP, a routing rule that contains only the "network": "tcp,udp" condition can be used as a catch-all to match any traffic. A typical use case is to place such a rule at the very end of the routing rule list to specify the default outbound when no other rules match (otherwise, the core uses the first one by default).
+Since the core obviously only supports TCP and UDP layer 4 protocols, a routing rule containing only `"network": "tcp,udp"` can be used as a "catch-all" to match any traffic. An example usage is placing it at the very end of all routing rules to specify the default outbound when no other rules match (otherwise the core defaults to the first outbound).
 
-Of course, other obvious ways to match all traffic—such as specifying ports 1–65535, or using 0.0.0.0/0 together with ::/0 as IP conditions—serve a similar purpose.
+Of course, other ways that obviously match any traffic, such as specifying ports 1-65535 or IPs 0.0.0.0/0 + ::/0, have a similar effect.
 
-> `sourceIP`: [string]
+> `sourceIP`: \[string\]
 
-An array where each item represents an IP range in the format of IP, CIDR, GeoIP, or loading IP from a file. This rule will take effect when the source IP matches any of the IP ranges in the array.
+An array, where each item represents an IP range. Forms include IP, CIDR, GeoIP, and loading IPs from a file. The rule takes effect when an item matches the source IP.
 
-alias: `source`
+Alias: `source`
 
 > `localIP`: \[string\]
 
-The format is the same as other IP fields and is used to specify the IP address on which the local inbound connection is received. When listening on 0.0.0.0, different actual incoming IP addresses will result in different localIP values.
+Format is the same as other IPs. Used to specify the IP used by the local inbound (when using 0.0.0.0 to listen on all IPs, different actual incoming IPs will produce different localIPs).
 
-This field is not effective for UDP. Due to the message-oriented nature of UDP, the local IP cannot be tracked, and the listener IP is always reported.
+Ineffective for UDP (due to UDP being message-oriented, tracking is not possible); it always sees the listening IP.
 
-> `user`: [string]
+> `user`: \[string\]
 
-An array where each item represents an email address. This rule will take effect when the source user matches any of the email addresses in the array.
+An array, where each item is an email address. The rule takes effect when an item matches the source user.
 
-Similar to domain matching, this field also supports regular-expression matching with the `regexp:` prefix (note that `\` must be escaped as `\\`; see the explanation in the domain section).
+Similar to domains, it also supports regex matching starting with `regexp:`. (Similarly, need to replace `\` with `\\`, see explanation in domain section).
 
 > `vlessRoute`: number | string
 
-For VLESS inbounds, the client is allowed to modify the 7th and 8th bytes of the configured UUID to any value. The server-side routing system uses these two bytes as vlessRoute data, allowing users to customize server-side routing behavior without changing any external fields.
+VLESS inbound allows the client to modify the 7th and 8th bytes of the configured UUID to any bytes. The server routing will use this as `vlessRoute` data, allowing users to customize parts of the server routing based on needs without changing any external fields.
 
 ```
 --------------↓↓↓↓------------------
 xxxxxxxx-xxxx-0000-xxxx-xxxxxxxxxxxx
 ```
 
-In the configuration, the value is interpreted as a big-endian uint16. (If this sounds confusing, simply treat these four hexadecimal digits as a single hexadecimal number and convert it to decimal). For example: `0001 → 1`, `000e → 14`, `38b2 → 14514`. This design is used so that the syntax matches `port`, allowing multiple ranges to be specified freely for routing, just like port-based routing.
+The configuration uses data after Big-Endian encoding to uint16 (if you don't understand, treat these four digits as a hexadecimal number and convert to decimal). E.g., `0001→1`, `000e→14`, `38b2→14514`. The reason for this is that the syntax here is the same as `port`; you can freely specify many segments for routing just like specifying ports.
 
-> `inboundTag`: [string]
+> `inboundTag`: \[string\]
 
-An array where each item represents an identifier. This rule will take effect when the inbound protocol matches any of the identifiers in the array.
+An array, where each item is an identifier. The rule takes effect when an item matches the identifier of the inbound protocol.
 
-> `protocol`: [ "http" | "tls" | "quic" | "bittorrent" ]
+> `protocol`: \[ "http" | "tls" | "quic" | "bittorrent" \]
 
-An array where each item represents a protocol. This rule will take effect when the protocol of the current connection matches any of the protocols in the array.
+An array, where each item represents a protocol. The rule takes effect when a protocol matches the protocol type of the current connection.
 
-`http` Only HTTP/1.0 and HTTP/1.1 are supported; HTTP/2 (h2) is not currently supported. (Plaintext h2 traffic is also very rare.)
+`http` only supports 1.0 and 1.1; h2 is not supported yet (plaintext h2 traffic is also very rare).
 
-`tls` TLS versions 1.0 through 1.3 are supported.
+`tls` TLS 1.0 ~ 1.3.
 
-`quic` Due to the complexity of the protocol, sniffing may occasionally fail.
+`quic` Due to the complexity of this protocol, sniffing may sometimes fail.
 
-`bittorrent` Only very basic sniffing is supported and may not work with many encrypted or obfuscated variants.
+`bittorrent` Only has the most basic sniffing; may not work for much encrypted and obfuscated traffic.
 
 ::: tip
-The `sniffing` option in the inbound proxy must be enabled to detect the protocol type used by the connection.
+You must enable the `sniffing` option in the inbound proxy to sniff the protocol type used by the connection.
 :::
 
-`attrs`: object
+> `attrs`: object
 
-A JSON object in which both keys and values are strings. It is used to match attributes of HTTP traffic (for obvious reasons, only HTTP/1.0 and HTTP/1.1 are supported). A rule is considered matched when the HTTP headers contain **all** specified keys and the corresponding values contain the specified substrings.Header names are case-insensitive. Values support regular-expression matching.
+A JSON object where keys and values are strings. Used to detect HTTP traffic attribute values (due to obvious reasons, only supports 1.0 and 1.1). The rule is matched when HTTP headers contain all specified keys and values contain the specified substrings. Keys are case-insensitive. Values support regular expressions.
 
-Pseudo-headers similar to those in HTTP/2, such as `:method` and `:path`, are also supported for matching the request method and path (even though these headers do not exist in HTTP/1.1).
+It also supports pseudo-headers like `:method` and `:path` from h2 for matching methods and paths (although these headers do not exist in HTTP/1.1).
 
-For HTTP inbounds using non-`CONNECT` methods, the attributes can be obtained directly. For other inbounds, sniffing must be enabled in order to obtain these values for matching.
+For non-CONNECT methods of HTTP inbounds, `attrs` can be obtained directly. For other inbounds, sniffing must be enabled to obtain these values for matching.
 
-Examples:
+Example:
 
-- Detect HTTP GET：`{":method": "GET"}`
-- Detect HTTP Path：`{":path": "/test"}`
-- Detect Content Type：`{"accept": "text/html"}`
+- Detect HTTP GET: `{":method": "GET"}`
+- Detect HTTP Path: `{":path": "/test"}`
+- Detect Content Type: `{"accept": "text/html"}`
+
+> `process`: \[string\]
+
+If the connection originates from the local machine, match its process. If not from local, it is directly regarded as a match failure. Only supports Windows and Linux.
+
+This option is an array, where each item has three matching modes.
+
+1. **No slash**: Matches process name.
+2. **Contains slash, does not end with slash**: Matches absolute path.
+3. **Contains slash, ends with slash**: Matches folder; all processes under this folder are considered a match.
+
+Note:
+
+- All options are case-sensitive.
+- On Windows, use backslash `\` for paths. Here it is uniformly required to use forward slash `/`, e.g., `C:/Windows/System32/curl.exe`, because backslashes are treated as escape characters in JSON, which is inconvenient (unless you choose to double the backslashes, which also works).
+- When matching by process name, the core automatically removes the `.exe` suffix. Similarly, `["curl"]` can match curl on both Linux and Windows. When using absolute paths, the `.exe` suffix cannot be ignored.
+
+Special syntax sugar:
+
+- `self/`: Matches the current core process, very useful for avoiding routing loops.
+- `xray/`: Will be replaced by the absolute path where the current core resides, matching all Xray processes started from this binary.
 
 > `outboundTag`: string
 
-Corresponds to the identifier of an outbound.
+Corresponds to an outbound identifier.
 
 > `balancerTag`: string
 
-Corresponds to the identifier of a balancer.
+Corresponds to a Balancer identifier.
 
 ::: tip
-`balancerTag` and `outboundTag` are mutually exclusive. When both are specified, `outboundTag` takes effect.
+You must choose one between `balancerTag` and `outboundTag`. When both are specified, `outboundTag` takes effect.
 :::
 
 > `ruleTag`: string
 
-Optional. Has no functional effect and is used only to identify the rule.
+Optional. No actual effect, only used to identify the name of this rule.
 
-When set, relevant information will be logged at the Info level when this rule is matched, which is useful for debugging and determining which routing rule was applied.
+If set, information regarding this rule will be output at the Info level when the rule is matched, used for debugging which specific rule was hit.
 
 ### BalancerObject
 
-Load balancer configuration. When a load balancer is in effect, it selects the most appropriate outbound from the specified outbound according to the configuration and forwards traffic.
+Load balancer configuration. When a load balancer takes effect, it selects the most suitable outbound from the specified outbounds according to the configuration and forwards the traffic.
 
 ```json
 {
@@ -233,17 +251,17 @@ Load balancer configuration. When a load balancer is in effect, it selects the m
 
 The identifier of this load balancer, used to match `balancerTag` in `RuleObject`.
 
-> `selector`: [ string ]
+> `selector`: \[ string \]
 
-An array of strings, each of which will be used to match the prefix of the outbound identifier. For example, in the following outbound identifiers: `[ "a", "ab", "c", "ba" ]`, `"selector": ["a"]` will match `[ "a", "ab" ]`.
+An array of strings. Each string is used for prefix matching against outbound identifiers. Among the following outbound identifiers: `[ "a", "ab", "c", "ba" ]`, `"selector": ["a"]` will match `[ "a", "ab" ]`.
 
-Generally, multiple outbounds are matched to distribute the load evenly.
+Generally matches multiple outbounds to distribute load among them.
 
 > `fallbackTag`: string
 
-If all outbounds fail to connect based on the connection observation results, the outbound specified by this configuration item will be used.
+If all outbounds cannot be connected based on observation results, the outbound specified by this configuration item is used.
 
-Note: You need to add either the [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject) configuration item.
+Note: Requires adding [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject) configuration items.
 
 > `strategy`: [StrategyObject](#strategyobject)
 
@@ -256,22 +274,22 @@ Note: You need to add either the [observatory](./observatory.md#observatoryobjec
 }
 ```
 
-> `type`: `"random"` | `"roundRobin"` | `"leastPing"` | `"leastLoad"`
+> `type` : "random" | "roundRobin" | "leastPing" | "leastLoad"
 
-- `random` Default value. Randomly selects one of the matched outbound proxies.
-- `roundRobin` Selects matched outbound proxies in sequential order.
-- `leastPing` Selects the matched outbound proxy with the lowest latency based on connection observation results. Requires either the [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject) configuration to be enabled.
-- `leastLoad` Selects the most stable matched outbound proxy based on connection observation results. Requires either the [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject) configuration to be enabled.
+- `random`: Default value. Randomly selects a matched outbound proxy.
+- `roundRobin`: Selects matched outbound proxies in order.
+- `leastPing`: Selects the matched outbound proxy with the lowest latency based on observation results. Requires [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject).
+- `leastLoad`: Selects the most stable outbound proxy based on observation results. Requires [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject).
 
 ::: tip
-Regardless of the selected strategy, once all nodes referenced by the `selector` are configured with either `observatory` or `burstObservatory`, unhealthy nodes can be filtered out. If no healthy nodes are available, `fallbackTag` will be attempted.
+Regardless of the mode, if all nodes corresponding to its `selector` have `observatory` or `burstObservatory` configured, healthy nodes can be filtered out. If no healthy nodes are available, it attempts `fallbackTag`.
 :::
 
 > `settings`: [StrategySettingsObject](#strategysettingsobject)
 
 ##### StrategySettingsObject
 
-This is an optional configuration object. The configuration format varies depending on the load-balancing strategy. Currently, only the `leastLoad` strategy supports this configuration.
+This is an optional configuration item. The configuration format varies for different load balancing strategies. Currently, only the `leastLoad` strategy supports this item.
 
 ```json
 {
@@ -295,94 +313,94 @@ The number of optimal nodes selected by the load balancer. Traffic will be rando
 
 > `maxRTT`: string
 
-The maximum acceptable RTT for latency measurements.
+The maximum acceptable RTT duration for speed tests.
 
-> `tolerance`: float
+> `tolerance`: float number
 
-The maximum acceptable ratio of failed latency measurements. For example, `0.01` allows up to 1% of measurements to fail. (Appears to be not yet implemented.)
+The maximum acceptable failure rate for speed tests. For example, 0.01 means accepting a 1% failure rate. (Seemingly unimplemented).
 
-> `baselines`: [string]
+> `baselines`: \[ string \]
 
-The maximum acceptable standard deviation of RTT measurements.
+The maximum acceptable standard deviation duration for RTT speed tests.
 
-> `costs`: [CostObject]
+> `costs`: \[ CostObject \]
 
-Optional. An array used to assign weights to outbounds.
+Optional configuration item. An array to assign weights to all outbounds.
 
-> `regexp`: `true` | `false`
+> `regexp`: true | false
 
-Whether to use a regular expression to match the outbound `tag`.
+Whether to use regular expressions to select outbound `Tag`.
 
 > `match`: string
 
-The outbound `tag` to match.
+Matches outbound `Tag`.
 
-> `value`: float
+> `value`: float number
 
-The weight value. A higher value makes the corresponding node less likely to be selected.
+Weight value. The larger the value, the less likely the corresponding node is to be selected.
 
-### Load Balancing Configuration Example
+### Load Balancer Configuration Example
 
 ```json
-"routing": {
-  "rules": [
-    {
-      "inboundTag": [
-        "in"
-      ],
-      "balancerTag": "round"
-    }
-  ],
-  "balancers": [
-    {
-      "selector": [
-        "out"
-      ],
-      "strategy": {
-        "type": "roundRobin"
-      },
-      "tag": "round"
-    }
-  ]
-},
+    "routing": {
+        "rules": [
+            {
+                "inboundTag": [
+                    "in"
+                ],
+                "balancerTag": "round"
+            }
+        ],
+        "balancers" : [
+            {
+                "selector": [
+                    "out"
+                ],
+                "strategy": {
+                    "type":"roundRobin"
+                },
+                "tag": "round"
+            }
+        ]
+    },
 
-"inbounds": [
-  {
-    // inbound configuration
-    "tag": "in"
-  }
-],
+    "inbounds": [
+        {
+            // Inbound config
+            "tag": "in"
+        }
+    ],
 
-"outbounds": [
-  {
-    // outbound configuration
-    "tag": "out1"
-  },
-  {
-    // outbound configuration
-    "tag": "out2"
-  }
-]
+    "outbounds": [
+        {
+            // Outbound config
+            "tag": "out1"
+        },
+        {
+            // Outbound config
+            "tag": "out2"
+        }
+    ]
 ```
 
-### Predefined Domain Lists
+### Predefined Domain List
 
-This list is included in every Xray installation package, and the file name is `geosite.dat`. This file contains some common domain names, which can be used as `geosite:filename` to perform routing or DNS filtering for domain names that match those in the file.
+This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Usage: `geosite:filename`, e.g., `geosite:google` represents routing filtering or DNS filtering for domains included within `google` in the file.
 
-Common domain lists include:
+Common domains include:
 
-- `category-ads`: Contains common advertising domain names.
-- `category-ads-all`: Contains common advertising domain names and advertising provider domain names.
-- `cn`: Equivalent to the combination of `geolocation-cn` and `tld-cn`.
-- `apple`: Contains most of the domain names under Apple.
-- `google`: Contains most of the domain names under Google.
-- `microsoft`: Contains most of the domain names under Microsoft.
-- `facebook`: Contains most of the domain names under Facebook.
-- `twitter`: Contains most of the domain names under Twitter.
-- `telegram`: Contains most of the domain names under Telegram.
-- `geolocation-cn`: Contains common domain names of mainland Chinese websites.
-- `geolocation-!cn`: Contains common domain names of non-mainland Chinese websites.
-- `tld-cn`: Contains top-level domain names managed by CNNIC for mainland China, such as domain names ending in `.cn` and `.中国`.
-- `tld-!cn`: Contains top-level domain names used outside mainland China, such as domain names ending in `.tw` (Taiwan), `.jp` (Japan), `.sg` (Singapore), `.us` (United States), and `.ca` (Canada).
+- `category-ads`: Contains common advertising domains.
+- `category-ads-all`: Contains common advertising domains, as well as domains of advertising providers.
+- `cn`: Equivalent to the collection of `geolocation-cn` and `tld-cn`.
+- `apple`: Contains the vast majority of Apple domains.
+- `google`: Contains the vast majority of Google domains.
+- `microsoft`: Contains the vast majority of Microsoft domains.
+- `facebook`: Contains the vast majority of Facebook domains.
+- `twitter`: Contains the vast majority of Twitter domains.
+- `telegram`: Contains the vast majority of Telegram domains.
+- `geolocation-cn`: Contains common mainland China site domains.
+- `geolocation-!cn`: Contains common non-mainland China site domains.
+- `tld-cn`: Contains top-level domains managed by CNNIC for mainland China, such as domains ending in `.cn`, `.中国`.
+- `tld-!cn`: Contains top-level domains not used in mainland China, such as domains ending in `.tw` (Taiwan), `.jp` (Japan), `.sg` (Singapore), `.us` (USA), `.ca` (Canada), etc.
 
-You can also find the complete list of domain names here: [Domain list community](https://github.com/v2fly/domain-list-community).
+You can also view the complete domain list here: [Domain list community](https://github.com/v2fly/domain-list-community).

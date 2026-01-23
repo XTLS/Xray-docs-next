@@ -1,25 +1,25 @@
-# Plain and Simple Language
+# Absolute Beginner's Plain Guide
 
-**This chapter is a basic lesson of [Starting from Scratch]. New students, please watch and learn carefully.**
+**This section is a [From Scratch] foundation course. Newcomers, please read and study carefully!**
 
 ::: tip
 Made with ❤️ by [@ricuhkaen](https://github.com/ricuhkaen)
 :::
 
-[【Chapter 1】 Preface: Rambling](./ch01-preface.md) - Airport or Self-built? That is the question.
+[[Chapter 1] Preface](./ch01-preface.md) - Commercial Provider or Self-Hosted? That Is the Question
 
-[Chapter 2: Preparation of Raw Materials](./ch02-preparation.md) - Tools must be sharpened before they can be used proficiently.
+[[Chapter 2] Preparation](./ch02-preparation.md) - To Do a Good Job, One Must First Sharpen One's Tools
 
-[Chapter 3: Remote Login](./ch03-ssh.md) - A bridge connecting the north and south, turning a natural obstacle into a thoroughfare.
+[[Chapter 3] Remote Login (SSH)](./ch03-ssh.md) - Bridging the Gap
 
-[【Chapter 4】Security Protection](./ch04-security.md) - If you don't pay attention to security, you will shed tears for your loved ones.
+[[Chapter 4] Security](./ch04-security.md) - Safety First, or Regret Later
 
-[【Chapter 5】Website Construction] - Show Your Beauty (Link to webpage.md file)
+[[Chapter 5] Website Setup](./ch05-webpage.md) - Show Your Style
 
-[Chapter 6: Certificate Management](./ch06-certificates.md) - Only those who obtain certificates are considered legitimate.
+[[Chapter 6] Certificates](./ch06-certificates.md) - It's Only Legal with a License
 
-[Chapter 7: Xray Server](./ch07-xray-server.md) - Finally, waited for you.
+[[Chapter 7] Xray Server](./ch07-xray-server.md) - The Moment You've Been Waiting For
 
-[Chapter 8: Xray Client](./ch08-xray-clients.md) - A New Beginning.
+[[Chapter 8] Xray Clients](./ch08-xray-clients.md) - A New Beginning
 
-[Chapter 9] Appendix - All the exam points are here.
+[[Chapter 9] Appendix](./ch09-appendix.md) - Key Takeaways Are Here

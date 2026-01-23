@@ -1,23 +1,23 @@
 ---
-title: 流量统计
+title: Traffic Statistics
 ---
 
-# 流量统计配置教程
+# Traffic Statistics Configuration Tutorial
 
-请熟悉[流量统计 白话文教程](https://guide.v2fly.org/advanced/traffic.html)，本文在其基础上适配了 Xray（1.5.9+）。
+Please familiarize yourself with the [Traffic Statistics Plain Language Guide](https://guide.v2fly.org/advanced/traffic.html). This article adapts those concepts for Xray (1.5.9+).
 
-## 查看流量信息
+## Viewing Traffic Information
 
-配置方法与 v2fly 一致。
-查看流量信息是 xray 命令行的其中一个功能。配置内设置的 api dokodemo-door 端口，即为 `--server` 参数的端口。
+The configuration method is consistent with v2fly.
+Viewing traffic information is one of the features of the xray command line. The `api dokodemo-door` port set in the configuration corresponds to the port for the `--server` parameter.
 
 ```bash
-xray api statsquery --server=127.0.0.1:10085 #查看所有流量
-xray help api statsquery #statsquery 查询匹配的记录
-xray help api stats #stats 查询一个记录
+xray api statsquery --server=127.0.0.1:10085 # View all traffic statistics
+xray help api statsquery # statsquery queries matching records
+xray help api stats # stats queries a single record
 ```
 
-输出例子：
+Output example:
 
 ```json
 {
@@ -58,9 +58,9 @@ xray help api stats #stats 查询一个记录
 }
 ```
 
-## 流量信息的处理
+## Processing Traffic Information
 
-把以下脚本保存到 `traffic.sh`，注意使用 `chmod 755 traffic.sh` 授予执行权限。注意调整修改 `_APISERVER` 一行的连接具体的端口参数。
+Save the following script to `traffic.sh`, and remember to use `chmod 755 traffic.sh` to grant execution permissions. Pay attention to adjusting the specific port parameter in the `_APISERVER` line.
 
 ```bash
 #!/bin/bash

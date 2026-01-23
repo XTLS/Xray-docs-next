@@ -1,51 +1,53 @@
----
-sidebar: auto
----
-
 # Quick Start
 
-> **This chapter will tell you how to get Xray in the easiest way and start using Xray.**
+> **This chapter will show you the simplest way to obtain and start using Xray.**
+
+::: tip
+This section has not been updated for quite a long time, so some parts may not be entirely reliable. We mainly strive to keep the configuration file documentation up to date. If you encounter any pitfalls, suggestions for modifications via PR are welcome.
+
+ℱ.
+:::
 
 ## Download and Install
 
-Xray supports various platforms, and you can get various versions of Xray from various sources and methods.
+Xray supports a wide range of platforms, and you can obtain various versions of Xray through multiple channels and methods.
 
-Please click [How to Download and Install Xray](./install.md) to get Xray.
+Please click [Download and Install](./install.md) to get Xray.
 
 ## Configure and Run
 
-After downloading and installing Xray, you need to configure it.
+After downloading and installing Xray, you only need to configure it to start using it.
 
-Please click [How to Configure and Run Xray](./config.md) to learn the easiest way to configure Xray.
+Please click [Configure and Run](./config.md) to learn the simplest way to configure it.
 
 ## Command Parameters
 
 Xray has a variety of commands and parameters available, making it flexible and powerful.
 
-Please click [Command Parameters for Xray](./command.md) to view more commands and parameters usages.
+Please click [Command Parameters](./command.md) to view more usage details of Xray's commands and parameters.
 
-## Improve Documents
+## Improve Documentation
 
-If you're interested, please click [Documents](./document.md) to help us improve the documents, or click the `Help us improve this page!`
+If you are interested, please click [Documentation Guide](./document.md) to help us improve the documentation, or click `Help us improve this page!` at the bottom of the page.
 
-We are very grateful to every Contributor for their contribution! You guys make Project X even stronger!
+We are very grateful for the contributions made by every Contributor! It is you who make Project X more powerful!
 
-## Beginner Tutorial
+## Project X for Dummies
 
-An easy tutorial for beginner.
+User insights and guidance for beginners.
 
-Please click [Beginner Tutorial](./level-0/) to view it.
+Please click [Project X for Dummies](./level-0/) to view.
 
-## Getting Started Tips
+## Beginner Tips
 
-After you have the basics, you can explore more ways to use them through [Getting Started Tips](./level-1/).
+Once you have the basics down, you can explore more usage methods through [Beginner Tips](./level-1/).
 
 ## Advanced Documentation
 
-Tips for advanced user guidance
+Usage tips and guidance for advanced users.
 
-Click on [Advanced Documentation](./level-2/) to view it
+Click [Advanced Documentation](./level-2/) to view.
 
-::: tip Appreciations
-Thank you very much for your selfless sharing of usage skills and experience, which makes Xray more and more powerful.
+::: tip Acknowledgements
+Many thanks to everyone for selflessly sharing their tips and insights, making Xray increasingly powerful.
 :::

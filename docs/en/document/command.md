@@ -1,12 +1,12 @@
-# Command Parameters
+# Command Line Parameters
 
 ::: tip
-Xray uses Go-style commands and parameters
+Xray uses Go-style commands and parameters.
 :::
 
-## Get Basic Commands
+## Getting Basic Commands
 
-You can run `xray help`to get the most basic usage of all xray, as well as available commands and instructions.
+You can run `xray help` to get the most basic usage of Xray, as well as available commands and descriptions.
 
 ```
 Xray is a platform for building proxies.
@@ -20,13 +20,16 @@ The commands are:
         run          Run Xray with config, the default command
         version      Show current version of Xray
         api          Call an API in an Xray process
+        convert      Convert configs
         tls          TLS tools
-        uuid         Generate UUIDv4 or UUIDv5
-        x25519       Generate key pair for x25519 key exchange
-        wg           Generate key pair for wireguard key exchange
+        uuid         Generate UUIDv4 or UUIDv5 (VLESS)
+        x25519       Generate key pair for X25519 key exchange (REALITY, VLESS Encryption)
+        wg           Generate key pair for X25519 key exchange (WireGuard)
+        mldsa65      Generate key pair for ML-DSA-65 post-quantum signature (REALITY)
+        mlkem768     Generate key pair for ML-KEM-768 post-quantum key exchange (VLESS Encryption)
+        vlessenc     Generate decryption/encryption json pair (VLESS Encryption)
 
 Use "xray help <command>" for more information about a command.
-
 ```
 
 ### xray run
@@ -48,21 +51,40 @@ Xray. Multiple assign is accepted.
 The -confdir=dir flag sets a dir with multiple json config
 
 The -format=json flag sets the format of config files.
-Default "json".
+Default "auto".
 
 The -test flag tells Xray to test config files only,
-without launching the server
+without launching the server.
 
 The -dump flag tells Xray to print the merged config.
 ```
 
+`-config=` / `-c=` are used to specify the location of the configuration file(s) to use. Supports multi-file configuration.
+`-confdir=` is used to specify a folder containing multiple configuration files.
+`-format=` is used to specify the format of the configuration files.
+`-test` is used to test the validity of the configuration files.
+`-dump` is used to display the result after merging multiple configuration files.
+
 ::: tip
-Except from the default JSON format, config can also use TOML and YAML. It will automatically recognized from file extensions when the `-format` flag is not set.
+In addition to the default JSON format, configuration files can also use TOML and YAML. If no format is specified, it will be identified by the file extension.
 :::
+
+::: tip
+When `-config` is not specified, Xray will attempt to load `config.json` from the following paths in order:
+
+- Working Directory
+- The path specified by `Xray.location.asset` in [Environment Variables](../config/features/env.md#resource-file-path)
+:::
+
+```
+ xray run -dump
+```
+
+Used to output the result after merging multi-file configurations.
 
 ### xray version
 
-Output Xray version, Golang version and other information.
+Output Xray version, Golang version, and other information.
 
 Usage:
 
@@ -72,7 +94,7 @@ Usage:
 
 ### xray api
 
-To call Xray's gRPC API, it needs to be enabled in the configuration file.
+Call Xray's gRPC API. Needs to be enabled in the configuration file.
 
 Usage:
 
@@ -93,9 +115,9 @@ xray api <command> [arguments]
 
 ### xray convert
 
-Convert config to protobuf, or convert typedMessage to JSON
+Convert configuration files to protobuf or convert typedMessage to JSON.
 
-usage:
+Usage:
 
 ```
 xray convert <command> [arguments]
@@ -106,25 +128,25 @@ The commands are:
         json         Convert typedMessage to json
 ```
 
-Sub-command `pb`
+`pb` subcommand usage example:
 
 ```bash
-# Usage: xray convert pb [-debug] [-type] [json file] [json file] ...
+# Usage: xray convert pb [-outpbfile out.pb] [-debug] [-type] [json file] [json file] ...
 
-# mix three config files to mix.pb
-xray convert pb c1.json c2.json c3.json > mix.pb
+# Merge three configs into mix.pb
+xray convert pb -outpbfile mix.pb c1.json c2.json c3.json
 
 # Use -debug option to view the content of mix.pb
 xray convert pb -debug mix.pb
 
-# Start Xray-core with mix.pb
+# Start Xray-core using mix.pb
 xray -c mix.pb
 
-# Detailed usage
+# Detailed instructions
 xray help convert pb
 ```
 
-Sub-command JSON
+`json` subcommand usage example:
 
 ```bash
 # Usage: xray convert json [-type] [stdin:] [typedMessage file]
@@ -136,13 +158,13 @@ tmsg='{
 
 echo ${tmsg} | xray convert json stdin:
 
-# Outputs from above:
+# The output of the above command is:
 '{
   "cipherType": "AES_256_GCM",
   "password": "111"
 }'
 
-# Detailed usage
+# Detailed instructions
 xray help convert json
 ```
 
@@ -169,22 +191,22 @@ Generate UUID.
 Usage:
 
 ```
-xray uuid
+xray uuid [-i "example"]
 ```
 
 ### xray x25519
 
-Generate x25519 key pair。
+Generate x25519 key pair.
 
 Usage:
 
 ```
-xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding]
+xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding ]
 ```
 
 ### xray wg
 
-Generate wireguard curve25519 key pair。
+Generate WireGuard curve25519 key pair.
 
 Usage:
 
@@ -193,8 +215,38 @@ xray wg [-i "(base64.StdEncoding)"]
 ```
 
 ::: tip
-When `-config` is not specified, Xray will try to load `config.json` from the following paths:
+When `-config` is not specified, Xray will attempt to load `config.json` from the following paths in order:
 
 - Working Directory
-- The path specified by `Xray.location.asset` in the [environment variable](../config/features/env.md).
-  :::
+- The path specified by `Xray.location.asset` in [Environment Variables](../config/features/env.md#resource-file-path)
+:::
+
+### xray mldsa65
+
+Generate MLDSA-65 post-quantum signature key pair for REALITY.
+
+Usage:
+
+```
+xray mldsa65 [-i "seed (base64.StdEncoding)"]
+```
+
+### xray mlkem768
+
+Generate ML-KEM-768 post-quantum key exchange key pair for VLESS Encryption.
+
+Usage:
+
+```
+xray mlkem768 [-i "seed (base64.StdEncoding)"]
+```
+
+### xray vlessenc
+
+Generate encryption/decryption option content that can be directly used for VLESS Encryption. In the generated configuration, you can use either X25519 or ML-KEM-768 authentication method, but the server and client must use the same authentication method. The ephemeral key exchange remains post-quantum secure regardless of the authentication method.
+
+Usage:
+
+```
+xray vlessenc
+```

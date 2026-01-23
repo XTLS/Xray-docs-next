@@ -1,4 +1,4 @@
-# Xray Transport Layer List
+# Xray Transport Layer
 
 Xray supports the following transport layers:
 
@@ -8,3 +8,4 @@ Xray supports the following transport layers:
 - [gRPC](grpc.md)
 - [WebSocket](websocket.md)
 - [HTTPUpgrade](httpupgrade.md)
+- [Hysteria](hysteria.md)

@@ -2,42 +2,46 @@
 
 ## DNS Server
 
-The DNS module built into Xray has two main purposes:
+The built-in DNS module in Xray has three main purposes:
 
-- During the routing phase, it resolves domain names to IP addresses and performs traffic splitting based on the results of domain name resolution and the value of `domainStrategy` in the routing configuration module. The built-in DNS server is only used for DNS queries when either of the following values is set:
-  - "IPIfNonMatch": When a domain name is requested, it first tries to match it against the `domain` entries in the routing configuration. If no match is found, the built-in DNS server is used to perform a DNS query for the domain name, and the returned IP address is used to perform IP routing matching again.
-  - "IPOnDemand": When a domain name is matched against any IP-based rule, it is immediately resolved to an IP address for matching.
-- It resolves the target address for connection.
-  - In the `freedom` outbound setting, if `domainStrategy` is set to `UseIP`, requests made through the outbound proxy will first resolve the domain name to an IP address using the built-in server before making the connection.
-  - In the `sockopt` setting, if `domainStrategy` is set to `UseIP`, system connections initiated through the outbound proxy will first be resolved to an IP address using the built-in server before making the connection.
+- **Routing Phase:** Resolves domain names to IPs and matches rules based on the resolved IPs for traffic splitting. Whether to resolve the domain and split traffic depends on the `domainStrategy` setting in the routing configuration module. The built-in DNS server is used for DNS queries only when the following two values are set:
+  - `"IPIfNonMatch"`: When a domain is requested, Xray attempts to match it against the `domain` rules in the routing configuration. If no match is found, the built-in DNS server is used to resolve the domain, and the returned IP address is used to match against IP routing rules.
+  - `"IPOnDemand"`: When any IP-based rule is encountered during matching, the domain is immediately resolved to an IP for matching.
+
+- **Resolving Target Addresses for Connections:**
+  - For example, in a `freedom` outbound, if `domainStrategy` is set to `UseIP`, requests sent from this outbound will first resolve the domain to an IP using the built-in server before connecting.
+  - For example, in `sockopt`, if `domainStrategy` is set to `UseIP`, system connections initiated by this outbound will first resolve to an IP using the built-in server before connecting.
+
+- **DNS Traffic Hijacking (Transparent Proxy) or Acting as a Recursive DNS Server:** Directly exposing port 53 to serve as a DNS server.
 
 ::: tip TIP 1
-DNS queries sent by the built-in DNS server are automatically forwarded based on the routing configuration.
+DNS query requests sent by the built-in DNS server will be automatically forwarded according to the routing configuration.
 :::
 
 ::: tip TIP 2
-Only basic IP queries (A and AAAA records) are supported. CNAME records will be queried repeatedly until an A/AAAA record is returned. Other queries will not enter the built-in DNS server.
+Only basic IP queries (A and AAAA records) are supported. CNAME records will be queried repeatedly until an A/AAAA record is returned. Other queries will not enter the built-in DNS server; instead, they may be discarded or transparently forwarded to other servers depending on your outbound configuration.
 :::
 
 ## DNS Processing Flow
 
-If the domain name to be queried:
+If the domain currently being queried:
 
-- Matches the mapping of "domain name - IP" or "domain name - IP array" in the `hosts`, then the IP or IP array will be returned as the DNS resolution result.
-
-- Matches the mapping of "domain name - domain name" in the `hosts`, then the value of this mapping (another domain name) will be used as the domain name to be queried, and enter the DNS processing flow until an IP is resolved and returned, or an empty resolution is returned.
-
-- Does not match `hosts`, but matches the `domains` list in one or more DNS servers, then according to the priority of the matching rule, use the DNS server corresponding to the rule to perform the query in sequence. If the DNS server that is hit fails to query or `expectedIPs` does not match, then use the next hit DNS server to perform the query. Otherwise, return the resolved IP. If all hit DNS servers fail to query or `expectedIPs` does not match, then the DNS component:
-  - By default, it will perform "DNS fallback query": use the "DNS server that has not been used in the last failed query and has a default value of `false` for `skipFallback`" to perform the query in sequence. If the query fails or `expectedIPs` does not match, return an empty resolution; otherwise, return the resolved IP.
-  - If `disableFallback` is set to `true`, "DNS fallback query" will not be performed.
-
-- If neither `hosts` nor the `domains` list in DNS servers matches, then:
-  - By default, use the "DNS server that has a default value of `false` for `skipFallback`" to perform the query in sequence. If the first selected DNS server fails to query or `expectedIPs` does not match, then use the next selected DNS server to perform the query. Otherwise, return the resolved IP. If all selected DNS servers fail to query or `expectedIPs` does not match, return an empty resolution.
-  - If the number of "DNS servers that have a default value of `false` for `skipFallback`" is 0 or `disableFallback` is set to `true`, use the first DNS server in the DNS configuration to perform the query. If the query fails or `expectedIPs` does not match, return an empty resolution; otherwise, return the resolved IP.
+- Matches a "Domain - IP" or "Domain - IP Array" mapping in `hosts`, that IP or IP array is returned as the DNS resolution result.
+- Matches a "Domain - Domain" mapping in `hosts`, the mapped value (another domain) becomes the domain to be queried, re-entering the DNS processing flow until an IP is resolved or an empty response is returned.
+- Does **not** match `hosts`, but matches the `domains` list of one or more DNS servers:
+  - It will query the corresponding DNS servers in the order of the matching rules' priority.
+  - If a matched DNS server fails to query or the `expectedIPs` do not match, the next matched DNS server is used.
+  - If successful, the resolved IP is returned.
+  - If all matched DNS servers fail or `expectedIPs` do not match, the DNS component will:
+    - By default, perform a "DNS Fallback Query": Sequentially query "DNS servers that were not used in the previous failed round and have `skipFallback` set to the default `false`". If these queries fail or `expectedIPs` do not match, an empty response is returned; otherwise, the resolved IP is returned.
+    - If `disableFallback` is set to `true`, the "DNS Fallback Query" will not be performed.
+- Matches **neither** `hosts` **nor** the `domains` list of any DNS server:
+  - By default, it sequentially queries "DNS servers where `skipFallback` is default `false`". If the first selected DNS server fails or `expectedIPs` do not match, the next selected server is used; otherwise, the resolved IP is returned. If all selected servers fail, an empty response is returned.
+  - If the count of "DNS servers where `skipFallback` is `false`" is 0, or if `disableFallback` is set to `true`, the first DNS server in the DNS configuration is used. If it fails or `expectedIPs` do not match, an empty response is returned; otherwise, the resolved IP is returned.
 
 ## DnsObject
 
-`DnsObject` corresponds to the `dns` section in the configuration file.
+`DnsObject` corresponds to the `dns` field in the configuration file.
 
 ```json
 {
@@ -58,13 +62,13 @@ If the domain name to be queried:
         "clientIP": "1.2.3.4"
       },
       {
-        "address": "https://1.1.1.1/dns-query",
+        "address": "[https://8.8.8.8/dns-query](https://8.8.8.8/dns-query)",
         "domains": ["geosite:netflix"],
         "skipFallback": true,
         "queryStrategy": "UseIPv4"
       },
       {
-        "address": "https://1.1.1.1/dns-query",
+        "address": "[https://1.1.1.1/dns-query](https://1.1.1.1/dns-query)",
         "domains": ["geosite:openai"],
         "skipFallback": true,
         "queryStrategy": "UseIPv6"
@@ -74,8 +78,11 @@ If the domain name to be queried:
     "clientIp": "1.2.3.4",
     "queryStrategy": "UseIP",
     "disableCache": false,
+    "serveStale": false,
+    "serveExpiredTTL": 0,
     "disableFallback": false,
     "disableFallbackIfMatch": false,
+    "enableParallelQuery": false,
     "useSystemHosts": false,
     "tag": "dns_inbound"
   }
@@ -84,140 +91,169 @@ If the domain name to be queried:
 
 > `hosts`: map{string: address} | map{string: [address]}
 
-A list of static IP addresses, with values consisting of a series of "domain": "address" or "domain": ["address 1","address 2"]. The address can be an IP or a domain name. When resolving a domain name, if the domain name matches an item in this list:
+A list of static IPs. The value is a series of `"domain": "address"` or `"domain": ["address 1", "address 2"]`. The address can be an IP or a domain. When resolving a domain, if the domain matches an item in this list:
 
-- If the address of the item is an IP, the resolution result will be that IP.
-- If the address of the item is a domain name, this domain name will be used for IP resolution instead of the original domain name.
-- If multiple IPs and domain names are set in the address, only the first domain name will be returned, and the rest of the IPs and domain names will be ignored.
+- If the address of the item is an IP, the resolution result is that IP.
+- If the address of the item is a domain, this domain will be used for IP resolution instead of the original domain.
+- If multiple IPs and domains are set in the address list simultaneously, only the first domain is returned, and the remaining IPs and domains are ignored.
+- If the first value in the address starts with a hash followed by a number (e.g., `#3`), and it is used in a DNS outbound, the core will return an empty response with the corresponding rcode number to reject the request. If the request comes from an internal query, it will simply be treated as a failure.
+- When the resolved domain matches multiple domains in the list, all associated IPs are returned.
 
-The domain name can take several forms:
+The matching format (`domain:`, `full:`, etc.) is the same as the domain in the commonly used [Routing System](./routing.md#ruleobject). The difference is that without a prefix, it defaults to using the `full:` prefix (similar to the common hosts file syntax).
 
-- Plain string: When this string matches the target domain name exactly, the rule takes effect. For example, "xray.com" matches "xray.com" but not "www.xray.com".
-- Regular expression: Starting with `"regexp:"`, the rest is a regular expression. When this regular expression matches the target domain name, the rule takes effect. For example, "regexp:\\\\.goo.\*\\\\.com$" matches "www.google.com" and "fonts.googleapis.com", but not "google.com".
-- Subdomain (recommended): Starting with `"domain:"`, the rest is a domain name. When this domain name is the target domain name or its subdomain, the rule takes effect. For example, "domain:xray.com" matches "www.xray.com" and "xray.com", but not "wxray.com".
-- Substring: Starting with `"keyword:"`, the rest is a string. When this string matches any part of the target domain name, the rule takes effect. For example, "keyword:sina.com" can match "sina.com", "sina.com.cn", and "www.sina.com", but not "sina.cn".
-- Predefined domain name list: Starting with `"geosite:"`, the rest is a name, such as `geosite:google` or `geosite:cn`. The names and domain name lists are listed in [Predefined Domain Name Lists](./routing.md#predefined-domain-lists).
+> `servers`: \[string | [DnsServerObject](#dnsserverobject) \]
 
-> `servers`: [string | [DnsServerObject](#dnsserverobject) ]
+A list of DNS servers. Two types are supported: DNS address (string format) and [DnsServerObject](#dnsserverobject).
 
-A list of DNS servers that supports two types: DNS addresses (in string format) and [DnsServerObject](#dnsserverobject).
+When the value is `"localhost"`, it indicates using the local machine's preset DNS configuration.
 
-When the value is `"localhost"`, it means to use the default DNS configuration on the local machine.
+When the value is a DNS `"IP:Port"` address, such as `"8.8.8.8:53"`, Xray will use the specified UDP port of this address for DNS queries. The query follows routing rules. If no port is specified, port 53 is used by default.
 
-When the value is a DNS `"IP:Port"` address, such as `"8.8.8.8:53"`, Xray will use the specified UDP port of this address for DNS queries. The query follows the routing rules. When the port is not specified, the default port 53 is used.
+When the value is in the form of `"tcp://host:port"`, such as `"tcp://8.8.8.8:53"`, Xray will use `DNS over TCP` for queries. The query follows routing rules. If no port is specified, port 53 is used by default.
 
-When the value is in the form of `"tcp://host:port"`, such as `"tcp://8.8.8.8:53"`, Xray will use `DNS over TCP` for queries. The query follows the routing rules. When the port is not specified, the default port 53 is used.
+When the value is in the form of `"tcp+local://host:port"`, such as `"tcp+local://8.8.8.8:53"`, Xray will use `TCP Local Mode (TCPL)` for queries. This means the DNS request will **not** pass through the routing component but will request directly via the Freedom outbound to reduce latency. If no port is specified, port 53 is used by default.
 
-When the value is in the form of `"tcp+local://host:port"`, such as `"tcp+local://8.8.8.8:53"`, Xray will use `TCP local mode (TCPL)` for queries. That is, DNS requests will not pass through the routing component and will directly request outbound through Freedom, to reduce latency. When the port is not specified, the default port 53 is used.
+When the value is in the form of `"https://host:port/dns-query"`, such as `"https://dns.google/dns-query"`, Xray will use `DNS over HTTPS` (RFC8484, abbreviated as DOH) for queries. Some providers have certificates for IP aliases, so you can write the IP directly, such as `https://1.1.1.1/dns-query`. Non-standard ports and paths can also be used, such as `"https://a.b.c.d:8443/my-dns-query"`.
 
-When the value is in the form of `"https://host:port/dns-query"`, such as `"https://dns.google/dns-query"`, Xray will use `DNS over HTTPS` (RFC8484, abbreviated as DOH) for queries. Some service providers have certificates with IP aliases, which can be directly written in IP form, such as `https://1.1.1.1/dns-query`. Non-standard ports and paths can also be used, such as `"https://a.b.c.d:8443/my-dns-query"`.
+When the value is in the form of `"h2c://host:port/dns-query"`, such as `"h2c://dns.google/dns-query"`, Xray will use the `DNS over HTTPS` request format but will send the request in cleartext h2c. This cannot be used directly; in this case, you need to configure a Freedom outbound + streamSettings with TLS to wrap it into a normal DOH request. This is used for special purposes, such as customizing the SNI of DOH requests or using utls fingerprints.
 
-When the value is in the form of `"https+local://host:port/dns-query"`, such as `"https+local://dns.google/dns-query"`, Xray will use `DOH local mode (DOHL)` for queries. That is, DOH requests will not pass through the routing component and will directly request outbound through Freedom, to reduce latency. This is generally suitable for use on the server side. Non-standard ports and paths can also be used.
+When the value is in the form of `"https+local://host:port/dns-query"`, such as `"https+local://dns.google/dns-query"`, Xray will use `DOH Local Mode (DOHL)` for queries. This means the DOH request will **not** pass through the routing component but will request directly via the Freedom outbound to reduce latency. Generally suitable for server-side use. Non-standard ports and paths can also be used.
 
-When the value is in the form of `"quic+local://host"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DNS over QUIC local mode (DOQL)` for queries. That is, DNS requests will not pass through the routing component and will directly request outbound through Freedom. This method requires DNS server support for DNS over QUIC. The default port 853 is used for queries, and non-standard ports can also be used.
+When the value is in the form of `"quic+local://host"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DNS over QUIC Local Mode (DOQL)` for queries. This means the DNS request will **not** pass through the routing component but will request directly via the Freedom outbound. This method requires the DNS server to support DNS over QUIC. By default, port 853 is used for queries, and non-standard ports can be used.
 
-When the value is `fakedns`, the FakeDNS function will be used for queries.
+When the value is `fakedns`, the FakeDNS feature will be used for queries.
 
 ::: tip TIP 1
-When using `localhost`, DNS requests on the local machine are not controlled by Xray and additional configuration is required to make DNS requests forwarded by Xray.
+When using `localhost`, the local machine's DNS requests are not controlled by Xray. Additional configuration is required to forward DNS requests through Xray.
 :::
 
 ::: tip TIP 2
-DNS clients initialized with different rules will be reflected in the Xray startup log at the `info` level, such as `local DOH`, `remote DOH`, and `udp` modes.
+The DNS clients initialized by different rules will be shown in the Xray startup logs at the `info` level, such as `local DOH`, `remote DOH`, and `udp` modes.
 :::
 
 ::: tip TIP 3
-(v1.4.0+) DNS query logging can be enabled in the [log](./log.md).
+(v1.4.0+) You can enable DNS query logging in [Log](./log.md).
 :::
 
 > `clientIp`: string
 
-Used to notify the server of the specified IP location during DNS queries. Cannot be a private address.
+The IP address used in the EDNS Client Subnet extension.
 
-::: tip TIP 1
-EDNS Client Subnet support is required for the DNS server.
-:::
-
-::: tip TIP 2
-You can specify `clientIp` for all DNS servers in [DnsObject](#dnsobject), or specify it for each DNS server in the configuration of [DnsServerObject](#dnsserverobject) (which has higher priority than the configuration in [DnsObject](#dnsobject)).
-:::
+Must be a valid IPv4 or IPv6 address. When actually sent, the last few bits will be automatically masked; IPv4 and IPv6 are sent with /24 and /96 subnets respectively.
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
 
-`UseIPv4` only queries A records; `UseIPv6` only queries AAAA records. The default value is `UseIP`, which queries both A and AAAA records.
+Limits the capabilities of all servers in the DNS module and sets the default value for IP query types initiated by Xray itself.
 
-`UseSystem`, every time dns-Query call, it check the system-network to see if it supports IPv6(and IPv4) or not, if it support IPv6(or IPv4), the IPv6(or IPv4) is also returned, otherwise not returned.
+The default value `UseIP` allows querying both A + AAAA records. When a query initiated by Xray itself does not specify an IP type, both A and AAAA records are queried from the upstream DNS server. `UseIPv4` only queries and allows querying A records; `UseIPv6` only queries and allows querying AAAA records.
 
-Xray-core v1.8.6 New feature: `queryStrategy` can be set separately for each `DNS` server.
+`UseSystem` adapts to the operating system's network environment. Before querying, it checks whether there are IPv4 and IPv6 default gateways, thereby limiting the capabilities of all servers and setting the default query type. It checks in real-time on graphical OS environments and only once on command-line environments.
 
 ```json
     "dns": {
         "servers": [
-            "https://1.1.1.1/dns-query",
+            "[https://1.1.1.1/dns-query](https://1.1.1.1/dns-query)",
             {
-                "address": "https://1.1.1.1/dns-query",
+                "address": "[https://8.8.8.8/dns-query](https://8.8.8.8/dns-query)",
                 "domains": [
                     "geosite:netflix"
                 ],
                 "skipFallback": true,
-                "queryStrategy": "UseIPv4" // geosite:netflix's domain name uses "UseIPv4"
+                "queryStrategy": "UseIPv4" // netflix domain queries A record
             },
             {
-                "address": "https://1.1.1.1/dns-query",
+                "address": "[https://1.1.1.1/dns-query](https://1.1.1.1/dns-query)",
                 "domains": [
                     "geosite:openai"
                 ],
                 "skipFallback": true,
-                "queryStrategy": "UseIPv6" // The domain name geosite:openai uses "UseIPv6".
+                "queryStrategy": "UseIPv6" // openai domain queries AAAA record
             }
         ],
-        "queryStrategy": "UseIP" // Global use of "UseIP"
+        "queryStrategy": "UseIP" // Globally query both A and AAAA records
     }
 ```
 
-**NOTE：**<br>
-When the `"queryStrategy"` value in the child item conflicts with the global `"queryStrategy"` value, the query for the child item will respond null.
+::: tip TIP 1
+The global `"queryStrategy"` value takes precedence. When the `"queryStrategy"` value in a sub-item conflicts with the global `"queryStrategy"` value, the query for that sub-item will return an empty response.
+:::
+
+::: tip TIP 2
+When the `"queryStrategy"` parameter is not written in a sub-item, the global `"queryStrategy"` parameter value is used. This behavior is the same as versions prior to Xray-core v1.8.6.
+:::
+
+For example:<br>
+Global `"queryStrategy": "UseIPv6"` conflicts with sub-item `"queryStrategy": "UseIPv4"`.<br>
+Global `"queryStrategy": "UseIPv4"` conflicts with sub-item `"queryStrategy": "UseIPv6"`.<br>
+Global `"queryStrategy": "UseIP"` does not conflict with sub-item `"queryStrategy": "UseIPv6"`.<br>
+Global `"queryStrategy": "UseIP"` does not conflict with sub-item `"queryStrategy": "UseIPv4"`.
 
 ```json
     "dns": {
         "servers": [
-            "https://1.1.1.1/dns-query",
+            "[https://1.1.1.1/dns-query](https://1.1.1.1/dns-query)",
             {
-                "address": "https://8.8.8.8/dns-query",
+                "address": "[https://8.8.8.8/dns-query](https://8.8.8.8/dns-query)",
                 "domains": [
                     "geosite:netflix"
                 ],
                 "skipFallback": true,
-                "queryStrategy": "UseIPv6" // "UseIPv6" conflicts with "UseIPv4".
+                "queryStrategy": "UseIPv6" // Global "UseIPv4" conflicts with sub-item "UseIPv6"
             }
         ],
         "queryStrategy": "UseIPv4"
     }
 ```
 
-Subterm geosite:netflix query gets null response due to conflicting `"queryStrategy"` values. geosite:netflix domain is queried by global DNS `https://1.1.1.1/dns-query` and gets A record.
+The sub-item query for the Netflix domain returns an empty response due to the conflicting `"queryStrategy"` value. The Netflix domain is then queried by `https://1.1.1.1/dns-query`, returning an A record.
 
 > `disableCache`: true | false
 
-`true` disables DNS caching for all DNS servers, default is `false` which means caching is not disabled.
+`true` disables DNS caching. Defaults to `false` (not disabled).
 
-this option has no effect on `localhost` DNS and `localhost` DNS always use system DNS cache.
+This does not affect `localhost` DNS (system DNS), which always follows Golang's DNS caching behavior (cgo and pure go may differ slightly).
+
+> `serveStale`: true | false
+
+`true` enables DNS optimistic caching. Defaults to `false` (not enabled).
+
+Only effective when the server has DNS caching enabled (i.e., this option is constrained by `disableCache`).
+
+> `serveExpiredTTL`: number
+
+Validity period for optimistic caching in seconds. Defaults to 0, meaning it never expires.
+
+If the server has caching enabled and optimistic caching is turned on: when the cache has expired but the optimistic cache has not, the stale DNS record in the cache is returned immediately, and the cache is refreshed in the background. This can reduce latency.
 
 > `disableFallback`: true | false
 
-`true` disables fallback DNS queries, default is `false` which means fallback queries are not disabled.
+`true` disables DNS fallback queries. Defaults to `false` (not disabled).
 
 > `disableFallbackIfMatch`: true | false
 
-`true` disables fallback DNS queries when the matching domain list of the DNS server is hit, default is `false` which means fallback queries are not disabled.
+`true` disables fallback queries when the DNS server's priority domain list is matched. Defaults to `false` (not disabled).
+
+> `enableParallelQuery`: true | false
+
+`true` enables parallel queries. Defaults to `false` (not enabled).
+
+DNS failover is serial by default, meaning a query is sent to the next server only after the selected DNS server fails or `expectedIPs` and `unexpectedIPs` do not match.
+
+When parallel query is enabled, queries are initiated asynchronously to all selected DNS servers in advance, executing a strategy of "dynamic grouping, intra-group racing, and inter-group fallback".
+
+**Dynamic Grouping**: Adjacent servers in the selected server list are considered the same group if their `clientIP`, `skipFallback`, `queryStrategy`, `tag`, `domains`, `expectedIPs`, and `unexpectedIPs` are **exactly** the same.
+
+**Intra-group Racing**: If any DNS server in the same group queries successfully and the IP matches `expectedIPs` and `unexpectedIPs`, the group is considered successful, and results from other servers in the group are ignored.
+
+**Inter-group Fallback**: If the first group is still querying, wait. If the first group succeeds, return the IP. If all servers in the first group fail or IPs do not match, fallback to the next group. Finally, if all groups fail, return an empty resolution.
 
 > `useSystemHosts`: true | false
 
-if true, system-hosts appends to config-hosts at start, default is false.
+If true, appends the system hosts file to the built-in DNS hosts.
 
 > `tag`: string
 
-Traffic generated by built-in DNS, except for `localhost`, `fakedns`, `TCPL`, `DOHL`, and `DOQL` modes, can be matched with `inboundTag` in routing using this identifier.
+For query traffic generated by the built-in DNS, except for `localhost`, `fakedns`, `TCPL`, `DOHL`, and `DOQL` modes, this tag can be used in routing for matching via `inboundTag`.
 
 ### DnsServerObject
 
@@ -229,86 +265,94 @@ Traffic generated by built-in DNS, except for `localhost`, `fakedns`, `TCPL`, `D
   "expectedIPs": ["geoip:cn"],
   "unexpectedIPs": ["geoip:cloudflare"],
   "skipFallback": false,
+  "finalQuery": false,
+  "tag": "dns-tag",
   "clientIP": "1.2.3.4",
   "queryStrategy": "UseIPv4",
-  "tag": "server-1",
-  "timeoutMs": 4000,
-  "disableCache": false,
-  "finalQuery": false
+  "disableCache": false
 }
 ```
 
 > `address`: address
 
-A list of DNS servers, which can be either DNS addresses (in string form) or DnsServerObjects.
+A list of DNS servers. Two types are supported: DNS address (string format) and DnsServerObject.
 
-When the value is `"localhost"`, it means using the local DNS configuration.
+When the value is `"localhost"`, it indicates using the local machine's preset DNS configuration.
 
-When the value is a DNS `"IP"` address, such as `"8.8.8.8"`, Xray will use the specified UDP port of this address for DNS queries. The query follows routing rules. By default, port 53 is used.
+When the value is a DNS `"IP"` address, such as `"8.8.8.8"`, Xray will use the specified UDP port of this address for DNS queries. The query follows routing rules. Defaults to port 53.
 
-When the value is in the form of `"tcp://host"`, such as `"tcp://8.8.8.8"`, Xray will use `DNS over TCP` for the query. The query follows routing rules. By default, port 53 is used.
+When the value is in the form of `"tcp://host"`, such as `"tcp://8.8.8.8"`, Xray will use `DNS over TCP` for queries. The query follows routing rules. Defaults to port 53.
 
-When the value is in the form of `"tcp+local://host"`, such as `"tcp+local://8.8.8.8"`, Xray will use `TCP local mode (TCPL)` for the query. That is, the DNS request will not go through the routing component and will be sent directly through the Freedom outbound to reduce latency. When no port is specified, port 53 is used by default.
+When the value is in the form of `"tcp+local://host"`, such as `"tcp+local://8.8.8.8"`, Xray will use `TCP Local Mode (TCPL)` for queries. This means the DNS request will **not** pass through the routing component but will request directly via the Freedom outbound to reduce latency. If no port is specified, port 53 is used by default.
 
-When the value is in the form of `"https://host:port/dns-query"`, such as `"https://dns.google/dns-query"`, Xray will use `DNS over HTTPS` (RFC8484, abbreviated as DOH) for the query. Some service providers have IP alias certificates, which can be directly written in IP form, such as `https://1.1.1.1/dns-query`. Non-standard ports and paths can also be used, such as `"https://a.b.c.d:8443/my-dns-query"`.
+When the value is in the form of `"https://host:port/dns-query"`, such as `"https://dns.google/dns-query"`, Xray will use `DNS over HTTPS` (RFC8484, abbreviated as DOH) for queries. Some providers have certificates for IP aliases, so you can write the IP directly, such as `https://1.1.1.1/dns-query`. Non-standard ports and paths can also be used, such as `"https://a.b.c.d:8443/my-dns-query"`.
 
-When the value is in the form of `"https+local://host:port/dns-query"`, such as `"https+local://dns.google/dns-query"`, Xray will use `DOH local mode (DOHL)` for the query, which means that the DOH request will not go through the routing component and will be sent directly through the Freedom outbound to reduce latency. This is generally suitable for server-side use. Non-standard ports and paths can also be used.
+When the value is in the form of `"https+local://host:port/dns-query"`, such as `"https+local://dns.google/dns-query"`, Xray will use `DOH Local Mode (DOHL)` for queries. This means the DOH request will **not** pass through the routing component but will request directly via the Freedom outbound to reduce latency. Generally suitable for server-side use. Non-standard ports and paths can also be used.
 
-When the value is in the form of `"quic+local://host:port"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DOQ local mode (DOQL)` for the query, which means that the DNS request will not go through the routing component and will be sent directly through the Freedom outbound. This method requires DNS server support for DNS over QUIC. By default, port 853 is used for the query, and non-standard ports can be used.
+When the value is in the form of `"quic+local://host:port"`, such as `"quic+local://dns.adguard.com"`, Xray will use `DOQ Local Mode (DOQL)` for queries. This means the DNS request will **not** pass through the routing component but will request directly via the Freedom outbound. This method requires the DNS server to support DNS over QUIC. By default, port 853 is used for queries, and non-standard ports can be used.
 
-When the value is `fakedns`, FakeDNS functionality will be used for the query.
+When the value is `fakedns`, the FakeDNS feature will be used for queries.
+
+::: tip About Local Mode and the Domain of the DNS Server Itself
+There are two scenarios for DNS requests sent by the DNS module:
+
+**Local Mode** connections are made directly outwards by the core. In this case, if the address is a domain name, it will be resolved by the system itself. The logic is relatively simple.
+
+**Non-Local** modes will essentially be treated as requests coming from an inbound with the tag `dns.tag` (Don't know where it is? Ctrl+F in your browser to search for `inboundTag`). They will go through the normal core processing flow and may be assigned by the routing module to a local freedom or other remote outbounds. They will be resolved by the freedom's `domainStrategy` (beware of potential loops) or sent directly as domains to the remote end to be resolved according to the server's own resolution method.
+
+Since it might be difficult for average users to clarify the logic involved, it is recommended (especially in a transparent proxy environment) to **directly set the corresponding IPs for servers with domain names in the host option of the DNS module** to prevent loops.
+
+Incidentally, DNS requests sent by the DNS module in non-local modes will automatically skip the `IPIfNonMatch` and `IPOnDemand` resolution processes in the routing module. This prevents their resolution from being sent back to the DNS module, causing a loop.
+:::
 
 > `port`: number
 
-The port number of the DNS server, such as `53`. If not specified, the default is `53`. This item is not applicable when using DOH, DOHL, or DOQL modes, and non-standard ports should be specified in the URL.
+DNS server port, e.g., `53`. Defaults to `53` if omitted. This item is invalid when using DOH, DOHL, or DOQL modes; non-standard ports should be specified in the URL.
 
-> `domains`: [string]
+> `domains`: \[string\]
 
-A list of domain names. The domain names in this list will be queried using this server first. The format of domain names is the same as in [routing configuration](./routing.md#ruleobject).
+A list of domains. Domains included in this list will prioritize using this server for queries. The domain format is the same as in [Routing Configuration](./routing.md#ruleobject).
 
-> `expectedIPs`: [string]
+> `expectedIPs`:\[string\]
 
-A list of IP ranges in the same format as in [routing configuration](./routing.md#ruleobject).
+A list of IP ranges. The format is the same as in [Routing Configuration](./routing.md#ruleobject).
 
-When this item is configured, Xray DNS will verify the returned IP addresses and only return addresses that are included in the `expectedIPs` list.
+When configured, Xray DNS will verify the returned IP and only return addresses included in the `expectedIPs` list.
 
-If this item is not configured, the IP address will be returned as is.
-
-if you add "\*" in this list, the original-IPs still returned if no IP matched.
+If `*` exists in the list, and if no IP exists after filtering, the original IP is still returned so that the request does not fail.
 
 > `unexpectedIPs`: [string]
 
-reverse of `expectedIPs`, an IP is matched if and only if does not match any of the IP-ranges in the list, in other words:
-`expectedIPs = [0.0.0.0/0, ::/0] - unexpectedIPs.`
-
-if you add "\*" in this list, the original-IPs still returned if no IP matched.
+The reverse version of `expectedIPs`. IPs included in this list are removed. The asterisk works the same way.
 
 > `skipFallback`: true | false
 
-`true` means to skip this server when performing DNS fallback queries, and the default is `false`, which means not to skip.
-
-> `finalQuery`: true | false
-
-if true, the query result is returned in any case(even when IP-list is empty) and no other fallback will be performed.
-
-> `disableCache`: true | false
-
-if true, the cache is disabled only for this DNS server.
-
-this option has no effect on `localhost` DNS and `localhost` DNS always use system DNS cache.
+`true`: Skip this server during DNS fallback queries. Defaults to `false` (not skipped).
 
 > `timeoutMs`: number
 
-DNS server timeout, default 4000 ms.
+DNS server timeout in milliseconds. Default is 4000 ms.
 
-this option has no effect on `localhost` DNS and `localhost` DNS always use system DNS timeout.
+This does not affect `localhost` DNS (system DNS), which always follows Golang's DNS timeout behavior (cgo and pure go may differ slightly).
 
-> `tag`: string
+> `finalQuery`: true | false
 
-The tag of this DNS server. If set, it will use this tag as the inbound tag to initiate the request (non-local mode), overwriting the global tag option.
+If set to true, the request to this DNS server will be the final attempt and will not trigger fallback behavior.
 
 > `queryStrategy`: "UseIP" | "UseIPv4" | "UseIPv6" | "UseSystem"
 
-`UseIPv4` only queries A records; `UseIPv6` only queries AAAA records. The default value is `UseIP`, which queries both A and AAAA records.
+If not specified, it inherits from the global configuration; if specified, it allows further limiting the capabilities of this server and setting the default value for IP query types initiated by Xray itself.
 
-`UseSystem`, every time dns-Query call, it check the system-network to see if it supports IPv6(and IPv4) or not, if it support IPv6(or IPv4), the IPv6(or IPv4) is also returned, otherwise not returned.
+Note: It is always constrained by the global `queryStrategy`.
+
+### The following configuration items, if not specified, will inherit from the global configuration, or can override the global configuration here
+
+> `tag`: string
+
+> `clientIP`: [string]
+
+> `disableCache`: true | false
+
+> `serveStale`: true | false
+
+> `serveExpiredTTL`: number

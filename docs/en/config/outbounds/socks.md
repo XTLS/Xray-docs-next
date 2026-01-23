@@ -1,54 +1,27 @@
 # Socks
 
-The Socks protocol is a standard protocol implementation that is compatible with [Socks 5](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol).
+Standard Socks protocol implementation, compatible with Socks 5.
 
 ::: danger
-The Socks protocol does not provide encryption for transmission and is not suitable for transmitting data over public networks.
+**The Socks protocol does not encrypt transmission and is not suitable for transmission over the public internet.**
 :::
 
 ## OutboundConfigurationObject
 
 ```json
 {
-  "servers": [
-    {
-      "address": "127.0.0.1",
-      "port": 1234,
-      "users": [
-        {
-          "user": "test user",
-          "pass": "test pass",
-          "level": 0
-        }
-      ]
-    }
-  ]
-}
-```
-
-> `servers`: \[ [ServerObject](#serverobject) \]
-
-An array representing a list of Socks servers, where each item is a server configuration.
-
-### ServerObject
-
-```json
-{
   "address": "127.0.0.1",
   "port": 1234,
-  "users": [
-    {
-      "user": "test user",
-      "pass": "test pass",
-      "level": 0
-    }
-  ]
+  "user": "test user",
+  "pass": "test pass",
+  "level": 0,
+  "email": "love@xray.com"
 }
 ```
 
 > `address`: address
 
-The server address. Required.
+Server address. Required.
 
 ::: tip
 Only connections to Socks 5 servers are supported.
@@ -56,36 +29,22 @@ Only connections to Socks 5 servers are supported.
 
 > `port`: number
 
-The server port. Required.
-
-> `users`: \[ [UserObject](#userobject) \]
-
-An array representing a list of users. Each item in the array is a user configuration.
-
-When the list is not empty, the Socks client will authenticate using the user information. If not specified, no authentication is performed.
-
-The default value is an empty array.
-
-#### UserObject
-
-```json
-{
-  "user": "test user",
-  "pass": "test pass",
-  "level": 0
-}
-```
+Server port. Required.
 
 > `user`: string
 
-The username. Required.
+Username, string type. Required if the remote server requires authentication; otherwise, do not include this item.
 
 > `pass`: string
 
-The password. Required.
+Password, string type. Required if the remote server requires authentication; otherwise, do not include this item.
 
 > `level`: number
 
-The user level. Connections will use the corresponding [local policy](../policy.md#levelpolicyobject) associated with this user level.
+User level. The connection will use the [local policy](../policy.md#levelpolicyobject) corresponding to this user level. Optional if the remote server requires authentication; otherwise, do not include this item.
 
-The `level` value corresponds to the `level` value in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
+The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, the default is 0.
+
+> `email`: string
+
+Email address, used to identify the user. Optional if the remote server requires authentication; otherwise, do not include this item.

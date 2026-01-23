@@ -1,4 +1,4 @@
-# Xray Inbound Protocols List
+# Xray Inbound Protocols
 
 Xray supports the following inbound protocols:
 

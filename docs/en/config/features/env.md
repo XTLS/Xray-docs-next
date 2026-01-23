@@ -1,13 +1,14 @@
 # Environment Variables
 
-Xray provides the following environment variables for modifying some of its underlying configurations.
+Xray provides the following environment variables to modify some underlying configurations of Xray.
 
-## Xray Asset Location
+## Resource File Path
 
-- Name：`xray.location.asset` or `XRAY_LOCATION_ASSET`。
-- Default value：specified [FHS](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) directory or the same path as the Xray file.
+- Name: `xray.location.asset` or `XRAY_LOCATION_ASSET`.
+- Default value: Specific [FHS](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) directories or the same path as the Xray executable.
 
-This environment variable specifies a folder location that should contain the `geoip.dat` and `geosite.dat` files. If no variable value is specified, the program will search for resource files in the following order:
+This environment variable specifies a folder location that should contain the `geoip.dat` and `geosite.dat` files.
+If no variable value is specified, the program will look for resource files in the following order:
 
 ```
 ./
@@ -17,14 +18,34 @@ This environment variable specifies a folder location that should contain the `g
 
 ## Configuration File Location
 
-- Name：`xray.location.config` or `XRAY_LOCATION_CONFIG`。
-- Default value: Same path as the Xray file.
+- Name: `xray.location.config` or `XRAY_LOCATION_CONFIG`.
+- Default value: The same path as the Xray executable.
 
 This environment variable specifies a folder location that should contain the `config.json` file.
 
-## Multiple Configuration Directories
+## Multiple Configuration Directory
 
-- Name：`xray.location.confdir` or `XRAY_LOCATION_CONFDIR`。
-- Default value：`""`。
+- Name: `xray.location.confdir` or `XRAY_LOCATION_CONFDIR`.
+- Default value: `""`.
 
-The `.json` files in this directory will be read in alphabetical order by filename and used as options for multiple configurations.
+The `.json` files in this directory will be read in alphabetical order of their filenames as multiple configuration options.
+
+This item has lower priority than the startup argument `confdir`.
+
+## Other Available Configurations
+
+- xray.location.plugin
+- xray.location.tool
+- xray.location.cert
+
+- xray.buf.readv
+- xray.buf.splice
+- xray.vmess.padding
+- xray.cone.disabled
+
+- xray.ray.buffer.size
+- xray.browser.dialer
+- xray.xudp.show
+- xray.xudp.basekey
+
+These options are open to users with special needs; you can read the source code to discover their usage. ~PR Welcome~

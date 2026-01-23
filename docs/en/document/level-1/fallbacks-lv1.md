@@ -1,10 +1,10 @@
-# 回落 (fallbacks) 功能简析
+# A Brief Analysis of Fallbacks
 
-在使用 Xray 的过程中，你一定无数次的听说了【回落】这个功能。本文就稍微说明一下这个功能的逻辑以及使用方式。
+In the process of using Xray, you must have heard about the **[Fallback]** function countless times. This article will briefly explain the logic and usage of this function.
 
-## 1. 回顾《小小白白话文》中的回落
+## 1. Reviewing Fallbacks in the "Beginner's Guide"
 
-如果你用了《小小白白话文》中的[Xray 配置](../level-0/ch07-xray-server.md#_7-4-配置xray)，并完成了[HTTP 自动跳转 HTTPS 优化](../level-0/ch07-xray-server.md#_7-8-服务器优化之二-开启http自动跳转https)，那么你已经有了基于 `VLESS` 协议的简易回落：
+If you used the [Xray Configuration](../level-0/ch07-xray-server.md#_7-4-configuration-xray) from the *Beginner's Guide* and completed the [HTTP to HTTPS Redirection Optimization](../level-0/ch07-xray-server.md#_7-8-server-optimization-part-2-enable-http-automatic-jump-to-https), then you already have a simple fallback based on the `VLESS` protocol:
 
 ```json
 {
@@ -19,7 +19,7 @@
         "decryption": "none",
         "fallbacks": [
           {
-            "dest": 8080 // 默认回落到防探测的代理
+            "dest": 8080 // Default fallback to the probe-resistant proxy/service
           }
         ]
       },
@@ -31,109 +31,109 @@
 }
 ```
 
-这一段配置用人话要怎么解释呢？
+How do we explain this configuration in plain language?
 
-1. **`Xray` 的入站端口 `[inbound port]` 是 `443`**
+1. **Xray's `[inbound port]` is `443`**
 
-   即由 `Xray` 负责监听 `443` 端口的 `HTTPS` 流量
+    This means `Xray` is responsible for listening to `HTTPS` traffic on port `443`.
 
-2. **`Xray` 的入站协议 `[inbound protocol]` 是 `vless`**
+2. **Xray's `[inbound protocol]` is `vless`**
 
-   只有 `vless` 协议的流量才会流入 `Xray` 中做后续处理。
+    Only traffic using the `vless` protocol will flow into `Xray` for further processing.
 
-   ::: warning
-   **注：** `VLESS` 这个轻量协议开发的初衷就是给 `xray` 及 `v2fly` 等核心引入回落功能、并同时减少冗余校验/加密。（当然，到目前为止，`xray` 中的 `trojan` 协议也已完整支持回落功能。）
-   :::
+    ::: warning
+    **Note:** The `VLESS` lightweight protocol was originally developed to introduce the fallback function to cores like `xray` and `v2fly`, while reducing redundant verification/encryption. (Of course, as of now, the `trojan` protocol in `xray` also fully supports the fallback function.)
+    :::
 
-3. **回落目标端口 `[fallback dest]` 是 `8080`**
+3. **The `[fallback dest]` is `8080`**
 
-   `Xray` 接受 `443` 端口的访问流量后，属于 `vless` 协议的流量、由 `Xray` 进行内部处理并转发至出站模块。而其他非 `vless` 协议的流量，则转发至 `8080` 端口。
+    After `Xray` accepts traffic on port `443`, traffic belonging to the `vless` protocol is processed internally by `Xray` and forwarded to the outbound module. Traffic that is *not* `vless` protocol is forwarded to port `8080`.
 
-   ::: warning
-   **问：到底是单数还是复数？**
+    ::: warning
+    **Q: Is it singular or plural?**
 
-   答：一定有聪明的同学发现，配置文件中，明明是复数 `inbounds`, `fallbacks`，为什么我解释的时候都是单数：`inbound`, `fallback` 呢？
+    A: Some sharp students may have noticed that in the configuration file, the keys are plural (`inbounds`, `fallbacks`), but when I explain them, I use the singular (`inbound`, `fallback`). Why?
 
-   因为，配置文件中用复数，说明 `xray` 支持 N 个同等级的元素（即 N 个入站，M 个回落等等），上面的示例解析中仅仅是其中一个，所以我用了单数。
-   :::
+    Because the plural form in the configuration file indicates that `xray` supports N elements of the same level (i.e., N inbounds, M fallbacks, etc.). In the example analysis above, we are referring to just one of them, so I used the singular.
+    :::
 
-4. **回落给 `8080` 端口的流量，由后续程序处理**
+4. **Traffic falling back to port `8080` is handled by a subsequent program**
 
-   小小白白话文中的示例，就是 `8080` 端口由 `Nginx` 处理，根据配置找到并展示小熊猫的网页。
+    In the example from the *Beginner's Guide*, port `8080` is handled by `Nginx`, which finds and displays the Red Panda webpage based on its configuration.
 
-5. **总结，小小白白话文示例中的最简单回落，完整数据路线如下：**
+5. **Summary: The complete data route for the simplest fallback in the Beginner's Guide is as follows:**
 
-   ```mermaid
-   graph LR;
+    ```mermaid
+    graph LR;
 
-   W(外部 HTTP:80 请求) --> N80(HTTP:80)
+    W(External HTTP:80 Request) --> N80(HTTP:80)
 
-   subgraph Nginx 外部监听
-   N80 -.- N301(301转写) -.- N443(HTTPS:443)
-   end
+    subgraph Nginx External Listener
+    N80 -.- N301(301 Redirect) -.- N443(HTTPS:443)
+    end
 
-   N443 --> X(Xray 监听 443) .- X1{入站判断}
-   X1 --> |接收 VLESS 流量| X2(Xray内部规则)
-   X2 --> O(Xray Outbounds 出站)
-   X1 ==> |回落 非VLESS 流量| N8080(Nginx:8080)
-   N8080:::nginxclass ==> H(index.html)
+    N443 --> X(Xray Listener 443) .- X1{Inbound Judgment}
+    X1 --> |Receive VLESS Traffic| X2(Xray Internal Rules)
+    X2 --> O(Xray Outbounds)
+    X1 ==> |Fallback Non-VLESS Traffic| N8080(Nginx:8080)
+    N8080:::nginxclass ==> H(index.html)
 
-   H:::nginxclass
-   classDef nginxclass fill:#FFFFDE
+    H:::nginxclass
+    classDef nginxclass fill:#FFFFDE
 
-   ```
+    ```
 
-## 2. 重新认识回落 (WHAT, HOW `v1`)
+## 2. Re-understanding Fallbacks (WHAT, HOW `v1`)
 
-基于上面的示例，你应该就可以明白什么是回落（What）和怎么回落（How）了，简单地说就是下面这几个要素：
+Based on the example above, you should understand what a fallback is (What) and how it works (How). Simply put, it involves these elements:
 
-1. 回落的时间是流量进入 `Xray监听端口` 后
-2. 回落的依据是 `协议类型` 等流量特征
-3. 回落的目标是某个 `端口`
-4. 被回落的流量由监听 `回落端口` 的后续程序接手
+1. The **Time** of fallback is after traffic enters the `Xray Listening Port`.
+2. The **Basis** for fallback is traffic characteristics like `Protocol Type`.
+3. The **Target** of fallback is a specific `Port`.
+4. The traffic being fallen back is taken over by a subsequent program listening on the `Fallback Port`.
 
-## 3. 为什么要回落 (WHY `v1`)
+## 3. Why Use Fallbacks (WHY `v1`)
 
-最初，是为了防御 **【主动探测】** (Active Probing)
+Initially, it was to defend against **[Active Probing]**.
 
-**主动探测：** 简单粗暴的理解，就是指外部通过发送特定的网络请求，并解读服务器的回应内容，来推测服务器端是否运行了 `xray`, `v2fly`, `shadowsocks` 等代理工具。一旦可以准确认定，则服务器可能受到干扰或阻断。
+**Active Probing:** To put it simply and crudely, this refers to external parties sending specific network requests and interpreting the server's response to guess whether the server is running proxy tools like `xray`, `v2fly`, or `shadowsocks`. Once accurately identified, the server may be interfered with or blocked.
 
-之所以可以根据服务器回应内容进行解读，就是因为一次完整的数据请求，其实有很多数据交换的步骤，每一个步骤，都会产生一些软件特征。用大白话说就是：
+The reason interpretation is possible based on server responses is that a complete data request involves many steps of data exchange, and each step produces certain software signatures. In plain English:
 
-- 正常的网站的回应，一定【会有】类似 `Nginx`, `Apache`, `MySQL` 的 Web 服务、数据库等工具的特征
-- 正常的网站的回应，一定【不会有】类似 `xray`, `v2fly`, `shadowsocks` 等代理工具的特征
+- A normal website response will definitely **[HAVE]** signatures of Web services/databases like `Nginx`, `Apache`, `MySQL`, etc.
+- A normal website response will definitely **[NOT HAVE]** signatures of proxy tools like `xray`, `v2fly`, `shadowsocks`, etc.
 
-于是，当我们给 `Xray` 提供了【回落】功能后（如上例，回落给 `Nginx`），面对任何用来探测的请求，产生的结果是：
+Therefore, when we provide the **[Fallback]** function to `Xray` (as in the example above, falling back to `Nginx`), the result when facing any probing request is:
 
-- 探测流量无法掌握你的 `VLESS` 要素，故都会被回落至 `Nginx`
-- 探测流量全都回落进入 `Nginx` ，故 VPS 服务器的回应一定【会有】 `Nginx` 的特征
-- 因为 `Xray` 本身不对探测流量做任何回应 ，所以 VPS 的回应一定【不会有】 `Xray` 的特征
+- Probing traffic cannot master your `VLESS` secrets/elements, so it will all fall back to `Nginx`.
+- Since probing traffic falls back into `Nginx`, the VPS server's response will definitely **[HAVE]** `Nginx` signatures.
+- Because `Xray` itself does not respond to probing traffic, the VPS response will definitely **[NOT HAVE]** `Xray` signatures.
 
-至此，【回落】功能就从数据交互逻辑上解决了服务器被 **【主动探测】** 的安全隐患。
+Thus, the **[Fallback]** function solves the security risk of the server being **[Actively Probed]** from the logic of data interaction.
 
-## 4. 重新认识【回落の完全体】 (WHAT, WHY, HOW `v2`)
+## 4. Re-understanding the [Perfect Form of Fallback] (WHAT, WHY, HOW `v2`)
 
-为什么又要再次认识回落呢？ 因为，上面仅仅说清楚了基于“协议”的、抵抗【主动探测】的初版回落。
+Why do we need to understand fallbacks again? Because the above only explains the initial version of fallbacks based on "protocols" for resisting [Active Probing].
 
-在 [RPRX](https://github.com/rprx) 不断开发迭代 `VLESS` 协议及 `fallback` 功能的过程中，逐渐发现，回落完全可以更加灵活强大，只要在保证抵抗【主动探测】的前提下，充分利用数据首包中的信息，其实可以做到多元素、多层次的回落。（如 `path`, `alpn` 等）
+During the continuous development and iteration of the `VLESS` protocol and `fallback` function by [RPRX](https://github.com/rprx), it was discovered that fallbacks could be much more flexible and powerful. As long as the premise of resisting [Active Probing] is met, by fully utilizing the information in the first data packet, multi-element and multi-level fallbacks (such as `path`, `alpn`, etc.) can be achieved.
 
-基于这个开发理念，【回落】功能才逐渐成长为现在的完全体，即完成了 `纯伪装 --> ws分流 --> 多协议多特征分流` 的进化。最终版甚至完全替代了以前要用 Web 服务器、其他工具才能完成的分流的功能。且由于上述的【回落/分流】处理都在首包判断阶段以毫秒级的速度完成、不涉及任何数据操作，所以几乎没有任何过程损耗。
+Based on this development philosophy, the **[Fallback]** function has gradually grown into its current "Perfect Form," completing the evolution from `Pure Camouflage --> WS Shunting --> Multi-protocol Multi-feature Shunting`. The final version has even completely replaced the shunting functions that previously required Web servers or other tools. Moreover, since the aforementioned [Fallback/Shunting] processing is completed at the first packet judgment stage with millisecond-level speed and does not involve any data manipulation, there is almost no process loss.
 
-**因此，现在 `Xray` 中【完整体的回落功能】，同时具备下述属性：**
+**Therefore, the [Complete Fallback Function] in `Xray` now possesses the following attributes:**
 
-- **安全：** 充分抵御主动探测攻击
-- **高效：** 几乎毫无性能损失
-- **灵活：** 数据灵活分流、常用端口复用（如 443）
+- **Secure:** Fully resists active probing attacks.
+- **Efficient:** Almost zero performance loss.
+- **Flexible:** Flexible data shunting, reuse of common ports (like 443).
 
-::: tip 啰嗦君
-这样多轮介绍虽然略显繁琐，但只有这样层层深入展开，才能充分的说明【回落の完全体】独有的强大！
+::: tip Mr. Wordy
+Although explaining it in multiple rounds seems tedious, only by peeling it back layer by layer can we fully demonstrate the unique power of the [Perfect Form of Fallback]!
 :::
 
-## 5. 多层回落示例及解读
+## 5. Multi-layer Fallback Example and Interpretation
 
-理解了【回落の完全体】是什么，那就可以动手操作配置多层回落了。其实，项目已经提供了非常完整的示例，即官方模板中的 [VLESS-TCP-XTLS-WHATEVER](https://github.com/XTLS/Xray-examples/blob/main/VLESS-TCP-XTLS-WHATEVER/)。
+Now that you understand what the [Perfect Form of Fallback] is, you can get your hands dirty configuring multi-layer fallbacks.
 
-### 5.1 首先，我将服务器端配置的 443 监听段摘抄如下：
+### 5.1 First, I will extract the server-side configuration for port 443 as follows
 
 ```json
 {
@@ -142,7 +142,7 @@
   "settings": {
     "clients": [
       {
-        "id": "", // 填写你的 UUID
+        "id": "", // Fill in your UUID
         "flow": "xtls-rprx-vision",
         "level": 0,
         "email": "love@example.com"
@@ -151,21 +151,21 @@
     "decryption": "none",
     "fallbacks": [
       {
-        "dest": 1310, // 默认回落到 Xray 的 Trojan 协议
+        "dest": 1310, // Default fallback to Xray's Trojan protocol
         "xver": 1
       },
       {
-        "path": "/websocket", // 必须换成自定义的 PATH
+        "path": "/websocket", // Must be changed to your custom PATH
         "dest": 1234,
         "xver": 1
       },
       {
-        "path": "/vmesstcp", // 必须换成自定义的 PATH
+        "path": "/vmesstcp", // Must be changed to your custom PATH
         "dest": 2345,
         "xver": 1
       },
       {
-        "path": "/vmessws", // 必须换成自定义的 PATH
+        "path": "/vmessws", // Must be changed to your custom PATH
         "dest": 3456,
         "xver": 1
       }
@@ -178,8 +178,8 @@
       "alpn": ["http/1.1"],
       "certificates": [
         {
-          "certificateFile": "/path/to/fullchain.crt", // 换成你的证书，绝对路径
-          "keyFile": "/path/to/private.key" // 换成你的私钥，绝对路径
+          "certificateFile": "/path/to/fullchain.crt", // Absolute path to your certificate
+          "keyFile": "/path/to/private.key" // Absolute path to your private key
         }
       ]
     }
@@ -187,194 +187,194 @@
 }
 ```
 
-这一段配置用人话要怎么解释呢？
+How do we explain this configuration in plain language?
 
-1. **`Xray` 的入站端口 (`inbound port`) 是 `443`**
+1. **Xray's `[inbound port]` is `443`**
 
-   即由 `Xray` 负责监听 `443` 端口的 `HTTPS` 流量，并使用 `certificates` 项下设定的 `TLS` 证书来进行验证
+    This means `Xray` is responsible for listening to `HTTPS` traffic on port `443` and uses the `TLS` certificate set under `certificates` for verification.
 
-2. **`Xray` 的入站协议 (`inbound protocol`) 是 `vless`**
+2. **Xray's `[inbound protocol]` is `vless`**
 
-   `vless` 协议流量直接流入 `Xray` 中做后续处理
+    `vless` protocol traffic flows directly into `Xray` for subsequent processing.
 
-3. **非 `VLESS` 协议流量有 4 个不同的回落目标：**
-   1. `path` 为 `websocket` 的流量，回落给端口 `1234` 后续处理
-   2. `path` 为 `vmesstcp` 的流量，回落给端口 `2345` 后续处理
-   3. `path` 为 `vmessws` 的流量，回落给端口 `3456` 后续处理
-   4. 其它所有流量，回落给端口 `1310` 后续处理
+3. **Non-`VLESS` protocol traffic has 4 different fallback targets:**
+    1. Traffic with `path` as `/websocket` falls back to port `1234` for processing.
+    2. Traffic with `path` as `/vmesstcp` falls back to port `2345` for processing.
+    3. Traffic with `path` as `/vmessws` falls back to port `3456` for processing.
+    4. All other traffic falls back to port `1310` for processing.
 
-4. **`xver` 为 `1` 表示开启 `proxy protocol` 功能，向后传递来源真实 IP**
+4. **`xver` set to `1` means enabling the `proxy protocol` function to pass the real source IP backwards.**
 
-5. **上述回落结构如下图所示：**
+5. **The fallback structure described above is shown in the diagram below:**
 
-   ```mermaid
-   graph LR;
+    ```mermaid
+    graph LR;
 
-   W443(外部 HTTP:443 请求) --> X443(Xray-inbound: 443) .- X1{入站判断}
-   X1 --> |协议 = VLESS 的流量| X2(Xray内部规则)
-   X2 --> O(Xray Outbounds 出站)
+    W443(External HTTP:443 Request) --> X443(Xray-inbound: 443) .- X1{Inbound Judgment}
+    X1 --> |Protocol = VLESS Traffic| X2(Xray Internal Rules)
+    X2 --> O(Xray Outbounds)
 
-   X1 --> |path = /websocket 的流量| X1234(Xray-inbound:1234)
-   X1 --> |path = /vmesstcp 的流量| X2345(Xray-inbound:2345)
-   X1 --> |path = /vmessws 的流量| X3456(Xray-inbound:3456)
-   X1 --> |其它所有流量| X1310(Xray-inbound:1310)
+    X1 --> |path = /websocket Traffic| X1234(Xray-inbound:1234)
+    X1 --> |path = /vmesstcp Traffic| X2345(Xray-inbound:2345)
+    X1 --> |path = /vmessws Traffic| X3456(Xray-inbound:3456)
+    X1 --> |All Other Traffic| X1310(Xray-inbound:1310)
 
-   ```
+    ```
 
-6. **网页回落不见了！**
+6. **The Web Page Fallback is missing!**
 
-   没错，聪明的同学应该发现了，防御【主动探测】的 `nginx回落` 不见了！！！这是为什么呢？会不会不安全？别急，我们继续分析：
+    That's right, clever students must have noticed that the `nginx fallback` for defending against [Active Probing] is gone!!! Why is that? Is it insecure? Don't worry, let's continue analyzing:
 
-### 5.2 后续监听处理的配置段摘抄如下：
+### 5.2 The configuration segments for subsequent listening processing are as follows
 
-1. 后续处理回落至 `1310` 端口的流量，按照下面的配置验证、处理：
+1. Traffic falling back to port `1310` is verified and processed according to the configuration below:
 
-   ```json
-   {
-     "port": 1310,
-     "listen": "127.0.0.1",
-     "protocol": "trojan",
-     "settings": {
-       "clients": [
-         {
-           "password": "", // 填写你的密码
-           "level": 0,
-           "email": "love@example.com"
-         }
-       ],
-       "fallbacks": [
-         {
-           "dest": 80 // 或者回落到其它也防探测的代理
-         }
-       ]
-     },
-     "streamSettings": {
-       "network": "tcp",
-       "security": "none",
-       "tcpSettings": {
-         "acceptProxyProtocol": true
-       }
-     }
-   }
-   ```
+    ```json
+    {
+      "port": 1310,
+      "listen": "127.0.0.1",
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          {
+            "password": "", // Fill in your password
+            "level": 0,
+            "email": "love@example.com"
+          }
+        ],
+        "fallbacks": [
+          {
+            "dest": 80 // Or fallback to another probe-resistant proxy
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none",
+        "tcpSettings": {
+          "acceptProxyProtocol": true
+        }
+      }
+    }
+    ```
 
-   看，神奇的事情发生了， `trojan` 协议这里又出现了一个新的 `fallbacks`。前面已经说过，`xray` 中的 `trojan` 协议也具有完整的回落能力，所以，此时 `trojan` 协议可以再次做判断和回落（这也就是传说中的套娃回落了）：
-   - 所有 `trojan` 协议的流量，流入 `Xray` 中做后续处理
-   - 所有非 `trojan` 协议的流量，转发至 `80` 端口，【主动探测】的防御，完成！
+    Look, something magical happened. A new `fallbacks` section appeared here in the `trojan` protocol. As mentioned before, the `trojan` protocol in `xray` also has full fallback capabilities. So, at this point, the `trojan` protocol can perform judgment and fallback again (this is the legendary "Nested/Matryoshka" fallback):
+    - All `trojan` protocol traffic flows into `Xray` for subsequent processing.
+    - All non-`trojan` protocol traffic is forwarded to port `80`. The defense against [Active Probing] is complete!
 
-2. 后续处理回落至 `1234` 端口的流量，仔细看！它其实是 `vless+ws`：
+2. Traffic falling back to port `1234`. Look closely! It is actually `vless+ws`:
 
-   ```json
-   {
-     "port": 1234,
-     "listen": "127.0.0.1",
-     "protocol": "vless",
-     "settings": {
-       "clients": [
-         {
-           "id": "", // 填写你的 UUID
-           "level": 0,
-           "email": "love@example.com"
-         }
-       ],
-       "decryption": "none"
-     },
-     "streamSettings": {
-       "network": "ws",
-       "security": "none",
-       "wsSettings": {
-         "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
-         "path": "/websocket" // 必须换成自定义的 PATH，需要和分流的一致
-       }
-     }
-   }
-   ```
+    ```json
+    {
+      "port": 1234,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "", // Fill in your UUID
+            "level": 0,
+            "email": "love@example.com"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true, // Reminder: Delete this line if using Nginx/Caddy to reverse proxy WS
+          "path": "/websocket" // Must be changed to custom PATH, matching the shunting path
+        }
+      }
+    }
+    ```
 
-3. 后续处理回落至 `2345` 端口的流量，仔细看！它其实是 `vmess直连`：
+3. Traffic falling back to port `2345`. Look closely! It is actually `vmess direct connection`:
 
-   ```json
-   {
-     "port": 2345,
-     "listen": "127.0.0.1",
-     "protocol": "vmess",
-     "settings": {
-       "clients": [
-         {
-           "id": "", // 填写你的 UUID
-           "level": 0,
-           "email": "love@example.com"
-         }
-       ]
-     },
-     "streamSettings": {
-       "network": "tcp",
-       "security": "none",
-       "tcpSettings": {
-         "acceptProxyProtocol": true,
-         "header": {
-           "type": "http",
-           "request": {
-             "path": [
-               "/vmesstcp" // 必须换成自定义的 PATH，需要和分流的一致
-             ]
-           }
-         }
-       }
-     }
-   }
-   ```
+    ```json
+    {
+      "port": 2345,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "", // Fill in your UUID
+            "level": 0,
+            "email": "love@example.com"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none",
+        "tcpSettings": {
+          "acceptProxyProtocol": true,
+          "header": {
+            "type": "http",
+            "request": {
+              "path": [
+                "/vmesstcp" // Must be changed to custom PATH, matching the shunting path
+              ]
+            }
+          }
+        }
+      }
+    }
+    ```
 
-4. 后续处理回落至 `3456` 端口的流量，再仔细看！它其实是是 `vmess+ws(+cdn)`。
+4. Traffic falling back to port `3456`. Look closely again! It is actually `vmess+ws(+cdn)`.
 
-   ::: warning 说明
-   你没看错，这就是 v2fly 曾经推荐的组合之一，并可完整支持 `CDN`。现已加入完美回落套餐哦！
-   :::
+    ::: warning Explanation
+    You read that right. This is one of the combinations previously recommended by v2fly, and it fully supports `CDN`. It is now included in the perfect fallback package!
+    :::
 
-   ```json
-   {
-     "port": 3456,
-     "listen": "127.0.0.1",
-     "protocol": "vmess",
-     "settings": {
-       "clients": [
-         {
-           "id": "", // 填写你的 UUID
-           "level": 0,
-           "email": "love@example.com"
-         }
-       ]
-     },
-     "streamSettings": {
-       "network": "ws",
-       "security": "none",
-       "wsSettings": {
-         "acceptProxyProtocol": true, // 提醒：若你用 Nginx/Caddy 等反代 WS，需要删掉这行
-         "path": "/vmessws" // 必须换成自定义的 PATH，需要和分流的一致
-       }
-     }
-   }
-   ```
+    ```json
+    {
+      "port": 3456,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "", // Fill in your UUID
+            "level": 0,
+            "email": "love@example.com"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true, // Reminder: Delete this line if using Nginx/Caddy to reverse proxy WS
+          "path": "/vmessws" // Must be changed to custom PATH, matching the shunting path
+        }
+      }
+    }
+    ```
 
-5. 至此，我们就能够完整的画出模板的回落路线了：
+5. **With this, we can draw the complete fallback route for the template:**
 
 ```mermaid
     graph LR;
 
-    W443(外部 HTTP:443 请求) --> X443(Xray-inbound: 443) .- X1{入站判断}
-    X1 --> |协议 = VLESS 的流量| X2(Xray内部规则)
-    X2 --> XO(Xray Outbounds 出站)
+    W443(External HTTP:443 Request) --> X443(Xray-inbound: 443) .- X1{Inbound Judgment}
+    X1 --> |Protocol = VLESS Traffic| X2(Xray Internal Rules)
+    X2 --> XO(Xray Outbounds)
 
-    X1 --> |path = /websocket 的流量| X1234(Xray-inbound:1234)
-    X1 --> |path = /vmesstcp 的流量| X2345(Xray-inbound:2345)
-    X1 --> |path = /vmessws 的流量| X3456(Xray-inbound:3456)
-    X1 --> |其它所有流量| X1310(Xray-inbound:1310)
+    X1 --> |path = /websocket Traffic| X1234(Xray-inbound:1234)
+    X1 --> |path = /vmesstcp Traffic| X2345(Xray-inbound:2345)
+    X1 --> |path = /vmessws Traffic| X3456(Xray-inbound:3456)
+    X1 --> |All Other Traffic| X1310(Xray-inbound:1310)
 
     X1234 --> X2
     X2345 --> X2
     X3456 --> X2
 
-    X1310 --> |协议 = trojan 的流量| X2
-    X1310 --> |其他所有流量| N80(Nginx:80)
+    X1310 --> |Protocol = trojan Traffic| X2
+    X1310 --> |All Other Traffic| N80(Nginx:80)
 
     N80:::nginxclass --> H(index.html)
 
@@ -382,12 +382,12 @@
     classDef nginxclass fill:#FFFFDE
 ```
 
-## 6. 结语
+## 6. Conclusion
 
-至此，`Xray` 的【回落】功能就介绍完了。希望本文能够对你理解 `Xray` 的强大有所帮助。
+This concludes the introduction to `Xray`'s **[Fallback]** function. I hope this article helps you understand the power of `Xray`.
 
-## 7. 附加题
+## 7. Bonus Question
 
-我再无耻的留一个附加题：本文详解的 [VLESS-TCP-XTLS-WHATEVER](https://github.com/XTLS/Xray-examples/blob/main/VLESS-TCP-XTLS-WHATEVER/) 模板？是否有可以优化的地方？
+I will shamelessly leave a bonus question: Is there any room for optimization in the [VLESS-TCP-XTLS-WHATEVER](https://github.com/XTLS/Xray-examples/blob/main/VLESS-TCP-XTLS-WHATEVER/) template detailed in this article?
 
-提示：HTTP 自动跳转 HTTPS
+Hint: HTTP automatic redirection to HTTPS.

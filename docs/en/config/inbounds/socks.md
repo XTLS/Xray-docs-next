@@ -1,12 +1,12 @@
-# SOCKS
+# Socks
 
-The standard SOCKS protocol implementation is compatible with [SOCKS 4](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol), SOCKS 4a, and [SOCKS 5](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol).
+Standard Socks protocol implementation, compatible with [Socks 4](http://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4.protocol), [Socks 4a](https://ftp.icm.edu.pl/packages/socks/socks4/SOCKS4A.protocol), Socks 5, and **HTTP**.
 
 ::: danger
-The SOCKS protocol does not provide encryption for transport and is not suitable for transmitting data over public networks.
+**The Socks protocol does not encrypt transmission and is not suitable for transmission over the public internet.**
 :::
 
-The use of `SOCKS` inbound is more meaningful in a local area network or local environment, where it can be used to listen for incoming connections and provide local services to other programs.
+A more meaningful usage of `Socks` inbound is to listen within a LAN or on the local machine to provide local services for other programs.
 
 ## InboundConfigurationObject
 
@@ -27,35 +27,39 @@ The use of `SOCKS` inbound is more meaningful in a local area network or local e
 
 > `auth`: "noauth" | "password"
 
-The authentication method for the SOCKS protocol, supporting `"noauth"` for anonymous mode and `"password"` for username/password authentication.
+Authentication method for the Socks protocol. Supports `"noauth"` (anonymous) and `"password"` (user/password).
 
-The default value is `"noauth"`.
+When using password, HTTP requests sent to this inbound will also require the same account and password.
+
+Default value is `"noauth"`.
 
 > `accounts`: \[ [AccountObject](#accountobject) \]
 
-An array where each element represents a user account.
+An array where each element is a user account.
 
-This option is only valid when `auth` is set to `"password"`.
+This option is only valid when `auth` is set to `password`.
 
-The default value is an empty array.
+Default value is empty.
 
 > `udp`: true | false
 
 Whether to enable UDP protocol support.
 
-The default value is `false`.
+Default value is `false`.
 
 > `ip`: address
 
-When UDP is enabled, Xray needs to know the local IP address.
+When UDP is enabled, Xray needs to know the IP address of the local machine.
 
-The default value is `"127.0.0.1"`.
+"The IP address of the local machine" means the IP that the client can use to find the server when initiating a UDP connection. By default, it is the local IP address when the server accepts the TCP connection. It should work normally in most cases, but when passing through systems behind NAT, it may cause malfunctions, requiring this parameter to be modified to the correct public IP.
+
+Warning: If your machine has multiple IP addresses, you will be affected by the issue regarding UDP listening on 0.0.0.0 mentioned in [Inbound Listening](../inbound.md#inboundobject).
 
 > `userLevel`: number
 
-The user level that the connection will use to determine the corresponding [Local Policy](../policy.md#levelpolicyobject).
+User level. Connections will use the [Local Policy](../policy.md#levelpolicyobject) corresponding to this user level.
 
-The value of `userLevel` corresponds to the value of `level` in the [policy](../policy.md#policyobject). If not specified, the default value is 0.
+The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, the default is 0.
 
 ### AccountObject
 
@@ -68,8 +72,8 @@ The value of `userLevel` corresponds to the value of `level` in the [policy](../
 
 > `user`: string
 
-The username as a string. Required.
+Username, string type. Required.
 
 > `pass`: string
 
-The password as a string. Required.
+Password, string type. Required.
