@@ -1,7 +1,3 @@
----
-title: GID Transparent Proxy
----
-
 # Transparent Proxy: Bypassing Xray Traffic via GID
 
 In existing `iptables` transparent proxy guides (**[New V2Ray Plain English Guide - Transparent Proxy](https://guide.v2fly.org/app/transparent_proxy.html)**, **[New V2Ray Plain English Guide - Transparent Proxy (TPROXY)](https://guide.v2fly.org/app/tproxy.html)**, **[Transparent Proxy (TProxy) Configuration Tutorial](./tproxy)**), the method used to bypass Xray traffic (to prevent routing loops) involves marking packets (`mark`). Specifically, marks are applied to Xray's outbound traffic, and `iptables` rules are set to direct traffic with corresponding marks to go out directly, thus bypassing the Xray proxy process.
@@ -145,11 +141,11 @@ ulimit -SHn 1000000
 sudo -u xray_tproxy xray -c /etc/xray/config.json &
 ```
 
-*First command:*
+_First command:_
 
 Changes the maximum number of open files. It is only effective for the current terminal and must be run every time before starting Xray. This command sets the maximum file limit for the client.
 
-*Second command:*
+_Second command:_
 
 Runs the Xray client as a user with `uid=0` and a non-zero `gid`. The `&` at the end indicates running in the background.
 

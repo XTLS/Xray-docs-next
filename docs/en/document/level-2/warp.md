@@ -1,15 +1,11 @@
----
-title: Enhancing Proxy Security via Cloudflare Warp
----
-
 # Enhancing Proxy Security via Cloudflare Warp
 
 Xray (1.6.5+) has added a WireGuard outbound. Although the additional code and dependencies increase the core size, we believe this is a highly necessary new feature for three reasons:
 
 1. Through recent discussions and [experiments](https://github.com/net4people/bbs/issues/129#issuecomment-1308102504), we know that routing traffic back to China via a proxy is insecure. One countermeasure is to route return traffic to a blackhole. The downside is that if `geosite` and `geoip` rules are not updated in time, or if beginners don't know how to configure routing properly on the client side, legitimate traffic enters the blackhole, affecting the user experience.
-    By routing return traffic (traffic destined for China) to Cloudflare Warp instead, we can achieve the same level of security without impacting the user experience.
+   By routing return traffic (traffic destined for China) to Cloudflare Warp instead, we can achieve the same level of security without impacting the user experience.
 2. It is well known that most proxy providers ("Airports") log user domain access history, and some even audit and block certain user traffic. One way to protect user privacy is to use a chain proxy on the client side.
-    The WireGuard lightweight VPN protocol used by Warp adds a layer of encryption within the proxy layer. For the proxy provider, the destination of all user traffic appears to be Warp, thereby maximizing privacy protection.
+   The WireGuard lightweight VPN protocol used by Warp adds a layer of encryption within the proxy layer. For the proxy provider, the destination of all user traffic appears to be Warp, thereby maximizing privacy protection.
 3. Ease of use. A single core can handle routing, WireGuard Tun, and chain proxy settings.
 
 ## Applying for a Warp Account

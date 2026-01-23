@@ -1,7 +1,3 @@
----
-title: 通过 Cloudflare Warp 增强代理安全性
----
-
 # 通过 Cloudflare Warp 增强代理安全性
 
 Xray（1.6.5+）新加入了 WireGuard 出站，虽然增加的代码和依赖会增大 core 体积，但是我们认为这是一个很有必要的新功能，原因有三：

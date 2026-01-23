@@ -1,7 +1,3 @@
----
-title: 流量统计
----
-
 # 流量统计配置教程
 
 请熟悉[流量统计 白话文教程](https://guide.v2fly.org/advanced/traffic.html)，本文在其基础上适配了 Xray（1.5.9+）。

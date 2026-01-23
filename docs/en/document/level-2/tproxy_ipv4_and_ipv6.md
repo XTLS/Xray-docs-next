@@ -1,7 +1,3 @@
----
-title: TProxy Transparent Proxy (IPv4 and IPv6)
----
-
 # TProxy Transparent Proxy (IPv4 and IPv6) Configuration Tutorial
 
 This configuration is based on the [New V2Ray Plain English Guide for TProxy Transparent Proxy](https://guide.v2fly.org/app/tproxy.html), the [Transparent Proxy (TProxy) Configuration Tutorial](https://xtls.github.io/document/level-2/tproxy.html#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D), and [Bypassing Xray Traffic via GID](https://xtls.github.io/document/level-2/iptables_gid.html). It adds support for IPv6 transparent proxying and utilizes the VLESS-TCP-XTLS-RPRX-Vision scheme to counter blocking (version 1.7.2 or later is recommended).

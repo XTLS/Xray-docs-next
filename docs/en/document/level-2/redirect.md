@@ -1,7 +1,3 @@
----
-title: Outbound Traffic Redirection
----
-
 # Traffic Redirection Based on fwmark or sendThrough
 
 Direct specific traffic to specific exits via Xray to achieve global routing "traffic splitting".

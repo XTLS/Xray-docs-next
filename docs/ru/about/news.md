@@ -1,7 +1,3 @@
----
-sidebar: auto
----
-
 # 大史记
 
 ## 2024.10.31 <badge>[24.10.31](https://github.com/XTLS/Xray-core/releases/tag/v24.10.31)</badge>

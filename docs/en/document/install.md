@@ -160,6 +160,6 @@ ghcr.io/xtls/xray-core version image:
   - [GoXRay](https://github.com/goxray/desktop)
   - [AnyPortal](https://github.com/AnyPortal/AnyPortal)
 
-# UUID Generator
+## UUID Generator
 
 Third-party UUID generator: [uuidgenerator.net](https://www.uuidgenerator.net)

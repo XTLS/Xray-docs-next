@@ -1,7 +1,3 @@
----
-title: TProxy Transparent Proxy
----
-
 # Transparent Proxy (TProxy) Configuration Tutorial
 
 This configuration is based on the [New V2Ray Plain Guide for Transparent Proxy (TProxy)](https://guide.v2fly.org/app/tproxy.html), adding new features from Xray. It utilizes the VLESS + XTLS Vision scheme. Unlike the old tutorial which defaulted to proxying outbound traffic, this configuration defaults to direct connection for outbound traffic. Users should adjust this according to their actual needs.
@@ -14,7 +10,7 @@ Please check that your device has an active network connection, the server-side 
 
 It is worth noting that many transparent proxy tutorials instruct you to enable IP Forwarding on Linux. However, doing so can degrade `Splice` performance. For details, please refer to [Detective Story Part 3: How we solved the mystery of Splice performance dropping even below Direct](https://github.com/XTLS/Xray-core/discussions/59).
 
-I would like to add that many transparent proxy tutorials use Netfilter for traffic splitting (routing), allowing direct traffic to go out without passing through Xray. In that case, IP Forwarding must be enabled. However, some tutorials, like this one, direct *all* traffic into Xray, and the routing module within Xray handles the splitting. In this scenario, IP Forwarding does **not** need to be enabled.
+I would like to add that many transparent proxy tutorials use Netfilter for traffic splitting (routing), allowing direct traffic to go out without passing through Xray. In that case, IP Forwarding must be enabled. However, some tutorials, like this one, direct _all_ traffic into Xray, and the routing module within Xray handles the splitting. In this scenario, IP Forwarding does **not** need to be enabled.
 
 ## Xray Configuration
 

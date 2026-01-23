@@ -1,7 +1,4 @@
----
-title: Configuration File
-lang: en-US
----
+# Configuration File
 
 > **This chapter will tell you all the details of Xray configuration. Mastering this content will allow you to unleash the greater power of Xray.**
 

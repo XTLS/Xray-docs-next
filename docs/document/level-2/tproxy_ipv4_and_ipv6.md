@@ -1,7 +1,3 @@
----
-title: TProxy 透明代理 (ipv4 and ipv6)
----
-
 # TProxy 透明代理（ipv4 and ipv6）配置教程
 
 本配置参考了[TProxy 透明代理的新 V2Ray 白话文教程](https://guide.v2fly.org/app/tproxy.html)，[透明代理（TProxy）配置教程](https://xtls.github.io/document/level-2/tproxy.html#%E5%BC%80%E5%A7%8B%E4%B9%8B%E5%89%8D)以及[透明代理通过 gid 规避 Xray 流量](https://xtls.github.io/document/level-2/iptables_gid.html)，加入了透明代理对 ipv6 的支持，并且使用 VLESS-TCP-XTLS-RPRX-Vision 方案对抗封锁 (推荐使用 1.7.2 及之后版本)。

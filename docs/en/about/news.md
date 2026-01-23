@@ -1,7 +1,3 @@
----
-sidebar: auto
----
-
 # Grand Chronicle
 
 ## 2024.10.31 <badge>[24.10.31](https://github.com/XTLS/Xray-core/releases/tag/v24.10.31)</badge>
@@ -484,7 +480,7 @@ Now bringing a sneak peek of X-flutter, look forward to what it will look like~ 
 
 ## 2021.3.25
 
-Yes, still changing. -_-
+Yes, still changing. -\_-
 
 ## 2021.3.15
 
@@ -530,7 +526,7 @@ The documentation site is quietly undergoing some mysterious changes... 🙊🙊
 
 - Support for SS protocol has become stronger **again**, supporting single-port multi-user!
 - Support for Trojan protocol has also become stronger **again**; Trojan fallback also unlocked a new posture for SNI routing~!
-- _(VLESS: _cries_)_
+- _(VLESS: \_cries_)\_
 - Weird UDP BUGs have been eliminated. One word: "Stable".
 - Sniffing can exclude domains you don't want to sniff, enabling some new ways to play.
 - Salute to [@Bohan Yang](https://github.com/bohanyang) who discovers issues -> opens issues -> self-tests -> self-analyzes -> finds the problem -> solves it -> and then submits PRs to upstream and downstream!

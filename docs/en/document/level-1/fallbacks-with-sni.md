@@ -1,7 +1,3 @@
----
-title: SNI Fallback
----
-
 # Camouflage and Routing by Domain via SNI Fallback
 
 VLESS is a lightweight protocol. Like Trojan, it does not perform complex encryption and obfuscation on traffic. Instead, it "hides in plain sight" by using the TLS protocol for encryption, blending in with other HTTPS traffic to pass in and out of the firewall. To better camouflage against active probing, the **Fallbacks** feature was introduced alongside VLESS. This tutorial will demonstrate how to use the fallback function of the VLESS inbound protocol in Xray, combined with Nginx or Caddy, to achieve routing based on domain names while ensuring complete camouflage.

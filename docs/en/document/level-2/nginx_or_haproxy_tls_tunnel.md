@@ -1,10 +1,8 @@
----
-title: Using Nginx or HAProxy to Build TLS Tunnels to Hide Fingerprints
----
+# Using Nginx or HAProxy to Build TLS Tunnels to Hide Fingerprints
 
 HTTPS tunnels, HTTP/2 over HTTPS tunnels, WebSocket over HTTP/2 over HTTPS tunnels, gRPC over HTTP/2 over HTTPS tunnels implemented via Nginx or HAProxy, and gRPC over HTTP/2 over HTTPS tunnels with self-signed certificate mutual authentication.
 
-# Building HTTPS Tunnels with Nginx on Client & Server to Hide Fingerprints
+## Building HTTPS Tunnels with Nginx on Client & Server to Hide Fingerprints
 
 Network Structure:
 

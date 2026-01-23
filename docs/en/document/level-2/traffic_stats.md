@@ -1,7 +1,3 @@
----
-title: Traffic Statistics
----
-
 # Traffic Statistics Configuration Tutorial
 
 Please familiarize yourself with the [Traffic Statistics Plain Language Guide](https://guide.v2fly.org/advanced/traffic.html). This article adapts those concepts for Xray (1.5.9+).

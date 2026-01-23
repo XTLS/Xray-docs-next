@@ -156,6 +156,6 @@ Xray предлагает два способа проверки:
   - [GoXRay](https://github.com/goxray/desktop)
   - [AnyPortal](https://github.com/AnyPortal/AnyPortal)
 
-# Генератор UUID
+## Генератор UUID
 
 Генератор UUID от сторонних разработчиков: [uuidgenerator.net](https://www.uuidgenerator.net)
