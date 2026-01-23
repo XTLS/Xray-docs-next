@@ -10,6 +10,9 @@ hero:
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand
+      text: Первые шаги
+      link: /ru/document/
+    - theme: alt
       text: Руководство по конфигурации
       link: /ru/config/
     - theme: alt

@@ -10,6 +10,9 @@ hero:
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand
+      text: Quickstart
+      link: /en/document/
+    - theme: alt
       text: Configuration guide
       link: /en/config/
     - theme: alt

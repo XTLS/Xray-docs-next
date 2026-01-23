@@ -11,6 +11,9 @@ hero:
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand
+      text: 快速上手
+      link: /document/
+    - theme: alt
       text: 配置指南
       link: /config/
     - theme: alt

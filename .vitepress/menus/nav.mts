@@ -2,7 +2,6 @@ import type { DefaultTheme } from "vitepress";
 
 export const nav: DefaultTheme.Config["nav"] = [
   { text: "首页", link: "/" },
-  { text: "赞助 & 捐款 & NFTs", link: "/about/sponsor.md" },
   {
     text: "配置指南",
     items: [
@@ -23,4 +22,5 @@ export const nav: DefaultTheme.Config["nav"] = [
     ],
   },
   { text: "开发指南", link: "/development/" },
+  { text: "赞助 & 捐款 & NFTs", link: "/about/sponsor.md" },
 ];
