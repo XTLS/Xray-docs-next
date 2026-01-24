@@ -61,7 +61,7 @@ The following operations need to be performed as the root user; using sudo may c
 :::
 
 ```bash
-curl [https://get.acme.sh](https://get.acme.sh) | sh # Install acme.sh
+curl https://get.acme.sh | sh # Install acme.sh
 export CF_Token="sdfsdfsdfljlbjkljlkjsdfoiwje" # Set API Token variable
 acme.sh --issue -d example.com -d *.example.com --dns dns_cf # Apply for certificate using DNS-01 validation
 mkdir /etc/ssl/xray # Create directory for certificates
@@ -216,7 +216,7 @@ Nginx will be installed via the official repository.
 sudo apt install curl gnupg2 ca-certificates lsb-release
 echo "deb [arch=amd64] [http://nginx.org/packages/ubuntu](http://nginx.org/packages/ubuntu) `lsb_release -cs` nginx" \
     | sudo tee /etc/apt/sources.list.d/nginx.list
-curl -fsSL [https://nginx.org/keys/nginx_signing.key](https://nginx.org/keys/nginx_signing.key) | sudo apt-key add -
+curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
 sudo apt update
 sudo apt install nginx
 ```
@@ -260,7 +260,7 @@ To install Caddy, please refer to [Install — Caddy Documentation](https://cadd
 To enable Caddy to obtain the visitor's real IP, you need to compile Caddy with the Proxy Protocol module. It is recommended to compile online directly on the Caddy website.
 
 ```bash
-sudo curl -o /usr/bin/caddy "[https://caddyserver.com/api/download?os=linux&arch=amd64&p=github.com%2Fmastercactapus%2Fcaddy2-proxyprotocol&idempotency=79074247675458](https://caddyserver.com/api/download?os=linux&arch=amd64&p=github.com%2Fmastercactapus%2Fcaddy2-proxyprotocol&idempotency=79074247675458)"
+sudo curl -o /usr/bin/caddy "https://caddyserver.com/api/download?os=linux&arch=amd64&p=github.com%2Fmastercactapus%2Fcaddy2-proxyprotocol&idempotency=79074247675458"
 sudo chmod +x /usr/bin/caddy
 ```
 

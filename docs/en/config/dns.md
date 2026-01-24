@@ -62,13 +62,13 @@ If the domain currently being queried:
         "clientIP": "1.2.3.4"
       },
       {
-        "address": "[https://8.8.8.8/dns-query](https://8.8.8.8/dns-query)",
+        "address": "https://8.8.8.8/dns-query",
         "domains": ["geosite:netflix"],
         "skipFallback": true,
         "queryStrategy": "UseIPv4"
       },
       {
-        "address": "[https://1.1.1.1/dns-query](https://1.1.1.1/dns-query)",
+        "address": "https://1.1.1.1/dns-query",
         "domains": ["geosite:openai"],
         "skipFallback": true,
         "queryStrategy": "UseIPv6"
@@ -152,9 +152,9 @@ The default value `UseIP` allows querying both A + AAAA records. When a query in
 ```json
     "dns": {
         "servers": [
-            "[https://1.1.1.1/dns-query](https://1.1.1.1/dns-query)",
+            "https://1.1.1.1/dns-query",
             {
-                "address": "[https://8.8.8.8/dns-query](https://8.8.8.8/dns-query)",
+                "address": "https://8.8.8.8/dns-query",
                 "domains": [
                     "geosite:netflix"
                 ],
@@ -162,7 +162,7 @@ The default value `UseIP` allows querying both A + AAAA records. When a query in
                 "queryStrategy": "UseIPv4" // netflix domain queries A record
             },
             {
-                "address": "[https://1.1.1.1/dns-query](https://1.1.1.1/dns-query)",
+                "address": "https://1.1.1.1/dns-query",
                 "domains": [
                     "geosite:openai"
                 ],
@@ -191,9 +191,9 @@ Global `"queryStrategy": "UseIP"` does not conflict with sub-item `"queryStrateg
 ```json
     "dns": {
         "servers": [
-            "[https://1.1.1.1/dns-query](https://1.1.1.1/dns-query)",
+            "https://1.1.1.1/dns-query",
             {
-                "address": "[https://8.8.8.8/dns-query](https://8.8.8.8/dns-query)",
+                "address": "https://8.8.8.8/dns-query",
                 "domains": [
                     "geosite:netflix"
                 ],

@@ -24,7 +24,7 @@ Additionally, I trust that by now you are gradually becoming familiar with basic
 2. Run the installation script
 
    ```shell
-   wget -O -  [https://get.acme.sh](https://get.acme.sh) | sh
+   wget -O - https://get.acme.sh | sh
    ```
 
 3. Make the `acme.sh` command effective
@@ -62,10 +62,10 @@ Before officially applying for a certificate, let's use a test command (`--issue
 2. You should ultimately see a log similar to this:
 
    ```log
-   [Wed 30 Dec 2022 04:25:12 AM EST] Using ACME_DIRECTORY: [https://acme-staging-v02.api.letsencrypt.org/directory](https://acme-staging-v02.api.letsencrypt.org/directory)
-   [Wed 30 Dec 2022 04:25:13 AM EST] Using CA: [https://acme-staging-v02.api.letsencrypt.org/directory](https://acme-staging-v02.api.letsencrypt.org/directory)
+   [Wed 30 Dec 2022 04:25:12 AM EST] Using ACME_DIRECTORY: https://acme-staging-v02.api.letsencrypt.org/directory
+   [Wed 30 Dec 2022 04:25:13 AM EST] Using CA: https://acme-staging-v02.api.letsencrypt.org/directory
    [Wed 30 Dec 2022 04:25:13 AM EST] Create account key ok.
-   [Wed 30 Dec 2022 04:25:13 AM EST] Registering account: [https://acme-staging-v02.api.letsencrypt.org/directory](https://acme-staging-v02.api.letsencrypt.org/directory)
+   [Wed 30 Dec 2022 04:25:13 AM EST] Registering account: https://acme-staging-v02.api.letsencrypt.org/directory
    [Wed 30 Dec 2022 04:25:13 AM EST] Registered
    [Wed 30 Dec 2022 04:25:13 AM EST] ACCOUNT_THUMBPRINT='CU6qmPKuRqhyTAIrF4swosR375194z_1ddUlWef8xDc'
    [Wed 30 Dec 2022 04:25:13 AM EST] Creating domain key
@@ -78,9 +78,9 @@ Before officially applying for a certificate, let's use a test command (`--issue
    [Wed 30 Dec 2022 04:25:25 AM EST] Success
    [Wed 30 Dec 2022 04:25:25 AM EST] Verify finished, start to sign.
    [Wed 30 Dec 2022 04:25:25 AM EST] Lets finalize the order.
-   [Wed 30 Dec 2022 04:25:25 AM EST] Le_OrderFinalize='[https://acme-staging-v02.api.letsencrypt.org/acme/finalize/490205995/7730242871](https://acme-staging-v02.api.letsencrypt.org/acme/finalize/490205995/7730242871)'
+   [Wed 30 Dec 2022 04:25:25 AM EST] Le_OrderFinalize='https://acme-staging-v02.api.letsencrypt.org/acme/finalize/490205995/7730242871'
    [Wed 30 Dec 2022 04:25:25 AM EST] Downloading cert.
-   [Wed 30 Dec 2022 04:25:25 AM EST] Le_LinkCert='[https://acme-staging-v02.api.letsencrypt.org/acme/cert/xujss5xt8i38waubafz2xujss5xt8i38waubz2](https://acme-staging-v02.api.letsencrypt.org/acme/cert/xujss5xt8i38waubafz2xujss5xt8i38waubz2)'
+   [Wed 30 Dec 2022 04:25:25 AM EST] Le_LinkCert='https://acme-staging-v02.api.letsencrypt.org/acme/cert/xujss5xt8i38waubafz2xujss5xt8i38waubz2'
    [Wed 30 Dec 2022 15:21:52 AM EST] Cert success.
    --BEGIN CERTIFICAT--
    sxlYqPvWreKgD5b8JyOQX0Yg2MLoRUoDyqVkd31PthIiwzdckoh5eD3JU7ysYBtN
@@ -127,7 +127,7 @@ Before officially applying for a certificate, let's use a test command (`--issue
 
    ```log
    vpsadmin@vps-server:~$ acme.sh --issue -d subdomain.yourdomain.com -w /home/vpsadmin/www/webpage --keylength ec-256
-   [Wed 30 Dec 2022 15:22:51 AM EST] Using CA: [https://acme-v02.api.letsencrypt.org/directory](https://acme-v02.api.letsencrypt.org/directory)
+   [Wed 30 Dec 2022 15:22:51 AM EST] Using CA: https://acme-v02.api.letsencrypt.org/directory
    [Wed 30 Dec 2022 15:22:51 AM EST] Creating domain key
    [Wed 30 Dec 2022 15:22:51 AM EST] The domain key is here: /home/vpsadmin/.acme.sh/subdomain.yourdomain.com_ecc/subdomain.yourdomain.com.key
    [Wed 30 Dec 2022 15:22:51 AM EST] Single domain='subdomain.yourdomain.com'
@@ -138,9 +138,9 @@ Before officially applying for a certificate, let's use a test command (`--issue
    [Wed 30 Dec 2022 15:22:51 AM EST] Success
    [Wed 30 Dec 2022 15:22:51 AM EST] Verify finished, start to sign.
    [Wed 30 Dec 2022 15:22:51 AM EST] Lets finalize the order.
-   [Wed 30 Dec 2022 15:22:51 AM EST] Le_OrderFinalize='[https://acme-v02.api.letsencrypt.org/acme/finalize/490205996/7730242872](https://acme-v02.api.letsencrypt.org/acme/finalize/490205996/7730242872)'
+   [Wed 30 Dec 2022 15:22:51 AM EST] Le_OrderFinalize='https://acme-v02.api.letsencrypt.org/acme/finalize/490205996/7730242872'
    [Wed 30 Dec 2022 15:22:51 AM EST] Downloading cert.
-   [Wed 30 Dec 2022 15:22:51 AM EST] Le_LinkCert='[https://acme-v02.api.letsencrypt.org/acme/cert/vsxvk0oldnuobe51ayxz4dms62sk2dwmw9zhuw](https://acme-v02.api.letsencrypt.org/acme/cert/vsxvk0oldnuobe51ayxz4dms62sk2dwmw9zhuw)'
+   [Wed 30 Dec 2022 15:22:51 AM EST] Le_LinkCert='https://acme-v02.api.letsencrypt.org/acme/cert/vsxvk0oldnuobe51ayxz4dms62sk2dwmw9zhuw'
    [Wed 30 Dec 2022 15:22:51 AM EST] Cert success.
    --BEGIN CERTIFICAT--
    sxlYqPvWreKgD5b8JyOQX0Yg2MLoRUoDyqVkd31PthIiwzdckoh5eD3JU7ysYBtN

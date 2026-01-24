@@ -34,7 +34,7 @@ At the time of writing, the installation script has a few small bugs when using 
 2.  Download the installation script locally:
 
     ```shell
-    wget [https://github.com/XTLS/Xray-install/raw/main/install-release.sh](https://github.com/XTLS/Xray-install/raw/main/install-release.sh)
+    wget https://github.com/XTLS/Xray-install/raw/main/install-release.sh
     ```
 
 3.  Execute the installation command:
@@ -190,8 +190,8 @@ First, various configurations can refer to the [official VLESS configuration exa
 
     ```json
     // REFERENCE:
-    // [https://github.com/XTLS/Xray-examples](https://github.com/XTLS/Xray-examples)
-    // [https://xtls.github.io/config/](https://xtls.github.io/config/)
+    // https://github.com/XTLS/Xray-examples
+    // https://xtls.github.io/config/
     // Common config files, whether server or client, have 5 parts. Plus newbie interpretation:
     // ┌─ 1*log Log Settings - What to write, where to write (evidence available when errors occur)
     // ├─ 2_dns DNS Settings - How to query DNS (prevent DNS pollution, prevent snooping, avoid matching domestic sites to foreign servers, etc.)

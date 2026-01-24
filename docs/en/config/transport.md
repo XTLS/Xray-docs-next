@@ -307,10 +307,7 @@ Adjusts the underlying socket options of the connection used when querying ECH r
   "show": false,
   "target": "example.com:443",
   "xver": 0,
-  "serverNames": [
-    "example.com",
-    "[www.example.com](https://www.example.com)"
-  ],
+  "serverNames": ["example.com", "www.example.com"],
   "privateKey": "",
   "minClientVer": "",
   "maxClientVer": "",

@@ -14,7 +14,7 @@
    Однако для сложных изменений обязательно используйте VSCode. Склонируйте документацию из вашего форка, например:
 
    ```bash
-   git clone [https://github.com/ваше-имя-пользователя/Xray-docs-next.git](https://github.com/ваше-имя-пользователя/Xray-docs-next.git)
+   git clone https://github.com/ваше-имя-пользователя/Xray-docs-next.git
    ```
 
 3. Создайте новую ветку на основе ветки `main`, например:

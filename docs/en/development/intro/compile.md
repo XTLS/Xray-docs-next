@@ -13,7 +13,7 @@ Install Golang: [golang.org/doc/install](https://golang.org/doc/install)
 ## Pull Xray Source Code
 
 ```bash
-git clone [https://github.com/XTLS/Xray-core.git](https://github.com/XTLS/Xray-core.git)
+git clone https://github.com/XTLS/Xray-core.git
 cd Xray-core && go mod download
 ```
 
@@ -22,7 +22,7 @@ cd Xray-core && go mod download
 Note: In network environments where Google cannot be accessed normally, dependencies cannot be pulled correctly. You need to set `GOPROXY` first:
 
 ```bash
-go env -w GOPROXY=[https://goproxy.io](https://goproxy.io),direct
+go env -w GOPROXY=https://goproxy.io,direct
 ```
 
 ## Build Binary

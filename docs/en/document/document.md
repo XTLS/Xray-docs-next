@@ -14,7 +14,7 @@ You can submit your changes to the documentation by following these steps:
    However, for complex edits, please use VSCode. Clone the documentation from your forked repository, for example:
 
    ```bash
-   git clone [https://github.com/your-github-username/Xray-docs-next.git](https://github.com/your-github-username/Xray-docs-next.git)
+   git clone https://github.com/your-github-username/Xray-docs-next.git
    ```
 
 3. Create a new branch based on the `main` branch, for example:

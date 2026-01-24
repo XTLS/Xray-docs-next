@@ -366,7 +366,7 @@ defaults
     timeout server  300s
 
 frontend tls-in
-    bind :::443 ssl crt /path/to/pem alpn h2,http/1.1 # haproxy uses pem for ssl decryption. pem is obtained by: cat [www.example.com](https://www.example.com).crt [www.example.com](https://www.example.com).key > [www.example.com](https://www.example.com).pem
+    bind :::443 ssl crt /path/to/pem alpn h2,http/1.1 # haproxy uses pem for ssl decryption. pem is obtained by: cat www.example.com.crt www.example.com.key > www.example.com.pem
     default_backend xray
     tcp-request inspect-delay 5s
     tcp-request content accept if HTTP
@@ -409,7 +409,7 @@ global
     group root
     daemon
 
-    # Adjust HTTP/2 performance. Set relevant items when encountering HTTP/2 performance issues. For more settings, see the tune.h2 section of the Haproxy documentation [https://docs.haproxy.org/2.7/configuration.html](https://docs.haproxy.org/2.7/configuration.html)
+    # Adjust HTTP/2 performance. Set relevant items when encountering HTTP/2 performance issues. For more settings, see the tune.h2 section of the Haproxy documentation https://docs.haproxy.org/2.7/configuration.html
     tune.h2.initial-window-size 536870912 # Initial window size. Recommended to set. Default is 65536 bytes. Larger values may require some load time during traffic bursts. Adjust based on network speed.
     tune.h2.max-concurrent-streams 512 # Number of multiplexed streams. Set as needed. Default is 100. Generally no need to set (official recommendation is not to change).
 
@@ -653,7 +653,7 @@ defaults
     timeout server  300s
 
 frontend tls-in
-    bind :::443 tfo allow-0rtt ssl crt /path/to/server.pem verify optional ca-file /path/to/fullchain.crt crt /path/to/[www.example.com](https://www.example.com).pem alpn h2,http/1.1
+    bind :::443 tfo allow-0rtt ssl crt /path/to/server.pem verify optional ca-file /path/to/fullchain.crt crt /path/to/www.example.com.pem alpn h2,http/1.1
     use_backend xray if { ssl_fc_sni tunnel.example.com } { ssl_c_used } { ssl_fc_alpn -i h2 } { path_beg /tunnel }
     use_backend server1 if { ssl_fc_sni atunnel.example.com } { ssl_c_used }  { ssl_fc_alpn -i h2 } { path_beg /path2 }
     use_backend server2 if { ssl_fc_sni btunnel.example.com } { ssl_c_used }  { ssl_fc_alpn -i h2 } { path_beg /path3 }
