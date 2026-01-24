@@ -179,7 +179,7 @@ iptables -t mangle -A XRAY -d Сегмент IPv4-сети шлюза 2 -j RETUR
 # Прямое подключение для многоадресных адресов/адресов класса E/широковещательных адресов
 iptables -t mangle -A XRAY -d 224.0.0.0/3 -j RETURN
 
-# Если шлюз является основным маршрутизатором, добавьте эту строку, см.: https://xtls.github.io/documents/level-2/transparent_proxy/transparent_proxy.md#iptables-прозрачное-проксирование-другие-замечания
+# Если шлюз является основным маршрутизатором, добавьте эту строку, см.: https://xtls.github.io/ru/document/level-2/transparent_proxy/transparent_proxy.html#другие-замечания-по-прозрачному-проксированию-с-помощью-iptables
 # "Диапазон LAN-адресов IPv4 шлюза" можно получить, выполнив команду "ip address | grep -w "inet" | awk '{print $2}'", это будет один из адресов
 iptables -t mangle -A XRAY ! -s Диапазон LAN-адресов IPv4 шлюза -j RETURN
 
@@ -215,7 +215,7 @@ ip6tables -t mangle -A XRAY6 -d Сегмент IPv6-сети шлюза 1 -j RET
 ip6tables -t mangle -A XRAY6 -d Сегмент IPv6-сети шлюза 2 -j RETURN
 ...
 
-# Если шлюз является основным маршрутизатором, добавьте эту строку, см.: https://xtls.github.io/documents/level-2/transparent_proxy/transparent_proxy.md#iptables-прозрачное-проксирование-другие-замечания
+# Если шлюз является основным маршрутизатором, добавьте эту строку, см.: https://xtls.github.io/ru/document/level-2/transparent_proxy/transparent_proxy.html#другие-замечания-по-прозрачному-проксированию-с-помощью-iptables
 # "Диапазон LAN-адресов IPv6 шлюза" можно получить, выполнив команду "ip address | grep -w "inet6" | awk '{print $2}'", это будет один из адресов
 ip6tables -t mangle -A XRAY6 ! -s Диапазон LAN-адресов IPv6 шлюза -j RETURN
 

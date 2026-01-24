@@ -182,8 +182,8 @@ iptables -t mangle -A XRAY -d 网关所在ipv4网段2 -j RETURN
 iptables -t mangle -A XRAY -d 224.0.0.0/3 -j RETURN
 
 
-#如果网关作为主路由，则加上这一句，见：https://xtls.github.io/documents/level-2/transparent_proxy/transparent_proxy.md#iptables透明代理的其它注意事项
-#网关LAN_IPv4地址段，运行命令"ip address | grep -w "inet" | awk '{print $2}'"获得，是其中的一个
+# 如果网关作为主路由，则加上这一句，见：https://xtls.github.io/document/level-2/transparent_proxy/transparent_proxy.html#iptables-透明代理的其它注意事项
+# 网关LAN_IPv4地址段，运行命令"ip address | grep -w "inet" | awk '{print $2}'"获得，是其中的一个
 iptables -t mangle -A XRAY ! -s 网关LAN_IPv4地址段 -j RETURN
 
 # 给 TCP 打标记 1，转发至 12345 端口
@@ -218,7 +218,7 @@ ip6tables -t mangle -A XRAY6 -d 网关所在ipv6网段1 -j RETURN
 ip6tables -t mangle -A XRAY6 -d 网关所在ipv6网段2 -j RETURN
 ...
 
-# 如果网关作为主路由，则加上这一句，见：https://xtls.github.io/documents/level-2/transparent_proxy/transparent_proxy.md#iptables透明代理的其它注意事项
+# 如果网关作为主路由，则加上这一句，见：https://xtls.github.io/document/level-2/transparent_proxy/transparent_proxy.html#iptables-透明代理的其它注意事项
 # 网关LAN_IPv6地址段，运行命令"ip address | grep -w "inet6" | awk '{print $2}'"获得，是其中的一个
 ip6tables -t mangle -A XRAY6 ! -s 网关LAN_IPv6地址段 -j RETURN
 

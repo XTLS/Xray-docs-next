@@ -179,7 +179,7 @@ iptables -t mangle -A XRAY -d 224.0.0.0/3 -j RETURN
 
 
 # If the gateway serves as the main router, add this line.
-# See: [https://xtls.github.io/documents/level-2/transparent_proxy/transparent_proxy.md#iptables透明代理的其它注意事项](https://xtls.github.io/documents/level-2/transparent_proxy/transparent_proxy.md#iptables透明代理的其它注意事项)
+# See: https://xtls.github.io/en/document/level-2/transparent_proxy/transparent_proxy.html#other-notes-on-iptables-transparent-proxy
 # Gateway_LAN_IPv4_Subnet is one of the results from "ip address | grep -w "inet" | awk '{print $2}'".
 iptables -t mangle -A XRAY ! -s Gateway_LAN_IPv4_Subnet -j RETURN
 
@@ -216,7 +216,7 @@ ip6tables -t mangle -A XRAY6 -d Gateway_IPv6_Subnet_2 -j RETURN
 ...
 
 # If the gateway serves as the main router, add this line.
-# See: [https://xtls.github.io/documents/level-2/transparent_proxy/transparent_proxy.md#iptables透明代理的其它注意事项](https://xtls.github.io/documents/level-2/transparent_proxy/transparent_proxy.md#iptables透明代理的其它注意事项)
+# See: https://xtls.github.io/en/document/level-2/transparent_proxy/transparent_proxy.html#other-notes-on-iptables-transparent-proxy
 # Gateway_LAN_IPv6_Subnet is one of the results from "ip address | grep -w "inet6" | awk '{print $2}'".
 ip6tables -t mangle -A XRAY6 ! -s Gateway_LAN_IPv6_Subnet -j RETURN
 
