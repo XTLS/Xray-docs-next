@@ -68,7 +68,37 @@ First add the [Arch Linux CN repository](https://www.archlinuxcn.org/archlinux-c
 
 The usage of the Linuxbrew package manager is consistent with Homebrew: `brew install xray`
 
-### Debian <Badge text="WIP" type="warning"/>
+### Debian
+
+The **unofficial** Debian packages for [XRay Core](https://github.com/XTLS/Xray-core), [XRay Examples](https://github.com/XTLS/Xray-examples) as shared knowledge base, and automatically updated [GeoIP database](https://github.com/Loyalsoldier/v2ray-rules-dat) by [`LoyalSoldier`](https://github.com/Loyalsoldier) are available in the dedicated [Ubuntu PPA](https://launchpad.net/~twdragon/+archive/ubuntu/xray), also together with the packages for [GoXRay](https://github.com/goxray) GUI and CLI clients for Linux. The repository publishes auto-updated packages on a weekly update basis. All the source packages are built automatically on GitHub Action CI agent servers, and the dedicated build scenarios are all totally open sourced in the [dedicated CI repository](https://github.com/twdragon/xray-debian-pkg).
+
+The Debian package repository is hosted on [Ubuntu Launchpad](https://launchpad.net) with all its isolated autobuild environment features. It utilises [Golang Backports](https://launchpad.net/~longsleep/+archive/ubuntu/golang-backports) the independent Golang packaging pipeline by `Simon Eisenmann` to build the binaries. It supplies the following package names:
+
+- `xray-server` - the kernel package, provides the **XRay Core** server of the latest version available, together with the ready-to use `systemd` maintenance infrastructure.
+- `xray-examples` - the set of configuration examples, provided as is from the official repository, installed into `/usr/share/xray` XDG directory.
+- `xray-geoip` - the GeoIP database for XRay geographic routing rules. The files are installed and updates within `/usr/share/xray/geeoip`.
+- `goxray-gui`, `goxray-cli` - the packages containing software clients compatible with XRay.
+
+#### Installation from PPA
+
+```bash
+sudo add-apt-repository ppa:twdragon/xray
+sudo apt update
+sudo apt install xray-server
+```
+or, on an older Ubuntu:
+```bash
+# Change UBUNTU_CODENAME accordingly
+# Add the corresponding Ubuntu GPG signing key to your keyring:
+# https://keyserver.ubuntu.com/pks/lookup?fingerprint=on&op=index&search=0xC8F2828A240FDFC55B8CAE25E2F2445F17F6E584
+sudo UBUNTU_CODENAME="focal" echo -e "deb https://ppa.launchpadcontent.net/twdragon/xray/ubuntu ${UBUNTU_CODENAME} main\ndeb-src https://ppa.launchpadcontent.net/twdragon/xray/ubuntu ${UBUNTU_CODENAME} main" > /etc/apt/sources.list.d/xray.list
+sudo apt update
+sudo apt install xray-server
+```
+
+#### Distro Compatibility
+
+Despite the repositories are built and hosted over the Ubuntu infrastructure, `xray-server`, `xray-examples`, and `xray-geoip` packages could be installed freely also on the generic **Debian** Linux distribution of the same binary architecture, as the server itself is a statically linked standalone executable. The packages' control sequences intentionally don't mention `systemd` package, so it should be possible to install them on Debian. The compatibility of the `goxray-*` packages was not tested and it is impossible to ensure it as they depend from the external Ubuntu runtime libraries.
 
 ### Gentoo
 
