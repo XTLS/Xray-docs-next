@@ -1,0 +1,23 @@
+/* .vitepress/theme/style/vitepress-plugin-mermaid.css */
+
+/* Fix: VitePress typography styles affect Mermaid htmlLabels and clip last line */
+.vp-doc .mermaid svg foreignObject p {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.2 !important;
+}
+
+/* In some cases, the default overflow setting for foreignObjects may cause clipping, so I'll go ahead and disable it */
+.vp-doc .mermaid svg foreignObject > div {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  box-sizing: border-box;
+}
+
+.vp-doc .mermaid svg {
+  cursor: zoom-in;
+}

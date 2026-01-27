@@ -1,3 +1,4 @@
 @import "./var.css";
 @import "./custom-block.css";
 @import "./blockquote.css";
+@import "./vitepress-plugin-mermaid.css";

@@ -12,6 +12,7 @@ import { h } from "vue"
 import TranslationNotice from "./components/TranslationNotice.vue"
 import PageContributors from "./components/PageContributors.vue"
 import BackToTop from "./components/BackToTop.vue"
+import MermaidZoom from "./components/MermaidZoom.vue"
 
 export default {
   extends: DefaultTheme,
@@ -35,7 +36,7 @@ export default {
     return h(DefaultTheme.Layout, null, {
       "doc-before": () => h(TranslationNotice),
       "doc-after": () => h(PageContributors),
-      "layout-bottom": () => h(BackToTop)
+      "layout-bottom": () => [h(BackToTop), h(MermaidZoom)]
     })
   }
 }
