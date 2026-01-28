@@ -38,7 +38,6 @@ DNS 服务器默认进入路由系统进行匹配，除非其包含 `+local` 在
 
 执行 DNS 查询时，核心将依次使用最终服务器列表中的服务器进行查询，并使用 `expectedIPs` 和 `unexpectedIPs` 过滤结果，为空则尝试列表中的下一个。（`enableParallelQuery` 为真时行为略有不同，详见其字段描述）
 
-
 ## DnsObject
 
 `DnsObject` 对应配置文件的 `dns` 项。
