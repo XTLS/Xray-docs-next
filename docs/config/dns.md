@@ -35,6 +35,171 @@ Xray 内置的 DNS 模块，主要有三大用途：
   - 默认使用「`skipFallback` 为默认值 `false` 的 DNS 服务器」依次查询。若第一个被选中的 DNS 服务器查询失败或 `expectedIPs` 不匹配，则使用下一个被选中的 DNS 服务器进行查询；否则返回解析得到的 IP。若所有被选中的 DNS 服务器均查询失败或 `expectedIPs` 不匹配，返回空解析。
   - 若「`skipFallback` 为默认值 `false` 的 DNS 服务器」数量为 0 或 `disableFallback` 设置为 `true`，则使用 DNS 配置中的第一个 DNS 服务器进行查询。查询失败或 `expectedIPs` 不匹配，返回空解析；否则返回解析得到的 IP。
 
+::: details DNS 处理流程图（简易版）
+
+```mermaid
+flowchart TD
+    Start([DNS 请求发起]) --> HostsPhase
+
+    %% --- 阶段1: 本地 Hosts ---
+    subgraph HostsPhase ["1. 本地速查 (Hosts)"]
+        direction TB
+        CheckHosts{本地 Hosts 有记录?}
+        CheckHosts -- "是 (找到 IP)" --> SuccessHosts([直接返回 IP])
+        CheckHosts -- "否 (或仅有别名)" --> EnterSelection([进入服务器挑选])
+    end
+
+    %% --- 阶段2: 服务器挑选 ---
+    EnterSelection --> PrioritySelect
+
+    subgraph SelectModule ["2. 挑选 DNS 服务器"]
+        direction TB
+        PrioritySelect[第一轮: 挑选该域名专属的服务器]
+
+        PrioritySelect --> CheckStop{"是否强制停止挑选?<br>(命中专属且 finalQuery=true)"}
+
+        CheckStop -- 是 --> FinishSelection
+        CheckStop -- 否 --> CheckFallback{需要使用备用服务器?}
+
+        noteFallback["场景: <br>1. 没有专属服务器 (第一轮轮空)<br>2. 或者 允许回退 (没有禁用 Fallback)"]
+        CheckFallback -.- noteFallback
+
+        CheckFallback -- "否 (仅用专属)" --> FinishSelection
+        CheckFallback -- "是 (追加备用)" --> GeneralSelect[第二轮: 追加剩余的可用服务器]
+
+        GeneralSelect --> FinishSelection[服务器名单确定]
+    end
+
+    %% --- 阶段3: 执行查询 ---
+    FinishSelection --> QueryMode{查询模式}
+
+    subgraph QueryModule ["3. 执行查询"]
+        direction TB
+
+        %% 串行路径
+        QueryMode -- "串行 (省流量)" --> SerialQuery[按顺序逐个尝试服务器]
+        SerialQuery --> CheckValid1{结果有效?}
+        CheckValid1 -- "是 (命中预期IP)" --> Success([查询成功])
+        CheckValid1 -- "否 (尝试下一台)" --> SerialQuery
+
+        %% 并行路径
+        QueryMode -- "并发 (低延迟)" --> ParallelQuery[所有服务器同时发起请求]
+        ParallelQuery --> FastCheck{谁最先返回有效结果?}
+        FastCheck -- "同组最快胜出" --> Success
+
+        %% 失败路径
+        CheckValid1 -- "全部失败" --> Fail([查询失败])
+        FastCheck -- "全部超时或无效" --> Fail
+    end
+
+    %% 样式美化
+    classDef success fill:#d4edda,stroke:#28a745,color:black;
+    classDef process fill:#e2e3e5,stroke:#333,color:black;
+    classDef logic fill:#fff3cd,stroke:#ffc107,color:black;
+
+    class SuccessHosts,Success success;
+    class Start,PrioritySelect,GeneralSelect,SerialQuery,ParallelQuery process;
+    class CheckHosts,CheckStop,CheckFallback,QueryMode,CheckValid1,FastCheck logic;
+```
+
+:::
+
+::: details DNS 处理流程图（专家版）
+
+```mermaid
+flowchart TD
+    Start([DNS查询开始]) --> CheckHosts{命中 Hosts?}
+
+    %% --- 模块1: Hosts 解析 ---
+    subgraph HostsModule [Hosts 解析模块]
+        direction TB
+        CheckHosts -- 是 --> TypeCheck{结果是 IP?}
+        TypeCheck -- 是 IP --> SuccessHosts([DNS查询结束: 返回IP])
+        TypeCheck -- "不是 IP (别名)" --> RecursionCheck{递归次数 < 5?}
+        RecursionCheck -- 是 --> ReLookup[继续在 Hosts 查找映射]
+        ReLookup --> TypeCheck
+        RecursionCheck -- "否 (或未找到)" --> ExitHosts[退出 Hosts 模块]
+    end
+    CheckHosts -- 否 --> ExitHosts
+
+    %% --- 模块2: 服务器挑选 ---
+    ExitHosts --> StartSelect([开始挑选服务器])
+
+    subgraph SelectModule [服务器挑选流程]
+        direction TB
+        StartSelect --> R1_Start[第一回合: 遍历配置了 domains 的服务器]
+
+        %% --- R1 逻辑 ---
+        R1_Start --> R1_Decision{域名匹配?}
+        R1_Decision -- 否 --> R1_Next{第一回合: 还有下一台?}
+
+        R1_Decision -- 是 --> R1_Add[加入候选列表]
+        R1_Add --> R1_CheckFinal{"finalQuery=true?"}
+
+        %% R1 退出/继续
+        R1_CheckFinal -- "是 (立即退出)" --> FinishSelection[挑选结束]
+        R1_CheckFinal -- 否 --> R1_Next
+
+        R1_Next -- 是 --> R1_Decision
+
+        %% --- R2 准入判断 ---
+        R1_Next -- "否 (遍历完)" --> CheckR2Condition{满足第二轮条件?}
+
+        noteR2["需满足: disableFallback 为 false <br>且<br> (disableFallbackIfMatch 为 false 或 第一轮未命中)"]
+        CheckR2Condition -.- noteR2
+
+        CheckR2Condition -- 否 --> FinishSelection
+
+        %% --- R2 逻辑 ---
+        CheckR2Condition -- 是 --> R2_Start[第二回合: 遍历所有服务器]
+        R2_Start --> R2_Filter{"skipFallback=false <br>且 第一轮未命中?"}
+
+        R2_Filter -- "否 (跳过)" --> R2_Next{第二回合: 下一台?}
+        R2_Filter -- 是 --> R2_Add[加入候选列表]
+
+        %% R2 的 FinalQuery 检查
+        R2_Add --> R2_CheckFinal{"finalQuery=true?"}
+
+        R2_CheckFinal -- "是 (立即退出)" --> FinishSelection
+        R2_CheckFinal -- 否 --> R2_Next
+
+        R2_Next -- 是 --> R2_Filter
+        R2_Next -- "否 (遍历完)" --> FinishSelection
+    end
+
+    %% --- 模块3: 查询执行 ---
+    FinishSelection --> CheckMode{enableParallelQuery?}
+
+    subgraph QueryModule [查询执行模块]
+        %% 串行模式
+        CheckMode -- "False: 串行" --> SerialLoop[依次发起查询]
+        SerialLoop --> SerialFilter[结果在 expectedIPs/unexpectedIPs 过滤]
+        SerialFilter --> SerialCheck{结果非空?}
+        SerialCheck -- 是 --> SuccessQuery([DNS查询结束: 返回结果])
+        SerialCheck -- 否 --> SerialNext{还有下一台?}
+        SerialNext -- 是 --> SerialLoop
+        SerialNext -- 否 --> QueryFail([查询全部失败])
+
+        %% 并行模式
+        CheckMode -- "True: 并行" --> ParallelStart["一次性发起所有查询<br>(动态分组)"]
+        ParallelStart --> GroupWait["同组竞争: 任意服务器成功且匹配IPs"]
+        GroupWait --> ParallelCheck{组内有有效结果?}
+        ParallelCheck -- "是 (忽略同组其他)" --> SuccessQuery
+        ParallelCheck -- 否 --> NextGroup{还有其他组?}
+        NextGroup -- 是 --> GroupWait
+        NextGroup -- 否 --> QueryFail
+    end
+
+    %% 样式
+    classDef finish fill:#d4edda,stroke:#28a745,color:black;
+    classDef decision fill:#fff3cd,stroke:#ffc107,color:black;
+
+    class SuccessHosts,SuccessQuery finish;
+    class CheckHosts,TypeCheck,RecursionCheck,CheckFinal,CheckR2Condition,CheckMode,SerialCheck,ParallelCheck,R1_Decision,R1_CheckFinal,R2_Filter,R2_CheckFinal decision;
+```
+
+:::
+
 ## DnsObject
 
 `DnsObject` 对应配置文件的 `dns` 项。
