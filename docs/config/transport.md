@@ -74,7 +74,7 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 
 当前连接的 RAW 配置，仅当此连接使用 RAW 时有效。
 
-> `xhttpSettings`: [XHTTP: Beyond REALITY](https://github.com/XTLS/Xray-core/discussions/4113)
+> `xhttpSettings`: [XHTTPObject](./transports/xhttp.md)
 
 当前连接的 XHTTP 配置，仅当此连接使用 XHTTP 时有效。
 
