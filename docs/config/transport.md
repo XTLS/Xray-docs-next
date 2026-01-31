@@ -107,7 +107,7 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 ```json
 {
   "serverName": "xray.com",
-  "verifyPeerCertInNames": [],
+  "verifyPeerCertByName": "",
   "rejectUnknownSni": false,
   "allowInsecure": false,
   "alpn": ["h2", "http/1.1"],
@@ -136,13 +136,9 @@ Reality 是目前最安全的传输加密方案, 且外部看来流量类型和�
 
 特殊值 `"FromMitM"`, 这会使其使用入来自 dokodemo-door 入站解密的 TLS 中包含的 SNI.
 
-::: tip
-如上所述，因为该值用于校验服务端证书是否有效，如果出于特殊目的将其修改为与服务端证书域名不一致的需要需要开启 `allowInsecure` 否则会导致证书认证失败。出于安全考虑我们不推荐长期使用这种方法，如果想要安全地伪造SNI，请考虑使用REALITY。
-:::
+> `verifyPeerCertByName`: string
 
-> `verifyPeerCertInNames`: \[ string \]
-
-仅客户端，用于校验证书使用的 SNI 列表(只需要证书中有一个 SAN 在该列表中即可), 将会覆盖本用于校验的 `serverName`, 用于域前置等特殊目的。 相较于修改 `serverName` 并开启 `allowInsecure` 更加安全，因为其仍会执行证书签名验证。
+仅客户端，用于校验证书使用的 SNI，可以用 `,` 分割多个域名(只需要证书中有一个 SAN 在该列表中即可), 将会覆盖本用于校验的 `serverName`, 用于域前置等特殊目的。
 
 特殊值 `"FromMitM"`, 这会使其额外加入来自 dokodemo-door 入站解密的 TLS 中包含的 SNI.
 
@@ -182,7 +178,9 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 当值为 `true` 时，Xray 不会检查远端主机所提供的 TLS 证书的有效性。
 
 ::: danger
-出于安全性考虑，这个选项不应该在实际场景中选择 true，否则可能遭受中间人攻击。
+~~出于安全性考虑，这个选项不应该在实际场景中选择 true，否则可能遭受中间人攻击。~~
+
+该选项已被弃用，使用 `pinnedPeerCertSha256` 手动指定需要的证书。
 :::
 
 > `disableSystemRoot`: true | false
@@ -229,19 +227,19 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 ::: tip
 当使用此功能时，TLS 的部分影响TLS指纹的选项将被 utls 库覆盖不再生效，列如ALPN。
 会被传递的参数有
-`"serverName" "allowInsecure" "disableSystemRoot" "pinnedPeerCertSha256" "masterKeyLog"`
+`"serverName" "disableSystemRoot" "pinnedPeerCertSha256" "masterKeyLog"`
 :::
 
 > `pinnedPeerCertSha256`: string
 
-用于指定远程服务器的证书 SHA256 散列值，使用 hex 且大小写不敏感。如 `e8e2d387fdbffeb38e9c9065cf30a97ee23c0e3d32ee6f78ffae40966befccc9`. 该编码与 Chrome 证书查看器 SHA-256 证书指纹，以及 crt.sh 的 Certificate Fingerprints SHA-256 格式均相同。也可以使用 `xray tls leafCertHash --cert <cert.pem>` 进行计算。可以使用 `~` 连接更多的散列值，匹配到任何一个即通过验证。
+用于指定远程服务器的证书 SHA256 散列值，使用 hex 且大小写不敏感。如 `e8e2d387fdbffeb38e9c9065cf30a97ee23c0e3d32ee6f78ffae40966befccc9`，可以使用 `,` 连接更多的散列值，匹配到任何一个即通过验证。
 
-该验证在正常证书验证成功后才会调用，分为两种情况。
+该编码与 Chrome 证书查看器 SHA-256 证书指纹，以及 crt.sh 的 Certificate Fingerprints SHA-256 格式均相同。可以使用 `xray tls leafCertHash --cert <cert.pem>` 进行计算，也可以使用 `openssl x509 -noout -fingerprint -sha256 -in cert.pem` （兼容它生成的带冒号的格式）， `xray tls ping` 同样会输出远程证书的 SHA256 散列值。
+
+该验证将覆盖默认的证书校验，分两种情况：
 
 - 1.当核心找到匹配的散列值为叶子证书，验证直接通过。
-- 2.当核心找到匹配的值为 CA 证书（可以是根证书也可以是中级证书），将验证叶子证书上的签名是否来自该 CA 授权。
-
-在该验证前会先执行正常的证书验证，故自签证书可以考虑开启 `allowInsecure` 并在此配置散列，而自签 CA 可以在这里 pin CA 并设置 `verifyPeerCertInNames` （其验证流程使用的 CA 证书将会被这里找到的 CA 证书替换）
+- 2.当核心找到匹配的值为 CA 证书（可以是根证书也可以是中级证书），将使用 `serverName` 里的值验证叶子证书上的签名是否来自该 CA 授权。
 
 > `certificates`: \[ [CertificateObject](#certificateobject) \]
 
