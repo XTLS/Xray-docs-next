@@ -15,7 +15,7 @@ The built-in DNS module in Xray has three main purposes:
 - **DNS Traffic Hijacking (Transparent Proxy) or Acting as a Recursive DNS Server:** Directly exposing port 53 to serve as a DNS server.
 
 ::: tip TIP 1
-DNS query requests sent by the built-in DNS server will be automatically forwarded according to the routing configuration.
+The DNS server enters the routing system for matching by default unless it contains `+local`. When using domain names within it, be aware of potential routing loops; `hosts` may help.
 :::
 
 ::: tip TIP 2
@@ -24,20 +24,19 @@ Only basic IP queries (A and AAAA records) are supported. CNAME records will be 
 
 ## DNS Processing Flow
 
-If the domain currently being queried:
+The domain first undergoes a Hosts mapping check (see the `hosts` field). If the required IP is not found, the DNS server is used for the query.
 
-- Matches a "Domain - IP" or "Domain - IP Array" mapping in `hosts`, that IP or IP array is returned as the DNS resolution result.
-- Matches a "Domain - Domain" mapping in `hosts`, the mapped value (another domain) becomes the domain to be queried, re-entering the DNS processing flow until an IP is resolved or an empty response is returned.
-- Does **not** match `hosts`, but matches the `domains` list of one or more DNS servers:
-  - It will query the corresponding DNS servers in the order of the matching rules' priority.
-  - If a matched DNS server fails to query or the `expectedIPs` do not match, the next matched DNS server is used.
-  - If successful, the resolved IP is returned.
-  - If all matched DNS servers fail or `expectedIPs` do not match, the DNS component will:
-    - By default, perform a "DNS Fallback Query": Sequentially query "DNS servers that were not used in the previous failed round and have `skipFallback` set to the default `false`". If these queries fail or `expectedIPs` do not match, an empty response is returned; otherwise, the resolved IP is returned.
-    - If `disableFallback` is set to `true`, the "DNS Fallback Query" will not be performed.
-- Matches **neither** `hosts` **nor** the `domains` list of any DNS server:
-  - By default, it sequentially queries "DNS servers where `skipFallback` is default `false`". If the first selected DNS server fails or `expectedIPs` do not match, the next selected server is used; otherwise, the resolved IP is returned. If all selected servers fail, an empty response is returned.
-  - If the count of "DNS servers where `skipFallback` is `false`" is 0, or if `disableFallback` is set to `true`, the first DNS server in the DNS configuration is used. If it fails or `expectedIPs` do not match, an empty response is returned; otherwise, the resolved IP is returned.
+The core then begins to build a list of servers, sorting them according to the requested domain based on the following rules.
+
+- Build List 1: Contains servers where the `domains` field successfully matches the requested domain, in the order they appear in the configuration file.
+- Check `disableFallback`: If true, skip building List 2.
+- Check `disableFallbackIfMatch`: If true and List 1 is not empty, skip building List 2.
+- Build List 2: Contains servers not in List 1 where `skipFallback` is not true, in the order they appear in the configuration file.
+- Final Server List = List 1 + List 2.
+
+Note: Any DNS server with `FinalQuery` set to true will directly truncate the subsequent parts of the list.
+
+When executing a DNS query, the core will query the servers in the Final Server List sequentially. It filters the results using `expectedIPs` and `unexpectedIPs`; if the result is empty after filtering, it attempts the next server in the list. (Behavior differs slightly when `enableParallelQuery` is true; see its field description for details.)
 
 ## DnsObject
 
@@ -94,7 +93,7 @@ If the domain currently being queried:
 A list of static IPs. The value is a series of `"domain": "address"` or `"domain": ["address 1", "address 2"]`. The address can be an IP or a domain. When resolving a domain, if the domain matches an item in this list:
 
 - If the address of the item is an IP, the resolution result is that IP.
-- If the address of the item is a domain, this domain will be used for IP resolution instead of the original domain.
+- If the address of the item is a domain, this domain is used to recursively match within the hosts list (max depth 5). If no IP is found ultimately, the domain is handed over to subsequent DNS servers for resolution.
 - If multiple IPs and domains are set in the address list simultaneously, only the first domain is returned, and the remaining IPs and domains are ignored.
 - If the first value in the address starts with a hash followed by a number (e.g., `#3`), and it is used in a DNS outbound, the core will return an empty response with the corresponding rcode number to reject the request. If the request comes from an internal query, it will simply be treated as a failure.
 - When the resolved domain matches multiple domains in the list, all associated IPs are returned.
