@@ -4,7 +4,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
   "/ru/config/": [
     {
       text: "Обзор",
-      link: "/config/features/",
+      link: "/ru/config/features/",
       collapsed: true,
       items: [
         {
