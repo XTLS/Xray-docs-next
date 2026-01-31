@@ -936,7 +936,7 @@ Corresponds to the original mKCP `seed` feature. Uses AES-128-GCM for obfuscatio
 
 > `header-dns`
 
-Corresponds to the original mKCP DNS obfuscation.
+Original mKCP DNS obfuscation. Some campus networks allow DNS queries without login, add DNS header to KCP.
 
 - `settings`:
   ```json
@@ -949,23 +949,23 @@ Corresponds to the original mKCP DNS obfuscation.
 
 > `header-dtls`
 
-Corresponds to the original mKCP DTLS obfuscation. No additional configuration required.
+Original mKCP DTLS obfuscation. Obfuscates as DTLS 1.2 packets. No additional configuration required.
 
 > `header-srtp`
 
-Corresponds to the original mKCP SRTP obfuscation. No additional configuration required.
+Original mKCP SRTP obfuscation. Obfuscates as SRTP packets, will be recognized as video call data (e.g., FaceTime). No additional configuration required.
 
 > `header-utp`
 
-Corresponds to the original mKCP uTP obfuscation. No additional configuration required.
+Original mKCP uTP obfuscation. Obfuscates as uTP packets, will be recognized as BT download data. No additional configuration required.
 
 > `header-wechat`
 
-Corresponds to the original mKCP WeChat Video obfuscation. No additional configuration required.
+Original mKCP WeChat Video obfuscation. Obfuscates as WeChat video call data. No additional configuration required.
 
 > `header-wireguard`
 
-Corresponds to the original mKCP WireGuard obfuscation. No additional configuration required.
+Original mKCP WireGuard obfuscation. Obfuscates as WireGuard packets. (Not the real WireGuard protocol) No additional configuration required.
 
 > `xdns`
 

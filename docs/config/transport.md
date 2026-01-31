@@ -953,7 +953,7 @@ mKCP 曾经默认应用的简单混淆，你可能需要配置它来连接以前
 
 > `header-dns`
 
-对应原 mKCP 的 DNS 伪装。
+原 mKCP 的 DNS 伪装。某些校园网在未登录的情况下允许 DNS 查询，给 KCP 添加 DNS 头。
 
 - `settings`:
   ```json
@@ -966,23 +966,23 @@ mKCP 曾经默认应用的简单混淆，你可能需要配置它来连接以前
 
 > `header-dtls`
 
-对应原 mKCP 的 DTLS 伪装。无额外配置。
+原 mKCP 的 DTLS 伪装。伪装成 DTLS 1.2 数据包。无额外配置。
 
 > `header-srtp`
 
-对应原 mKCP 的 SRTP 伪装。无额外配置。
+原 mKCP 的 SRTP 伪装。伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。无额外配置。
 
 > `header-utp`
 
-对应原 mKCP 的 uTP 伪装。无额外配置。
+原 mKCP 的 uTP 伪装。伪装成 uTP 数据包，会被识别为 BT 下载数据。无额外配置。
 
 > `header-wechat`
 
-对应原 mKCP 的 WeChat Video 伪装。无额外配置。
+原 mKCP 的 WeChat Video 伪装。伪装成微信视频通话的数据包。无额外配置。
 
 > `header-wireguard`
 
-对应原 mKCP 的 WireGuard 伪装。无额外配置。
+原 mKCP 的 WireGuard 伪装。伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）无额外配置。
 
 > `xdns`
 
