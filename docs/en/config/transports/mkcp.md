@@ -20,14 +20,15 @@ Please ensure that the firewall configuration on the host is correct.
   "downlinkCapacity": 20,
   "congestion": false,
   "readBufferSize": 1,
-  "writeBufferSize": 1,
-  "header": {
-    "type": "none",
-    "domain": "example.com"
-  },
-  "seed": "Password"
+  "writeBufferSize": 1
 }
 ```
+
+::: TIP
+The `header` and `seed` fields have been removed. Please use [FinalMask](../transport.md#finalmaskobject) for configuration.
+
+Additionally, the previously default mKCP obfuscation has also been removed. To connect to a legacy server, you need to configure `mkcp-original` in FinalMask.
+:::
 
 > `mtu`: number
 
@@ -90,43 +91,6 @@ When high-speed transmission is required, specifying larger `readBufferSize` and
 
 When the network speed does not exceed 20MB/s, the default value of 1MB can meet the demand; beyond that, you can appropriately increase the values of `readBufferSize` and `writeBufferSize`, and then manually balance the relationship between speed and memory.
 :::
-
-> `header`: [HeaderObject](#headerobject)
-
-Packet header camouflage settings.
-
-> `seed`: string
-
-Optional obfuscation password. Uses the AES-128-GCM algorithm to obfuscate traffic data. Must be consistent between the client and the server.
-
-This obfuscation mechanism cannot be used to guarantee the security of communication content, but it may help mitigate some forms of blocking.
-
-> Currently, in test environments, no port blocking phenomena have been observed after enabling this setting compared to the original unobfuscated version.
-
-### HeaderObject
-
-```json
-{
-  "type": "none",
-  "domain": "example.com"
-}
-```
-
-> `type`: string
-
-Camouflage type. Optional values are:
-
-- `"none"`: Default value. No camouflage is performed; sent data is a packet without characteristics.
-- `"srtp"`: Disguised as SRTP packets, recognized as video call data (e.g., FaceTime).
-- `"utp"`: Disguised as uTP packets, recognized as BT download data.
-- `"wechat-video"`: Disguised as WeChat video call packets.
-- `"dtls"`: Disguised as DTLS 1.2 packets.
-- `"wireguard"`: Disguised as WireGuard packets. (Not the real WireGuard protocol).
-- `"dns"`: Some campus networks allow DNS queries without logging in. Adding a DNS header to KCP allows traffic to be disguised as DNS requests, potentially bypassing login requirements on some campus networks.
-
-> `domain`: string
-
-Used with the camouflage type `"dns"`. You can fill in any domain name.
 
 ## Credits
 

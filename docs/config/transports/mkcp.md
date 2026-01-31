@@ -20,14 +20,15 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
   "downlinkCapacity": 20,
   "congestion": false,
   "readBufferSize": 1,
-  "writeBufferSize": 1,
-  "header": {
-    "type": "none",
-    "domain": "example.com"
-  },
-  "seed": "Password"
+  "writeBufferSize": 1
 }
 ```
+
+::: TIP
+`header` 和 `seed` 字段已被移除，请使用 [FinalMask](../transport.md#finalmaskobject) 进行配置。
+
+并且曾经默认的 mKCP 混淆也被移除，要连接旧版服务端，需要在 FinalMask 中配置 `mkcp-original`。
+:::
 
 > `mtu`: number
 
@@ -90,43 +91,6 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
 
 在网速不超过 20MB/s 时，默认值 1MB 可以满足需求；超过之后，可以适当增加 `readBufferSize` 和 `writeBufferSize` 的值，然后手动平衡速度和内存的关系。
 :::
-
-> `header`: [HeaderObject](#headerobject)
-
-数据包头部伪装设置
-
-> `seed`: string
-
-可选的混淆密码，使用 AES-128-GCM 算法混淆流量数据，客户端和服务端需要保持一致。
-
-本混淆机制不能用于保证通信内容的安全，但可能可以对抗部分封锁。
-
-> 目前测试环境下开启此设置后没有出现原版未混淆版本的封端口现象
-
-### HeaderObject
-
-```json
-{
-  "type": "none",
-  "domain": "example.com"
-}
-```
-
-> `type`: string
-
-伪装类型，可选的值有：
-
-- `"none"`：默认值，不进行伪装，发送的数据是没有特征的数据包。
-- `"srtp"`：伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。
-- `"utp"`：伪装成 uTP 数据包，会被识别为 BT 下载数据。
-- `"wechat-video"`：伪装成微信视频通话的数据包。
-- `"dtls"`：伪装成 DTLS 1.2 数据包。
-- `"wireguard"`：伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）
-- `"dns"`：某些校园网在未登录的情况下允许DNS查询，给KCP添加DNS头，把流量伪装成dns请求，可以绕过某些校园网登录。
-
-> `domain`: string
-
-配合伪装类型 `"dns"` 使用，可随便填一个域名。
 
 ## 鸣谢
 

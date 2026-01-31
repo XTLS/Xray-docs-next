@@ -20,6 +20,9 @@ Transport specifies a stable method for data transmission. Generally, both ends 
   "grpcSettings": {},
   "wsSettings": {},
   "httpupgradeSettings": {},
+  "finalmask": {
+    "udp": []
+  },
   "sockopt": {
     "mark": 0,
     "tcpMaxSeg": 1440,
@@ -100,6 +103,10 @@ Hysteria configuration for the current connection. Only valid when this connecti
 > `sockopt`: [SockoptObject](#sockoptobject)
 
 Specific configurations related to transparent proxying.
+
+> `finalmask`: [FinalMaskObject](#finalmaskobject)
+
+FinalMask configuration, used for general traffic obfuscation.
 
 ### TLSObject
 
@@ -888,3 +895,100 @@ E.g., waiting IP queue sorted as 46464646 (set to 1), 44664466 (set to 2).
 > `maxConcurrentTry`: number
 
 Max concurrent attempts. Prevents core from making massive connections if many IPs resolve but fail. Default 4. Set to 0 to disable happyEyeballs.
+
+### FinalMaskObject
+
+FinalMask applies a final layer of obfuscation to the traffic after the core has processed transport layer encryption, including TLS/REALITY. Currently, only UDP is supported.
+
+```json
+{
+  "udp": [
+    {
+      "type": "header-dns",
+      "settings": {
+        "domain": "[www.baidu.com](https://www.baidu.com)"
+      }
+    }
+  ]
+}
+```
+
+> `udp`: \[ list \]
+
+An array representing the list of obfuscations applied to UDP traffic. Multiple obfuscations will be applied sequentially, layer by layer. The `settings` vary depending on the obfuscation type; see below.
+
+> `mkcp-original`
+
+The simple obfuscation that was previously applied by default in mKCP. You may need to configure this to connect to legacy mKCP servers. No additional configuration required.
+
+> `mkcp-aes128gcm`
+
+Corresponds to the original mKCP `seed` feature. Uses AES-128-GCM for obfuscation.
+
+- `settings`:
+  ```json
+  {
+    "password": "your-password"
+  }
+  ```
+
+`password` is the encryption password; it must be consistent between the server and the client.
+
+> `header-dns`
+
+Corresponds to the original mKCP DNS obfuscation.
+
+- `settings`:
+  ```json
+  {
+    "domain": "[www.example.com](https://www.example.com)"
+  }
+  ```
+
+`domain` is the domain name used for obfuscation.
+
+> `header-dtls`
+
+Corresponds to the original mKCP DTLS obfuscation. No additional configuration required.
+
+> `header-srtp`
+
+Corresponds to the original mKCP SRTP obfuscation. No additional configuration required.
+
+> `header-utp`
+
+Corresponds to the original mKCP uTP obfuscation. No additional configuration required.
+
+> `header-wechat`
+
+Corresponds to the original mKCP WeChat Video obfuscation. No additional configuration required.
+
+> `header-wireguard`
+
+Corresponds to the original mKCP WireGuard obfuscation. No additional configuration required.
+
+> `xdns`
+
+Experimental feature. Utilizes DNS queries to transport data (similar to DNSTT). It performs standard DNS TXT queries to transport the payload. Due to technical limitations, the resulting MTU is very small, making it incompatible with QUIC; it is recommended to use it with mKCP. Recommended MTU values: Client 130, Server 900.
+
+- `settings`:
+  ```json
+  {
+    "domain": "[www.example.com](https://www.example.com)"
+  }
+  ```
+
+`domain` is the domain name used for queries. Since the queries performed are standard, they can be forwarded through any UDP DNS server, although efficiency may be very suboptimal. To use this feature, the server needs to listen on port 53, and the proxy protocol should direct the target to a DNS server (e.g., 8.8.8.8:53). Additionally, you must own the domain specified in `domain` and point its NS record to your server.
+
+> `salamander`
+
+Salamander obfuscation (from Hysteria2).
+
+- `settings`:
+  ```json
+  {
+    "password": "your-password"
+  }
+  ```
+
+`password` is the obfuscation password; it must be consistent between the server and the client.
