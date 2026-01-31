@@ -9,7 +9,7 @@ The format is as follows:
 
 ```json
 {
-  "vsersion": {},
+  "version": {},
   "log": {},
   "api": {},
   "dns": {},
