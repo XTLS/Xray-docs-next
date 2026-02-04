@@ -90,13 +90,14 @@ When executing a DNS query, the core will query the servers in the Final Server 
 
 > `hosts`: map{string: address} | map{string: [address]}
 
-A list of static IPs. The value is a series of `"domain": "address"` or `"domain": ["address 1", "address 2"]`. The address can be an IP or a domain. When resolving a domain, if the domain matches an item in this list:
+A static IP mapping. The value consists of entries in the form `"domain": "address"` or `"domain": ["address 1", "address 2"]`. Each address may be an IP or a domain name. When resolving a domain, the core will check all mapping entries and return all matched IP addresses. If nothing matches, the DNS query phase is entered.
 
-- If the address of the item is an IP, the resolution result is that IP.
-- If the address of the item is a domain, this domain is used to recursively match within the hosts list (max depth 5). If no IP is found ultimately, the domain is handed over to subsequent DNS servers for resolution.
-- If multiple IPs and domains are set in the address list simultaneously, only the first domain is returned, and the remaining IPs and domains are ignored.
-- If the first value in the address starts with a hash followed by a number (e.g., `#3`), and it is used in a DNS outbound, the core will return an empty response with the corresponding rcode number to reject the request. If the request comes from an internal query, it will simply be treated as a failure.
-- When the resolved domain matches multiple domains in the list, all associated IPs are returned.
+The mapping target may be a domain name. When the core finishes matching and the mapping contains domain name(s), the behavior is slightly different:
+
+- If the mapping contains both IP addresses and domain names, the domain names are removed and only the IP addresses are returned.
+- If the mapping contains several domain names, the result is ambiguous: the match fails, is treated as a miss, and the DNS query phase is entered.
+- If the mapping contains exactly one domain name, that domain will be fed back into the Hosts module for recursive resolution, repeating the above steps with a maximum recursion depth of 5.
+- If the above recursive resolution yields no IPs, and the final resolution result contains exactly one domain name, that domain replaces the original requested domain and is sent to the DNS query phase.
 
 The matching format (`domain:`, `full:`, etc.) is the same as the domain in the commonly used [Routing System](./routing.md#ruleobject). The difference is that without a prefix, it defaults to using the `full:` prefix (similar to the common hosts file syntax).
 
