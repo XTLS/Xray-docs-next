@@ -72,6 +72,10 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 设置 gRPC 的用户代理，可能能防止某些 CDN 阻止 gRPC 流量。
 
+::: tip
+通过 Cloudflare CDN 时，如果 Cloudflare 将 gRPC 请求视为 HTTP DDoS 攻击并屏蔽，可设置值为常用浏览器的User-Agent解除屏蔽。
+:::
+
 > `multiMode`: true | false <Badge text="BETA" type="warning"/>
 
 `true` 启用 `multiMode`，默认值为： `false`。
