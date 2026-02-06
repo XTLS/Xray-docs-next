@@ -38,7 +38,7 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 
 推荐大多数用户使用 ./xray vlessenc 自动生成该字段确保编写不会出错。下方详细配置仅推荐高级用户阅读。
 
-其格式为一串字段由 `.` 连接的详细配置。 如 `mlkem768x25519plus.native.0rtt.100-111-1111.75-0-111.50-0-3333.ptjHQxBQxTJ9MWr2cd5qWIflBSACHOevTauCQwa_71U`. 本文档将用点分开的单独部分称之为一个块
+其格式为一串字段由 `.` 连接的详细配置。 如 `mlkem768x25519plus.native.600s.100-111-1111.75-0-111.50-0-3333.ptjHQxBQxTJ9MWr2cd5qWIflBSACHOevTauCQwa_71U`. 本文档将用点分开的单独部分称之为一个块
 
 - 第1个块为握手方式，目前有且仅有 `mlkem768x25519plus`. 要求服务端与客户端一致
 - 第2个块为加密方式，可选 `native`/`xorpub`/`random`, 分别对应: 原始格式数据包/原始格式+混淆公钥部分/全随机数（类似 VMESS/Shadows socks）。要求服务端与客户端一致
