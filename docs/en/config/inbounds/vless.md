@@ -38,7 +38,7 @@ Each item is a user [ClientObject](#clientobject).
 
 It is recommended for most users to use `./xray vlessenc` to automatically generate this field to ensure no errors in writing. The detailed configuration below is recommended for advanced users only.
 
-Its format is a string of detailed configuration fields connected by `.`. For example: `mlkem768x25519plus.native.0rtt.100-111-1111.75-0-111.50-0-3333.ptjHQxBQxTJ9MWr2cd5qWIflBSACHOevTauCQwa_71U`. This document refers to the individual parts separated by dots as blocks.
+Its format is a string of detailed configuration fields connected by `.`. For example: `mlkem768x25519plus.native.600s.100-111-1111.75-0-111.50-0-3333.ptjHQxBQxTJ9MWr2cd5qWIflBSACHOevTauCQwa_71U`. This document refers to the individual parts separated by dots as blocks.
 
 - The 1st block is the handshake method. Currently, there is only `mlkem768x25519plus`. Requires the server and client to match.
 - The 2nd block is the encryption method. Options are `native`/`xorpub`/`random`, corresponding to: raw format packets / raw format + obfuscated public key part / full random numbers (similar to VMess/Shadowsocks). Requires the server and client to match.
