@@ -241,7 +241,7 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 
 用于指定远程服务器的证书 SHA256 散列值，使用 hex 且大小写不敏感。如 `e8e2d387fdbffeb38e9c9065cf30a97ee23c0e3d32ee6f78ffae40966befccc9`，可以使用 `,` 连接更多的散列值，匹配到任何一个即通过验证。
 
-该编码与 Chrome 证书查看器 SHA-256 证书指纹，以及 crt.sh 的 Certificate Fingerprints SHA-256 格式均相同。可以使用 `xray tls leafCertHash --cert <cert.pem>` 进行计算，也可以使用 `openssl x509 -noout -fingerprint -sha256 -in cert.pem` （兼容它生成的带冒号的格式）， `xray tls ping` 同样会输出远程证书的 SHA256 散列值。
+该编码与 Chrome 证书查看器 SHA-256 证书指纹，以及 crt.sh 的 Certificate Fingerprints SHA-256 格式均相同。可以使用 `xray tls hash --cert <cert.pem>` 进行计算，也可以使用 `openssl x509 -noout -fingerprint -sha256 -in cert.pem` （兼容它生成的带冒号的格式）， `xray tls ping` 同样会输出远程证书的 SHA256 散列值。
 
 该验证将覆盖默认的证书校验，分两种情况：
 
