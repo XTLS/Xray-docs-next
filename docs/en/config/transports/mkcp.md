@@ -24,7 +24,7 @@ Please ensure that the firewall configuration on the host is correct.
 }
 ```
 
-::: TIP
+::: tip
 The `header` and `seed` fields have been removed. Please use [FinalMask](../transport.md#finalmaskobject) for configuration.
 
 Additionally, the previously default mKCP obfuscation has also been removed. To connect to a legacy server, you need to configure `mkcp-original` in FinalMask.

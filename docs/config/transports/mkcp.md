@@ -24,7 +24,7 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
 }
 ```
 
-::: TIP
+::: tip
 `header` 和 `seed` 字段已被移除，请使用 [FinalMask](../transport.md#finalmaskobject) 进行配置。
 
 并且曾经默认的 mKCP 混淆也被移除，要连接旧版服务端，需要在 FinalMask 中配置 `mkcp-original`。
