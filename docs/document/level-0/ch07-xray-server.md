@@ -90,65 +90,7 @@
 
    ![Xray服务器端安装流程演示](./ch07-img02-xray-cert-install.png)
 
-5. `acme.sh` 会每 60 天检查一次证书并自动更新临期证书。但据我所知是它并不会自动将新证书安装给 `xray-core`，所以我们需要新增一个系统的自动周期任务来完成这一步。
-   1. 小小白白 Linux 基础命令：
-
-   |   编号   |   命令名称   |        命令说明        |
-   | :------: | :----------: | :--------------------: |
-   | `cmd-15` | `crontab -e` | 编辑当前用户的定时任务 |
-   2. 建立一个脚本文件（`xray-cert-renew.sh`）
-
-      ```shell
-      nano ~/xray_cert/xray-cert-renew.sh
-      ```
-
-   3. 把下面的内容复制进去，记得替换你的真实域名，然后保存退出
-
-      ```bash
-      #!/bin/bash
-
-      /home/vpsadmin/.acme.sh/acme.sh --install-cert -d a-name.yourdomain.com --ecc --fullchain-file /home/vpsadmin/xray_cert/xray.crt --key-file /home/vpsadmin/xray_cert/xray.key
-      echo "Xray Certificates Renewed"
-
-      chmod +r /home/vpsadmin/xray_cert/xray.key
-      echo "Read Permission Granted for Private Key"
-
-      sudo systemctl restart xray
-      echo "Xray Restarted"
-      ```
-
-      ::: warning
-      经大家提醒，`acme.sh` 有一个 `reloadcmd` 命令，可以在证书更新时自动执行特定命令，那么就可以指定自动给 `Xray` 安装证书，但因为 `crontab` 是 Linux
-      系统中一个非常有用、非常常用的功能，所以本文保留 `crontab` 的方式来更新 `Xray` 证书。（对 `reloadcmd` 感兴趣的同学可以查看 `acme.sh`
-      的[官方文档](https://github.com/acmesh-official/acme.sh)）
-
-      另外，录制动图时，脚本中没有加入重启 `Xray` 的命令，是因为 `Xray` 计划支持【证书热更新】功能，即 `Xray` 会自动识别证书更新并重载证书、无需手动重启。待功能加入后，我将适当修改 `config.json`
-      开启此设置，并删除脚本中的重启命令。
-      :::
-
-   4. 给这个文件增加【可执行】权限
-
-      ```
-      chmod +x ~/xray_cert/xray-cert-renew.sh
-      ```
-
-   5. 运行 `crontab -e`，添加一个自动任务【每月自动运行一次`xray-cert-renew.sh`】 (注意不要加`sudo`，因为我们增加的是`vpsadmin`
-      账户的自动任务。初次运行时会让你选择编辑器，当然是选择熟悉的`nano`啦！)
-
-      ```shell
-      crontab -e
-      ```
-
-   6. 把下面的内容增加在文件最后，保存退出即可。
-
-      ```
-      # 1:00am, 1st day each month, run `xray-cert-renew.sh`
-      0 1 1 * *   bash /home/vpsadmin/xray_cert/xray-cert-renew.sh
-      ```
-
-   7. 完整流程演示如下：
-
-      ![每月自动给Xray安装证书](./ch07-img03-crontab-cert-renew.gif)
+5. `acme.sh` 会每天检查一次并自动更新有效期短于 30 天的证书，Xray 默认会自动热重载证书，无需担心后续证书更新的问题。
 
 ## 7.4 配置 Xray
 

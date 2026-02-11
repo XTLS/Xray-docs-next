@@ -85,61 +85,7 @@ Although we have already applied for TLS certificates earlier, according to the 
 
     ![Xray Certificate Install Demo](./ch07-img02-xray-cert-install.png)
 
-5.  `acme.sh` checks the certificate every 60 days and automatically renews it if it's close to expiration. However, as far as I know, it does not automatically install the new certificate to `xray-core`, so we need to add a system automatic periodic task to complete this step.
-    1.  Linux 101 - Basic Commands:
-
-    |  Number  | Command Name |           Command Description           |
-    | :------: | :----------: | :-------------------------------------: |
-    | `cmd-15` | `crontab -e` | Edit the current user's scheduled tasks |
-    2.  Create a script file (`xray-cert-renew.sh`):
-
-        ```shell
-        nano ~/xray_cert/xray-cert-renew.sh
-        ```
-
-    3.  Copy the content below into it, remembering to replace it with your real domain name, then save and exit.
-
-        ```bash
-        #!/bin/bash
-
-        /home/vpsadmin/.acme.sh/acme.sh --install-cert -d a-name.yourdomain.com --ecc --fullchain-file /home/vpsadmin/xray_cert/xray.crt --key-file /home/vpsadmin/xray_cert/xray.key
-        echo "Xray Certificates Renewed"
-
-        chmod +r /home/vpsadmin/xray_cert/xray.key
-        echo "Read Permission Granted for Private Key"
-
-        sudo systemctl restart xray
-        echo "Xray Restarted"
-        ```
-
-        ::: warning
-        As pointed out by others, `acme.sh` has a `reloadcmd` command that can automatically execute specific commands when the certificate is updated. This could be used to automatically install certificates for `Xray`. However, since `crontab` is a very useful and common function in Linux systems, this article retains the `crontab` method for updating `Xray` certificates. (Those interested in `reloadcmd` can check the [official documentation](https://github.com/acmesh-official/acme.sh) of `acme.sh`).
-
-        Additionally, in the GIF recording, the script did not include the `Xray` restart command because `Xray` plans to support [Certificate Hot Reload], meaning `Xray` will automatically recognize certificate updates and reload them without a manual restart. Once this feature is added, I will modify `config.json` appropriately to enable this setting and remove the restart command from the script.
-        :::
-
-    4.  Add [Executable] permission to this file.
-
-        ```shell
-        chmod +x ~/xray_cert/xray-cert-renew.sh
-        ```
-
-    5.  Run `crontab -e` to add an automatic task [Run `xray-cert-renew.sh` automatically once a month] (Note: do not add `sudo`, because we are adding the automatic task for the `vpsadmin` account. When running for the first time, it will ask you to choose an editor; choose the familiar `nano`!).
-
-        ```shell
-        crontab -e
-        ```
-
-    6.  Add the following content to the end of the file, save, and exit.
-
-        ```
-        # 1:00am, 1st day each month, run `xray-cert-renew.sh`
-        0 1 1 * * bash /home/vpsadmin/xray_cert/xray-cert-renew.sh
-        ```
-
-    7.  The complete process demonstration is as follows:
-
-        ![Automatically install certificates for Xray monthly](./ch07-img03-crontab-cert-renew.gif)
+5.  `acme.sh` checks every day and automatically updates certificates that expire within 30 days. Xray reloads the certificate automatically by default, so you don't need to worry about certificate updates.
 
 ## 7.4 Configuring Xray
 
