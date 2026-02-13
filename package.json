@@ -1,4 +1,9 @@
 {
+  "overrides": {
+    "vitepress-plugin-mermaid": {
+      "vitepress": "$vitepress"
+    }
+  },
   "devDependencies": {
     "medium-zoom": "^1.1.0",
     "mermaid": "^11.12.2",
