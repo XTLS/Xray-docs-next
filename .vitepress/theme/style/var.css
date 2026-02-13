@@ -1,5 +1,9 @@
 /* .vitepress/theme/style/var.css */
 
+.VPNav {
+  overflow-x: visible !important;
+}
+
 .medium-zoom-overlay {
   z-index: 30;
 }
