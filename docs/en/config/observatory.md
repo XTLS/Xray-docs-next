@@ -51,20 +51,22 @@ An array of strings, where each string is used for prefix matching against outbo
 
 ```json
 {
-  // For each outbound, probe 2 times within 10 minutes; specific probe times are random.
+  // For each outbound, probe 10 times within 10 minutes; specific probe times are random.
   // If they all fail, it will be marked as a faulty node within 10 ~ 20 minutes.
   // After failure, a single successful probe will mark it as a healthy node; at slowest, it takes 10 minutes.
   "destination": "https://connectivitycheck.gstatic.com/generate_204",
   "connectivity": "",
-  "interval": "5m",
-  "sampling": 2,
-  "timeout": "30s"
+  "interval": "1m",
+  "sampling": 10,
+  "timeout": "5s",
+  "httpMethod": "HEAD"
 }
 ```
 
 > `destination`: string
 
 The URL used to probe the connection status of the outbound proxy. This URL should return an HTTP 204 success status code.
+Default `"https://connectivitycheck.gstatic.com/generate_204"`.
 
 > `connectivity`: string
 
@@ -81,14 +83,22 @@ Note: In transparent proxy mode, this request might be captured by the transpare
 The expected **average** probe interval for each outbound proxy.
 
 The time format is number + unit, such as `"10s"`, `"2h45m"`. Supported time units are `ns`, `us`, `ms`, `s`, `m`, `h`, corresponding to nanoseconds, microseconds, milliseconds, seconds, minutes, and hours respectively.
+Default `"1m"`. Minimum allowed value is `"10s"`. If less is specified, `"10s"` will be used.
 
 > `sampling`: number
 
 The number of recent probe results to keep.
+Default `10`.
 
 > `timeout`: string
 
 Probe timeout. Format is the same as `interval` above.
+Default `"5s"`.
+
+> `httpMethod`: string
+
+The HTTP method used for probing (e.g. `"HEAD"`, `"GET"`).
+Default `"HEAD"`.
 
 ::: tip
 The working principle of Burst Observatory is to immediately schedule probe tasks for each matched outbound at every `interval` \* `sampling` (hereinafter referred to as the probe cycle). However, within each task's cycle, the probe is executed at a random time. This means compared to `observatory` (Background Connection Observatory), the fingerprint of this detector is less obvious. But if `interval` is set too small, or `sampling` is too large causing frequent probing, the fingerprint will be more obvious.

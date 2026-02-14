@@ -51,20 +51,22 @@
 
 ```json
 {
-  // 针对每个出站，在 10 分钟内探测 2 次，具体的探测时间点随机
+  // 针对每个出站，在 10 分钟内探测 10 次，具体的探测时间点随机
   // 如果它们全部失败，那么将在 10 ~ 20 分钟内被标记为故障节点
   // 故障后只要有一次探测成功，将被标记为健康节点，最慢需要 10 分钟
   "destination": "https://connectivitycheck.gstatic.com/generate_204",
   "connectivity": "",
-  "interval": "5m",
-  "sampling": 2,
-  "timeout": "30s"
+  "interval": "1m",
+  "sampling": 10,
+  "timeout": "5s",
+  "httpMethod": "HEAD"
 }
 ```
 
 > `destination`: string
 
 用于探测出站代理连接状态的网址。这个网址应该返回 HTTP 204 成功状态码。
+默认值 `"https://connectivitycheck.gstatic.com/generate_204"`。
 
 > `connectivity`: string
 
@@ -81,14 +83,22 @@
 针对每个出站代理，预期的**平均**每次探测间隔。
 
 时间格式为数字 + 单位，比如 `"10s"`, `"2h45m"`，支持的时间单位有 `ns`, `us`, `ms`, `s`, `m`, `h`， 分别对应纳秒、微秒、毫秒、秒、分、时。
+默认值 `"1m"`。最小允许值为 `"10s"`。如果指定的值更小，将使用 `"10s"`。
 
 > `sampling`: number
 
 保留最近探测结果的数量。
+默认值 `10`。
 
 > `timeout`: string
 
 探测超时时间。格式和上面的 `interval` 相同。
+默认值 `"5s"`。
+
+> `httpMethod`: string
+
+用于探测的 HTTP 方法（例如 `"HEAD"`、`"GET"`）。
+默认值 `"HEAD"`。
 
 ::: tip
 突发连接观测的工作原理是每间隔 `interval` \* `sampling`（下称探测周期），立即针对每个匹配到的出站分别调度探测任务，但是在每个任务的周期内随机时间执行探测，这意味着相较于 `observatory`（后台连接观测），本探测器的特征更不明显。但如果 interval 设置的过小，或者 sampling 过大导致频繁探测，那么特征会更明显。
