@@ -261,9 +261,13 @@ CurveP384
 CurveP521
 X25519
 X25519MLKEM768
+SecP256r1MLKEM768*
+SecP384r1MLKEM1024*
 ```
 
-The default value as of go1.25 includes the above five curves. Adjusting the order does not make the client or server prefer a particular curve; the actual curve will be negotiated by the key exchange mechanism itself.
+\*: Not supported by utls
+
+The default value as of go1.26 includes all of the above curves. Adjusting the order does not make the client or server prefer a particular curve; the actual curve will be negotiated by the key exchange mechanism itself.
 
 > `masterKeyLog` : string
 
