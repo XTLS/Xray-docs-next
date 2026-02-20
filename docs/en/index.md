@@ -1,4 +1,5 @@
 ---
+# https://vitepress.dev/reference/default-theme-home-page
 layout: home
 
 hero:
@@ -20,38 +21,40 @@ hero:
       link: /en/about/sponsor.md
 
 features:
-  - title: High-speed protocol
+  - title: Pierce Whitelists (uTLS & REALITY)
+    icon: 🎭
+    details: uTLS perfectly simulates client TLS fingerprints; REALITY takes over server certificate fingerprints without a domain name, striking directly at SNI blocking and whitelists.
+  - title: Anti-Censorship Transport (XHTTP & xDrive)
     icon: 🚀
-    details: Original VLESS and XTLS protocols, free from redundant encryption, release CPU power
-  - title: Free combination
-    icon: 🧩
-    details: Perfect fallback mechanism, effectively prevent active detection, multi-service sharing ports
-  - title: Ultra-low occupancy
-    icon: 🌱
-    details: OpenWRT RaspberryPi and other simplified devices can be used
-  - title: Powerful routing
-    icon: ⚙️
-    details: Highly customizable routing system to meet various usage requirements and fully exploit network performance
-  - title: Full compatibility
-    icon: 🤝
-    details: Fully compatible with v2ray-core configuration files and API calls
-  - title: Affinity
-    icon: 💖
-    details: Active community discussions and contributions, MPL 2.0 open source license
+    details: Transport layer innovations. XHTTP cleverly leverages CDNs, while xDrive utilizes public cloud drives, hiding real traffic within massive whitelisted services.
+  - title: Extreme Camouflage (xDNS & xICMP)
+    icon: 👻
+    details: Makes traffic invisible by perfectly encapsulating data into basic DNS queries or ICMP packets, establishing communication even in extreme blocking environments.
+  - title: Performance & Stealth (VLESS & Vision)
+    icon: ⚡
+    details: VLESS avoids meaningless double encryption of inner traffic; combined with XTLS Vision, it completely eliminates TLS-in-TLS characteristics and achieves 0-RTT handshakes.
+  - title: Ultra-Low Latency & Fullcone
+    icon: 🎮
+    details: Deeply optimizes DNS performance and fully supports UDP Fullcone NAT traversal, providing a native-like smooth experience for gaming and instant messaging.
+  - title: Intranet Penetration (Reverse Proxy)
+    icon: 🔗
+    details: Built-in powerful reverse proxy and routing distribution, capable of reverse-forwarding server traffic to the client for secure cross-network interconnection.
 ---
 
-## XTLS? Xray? V2Ray?
+## What is Xray?
 
-**XTLS are brilliant ideas for TLS we study, while Xray is the best practice we maintain.**
+**Xray-core is the next-generation network proxy tool that penetrates everything.**
 
-- Xray-core is a superset of v2ray-core, with better overall performance and enhancements such as XTLS, and it's~~completely~~compatible with v2ray-core functionality and configuration.
-  - Only one executable file, including ctl functionality, run is the default command
-  - Configuration is~~completely~~compatible, environment variables and API calls need to be changed to start with XRAY\_
-  - Exposed raw protocol's ReadV on all platforms
-  - Provides complete VLESS & Trojan XTLS support, both with ReadV
-  - Provides multiple XTLS flow control modes, unrivaled performance!
+As network blocking technologies continuously upgrade, traditional proxy protocols have gradually fallen behind. Xray-core has completely discarded historical baggage, providing the most powerful solutions for the harshest network environments and most complex routing needs through underlying architecture reconstruction and protocol innovation:
 
-> "Configuration compatible, overall better"
+- **Direct Strike on Censorship (uTLS & REALITY)**: **uTLS** perfectly disguises client TLS handshake fingerprints; **REALITY** abandons the traditional website-building model, taking over server certificate fingerprints without needing a domain name. Its core power lies in ignoring SNI blocking and whitelist restrictions by directly "borrowing" certificates and SNIs of major target websites, fundamentally changing the dimension of the confrontation.
+- **Core Power & Stealth (VLESS & XTLS Vision)**: A powerful alliance with distinct roles. **VLESS** protocol cleverly avoids meaningless double encryption of already encrypted inner traffic (like TLS 1.3), maximizing CPU power release (its variant **VLESS enc** is a perfect replacement for SS in relay scenarios, safe even if keys are leaked). **XTLS Vision** focuses on completely eliminating TLS-in-TLS traffic characteristics and natively supports true 0-RTT handshakes.
+- **Anti-Censorship Transport (XHTTP & xDrive)**: Facing modern complex Deep Packet Inspection (DPI), new transport layers emerged. **XHTTP** leverages CDN infrastructure for efficient traffic forwarding with native 0-RTT support; **xDrive** takes a different approach, using public cloud drive APIs for data transmission, making censorship systems hesitate to block them.
+- **Exotic Camouflage Tunnels (xDNS & xICMP)**: Underlying camouflage layers prepared for extremely high-pressure environments. They encapsulate proxy data in standard DNS queries or ICMP (Ping) packets, capable of not only penetrating strict firewall rules but also serving as the ultimate tool to bypass Captive Portals.
+- **Ultimate Experience (UDP Fullcone & Reverse Proxy)**: The application side deeply optimizes DNS performance, while the protocol side fully supports UDP Fullcone NAT traversal. The built-in powerful reverse proxy can forward server traffic backward to the client, easily achieving intranet penetration and service exposure.
+- **Fearless in Real-World Tests**: During previous strict network blockades (including high-pressure censorship in Iran, Russia, and Quanzhou, China), Xray-core demonstrated unmatched stability and connectivity. **When others fail, Xray prevails.**
+
+> "Simpler configuration, stronger performance, penetrates everything."
 
 ### Who are we?
 
@@ -62,29 +65,26 @@ features:
 Welcome to help Xray become stronger!
 
 - 🖥️ Help develop and test Xray, submit high-quality Pull requests.
-- 📩 Initiate constructive or meaningful issues and discussions in [GitHub Issues](https://github.com/XTLS/Xray-core/issues) or [Discussion area](https://github.com/XTLS/Xray-core/discussions).
+- 📩 Initiate constructive or meaningful issues and discussions in [GitHub Issues](https://github.com/XTLS/Xray-core/issues) or the [Discussion area](https://github.com/XTLS/Xray-core/discussions).
 - 📝 Write down your usage experience and submit it to Xray's [documentation website](https://github.com/XTLS/Xray-docs-next).
-- 💬 Help group members/chat in Telegram group.
-- **...In fact, every support for Xray will make Xray stronger**
+- 💬 Help group members/chat in our Telegram group.
+- **...In fact, every support for Xray will make Xray stronger.**
 
 ### Telegram
 
 - [Project X Discussion Group](https://t.me/projectXray)
   - You can chat freely above the bottom line in the discussion group, don't fight, no abuse of power.
   - Feel free to ask questions, and try to answer those you know.
-  - No politics, No NSFW
-
-- [Project VLESS Group](https://t.me/projectVless)
-  - The official Xray-core group for non-Chinese participants. Sister group of [Project X](https://t.me/projectXray)
-  - No advertising, No insults, No politics.
+  - No politics, No NSFW.
+  - [Persian](https://t.me/projectXHTTP)
 
 - [Project X Channel](https://t.me/projectXtls)
-  - Publish the latest news of Project X
+  - Publish the latest news of Project X.
 
 ### Thanks
 
 - Thanks to everyone for their support!
-- Thanks to all kinds of scripts, Docker images, client support... Thanks to all the big guys who helped improve the ecosystem!
+- Thanks to all kinds of scripts, Docker images, multi-platform clients... Thanks to all the big guys who helped improve the ecosystem!
 - Thanks to friends who have contributed to the Xray website and documentation.
 - Thanks to friends who have made meaningful suggestions and comments.
 - Thanks to every friend in the Telegram group who helps others.
@@ -92,7 +92,6 @@ Welcome to help Xray become stronger!
 ### More about project X
 
 - If you would like to learn more about project X's history and growth, please click [here](./about/news.md)
-- Now Project X releases NFTs! If you would like to have one Project X NFT, or want to donate to or sponsoring Project X, please click [here](https://github.com/XTLS/Xray-core/discussions/3633#discussioncomment-10240940)
 
 ### License
 

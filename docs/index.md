@@ -21,38 +21,40 @@ hero:
       link: /about/sponsor.md
 
 features:
-  - title: 极速协议
+  - title: 击穿白名单 (uTLS & REALITY)
+    icon: 🎭
+    details: uTLS 完美模拟客户端 TLS 指纹；REALITY 无需域名即可接管服务端证书指纹，直击 SNI 阻断与白名单机制。
+  - title: 强力抗封锁传输 (XHTTP & xDrive)
     icon: 🚀
-    details: 原创 VLESS 与 XTLS 协议，摆脱冗余加密，释放CPU算力
-  - title: 自由组合
-    icon: 🧩
-    details: 完善的回落机制，有效防止主动探测，多服务共享端口
-  - title: 超低占用
-    icon: 🌱
-    details: OpenWRT RaspberryPi 等各种精简设备皆可使用
-  - title: 强大路由
-    icon: ⚙️
-    details: 高可定制化的路由系统，满足各类使用需求，充分发挥网络性能
-  - title: 完整兼容
-    icon: 🤝
-    details: 完整兼容 v2ray-core 配置文件与 API 调用
-  - title: 亲和力
-    icon: 💖
-    details: 活跃的社区讨论及贡献，MPL 2.0 开源许可协议
+    details: 同属传输层创新，XHTTP 巧妙借道 CDN，xDrive 创新借道公有网盘，将真实流量隐匿于海量白名单服务中。
+  - title: 极端伪装层 (xDNS & xICMP)
+    icon: 👻
+    details: 化流量于无形，将数据完美封装为基础的 DNS 查询或 ICMP 报文，在最极端的封锁环境下依然能建立通信。
+  - title: 性能与伪装 (VLESS & Vision)
+    icon: ⚡
+    details: VLESS 避免内层流量被无意义二次加密；配合 XTLS Vision 彻底消除 TLS-in-TLS 特征，并实现 0-RTT 极速握手。
+  - title: 极低延迟 & Fullcone
+    icon: 🎮
+    details: 深度优化 DNS 性能，全面支持 UDP Fullcone 完美 NAT 穿透，为游戏与即时通讯提供原生级流畅体验。
+  - title: 内网穿透 (反向代理)
+    icon: 🔗
+    details: 内置强大的反向代理与路由分流，可将服务端流量逆向转发至客户端，轻松实现安全高效的跨网互联与内网穿透。
 ---
 
-## XTLS ? Xray ? V2Ray ?
+## 什么是 Xray ?
 
-**XTLS are brilliant ideas for TLS we study, while Xray is the best practice we maintain.**
+**Xray-core 是穿透一切的下一代网络代理工具。**
 
-- Xray-core 是 v2ray-core 的超集，含更好的整体性能和 XTLS 等一系列增强，且~~完全~~兼容 v2ray-core 的功能及配置。
-  - 只有一个可执行文件，含 ctl 的功能，run 为默认指令
-  - 配置上~~完全~~兼容，环境变量和 API 对应要改为以 XRAY\_ 开头
-  - 全平台开放了裸协议的 ReadV
-  - 提供完整的 VLESS XTLS 支持，均有 ReadV
-  - 提供了 XTLS 多种流控模式, 性能一骑绝尘!
+伴随着网络封锁技术的不断升级，传统的代理协议已逐渐力不从心。Xray-core 彻底抛弃了历史包袱，通过底层的架构重构与协议创新，为最严苛的网络环境和最复杂的路由需求提供了最强有力的解决方案：
 
-> “配置兼容，整体更好”
+- **精准直击封锁 (uTLS & REALITY)**：**uTLS** 负责完美伪装客户端的 TLS 握手指纹；而 **REALITY** 彻底摒弃传统的建站模式，无需域名即可接管服务端的证书指纹。它的核心威力在于无视 SNI 阻断与白名单限制，直接“借用”大厂目标网站的证书与 SNI，从根本上改变了对抗维度的玩法。
+- **核心动力与隐匿 (VLESS & XTLS Vision)**：两者强强联合但各司其职。**VLESS** 协议巧妙地避免了对已有加密（如 TLS 1.3）的内层流量进行无意义的二次加密，极致释放 CPU 算力（其变种 **VLESS enc** 更是完美替代 SS 的中转利器，密钥泄露亦安全）；而 **XTLS Vision** 则专注于彻底消除 TLS-in-TLS 的流量特征，并原生支持真正的 0-RTT 握手延迟。
+- **抗封锁传输 (XHTTP & xDrive)**：面对现代复杂的深度包检测（DPI），全新传输层应运而生。**XHTTP** 巧妙借道 CDN 基础设施进行高效流量转发，且原生支持 0-RTT；**xDrive** 则另辟蹊径，借道各大公有云盘（网盘）API 进行数据传输，让审查系统投鼠忌器，无法封锁。
+- **异类伪装隧道 (xDNS & xICMP)**：专为极高压环境准备的底层伪装层。能够将代理数据封装在常规的 DNS 查询或 ICMP (Ping) 报文中，不仅能穿透严苛的防火墙规则，更是绕过局域网认证（Captive Portal）的绝对利器。
+- **极致体验 (UDP Fullcone & 反向代理)**：应用侧深度优化 DNS 性能，协议侧全面支持 UDP Fullcone（完全圆锥型 NAT）穿透；内置强大的反向代理功能，能够将服务端的流量逆向转发至客户端，轻松实现内网穿透与服务暴露。
+- **无惧实战检验**：在历次严格的网络封锁期间（包括伊朗、俄罗斯及国内泉州等地的高压封锁），Xray-core 均展现出了傲视群雄的稳定性和连通率。**别家不行，Xray 能行。**
+
+> “配置更简，性能更强，穿透一切”
 
 ### 我们是谁？
 
@@ -75,17 +77,13 @@ features:
   - 有问题尽管随便问，知道的尽量回答。
   - 禁政治，禁 NSFW
 
-- [Project VLESS Group](https://t.me/projectVless)
-  - 对非中文参与的官方用户群。 [Project X](https://t.me/projectXray) 的姊妹群。
-  - 禁广告，禁人身攻击，禁政治。
-
 - [Project X 频道](https://t.me/projectXtls)
   - 发布 Project X 的最新资讯
 
 ### 致谢
 
 - 感谢所有人的支持！
-- 感谢各类脚本、Docker 镜像、客户端支持...感谢所有帮忙完善生态的大佬们！
+- 感谢各类脚本、Docker 镜像、多端客户端...感谢所有帮忙完善生态的大佬们！
 - 感谢为 Xray 网站和文档添砖加瓦的朋友们.
 - 感谢提出有意义的建议和意见的朋友们.
 - 感谢 Telegram 群每一位帮助群友的朋友.
@@ -93,7 +91,6 @@ features:
 ### 更多关于 Project X
 
 - 如果你想知道更多关于 Project X 的足迹与成长, 请点击[这里](./about/news.md)
-- 现在 Project X 也发行 NFT 了！如果想拥有一枚 Project X NFT 或者想捐赠或者赞助 Project X，请点击[这里](https://github.com/XTLS/Xray-core/discussions/3633)
 
 ### License
 
