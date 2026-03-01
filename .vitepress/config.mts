@@ -15,7 +15,24 @@ export default defineConfig({
 
   title: "Project X",
   description: "Xray-core",
-  head: [["link", { rel: "icon", href: "/logo.png" }]],
+  head: [
+    [
+      "link",
+      {
+        rel: "icon",
+        href: "/logo-light.svg",
+        media: "(prefers-color-scheme: light)"
+      }
+    ],
+    [
+      "link",
+      {
+        rel: "icon",
+        href: "/logo-dark.svg",
+        media: "(prefers-color-scheme: dark)"
+      }
+    ]
+  ],
 
   lastUpdated: true,
 
@@ -54,6 +71,7 @@ export default defineConfig({
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: { light: "/logo-light.svg", dark: "/logo-dark.svg" },
     nav: nav,
 
     search: {

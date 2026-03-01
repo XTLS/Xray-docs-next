@@ -6,7 +6,7 @@ hero:
   text: Xray-core
   tagline: Не бойтесь облаков, застилающих вид – золотые глаза, словно факел, озаряют небо.
   image:
-    src: /LogoX2.png
+    src: /img-project-x.png
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand

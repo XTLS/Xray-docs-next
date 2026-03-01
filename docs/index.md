@@ -7,7 +7,7 @@ hero:
   text: Xray-core
   tagline: 不畏浮云遮望眼 · 金睛如炬耀苍穹
   image:
-    src: /LogoX2.png
+    src: /img-project-x.png
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand

@@ -6,7 +6,7 @@ hero:
   text: Xray-core
   tagline: Fear not the clouds that obscure the view, golden eyes like a torch brighten the sky
   image:
-    src: /LogoX2.png
+    src: /img-project-x.png
     alt: Xray, Penetrates Everything
   actions:
     - theme: brand
