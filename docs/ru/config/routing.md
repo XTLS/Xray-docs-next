@@ -66,7 +66,11 @@
   "process": ["curl"],
   "outboundTag": "direct",
   "balancerTag": "balancer",
-  "ruleTag": "rule name"
+  "ruleTag": "rule name",
+  "webhook": {
+    "url": "https://api.example.com/alert",
+    "deduplication": 300
+  }
 }
 ```
 
@@ -225,6 +229,60 @@ JSON-объект, где ключи и значения являются стр
 Необязательно, не имеет фактического эффекта, используется только для идентификации имени этого правила.
 
 Если установлено, при совпадении с этим правилом в журнал с уровнем Info будет выводиться соответствующая информация, используемая для отладки того, какое правило маршрутизации сработало.
+
+> `webhook`: [WebhookObject](#webhookobject)
+
+Необязательно. Если установлено, при попадении в правило будет отправлен POST-запрос на указанный URL.
+
+Пример данных, отправляемых в POST-запросе:
+
+```json
+{
+  "email": "2", // string | null
+  "level": null, // number | null
+  "protocol": "tls", // string | null
+  "network": "tcp", // string
+  "source": "tcp:127.0.0.1:54203", // string | null
+  "destination": "tcp:dns.google:443", // string
+  "routeTarget": null, // string | null
+  "originalTarget": "tcp:8.8.8.8:443", // string | null
+  "inboundTag": "VLESS_TCP", // string | null
+  "inboundName": "vless", // string | null
+  "inboundLocal": "tcp:192.168.108.1:443", // string | null
+  "outboundTag": "notify-bittorrent", // string | null
+  "ts": 1771886901 // number
+}
+```
+
+#### WebhookObject
+
+```json
+{
+  "url": "http://127.0.0.1:8080/api/webhook",
+  "deduplication": 10,
+  "headers": {
+    "X-API-Key": "your-secret-key"
+  }
+}
+```
+
+> `url`: string
+
+URL, по которому будет отправлено уведомление. Поддерживаются как стандартные веб-адреса, так и локальные пути Unix socket.
+
+- `https://api.example.com/alert` — стандартный URL для передачи уведомлений по HTTP(S). Используется при интеграции с внешними веб-сервисами или API.
+- `/var/run/webhook.sock` — отправка уведомления через Unix socket, POST-запрос осуществляется на корневой путь `/` данного сокета.
+- `/var/run/webhook.sock:/alert` — отправка уведомления через Unix socket на специфический endpoint `/alert`. Это позволяет интегрироваться с локальными сервисами напрямую, без использования сетевого интерфейса.
+- `@abstract:/webhook` — abstract-сокет (lock-free, только Linux/Android).
+- `@@padded:/webhook` — abstract-сокет с padding.
+
+> `deduplication`: number
+
+Время (в секундах) для дедупликации событий. При срабатывании нескольких событий в этот период дублирующие запросы игнорируются.
+
+> `headers`: object
+
+Заголовки HTTP-запроса.
 
 ### BalancerObject
 
