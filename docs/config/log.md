@@ -34,8 +34,7 @@ LogObject 对应配置文件的 `log` 项。
 
 > `loglevel`: "debug" | "info" | "warning" | "error" | "none"
 
-error 日志的级别, 指示 error 日志需要记录的信息.
-默认值为 `"warning"`。
+error 日志的级别, 指示 error 日志需要记录的信息.默认值为 `"warning"`。
 
 - `"debug"`：调试程序时用到的输出信息。同时包含所有 `"info"` 内容。
 - `"info"`：运行时的状态信息等，不影响正常使用。同时包含所有 `"warning"` 内容。
