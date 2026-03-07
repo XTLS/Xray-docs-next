@@ -33,7 +33,7 @@
 
 > `level`: map{string: [LevelPolicyObject](#levelpolicyobject)}
 
-一组键值对，每个键是一个字符串形式的数字（JSON 的要求），比如 `"0"`、`"1"` 等，双引号不能省略，此数字对应用户等级。每一个值是一个 [LevelPolicyObject](#levelpolicyobject).
+一组键值对，每个键是一个字符串形式的数字（JSON 的要求），比如 `"0"`、`"1"` 等，双引号不能省略，此数字对应用户等级。每一个值是一个 [LevelPolicyObject](#levelpolicyobject)。
 
 ::: tip
 每个入站出站代理现在都可以设置用户等级，Xray 会根据实际的用户等级应用不同的本地策略。
@@ -41,7 +41,7 @@
 
 > `system`: [SystemPolicyObject](#systempolicyobject)
 
-Xray 系统级别的策略
+Xray 系统级别的策略。
 
 ### LevelPolicyObject
 
