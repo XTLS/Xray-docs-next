@@ -385,7 +385,7 @@ Weight value. The larger the value, the less likely the corresponding node is to
 
 ### Predefined Domain List
 
-This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Usage: `geosite:filename`, e.g., `geosite:google` represents routing filtering or DNS filtering for domains included within `google` in the file.
+This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Usage: `geosite:xxx`, e.g., `geosite:google` represents routing filtering or DNS filtering for domains included within `google` in the file.
 
 Common domains include:
 
