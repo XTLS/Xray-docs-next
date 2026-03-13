@@ -87,7 +87,7 @@ When multiple attributes are specified simultaneously, these attributes must be 
 - **Full match**: Starts with `"full:"`, the rest is a domain name. The rule takes effect when this domain exactly matches the target domain. For example, "full:xray.com" matches "xray.com" but not "www.xray.com".
 - **Dotless domain**: Starts with `"dotless:"`, the rest is a string that cannot contain `.`. The rule takes effect when the domain contains no `.` and this string matches any part of the target domain. For example, "dotless:pc-" matches "pc-alice", "mypc-alice". Suitable for intranet NetBIOS domains, etc. Case sensitive.
 - **Predefined domain list**: Starts with `"geosite:"`, the rest is a name, such as `geosite:google` or `geosite:cn`. Refer to [Predefined Domain List](#predefined-domain-list) for names and domain lists.
-- **Load domains from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by filename and tag. The file is stored in the [Resource Directory](./features/env.md#resource-file-path). The file format is the same as `geosite.dat`, and the tag must exist in the file.
+- **Load domains from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by file and tag. The file is stored in the [Resource Directory](./features/env.md#resource-file-path). The file format is the same as `geosite.dat`, and the tag must exist in the file.
 
 ::: tip
 `"ext:geoip.dat:cn"` is equivalent to `"geoip:cn"`
@@ -102,7 +102,7 @@ An array, where each item represents an IP range. The rule takes effect when an 
 - **Predefined IP list**: This list is pre-installed in every Xray installation package, named `geoip.dat`. Usage is like `"geoip:cn"`. Must start with `geoip:` (lowercase), followed by a two-character country code. Supports almost all countries with internet access.
   - **Special value**: `"geoip:private"`, includes all private addresses, such as `127.0.0.1`.
   - **Inverse selection `!`**: `"geoip:!cn"` means results not in geoip:cn. Multiple inverse options have an `AND` relationship, while positive options, or positive options and all inverse options, have an `OR` relationship. For example, `ip: ["geoip:!cn", "geoip:!us", "geoip:telegram"]` matches IPs that are not from the US AND not from China, OR are Telegram IPs.
-- **Load IPs from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by filename and tag. The file is stored in the [Resource Directory](./features/env.md#resource-file-path). The file format is the same as `geoip.dat`, and the tag must exist in the file.
+- **Load IPs from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by file and tag. The file is stored in the [Resource Directory](./features/env.md#resource-file-path). The file format is the same as `geoip.dat`, and the tag must exist in the file.
 
 > `port`: number | string
 
@@ -385,7 +385,7 @@ Weight value. The larger the value, the less likely the corresponding node is to
 
 ### Predefined Domain List
 
-This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Usage: `geosite:filename`, e.g., `geosite:google` represents routing filtering or DNS filtering for domains included within `google` in the file.
+This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Usage: `geosite:xxx`, e.g., `geosite:google` represents routing filtering or DNS filtering for domains included within `google` in the file.
 
 Common domains include:
 
