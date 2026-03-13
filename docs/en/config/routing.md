@@ -72,7 +72,11 @@ When a rule points to a load balancer, Xray will select an outbound through this
   "process": ["curl"],
   "outboundTag": "direct",
   "balancerTag": "balancer",
-  "ruleTag": "rule name"
+  "ruleTag": "rule name",
+  "webhook": {
+    "url": "https://api.example.com/alert",
+    "deduplication": 300
+  }
 }
 ```
 
@@ -233,6 +237,60 @@ You must choose one between `balancerTag` and `outboundTag`. When both are speci
 Optional. No actual effect, only used to identify the name of this rule.
 
 If set, information regarding this rule will be output at the Info level when the rule is matched, used for debugging which specific rule was hit.
+
+> `webhook`: [WebhookObject](#webhookobject)
+
+Optional. If set, a POST request will be sent to the specified URL when the rule is matched.
+
+Example of data sent in the POST request:
+
+```json
+{
+  "email": "2", // string | null
+  "level": null, // number | null
+  "protocol": "tls", // string | null
+  "network": "tcp", // string
+  "source": "tcp:127.0.0.1:54203", // string | null
+  "destination": "tcp:dns.google:443", // string
+  "routeTarget": null, // string | null
+  "originalTarget": "tcp:8.8.8.8:443", // string | null
+  "inboundTag": "VLESS_TCP", // string | null
+  "inboundName": "vless", // string | null
+  "inboundLocal": "tcp:192.168.108.1:443", // string | null
+  "outboundTag": "notify-bittorrent", // string | null
+  "ts": 1771886901 // number
+}
+```
+
+#### WebhookObject
+
+```json
+{
+  "url": "http://127.0.0.1:8080/api/webhook",
+  "deduplication": 10,
+  "headers": {
+    "X-API-Key": "your-secret-key"
+  }
+}
+```
+
+> `url`: string
+
+The URL to which the notification will be sent. Both standard web addresses and local Unix socket paths are supported.
+
+- `https://api.example.com/alert` — a standard URL for sending notifications via HTTP(S). Used for integration with external web services or APIs.
+- `/var/run/webhook.sock` — sends the notification via a Unix socket, with the POST request directed to the root path `/` of the socket.
+- `/var/run/webhook.sock:/alert` — sends the notification via a Unix socket to a specific endpoint `/alert`. This allows direct integration with local services without using a network interface.
+- `@abstract:/webhook` — abstract socket (lock-free, Linux/Android only).
+- `@@padded:/webhook` — abstract socket with padding for HAProxy compatibility.
+
+> `deduplication`: number
+
+The time (in seconds) for event deduplication. If multiple events are triggered within this period, duplicate requests are ignored.
+
+> `headers`: object
+
+HTTP request headers.
 
 ### BalancerObject
 
