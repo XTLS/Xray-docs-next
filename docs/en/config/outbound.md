@@ -45,7 +45,7 @@ For example, if the machine has a full IPv4 range `11.4.5.0/24` and listens on `
 
 As mentioned in the inbound introduction, because of the connectionless nature of UDP, Xray cannot know the original destination IP where the request entered the core (for example, in the same QUIC connection, it might even change), so this feature cannot take effect for UDP.
 
-> `protocol`: "blackhole" | "dns" | "freedom" | "http" | "loopback" | "shadowsocks" | "socks" | "trojan" | "vless" | "vmess" | "wireguard"
+> `protocol`: "blackhole" | "dns" | "freedom" | "http" | "loopback" | "shadowsocks" | "socks" | "trojan" | "vless" | "vmess" | "hysteria" | "wireguard"
 
 The connection protocol name. For the list of optional protocols, see [Outbound Protocols](./outbounds/) on the left.
 
