@@ -1245,7 +1245,7 @@ FinalMask применяет последний слой маскировки к
 
 > `debug`: false | true
 
-Enable bbr/brutal congestion control logging.
+Включить логирование в режиме bbr/brutal congestal control.
 
 > `brutalUp`: string
 
