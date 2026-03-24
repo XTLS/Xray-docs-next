@@ -954,13 +954,19 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-> `tcp.type`: header-custom | fragment | sudoku
+> `tcp[n].type`: header-custom | fragment | sudoku
 
-层数顺序为第一个为最后一层伪装。
+数组第一个为最外层伪装。
 
 用于搭配 raw | httpupgarde | websocket | grpc | xhttp 传输层。
 
-> `tcp.settings`: header-custom | fragment | sudoku
+`header-custom`:
+
+`fragment`:
+
+`sudoku`:
+
+> `tcp[n].settings`: header-custom | fragment | sudoku
 
 #### header-custom
 
@@ -1038,9 +1044,9 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-> `udp.type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
-层数顺序为第一个为最后一层伪装。
+数组第一个为最外层伪装。
 
 用于搭配 raw udp | kcp | hysteria | xhttp h3 传输层。
 
@@ -1080,7 +1086,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `xicmp`:
 
-> `udp.settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `udp[n].settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
 #### header-custom
 
@@ -1274,3 +1280,7 @@ QUIC KeepAlive 间隔（秒）。范围为 2~60 秒。默认禁用。
 是否禁用路径 MTU 发现。
 
 其他实现里对于 !linux && !windows && !darwin OS 为强制禁用，xray 里则非强制，如果你为非 (linux || windows || darwin) 可能需要手动禁用。
+
+> `maxIncomingStreams`: number
+
+服务端参数，如果设置则不得小于 8

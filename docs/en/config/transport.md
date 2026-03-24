@@ -941,13 +941,19 @@ FinalMask applies a final layer of obfuscation to the traffic after the core has
 }
 ```
 
-> `tcp.type`: header-custom | fragment | sudoku
+> `tcp[n].type`: header-custom | fragment | sudoku
 
-The layer order is such that the first layer is the last layer of camouflage.
+The first element in the array is the outermost camouflage.
 
 Used in conjunction with raw | httpupgarde | websocket | gRPC | xhttp transport layers.
 
-> `tcp.settings`: header-custom | fragment | sudoku
+`header-custom`:
+
+`fragment`:
+
+`sudoku`:
+
+> `tcp[n].settings`: header-custom | fragment | sudoku
 
 #### header-custom
 
@@ -1025,9 +1031,9 @@ Used in conjunction with raw | httpupgarde | websocket | gRPC | xhttp transport 
 }
 ```
 
-> `udp.type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
-The layer order is such that the first layer is the last layer of camouflage.
+The first element in the array is the outermost camouflage.
 
 Used in conjunction with raw udp | kcp | hysteria | xhttp h3 transport layers.
 
@@ -1063,7 +1069,7 @@ For example, if you own example.com, then you can set an A record for a.example.
 
 `xicmp`:
 
-> `udp.settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `udp[n].settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
 #### header-custom
 
@@ -1257,3 +1263,7 @@ QUIC KeepAlive interval (seconds). Range: 2~60 seconds. Disabled by default.
 Whether to disable Path MTU Discovery.
 
 In other implementations, !linux && !windows && !darwin OS are forcibly disabled, while in xray it is not mandatory. If your OS is not (linux || windows || darwin), you may need to disable it manually.
+
+> `maxIncomingStreams`: number
+
+Server-side parameters, if set, must not be less than 8.

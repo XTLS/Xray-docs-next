@@ -966,13 +966,19 @@ FinalMask применяет последний слой маскировки к
 }
 ```
 
-> `tcp.type`: header-custom | fragment | sudoku
+> `tcp[n].type`: header-custom | fragment | sudoku
 
-Порядок слоев таков, что первый слой является последним слоем маскировки.
+Первый элемент в массиве — это самый внешний камуфляж.
 
 Используется совместно с транспортными уровнями raw | httpupgarde | websocket | gRPC | xhttp.
 
-> `tcp.settings`: header-custom | fragment | sudoku
+`header-custom`:
+
+`fragment`:
+
+`sudoku`:
+
+> `tcp[n].settings`: header-custom | fragment | sudoku
 
 #### header-custom
 
@@ -1050,9 +1056,9 @@ FinalMask применяет последний слой маскировки к
 }
 ```
 
-> `udp.type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
-Порядок слоев таков, что первый слой является последним слоем маскировки.
+Первый элемент в массиве — это самый внешний камуфляж.
 
 Используется совместно с транспортными слоями raw udp | kcp | hysteria | xhttp h3.
 
@@ -1094,7 +1100,7 @@ FinalMask применяет последний слой маскировки к
 
 `xicmp`:
 
-> `udp.settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `udp[n].settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
 #### header-custom
 
@@ -1286,3 +1292,7 @@ Enable bbr/brutal congestion control logging.
 Отключить ли обнаружение Path MTU Discovery.
 
 В других реализациях команды !linux && !windows && !darwin OS принудительно отключены, тогда как в xray это не является обязательным. Если ваша ОС не (linux || windows || darwin), вам может потребоваться отключить их вручную.
+
+> `maxIncomingStreams`: number
+
+Если заданы параметры на стороне сервера, их количество не должно быть меньше 8.
