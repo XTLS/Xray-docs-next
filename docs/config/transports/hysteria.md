@@ -85,11 +85,11 @@ type 为 file 时的配置项。
 
 type 为 proxy 时的配置项。
 
-> `rewriteHost`: false |  true
+> `rewriteHost`: false | true
 
 type 为 proxy 时的配置项。
 
-> `insecure`: false |  true
+> `insecure`: false | true
 
 type 为 proxy 时的配置项。
 

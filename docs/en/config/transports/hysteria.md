@@ -85,11 +85,11 @@ Configuration items when type is file.
 
 Configuration items when type is proxy.
 
-> `rewriteHost`: false |  true
+> `rewriteHost`: false | true
 
 Configuration items when type is proxy.
 
-> `insecure`: false |  true
+> `insecure`: false | true
 
 Configuration items when type is proxy.
 

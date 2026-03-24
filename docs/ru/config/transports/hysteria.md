@@ -85,11 +85,11 @@
 
 Элементы конфигурации, когда `type` имеет значение `proxy`.
 
-> `rewriteHost`: false |  true
+> `rewriteHost`: false | true
 
 Элементы конфигурации, когда `type` имеет значение `proxy`.
 
-> `insecure`: false |  true
+> `insecure`: false | true
 
 Элементы конфигурации, когда `type` имеет значение `proxy`.
 
