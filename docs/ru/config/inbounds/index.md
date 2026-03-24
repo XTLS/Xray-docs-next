@@ -10,4 +10,5 @@ Xray поддерживает следующие входящие протоко
 - [VLESS (XTLS Vision Seed)](vless.md)
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
+- [Hysteria](hysteria.md)
 - [TUN](tun.md)
