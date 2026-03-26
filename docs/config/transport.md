@@ -1142,7 +1142,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
   "reset": 0,
   "noise": [
     {
-      "rand": 0,
+      "rand": "1-8192",
       "randRange": "0-255",
       "type": "",
       "packet": [],
@@ -1152,7 +1152,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-`noise[n].rand`: 添加指定长度随机字节，与 `packet` 冲突。
+`noise[n].rand`: 添加随机或指定长度随机字节，与 `packet` 冲突。
 
 `noise[n].randRange`: 随机字节范围，默认 0-255。
 

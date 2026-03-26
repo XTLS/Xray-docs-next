@@ -47,7 +47,9 @@ Hysteria authentication password. Must be consistent between the server and the 
 
 > `udpIdleTimeout`: number
 
-The idle waiting time for a single UDP connection is likely not strictly adhered to if it is too long, and it may be terminated by the policy first.
+Unit: seconds, default 60.
+
+Idle wait time for a single UDP connection. If this time is too long, it may not be strictly adhered to and may be terminated by the policy first.
 
 > `masquerade`: [MasqObject](#MasqObject)
 

@@ -1125,7 +1125,7 @@ For example, if you own example.com, then you can set an A record for a.example.
   "reset": 0,
   "noise": [
     {
-      "rand": 0,
+      "rand": "1-8192",
       "randRange": "0-255",
       "type": "",
       "packet": [],
@@ -1135,7 +1135,7 @@ For example, if you own example.com, then you can set an A record for a.example.
 }
 ```
 
-`noise[n].rand`: Adds a specified length of random bytes, which conflicts with `packet`.
+`noise[n].rand`: Adds random or specified length of random bytes, which conflicts with `packet`.
 
 `noise[n].randRange`: Random byte range, default 0-255.
 
