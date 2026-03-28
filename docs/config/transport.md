@@ -1087,6 +1087,67 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
+最小配套示例：
+
+客户端 `outbound` 侧的 `streamSettings`：
+
+```json
+{
+  "streamSettings": {
+    "finalmask": {
+      "tcp": [
+        {
+          "type": "sudoku",
+          "settings": {
+            "password": "your-shared-secret",
+            "ascii": "prefer_entropy",
+            "customTables": [
+              "xpxvvpvv",
+              "vxpvxvvp",
+              "pxvvxvvp"
+            ],
+            "paddingMin": 2,
+            "paddingMax": 7
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+服务端 `inbound` 侧的 `streamSettings`：
+
+```json
+{
+  "streamSettings": {
+    "network": "tcp",
+    "finalmask": {
+      "tcp": [
+        {
+          "type": "sudoku",
+          "settings": {
+            "password": "your-shared-secret",
+            "ascii": "prefer_entropy",
+            "customTables": [
+              "xpxvvpvv",
+              "vxpvxvvp",
+              "pxvvxvvp"
+            ],
+            "paddingMin": 0,
+            "paddingMax": 3
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+这两个示例里，`password`、`ascii`、`customTables` 需要两端一致；`paddingMin`、`paddingMax` 可以不同。
+
+需要完整可运行配置，请参考上游 PR 讨论中的示例：<https://github.com/XTLS/Xray-core/pull/5685#issue-3934350685>
+
 > `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
 数组第一个为最外层伪装。
@@ -1260,6 +1321,28 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
   ]
 }
 ```
+
+最小配套示例：
+
+客户端或服务端的 `streamSettings.finalmask` 可分别写成：
+
+```json
+{
+  "udp": [
+    {
+      "type": "sudoku",
+      "settings": {
+        "password": "your-shared-secret",
+        "ascii": "prefer_ascii"
+      }
+    }
+  ]
+}
+```
+
+UDP 下 `password`、`ascii`、`customTable` / `customTables` 的匹配规则与 TCP 相同；若还叠加其他 UDP 伪装，`sudoku` 必须放在数组最后一个。
+
+需要完整可运行配置，请参考上游 PR 讨论中的示例：<https://github.com/XTLS/Xray-core/pull/5685#issue-3934350685>
 
 #### xdns
 
