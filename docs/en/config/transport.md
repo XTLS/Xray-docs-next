@@ -1067,7 +1067,7 @@ Used in conjunction with raw udp | kcp | hysteria | xhttp h3 transport layers.
 
 For example, if you own example.com, then you can set an A record for a.example.com pointing to the IP address, set an NS record for t.example.com pointing to t.example.com, and ultimately use t.example.com. The A record cannot be a subdomain of an NS record.
 
-`xicmp`: It must be at the outermost level, that is, the first element of the array, and cannot be used with `udphop` or `dialerProxy`.
+`xicmp`: It requires at least `CAP_NET_RAW` permissions and must be at the outermost level, i.e., the first element in the array. It cannot be used with `udphop` or `dialerProxy`.
 
 > `udp[n].settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
