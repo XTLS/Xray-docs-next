@@ -49,7 +49,7 @@ Hysteria 认证密码，服务端和客户端需要保持一致。
 
 单位秒，默认 60。
 
-单条 udp 连接空闲等待时间，过大应该不会严格遵守，可能会先被 policy 掐断。
+单条 `quic native udp` 连接空闲等待时间，过大应该不会严格遵守，可能会先被 policy 掐断。
 
 > `masquerade`: [MasqObject](#MasqObject)
 
