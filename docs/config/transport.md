@@ -1084,7 +1084,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 比如持有 example.com，那么设置 a.example.com A记录 指向 ip，设置 t.example.com NS记录 指向 t.example.com，最后使用的是 t.example.com。设置 A记录 的不能为 NS记录 的子域。
 
-`xicmp`:
+`xicmp`: 要求在最外层，也就是数组第一个，不可搭配 `udphop` 与 `dialerProxy`。
 
 > `udp[n].settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
@@ -1201,6 +1201,10 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
   "id": 0
 }
 ```
+
+`listenIp`: 监听的 ip。
+
+`id`: 如果同 ip 下有多客户端，建议服务端保持为 0。
 
 > `quicParams`: [quicParamsObject](#quicParams)
 
