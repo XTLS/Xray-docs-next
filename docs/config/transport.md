@@ -1046,11 +1046,11 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `password`: 共享字符串，用于派生编码表。通信两端应保持一致，建议使用非空值。
 
-`ascii`: 字节外观模式。可选值为 `prefer_entropy` 或 `prefer_ascii`，默认值为 `prefer_entropy`。
+`ascii`: 字节外观模式。可选值为 `prefer_entropy` 或 `prefer_ascii`。
 
-`prefer_entropy`: 默认模式，输出更接近高熵字节流。兼容别名 `entropy`。
+`prefer_entropy`: 默认模式，输出更接近低熵字节流（汉明1在3.4~4.6之外）。
 
-`prefer_ascii`: 输出尽量接近 ASCII 字节，抓包时更像文本流。兼容别名 `ascii`。
+`prefer_ascii`: 输出全映射为 ASCII 字节，抓包时更像文本流。
 
 `customTable`: 单个自定义外观表，兼容旧的单表写法，仅在 `ascii` 为 `prefer_entropy` 时生效。
 
@@ -1061,8 +1061,6 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 `paddingMin`: 最小填充概率，范围为 `0-100`，单位为百分比。仅影响本端发出的字节外观，不要求与对端一致。
 
 `paddingMax`: 最大填充概率，范围为 `0-100`，单位为百分比。小于 `paddingMin` 时会按 `paddingMin` 处理，大于 `100` 时会按 `100` 处理。
-
-`custom_table`、`custom_tables`、`padding_min`、`padding_max`: 仍兼容旧的 snake_case 写法，但建议优先使用当前文档中的 camelCase。
 
 `password`、`ascii`、`customTable` / `customTables` 需要与对端匹配；`paddingMin` / `paddingMax` 只影响本端发送侧外观，可以与对端不同。
 
