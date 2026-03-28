@@ -964,7 +964,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `fragment`:
 
-`sudoku`:
+`sudoku`: 仅改变字节外观的伪装，不是独立的 Sudoku 协议实现，不能与 Sudoku 协议本体互通，也不提供其握手、防重放、回落或前向安全能力。
 
 > `tcp[n].settings`: header-custom | fragment | sudoku
 
@@ -1044,6 +1044,51 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
+`password`: 共享字符串，用于派生编码表。通信两端应保持一致，建议使用非空值。
+
+`ascii`: 字节外观模式。可选值为 `prefer_entropy` 或 `prefer_ascii`，默认值为 `prefer_entropy`。
+
+`prefer_entropy`: 默认模式，输出更接近高熵字节流。兼容别名 `entropy`。
+
+`prefer_ascii`: 输出尽量接近 ASCII 字节，抓包时更像文本流。兼容别名 `ascii`。
+
+`customTable`: 单个自定义外观表，兼容旧的单表写法，仅在 `ascii` 为 `prefer_entropy` 时生效。
+
+`customTables`: 多个自定义外观表，推荐写法，仅在 `ascii` 为 `prefer_entropy` 时生效。存在多个时会轮换使用；若同时配置 `customTable` 与 `customTables`，以后者为准。
+
+`customTable` / `customTables[n]`: 去掉空格后必须正好为 8 个字符，只能包含 `x`、`p`、`v`，且必须恰好包含 2 个 `x`、2 个 `p`、4 个 `v`，大小写不敏感。
+
+`paddingMin`: 最小填充概率，范围为 `0-100`，单位为百分比。仅影响本端发出的字节外观，不要求与对端一致。
+
+`paddingMax`: 最大填充概率，范围为 `0-100`，单位为百分比。小于 `paddingMin` 时会按 `paddingMin` 处理，大于 `100` 时会按 `100` 处理。
+
+`custom_table`、`custom_tables`、`padding_min`、`padding_max`: 仍兼容旧的 snake_case 写法，但建议优先使用当前文档中的 camelCase。
+
+`password`、`ascii`、`customTable` / `customTables` 需要与对端匹配；`paddingMin` / `paddingMax` 只影响本端发送侧外观，可以与对端不同。
+
+示例（放在 `streamSettings.finalmask` 中）：
+
+```json
+{
+  "tcp": [
+    {
+      "type": "sudoku",
+      "settings": {
+        "password": "shared-secret",
+        "ascii": "prefer_entropy",
+        "customTables": [
+          "xpxvvpvv",
+          "vxpvxvvp",
+          "pxvvxvvp"
+        ],
+        "paddingMin": 2,
+        "paddingMax": 7
+      }
+    }
+  ]
+}
+```
+
 > `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
 数组第一个为最外层伪装。
@@ -1072,7 +1117,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `salamander`: Salamander 混淆。（来自 Hysteria2）
 
-`sudoku`:
+`sudoku`: 仅改变字节外观的伪装，不是独立的 Sudoku 协议实现。用于 UDP 时必须位于伪装链最内层，也就是 `udp` 数组最后一个元素。
 
 `xdns`: 利用 DNS 查询来传输数据（类似 DNSTT）。它将执行标准的 DNS TXT 查询来传输载荷。
 
@@ -1182,6 +1227,39 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
   "paddingMin": 0,
   "paddingMax": 0
+}
+```
+
+字段含义、可选值与上文 TCP 的 `sudoku` 配置相同。
+
+额外限制：UDP 模式下 `sudoku` 必须位于伪装链最内层，也就是 `udp` 数组最后一个元素，否则无法启用。
+
+示例（放在 `streamSettings.finalmask` 中）：
+
+```json
+{
+  "udp": [
+    {
+      "type": "noise",
+      "settings": {
+        "noise": [
+          {
+            "rand": "16-32",
+            "delay": "5-10"
+          }
+        ]
+      }
+    },
+    {
+      "type": "sudoku",
+      "settings": {
+        "password": "shared-secret",
+        "ascii": "prefer_ascii",
+        "paddingMin": 0,
+        "paddingMax": 3
+      }
+    }
+  ]
 }
 ```
 
