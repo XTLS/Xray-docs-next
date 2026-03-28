@@ -80,6 +80,8 @@
 当多个属性同时指定时，这些属性需要**同时**满足，才可以使当前规则生效。
 :::
 
+> `domain`: \[string\]
+
 - 纯字符串：同下面的子串，但可以省略前面的 `"keyword:"` 开头。
 - 正则表达式：由 `"regexp:"` 开始，余下部分是一个正则表达式。当此正则表达式匹配目标域名时，该规则生效。例如 "regexp:\\\\.goo.\*\\\\.com\$" 匹配 "www.google.com"、"fonts.googleapis.com"，但不匹配 "google.com"。大小写敏感。
 - 子域名 (推荐)：由 `"domain:"` 开始，余下部分是一个域名。当此域名是目标域名或其子域名时，该规则生效。例如 "domain:xray.com" 匹配 "www.xray.com" 与 "xray.com"，但不匹配 "wxray.com"。

@@ -80,6 +80,8 @@ When a rule points to a load balancer, Xray will select an outbound through this
 When multiple attributes are specified simultaneously, these attributes must be satisfied **simultaneously** for the current rule to take effect.
 :::
 
+> `domain`: \[string\]
+
 - **Pure string**: Same as substring below, but the `"keyword:"` prefix can be omitted.
 - **Regular expression**: Starts with `"regexp:"`, the rest is a regular expression. The rule takes effect when the regular expression matches the target domain. For example, "regexp:\\\\.goo.\*\\\\.com\$" matches "www.google.com" and "fonts.googleapis.com", but not "google.com". Case sensitive.
 - **Subdomain (Recommended)**: Starts with `"domain:"`, the rest is a domain name. The rule takes effect when the domain is the target domain or its subdomain. For example, "domain:xray.com" matches "www.xray.com" and "xray.com", but not "wxray.com".
