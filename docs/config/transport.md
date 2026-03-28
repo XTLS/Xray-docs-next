@@ -21,7 +21,9 @@
   "wsSettings": {},
   "httpupgradeSettings": {},
   "finalmask": {
-    "udp": []
+    "tcp": [],
+    "udp": [],
+    "quicParams": {}
   },
   "sockopt": {
     "mark": 0,
@@ -917,105 +919,372 @@ RFC-8305 中的 "First Address Family count", 默认值为 1. 它定义了对不
 
 FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对流量进行最后一层伪装。
 
-目前仅有 UDP 支持。
+```json
+{
+  "tcp": [
+    {
+      "type": "",
+      "settings": {}
+    }
+  ],
+  "udp": [
+    {
+      "type": "",
+      "settings": {}
+    }
+  ],
+  "quicParams": {
+    "congestion": "force-brutal",
+    "debug": false,
+    "brutalUp": "60 mbps",
+    "brutalDown": 0,
+    "udpHop": {
+      "ports": "20000-50000",
+      "interval": "5-10"
+    },
+    "initStreamReceiveWindow": 8388608,
+    "maxStreamReceiveWindow": 8388608,
+    "initConnectionReceiveWindow": 20971520,
+    "maxConnectionReceiveWindow": 20971520,
+    "maxIdleTimeout": 30,
+    "keepAlivePeriod": 0,
+    "disablePathMTUDiscovery": false,
+    "maxIncomingStreams": 1024
+  }
+}
+```
+
+> `tcp[n].type`: header-custom | fragment | sudoku
+
+数组第一个为最外层伪装。
+
+用于搭配 raw | httpupgarde | websocket | grpc | xhttp 传输层。
+
+`header-custom`:
+
+`fragment`:
+
+`sudoku`:
+
+> `tcp[n].settings`: header-custom | fragment | sudoku
+
+#### header-custom
 
 ```json
 {
-  "udp": [
-    {
-      "type": "header-dns",
-      "settings": {
-        "domain": "www.baidu.com"
+  "clients": [
+    [
+      {
+        "delay": 0,
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
       }
-    }
+    ]
+  ],
+  "servers": [
+    [
+      {
+        "delay": 0,
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ]
+  ],
+  "errors": [
+    [
+      {
+        "delay": 0,
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ]
   ]
 }
 ```
 
-> `udp`: \[ list \]
+`clients[n][m].delay`: 单位毫秒，为 0 则于前面的粘包发送。
 
-一个数组，表示应用于 UDP 流量的伪装列表。多个伪装会按顺序一层层应用。
+`clients[n][m].rand`: 添加指定长度随机字节，与 `packet` 冲突。
 
-settings 根据伪装类型不同，见下。
+`clients[n][m].randRange`: 随机字节范围，默认 0-255。
 
-> `mkcp-original`
+`clients[n][m].type`: `packet` 类型，`array | str | hex | base64`，默认为 array。
 
-mKCP 曾经默认应用的简单混淆，你可能需要配置它来连接以前的 mKCP 服务器。无额外配置。
+`clients[n][m].packet`: 添加固定数据，与 `rand` 冲突。
 
-> `mkcp-aes128gcm`
+#### fragment
 
-对应原 mKCP 的 `seed` 功能。使用 AES-128-GCM 进行混淆。
+```json
+{
+  "packets": "tlshello",
+  "length": "100-200",
+  "delay": "10-20",
+  "maxSplit": "3-6"
+}
+```
 
-- `settings`:
-  ```json
-  {
-    "password": "your-password"
-  }
-  ```
+#### sudoku
 
-`password` 为加密密码，服务端客户端需一致。
+```json
+{
+  "password": "",
+  "ascii": "",
 
-> `header-dns`
+  "customTable": "",
+  "customTables": [""],
 
-原 mKCP 的 DNS 伪装。某些校园网在未登录的情况下允许 DNS 查询，给 KCP 添加 DNS 头。
+  "paddingMin": 0,
+  "paddingMax": 0
+}
+```
 
-- `settings`:
-  ```json
-  {
-    "domain": "www.example.com"
-  }
-  ```
+> `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
-`domain` 为用于伪装的域名。
+数组第一个为最外层伪装。
 
-> `header-dtls`
+用于搭配 raw udp | kcp | hysteria | xhttp h3 传输层。
 
-原 mKCP 的 DTLS 伪装。伪装成 DTLS 1.2 数据包。无额外配置。
+`header-custom`: 总是合包到数据包头。
 
-> `header-srtp`
+`header-dns`: 原 mKCP 的 DNS 伪装。某些校园网在未登录的情况下允许 DNS 查询，给 KCP 添加 DNS 头。
 
-原 mKCP 的 SRTP 伪装。伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。无额外配置。
+`header-dtls`: 原 mKCP 的 DTLS 伪装。伪装成 DTLS 1.2 数据包。无额外配置。
 
-> `header-utp`
+`header-srtp`: 原 mKCP 的 SRTP 伪装。伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。无额外配置。
 
-原 mKCP 的 uTP 伪装。伪装成 uTP 数据包，会被识别为 BT 下载数据。无额外配置。
+`header-utp`: 原 mKCP 的 uTP 伪装。伪装成 uTP 数据包，会被识别为 BT 下载数据。无额外配置。
 
-> `header-wechat`
+`header-wechat`: 原 mKCP 的 WeChat Video 伪装。伪装成微信视频通话的数据包。无额外配置。
 
-原 mKCP 的 WeChat Video 伪装。伪装成微信视频通话的数据包。无额外配置。
+`header-wireguard`: 原 mKCP 的 WireGuard 伪装。伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）无额外配置。
 
-> `header-wireguard`
+`mkcp-original`: mKCP 曾经默认应用的简单混淆，你可能需要配置它来连接以前的 mKCP 服务器。无额外配置。
 
-原 mKCP 的 WireGuard 伪装。伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）无额外配置。
+`mkcp-aes128gcm`: 对应原 mKCP 的 `seed` 功能。使用 AES-128-GCM 进行混淆。
 
-> `xdns`
+`noise`: 在发送数据前发送的噪声。
 
-实验性功能，利用 DNS 查询来传输数据（类似 DNSTT）。它将执行标准的 DNS TXT 查询来传输载荷。
+`salamander`: Salamander 混淆。（来自 Hysteria2）
+
+`sudoku`:
+
+`xdns`: 利用 DNS 查询来传输数据（类似 DNSTT）。它将执行标准的 DNS TXT 查询来传输载荷。
 
 由于技术限制，它给出的 MTU 非常小，无法使用 QUIC，建议搭配 mKCP 使用。推荐的 MTU 值：客户端 130，服务端 900。
-
-- `settings`:
-  ```json
-  {
-    "domain": "www.example.com"
-  }
-  ```
-
-`domain` 为用于查询的域名。
 
 因为执行的查询是标准的，它可以透过任何 UDP DNS 服务器进行转发，尽管效率可能十分不理想。
 
 要使用这个功能，需要服务端监听 53 端口，然后代理协议将目标指向一个 DNS 服务器（如 8.8.8.8:53），并且你拥有 `domain` 的域名，然后将其 NS 记录指向服务端。
 
-> `salamander`
+比如持有 example.com，那么设置 a.example.com A记录 指向 ip，设置 t.example.com NS记录 指向 t.example.com，最后使用的是 t.example.com。设置 A记录 的不能为 NS记录 的子域。
 
-Salamander 混淆。（来自 Hysteria2）
+`xicmp`: 要求至少 `CAP_NET_RAW` 权限且在最外层，也就是数组第一个，不可搭配 `udpHop` 与 `dialerProxy`。
 
-- `settings`:
-  ```json
-  {
-    "password": "your-password"
-  }
-  ```
+> `udp[n].settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
-`password` 为混淆密码，服务端客户端需一致。
+#### header-custom
+
+```json
+{
+  "client": [
+    {
+      "rand": 0,
+      "randRange": "0-255",
+      "type": "",
+      "packet": []
+    }
+  ],
+  "server": [
+    {
+      "rand": 0,
+      "randRange": "0-255",
+      "type": "",
+      "packet": []
+    }
+  ]
+}
+```
+
+`client[n].rand`: 添加指定长度随机字节，与 `packet` 冲突。
+
+`client[n].randRange`: 随机字节范围，默认 0-255。
+
+`client[n].type`: `packet` 类型，`array | str | hex | base64`，默认为 array。
+
+`client[n].packet`: 添加固定数据，与 `rand` 冲突。
+
+#### header-dns
+
+```json
+{
+  "domain": "www.example.com"
+}
+```
+
+#### mkcp-aes128gcm
+
+```json
+{
+  "password": "your-password"
+}
+```
+
+#### noise
+
+```json
+{
+  "reset": 0,
+  "noise": [
+    {
+      "rand": "1-8192",
+      "randRange": "0-255",
+      "type": "",
+      "packet": [],
+      "delay": "10-20"
+    }
+  ]
+}
+```
+
+`noise[n].rand`: 添加随机或指定长度随机字节，与 `packet` 冲突。
+
+`noise[n].randRange`: 随机字节范围，默认 0-255。
+
+`noise[n].type`: `packet` 类型，`array | str | hex | base64`，默认为 array。
+
+`noise[n].packet`: 添加固定数据，与 `rand` 冲突
+
+`noise[n].delay`: 单位毫秒，发送噪声后延迟指定时间后再发下一个。
+
+#### salamander
+
+```json
+{
+  "password": "your-password"
+}
+```
+
+#### sudoku
+
+```json
+{
+  "password": "",
+  "ascii": "",
+
+  "customTable": "",
+  "customTables": [""],
+
+  "paddingMin": 0,
+  "paddingMax": 0
+}
+```
+
+#### xdns
+
+```json
+{
+  "domain": "www.example.com"
+}
+```
+
+#### xicmp
+
+```json
+{
+  "listenIp": "0.0.0.0",
+  "id": 0
+}
+```
+
+`listenIp`: 监听的 ip。
+
+`id`: 如果同 ip 下有多客户端，建议服务端保持为 0。
+
+> `quicParams`: [quicParamsObject](#quicParams)
+
+#### quicParams
+
+```json
+{
+  "congestion": "force-brutal",
+  "debug": false,
+  "brutalUp": "60 mbps",
+  "brutalDown": 0,
+  "udpHop": {
+    "ports": "20000-50000",
+    "interval": "5-10"
+  },
+  "initStreamReceiveWindow": 8388608,
+  "maxStreamReceiveWindow": 8388608,
+  "initConnectionReceiveWindow": 20971520,
+  "maxConnectionReceiveWindow": 20971520,
+  "maxIdleTimeout": 30,
+  "keepAlivePeriod": 0,
+  "disablePathMTUDiscovery": false,
+  "maxIncomingStreams": 1024
+}
+```
+
+> `congestion`: reno | bbr | brutal | force-brutal
+
+> `debug`: false | true
+
+启用 bbr/brutal congestion control 日志。
+
+> `brutalUp`: string
+
+> `brutalDown`: string
+
+限制的上传/下载速率。默认值为 0。
+
+格式用户友好，支持各种常见的比特每秒写法，包括 `1000000` `100kb` `20 mb` `100 mbps` `1g` `1 tbps` 等等等，大小写不敏感，单位之间可以带或者不带空格，无单位时默认为 bps（比特每秒），不能低于 65535 bps。
+
+协商行为和 Hysteria 原版一致：
+
+服务端的值将限制客户端可以选择的最大 Brutal 模式速率，为 0 表示不限制客户端。
+
+客户端为 0 则表示使用 BBR 模式，不为 0 则表示使用 Brutal 模式，会受到服务端的限制。
+
+注意相对论，服务端的上传是客户端的下载，服务端的下载是客户端的上传。
+
+> `udpHop`: {"ports": string, "interval": number}
+
+UDP 端口跳跃配置。
+
+ports 为跳跃的端口范围，可以是一个数值类型的字符串，如 `"1234"`；或者一个数值范围，如 `"1145-1919"` 表示端口 1145 到端口 1919，这 775 个端口。可以使用逗号进行分段，如 `11,13,15-17` 表示端口 11、端口 13、端口 15 到端口 17 这 5 个端口。
+
+interval 为端口跳跃间隔，单位为秒，至少为 5，默认 30 秒。
+
+> `initStreamReceiveWindow`: number
+
+> `maxStreamReceiveWindow`: number
+
+> `initConnectionReceiveWindow`: number
+
+> `maxConnectionReceiveWindow`: number
+
+这四个为具体的 QUIC 窗口参数，**除非你完全明白自己在做什么，否则不建议修改这些值**。如果要改，建议保持流接收窗口与连接接收窗口的比例为 2:5
+
+> `maxIdleTimeout`: number
+
+最长空闲超时时间（秒）。服务器会在多长时间没有收到任何客户端数据后关闭连接，范围为 4~120 秒，默认为 30 秒。
+
+> `keepAlivePeriod`: number
+
+QUIC KeepAlive 间隔（秒）。范围为 2~60 秒。默认禁用。
+
+> `disablePathMTUDiscovery`: bool
+
+是否禁用路径 MTU 发现。
+
+其他实现里对于 !linux && !windows && !darwin OS 为强制禁用，xray 里则非强制，如果你为非 (linux || windows || darwin) 可能需要手动禁用。
+
+> `maxIncomingStreams`: number
+
+服务端参数，如果设置则不得小于 8

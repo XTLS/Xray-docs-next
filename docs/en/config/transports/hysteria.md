@@ -1,6 +1,14 @@
 # Hysteria
 
-The Xray implementation of Hysteria2's underlying QUIC transport. It is usually used in conjunction with [hysteria2 outbound](../outbounds/hysteria.md).
+::: tip
+When used with the `hysteria protocol`, `quic native udp` is enabled by default.
+
+When used with `hysteria inbound`, `auth` will be overridden by `clients` (if it exists).
+
+Whether other `protocols` can proxy `udp` depends on whether that `protocol` has `uot` capabilities.
+
+Enabling `finalmask.udp` will break the `masquerade` page masquerading.
+:::
 
 ## HysteriaObject
 
@@ -10,19 +18,22 @@ The Xray implementation of Hysteria2's underlying QUIC transport. It is usually 
 {
   "version": 2,
   "auth": "password",
-  "up": "0",
-  "down": "0",
-  "udphop": {
-    "port": "1145-1919",
-    "interval": 30
-  },
-  "initStreamReceiveWindow": 8388608,
-  "maxStreamReceiveWindow": 8388608,
-  "initConnectionReceiveWindow": 20971520,
-  "maxConnectionReceiveWindow": 20971520,
-  "maxIdleTimeout": 30,
-  "keepAlivePeriod": 0,
-  "disablePathMTUDiscovery": false
+  "udpIdleTimeout": 60,
+  "masquerade": {
+    "type": "",
+
+    "dir": "",
+
+    "url": "",
+    "rewriteHost": false,
+    "insecure": false,
+
+    "content": "",
+    "headers": {
+      "key": "value"
+    },
+    "statusCode": 0
+  }
 }
 ```
 
@@ -34,48 +45,64 @@ Hysteria version, must be 2.
 
 Hysteria authentication password. Must be consistent between the server and the client.
 
-> `up`: string
+> `udpIdleTimeout`: number
 
-> `down`: string
+Unit: seconds, default 60.
 
-Upload/Download rate limits. Default is 0.
+Idle wait time for a single `quic native udp` connection. If this time is too long, it may not be strictly adhered to and may be terminated by the policy first.
 
-The format is user-friendly and supports various common bit-per-second notations, including `1000000`, `100kb`, `20 mb`, `100 mbps`, `1g`, `1 tbps`, etc. It is case-insensitive, and spaces between the number and unit are optional. If no unit is specified, it defaults to bps (bits per second). It cannot be lower than 65535 bps.
+> `masquerade`: [MasqObject](#MasqObject)
 
-The negotiation behavior is consistent with the original Hysteria:
+HTTP/3 page masquerading.
 
-The server's value limits the maximum Brutal mode rate that the client can choose. 0 means no limit on the client.
+### MasqObject
 
-If the client sets this to 0, it uses BBR mode. If not 0, it uses Brutal mode, subject to the server's limit.
+```json
+{
+  "type": "",
 
-Note relativity: Server upload is client download, and server download is client upload.
+  "dir": "",
 
-> `udphop`: {"port": string, "interval": number}
+  "url": "",
+  "rewriteHost": false,
+  "insecure": false,
 
-UDP port hopping configuration.
+  "content": "",
+  "headers": {
+    "key": "value"
+  },
+  "statusCode": 0
+}
+```
 
-`port` is the port range for hopping. It can be a numeric string, such as `"1234"`; or a numeric range, such as `"1145-1919"` (indicating ports 1145 to 1919, totaling 775 ports). Commas can be used for segmentation, such as `11,13,15-17` (indicating port 11, port 13, and ports 15 to 17, totaling 5 ports).
+> `type`: "file" | "proxy" | "string"
 
-`interval` is the port hopping interval in seconds. Minimum is 5, default is 30 seconds.
+If left blank, the default 404 page will be displayed.
 
-> `initStreamReceiveWindow`: number
+> `dir`: string
 
-> `maxStreamReceiveWindow`: number
+Configuration items when type is file.
 
-> `initConnectionReceiveWindow`: number
+> `url`: string
 
-> `maxConnectionReceiveWindow`: number
+Configuration items when type is proxy.
 
-These four are specific QUIC window parameters. **Unless you fully understand what you are doing, it is not recommended to modify these values.** If you must modify them, it is recommended to keep the ratio of the stream receive window to the connection receive window at 2:5.
+> `rewriteHost`: false | true
 
-> `maxIdleTimeout`: number
+Configuration items when type is proxy.
 
-Maximum idle timeout (seconds). The server will close the connection if no data is received from the client for this duration. Range: 4~120 seconds. Default: 30 seconds.
+> `insecure`: false | true
 
-> `keepAlivePeriod`: number
+Configuration items when type is proxy.
 
-QUIC KeepAlive interval (seconds). Range: 2~60 seconds. Disabled by default.
+> `content`: string
 
-> `disablePathMTUDiscovery`: bool
+Configuration items when type is string.
 
-Whether to disable Path MTU Discovery.
+> `headers`: map{ string, string }
+
+Configuration items when type is string.
+
+> `statusCode`: int
+
+Configuration items when type is string.

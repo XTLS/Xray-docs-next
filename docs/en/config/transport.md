@@ -21,7 +21,9 @@ Transport specifies a stable method for data transmission. Generally, both ends 
   "wsSettings": {},
   "httpupgradeSettings": {},
   "finalmask": {
-    "udp": []
+    "tcp": [],
+    "udp": [],
+    "quicParams": {}
   },
   "sockopt": {
     "mark": 0,
@@ -906,93 +908,366 @@ FinalMask applies a final layer of obfuscation to the traffic after the core has
 
 ```json
 {
+  "tcp": [
+    {
+      "type": "",
+      "settings": {}
+    }
+  ],
   "udp": [
     {
-      "type": "header-dns",
-      "settings": {
-        "domain": "[www.baidu.com](https://www.baidu.com)"
+      "type": "",
+      "settings": {}
+    }
+  ],
+  "quicParams": {
+    "congestion": "force-brutal",
+    "debug": false,
+    "brutalUp": "60 mbps",
+    "brutalDown": 0,
+    "udpHop": {
+      "ports": "20000-50000",
+      "interval": "5-10"
+    },
+    "initStreamReceiveWindow": 8388608,
+    "maxStreamReceiveWindow": 8388608,
+    "initConnectionReceiveWindow": 20971520,
+    "maxConnectionReceiveWindow": 20971520,
+    "maxIdleTimeout": 30,
+    "keepAlivePeriod": 0,
+    "disablePathMTUDiscovery": false,
+    "maxIncomingStreams": 1024
+  }
+}
+```
+
+> `tcp[n].type`: header-custom | fragment | sudoku
+
+The first element in the array is the outermost camouflage.
+
+Used in conjunction with raw | httpupgarde | websocket | gRPC | xhttp transport layers.
+
+`header-custom`:
+
+`fragment`:
+
+`sudoku`:
+
+> `tcp[n].settings`: header-custom | fragment | sudoku
+
+#### header-custom
+
+```json
+{
+  "clients": [
+    [
+      {
+        "delay": 0,
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
       }
+    ]
+  ],
+  "servers": [
+    [
+      {
+        "delay": 0,
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ]
+  ],
+  "errors": [
+    [
+      {
+        "delay": 0,
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ]
+  ]
+}
+```
+
+`clients[n][m].delay`: The unit is milliseconds; a value of 0 indicates that the packet was previously sent in a fragmented manner.
+
+`clients[n][m].rand`: Adds a specified length of random bytes, which conflicts with `packet`.
+
+`clients[n][m].randRange`: Random byte range, default 0-255.
+
+`clients[n][m].type`: The `packet` type can be `array | str | hex | base64`, with the default being array.
+
+`clients[n][m].packet`: Adding fixed data conflicts with `rand`.
+
+#### fragment
+
+```json
+{
+  "packets": "tlshello",
+  "length": "100-200",
+  "delay": "10-20",
+  "maxSplit": "3-6"
+}
+```
+
+#### sudoku
+
+```json
+{
+  "password": "",
+  "ascii": "",
+
+  "customTable": "",
+  "customTables": [""],
+
+  "paddingMin": 0,
+  "paddingMax": 0
+}
+```
+
+> `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+
+The first element in the array is the outermost camouflage.
+
+Used in conjunction with raw udp | kcp | hysteria | xhttp h3 transport layers.
+
+`header-custom`: Always merge packets into the data packet header.
+
+`header-dns`: Original mKCP DNS obfuscation. Some campus networks allow DNS queries without login, add DNS header to KCP.
+
+`header-dtls`: Original mKCP DTLS obfuscation. Obfuscates as DTLS 1.2 packets. No additional configuration required.
+
+`header-srtp`: Original mKCP SRTP obfuscation. Obfuscates as SRTP packets, will be recognized as video call data (e.g., FaceTime). No additional configuration required.
+
+`header-utp`: Original mKCP uTP obfuscation. Obfuscates as uTP packets, will be recognized as BT download data. No additional configuration required.
+
+`header-wechat`: Original mKCP WeChat Video obfuscation. Obfuscates as WeChat video call data. No additional configuration required.
+
+`header-wireguard`: Original mKCP WireGuard obfuscation. Obfuscates as WireGuard packets. (Not the real WireGuard protocol) No additional configuration required.
+
+`mkcp-original`: The simple obfuscation that was previously applied by default in mKCP. You may need to configure this to connect to legacy mKCP servers. No additional configuration required.
+
+`mkcp-aes128gcm`: Corresponds to the original mKCP `seed` feature. Uses AES-128-GCM for obfuscation.
+
+`noise`: Noise sent before data is transmitted.
+
+`salamander`: Salamander obfuscation (from Hysteria2).
+
+`sudoku`:
+
+`xdns`: Utilizes DNS queries to transport data (similar to DNSTT). It performs standard DNS TXT queries to transport the payload. Due to technical limitations, the resulting MTU is very small, making it incompatible with QUIC; it is recommended to use it with mKCP. Recommended MTU values: Client 130, Server 900.
+
+`domain` is the domain name used for queries. Since the queries performed are standard, they can be forwarded through any UDP DNS server, although efficiency may be very suboptimal. To use this feature, the server needs to listen on port 53, and the proxy protocol should direct the target to a DNS server (e.g., 8.8.8.8:53). Additionally, you must own the domain specified in `domain` and point its NS record to your server.
+
+For example, if you own example.com, then you can set an A record for a.example.com pointing to the IP address, set an NS record for t.example.com pointing to t.example.com, and ultimately use t.example.com. The A record cannot be a subdomain of an NS record.
+
+`xicmp`: It requires at least `CAP_NET_RAW` permissions and must be at the outermost level, i.e., the first element in the array. It cannot be used with `udpHop` or `dialerProxy`.
+
+> `udp[n].settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+
+#### header-custom
+
+```json
+{
+  "client": [
+    {
+      "rand": 0,
+      "randRange": "0-255",
+      "type": "",
+      "packet": []
+    }
+  ],
+  "server": [
+    {
+      "rand": 0,
+      "randRange": "0-255",
+      "type": "",
+      "packet": []
     }
   ]
 }
 ```
 
-> `udp`: \[ list \]
+`client[n].rand`: Adds a specified length of random bytes, which conflicts with `packet`.
 
-An array representing the list of obfuscations applied to UDP traffic. Multiple obfuscations will be applied sequentially, layer by layer. The `settings` vary depending on the obfuscation type; see below.
+`client[n].randRange`: Random byte range, default 0-255.
 
-> `mkcp-original`
+`client[n].type`: The `packet` type can be `array | str | hex | base64`, with the default being array.
 
-The simple obfuscation that was previously applied by default in mKCP. You may need to configure this to connect to legacy mKCP servers. No additional configuration required.
+`client[n].packet`: Adding fixed data conflicts with `rand`.
 
-> `mkcp-aes128gcm`
+#### header-dns
 
-Corresponds to the original mKCP `seed` feature. Uses AES-128-GCM for obfuscation.
+```json
+{
+  "domain": "www.example.com"
+}
+```
 
-- `settings`:
-  ```json
-  {
-    "password": "your-password"
-  }
-  ```
+#### mkcp-aes128gcm
 
-`password` is the encryption password; it must be consistent between the server and the client.
+```json
+{
+  "password": "your-password"
+}
+```
 
-> `header-dns`
+#### noise
 
-Original mKCP DNS obfuscation. Some campus networks allow DNS queries without login, add DNS header to KCP.
+```json
+{
+  "reset": 0,
+  "noise": [
+    {
+      "rand": "1-8192",
+      "randRange": "0-255",
+      "type": "",
+      "packet": [],
+      "delay": "10-20"
+    }
+  ]
+}
+```
 
-- `settings`:
-  ```json
-  {
-    "domain": "[www.example.com](https://www.example.com)"
-  }
-  ```
+`noise[n].rand`: Adds random or specified length of random bytes, which conflicts with `packet`.
 
-`domain` is the domain name used for obfuscation.
+`noise[n].randRange`: Random byte range, default 0-255.
 
-> `header-dtls`
+`noise[n].type`: The `packet` type can be `array | str | hex | base64`, with the default being array.
 
-Original mKCP DTLS obfuscation. Obfuscates as DTLS 1.2 packets. No additional configuration required.
+`noise[n].packet`: Adding fixed data conflicts with `rand`.
 
-> `header-srtp`
+`noise[n].delay`: The unit is milliseconds. After sending one noise signal, a specified time is delayed before sending the next one.
 
-Original mKCP SRTP obfuscation. Obfuscates as SRTP packets, will be recognized as video call data (e.g., FaceTime). No additional configuration required.
+#### salamander
 
-> `header-utp`
+```json
+{
+  "password": "your-password"
+}
+```
 
-Original mKCP uTP obfuscation. Obfuscates as uTP packets, will be recognized as BT download data. No additional configuration required.
+#### sudoku
 
-> `header-wechat`
+```json
+{
+  "password": "",
+  "ascii": "",
 
-Original mKCP WeChat Video obfuscation. Obfuscates as WeChat video call data. No additional configuration required.
+  "customTable": "",
+  "customTables": [""],
 
-> `header-wireguard`
+  "paddingMin": 0,
+  "paddingMax": 0
+}
+```
 
-Original mKCP WireGuard obfuscation. Obfuscates as WireGuard packets. (Not the real WireGuard protocol) No additional configuration required.
+#### xdns
 
-> `xdns`
+```json
+{
+  "domain": "www.example.com"
+}
+```
 
-Experimental feature. Utilizes DNS queries to transport data (similar to DNSTT). It performs standard DNS TXT queries to transport the payload. Due to technical limitations, the resulting MTU is very small, making it incompatible with QUIC; it is recommended to use it with mKCP. Recommended MTU values: Client 130, Server 900.
+#### xicmp
 
-- `settings`:
-  ```json
-  {
-    "domain": "[www.example.com](https://www.example.com)"
-  }
-  ```
+```json
+{
+  "listenIp": "0.0.0.0",
+  "id": 0
+}
+```
 
-`domain` is the domain name used for queries. Since the queries performed are standard, they can be forwarded through any UDP DNS server, although efficiency may be very suboptimal. To use this feature, the server needs to listen on port 53, and the proxy protocol should direct the target to a DNS server (e.g., 8.8.8.8:53). Additionally, you must own the domain specified in `domain` and point its NS record to your server.
+`listenIp`: The IP address to listen on.
 
-> `salamander`
+`id`: If there are multiple clients under the same IP address, it is recommended that the server keep it at 0.
 
-Salamander obfuscation (from Hysteria2).
+> `quicParams`: [quicParamsObject](#quicParams)
 
-- `settings`:
-  ```json
-  {
-    "password": "your-password"
-  }
-  ```
+#### quicParams
 
-`password` is the obfuscation password; it must be consistent between the server and the client.
+```json
+{
+  "congestion": "force-brutal",
+  "debug": false,
+  "brutalUp": "60 mbps",
+  "brutalDown": 0,
+  "udpHop": {
+    "ports": "20000-50000",
+    "interval": "5-10"
+  },
+  "initStreamReceiveWindow": 8388608,
+  "maxStreamReceiveWindow": 8388608,
+  "initConnectionReceiveWindow": 20971520,
+  "maxConnectionReceiveWindow": 20971520,
+  "maxIdleTimeout": 30,
+  "keepAlivePeriod": 0,
+  "disablePathMTUDiscovery": false,
+  "maxIncomingStreams": 1024
+}
+```
+
+> `congestion`: reno | bbr | brutal | force-brutal
+
+> `debug`: false | true
+
+Enable bbr/brutal congestion control logging.
+
+> `brutalUp`: string
+
+> `brutalDown`: string
+
+Upload/Download rate limits. Default is 0.
+
+The format is user-friendly and supports various common bit-per-second notations, including `1000000`, `100kb`, `20 mb`, `100 mbps`, `1g`, `1 tbps`, etc. It is case-insensitive, and spaces between the number and unit are optional. If no unit is specified, it defaults to bps (bits per second). It cannot be lower than 65535 bps.
+
+The negotiation behavior is consistent with the original Hysteria:
+
+The server's value limits the maximum Brutal mode rate that the client can choose. 0 means no limit on the client.
+
+If the client sets this to 0, it uses BBR mode. If not 0, it uses Brutal mode, subject to the server's limit.
+
+Note relativity: Server upload is client download, and server download is client upload.
+
+> `udpHop`: {"ports": string, "interval": number}
+
+UDP port hopping configuration.
+
+`ports` is the port range for hopping. It can be a numeric string, such as `"1234"`; or a numeric range, such as `"1145-1919"` (indicating ports 1145 to 1919, totaling 775 ports). Commas can be used for segmentation, such as `11,13,15-17` (indicating port 11, port 13, and ports 15 to 17, totaling 5 ports).
+
+`interval` is the port hopping interval in seconds. Minimum is 5, default is 30 seconds.
+
+> `initStreamReceiveWindow`: number
+
+> `maxStreamReceiveWindow`: number
+
+> `initConnectionReceiveWindow`: number
+
+> `maxConnectionReceiveWindow`: number
+
+These four are specific QUIC window parameters. **Unless you fully understand what you are doing, it is not recommended to modify these values.** If you must modify them, it is recommended to keep the ratio of the stream receive window to the connection receive window at 2:5.
+
+> `maxIdleTimeout`: number
+
+Maximum idle timeout (seconds). The server will close the connection if no data is received from the client for this duration. Range: 4~120 seconds. Default: 30 seconds.
+
+> `keepAlivePeriod`: number
+
+QUIC KeepAlive interval (seconds). Range: 2~60 seconds. Disabled by default.
+
+> `disablePathMTUDiscovery`: bool
+
+Whether to disable Path MTU Discovery.
+
+In other implementations, !linux && !windows && !darwin OS are forcibly disabled, while in xray it is not mandatory. If your OS is not (linux || windows || darwin), you may need to disable it manually.
+
+> `maxIncomingStreams`: number
+
+Server-side parameters, if set, must not be less than 8.
