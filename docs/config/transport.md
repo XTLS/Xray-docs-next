@@ -964,7 +964,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `fragment`:
 
-`sudoku`: 仅改变字节外观的伪装，不是独立的 Sudoku 协议实现，不能与 Sudoku 协议本体互通，也不提供其握手、防重放、回落或前向安全能力。请确保底层协议实现了足够的安全，推荐使用[VLESS 加密](https://github.com/XTLS/Xray-core/pull/5067)且抗量子的加密算法作为底层协议（当然其他例如ss/vmess/socks也是可用的）。
+`sudoku`: 将字节外观改变为低熵（汉明1在3.4~4.6之外）或全映射为可打印ASCII字节，用于与随机数外观区分，并且提供了任意填充的能力，能改变包分布。仅改变字节外观的伪装，不是独立的 Sudoku 协议实现，不能与 [Sudoku 协议本体](https://github.com/SUDOKU-ASCII/sudoku)互通，也不提供其握手、防重放、回落或前向安全能力。请确保底层协议实现了足够的安全，推荐使用[VLESS 加密](https://github.com/XTLS/Xray-core/pull/5067)且抗量子的加密算法作为底层协议（当然其他例如ss/vmess/socks也是可用的）。
 
 > `tcp[n].settings`: header-custom | fragment | sudoku
 
