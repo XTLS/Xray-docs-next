@@ -964,7 +964,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `fragment`:
 
-`sudoku`: 仅改变字节外观的伪装，不是独立的 Sudoku 协议实现，不能与 Sudoku 协议本体互通，也不提供其握手、防重放、回落或前向安全能力。
+`sudoku`: 仅改变字节外观的伪装，不是独立的 Sudoku 协议实现，不能与 Sudoku 协议本体互通，也不提供其握手、防重放、回落或前向安全能力。请确保底层协议实现了足够的安全，推荐使用[VLESS 加密](https://github.com/XTLS/Xray-core/pull/5067)且抗量子的加密算法作为底层协议（当然其他例如ss/vmess/socks也是可用的）。
 
 > `tcp[n].settings`: header-custom | fragment | sudoku
 
@@ -1089,7 +1089,112 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 最小配套示例：
 
-需要完整可运行配置，请参考sudoku PR 中的示例：<https://github.com/XTLS/Xray-core/pull/5685#issue-3934350685>
+>客户端：
+```json
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "port": 8445,
+      "protocol": "mixed",
+      "settings": {
+        "udp": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic"
+        ]
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "proxy",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "xxx.xxx.xxx.xxx",
+            "port": 8443,
+            "users": [
+              {
+                "id": "4d025c19-560c-4d81-a3cd-381c4a4cc263",
+                "encryption": "mlkem768x25519plus.native.0rtt.DAx_Ls11ljtttYxi2-uaAKfApdF2aI1GwM3OrNj-7g8"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "finalmask": {
+          "tcp": [
+            {
+              "type": "sudoku",
+              "settings": {
+                "password": "ffa6ecdb-63f3-4b0b-a717-a3e89dc12bee",
+                "ascii": "prefer_entropy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
+```
+>服务端：
+```json
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "tag": "vless-in",
+      "listen": "0.0.0.0",
+      "port": 8443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "4d025c19-560c-4d81-a3cd-381c4a4cc263",
+            "email": "client@local"
+          }
+        ],
+        "decryption": "mlkem768x25519plus.native.600s.gHTRo-mJOsxHfA2GgY5HEp2YsOyfpR4w0IoN7LIPd2w"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "finalmask": {
+          "tcp": [
+            {
+              "type": "sudoku",
+              "settings": {
+                "password": "ffa6ecdb-63f3-4b0b-a717-a3e89dc12bee",
+                "ascii": "prefer_entropy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom"
+    }
+  ]
+}
+```
 
 > `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
@@ -1119,7 +1224,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `salamander`: Salamander 混淆。（来自 Hysteria2）
 
-`sudoku`: 仅改变字节外观的伪装，不是独立的 Sudoku 协议实现。用于 UDP 时必须位于伪装链最内层，也就是 `udp` 数组最后一个元素。
+`sudoku`: 仅改变字节外观的伪装，不是独立的 Sudoku 协议实现。用于 UDP 时必须位于伪装链最内层，也就是 `udp` 数组最后一个元素。（推荐在TCP的finalmask中使用sudoku，UDP中sudoku可认为是无意义的）
 
 `xdns`: 利用 DNS 查询来传输数据（类似 DNSTT）。它将执行标准的 DNS TXT 查询来传输载荷。
 
@@ -1265,9 +1370,6 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-最小配套示例：
-
-需要完整可运行配置，请参考sudoku PR 中的示例：<https://github.com/XTLS/Xray-core/pull/5685#issue-3934350685>
 
 #### xdns
 
