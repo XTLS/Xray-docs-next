@@ -20,6 +20,7 @@ Transport specifies a stable method for data transmission. Generally, both ends 
   "grpcSettings": {},
   "wsSettings": {},
   "httpupgradeSettings": {},
+  "hysteriaSettings": {},
   "finalmask": {
     "tcp": [],
     "udp": [],

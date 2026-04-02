@@ -20,6 +20,7 @@
   "grpcSettings": {},
   "wsSettings": {},
   "httpupgradeSettings": {},
+  "hysteriaSettings": {},
   "finalmask": {
     "tcp": [],
     "udp": [],
