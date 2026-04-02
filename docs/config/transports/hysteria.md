@@ -1,14 +1,6 @@
 # Hysteria
 
-::: tip
-搭配 `hysteria protocol` 时默认启用 `quic native udp`
-
-搭配 `hysteria inbound` 时 `auth` 将会被 `clients` 覆盖 (如果存在)
-
-搭配其他 `protocol` 能否代理 `udp` 取决于该 `protocol` 是否具有 `uot` 能力
-
-启用 `finalmask.udp` 后将会破坏 `masquerade` 的页面伪装
-:::
+Hysteria2 的底层 QUIC 传输的 Xray 实现，通常搭配 hysteria[出站](../outbounds/hysteria.md) 和 hysteria[入站](../inbounds/hysteria.md) 使用，此时兼容其官方实现。
 
 ## HysteriaObject
 
@@ -44,6 +36,8 @@ Hysteria 版本，必须为 2。
 > `auth`: string
 
 Hysteria 认证密码，服务端和客户端需要保持一致。
+
+搭配 `hysteria inbound` 时将会被 `clients` 覆盖 (如果存在)
 
 > `udpIdleTimeout`: number
 

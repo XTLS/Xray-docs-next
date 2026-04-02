@@ -1236,7 +1236,17 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
+用于 XHTTP H3 以及 hysteria 的 QUIC 配置调整。其中 XHTTP
+
 > `congestion`: reno | bbr | brutal | force-brutal
+
+拥塞控制算法，Hysteria 默认为 `brutal`，XHTTP H3 默认使用 `bbr`。
+
+`reno`/`bbr`: 知名算法。
+
+`brutal`: 与对端协商固定发包速率或降级到 BBR，只支持 Hysteria 传输（因为 XHTTP 无协商机制）。
+
+`force-brutal`: 同 `brutal`，但强制使上行使用 `brutalUp` 固定发包速率，无视对端协商。
 
 > `debug`: false | true
 
@@ -1250,7 +1260,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 格式用户友好，支持各种常见的比特每秒写法，包括 `1000000` `100kb` `20 mb` `100 mbps` `1g` `1 tbps` 等等等，大小写不敏感，单位之间可以带或者不带空格，无单位时默认为 bps（比特每秒），不能低于 65535 bps。
 
-协商行为和 Hysteria 原版一致：
+协商行为和 Hysteria brutal 一致：
 
 服务端的值将限制客户端可以选择的最大 Brutal 模式速率，为 0 表示不限制客户端。
 

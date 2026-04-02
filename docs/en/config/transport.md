@@ -1219,7 +1219,17 @@ Same as the TCP version.
 }
 ```
 
+Used for QUIC configuration tuning of XHTTP H3 and Hysteria.
+
 > `congestion`: reno | bbr | brutal | force-brutal
+
+Congestion control algorithm. Hysteria defaults to `brutal`, XHTTP H3 defaults to `bbr`.
+
+`reno`/`bbr`: Well-known algorithms.
+
+`brutal`: Negotiates a fixed packet sending rate with the peer or falls back to BBR. Only supported with Hysteria transport (since XHTTP has no negotiation mechanism).
+
+`force-brutal`: Same as `brutal`, but forces upstream to use the `brutalUp` fixed packet sending rate, ignoring peer negotiation.
 
 > `debug`: false | true
 
@@ -1233,7 +1243,7 @@ Upload/Download rate limits. Default is 0.
 
 The format is user-friendly and supports various common bit-per-second notations, including `1000000`, `100kb`, `20 mb`, `100 mbps`, `1g`, `1 tbps`, etc. It is case-insensitive, and spaces between the number and unit are optional. If no unit is specified, it defaults to bps (bits per second). It cannot be lower than 65535 bps.
 
-The negotiation behavior is consistent with the original Hysteria:
+The negotiation behavior is consistent with Hysteria brutal:
 
 The server's value limits the maximum Brutal mode rate that the client can choose. 0 means no limit on the client.
 

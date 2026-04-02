@@ -1,14 +1,6 @@
 # Hysteria
 
-::: tip
-When used with the `hysteria protocol`, `quic native udp` is enabled by default.
-
-When used with `hysteria inbound`, `auth` will be overridden by `clients` (if it exists).
-
-Whether other `protocols` can proxy `udp` depends on whether that `protocol` has `uot` capabilities.
-
-Enabling `finalmask.udp` will break the `masquerade` page masquerading.
-:::
+Xray implementation of the underlying QUIC transport for Hysteria2, typically used with hysteria [outbound](../outbounds/hysteria.md) and hysteria [inbound](../inbounds/hysteria.md), and is compatible with the official implementation in this case.
 
 ## HysteriaObject
 
@@ -44,6 +36,8 @@ Hysteria version, must be 2.
 > `auth`: string
 
 Hysteria authentication password. Must be consistent between the server and the client.
+
+When used with `hysteria inbound`, it will be overridden by `clients` (if it exists).
 
 > `udpIdleTimeout`: number
 
