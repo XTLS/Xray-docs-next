@@ -1024,13 +1024,15 @@ Used in conjunction with raw | httpupgarde | websocket | gRPC | xhttp transport 
   "password": "",
   "ascii": "",
 
-  "customTable": "",
-  "customTables": [""],
+  "customTable": "", // custom_table in official docs
+  "customTables": [""], // custom_tables in official docs
 
-  "paddingMin": 0,
-  "paddingMax": 0
+  "paddingMin": 0, // padding_min in official docs
+  "paddingMax": 0 // padding_max in official docs
 }
 ```
+
+See [official documentation](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.md) for field descriptions.
 
 > `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
@@ -1168,6 +1170,8 @@ For example, if you own example.com, then you can set an A record for a.example.
   "paddingMax": 0
 }
 ```
+
+Same as the TCP version.
 
 #### xdns
 

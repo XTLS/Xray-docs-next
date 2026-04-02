@@ -1037,13 +1037,15 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
   "password": "",
   "ascii": "",
 
-  "customTable": "",
-  "customTables": [""],
+  "customTable": "", // 官方文档字段名为 custom_table
+  "customTables": [""], // 官方文档字段名为 custom_tables
 
-  "paddingMin": 0,
-  "paddingMax": 0
+  "paddingMin": 0, // 官方文档字段名为 padding_min
+  "paddingMax": 0 // 官方文档字段名为 padding_max
 }
 ```
+
+含义见其 [官方文档](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.zh_CN.md) 文档字段
 
 > `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
@@ -1185,6 +1187,8 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
   "paddingMax": 0
 }
 ```
+
+同 TCP 版本
 
 #### xdns
 

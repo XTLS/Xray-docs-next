@@ -1049,13 +1049,15 @@ FinalMask применяет последний слой маскировки к
   "password": "",
   "ascii": "",
 
-  "customTable": "",
-  "customTables": [""],
+  "customTable": "", // custom_table в официальной документации
+  "customTables": [""], // custom_tables в официальной документации
 
-  "paddingMin": 0,
-  "paddingMax": 0
+  "paddingMin": 0, // padding_min в официальной документации
+  "paddingMax": 0 // padding_max в официальной документации
 }
 ```
+
+См. [официальную документацию](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.md) для описания полей.
 
 > `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
@@ -1199,6 +1201,8 @@ FinalMask применяет последний слой маскировки к
   "paddingMax": 0
 }
 ```
+
+Аналогично версии TCP.
 
 #### xdns
 
