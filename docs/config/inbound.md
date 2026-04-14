@@ -119,11 +119,9 @@ Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进
 
 如果关闭仅使用元数据推断目标地址，此时客户端必须先发送数据，代理服务器才会实际建立连接。此行为与需要服务器首先发起第一个消息的协议不兼容，如 SMTP 协议。
 
-> `domainsExcluded`: [string] <Badge text="WIP" type="warning"/>
+> `domainsExcluded`: [string]
 
-一个域名列表，如果流量探测结果在这个列表中时，将 **不会** 重置目标地址。
-
-支持直接的域名（精确匹配），或 `regexp:` 开头后接正则表达式。
+一个域名列表，如果流量探测结果在这个列表中时，将 **不会** 重置目标地址。格式和 [路由配置](./routing.md#ruleobject) 中相同。
 
 ::: tip
 填写一些域名，可能解决iOS 推送通知，米家智能设备，某些游戏（彩虹六号）语音问题。<br>
@@ -138,10 +136,6 @@ Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进
 ]
 
 ```
-
-::: warning
-目前，`domainsExcluded` 不支持类似路由中的域名匹配方式。此选项未来可能会改变，不保证跨版本兼容。
-:::
 
 > `routeOnly`: true | false
 

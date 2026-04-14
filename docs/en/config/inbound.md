@@ -118,11 +118,9 @@ When enabled, only the connection metadata will be used to sniff the destination
 
 If disabled (using more than just metadata to infer the destination address), the client must send data first before the proxy server actually establishes a connection. This behavior is incompatible with protocols where the server must initiate the first message, such as the SMTP protocol.
 
-> `domainsExcluded`: [string] <Badge text="WIP" type="warning"/>
+> `domainsExcluded`: [string]
 
-A list of domains. If the result of traffic sniffing is in this list, the destination address will **not** be reset.
-
-Supports direct domains (exact match), or strings starting with `regexp:` followed by a regular expression.
+A list of domains. If the result of traffic sniffing is in this list, the destination address will **not** be reset. The domain format is the same as in [Routing Configuration](./routing.md#ruleobject).
 
 ::: tip
 Filling in some domains may solve issues with iOS push notifications, Mijia smart devices, and voice chat in certain games (Rainbow Six).<br>
@@ -136,10 +134,6 @@ If you need to troubleshoot the cause of certain problems, you can test by disab
     "dlg.io.mi.com"
 ]
 ```
-
-::: warning
-Currently, `domainsExcluded` does not support the domain matching methods used in routing. This option may change in the future and cross-version compatibility is not guaranteed.
-:::
 
 > `routeOnly`: true | false
 
