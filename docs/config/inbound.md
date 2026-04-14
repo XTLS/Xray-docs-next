@@ -97,6 +97,7 @@
   "destOverride": ["http", "tls", "fakedns"],
   "metadataOnly": false,
   "domainsExcluded": [],
+  "ipsExcluded": [],
   "routeOnly": false
 }
 ```
@@ -136,6 +137,10 @@ Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进
 ]
 
 ```
+
+> `ipsExcluded`: [string]
+
+一个 IP 列表，如果目标地址在这个列表中，将 **不会** 重置目标地址。格式和 [路由配置](./routing.md#ruleobject) 中相同。
 
 > `routeOnly`: true | false
 

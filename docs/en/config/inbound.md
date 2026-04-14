@@ -96,6 +96,7 @@ Note: Newer browsers may use ECH to encrypt the Client Hello. In this case, Xray
   "destOverride": ["http", "tls", "fakedns"],
   "metadataOnly": false,
   "domainsExcluded": [],
+  "ipsExcluded": [],
   "routeOnly": false
 }
 ```
@@ -134,6 +135,10 @@ If you need to troubleshoot the cause of certain problems, you can test by disab
     "dlg.io.mi.com"
 ]
 ```
+
+> `ipsExcluded`: [string]
+
+A list of IPs. If the destination address is in this list, the destination address will **not** be reset. The format is the same as in [Routing Configuration](./routing.md#ruleobject).
 
 > `routeOnly`: true | false
 

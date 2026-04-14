@@ -107,6 +107,7 @@
   "destOverride": ["http", "tls", "fakedns"],
   "metadataOnly": false,
   "domainsExcluded": [],
+  "ipsExcluded": [],
   "routeOnly": false
 }
 ```
@@ -151,6 +152,10 @@ Xray будет использовать доменные имена, обнар
 ]
 
 ```
+
+> `ipsExcluded`: [string]
+
+Список IP-адресов. Если целевой адрес находится в этом списке, он **не будет** заменён. Формат такой же, как и в [конфигурации маршрутизации](./routing.md#ruleobject).
 
 > `routeOnly`: true | false
 
