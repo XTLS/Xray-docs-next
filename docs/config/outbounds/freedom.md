@@ -21,7 +21,8 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
       "delay": "10-16"
     }
   ],
-  "proxyProtocol": 0
+  "proxyProtocol": 0,
+  "ipsBlocked": [] // 显式设为空可关闭默认私有 IP 拦截
 }
 ```
 
@@ -88,3 +89,13 @@ UDP noise, 用于在发出UDP连接前发出一些随机数据作为“噪声”
 PROXY protocol 通常配合 `redirect` 重定向到开启了 PROXY protocol 协议的 Nginx 或其他后端服务中。如果后端服务不支持 PROXY protocol 协议，连接将会被断开。
 
 proxyProtocol 的值为 PROXY protocol 版本号，可选 `1` 或 `2`，如不指定，默认为 `0` 不启用。
+
+> `ipsBlocked`: [string]
+
+用于指定一组禁止连接的 IP 范围，格式与 [路由配置](../routing.md#ruleobject) 中的 IP 规则相同。
+
+配置后，Freedom 会阻止连接到这些 IP 范围。常用于服务端限制直连出站，例如封锁内网地址，或阻止流量经 Freedom 直接回国。
+
+如果未显式配置 `ipsBlocked`，且入站协议为 `VLESS`、`VMess`、`Trojan`、`Shadowsocks`、`Hysteria` 或 `WireGuard`，Freedom 会默认阻止私有 IP。
+
+相比在 `routing` 中封锁，这种方式更严谨、更彻底，且对于 UDP 会逐包匹配，每个仅耗时 50ns；如需关闭此默认策略，可显式设置 `ipsBlocked: []`。

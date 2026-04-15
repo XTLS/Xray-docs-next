@@ -21,7 +21,8 @@ Freedom is an outbound protocol used to send (normal) TCP or UDP data to any net
       "delay": "10-16"
     }
   ],
-  "proxyProtocol": 0
+  "proxyProtocol": 0,
+  "ipsBlocked": [] // Set explicitly to empty to disable default private IP blocking
 }
 ```
 
@@ -88,3 +89,13 @@ It is an array where multiple noise packets to be sent can be defined. A single 
 PROXY protocol is usually used with `redirect` to redirect traffic to Nginx or other backend services that have the PROXY protocol enabled. If the backend service does not support PROXY protocol, the connection will be disconnected.
 
 The value of `proxyProtocol` is the PROXY protocol version number. Options are `1` or `2`. If not specified, it defaults to `0` (disabled).
+
+> `ipsBlocked`: [string]
+
+Used to specify a list of blocked IP ranges. The format is the same as the IP rules in [Routing](../routing.md#ruleobject).
+
+When configured, Freedom blocks connections to these IP ranges. This is commonly used on servers to restrict direct outbound access, such as blocking private networks or preventing traffic from going to China directly through Freedom.
+
+If `ipsBlocked` is not explicitly configured, and the inbound protocol is `VLESS`, `VMess`, `Trojan`, `Shadowsocks`, `Hysteria`, or `WireGuard`, Freedom will block private IPs by default.
+
+Compared to blocking in `routing`, this approach is stricter and more thorough, and for UDP it matches packet by packet, with each match taking only 50 ns; to disable this default behavior, explicitly set `ipsBlocked: []`.
