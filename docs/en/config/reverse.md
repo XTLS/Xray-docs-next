@@ -134,7 +134,9 @@ Outbounds:
   "tag": "out",
   "protocol": "freedom",
   "settings": {
-    "redirect": "127.0.0.1:80"
+    "redirect": "127.0.0.1:80",
+    // Override the default safe policy to allow only 127.0.0.1
+    "ipsBlocked": ["!127.0.0.1/32"]
   }
 }
 ```
@@ -144,17 +146,9 @@ Outbounds:
   // Connect to portal
   "protocol": "vmess",
   "settings": {
-    "vnext": [
-      {
-        "address": "IP Address of Portal",
-        "port": 1024,
-        "users": [
-          {
-            "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
-          }
-        ]
-      }
-    ]
+    "address": "IP Address of Portal",
+    "port": 1024,
+    "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
   },
   "tag": "interconn"
 }

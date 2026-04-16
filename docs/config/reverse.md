@@ -134,7 +134,9 @@ outbound:
   "tag": "out",
   "protocol": "freedom",
   "settings": {
-    "redirect": "127.0.0.1:80"
+    "redirect": "127.0.0.1:80",
+    // 解除默认安全策略后，仅放行 127.0.0.1
+    "ipsBlocked": ["!127.0.0.1/32"]
   }
 }
 ```
@@ -144,17 +146,9 @@ outbound:
   // 连接到 portal
   "protocol": "vmess",
   "settings": {
-    "vnext": [
-      {
-        "address": "portal 的 IP 地址",
-        "port": 1024,
-        "users": [
-          {
-            "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
-          }
-        ]
-      }
-    ]
+    "address": "portal 的 IP 地址",
+    "port": 1024,
+    "id": "5783a3e7-e373-51cd-8642-c83782b807c5"
   },
   "tag": "interconn"
 }
