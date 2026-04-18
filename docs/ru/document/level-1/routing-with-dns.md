@@ -102,13 +102,13 @@
         "address": "1.1.1.1",
         "skipFallback": true,
         "domains": ["geosite:geolocation-!cn"],
-        "expectIPs": ["geoip:!cn"]
+        "expectIPs": ["!geoip:cn"]
       },
       {
         "address": "8.8.8.8",
         "skipFallback": true,
         "domains": ["geosite:geolocation-!cn"],
-        "expectIPs": ["geoip:!cn"]
+        "expectIPs": ["!geoip:cn"]
       },
       {
         "address": "8.8.8.8",
