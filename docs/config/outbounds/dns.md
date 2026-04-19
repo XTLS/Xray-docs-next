@@ -13,6 +13,7 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
   "network": "tcp",
   "address": "1.1.1.1",
   "port": 53,
+  "userLevel": 0,
   "nonIPQuery": "drop",
   "blockTypes": []
 }
@@ -29,6 +30,12 @@ DNS 是一个出站协议，主要用于拦截和转发 DNS 查询。
 > `port`: number
 
 修改 DNS 服务器端口。当不指定时，保持来源中指定的端口不变。
+
+> `userLevel`: number
+
+用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
+
+userLevel 的值，对应 [policy](../policy.md#policyobject) 中 `level` 的值。如不指定，默认为 0。
 
 > `nonIPQuery`: string
 

@@ -13,6 +13,7 @@ When processing DNS queries, this outbound protocol forwards IP queries (i.e., A
   "network": "tcp",
   "address": "1.1.1.1",
   "port": 53,
+  "userLevel": 0,
   "nonIPQuery": "drop",
   "blockTypes": []
 }
@@ -29,6 +30,12 @@ Modifies the DNS server address. When unspecified, the address specified in the 
 > `port`: number
 
 Modifies the DNS server port. When unspecified, the port specified in the source remains unchanged.
+
+> `userLevel`: number
+
+User level. Connections will use the [Local Policy](../policy.md#levelpolicyobject) corresponding to this user level.
+
+The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, it defaults to 0.
 
 > `nonIPQuery`: string
 
