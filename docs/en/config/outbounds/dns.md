@@ -1,54 +1,183 @@
 # DNS
 
-DNS is an outbound protocol, mainly used to intercept and forward DNS queries.
+DNS is an outbound protocol used to receive DNS queries sent in by routing, then forward or process them according to rules.
 
-This outbound protocol can only receive DNS traffic (including queries based on UDP and TCP protocols); other types of traffic will cause errors.
+This outbound only supports traditional plaintext DNS queries over UDP and TCP; non-plaintext DNS protocols such as DoH, DoT, and DoQ are not applicable to this outbound. Common scenarios include TUN, transparent proxy, or `dokodemo-door` receiving DNS traffic and then routing sending that traffic to this outbound.
 
-When processing DNS queries, this outbound protocol forwards IP queries (i.e., A and AAAA) to the built-in [DNS server](../dns.md). For other types of query traffic, see `nonIPQuery` below.
+It can allow queries to the target DNS server, `hijack` them to the built-in [DNS server](../dns.md) for further processing, drop them, or explicitly refuse them according to rules. It can also rewrite the target address, port, and transport protocol.
 
 ## OutboundConfigurationObject
 
 ```json
 {
-  "network": "tcp",
+  "network": "udp",
   "address": "1.1.1.1",
   "port": 53,
   "userLevel": 0,
-  "nonIPQuery": "drop",
-  "blockTypes": []
+  "rules": [
+    {
+      "action": "reject",
+      "domain": ["domain:example.com"]
+    },
+    {
+      "action": "direct",
+      "qtype": 65,
+      "domain": ["geosite:geolocation-!cn"]
+    }
+  ]
 }
 ```
 
-> `network`: "tcp" | "udp"
+The example above only demonstrates the field syntax. See the full example below for a complete configuration.
 
-Modifies the transport layer protocol for DNS traffic. Optional values are `"tcp"` and `"udp"`. When unspecified, the source transport method remains unchanged.
+> `network`: [ "tcp" | "udp" ]
+
+Modifies the transport protocol used for DNS traffic. Available values are `"tcp"` and `"udp"`. If omitted, the original transport method is preserved.
 
 > `address`: address
 
-Modifies the DNS server address. When unspecified, the address specified in the source remains unchanged.
+Modifies the DNS server address. If omitted, the address specified by the source is preserved.
 
 > `port`: number
 
-Modifies the DNS server port. When unspecified, the port specified in the source remains unchanged.
+Modifies the DNS server port. If omitted, the port specified by the source is preserved.
 
 > `userLevel`: number
 
-User level. Connections will use the [Local Policy](../policy.md#levelpolicyobject) corresponding to this user level.
+User level. Connections will use the [local policy](../policy.md#levelpolicyobject) corresponding to this user level.
 
-The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, it defaults to 0.
+The value of `userLevel` corresponds to the `level` value in [policy](../policy.md#policyobject). If omitted, it defaults to `0`.
 
-> `nonIPQuery`: string
+> `rules`: \[[RuleObject](#ruleobject)\]
 
-Controls non-IP queries (non-A and non-AAAA). `"drop"` means discard; `"skip"` means it is not processed by the built-in DNS server and is forwarded to the destination; `"reject"` returns a DNS reject response, explicitly refusing the request immediately. Compared to `"drop"`, this avoids applications waiting too long for a DNS response until timeout.
+Matches DNS query rules in order, and supports fine-grained control by `qtype` and `domain`.
 
-The default value is `"reject"`.
+If no rule is matched, the built-in fallback rule is used: A and AAAA queries are imported into the built-in DNS module, while other query types are explicitly refused.
 
-> `blockTypes`: array
+## RuleObject
 
-An integer array used to block query types listed in the array. For example, `"blockTypes": [65,28]` means blocking type 65 (HTTPS) and 28 (AAAA). Common uses include blocking type 65 to prevent browsers from initiating ECH.
+```json
+{
+  "action": "hijack",
+  "qtype": 1,
+  "domain": ["geosite:cn"]
+}
+```
 
-Since `nonIPQuery` drops all non-A and non-AAAA queries by default, this option requires `nonIPQuery` to be set to `skip` to take further effect on other types. Of course, you can also use it solely to block A or AAAA (IPv4/IPv6 queries), but this is highly discouraged. It is recommended to configure `queryStrategy` in the built-in DNS settings for relevant content instead.
+All matching conditions in a rule are combined with AND logic. If a condition is omitted, that condition is not restricted.
 
-Note: When using `blockTypes` to block only A or AAAA, if `nonIPQuery` is set to `reject`, the blocking method will also be to return a DNS reject response instead of dropping.
+> `action`: [ "direct" | "hijack" | "drop" | "reject" ]
 
-## DNS Configuration Examples <Badge text="WIP" type="warning"/>
+Defines the action to take when the rule matches.
+
+- `direct`: Allows the query directly to the target DNS server. If outbound-level `network`, `address`, or `port` is also configured, the query is forwarded to the rewritten target.
+- `hijack`: Imports the query into the built-in [DNS server](../dns.md) for further processing. This can be used for additional routing based on the built-in DNS configuration. Currently, only A and AAAA records are supported.
+- `drop`: Drops the request directly without returning a response.
+- `reject`: Returns an explicit refusal response. Compared with `drop`, this can prevent applications from waiting too long for a DNS timeout.
+
+> `qtype`: number | string
+
+Matches DNS query types. It has three forms:
+
+- `"a-b"`: `a` and `b` are both integers. This is a closed interval; the rule takes effect when the query type falls within this range.
+- `a`: `a` is an integer. The rule takes effect when the query type is `a`.
+- A comma-separated mix of the two forms above. For example: `"1,3,23-24"`.
+
+Common type numbers can be found in the [List of DNS record types](https://en.wikipedia.org/wiki/List_of_DNS_record_types).
+
+If omitted, all query types are matched.
+
+> `domain`: [string]
+
+Matches a list of domains. The syntax is the same as [`domain` in routing rules](../routing.md#ruleobject), such as `domain:example.com`, `full:example.com`, and `geosite:cn`. If omitted, domains are not restricted.
+
+## DNS Configuration Example
+
+The following example demonstrates a practical scenario: in a transparent proxy environment, the inbound enables `sniffing` for domain / SNI routing, foreign domains go through the proxy, and other IP traffic goes directly. At the same time, `dns-out` refuses HTTPS records for foreign domains to reduce cases where clients obtain ECH configuration and affect plaintext SNI routing, forwards common MX, TXT, SRV, and similar queries to a specified upstream, and refuses AAAA queries because the proxy server has no IPv6 environment.
+
+```json
+{
+  "inbounds": [
+    {
+      "tag": "all-in",
+      "port": 12345,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls", "quic"],
+        "routeOnly": true
+      },
+      "streamSettings": {
+        "sockopt": {
+          "tproxy": "tproxy"
+        }
+      }
+    }
+  ],
+  "dns": {
+    "servers": ["https+local://1.1.1.1/dns-query"]
+  },
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom"
+    },
+    {
+      "tag": "proxy",
+      "protocol": "vless",
+      "settings": {
+        // Omitted...
+      }
+    },
+    {
+      "tag": "dns-out",
+      "protocol": "dns",
+      "settings": {
+        "network": "tcp",
+        "address": "1.1.1.1",
+        "port": 53,
+        "rules": [
+          {
+            "action": "reject",
+            "qtype": "28,65",
+            "domain": ["geosite:geolocation-!cn"]
+          },
+          {
+            "action": "direct",
+            "qtype": "15-16,33"
+          }
+        ]
+      }
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "inboundTag": ["all-in"],
+        "network": "tcp,udp",
+        "port": "53",
+        "outboundTag": "dns-out"
+      },
+      {
+        "domain": ["geosite:geolocation-!cn"],
+        "outboundTag": "proxy"
+      }
+    ]
+  }
+}
+```
+
+The example behaves as follows:
+
+- `all-in` enables `sniffing` and uses `routeOnly: true`, allowing routing to split traffic based on sniffed HTTP, TLS, and QUIC target domains while preserving the original target address.
+- UDP/TCP plaintext DNS queries from `all-in` to port 53 are routed to `dns-out`.
+- For regular traffic, `geosite:geolocation-!cn` goes through `proxy`; traffic that does not match this domain rule automatically uses the first outbound, `direct`.
+- HTTPS records with `qtype` `65` for domains in `geosite:geolocation-!cn` are explicitly refused, which can help with plaintext SNI-based routing.
+- AAAA queries with `qtype` `28` for domains in `geosite:geolocation-!cn` are explicitly refused, which can be used to block IPv6 resolution for foreign domains.
+- Queries with `qtype` `15-16,33` are allowed directly and forwarded to `1.1.1.1:53` according to the outbound configuration, using TCP as the transport.
+- Queries that do not match any rule enter the built-in fallback logic: A and AAAA queries are imported into the built-in DNS module, while other query types are explicitly refused. The built-in DNS then queries upstream through `https+local://1.1.1.1/dns-query`, avoiding a loop.

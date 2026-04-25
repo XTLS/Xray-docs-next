@@ -12,7 +12,7 @@ The built-in DNS module in Xray has three main purposes:
   - For example, in a `freedom` outbound, if `domainStrategy` is set to `UseIP`, requests sent from this outbound will first resolve the domain to an IP using the built-in server before connecting.
   - For example, in `sockopt`, if `domainStrategy` is set to `UseIP`, system connections initiated by this outbound will first resolve to an IP using the built-in server before connecting.
 
-- **DNS Traffic Hijacking (Transparent Proxy) or Acting as a Recursive DNS Server:** Directly exposing port 53 to serve as a DNS server.
+- **TUN/Transparent Proxy DNS Traffic Hijacking:** Combines routing with the DNS outbound to hijack DNS traffic into this module; or directly exposes port 53 to act as a recursive DNS server.
 
 ::: tip TIP 1
 The DNS server enters the routing system for matching by default unless it contains `+local`. When using domain names within it, be aware of potential routing loops; `hosts` may help.
