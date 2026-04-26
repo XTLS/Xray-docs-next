@@ -23,7 +23,8 @@
   "fakedns": {},
   "metrics": {},
   "observatory": {},
-  "burstObservatory": {}
+  "burstObservatory": {},
+  "geodata": {}
 }
 ```
 
@@ -124,3 +125,7 @@
 > burstObservatory: [BurstObservatoryObject](./observatory.md#burstobservatoryobject)
 
 Мониторинг параллельных подключений. Обнаружение состояния подключения исходящего прокси.
+
+> geodata: [GeodataObject](./geodata.md)
+
+Автоматическое обновление и горячая перезагрузка файлов геоданных.

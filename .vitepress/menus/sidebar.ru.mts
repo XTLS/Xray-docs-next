@@ -55,6 +55,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         {
           text: "Мониторинг подключений",
           link: "/ru/config/observatory.md"
+        },
+        {
+          text: "Файлы геоданных",
+          link: "/ru/config/geodata.md"
         }
       ]
     },

@@ -43,7 +43,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/en/config/transport.md"
         },
         { text: "Metrics", link: "/en/config/metrics.md" },
-        { text: "Observatory", link: "/en/config/observatory.md" }
+        { text: "Observatory", link: "/en/config/observatory.md" },
+        { text: "Geodata Files", link: "/en/config/geodata.md" }
       ]
     },
     {

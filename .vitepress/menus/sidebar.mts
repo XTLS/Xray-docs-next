@@ -37,7 +37,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/config/transport.md"
         },
         { text: "Metrics", link: "/config/metrics.md" },
-        { text: "连接观测", link: "/config/observatory.md" }
+        { text: "连接观测", link: "/config/observatory.md" },
+        { text: "地理数据文件", link: "/config/geodata.md" }
       ]
     },
     {

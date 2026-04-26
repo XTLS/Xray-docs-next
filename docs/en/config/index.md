@@ -23,7 +23,8 @@ The format is as follows:
   "fakedns": {},
   "metrics": {},
   "observatory": {},
-  "burstObservatory": {}
+  "burstObservatory": {},
+  "geodata": {}
 }
 ```
 
@@ -121,3 +122,7 @@ Background connection observatory. Detects the connection status of outbound pro
 > burstObservatory: [BurstObservatoryObject](./observatory.md#burstobservatoryobject)
 
 Burst connection observatory. Detects the connection status of outbound proxies.
+
+> geodata: [GeodataObject](./geodata.md)
+
+Automatic update and hot reload for geodata files.
