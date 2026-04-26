@@ -94,7 +94,7 @@ The value of `level` corresponds to the value of `level` in [policy](../policy.m
 
 > `reverse`: struct
 
-VLESS minimalist reverse proxy configuration. It functions the same as the core's built-in generic reverse proxy but is simpler to configure.
+VLESS minimalist reverse proxy configuration. It functions the same as the core's built-in generic reverse proxy but is simpler to configure, and it preserves the real source IP information from the public-facing side.
 
 The existence of this item indicates that this outbound can be used as a VLESS reverse proxy outbound, and it will automatically establish a connection to the server to register the reverse proxy tunnel.
 
@@ -102,10 +102,13 @@ Current syntax:
 
 ```json
 "reverse": {
-  "tag": "r-inbound"
+  "tag": "r-inbound",
+  "sniffing" : {}
 }
 ```
 
 `tag` is the inbound proxy tag for this reverse proxy. When the server dispatches a reverse proxy request, it enters the routing system from the inbound using this tag, and the routing system routes it to the outbound you need.
 
 The UUID used needs to be a UUID that is also configured with reverse on the server side (see VLESS Inbound for details).
+
+`sniffing` see [sniffingObject](../inbound.md#sniffingobject), performs sniffing on requests entering through this reverse proxy.
