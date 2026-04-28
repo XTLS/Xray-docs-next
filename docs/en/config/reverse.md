@@ -135,8 +135,18 @@ Outbounds:
   "protocol": "freedom",
   "settings": {
     "redirect": "127.0.0.1:80",
-    // Override the default safe policy to allow only 127.0.0.1
-    "ipsBlocked": ["!127.0.0.1/32"]
+    // Allow only TCP 127.0.0.1:80 and block all other targets
+    "finalRules": [
+      {
+        "action": "allow",
+        "network": "tcp",
+        "port": 80,
+        "ip": ["127.0.0.1/32"]
+      },
+      {
+        "action": "block"
+      }
+    ]
   }
 }
 ```

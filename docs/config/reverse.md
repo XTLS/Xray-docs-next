@@ -135,8 +135,18 @@ outbound:
   "protocol": "freedom",
   "settings": {
     "redirect": "127.0.0.1:80",
-    // 解除默认安全策略后，仅放行 127.0.0.1
-    "ipsBlocked": ["!127.0.0.1/32"]
+    // 仅放行 TCP 127.0.0.1:80，阻止其它目标
+    "finalRules": [
+      {
+        "action": "allow",
+        "network": "tcp",
+        "port": 80,
+        "ip": ["127.0.0.1/32"]
+      },
+      {
+        "action": "block"
+      }
+    ]
   }
 }
 ```

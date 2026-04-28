@@ -1,6 +1,10 @@
-# Freedom (fragment, noises)
+﻿# Freedom (fragment, noises)
 
 Freedom is an outbound protocol used to send (normal) TCP or UDP data to any network.
+
+::: warning
+This outbound's safety policy may block some targets by default. See `finalRules` below for details.
+:::
 
 ## OutboundConfigurationObject
 
@@ -22,7 +26,17 @@ Freedom is an outbound protocol used to send (normal) TCP or UDP data to any net
     }
   ],
   "proxyProtocol": 0,
-  "ipsBlocked": [] // Set explicitly to empty to disable default private IP blocking
+  "finalRules": [
+    {
+      "action": "block",
+      "network": "tcp",
+      "port": "22,25,465,587"
+    },
+    {
+      "action": "block",
+      "ip": ["geoip:cn"]
+    }
+  ]
 }
 ```
 
@@ -90,12 +104,46 @@ PROXY protocol is usually used with `redirect` to redirect traffic to Nginx or o
 
 The value of `proxyProtocol` is the PROXY protocol version number. Options are `1` or `2`. If not specified, it defaults to `0` (disabled).
 
-> `ipsBlocked`: [string]
+> `finalRules`: \[[FinalRuleObject](#finalruleobject)\]
 
-Used to specify a list of blocked IP ranges. The format is the same as the IP rules in [Routing](../routing.md#ruleobject).
+Matches Freedom final outbound rules in order, and allows or blocks connection targets.
 
-When configured, Freedom blocks connections to these IP ranges. This is commonly used on servers to restrict direct outbound access, such as blocking private networks or preventing traffic from going to China directly through Freedom.
+Compared with blocking in `routing`, `finalRules` applies at Freedom's final outbound stage: TCP is matched after the final IP is resolved and before dialing, and UDP is matched packet by packet on both send and receive, making it stricter and more thorough. Each rule match takes about 50-150 ns.
 
-If `ipsBlocked` is not explicitly configured, and the inbound protocol is `VLESS`, `VMess`, `Trojan`, `Shadowsocks`, `Hysteria`, or `WireGuard`, Freedom will block private IPs by default.
+If no rule is matched, the built-in fallback rule is used: traffic from the VLESS reverse proxy blocks all targets by default; traffic from `VLESS`, `VMess`, `Trojan`, `Shadowsocks`, `Hysteria`, or `WireGuard` inbounds blocks private and reserved IP ranges by default; other traffic is allowed by default.
 
-Compared to blocking in `routing`, this approach is stricter and more thorough, and for UDP it matches packet by packet, with each match taking only 50 ns; to disable this default behavior, explicitly set `ipsBlocked: []`.
+For the seven inbound types above, or when `finalRules` is explicitly configured: if Freedom `domainStrategy` is `AsIs` and the target is a domain, Freedom resolves the target to an IP before applying `finalRules`. At that point the target is no longer a domain, so the later `sockopt.domainStrategy` and its `happyEyeballs` no longer take effect.
+
+To restore the previous behavior, configure exactly one `allow` rule in `finalRules` without any matching conditions.
+
+### FinalRuleObject
+
+```json
+{
+  "action": "block",
+  "network": "tcp,udp",
+  "port": "53,443",
+  "ip": ["10.0.0.0/8", "2001:db8::/32"]
+}
+```
+
+All matching conditions in a rule are combined with AND logic. If a condition is omitted, that condition is not restricted.
+
+> `action`: "allow" | "block"
+
+Defines the action to take when the rule matches.
+
+- `allow`: Allows the target.
+- `block`: Blocks the target.
+
+> `network`: "tcp" | "udp" | "tcp,udp"
+
+Matches the network type. The rule takes effect when the connection method matches. It can also be written as a string array, such as `["tcp", "udp"]`. If omitted, all networks are matched.
+
+> `port`: number | string
+
+Target port range. The syntax is the same as [`port` in routing rules](../routing.md#ruleobject). If omitted, all ports are matched.
+
+> `ip`: \[string\]
+
+An array where each item represents an IP range. The rule takes effect when an item matches the target IP. The syntax is the same as [`ip` in routing rules](../routing.md#ruleobject). If omitted, all IPs are matched.
