@@ -133,7 +133,6 @@ FinalMask 配置，用于对流量进行通用伪装。
   "masterKeyLog": "",
   "echServerKeys": "",
   "echConfigList": "",
-  "echForceQuery": "",
   "echSockopt": {}
 }
 ```
@@ -301,18 +300,6 @@ SecP384r1MLKEM1024*
 基础格式为 `"udp://1.1.1.1"` 表示从 UDP DNS 1.1.1.1 查询，也可以使用 `"https://1.1.1.1/dns-query"`(或者 `h2c://`) 这样的格式，代表使用 DOH(h2c) 进行查询(实际使用请替换成当地可用的服务器). 上述三种均支持修改端口号，如 `udp://1.1.1.1:53`，没写会按照协议默认 53/443.
 
 特别地，可以使用指定的域名用于查询 ECHConfig, 格式为 `"example.com+https://1.1.1.1/dns-query"` 这样 Xray 会强制使用 example.com 的 DNS 记录中的 ECHConfig 用于连接，如果你想从 DNS 获取 ECHConfig 但又不想暴露自己在查询这个域名的 HTTPS 记录或者在这个域名下发布 HTTPS 记录时有一些用。
-
-> `echForceQuery` : string
-
-控制使用 DNS 查询 ECH Config 时的策略，可选 `none`(默认) `half` `full`
-
-`none`: 查询一次，如果没能获取有效 ECH Config 五分钟后才会继续查询。如果查询失败**不会使用 ECH**.
-
-`half`: 查询一次，失败后每次请求都会尝试查询。如果查询失败**不会使用 ECH**。如果查询成功得到响应但是不包含 ECH Config 也**不会使用 ECH**，并且五分钟内不会再次查询。
-
-`full`: 查询一次，强制要求得到了有效 ECH Config 才会成功连接，否则连接会失败。确定要使用 ECH 推荐此选项，前两种模拟 fallback 行为确保可用性但是可能会导致明文 SNI 被发送。
-
-无论查询成功与否，只有第一次连接才会阻塞等待查询响应结果，后续更新不会阻塞连接。
 
 > `echSockopt` : [SockoptObject](#sockoptobject)
 

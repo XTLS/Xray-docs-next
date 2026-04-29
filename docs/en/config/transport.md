@@ -132,7 +132,6 @@ FinalMask configuration, used for general traffic obfuscation.
   "masterKeyLog": "",
   "echServerKeys": "",
   "echConfigList": "",
-  "echForceQuery": "",
   "echSockopt": {}
 }
 ```
@@ -295,18 +294,6 @@ The second is querying from a DNS server. For example, when using a CDN, you can
 The basic format is `"udp://1.1.1.1"`, indicating querying from UDP DNS 1.1.1.1. You can also use formats like `"https://1.1.1.1/dns-query"` (or `h2c://`), indicating querying via DOH (h2c) (replace with locally available servers for actual use). All three support modifying port numbers, e.g., `udp://1.1.1.1:53`. If omitted, defaults to 53/443 based on protocol.
 
 Specifically, you can use a designated domain for querying ECHConfig, in the format `"example.com+https://1.1.1.1/dns-query"`. In this way, Xray will force the use of the ECHConfig in the DNS record of `example.com` for connection. This is useful if you want to get ECHConfig from DNS but don't want to expose yourself querying the HTTPS record of this domain or publishing HTTPS records under this domain.
-
-> `echForceQuery` : string
-
-Controls the strategy when using DNS to query ECH Config. Options: `none` (default), `half`, `full`.
-
-`none`: Query once. If a valid ECH Config is not obtained, it will query again after five minutes. If the query fails, **ECH will not be used**.
-
-`half`: Query once. If failed, attempts to query on every request. If the query fails, **ECH will not be used**. If the query succeeds and gets a response but does not contain ECH Config, **ECH will not be used** either, and it will not query again within five minutes.
-
-`full`: Query once. Forcibly requires a valid ECH Config to connect successfully; otherwise, the connection fails. Recommended if you definitely want to use ECH. The first two simulate fallback behavior to ensure availability but may lead to plaintext SNI being sent.
-
-Regardless of query success or failure, only the first connection will block waiting for the query response result; subsequent updates will not block connections.
 
 > `echSockopt` : [SockoptObject](#sockoptobject)
 
