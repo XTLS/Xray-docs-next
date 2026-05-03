@@ -29,11 +29,8 @@
 | :-------: | :-------------------------------------- | :----------------------------- | :----------------------------------------: |
 | `conf-01` | `/etc/ssh/sshd_config`                  | SSH 远程登录程序设置           |      [《远程登录篇》](./ch03-ssh.md)       |
 | `conf-02` | `/etc/nginx/nginx.conf`                 | Nginx 程序设置                 |    [《网站建设篇》](./ch05-webpage.md)     |
-| `conf-03` | `/etc/apt/sources.list`                 | apt 软件源列表                 | [《Xray 服务器篇》](./ch07-xray-server.md) |
-| `conf-04` | `/etc/apt/sources.list.d/vpsadmin.list` | 用户自定义软件源列表列表       | [《Xray 服务器篇》](./ch07-xray-server.md) |
-| `conf-05` | `crontab -e`                            | 当前用户的定时任务             | [《Xray 服务器篇》](./ch07-xray-server.md) |
-| `conf-06` | `/etc/sysctl.conf`                      | 手动设置 kernel 参数           | [《Xray 服务器篇》](./ch07-xray-server.md) |
-| `conf-07` | `/etc/sysctl.d/vpsadmin.conf`           | 用户自定义 kernel 参数配置文件 | [《Xray 服务器篇》](./ch07-xray-server.md) |
+| `conf-03` | `crontab -e`                            | 当前用户的定时任务             | [《Xray 服务器篇》](./ch07-xray-server.md) |
+| `conf-04` | `/etc/sysctl.d/99-xray-bbr.conf`        | `BBR` 的 kernel 参数配置文件   | [《Xray 服务器篇》](./ch07-xray-server.md) |
 
 ## 3. 小小白白 Xray 重要文件索引
 

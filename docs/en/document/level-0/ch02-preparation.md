@@ -6,7 +6,7 @@ This chapter is somewhat special because it involves monetary transactions. Base
 
 You need to obtain a healthy VPS whose IP is not blocked, and complete the following basic preparations in the management panel:
 
-1. Install the **Debian 10 64bit** system in the VPS management panel.
+1. Install the current Debian stable 64-bit system in the VPS management panel. (At the time of this revision, that is Debian 13 / trixie.)
 2. Make a note of the VPS IP address (this article will use `"100.200.300.400"` to represent it).
    ::: tip
    This is a deliberately written illegal IP; please replace it with your real IP.
@@ -17,7 +17,7 @@ You need to obtain a healthy VPS whose IP is not blocked, and complete the follo
 Purchasing a VPS is a relatively complex matter. It is recommended to learn some relevant knowledge first and choose one that fits your financial ability and line quality needs. Additionally, you can choose to take advantage of free offers from major international tech giants (such as the permanent free or limited-time free tiers provided by Oracle and Google). In short, please act according to your means.
 
 ::: tip Note
-Regarding the choice of Debian 10 as the operating system, let me add a few words here: No matter what you hear online, no matter which "guru" tells you that XXX version of Linux is better or XXX version of Linux is cooler, these Linux distro wars **have absolutely nothing to do with you right now**! Using Debian 10 is sufficient to allow your VPS server to run securely and stably while receiving enough optimization (such as cloud-specific kernels, timely BBR support, etc.). Once you are familiar with Linux, it won't be too late to look back and try other Linux distributions.
+Regarding the choice of Debian stable as the operating system, let me add a few words here: No matter what you hear online, no matter which "guru" tells you that XXX version of Linux is better or XXX version of Linux is cooler, these Linux distro wars **have absolutely nothing to do with you right now**! Using the current Debian stable release is already enough to let your VPS server run securely and stably while receiving the optimizations you actually need (such as cloud-specific kernels and timely `BBR` support). Once you are familiar with Linux, it won't be too late to look back and try other Linux distributions.
 :::
 
 ## 2.2 Obtain a Desired Domain Name

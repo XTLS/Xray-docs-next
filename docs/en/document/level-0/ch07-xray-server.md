@@ -316,7 +316,7 @@ So far, we have used `systemctl` related commands like `start`, `status`, `reloa
     Kernel stability is the cornerstone of a stable server operation. **[The subtle performance difference brought by the BBR beta version is absolutely not worth swapping for an unstable kernel.]** Please choose the latest kernel supported by your Linux distribution, which maximizes the long-term stability and compatibility of the server.
 
     ::: warning
-    The so-called "lead" of modified `bbr` has a very strong timeliness. For example, many `bbrplus` scripts have not been updated for several years, and even now they will replace your kernel with `4.19`. You should know that stable distributions like Debian are already in the `5.9` era. So maybe this script was a little ahead in January 2018, but by October 2018 when 4.19 was officially released, it had lost its meaning. Putting it in use now can even be considered a complete [Downgrade] and [Degradation].
+    The so-called "lead" of modified `bbr` is extremely time-sensitive. Many of these scripts go unmaintained for years, and even today they may still replace your kernel with an already outdated release. In other words, their so-called "upgrade" often just takes you away from the stable kernel currently maintained by your distribution and puts you onto an older kernel with weaker ongoing maintenance. At this point, that is much closer to a [Downgrade] and [Degradation].
     :::
 
 4.  Which algorithm is better: `fq`, `fq_codel`, `fq_pie`, `cake` or others?
@@ -335,46 +335,42 @@ So far, we have used `systemctl` related commands like `start`, `status`, `reloa
     If your line really has a ridiculously high packet loss rate, the truly reliable solution is to [Change the Line].
     :::
 
-6.  I've been rambling so much because there are too many misconceptions and pitfall scripts fooling newbies surrounding `BBR`. I hope you now have a relatively clear understanding of `BBR`. Next, let's install the latest Debian kernel and enable `BBR`! (It's really simple)
+6.  I've been rambling so much because there are too many misconceptions and pitfall scripts fooling newbies surrounding `BBR`. I hope you now have a relatively clear understanding of `BBR`. Next, let's upgrade the system to the latest kernel maintained by Debian stable and enable `BBR`! (It's really simple)
 
-7.  Add the official `backports` source to Debian 10 to get updated software libraries.
-
-    ```shell
-    sudo nano /etc/apt/sources.list
-    ```
-
-    ::: warning Note
-    This article takes Debian 10 as an example, so using `/etc/apt/sources.list` is fine. However, if you are not starting from scratch following this article, or are using another Linux distribution, I suggest you create a `/etc/apt/sources.list.d/` folder and create your own configuration file inside this folder, like `/etc/apt/sources.list.d/vpsadmin.list`. This ensures compatibility and avoids configuration loss caused by default files being overwritten in unforeseen circumstances.
-    :::
-
-8.  Then add the following line at the end, save, and exit.
-
-    ```
-    deb [http://archive.debian.org/debian](http://archive.debian.org/debian) buster-backports main
-    ```
-
-9.  Refresh the software library, query the latest official Debian kernel, and install it. Please be sure to install the version corresponding to your VPS (this article uses the common [amd64] as an example).
+7.  First refresh the package index and upgrade the system so you are on the latest state of the current Debian stable release. (At the time of this revision, that is Debian 13 / trixie.)
 
     ```shell
-    sudo apt update && sudo apt -t buster-backports install linux-image-amd64
+    sudo apt update && sudo apt full-upgrade
+    ```
+
+8.  For most `amd64` VPS instances, installing or confirming the official generic kernel meta-package is enough. It will keep tracking kernel updates from Debian stable.
+
+    ```shell
+    sudo apt install linux-image-amd64
+    ```
+
+9.  If your VPS explicitly supports it, you can replace the package name above with the [Cloud Server Dedicated Kernel] `linux-image-cloud-amd64`.
+
+    ```shell
+    sudo apt install linux-image-cloud-amd64
     ```
 
     ::: warning Attention
-    If your VPS supports it, you can try the [Cloud Server Dedicated Kernel] `linux-image-cloud-amd64`. The advantage is that it is streamlined and uses fewer resources. The downside is that some students reported that forcing installation on unsupported systems leads to boot failure (Kernel cannot be recognized).
+    `linux-image-amd64` and `linux-image-cloud-amd64` are alternatives. You only need one of them. The latter is more streamlined and uses fewer resources, but some users have reported that forcing it onto unsupported systems can lead to boot failure (the kernel cannot be recognized).
 
-    To avoid the tragedy of being unable to recognize the kernel, please ensure:
-    - Take a system snapshot before trying, or
-    - You have `vnc` to save the situation (and you know how to use it)
-      :::
+    To avoid that tragedy, please make sure:
+    - You take a system snapshot before trying, or
+    - You have `vnc` available for rescue (and you know how to use it)
+    :::
 
-10. Modify the `kernel` parameter configuration file `sysctl.conf` and specify enabling `BBR`.
+10. Create a dedicated `sysctl` configuration file and enable `BBR`.
 
     ```shell
-    sudo nano /etc/sysctl.conf
+    sudo nano /etc/sysctl.d/99-xray-bbr.conf
     ```
 
     ::: warning Note
-    This article takes Debian 10 as an example, so using `/etc/sysctl.conf` is fine. However, if you are not starting from scratch following this article, or are using another Linux distribution, I suggest you create a `/etc/sysctl.d/` folder and create your own configuration file inside this folder, like `/etc/sysctl.d/vpsadmin.conf`. This ensures compatibility because some distributions no longer read parameters from `/etc/sysctl.conf` after `systemd` version 207. Using a custom configuration file also avoids configuration loss caused by default files being overwritten in unforeseen circumstances.
+    Compared with editing `/etc/sysctl.conf` directly, placing custom parameters in `/etc/sysctl.d/` better matches modern Debian / `systemd` conventions and is less likely to be overwritten during later maintenance. If you already have your own naming convention, feel free to keep using it.
     :::
 
 11. Add the following content into it:
@@ -384,44 +380,50 @@ So far, we have used `systemctl` related commands like `start`, `status`, `reloa
     net.ipv4.tcp_congestion_control=bbr
     ```
 
-12. Reboot the VPS to make the kernel update and `BBR` settings take effect.
+12. Load the new `kernel` parameter configuration immediately.
+
+    ```shell
+    sudo sysctl --system
+    ```
+
+13. Reboot the VPS. If you installed a new kernel above, this also makes that kernel take effect.
 
     ```shell
     sudo reboot
     ```
 
-13. The complete process demonstration is as follows:
+14. The complete process demonstration is as follows:
 
     ::: tip Mr. Verbose
-    Because the VPS I used for the demonstration supports the cloud server dedicated kernel, I used `linux-image-cloud-amd64` in the GIF. If you are not sure if your VPS supports it, please be sure to follow the command in step 3 and use the regular kernel `linux-image-amd64`.
+    This GIF was recorded for an older version of the guide, so the package names and commands shown in it may not exactly match the text above. Please follow the written instructions on this page. If you are not sure whether your VPS supports the cloud kernel, prefer the regular kernel `linux-image-amd64`.
     :::
 
     ![Update Debian Kernel and Enable BBR](./ch07-img06-bbr-proper.gif)
 
-14. Confirm `BBR` is enabled
+15. Confirm `BBR` is enabled
 
     If you want to confirm if `BBR` is enabled correctly, you can use the following command:
 
     ```shell
-    lsmod | grep bbr
+    sysctl net.ipv4.tcp_congestion_control
     ```
 
     It should return a result like this:
 
     ```
-    tcp_bbr
+    net.ipv4.tcp_congestion_control = bbr
     ```
 
     If you want to confirm if the `fq` algorithm is enabled correctly, you can use the following command:
 
     ```shell
-    lsmod | grep fq
+    sysctl net.core.default_qdisc
     ```
 
     It should return a result like this:
 
     ```
-    sch_fq
+    net.core.default_qdisc = fq
     ```
 
 ## 7.8 Server Optimization 2: Enable Auto-Redirect from HTTP to HTTPS

@@ -29,11 +29,8 @@
 | :-------: | :-------------------------------------- | :--------------------------------------- | :--------------------------------------------: |
 | `conf-01` | `/etc/ssh/sshd_config`                  | Конфигурация SSH сервера                 | [Глава о удаленном подключении](./ch03-ssh.md) |
 | `conf-02` | `/etc/nginx/nginx.conf`                 | Конфигурация Nginx                       |  [Глава о создании сайта](./ch05-webpage.md)   |
-| `conf-03` | `/etc/apt/sources.list`                 | Список репозиториев APT                  | [Глава о Xray сервере](./ch07-xray-server.md)  |
-| `conf-04` | `/etc/apt/sources.list.d/vpsadmin.list` | Список пользовательских репозиториев APT | [Глава о Xray сервере](./ch07-xray-server.md)  |
-| `conf-05` | `crontab -e`                            | Crontab текущего пользователя            | [Глава о Xray сервере](./ch07-xray-server.md)  |
-| `conf-06` | `/etc/sysctl.conf`                      | Настройки ядра Linux                     | [Глава о Xray сервере](./ch07-xray-server.md)  |
-| `conf-07` | `/etc/sysctl.d/vpsadmin.conf`           | Пользовательские настройки ядра Linux    | [Глава о Xray сервере](./ch07-xray-server.md)  |
+| `conf-03` | `crontab -e`                            | Crontab текущего пользователя            | [Глава о Xray сервере](./ch07-xray-server.md)  |
+| `conf-04` | `/etc/sysctl.d/99-xray-bbr.conf`        | Файл параметров ядра для `BBR`           | [Глава о Xray сервере](./ch07-xray-server.md)  |
 
 ## 3. Индекс важных файлов Xray
 

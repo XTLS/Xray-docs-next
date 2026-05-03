@@ -29,11 +29,8 @@
 | :-------: | :-------------------------------------- | :---------------------------------------- | :------------------------------------------------: |
 | `conf-01` | `/etc/ssh/sshd_config`                  | SSH remote login program settings         |     [[Chapter 3: Remote Login]](./ch03-ssh.md)     |
 | `conf-02` | `/etc/nginx/nginx.conf`                 | Nginx program settings                    | [[Chapter 5: Website Building]](./ch05-webpage.md) |
-| `conf-03` | `/etc/apt/sources.list`                 | apt software source list                  | [[Chapter 7: Xray Server]](./ch07-xray-server.md)  |
-| `conf-04` | `/etc/apt/sources.list.d/vpsadmin.list` | User-defined software source list         | [[Chapter 7: Xray Server]](./ch07-xray-server.md)  |
-| `conf-05` | `crontab -e`                            | Current user's scheduled tasks            | [[Chapter 7: Xray Server]](./ch07-xray-server.md)  |
-| `conf-06` | `/etc/sysctl.conf`                      | Manual kernel parameter settings          | [[Chapter 7: Xray Server]](./ch07-xray-server.md)  |
-| `conf-07` | `/etc/sysctl.d/vpsadmin.conf`           | User-defined kernel parameter config file | [[Chapter 7: Xray Server]](./ch07-xray-server.md)  |
+| `conf-03` | `crontab -e`                            | Current user's scheduled tasks            | [[Chapter 7: Xray Server]](./ch07-xray-server.md)  |
+| `conf-04` | `/etc/sysctl.d/99-xray-bbr.conf`        | `BBR` kernel parameter config file        | [[Chapter 7: Xray Server]](./ch07-xray-server.md)  |
 
 ## 3. Index of Important Xray Files for Beginners
 
