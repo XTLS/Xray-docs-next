@@ -32,6 +32,13 @@ The `.json` files in this directory will be read in alphabetical order of their 
 
 This item has lower priority than the startup argument `confdir`.
 
+## Strict JSON Parser
+
+- Name: `xray.json.strict` or `XRAY_JSON_STRICT`.
+- Default value: `false`.
+
+By default, on startup Xray uses a custom JSON parser that strips comments and other non-standard characters from the configuration. If you are sure that your configuration file strictly conforms to the JSON standard (RFC 8259), you can enable this option to use the standard JSON parser, which is faster when working with large configurations.
+
 ## Other Available Configurations
 
 - xray.location.plugin

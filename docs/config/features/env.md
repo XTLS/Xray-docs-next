@@ -32,6 +32,13 @@ Xray 提供以下环境变量以供修改 Xray 的一些底层配置。
 
 此项优先级低于启动参数 `confdir`。
 
+## 严格 JSON 解析器
+
+- 名称：`xray.json.strict` 或 `XRAY_JSON_STRICT`。
+- 默认值：`false`。
+
+默认情况下，Xray 在启动时会使用自定义的 JSON 解析器（该解析器会从配置中剔除注释及其他非标准字符）。如果你确认自己的配置文件严格遵循 JSON 标准（RFC8259），可以启用此选项以使用标准 JSON 解析器，在配置文件极大时（几十 MB 以上）可以提升其解析速度。
+
 ## 其它可用的配置
 
 - xray.location.plugin
