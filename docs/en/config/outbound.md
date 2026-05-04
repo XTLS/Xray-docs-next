@@ -41,6 +41,8 @@ For networks using NDP access, it is not recommended to set a subnet smaller tha
 
 Special value `origin`: If this value is used, the request will be sent using the IP address of the local machine that received the connection.
 
+Special value `srcip`: If this value is used, the request will be sent using the source IP address of the inbound connection.
+
 For example, if the machine has a full IPv4 range `11.4.5.0/24` and listens on `0.0.0.0` (all IPv4 and IPv6 on the network interface), if a client connects to the local machine via `11.4.5.14`, the outbound request will also be sent via `11.4.5.14`. If the client connects via `11.4.5.10`, the outbound request will be sent via `11.4.5.10`. This also applies to cases where the machine has a full range/multiple IPv6 addresses.
 
 As mentioned in the inbound introduction, because of the connectionless nature of UDP, Xray cannot know the original destination IP where the request entered the core (for example, in the same QUIC connection, it might even change), so this feature cannot take effect for UDP.
