@@ -1,14 +1,27 @@
 # TUN
 
-创建一个 TUN 接口，发往此接口的流量将由 Xray 处理。目前仅支持 Windows 与 Linux.
+创建一个 TUN 接口，发往此接口的流量将由 Xray 处理。目前支持 Windows、Linux、macOS 和 FreeBSD。
 
 ## InboundConfigurationObject
 
 ```json
 {
   "name": "xray0",
-  "MTU": 1500,
-  "UserLevel": 0
+  "mtu": 1500,
+  "gateway": [
+    "10.0.0.1/16",
+    "fc00::1/64"
+  ],
+  "dns": [
+    "1.1.1.1",
+    "8.8.8.8"
+  ],
+  "userLevel": 0,
+  "autoSystemRoutingTable": [
+    "0.0.0.0/0",
+    "::/0"
+  ],
+  "autoOutboundsInterface": "auto"
 }
 ```
 
@@ -16,9 +29,17 @@
 
 创建的 TUN 接口名。默认 `"xray0"`
 
-> `MTU`: number
+> `mtu`: number
 
-接口的 MTU 默认值 `1500`
+接口的 MTU。默认值为 `1500`。
+
+> `gateway`: [string]
+
+为 TUN 接口配置的地址前缀列表，通常分别填写 IPv4 / IPv6，例如 `"10.0.0.1/16"`、`"fc00::1/64"`。
+
+> `dns`: [string]
+
+为 TUN 接口配置的 DNS 服务器列表，例如 `"1.1.1.1"`、`"8.8.8.8"`。
 
 > `userLevel`: number
 
@@ -26,14 +47,26 @@
 
 userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值. 如不指定, 默认为 0。
 
+> `autoSystemRoutingTable`: [string]
+
+自动写入系统路由表的目标网段列表。每一项均为 CIDR，例如 `"0.0.0.0/0"` 表示所有 IPv4 流量，`"::/0"` 表示所有 IPv6 流量。
+
+> `autoOutboundsInterface`: string
+
+自动为 Xray 的出站绑定物理网络接口，用于避免把 Xray 自己发出的流量再次送回 TUN 造成回环。
+
+默认值为 `null`，即未配置。可填写具体接口名，也可填写 `"auto"` 让 Xray 自动选择。如果配置了 `autoSystemRoutingTable` 但未显式指定此项，Xray 会自动按 `"auto"` 处理。
+
 ## 使用提示
 
-目前 Xray 不会自动修改系统路由表，需要手动配置路由将数据导向创建的 TUN 接口，否则它只是个接口。
+如果未配置 `autoSystemRoutingTable`，仍需要手动配置路由将数据导向创建的 TUN 接口，否则它只是个接口。
+
+配置了 `gateway`、`dns`、`autoSystemRoutingTable` 和 `autoOutboundsInterface` 后，Xray 可以在支持的平台上自动完成一部分系统侧配置；如果你的平台尚未实现这些自动设置，或者需要更细粒度的策略路由，仍然需要配合系统工具手动处理。
 
 如果只想代理某一个或一些进程，Xray 路由系统中的进程名路由会十分有用。
 
 ::: warning
 注意可能的流量回环的问题，设置路由后可能将 Xray 发出的请求发回 Xray 造成回环！
-使用`sockopt` 中的 `interface` 绑定实际的物理网络接口来避免此问题。`ipconfig` (Windows) `ip a` (Linux) 将有助于找到你需要的接口名。
+优先使用 `autoOutboundsInterface` 避免此问题；如果你需要手动控制，也可以使用 `sockopt` 中的 `interface` 绑定实际的物理网络接口。`ipconfig` (Windows) `ip a` (Linux) 将有助于找到你需要的接口名。
 或者使用出站的 `sendThrough` 它直接在 OutboundObject 中可用，没有 sockOpt.interface 那么深的嵌套层级，这里需要使用的是网卡上的 IP，比如 192.168.1.2 （如你所见它的缺点是不能自动支持双栈，请按你出站的实际使用的 IP 选择）。
 :::
