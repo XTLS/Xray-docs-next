@@ -206,20 +206,12 @@ Its disadvantage is probably that [hand-writing configuration files] is a bit tr
          "tag": "proxy",
          "protocol": "vless",
          "settings": {
-           "vnext": [
-             {
-               "address": "a-name.yourdomain.com", // Replace with your real domain
-               "port": 443,
-               "users": [
-                 {
-                   "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid", // Consistent with server-side
-                   "flow": "xtls-rprx-vision",
-                   "encryption": "none",
-                   "level": 0
-                 }
-               ]
-             }
-           ]
+           "address": "a-name.yourdomain.com", // Replace with your real domain
+           "port": 443,
+           "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid", // Consistent with server-side
+           "flow": "xtls-rprx-vision",
+           "encryption": "none",
+           "level": 0
          },
          "streamSettings": {
            "network": "tcp",

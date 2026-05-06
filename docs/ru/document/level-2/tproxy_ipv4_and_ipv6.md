@@ -70,20 +70,12 @@
       "tag": "proxy",
       "protocol": "vless",
       "settings": {
-        "vnext": [
-          {
-            "address": "yourdomain.domain", // Замените на ваше доменное имя, также можно использовать IPv4- или IPv6-адрес.
-            "port": 443,
-            "users": [
-              {
-                "id": "uuid", // Введите UUID, который можно сгенерировать, выполнив команду xray uuid в терминале.
-                // Также поддерживаются произвольные строки (https://xtls.github.io/config/inbounds/vless.html#userobject).
-                "encryption": "none",
-                "flow": "xtls-rprx-vision"
-              }
-            ]
-          }
-        ]
+        "address": "yourdomain.domain", // Замените на ваше доменное имя, также можно использовать IPv4- или IPv6-адрес.
+        "port": 443,
+        "id": "uuid", // Введите UUID, который можно сгенерировать, выполнив команду xray uuid в терминале.
+        // Также поддерживаются произвольные строки (https://xtls.github.io/config/inbounds/vless.html#userobject).
+        "encryption": "none",
+        "flow": "xtls-rprx-vision"
       },
       "streamSettings": {
         "sockopt": {

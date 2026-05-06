@@ -176,47 +176,39 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 
 ```json
 {
-   "outbounds":[
-      {
-         "protocol":"wireguard",
-         "settings":{
-            "secretKey":"Секретный ключ",
-            "peers":[
-               {
-                  "publicKey":"Публичный ключ Warp",
-                  "endpoint":"engage.cloudflareclient.com:2408"
-               }
-            ],
-            "reserved":[0, 0, 0] // Вставьте reserved, если у вас есть.
-         },
-         "streamSettings":{
-            "sockopt":{
-               "dialerProxy":"proxy"
-            }
-         },
-         "tag":"wireguard-1"
+  "outbounds": [
+    {
+      "protocol": "wireguard",
+      "settings": {
+        "secretKey": "Секретный ключ",
+        "peers": [
+          {
+            "publicKey": "Публичный ключ Warp",
+            "endpoint": "engage.cloudflareclient.com:2408"
+          }
+        ],
+        "reserved": [0, 0, 0] // Вставьте reserved, если у вас есть.
       },
-      {
-         "tag":"proxy",
-         "protocol":"vmess",
-         "settings":{
-            "vnext":[
-               {
-                  "address":"IP-адрес",
-                  "port":Порт,
-                  "users":[
-                     {
-                        "id":"UUID",
-                        "security":"auto"
-                     }
-                  ]
-               }
-            ]
-         },
-         "streamSettings":{
-            "network":"tcp"
-         }
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "proxy"
+        }
+      },
+      "tag": "wireguard-1"
+    },
+    {
+      "tag": "proxy",
+      "protocol": "vmess",
+      "settings": {
+        "address": "IP-адрес",
+        "port": Порт,
+        "id": "UUID",
+        "security": "auto"
+      },
+      "streamSettings": {
+        "network": "tcp"
       }
-   ]
+    }
+  ]
 }
 ```

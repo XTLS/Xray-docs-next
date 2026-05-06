@@ -10,7 +10,7 @@ To configure more complex features, please refer to the detailed instructions in
 To avoid your traffic being decrypted,<br>
 You should use `xray uuid` or `uuidgen` to generate a unique UUID.<br>
 On the server side, put it in `inbounds[0].settings.users[0].id`.<br>
-On the client side, put it in `outbounds[0].settings.vnext[0].users[0].id`.<br>
+On the client side, put it in `outbounds[0].settings.id`.<br>
 :::
 
 ## Server Configuration
@@ -62,17 +62,9 @@ On your PC (or mobile phone), you need to run Xray with the following configurat
     {
       "protocol": "vmess",
       "settings": {
-        "vnext": [
-          {
-            "address": "server", // Server address. Please change to your own server IP or domain name.
-            "port": 10086, // Server port
-            "users": [
-              {
-                "id": "b831381d-6324-4d53-ad4f-8cda48b30811" // Remember to replace this field, generate using `xray uuid` or `uuidgen`
-              }
-            ]
-          }
-        ]
+        "address": "server", // Server address. Please change to your own server IP or domain name.
+        "port": 10086, // Server port
+        "id": "b831381d-6324-4d53-ad4f-8cda48b30811" // Remember to replace this field, generate using `xray uuid` or `uuidgen`
       }
     },
     {

@@ -170,47 +170,39 @@ Add the following to your existing routing rules:
 
 ```json
 {
-   "outbounds":[
-      {
-         "protocol":"wireguard",
-         "settings":{
-            "secretKey":"My_Private_Key",
-            "peers":[
-               {
-                  "publicKey":"Warp_Public_Key",
-                  "endpoint":"engage.cloudflareclient.com:2408"
-               }
-            ],
-            "reserved":[0, 0, 0] // If you have it, paste 'reserved' here
-         },
-         "streamSettings":{
-            "sockopt":{
-               "dialerProxy":"proxy"
-            }
-         },
-         "tag":"wireguard-1"
+  "outbounds": [
+    {
+      "protocol": "wireguard",
+      "settings": {
+        "secretKey": "My_Private_Key",
+        "peers": [
+          {
+            "publicKey": "Warp_Public_Key",
+            "endpoint": "engage.cloudflareclient.com:2408"
+          }
+        ],
+        "reserved": [0, 0, 0] // If you have it, paste 'reserved' here
       },
-      {
-         "tag":"proxy",
-         "protocol":"vmess",
-         "settings":{
-            "vnext":[
-               {
-                  "address":"My_Server_IP",
-                  "port":My_Port,
-                  "users":[
-                     {
-                        "id":"My_UUID",
-                        "security":"auto"
-                     }
-                  ]
-               }
-            ]
-         },
-         "streamSettings":{
-            "network":"tcp"
-         }
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "proxy"
+        }
+      },
+      "tag": "wireguard-1"
+    },
+    {
+      "tag": "proxy",
+      "protocol": "vmess",
+      "settings": {
+        "address": "My_Server_IP",
+        "port": My_Port,
+        "id": "My_UUID",
+        "security": "auto"
+      },
+      "streamSettings": {
+        "network": "tcp"
       }
-   ]
+    }
+  ]
 }
 ```

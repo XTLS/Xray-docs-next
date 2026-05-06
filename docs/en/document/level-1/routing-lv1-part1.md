@@ -82,20 +82,12 @@ The following outbound configuration example, in plain English, means: Data is s
       "tag": "proxy-out-vless",
       "protocol": "vless",
       "settings": {
-        "vnext": [
-          {
-            "address": "a-name.yourdomain.com",
-            "port": 443,
-            "users": [
-              {
-                "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid",
-                "flow": "xtls-rprx-vision",
-                "encryption": "none",
-                "level": 0
-              }
-            ]
-          }
-        ]
+        "address": "a-name.yourdomain.com",
+        "port": 443,
+        "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid",
+        "flow": "xtls-rprx-vision",
+        "encryption": "none",
+        "level": 0
       },
       "streamSettings": {
         "network": "tcp",

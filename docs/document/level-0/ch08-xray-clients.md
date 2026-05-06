@@ -208,20 +208,12 @@
          "tag": "proxy",
          "protocol": "vless",
          "settings": {
-           "vnext": [
-             {
-               "address": "a-name.yourdomain.com", // 替换成你的真实域名
-               "port": 443,
-               "users": [
-                 {
-                   "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid", // 和服务器端的一致
-                   "flow": "xtls-rprx-vision",
-                   "encryption": "none",
-                   "level": 0
-                 }
-               ]
-             }
-           ]
+           "address": "a-name.yourdomain.com", // 替换成你的真实域名
+           "port": 443,
+           "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid", // 和服务器端的一致
+           "flow": "xtls-rprx-vision",
+           "encryption": "none",
+           "level": 0
          },
          "streamSettings": {
            "network": "tcp",

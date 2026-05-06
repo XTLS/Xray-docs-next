@@ -207,20 +207,12 @@
           "tag": "proxy",
           "protocol": "vless",
           "settings": {
-            "vnext": [
-              {
-                "address": "sub.yourdomain.com", // Замените на доменное имя вашего сервера
-                "port": 443,
-                "users": [
-                  {
-                    "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid", // Должен совпадать с идентификатором на сервере
-                    "flow": "xtls-rprx-vision",
-                    "encryption": "none",
-                    "level": 0
-                  }
-                ]
-              }
-            ]
+            "address": "sub.yourdomain.com", // Замените на доменное имя вашего сервера
+            "port": 443,
+            "id": "uuiduuid-uuid-uuid-uuid-uuiduuiduuid", // Должен совпадать с идентификатором на сервере
+            "flow": "xtls-rprx-vision",
+            "encryption": "none",
+            "level": 0
           },
           "streamSettings": {
             "network": "tcp",

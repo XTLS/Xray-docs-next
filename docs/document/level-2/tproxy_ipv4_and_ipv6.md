@@ -68,19 +68,11 @@
       "tag": "proxy",
       "protocol": "vless",
       "settings": {
-        "vnext": [
-          {
-            "address": "yourdomain.domain", //改为你自己的域名，直接填写ipv4或ipv6地址也可以
-            "port": 443,
-            "users": [
-              {
-                "id": "uuid", //填写uuid，可通过在终端中输入 xray uuid 生成；此处也支持任意字符串（https://xtls.github.io/config/inbounds/vless.html#userobject）
-                "encryption": "none",
-                "flow": "xtls-rprx-vision"
-              }
-            ]
-          }
-        ]
+        "address": "yourdomain.domain", //改为你自己的域名，直接填写ipv4或ipv6地址也可以
+        "port": 443,
+        "id": "uuid", //填写uuid，可通过在终端中输入 xray uuid 生成；此处也支持任意字符串（https://xtls.github.io/config/inbounds/vless.html#userobject）
+        "encryption": "none",
+        "flow": "xtls-rprx-vision"
       },
       "streamSettings": {
         "sockopt": {

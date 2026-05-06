@@ -65,19 +65,11 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
       "tag": "proxy",
       "protocol": "vless",
       "settings": {
-        "vnext": [
-          {
-            "address": "Server_Domain",
-            "port": 443,
-            "users": [
-              {
-                "id": "UUID",
-                "flow": "xtls-rprx-vision",
-                "encryption": "none"
-              }
-            ]
-          }
-        ]
+        "address": "Server_Domain",
+        "port": 443,
+        "id": "UUID",
+        "flow": "xtls-rprx-vision",
+        "encryption": "none"
       },
       "streamSettings": {
         "network": "tcp",

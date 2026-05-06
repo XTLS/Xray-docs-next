@@ -191,18 +191,10 @@ WantedBy=multi-user.target
       "tag": "nginxtls",
       "protocol": "vless",
       "settings": {
-        "vnext": [
-          {
-            "address": "127.0.0.1",
-            "port": 6666,
-            "users": [
-              {
-                "id": "uuid",
-                "encryption": "none"
-              }
-            ]
-          }
-        ]
+        "address": "127.0.0.1",
+        "port": 6666,
+        "id": "uuid",
+        "encryption": "none"
       },
       "streamSettings": {
         "sockopt": {
