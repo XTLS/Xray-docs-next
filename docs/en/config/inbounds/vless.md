@@ -112,7 +112,7 @@ XTLS is only available under the following combinations:
 
 VLESS simplified reverse proxy configuration. It functions the same as the core's internal general reverse proxy but with simpler configuration.
 
-The presence of this item indicates that connections from this user can be used to establish a reverse proxy tunnel.
+The presence of this item indicates that connections from this user can be used to establish a reverse proxy tunnel, while disabling normal forward proxy usage.
 
 Current syntax:
 
