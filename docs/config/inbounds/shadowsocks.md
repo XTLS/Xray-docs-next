@@ -63,21 +63,21 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 - Shadowsocks 2022
 
-使用与 WireGuard 类似的预共享密钥作为密码。
+  使用与 WireGuard 类似的预共享密钥作为密码。
 
-使用 `openssl rand -base64 <长度>` 以生成与 shadowsocks-rust 兼容的密钥，长度取决于所使用的加密方法。
+  使用 `openssl rand -base64 <长度>` 以生成与 shadowsocks-rust 兼容的密钥，长度取决于所使用的加密方法。
 
-| 加密方法                      | 密钥长度 |
-| ----------------------------- | -------: |
-| 2022-blake3-aes-128-gcm       |       16 |
-| 2022-blake3-aes-256-gcm       |       32 |
-| 2022-blake3-chacha20-poly1305 |       32 |
+  | 加密方法                      | 密钥长度 |
+  | ----------------------------- | -------: |
+  | 2022-blake3-aes-128-gcm       |       16 |
+  | 2022-blake3-aes-256-gcm       |       32 |
+  | 2022-blake3-chacha20-poly1305 |       32 |
 
-在 Go 实现中，32 位密钥始终工作。
+  在 Go 实现中，32 位密钥始终工作。
 
 - 其他加密方法
 
-任意字符串。 不限制密码长度，但短密码会更可能被破解，建议使用 16 字符或更长的密码。
+  任意字符串。不限制密码长度，但短密码会更可能被破解，建议使用 16 字符或更长的密码。
 
 > `level`: number
 
@@ -87,6 +87,14 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 > `email`: string
 
 用户邮箱，用于区分不同用户的流量（日志、统计）。
+
+> `users`: \[ [UserObject](#userobject) \]
+
+一个数组，代表一组服务端认可的用户。
+
+其中每一项是一个用户 [UserObject](#userobject)。
+
+当存在此选项时，代表启用多用户模式。
 
 ## UserObject
 
@@ -99,12 +107,16 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 }
 ```
 
-当存在此选项时，代表启用多用户模式.
+> `method`: string
 
-当 InboundConfigurationObject 中的 `method` 不为SS2022选项时，可以在此为每个用户指定 `"method"`。(`"method"`中也仅支持非SS2022选项)与`"password"`(与此同时 InboundConfigurationObject 中的设置的 `"password"` 将会被忽略)。
+- 当 InboundConfigurationObject 中的 `method` 不为 SS2022 选项时，可以在此为每个用户指定 `"method"`。(`"method"`中也仅支持非 SS2022 选项) 与`"password"`(与此同时 InboundConfigurationObject 中的设置的 `"password"` 将会被忽略)。
 
-当 InboundConfigurationObject 中的 `method` 为SS2022选项时，出于安全考量，不再支持为单个用户设置 `"method"`，统一为 InboundConfigurationObject 所指定的`"method"`。
+- 当 InboundConfigurationObject 中的 `method` 为 SS2022 选项时，出于安全考量，不再支持为单个用户设置 `"method"`，统一为 InboundConfigurationObject 所指定的`"method"`。
 
-注意SS2022并不会像旧SS一样忽略上层 `"password"`, 客户端的正确密码写法应为, `ServerPassword:UserPassword`。如:`"password": "114514:1919810"`
+> `password`: string
 
-其余选项与 InboundConfigurationObject 中的含义一致。
+注意 SS2022 并不会像旧 SS 一样忽略上层 `"password"`, 客户端的正确密码写法应为, `ServerPassword:UserPassword`。如:`"password": "114514:1919810"`
+
+> 其余选项
+
+与 InboundConfigurationObject 中的含义一致。

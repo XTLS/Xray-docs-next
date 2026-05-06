@@ -63,21 +63,21 @@ Required.
 
 - Shadowsocks 2022
 
-Uses a pre-shared key similar to WireGuard as the password.
+  Uses a pre-shared key similar to WireGuard as the password.
 
-Use `openssl rand -base64 <length>` to generate a key compatible with shadowsocks-rust. The length depends on the encryption method used.
+  Use `openssl rand -base64 <length>` to generate a key compatible with shadowsocks-rust. The length depends on the encryption method used.
 
-| Encryption Method             | Key Length |
-| ----------------------------- | ---------: |
-| 2022-blake3-aes-128-gcm       |         16 |
-| 2022-blake3-aes-256-gcm       |         32 |
-| 2022-blake3-chacha20-poly1305 |         32 |
+  | Encryption Method             | Key Length |
+  | ----------------------------- | ---------: |
+  | 2022-blake3-aes-128-gcm       |         16 |
+  | 2022-blake3-aes-256-gcm       |         32 |
+  | 2022-blake3-chacha20-poly1305 |         32 |
 
-In the Go implementation, 32-byte keys always work.
+  In the Go implementation, 32-byte keys always work.
 
 - Other encryption methods
 
-Any string. There is no limit on password length, but short passwords are more likely to be cracked. It is recommended to use passwords of 16 characters or longer.
+  Any string. There is no limit on password length, but short passwords are more likely to be cracked. It is recommended to use passwords of 16 characters or longer.
 
 > `level`: number
 
@@ -87,6 +87,14 @@ The value of `level` corresponds to the `level` value in [policy](../policy.md#l
 > `email`: string
 
 User email, used to distinguish traffic from different users (logs, statistics).
+
+> `users`: [ [UserObject](#userobject) ]
+
+An array representing a group of users recognized by the server.
+
+Each item in the array is a [UserObject](#userobject).
+
+When this option exists, it indicates that multi-user mode is enabled.
 
 ## UserObject
 
@@ -99,12 +107,16 @@ User email, used to distinguish traffic from different users (logs, statistics).
 }
 ```
 
-When this option exists, it indicates that multi-user mode is enabled.
+> `method`: string
 
-When the `method` in `InboundConfigurationObject` is not an SS2022 option, you can specify `"method"` for each user here (only non-SS2022 options are supported in `"method"`) along with `"password"` (at the same time, the `"password"` set in `InboundConfigurationObject` will be ignored).
+- When the `method` in `InboundConfigurationObject` is not an SS2022 option, you can specify `"method"` for each user here (only non-SS2022 options are supported in `"method"`) together with `"password"` (in that case, the `"password"` set in `InboundConfigurationObject` will be ignored).
 
-When the `method` in `InboundConfigurationObject` is an SS2022 option, for security reasons, setting `"method"` for individual users is no longer supported. It is unified to the `"method"` specified in `InboundConfigurationObject`.
+- When the `method` in `InboundConfigurationObject` is an SS2022 option, for security reasons, setting `"method"` for individual users is no longer supported. It is unified to the `"method"` specified in `InboundConfigurationObject`.
+
+> `password`: string
 
 Note that SS2022 does not ignore the upper-level `"password"` like the old SS did. The correct password format for the client should be `ServerPassword:UserPassword`. For example: `"password": "114514:1919810"`.
 
-The remaining options have the same meaning as in `InboundConfigurationObject`.
+> Remaining options
+
+Have the same meaning as in `InboundConfigurationObject`.
