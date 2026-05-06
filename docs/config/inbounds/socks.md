@@ -13,7 +13,7 @@
 ```json
 {
   "auth": "noauth",
-  "accounts": [
+  "users": [
     {
       "user": "my-username",
       "pass": "my-password"
@@ -33,7 +33,7 @@ Socks 协议的认证方式，支持 `"noauth"` 匿名方式和 `"password"` 用
 
 默认值为 `"noauth"`。
 
-> `accounts`: \[ [AccountObject](#accountobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 一个数组，数组中每个元素为一个用户帐号。
 
@@ -61,7 +61,7 @@ Socks 协议的认证方式，支持 `"noauth"` 匿名方式和 `"password"` 用
 
 userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
 
-### AccountObject
+### UserObject
 
 ```json
 {

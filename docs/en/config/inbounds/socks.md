@@ -13,7 +13,7 @@ A more meaningful usage of `Socks` inbound is to listen within a LAN or on the l
 ```json
 {
   "auth": "noauth",
-  "accounts": [
+  "users": [
     {
       "user": "my-username",
       "pass": "my-password"
@@ -33,7 +33,7 @@ When using password, HTTP requests sent to this inbound will also require the sa
 
 Default value is `"noauth"`.
 
-> `accounts`: \[ [AccountObject](#accountobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 An array where each element is a user account.
 
@@ -61,7 +61,7 @@ User level. Connections will use the [Local Policy](../policy.md#levelpolicyobje
 
 The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, the default is 0.
 
-### AccountObject
+### UserObject
 
 ```json
 {

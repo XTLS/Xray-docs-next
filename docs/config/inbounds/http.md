@@ -23,7 +23,7 @@ HTTP 协议。
 
 ```json
 {
-  "accounts": [
+  "users": [
     {
       "user": "my-username",
       "pass": "my-password"
@@ -34,11 +34,11 @@ HTTP 协议。
 }
 ```
 
-> `accounts`: \[[AccountObject](#accountobject)\]
+> `users`: \[[UserObject](#userobject)\]
 
 一个数组，数组中每个元素为一个用户帐号。默认值为空。
 
-当 `accounts` 非空时，HTTP 代理将对入站连接进行 Basic Authentication 验证。
+当 `users` 非空时，HTTP 代理将对入站连接进行 Basic Authentication 验证。
 
 > `allowTransparent`: true | false
 
@@ -54,7 +54,7 @@ HTTP 协议。
 
 userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
 
-### AccountObject
+### UserObject
 
 ```json
 {

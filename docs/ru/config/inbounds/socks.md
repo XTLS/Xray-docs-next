@@ -13,7 +13,7 @@
 ```json
 {
   "auth": "noauth",
-  "accounts": [
+  "users": [
     {
       "user": "my-username",
       "pass": "my-password"
@@ -33,7 +33,7 @@
 
 Значение по умолчанию — `"noauth"`.
 
-> `accounts`: \[ [AccountObject](#accountobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 Массив, каждый элемент которого представляет собой учетную запись пользователя.
 
@@ -61,7 +61,7 @@
 
 Значение `userLevel` соответствует значению `level` в [policy](../policy.md#policyobject). Если не указано, по умолчанию используется значение `0`.
 
-### AccountObject
+### UserObject
 
 ```json
 {

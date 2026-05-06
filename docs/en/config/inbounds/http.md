@@ -23,7 +23,7 @@ Use the following environment variables in Linux to enable a global HTTP proxy f
 
 ```json
 {
-  "accounts": [
+  "users": [
     {
       "user": "my-username",
       "pass": "my-password"
@@ -34,11 +34,11 @@ Use the following environment variables in Linux to enable a global HTTP proxy f
 }
 ```
 
-> `accounts`: \[[AccountObject](#accountobject)\]
+> `users`: \[[UserObject](#userobject)\]
 
 An array where each element is a user account. Default value is empty.
 
-When `accounts` is not empty, the HTTP proxy will perform Basic Authentication on inbound connections.
+When `users` is not empty, the HTTP proxy will perform Basic Authentication on inbound connections.
 
 > `allowTransparent`: true | false
 
@@ -54,7 +54,7 @@ User level. Connections will use the [Local Policy](../policy.md#levelpolicyobje
 
 The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, the default is 0.
 
-### AccountObject
+### UserObject
 
 ```json
 {

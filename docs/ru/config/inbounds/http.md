@@ -23,7 +23,7 @@
 
 ```json
 {
-  "accounts": [
+  "users": [
     {
       "user": "my-username",
       "pass": "my-password"
@@ -34,11 +34,11 @@
 }
 ```
 
-> `accounts`: \[[AccountObject](#accountobject)\]
+> `users`: \[[UserObject](#userobject)\]
 
 Массив, каждый элемент которого представляет собой учетную запись пользователя. Значение по умолчанию: пустой массив.
 
-Если `accounts` не пуст, HTTP-прокси будет выполнять проверку подлинности Basic Authentication для входящих соединений.
+Если `users` не пуст, HTTP-прокси будет выполнять проверку подлинности Basic Authentication для входящих соединений.
 
 > `allowTransparent`: true | false
 
@@ -54,7 +54,7 @@
 
 Значение userLevel соответствует значению `level` в разделе [policy](../policy.md#policyobject). Если не указано, используется значение по умолчанию - 0.
 
-### AccountObject
+### UserObject
 
 ```json
 {
