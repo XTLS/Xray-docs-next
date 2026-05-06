@@ -111,7 +111,7 @@ Enable auto-start on boot:
       "listen": "/dev/shm/vless.sock,0666",
       "protocol": "vless",
       "settings": {
-        "clients": [
+        "users": [
           {
             "id": "uuid"
           }

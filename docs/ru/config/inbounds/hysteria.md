@@ -9,7 +9,7 @@
 ```json
 {
   "version": 2,
-  "clients": [
+  "users": [
     {
       "auth": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "level": 0,
@@ -23,11 +23,11 @@
 
 Версия Hysteria, должна быть равна 2.
 
-> `clients`: \[ [ClientObject](#clientobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 Массив, представляющий группу пользователей, одобренных сервером.
 
-### ClientObject
+### UserObject
 
 ```json
 {

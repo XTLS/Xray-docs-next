@@ -190,7 +190,7 @@ First, various configurations can refer to the [official VLESS configuration exa
           "port": 443,
           "protocol": "vless",
           "settings": {
-            "clients": [
+            "users": [
               {
                 "id": "", // Fill in your UUID
                 "flow": "xtls-rprx-vision",

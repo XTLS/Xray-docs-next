@@ -1,7 +1,7 @@
 # Hysteria
 
 ::: tip
-`hysteria protocol` 本身无认证，`clients` 仅在搭配 `hysteria` 传输层时生效
+`hysteria protocol` 本身无认证，`users` 仅在搭配 `hysteria` 传输层时生效
 :::
 
 ## InboundConfigurationObject
@@ -9,7 +9,7 @@
 ```json
 {
   "version": 2,
-  "clients": [
+  "users": [
     {
       "auth": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "level": 0,
@@ -23,11 +23,11 @@
 
 Hysteria 版本，必须为 2。
 
-> `clients`: \[ [ClientObject](#clientobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 一个数组，代表一组服务端认可的用户。
 
-### ClientObject
+### UserObject
 
 ```json
 {

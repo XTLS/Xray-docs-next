@@ -13,7 +13,7 @@
       "port": 443,
       "protocol": "vless",
       "settings": {
-        "clients": [
+        "users": [
           // ... ...
         ],
         "decryption": "none",
@@ -140,7 +140,7 @@
   "port": 443,
   "protocol": "vless",
   "settings": {
-    "clients": [
+    "users": [
       {
         "id": "", // 填写你的 UUID
         "flow": "xtls-rprx-vision",
@@ -235,7 +235,7 @@
      "listen": "127.0.0.1",
      "protocol": "trojan",
      "settings": {
-       "clients": [
+       "users": [
          {
            "password": "", // 填写你的密码
            "level": 0,
@@ -270,7 +270,7 @@
      "listen": "127.0.0.1",
      "protocol": "vless",
      "settings": {
-       "clients": [
+       "users": [
          {
            "id": "", // 填写你的 UUID
            "level": 0,
@@ -298,7 +298,7 @@
      "listen": "127.0.0.1",
      "protocol": "vmess",
      "settings": {
-       "clients": [
+       "users": [
          {
            "id": "", // 填写你的 UUID
            "level": 0,
@@ -336,7 +336,7 @@
      "listen": "127.0.0.1",
      "protocol": "vmess",
      "settings": {
-       "clients": [
+       "users": [
          {
            "id": "", // 填写你的 UUID
            "level": 0,

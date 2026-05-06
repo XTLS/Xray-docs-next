@@ -37,7 +37,7 @@ Hysteria 版本，必须为 2。
 
 Hysteria 认证密码，服务端和客户端需要保持一致。
 
-搭配 `hysteria inbound` 时将会被 `clients` 覆盖 (如果存在)
+搭配 `hysteria inbound` 时将会被 `users` 覆盖 (如果存在)
 
 > `udpIdleTimeout`: number
 

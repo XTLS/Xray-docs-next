@@ -77,7 +77,7 @@
             "users": [
               {
                 "id": "uuid", // Введите UUID, который можно сгенерировать, выполнив команду xray uuid в терминале.
-                // Также поддерживаются произвольные строки (https://xtls.github.io/config/inbounds/vless.html#clientobject).
+                // Также поддерживаются произвольные строки (https://xtls.github.io/config/inbounds/vless.html#userobject).
                 "encryption": "none",
                 "flow": "xtls-rprx-vision"
               }
@@ -226,7 +226,7 @@
       "port": 443,
       "protocol": "vless",
       "settings": {
-        "clients": [
+        "users": [
           {
             "id": "uuid", // Должен совпадать с UUID клиента.
             "flow": "xtls-rprx-vision"

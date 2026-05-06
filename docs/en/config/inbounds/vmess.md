@@ -10,7 +10,7 @@ VMess depends on system time. Please ensure that the system UTC time of the devi
 
 ```json
 {
-  "clients": [
+  "users": [
     {
       "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "level": 0,
@@ -23,19 +23,19 @@ VMess depends on system time. Please ensure that the system UTC time of the devi
 }
 ```
 
-> `clients`: \[ [ClientObject](#clientobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 An array representing a group of users accepted by the server.
 
-Each item is a [ClientObject](#clientobject).
+Each item is a [UserObject](#userobject).
 
 When this configuration is used for dynamic ports, Xray will automatically create users.
 
 > `default`: [DefaultObject](#defaultobject)
 
-Optional. Default configuration for clients. Only valid when used in conjunction with `detour`.
+Optional. Default configuration for `users`. Only valid when used in conjunction with `detour`.
 
-### ClientObject
+### UserObject
 
 ```json
 {

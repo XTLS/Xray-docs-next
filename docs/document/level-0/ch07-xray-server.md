@@ -196,7 +196,7 @@
           "port": 443,
           "protocol": "vless",
           "settings": {
-            "clients": [
+            "users": [
               {
                 "id": "", // 填写你的 UUID
                 "flow": "xtls-rprx-vision",

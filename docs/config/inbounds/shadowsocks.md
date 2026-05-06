@@ -37,7 +37,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
     "password": "114514",
     "level": 0,
     "email": "love@xray.com",
-    "clients": [
+    "users": [
       {
         "password": "1919810",
         "method": "aes-128-gcm"
@@ -88,7 +88,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 用户邮箱，用于区分不同用户的流量（日志、统计）。
 
-## ClientObject
+## UserObject
 
 ```json
 {

@@ -10,7 +10,7 @@ Trojan is designed to work over correctly configured encrypted TLS tunnels.
 
 ```json
 {
-  "clients": [
+  "users": [
     {
       "password": "password",
       "email": "love@xray.com",
@@ -25,11 +25,11 @@ Trojan is designed to work over correctly configured encrypted TLS tunnels.
 }
 ```
 
-> `clients`: \[ [ClientObject](#clientobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 An array representing a group of users accepted by the server.
 
-Each item is a [ClientObject](#clientobject).
+Each item is a [UserObject](#userobject).
 
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
@@ -41,7 +41,7 @@ Xray's Trojan has complete support for fallbacks, and the configuration method i
 The conditions for triggering fallback are also similar to VLESS: the length of the first packet < 58, OR the 57th byte is not `\r` (because Trojan has no protocol version), OR authentication fails.
 :::
 
-### ClientObject
+### UserObject
 
 ```json
 {
@@ -60,7 +60,7 @@ Required, any string.
 Email address, optional, used to identify the user.
 
 ::: danger
-If there are multiple ClientObjects, please note that emails must not be duplicated.
+If there are multiple UserObjects, please note that emails must not be duplicated.
 :::
 
 > `level`: number

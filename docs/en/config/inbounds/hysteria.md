@@ -1,7 +1,7 @@
 # Hysteria
 
 ::: tip
-The `hysteria protocol` itself has no authentication; `clients` only take effect when used with the `hysteria` transport layer.
+The `hysteria protocol` itself has no authentication; `users` only take effect when used with the `hysteria` transport layer.
 :::
 
 ## InboundConfigurationObject
@@ -9,7 +9,7 @@ The `hysteria protocol` itself has no authentication; `clients` only take effect
 ```json
 {
   "version": 2,
-  "clients": [
+  "users": [
     {
       "auth": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "level": 0,
@@ -23,11 +23,11 @@ The `hysteria protocol` itself has no authentication; `clients` only take effect
 
 Hysteria version, must be 2.
 
-> `clients`: \[ [ClientObject](#clientobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 An array representing a group of users approved by the server.
 
-### ClientObject
+### UserObject
 
 ```json
 {

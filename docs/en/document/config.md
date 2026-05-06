@@ -9,7 +9,7 @@ To configure more complex features, please refer to the detailed instructions in
 ::: danger
 To avoid your traffic being decrypted,<br>
 You should use `xray uuid` or `uuidgen` to generate a unique UUID.<br>
-On the server side, put it in `inbounds[0].settings.clients[0].id`.<br>
+On the server side, put it in `inbounds[0].settings.users[0].id`.<br>
 On the client side, put it in `outbounds[0].settings.vnext[0].users[0].id`.<br>
 :::
 
@@ -24,7 +24,7 @@ You need a server outside the firewall to run the server-side Xray. The configur
       "port": 10086, // Server listening port
       "protocol": "vmess",
       "settings": {
-        "clients": [
+        "users": [
           {
             "id": "b831381d-6324-4d53-ad4f-8cda48b30811" // Remember to replace this field, generate using `xray uuid` or `uuidgen`
           }

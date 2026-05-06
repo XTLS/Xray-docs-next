@@ -10,7 +10,7 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 ```json
 {
-  "clients": [
+  "users": [
     {
       "password": "password",
       "email": "love@xray.com",
@@ -25,11 +25,11 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 }
 ```
 
-> `clients`: \[ [ClientObject](#clientobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 一个数组，代表一组服务端认可的用户.
 
-其中每一项是一个用户 [ClientObject](#clientobject)。
+其中每一项是一个用户 [UserObject](#userobject)。
 
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
@@ -41,7 +41,7 @@ Xray 的 Trojan 有完整的 fallbacks 支持，配置方式完全一致。
 触发回落的条件也与 VLESS 类似：首包长度 < 58 或第 57 个字节不为 `\r`（因为 Trojan 没有协议版本）或身份认证失败。
 :::
 
-### ClientObject
+### UserObject
 
 ```json
 {
@@ -60,7 +60,7 @@ Xray 的 Trojan 有完整的 fallbacks 支持，配置方式完全一致。
 邮件地址，可选，用于标识用户
 
 ::: danger
-如果存在多个 ClientObject, 请注意 email 不可以重复。
+如果存在多个 UserObject, 请注意 email 不可以重复。
 :::
 
 > `level`: number

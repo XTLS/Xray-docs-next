@@ -74,7 +74,7 @@
             "port": 443,
             "users": [
               {
-                "id": "uuid", //填写uuid，可通过在终端中输入 xray uuid 生成；此处也支持任意字符串（https://xtls.github.io/config/inbounds/vless.html#clientobject）
+                "id": "uuid", //填写uuid，可通过在终端中输入 xray uuid 生成；此处也支持任意字符串（https://xtls.github.io/config/inbounds/vless.html#userobject）
                 "encryption": "none",
                 "flow": "xtls-rprx-vision"
               }
@@ -220,7 +220,7 @@
       "port": 443,
       "protocol": "vless",
       "settings": {
-        "clients": [
+        "users": [
           {
             "id": "uuid", //与客户端相同
             "flow": "xtls-rprx-vision"

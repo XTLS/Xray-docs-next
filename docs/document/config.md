@@ -9,7 +9,7 @@
 ::: danger
 为了避免你的流量被解密，<br>
 你应该使用 `xray uuid` 或 `uuidgen` 生成一个独一无二的uuid <br>
-在服务端上，放入 `inbounds[0].settings.clients[0].id` 内 <br>
+在服务端上，放入 `inbounds[0].settings.users[0].id` 内 <br>
 在客户端内，放入 `outbounds[0].settings.vnext[0].users[0].id` 内 <br>
 :::
 
@@ -24,7 +24,7 @@
       "port": 10086, // 服务器监听端口
       "protocol": "vmess",
       "settings": {
-        "clients": [
+        "users": [
           {
             "id": "b831381d-6324-4d53-ad4f-8cda48b30811" // 记得替换这个字段，使用 `xray uuid` 或 `uuidgen` 生成
           }

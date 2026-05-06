@@ -13,7 +13,7 @@ If you used the [Xray Configuration](../level-0/ch07-xray-server.md#_7-4-configu
       "port": 443,
       "protocol": "vless",
       "settings": {
-        "clients": [
+        "users": [
           // ... ...
         ],
         "decryption": "none",
@@ -140,7 +140,7 @@ Now that you understand what the [Perfect Form of Fallback] is, you can get your
   "port": 443,
   "protocol": "vless",
   "settings": {
-    "clients": [
+    "users": [
       {
         "id": "", // Fill in your UUID
         "flow": "xtls-rprx-vision",
@@ -235,7 +235,7 @@ How do we explain this configuration in plain language?
      "listen": "127.0.0.1",
      "protocol": "trojan",
      "settings": {
-       "clients": [
+       "users": [
          {
            "password": "", // Fill in your password
            "level": 0,
@@ -270,7 +270,7 @@ How do we explain this configuration in plain language?
      "listen": "127.0.0.1",
      "protocol": "vless",
      "settings": {
-       "clients": [
+       "users": [
          {
            "id": "", // Fill in your UUID
            "level": 0,
@@ -298,7 +298,7 @@ How do we explain this configuration in plain language?
      "listen": "127.0.0.1",
      "protocol": "vmess",
      "settings": {
-       "clients": [
+       "users": [
          {
            "id": "", // Fill in your UUID
            "level": 0,
@@ -336,7 +336,7 @@ How do we explain this configuration in plain language?
      "listen": "127.0.0.1",
      "protocol": "vmess",
      "settings": {
-       "clients": [
+       "users": [
          {
            "id": "", // Fill in your UUID
            "level": 0,

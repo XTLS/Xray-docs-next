@@ -80,7 +80,7 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
       "port": 443,
       "protocol": "vless",
       "settings": {
-        "clients": [
+        "users": [
           {
             "id": "UUID",
             "flow": "xtls-rprx-vision"
@@ -135,7 +135,7 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
       "port": 5000,
       "protocol": "vmess",
       "settings": {
-        "clients": [
+        "users": [
           {
             "id": "UUID"
           }

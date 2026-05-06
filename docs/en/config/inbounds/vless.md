@@ -8,7 +8,7 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
 
 ```json
 {
-  "clients": [
+  "users": [
     {
       "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
       "level": 0,
@@ -26,11 +26,11 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
 }
 ```
 
-> `clients`: \[ [ClientObject](#clientobject) \]
+> `users`: \[ [UserObject](#userobject) \]
 
 An array representing a group of users approved by the server.
 
-Each item is a user [ClientObject](#clientobject).
+Each item is a user [UserObject](#userobject).
 
 > `decryption`: "none"
 
@@ -58,7 +58,7 @@ The last block is identified by the core as the parameter used to authenticate t
 An array containing a series of powerful fallback distribution configurations (optional).
 For specific fallback configurations, please click [FallbackObject](../features/fallback.md#fallbacks-configuration).
 
-### ClientObject
+### UserObject
 
 ```json
 {

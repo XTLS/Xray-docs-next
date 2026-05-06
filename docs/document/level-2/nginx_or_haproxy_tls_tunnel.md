@@ -112,7 +112,7 @@ WantedBy=multi-user.target
       "listen": "/dev/shm/vless.sock,0666",
       "protocol": "vless",
       "settings": {
-        "clients": [
+        "users": [
           {
             "id": "uuid"
           }

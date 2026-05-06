@@ -37,7 +37,7 @@ Under the "none" encryption method, traffic will be transmitted in plain text. T
     "password": "114514",
     "level": 0,
     "email": "love@xray.com",
-    "clients": [
+    "users": [
       {
         "password": "1919810",
         "method": "aes-128-gcm"
@@ -88,7 +88,7 @@ The value of `level` corresponds to the `level` value in [policy](../policy.md#l
 
 User email, used to distinguish traffic from different users (logs, statistics).
 
-## ClientObject
+## UserObject
 
 ```json
 {
