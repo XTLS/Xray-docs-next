@@ -113,7 +113,7 @@ Linux 使用`Netfilter`来管理网络，`Netfilter`模型如下：
       "port": 12345,
       "protocol": "dokodemo-door",
       "settings": {
-        "network": "tcp,udp",
+        "allowedNetwork": "tcp,udp",
         "followRedirect": true
       },
       "streamSettings": {

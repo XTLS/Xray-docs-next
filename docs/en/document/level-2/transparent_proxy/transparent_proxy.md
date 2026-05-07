@@ -113,7 +113,7 @@ The configuration file should listen on port 12345 and enable tproxy:
       "port": 12345,
       "protocol": "dokodemo-door",
       "settings": {
-        "network": "tcp,udp",
+        "allowedNetwork": "tcp,udp",
         "followRedirect": true
       },
       "streamSettings": {

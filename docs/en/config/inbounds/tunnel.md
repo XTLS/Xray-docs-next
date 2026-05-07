@@ -6,34 +6,34 @@ Tunnel, formerly known as dokodemo-door (Arbitrary Door), can listen on multiple
 
 ```json
 {
-  "address": "8.8.8.8",
-  "port": 53,
+  "allowedNetwork": "tcp",
+  "rewriteAddress": "8.8.8.8",
+  "rewritePort": 53,
   "portMap": {
     "5555": "1.1.1.1:7777",
     "5556": ":8888", // overrides port only
     "5557": "example.com:" // overrides address only
   },
-  "network": "tcp",
   "followRedirect": false,
   "userLevel": 0
 }
 ```
 
-> `address`: address
+> `allowedNetwork`: "tcp" | "udp" | "tcp,udp"
+
+Accepted network protocol types. For example, when specified as `"tcp"`, only TCP traffic will be received. Default value is `"tcp"`.
+
+> `rewriteAddress`: address
 
 Forward traffic to this address. It can be an IP address, like `"1.2.3.4"`, or a domain name, like `"xray.com"`. String type, defaults to `"localhost"`.
 
-> `port`: number
+> `rewritePort`: number
 
 Forward traffic to the specified port of the target address. Range \[0, 65535\], numeric type. If omitted or 0, it defaults to the listening port.
 
 > `portMap`: map[string]string
 
-A map mapping local ports to required remote addresses/ports (if the inbound listens on multiple ports). If the local port is not included in this map, it is handled according to the `address`/`port` settings.
-
-> `network`: "tcp" | "udp" | "tcp,udp"
-
-Accepted network protocol types. For example, when specified as `"tcp"`, only TCP traffic will be received. Default value is `"tcp"`.
+A map mapping local ports to required remote addresses/ports (if the inbound listens on multiple ports). If the local port is not included in this map, it is handled according to the `rewriteAddress`/`rewritePort` settings.
 
 > `followRedirect`: true | false
 
@@ -61,9 +61,9 @@ For example, the following Config (assuming the default outbound is a valid prox
   "port": 25565,
   "protocol": "tunnel",
   "settings": {
-    "address": "mc.hypixel.net",
-    "port": 25565,
-    "network": "tcp",
+    "allowedNetwork": "tcp",
+    "rewriteAddress": "mc.hypixel.net",
+    "rewritePort": 25565,
     "followRedirect": false,
     "userLevel": 0
   },

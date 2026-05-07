@@ -212,9 +212,9 @@ inbound:
   "port": 80,
   "protocol": "dokodemo-door",
   "settings": {
-    "address": "127.0.0.1",
-    "port": 80,
-    "network": "tcp"
+    "allowedNetwork": "tcp",
+    "rewriteAddress": "127.0.0.1",
+    "rewritePort": 80
   }
 }
 ```

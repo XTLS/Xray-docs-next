@@ -54,7 +54,7 @@ API 服务监听的 IP 和端口。这是一个可选配置项。
     "port": 10085,
     "protocol": "dokodemo-door",
     "settings": {
-      "address": "127.0.0.1"
+      "rewriteAddress": "127.0.0.1"
     },
     "tag": "api"
   }

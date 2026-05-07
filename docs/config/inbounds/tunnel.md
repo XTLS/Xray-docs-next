@@ -6,34 +6,34 @@ Tunnel（隧道），旧称 dokodemo-door（任意门），可以监听数个本
 
 ```json
 {
-  "address": "8.8.8.8",
-  "port": 53,
+  "allowedNetwork": "tcp",
+  "rewriteAddress": "8.8.8.8",
+  "rewritePort": 53,
   "portMap": {
     "5555": "1.1.1.1:7777",
     "5556": ":8888", // overrides port only
     "5557": "example.com:" // overrides address only
   },
-  "network": "tcp",
   "followRedirect": false,
   "userLevel": 0
 }
 ```
 
-> `address`: address
+> `allowedNetwork`: "tcp" | "udp" | "tcp,udp"
+
+可接收的网络协议类型。比如当指定为 `"tcp"` 时，仅会接收 TCP 流量。默认值为 `"tcp"`。
+
+> `rewriteAddress`: address
 
 将流量转发到此地址。可以是一个 IP 地址，形如 `"1.2.3.4"`，或者一个域名，形如 `"xray.com"`。字符串类型，默认为 `"localhost"`.
 
-> `port`: number
+> `rewritePort`: number
 
 将流量转发到目标地址的指定端口，范围 \[0, 65535\]，数值类型。不填或者为 0 时默认为监听端口。
 
 > `portMap`: map[string]string
 
-一个map, 映射本地端口和需要的远程地址/端口(如果 inbound 监听了数个端口), 如果本地端口未包含在其中则按 `address`/`port` 设置处理。
-
-> `network`: "tcp" | "udp" | "tcp,udp"
-
-可接收的网络协议类型。比如当指定为 `"tcp"` 时，仅会接收 TCP 流量。默认值为 `"tcp"`。
+一个map, 映射本地端口和需要的远程地址/端口(如果 inbound 监听了数个端口), 如果本地端口未包含在其中则按 `rewriteAddress`/`rewritePort` 设置处理。
 
 > `followRedirect`: true | false
 
@@ -61,9 +61,9 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
   "port": 25565,
   "protocol": "tunnel",
   "settings": {
-    "address": "mc.hypixel.net",
-    "port": 25565,
-    "network": "tcp",
+    "allowedNetwork": "tcp",
+    "rewriteAddress": "mc.hypixel.net",
+    "rewritePort": 25565,
     "followRedirect": false,
     "userLevel": 0
   },

@@ -54,7 +54,7 @@ You can add an `api` inbound in the `inbounds` configuration:
     "port": 10085,
     "protocol": "dokodemo-door",
     "settings": {
-      "address": "127.0.0.1"
+      "rewriteAddress": "127.0.0.1"
     },
     "tag": "api"
   }

@@ -96,7 +96,7 @@ Configure Xray `dokodemo-door` to listen on port 12345, enable `followRedirect` 
       "port": 12345,
       "protocol": "dokodemo-door",
       "settings": {
-        "network": "tcp,udp",
+        "allowedNetwork": "tcp,udp",
         "followRedirect": true
       },
       "streamSettings": {

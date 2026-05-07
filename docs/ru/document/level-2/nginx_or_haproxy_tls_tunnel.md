@@ -161,7 +161,7 @@ WantedBy=multi-user.target
       "port": 12345,
       "protocol": "dokodemo-door",
       "settings": {
-        "network": "tcp,udp",
+        "allowedNetwork": "tcp,udp",
         "followRedirect": true
       },
       "sniffing": {

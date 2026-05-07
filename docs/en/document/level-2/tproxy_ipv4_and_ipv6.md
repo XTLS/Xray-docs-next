@@ -36,7 +36,7 @@ If the Xray program is not installed on the side router, you can manually downlo
       "port": 12345,
       "protocol": "dokodemo-door",
       "settings": {
-        "network": "tcp,udp",
+        "allowedNetwork": "tcp,udp",
         "followRedirect": true
       },
       "sniffing": {

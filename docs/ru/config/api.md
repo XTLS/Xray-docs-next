@@ -58,7 +58,7 @@ IP-адрес и порт, на котором прослушивает API-се
     "port": 10085,
     "protocol": "dokodemo-door",
     "settings": {
-      "address": "127.0.0.1"
+      "rewriteAddress": "127.0.0.1"
     },
     "tag": "api"
   }

@@ -6,36 +6,36 @@
 
 ```json
 {
-  "address": "8.8.8.8",
-  "port": 53,
+  "allowedNetwork": "tcp",
+  "rewriteAddress": "8.8.8.8",
+  "rewritePort": 53,
   "portMap": {
     "5555": "1.1.1.1:7777",
     "5556": ":8888", // overrides port only
     "5557": "example.com:" // overrides address only
   },
-  "network": "tcp",
   "followRedirect": false,
   "userLevel": 0
 }
 ```
 
-> `address`: address
+> `allowedNetwork`: "tcp" | "udp" | "tcp,udp"
+
+Поддерживаемые типы сетевых протоколов. Например, если указано `"tcp"`, то будет приниматься только трафик TCP. Значение по умолчанию: `"tcp"`.
+
+> `rewriteAddress`: address
 
 Перенаправлять трафик на этот адрес. Может быть IP-адресом, например, `"1.2.3.4"`, или доменным именем, например, `"xray.com"`, по умолчанию `"localhost"`.
 
-Если `followRedirect` (см. ниже) равно `true`, то `address` может быть пустым.
+Если `followRedirect` (см. ниже) равно `true`, то `rewriteAddress` может быть пустым.
 
-> `port`: number
+> `rewritePort`: number
 
 Перенаправляет трафик на указанный порт целевого адреса, диапазон `[0, 65535]`, числовой тип. Если не заполнено или равно `0`, по умолчанию используется порт прослушиваемого адреса.
 
 > `portMap`: map[string]string
 
-Представляет собой `map`, который сопоставляет локальные порты с требуемыми удаленными адресами/портами (в случае, если `inbound` прослушивает несколько портов). Если локальный порт не указан в этом `map`, обработка будет производиться в соответствии с настройками `address`/`port`.
-
-> `network`: "tcp" | "udp" | "tcp,udp"
-
-Поддерживаемые типы сетевых протоколов. Например, если указано `"tcp"`, то будет приниматься только трафик TCP. Значение по умолчанию: `"tcp"`.
+Представляет собой `map`, который сопоставляет локальные порты с требуемыми удаленными адресами/портами (в случае, если `inbound` прослушивает несколько портов). Если локальный порт не указан в этом `map`, обработка будет производиться в соответствии с настройками `rewriteAddress`/`rewritePort`.
 
 > `followRedirect`: true | false
 
@@ -63,9 +63,9 @@
   "port": 25565,
   "protocol": "tunnel",
   "settings": {
-    "address": "mc.hypixel.net",
-    "port": 25565,
-    "network": "tcp",
+    "allowedNetwork": "tcp",
+    "rewriteAddress": "mc.hypixel.net",
+    "rewritePort": 25565,
     "followRedirect": false,
     "userLevel": 0
   },
