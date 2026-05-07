@@ -12,24 +12,28 @@ FakeDNS may pollute the local DNS cache, causing "no network access" after Xray 
 
 ```json
 {
-  "ipPool": "198.18.0.0/16",
-  "poolSize": 65535
+  "fakedns": {
+    "ipPool": "198.18.0.0/16",
+    "poolSize": 65535
+  }
 }
 ```
 
 `FakeDnsObject` can also be configured as an array containing multiple FakeIP Pools. When a DNS query request is received, FakeDNS will return a set of FakeIPs derived from multiple FakeIP Pools simultaneously.
 
 ```json
-[
-  {
-    "ipPool": "198.18.0.0/15",
-    "poolSize": 65535
-  },
-  {
-    "ipPool": "fc00::/18",
-    "poolSize": 65535
-  }
-]
+{
+  "fakedns": [
+    {
+      "ipPool": "198.18.0.0/15",
+      "poolSize": 65535
+    },
+    {
+      "ipPool": "fc00::/18",
+      "poolSize": 65535
+    }
+  ]
+}
 ```
 
 > `ipPool`: CIDR
@@ -50,24 +54,28 @@ If `fakedns` is set in the `dns` item of the configuration file but `FakeDnsObje
 When `queryStrategy` is `UseIP`, the initialized FakeIP Pool is equivalent to:
 
 ```json
-[
-  {
-    "ipPool": "198.18.0.0/15",
-    "poolSize": 32768
-  },
-  {
-    "ipPool": "fc00::/18",
-    "poolSize": 32768
-  }
-]
+{
+  "fakedns": [
+    {
+      "ipPool": "198.18.0.0/15",
+      "poolSize": 32768
+    },
+    {
+      "ipPool": "fc00::/18",
+      "poolSize": 32768
+    }
+  ]
+}
 ```
 
 When `queryStrategy` is `UseIPv4`, the initialized FakeIP Pool is equivalent to:
 
 ```json
 {
-  "ipPool": "198.18.0.0/15",
-  "poolSize": 65535
+  "fakedns": {
+    "ipPool": "198.18.0.0/15",
+    "poolSize": 65535
+  }
 }
 ```
 
@@ -75,8 +83,10 @@ When `queryStrategy` is `UseIPv6`, the initialized FakeIP Pool is equivalent to:
 
 ```json
 {
-  "ipPool": "fc00::/18",
-  "poolSize": 65535
+  "fakedns": {
+    "ipPool": "fc00::/18",
+    "poolSize": 65535
+  }
 }
 ```
 
@@ -105,7 +115,7 @@ It only works when DNS queries are routed to FakeDNS.
   "routing": {
     "rules": [
       {
-        "inboundTag": ["dns-in"], // Hijack DNS traffic from DNS query entry points, or hijack DNS traffic from transparent proxy inbounds.
+        "inboundTag": ["xxx"], // Hijack DNS traffic from DNS query entry points, or hijack DNS traffic from transparent proxy inbounds.
         "port": 53,
         "outboundTag": "dns-out"
       }
@@ -119,10 +129,18 @@ When an external DNS request enters the FakeDNS component, it returns an IP addr
 Additionally, you need to enable `Sniffing` on the inbound of the **client** that receives traffic to be proxied, and use `fakedns` for destination address resetting.
 
 ```json
-"sniffing": {
-  "enabled": true,
-  "destOverride": ["fakedns"], // Use "fakedns", or combine with other sniffers
-  "metadataOnly": false        // When this is true, destOverride can only use fakedns
+{
+  "inbounds": [
+    {
+      // ...
+      // [!code focus:5]
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["fakedns"], // Use "fakedns", or combine with other sniffers
+        "metadataOnly": false // When this is true, destOverride can only use fakedns
+      }
+    }
+  ]
 }
 ```
 
@@ -138,26 +156,29 @@ When using DNS routing (traffic splitting), to ensure `fakedns` has high priorit
 
 ```json
 {
-  "servers": [
-    {
-      "address": "fakedns",
-      "domains": [
-        // Consistent with the content used for routing below
-        "geosite:cn",
-        "domain:example.com"
-      ]
-    },
-    {
-      "address": "1.2.3.4",
-      "domains": ["geosite:cn"],
-      "expectIPs": ["geoip:cn"]
-    },
-    {
-      "address": "1.1.1.1",
-      "domains": ["domain:example.com"]
-    },
-    "8.8.8.8"
-  ]
+  "dns": {
+    "servers": [
+      // [!code focus:13]
+      {
+        "address": "fakedns",
+        "domains": [
+          // Consistent with the content used for routing below
+          "geosite:cn",
+          "domain:example.com"
+        ]
+      },
+      {
+        "address": "1.2.3.4",
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      {
+        "address": "1.1.1.1",
+        "domains": ["domain:example.com"]
+      },
+      "8.8.8.8"
+    ]
+  }
 }
 ```
 
@@ -167,13 +188,15 @@ If you do not want certain domains to use FakeDNS, you can add `domains` configu
 
 ```json
 {
-  "servers": [
-    "fakedns",
-    {
-      "address": "1.2.3.4",
-      "domains": ["domain:do-not-use-fakedns.com"]
-    }
-  ]
+  "dns": {
+    "servers": [
+      "fakedns",
+      {
+        "address": "1.2.3.4",
+        "domains": ["domain:do-not-use-fakedns.com"]
+      }
+    ]
+  }
 }
 ```
 
@@ -183,12 +206,14 @@ If you want only certain domains to use FakeDNS, you can add `domains` configura
 
 ```json
 {
-  "servers": [
-    "1.2.3.4",
-    {
-      "address": "fakedns",
-      "domains": ["domain:only-this-use-fakedns.com"]
-    }
-  ]
+  "dns": {
+    "servers": [
+      "1.2.3.4",
+      {
+        "address": "fakedns",
+        "domains": ["domain:only-this-use-fakedns.com"]
+      }
+    ]
+  }
 }
 ```

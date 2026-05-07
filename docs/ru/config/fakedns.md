@@ -12,8 +12,10 @@ FakeDNS может загрязнить локальный DNS-кэш, что м
 
 ```json
 {
-  "ipPool": "198.18.0.0/16",
-  "poolSize": 65535
+  "fakedns": {
+    "ipPool": "198.18.0.0/16",
+    "poolSize": 65535
+  }
 }
 ```
 
@@ -21,16 +23,18 @@ FakeDNS может загрязнить локальный DNS-кэш, что м
 При получении DNS-запроса FakeDNS вернет набор FakeIP, полученных из нескольких пулов FakeIP.
 
 ```json
-[
-  {
-    "ipPool": "198.18.0.0/15",
-    "poolSize": 65535
-  },
-  {
-    "ipPool": "fc00::/18",
-    "poolSize": 65535
-  }
-]
+{
+  "fakedns": [
+    {
+      "ipPool": "198.18.0.0/15",
+      "poolSize": 65535
+    },
+    {
+      "ipPool": "fc00::/18",
+      "poolSize": 65535
+    }
+  ]
+}
 ```
 
 > `ipPool`: CIDR
@@ -53,24 +57,28 @@ FakeDNS будет использовать этот блок IP-адресов 
 Если `queryStrategy` равен `UseIP`, инициализированный пул FakeIP будет эквивалентен:
 
 ```json
-[
-  {
-    "ipPool": "198.18.0.0/15",
-    "poolSize": 32768
-  },
-  {
-    "ipPool": "fc00::/18",
-    "poolSize": 32768
-  }
-]
+{
+  "fakedns": [
+    {
+      "ipPool": "198.18.0.0/15",
+      "poolSize": 32768
+    },
+    {
+      "ipPool": "fc00::/18",
+      "poolSize": 32768
+    }
+  ]
+}
 ```
 
 Если `queryStrategy` равен `UseIPv4`, инициализированный пул FakeIP будет эквивалентен:
 
 ```json
 {
-  "ipPool": "198.18.0.0/15",
-  "poolSize": 65535
+  "fakedns": {
+    "ipPool": "198.18.0.0/15",
+    "poolSize": 65535
+  }
 }
 ```
 
@@ -78,8 +86,10 @@ FakeDNS будет использовать этот блок IP-адресов 
 
 ```json
 {
-  "ipPool": "fc00::/18",
-  "poolSize": 65535
+  "fakedns": {
+    "ipPool": "fc00::/18",
+    "poolSize": 65535
+  }
 }
 ```
 
@@ -108,7 +118,7 @@ FakeDNS будет использовать этот блок IP-адресов 
   "routing": {
     "rules": [
       {
-        "inboundTag": ["dns-in"], // Перехват DNS-трафика, поступающего от DNS-входа или от входящего подключения прозрачного прокси.
+        "inboundTag": ["xxx"], // Перехват DNS-трафика, поступающего от DNS-входа или от входящего подключения прозрачного прокси.
         "port": 53,
         "outboundTag": "dns-out"
       }
@@ -122,10 +132,18 @@ FakeDNS будет использовать этот блок IP-адресов 
 Кроме того, вам нужно включить `Sniffing` во входящем подключении, которое принимает трафик, который нужно проксировать, и использовать `fakedns` для замены целевого адреса **на стороне клиента**.
 
 ```json
-"sniffing": {
-  "enabled": true,
-  "destOverride": ["fakedns"], // Используйте "fakedns" или в сочетании с другими снифферами.
-  "metadataOnly": false        // Если этот параметр равен true, то в destOverride можно использовать только fakedns.
+{
+  "inbounds": [
+    {
+      // ...
+      // [!code focus:5]
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["fakedns"], // Используйте "fakedns" или в сочетании с другими снифферами.
+        "metadataOnly": false // Если этот параметр равен true, то в destOverride можно использовать только fakedns.
+      }
+    }
+  ]
 }
 ```
 
@@ -141,26 +159,29 @@ FakeDNS будет использовать этот блок IP-адресов 
 
 ```json
 {
-  "servers": [
-    {
-      "address": "fakedns",
-      "domains": [
-        // То же самое, что и в разделе разделения DNS ниже.
-        "geosite:cn",
-        "domain:example.com"
-      ]
-    },
-    {
-      "address": "1.2.3.4",
-      "domains": ["geosite:cn"],
-      "expectIPs": ["geoip:cn"]
-    },
-    {
-      "address": "1.1.1.1",
-      "domains": ["domain:example.com"]
-    },
-    "8.8.8.8"
-  ]
+  "dns": {
+    "servers": [
+      // [!code focus:13]
+      {
+        "address": "fakedns",
+        "domains": [
+          // То же самое, что и в разделе разделения DNS ниже.
+          "geosite:cn",
+          "domain:example.com"
+        ]
+      },
+      {
+        "address": "1.2.3.4",
+        "domains": ["geosite:cn"],
+        "expectIPs": ["geoip:cn"]
+      },
+      {
+        "address": "1.1.1.1",
+        "domains": ["domain:example.com"]
+      },
+      "8.8.8.8"
+    ]
+  }
 }
 ```
 
@@ -170,13 +191,15 @@ FakeDNS будет использовать этот блок IP-адресов 
 
 ```json
 {
-  "servers": [
-    "fakedns",
-    {
-      "address": "1.2.3.4",
-      "domains": ["domain:do-not-use-fakedns.com"]
-    }
-  ]
+  "dns": {
+    "servers": [
+      "fakedns",
+      {
+        "address": "1.2.3.4",
+        "domains": ["domain:do-not-use-fakedns.com"]
+      }
+    ]
+  }
 }
 ```
 
@@ -186,12 +209,14 @@ FakeDNS будет использовать этот блок IP-адресов 
 
 ```json
 {
-  "servers": [
-    "1.2.3.4",
-    {
-      "address": "fakedns",
-      "domains": ["domain:only-this-use-fakedns.com"]
-    }
-  ]
+  "dns": {
+    "servers": [
+      "1.2.3.4",
+      {
+        "address": "fakedns",
+        "domains": ["domain:only-this-use-fakedns.com"]
+      }
+    ]
+  }
 }
 ```
