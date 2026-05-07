@@ -216,7 +216,11 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           text: "通过 Cloudflare Warp 增强代理安全性",
           link: "/document/level-2/warp.md"
         },
-        { text: "流量统计", link: "/document/level-2/traffic_stats.md" }
+        { text: "流量统计", link: "/document/level-2/traffic_stats.md" },
+        {
+          text: "VLESS 反向代理",
+          link: "/document/level-2/vless_reverse.md"
+        }
       ]
     }
   ],
