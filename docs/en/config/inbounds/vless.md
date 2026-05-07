@@ -6,6 +6,8 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

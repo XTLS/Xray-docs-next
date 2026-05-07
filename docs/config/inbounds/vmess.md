@@ -8,6 +8,8 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` 对应 [`InboundObject`](../inbound.md) 中的 `settings` 项。
+
 ```json
 {
   "inbounds": [

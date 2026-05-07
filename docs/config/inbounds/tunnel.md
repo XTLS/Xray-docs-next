@@ -4,6 +4,8 @@ Tunnel（隧道），旧称 dokodemo-door（任意门），可以监听数个本
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` 对应 [`InboundObject`](../inbound.md) 中的 `settings` 项。
+
 ```json
 {
   "inbounds": [

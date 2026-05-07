@@ -2,15 +2,17 @@
 
 A more direct (and hopefully better) way to export statistics.
 
-## Relevant Configuration
+## MetricsObject
 
-Add `metrics` to the basic configuration:
+`MetricsObject` corresponds to the `metrics` item in the configuration file.
 
 ```json
-    "metrics": {
-        "tag": "Metrics",
-        "listen": "127.0.0.1:11111"
-    }
+{
+  "metrics": {
+    "tag": "Metrics",
+    "listen": "127.0.0.1:11111"
+  }
+}
 ```
 
 > `tag`: string

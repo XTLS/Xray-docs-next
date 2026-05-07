@@ -8,6 +8,8 @@ User-space Wireguard 协议实现。
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` 对应 [`InboundObject`](../inbound.md) 中的 `settings` 项。
+
 ```json
 {
   "inbounds": [

@@ -10,6 +10,8 @@ The `hysteria protocol` itself has no authentication. When using with a non `hys
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

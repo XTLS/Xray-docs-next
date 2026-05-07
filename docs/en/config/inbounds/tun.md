@@ -4,6 +4,8 @@ Creates a TUN interface; traffic sent to this interface will be processed by Xra
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

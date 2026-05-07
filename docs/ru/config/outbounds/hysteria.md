@@ -10,6 +10,8 @@
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

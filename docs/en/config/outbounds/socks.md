@@ -8,6 +8,8 @@ Standard Socks protocol implementation, compatible with Socks 5.
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

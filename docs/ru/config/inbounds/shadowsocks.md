@@ -29,6 +29,8 @@
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` соответствует элементу `settings` в [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

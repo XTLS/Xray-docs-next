@@ -4,7 +4,7 @@ Hysteria2 的底层 QUIC 传输的 Xray 实现，通常搭配 hysteria[出站](.
 
 ## HysteriaObject
 
-`HysteriaObject` 对应传输配置的 `hysteriaSettings` 项。
+`HysteriaObject` 对应 [`StreamSettingsObject`](../transport.md#streamsettingsobject) 中的 `hysteriaSettings` 项。
 
 ```json
 {

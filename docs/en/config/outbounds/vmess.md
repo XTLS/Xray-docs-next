@@ -8,6 +8,8 @@ VMess depends on system time. Please ensure that the UTC time of the system runn
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

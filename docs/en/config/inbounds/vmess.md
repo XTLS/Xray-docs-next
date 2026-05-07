@@ -8,6 +8,8 @@ VMess depends on system time. Please ensure that the system UTC time of the devi
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

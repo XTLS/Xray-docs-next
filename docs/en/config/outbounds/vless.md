@@ -6,6 +6,8 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

@@ -4,12 +4,16 @@ The Observatory component uses HTTPing to probe the connection status of outboun
 
 ## ObservatoryObject
 
+`ObservatoryObject` corresponds to the `observatory` item in the configuration file.
+
 ```json
 {
-  "subjectSelector": ["outbound"],
-  "probeUrl": "https://www.google.com/generate_204",
-  "probeInterval": "10s",
-  "enableConcurrency": false
+  "observatory": {
+    "subjectSelector": ["outbound"],
+    "probeUrl": "https://www.google.com/generate_204",
+    "probeInterval": "10s",
+    "enableConcurrency": false
+  }
 }
 ```
 
@@ -34,10 +38,14 @@ Note that since the request interval is fixed, periodic fixed requests might lea
 
 ## BurstObservatoryObject
 
+`BurstObservatoryObject` corresponds to the `burstObservatory` item in the configuration file.
+
 ```json
 {
-  "subjectSelector": ["outbound"],
-  "pingConfig": {}
+  "burstObservatory": {
+    "subjectSelector": ["outbound"],
+    "pingConfig": {}
+  }
 }
 ```
 

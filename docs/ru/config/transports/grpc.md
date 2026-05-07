@@ -34,7 +34,7 @@ gRPC (HTTP/2) имеет встроенное мультиплексирован
 
 ## GRPCObject
 
-`GRPCObject` соответствует элементу `grpcSettings` конфигурации передачи.
+`GRPCObject` соответствует элементу `grpcSettings` в [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

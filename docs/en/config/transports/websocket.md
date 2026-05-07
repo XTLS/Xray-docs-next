@@ -14,7 +14,7 @@ WebSocket will recognize the `X-Forwarded-For` header in HTTP requests to overwr
 
 ## WebSocketObject
 
-`WebSocketObject` corresponds to the `wsSettings` item in the transport configuration.
+`WebSocketObject` corresponds to the `wsSettings` item in [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

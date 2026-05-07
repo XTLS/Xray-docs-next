@@ -6,7 +6,7 @@ It can be combined with various protocols in multiple modes.
 
 ## RawObject
 
-`RawObject` corresponds to the `rawSettings` item in transport configuration.
+`RawObject` corresponds to the `rawSettings` item in [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

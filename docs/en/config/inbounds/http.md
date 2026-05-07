@@ -21,6 +21,8 @@ Use the following environment variables in Linux to enable a global HTTP proxy f
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

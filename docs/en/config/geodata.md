@@ -6,14 +6,18 @@ Use with caution on low-memory devices.
 
 ## GeodataObject
 
+`GeodataObject` corresponds to the `geodata` item in the configuration file.
+
 ```json
 {
-  "cron": "0 4 * * *",
-  "outbound": "proxy",
-  "assets": [
-    { "url": "https://example.com/geoip.dat", "file": "geoip.dat" },
-    { "url": "https://example.com/geosite.dat", "file": "geosite.dat" }
-  ]
+  "geodata": {
+    "cron": "0 4 * * *",
+    "outbound": "proxy",
+    "assets": [
+      { "url": "https://example.com/geoip.dat", "file": "geoip.dat" },
+      { "url": "https://example.com/geosite.dat", "file": "geosite.dat" }
+    ]
+  }
 }
 ```
 

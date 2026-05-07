@@ -6,14 +6,18 @@
 
 ## GeodataObject
 
+`GeodataObject` соответствует элементу `geodata` в файле конфигурации.
+
 ```json
 {
-  "cron": "0 4 * * *",
-  "outbound": "proxy",
-  "assets": [
-    { "url": "https://example.com/geoip.dat", "file": "geoip.dat" },
-    { "url": "https://example.com/geosite.dat", "file": "geosite.dat" }
-  ]
+  "geodata": {
+    "cron": "0 4 * * *",
+    "outbound": "proxy",
+    "assets": [
+      { "url": "https://example.com/geoip.dat", "file": "geoip.dat" },
+      { "url": "https://example.com/geosite.dat", "file": "geosite.dat" }
+    ]
+  }
 }
 ```
 

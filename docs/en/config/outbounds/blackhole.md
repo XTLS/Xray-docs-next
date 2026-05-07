@@ -4,6 +4,8 @@ Blackhole is an outbound data protocol that blocks all outbound data. When used 
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

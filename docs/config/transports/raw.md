@@ -6,7 +6,7 @@
 
 ## RawObject
 
-`RawObject` 对应传输配置的 `rawSettings` 项。
+`RawObject` 对应 [`StreamSettingsObject`](../transport.md#streamsettingsobject) 中的 `rawSettings` 项。
 
 ```json
 {

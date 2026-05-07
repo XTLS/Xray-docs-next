@@ -8,6 +8,8 @@
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` 对应 [`OutboundObject`](../outbound.md) 中的 `settings` 项。
+
 ```json
 {
   "outbounds": [

@@ -6,7 +6,7 @@ Transport specifies a stable method for data transmission. Generally, both ends 
 
 ## StreamSettingsObject
 
-`StreamSettingsObject` corresponds to the `streamSettings` item in inbound or outbound configurations. Each inbound or outbound can be configured with different transport settings independently, and `streamSettings` can be set to perform some transport configurations.
+`StreamSettingsObject` corresponds to the `streamSettings` item in [`InboundObject`](./inbound.md) or [`OutboundObject`](./outbound.md). Each inbound or outbound can be configured with different transport settings independently, and `streamSettings` can be set to perform some transport configurations.
 
 ```json
 {

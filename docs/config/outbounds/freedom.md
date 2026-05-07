@@ -8,6 +8,8 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` 对应 [`OutboundObject`](../outbound.md) 中的 `settings` 项。
+
 ```json
 {
   "outbounds": [

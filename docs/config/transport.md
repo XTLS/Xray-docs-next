@@ -6,7 +6,7 @@
 
 ## StreamSettingsObject
 
-`StreamSettingsObject` 对应入站或出站中的 `streamSettings` 项。每一个入站或出站都可以分别配置不同的传输配置，都可以设置 `streamSettings` 来进行一些传输的配置。
+`StreamSettingsObject` 对应 [`InboundObject`](./inbound.md) 或 [`OutboundObject`](./outbound.md) 中的 `streamSettings` 项。每一个入站或出站都可以分别配置不同的传输配置，都可以设置 `streamSettings` 来进行一些传输的配置。
 
 ```json
 {

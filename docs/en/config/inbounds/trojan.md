@@ -8,6 +8,8 @@ Trojan is designed to work over correctly configured encrypted TLS tunnels.
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

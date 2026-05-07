@@ -2,15 +2,17 @@
 
 更直接（希望更好）的统计导出方式。
 
-## 相关配置
+## MetricsObject
 
-在基础配置中增加 metrics
+`MetricsObject` 对应配置文件的 `metrics` 项。
 
 ```json
-    "metrics": {
-        "tag": "Metrics",
-        "listen": "127.0.0.1:11111"
-    }
+{
+  "metrics": {
+    "tag": "Metrics",
+    "listen": "127.0.0.1:11111"
+  }
+}
 ```
 
 > `tag`: string

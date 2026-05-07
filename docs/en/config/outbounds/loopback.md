@@ -4,6 +4,8 @@ Loopback is an outbound data protocol. Its function is to re-inject data sent th
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

@@ -8,6 +8,8 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` 对应 [`InboundObject`](../inbound.md) 中的 `settings` 项。
+
 ```json
 {
   "inbounds": [

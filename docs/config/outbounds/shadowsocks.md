@@ -29,6 +29,8 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` 对应 [`OutboundObject`](../outbound.md) 中的 `settings` 项。
+
 ```json
 {
   "outbounds": [

@@ -4,6 +4,8 @@ Tunnel, formerly known as dokodemo-door (Arbitrary Door), can listen on multiple
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

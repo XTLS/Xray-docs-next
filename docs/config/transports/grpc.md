@@ -35,7 +35,7 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 ## GRPCObject
 
-`GRPCObject` 对应传输配置的 `grpcSettings` 项。
+`GRPCObject` 对应 [`StreamSettingsObject`](../transport.md#streamsettingsobject) 中的 `grpcSettings` 项。
 
 ```json
 {

@@ -8,6 +8,8 @@ Trojan is designed to work over a correctly configured encrypted TLS tunnel.
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

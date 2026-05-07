@@ -6,6 +6,8 @@ The `hysteria protocol` itself has no authentication; `users` only take effect w
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

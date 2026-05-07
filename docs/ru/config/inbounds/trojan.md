@@ -8,6 +8,8 @@ Trojan предназначен для работы в правильно нас
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` соответствует элементу `settings` в [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

@@ -8,6 +8,8 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

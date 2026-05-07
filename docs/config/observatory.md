@@ -4,12 +4,16 @@
 
 ## ObservatoryObject
 
+`ObservatoryObject` 对应配置文件的 `observatory` 项。
+
 ```json
 {
-  "subjectSelector": ["outbound"],
-  "probeUrl": "https://www.google.com/generate_204",
-  "probeInterval": "10s",
-  "enableConcurrency": false
+  "observatory": {
+    "subjectSelector": ["outbound"],
+    "probeUrl": "https://www.google.com/generate_204",
+    "probeInterval": "10s",
+    "enableConcurrency": false
+  }
 }
 ```
 
@@ -34,10 +38,14 @@
 
 ## BurstObservatoryObject
 
+`BurstObservatoryObject` 对应配置文件的 `burstObservatory` 项。
+
 ```json
 {
-  "subjectSelector": ["outbound"],
-  "pingConfig": {}
+  "burstObservatory": {
+    "subjectSelector": ["outbound"],
+    "pingConfig": {}
+  }
 }
 ```
 

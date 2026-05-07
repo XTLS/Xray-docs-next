@@ -4,6 +4,8 @@ Loopback - это исходящий протокол данных, которы
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

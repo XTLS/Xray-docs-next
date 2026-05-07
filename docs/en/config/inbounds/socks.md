@@ -10,6 +10,8 @@ A more meaningful usage of `Socks` inbound is to listen within a LAN or on the l
 
 ## InboundConfigurationObject
 
+`InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
+
 ```json
 {
   "inbounds": [

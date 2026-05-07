@@ -4,7 +4,7 @@
 
 ## HysteriaObject
 
-`HysteriaObject` соответствует пункту `hysteriaSettings` в конфигурации транспорта.
+`HysteriaObject` соответствует элементу `hysteriaSettings` в [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

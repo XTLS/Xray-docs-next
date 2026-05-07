@@ -4,7 +4,7 @@ Xray implementation of the underlying QUIC transport for Hysteria2, typically us
 
 ## HysteriaObject
 
-`HysteriaObject` corresponds to the `hysteriaSettings` item in the transport configuration.
+`HysteriaObject` corresponds to the `hysteriaSettings` item in [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

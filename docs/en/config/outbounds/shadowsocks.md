@@ -29,6 +29,8 @@ Under the "none" encryption method, traffic will be transmitted in plain text. T
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

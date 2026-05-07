@@ -35,7 +35,7 @@ If you are using fallback, please note the following:
 
 ## GRPCObject
 
-`GRPCObject` corresponds to the `grpcSettings` item in the transport configuration.
+`GRPCObject` corresponds to the `grpcSettings` item in [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

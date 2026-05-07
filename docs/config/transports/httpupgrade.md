@@ -9,7 +9,7 @@
 
 ## HttpUpgradeObject
 
-`HttpUpgradeObject` 对应传输配置的 `httpupgradeSettings` 项。
+`HttpUpgradeObject` 对应 [`StreamSettingsObject`](../transport.md#streamsettingsobject) 中的 `httpupgradeSettings` 项。
 
 ```json
 {

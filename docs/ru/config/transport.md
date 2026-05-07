@@ -7,7 +7,7 @@
 
 ## StreamSettingsObject
 
-`StreamSettingsObject` соответствует элементу `streamSettings` во входящем или исходящем подключении. Для каждого входящего или исходящего подключения можно настроить различные параметры передачи, и можно использовать `streamSettings` для настройки некоторых параметров передачи.
+`StreamSettingsObject` соответствует элементу `streamSettings` в [`InboundObject`](./inbound.md) или [`OutboundObject`](./outbound.md).
 
 ```json
 {

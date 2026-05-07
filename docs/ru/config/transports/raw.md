@@ -6,7 +6,7 @@
 
 ## RawObject
 
-`RawObject` соответствует элементу `rawSettings` в конфигурации транспорта.
+`RawObject` соответствует элементу `rawSettings` в [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

@@ -10,7 +10,7 @@
 
 ## HttpUpgradeObject
 
-`HttpUpgradeObject` соответствует пункту `httpupgradeSettings` в настройках передачи.
+`HttpUpgradeObject` соответствует элементу `httpupgradeSettings` в [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

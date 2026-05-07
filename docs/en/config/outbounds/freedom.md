@@ -8,6 +8,8 @@ This outbound has a default safety policy in server-side and reverse-proxy scena
 
 ## OutboundConfigurationObject
 
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+
 ```json
 {
   "outbounds": [

@@ -14,7 +14,7 @@ WebSocket распознает заголовок X-Forwarded-For в HTTP-зап
 
 ## WebSocketObject
 
-`WebSocketObject` соответствует элементу `wsSettings` в конфигурации транспорта.
+`WebSocketObject` соответствует элементу `wsSettings` в [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

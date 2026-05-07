@@ -9,7 +9,7 @@ Its design is not recommended for standalone use; instead, it is intended to wor
 
 ## HttpUpgradeObject
 
-`HttpUpgradeObject` corresponds to the `httpupgradeSettings` item in transport configuration.
+`HttpUpgradeObject` corresponds to the `httpupgradeSettings` item in [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

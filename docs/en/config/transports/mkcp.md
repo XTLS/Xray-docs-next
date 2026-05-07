@@ -10,7 +10,7 @@ Please ensure that the firewall configuration on the host is correct.
 
 ## KcpObject
 
-`KcpObject` corresponds to the `kcpSettings` item in the transport configuration.
+`KcpObject` corresponds to the `kcpSettings` item in [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {
