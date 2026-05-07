@@ -104,7 +104,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 当存在此选项时，代表启用多用户模式。
 
-## UserObject
+### UserObject
 
 ```json
 {

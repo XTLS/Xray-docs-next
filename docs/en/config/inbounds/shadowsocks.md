@@ -104,7 +104,7 @@ Each item in the array is a [UserObject](#userobject).
 
 When this option exists, it indicates that multi-user mode is enabled.
 
-## UserObject
+### UserObject
 
 ```json
 {
