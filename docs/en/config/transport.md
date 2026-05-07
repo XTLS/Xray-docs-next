@@ -347,8 +347,6 @@ For more information, please refer to the [REALITY Project](https://github.com/X
 
 ::: tip
 Reality only modifies TLS. Client implementation only requires slight modification of fully random session IDs and custom certificate verification, theoretically fully compatible with most TLS combinations.
-
-However, this does not apply to QUIC, because the session ID field that Reality needs to modify is entirely random in almost all TCP TLS implementations for compatibility purposes, but in QUIC TLS, this field has 0 length, leaving no room for modification.
 :::
 
 > `show` : true | false
