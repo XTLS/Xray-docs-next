@@ -10,10 +10,22 @@
 
 ```json
 {
-  "acceptProxyProtocol": false,
-  "header": {
-    "type": "none"
-  }
+  // outbound example; also applies to inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        "network": "raw",
+        "rawSettings": {
+          // [!code focus:4]
+          "acceptProxyProtocol": false,
+          "header": {
+            "type": "none"
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 

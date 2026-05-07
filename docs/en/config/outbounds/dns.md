@@ -10,19 +10,27 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
 
 ```json
 {
-  "rewriteNetwork": "udp",
-  "rewriteAddress": "1.1.1.1",
-  "rewritePort": 53,
-  "userLevel": 0,
-  "rules": [
+  "outbounds": [
     {
-      "action": "reject",
-      "domain": ["domain:example.com"]
-    },
-    {
-      "action": "direct",
-      "qtype": 65,
-      "domain": ["geosite:geolocation-!cn"]
+      // ...
+      "settings": {
+        // [!code focus:15]
+        "rewriteNetwork": "udp",
+        "rewriteAddress": "1.1.1.1",
+        "rewritePort": 53,
+        "userLevel": 0,
+        "rules": [
+          {
+            "action": "reject",
+            "domain": ["domain:example.com"]
+          },
+          {
+            "action": "direct",
+            "qtype": 65,
+            "domain": ["geosite:geolocation-!cn"]
+          }
+        ]
+      }
     }
   ]
 }

@@ -12,16 +12,24 @@
 
 ```json
 {
-  "auth": "noauth",
-  "users": [
+  "inbounds": [
     {
-      "user": "my-username",
-      "pass": "my-password"
+      // ...
+      "settings": {
+        // [!code focus:10]
+        "auth": "noauth",
+        "users": [
+          {
+            "user": "my-username",
+            "pass": "my-password"
+          }
+        ],
+        "udp": false,
+        "ip": "127.0.0.1",
+        "userLevel": 0
+      }
     }
-  ],
-  "udp": false,
-  "ip": "127.0.0.1",
-  "userLevel": 0
+  ]
 }
 ```
 

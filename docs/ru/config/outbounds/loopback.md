@@ -6,7 +6,15 @@ Loopback - это исходящий протокол данных, которы
 
 ```json
 {
-  "inboundTag": "TagUseAsInbound"
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:1]
+        "inboundTag": "TagUseAsInbound"
+      }
+    }
+  ]
 }
 ```
 

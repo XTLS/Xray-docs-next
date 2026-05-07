@@ -8,24 +8,33 @@ Hysteria2 的底层 QUIC 传输的 Xray 实现，通常搭配 hysteria[出站](.
 
 ```json
 {
-  "version": 2,
-  "auth": "password",
-  "udpIdleTimeout": 60,
-  "masquerade": {
-    "type": "",
-
-    "dir": "",
-
-    "url": "",
-    "rewriteHost": false,
-    "insecure": false,
-
-    "content": "",
-    "headers": {
-      "key": "value"
-    },
-    "statusCode": 0
-  }
+  // outbound 示例，同样可用于 inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        "network": "hysteria",
+        "hysteriaSettings": {
+          // [!code focus:14]
+          "version": 2,
+          "auth": "password",
+          "udpIdleTimeout": 60,
+          "masquerade": {
+            "type": "",
+            "dir": "",
+            "url": "",
+            "rewriteHost": false,
+            "insecure": false,
+            "content": "",
+            "headers": {
+              "key": "value"
+            },
+            "statusCode": 0
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 

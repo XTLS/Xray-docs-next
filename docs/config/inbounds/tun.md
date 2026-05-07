@@ -6,13 +6,21 @@
 
 ```json
 {
-  "name": "xray0",
-  "mtu": 1500,
-  "gateway": ["10.0.0.1/16", "fc00::1/64"],
-  "dns": ["1.1.1.1", "8.8.8.8"],
-  "userLevel": 0,
-  "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
-  "autoOutboundsInterface": "auto"
+  "inbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:7]
+        "name": "xray0",
+        "mtu": 1500,
+        "gateway": ["10.0.0.1/16", "fc00::1/64"],
+        "dns": ["1.1.1.1", "8.8.8.8"],
+        "userLevel": 0,
+        "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
+        "autoOutboundsInterface": "auto"
+      }
+    }
+  ]
 }
 ```
 

@@ -14,13 +14,25 @@ Please ensure that the firewall configuration on the host is correct.
 
 ```json
 {
-  "mtu": 1350,
-  "tti": 20,
-  "uplinkCapacity": 5,
-  "downlinkCapacity": 20,
-  "congestion": false,
-  "readBufferSize": 1,
-  "writeBufferSize": 1
+  // outbound example; also applies to inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        "network": "mkcp",
+        "kcpSettings": {
+          // [!code focus:7]
+          "mtu": 1350,
+          "tti": 20,
+          "uplinkCapacity": 5,
+          "downlinkCapacity": 20,
+          "congestion": false,
+          "readBufferSize": 1,
+          "writeBufferSize": 1
+        }
+      }
+    }
+  ]
 }
 ```
 

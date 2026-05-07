@@ -13,12 +13,24 @@ Its design is not recommended for standalone use; instead, it is intended to wor
 
 ```json
 {
-  "acceptProxyProtocol": false,
-  "path": "/",
-  "host": "xray.com",
-  "headers": {
-    "key": "value"
-  }
+  // outbound example; also applies to inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        "network": "httpupgrade",
+        "httpupgradeSettings": {
+          // [!code focus:6]
+          "acceptProxyProtocol": false,
+          "path": "/",
+          "host": "xray.com",
+          "headers": {
+            "key": "value"
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 

@@ -23,14 +23,22 @@ Use the following environment variables in Linux to enable a global HTTP proxy f
 
 ```json
 {
-  "users": [
+  "inbounds": [
     {
-      "user": "my-username",
-      "pass": "my-password"
+      // ...
+      "settings": {
+        // [!code focus:8]
+        "users": [
+          {
+            "user": "my-username",
+            "pass": "my-password"
+          }
+        ],
+        "allowTransparent": false,
+        "userLevel": 0
+      }
     }
-  ],
-  "allowTransparent": false,
-  "userLevel": 0
+  ]
 }
 ```
 

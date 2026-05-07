@@ -31,14 +31,22 @@ Under the "none" encryption method, traffic will be transmitted in plain text. T
 
 ```json
 {
-  "email": "love@xray.com",
-  "address": "127.0.0.1",
-  "port": 1234,
-  "method": "Encryption Method",
-  "password": "Password",
-  "uot": true,
-  "UoTVersion": 2,
-  "level": 0
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:8]
+        "email": "love@xray.com",
+        "address": "127.0.0.1",
+        "port": 1234,
+        "method": "Encryption Method",
+        "password": "Password",
+        "uot": true,
+        "UoTVersion": 2,
+        "level": 0
+      }
+    }
+  ]
 }
 ```
 

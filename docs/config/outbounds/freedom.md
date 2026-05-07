@@ -10,31 +10,39 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
 
 ```json
 {
-  "domainStrategy": "AsIs",
-  "redirect": "127.0.0.1:3366",
-  "userLevel": 0,
-  "fragment": {
-    "packets": "tlshello",
-    "length": "100-200",
-    "interval": "10-20" // 单位ms
-  },
-  "noises": [
+  "outbounds": [
     {
-      "type": "base64",
-      "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
-      "delay": "10-16"
-    }
-  ],
-  "proxyProtocol": 0,
-  "finalRules": [
-    {
-      "action": "block",
-      "network": "tcp",
-      "port": "22,25,465,587"
-    },
-    {
-      "action": "block",
-      "ip": ["geoip:cn"]
+      // ...
+      "settings": {
+        // [!code focus:27]
+        "domainStrategy": "AsIs",
+        "redirect": "127.0.0.1:3366",
+        "userLevel": 0,
+        "fragment": {
+          "packets": "tlshello",
+          "length": "100-200",
+          "interval": "10-20" // 单位ms
+        },
+        "noises": [
+          {
+            "type": "base64",
+            "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
+            "delay": "10-16"
+          }
+        ],
+        "proxyProtocol": 0,
+        "finalRules": [
+          {
+            "action": "block",
+            "network": "tcp",
+            "port": "22,25,465,587"
+          },
+          {
+            "action": "block",
+            "ip": ["geoip:cn"]
+          }
+        ]
+      }
     }
   ]
 }

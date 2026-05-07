@@ -10,16 +10,24 @@ Trojan is designed to work over correctly configured encrypted TLS tunnels.
 
 ```json
 {
-  "users": [
+  "inbounds": [
     {
-      "password": "password",
-      "email": "love@xray.com",
-      "level": 0
-    }
-  ],
-  "fallbacks": [
-    {
-      "dest": 80
+      // ...
+      "settings": {
+        // [!code focus:12]
+        "users": [
+          {
+            "password": "password",
+            "email": "love@xray.com",
+            "level": 0
+          }
+        ],
+        "fallbacks": [
+          {
+            "dest": 80
+          }
+        ]
+      }
     }
   ]
 }

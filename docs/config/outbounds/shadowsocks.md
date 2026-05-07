@@ -31,14 +31,22 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 ```json
 {
-  "email": "love@xray.com",
-  "address": "127.0.0.1",
-  "port": 1234,
-  "method": "加密方式",
-  "password": "密码",
-  "uot": true,
-  "UoTVersion": 2,
-  "level": 0
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:8]
+        "email": "love@xray.com",
+        "address": "127.0.0.1",
+        "port": 1234,
+        "method": "加密方式",
+        "password": "密码",
+        "uot": true,
+        "UoTVersion": 2,
+        "level": 0
+      }
+    }
+  ]
 }
 ```
 

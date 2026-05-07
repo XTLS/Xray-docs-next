@@ -6,7 +6,15 @@ Loopback is an outbound data protocol. Its function is to re-inject data sent th
 
 ```json
 {
-  "inboundTag": "TagUseAsInbound"
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:1]
+        "inboundTag": "TagUseAsInbound"
+      }
+    }
+  ]
 }
 ```
 

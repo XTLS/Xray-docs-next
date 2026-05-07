@@ -6,16 +6,24 @@ Tunnel（隧道），旧称 dokodemo-door（任意门），可以监听数个本
 
 ```json
 {
-  "allowedNetwork": "tcp",
-  "rewriteAddress": "8.8.8.8",
-  "rewritePort": 53,
-  "portMap": {
-    "5555": "1.1.1.1:7777",
-    "5556": ":8888", // overrides port only
-    "5557": "example.com:" // overrides address only
-  },
-  "followRedirect": false,
-  "userLevel": 0
+  "inbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:10]
+        "allowedNetwork": "tcp",
+        "rewriteAddress": "8.8.8.8",
+        "rewritePort": 53,
+        "portMap": {
+          "5555": "1.1.1.1:7777",
+          "5556": ":8888", // overrides port only
+          "5557": "example.com:" // overrides address only
+        },
+        "followRedirect": false,
+        "userLevel": 0
+      }
+    }
+  ]
 }
 ```
 

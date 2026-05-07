@@ -10,14 +10,22 @@ User-space WireGuard protocol implementation.
 
 ```json
 {
-  "secretKey": "PRIVATE_KEY",
-  "peers": [
+  "inbounds": [
     {
-      "publicKey": "PUBLIC_KEY",
-      "allowedIPs": [""]
+      // ...
+      "settings": {
+        // [!code focus:8]
+        "secretKey": "PRIVATE_KEY",
+        "peers": [
+          {
+            "publicKey": "PUBLIC_KEY",
+            "allowedIPs": [""]
+          }
+        ],
+        "mtu": 1420 // optional, default 1420
+      }
     }
-  ],
-  "mtu": 1420 // optional, default 1420
+  ]
 }
 ```
 

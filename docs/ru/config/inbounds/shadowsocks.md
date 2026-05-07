@@ -31,19 +31,25 @@
 
 ```json
 {
-  "settings": {
-    "network": "tcp,udp",
-    "method": "aes-256-gcm",
-    "password": "114514",
-    "level": 0,
-    "email": "love@xray.com",
-    "users": [
-      {
-        "password": "1919810",
-        "method": "aes-128-gcm"
+  "inbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:11]
+        "network": "tcp,udp",
+        "method": "aes-256-gcm",
+        "password": "114514",
+        "level": 0,
+        "email": "love@xray.com",
+        "users": [
+          {
+            "password": "1919810",
+            "method": "aes-128-gcm"
+          }
+        ]
       }
-    ]
-  }
+    }
+  ]
 }
 ```
 

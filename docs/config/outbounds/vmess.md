@@ -10,12 +10,20 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 ```json
 {
-  "address": "127.0.0.1",
-  "port": 37192,
-  "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-  "security": "auto",
-  "level": 0,
-  "experiments": ""
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:6]
+        "address": "127.0.0.1",
+        "port": 37192,
+        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+        "security": "auto",
+        "level": 0,
+        "experiments": ""
+      }
+    }
+  ]
 }
 ```
 

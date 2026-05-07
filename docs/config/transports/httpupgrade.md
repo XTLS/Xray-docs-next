@@ -13,12 +13,24 @@
 
 ```json
 {
-  "acceptProxyProtocol": false,
-  "path": "/",
-  "host": "xray.com",
-  "headers": {
-    "key": "value"
-  }
+  // outbound 示例，同样可用于 inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        "network": "httpupgrade",
+        "httpupgradeSettings": {
+          // [!code focus:6]
+          "acceptProxyProtocol": false,
+          "path": "/",
+          "host": "xray.com",
+          "headers": {
+            "key": "value"
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 

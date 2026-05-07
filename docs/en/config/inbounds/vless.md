@@ -8,19 +8,27 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
 
 ```json
 {
-  "users": [
+  "inbounds": [
     {
-      "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-      "level": 0,
-      "email": "love@xray.com",
-      "flow": "xtls-rprx-vision",
-      "reverse": {}
-    }
-  ],
-  "decryption": "none",
-  "fallbacks": [
-    {
-      "dest": 80
+      // ...
+      "settings": {
+        // [!code focus:15]
+        "users": [
+          {
+            "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+            "level": 0,
+            "email": "love@xray.com",
+            "flow": "xtls-rprx-vision",
+            "reverse": {}
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": 80
+          }
+        ]
+      }
     }
   ]
 }

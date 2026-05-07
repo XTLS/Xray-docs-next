@@ -12,9 +12,17 @@ Hysteria 协议的客户端实现。
 
 ```json
 {
-  "version": 2,
-  "address": "192.168.108.1",
-  "port": 3128
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:3]
+        "version": 2,
+        "address": "192.168.108.1",
+        "port": 3128
+      }
+    }
+  ]
 }
 ```
 

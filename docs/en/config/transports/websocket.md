@@ -18,13 +18,25 @@ WebSocket will recognize the `X-Forwarded-For` header in HTTP requests to overwr
 
 ```json
 {
-  "acceptProxyProtocol": false,
-  "path": "/",
-  "host": "xray.com",
-  "headers": {
-    "key": "value"
-  },
-  "heartbeatPeriod": 10
+  // outbound example; also applies to inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        "network": "websocket",
+        "wsSettings": {
+          // [!code focus:7]
+          "acceptProxyProtocol": false,
+          "path": "/",
+          "host": "xray.com",
+          "headers": {
+            "key": "value"
+          },
+          "heartbeatPeriod": 10
+        }
+      }
+    }
+  ]
 }
 ```
 

@@ -14,16 +14,24 @@ HTTP 协议。
 
 ```json
 {
-  "address": "192.168.108.1",
-  "port": 3128,
-  "user": "my-username",
-  "pass": "my-password",
-  "level": 0,
-  "email": "love@xray.com",
-  "headers": {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36",
-    "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"
-  }
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:10]
+        "address": "192.168.108.1",
+        "port": 3128,
+        "user": "my-username",
+        "pass": "my-password",
+        "level": 0,
+        "email": "love@xray.com",
+        "headers": {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36",
+          "Accept-Language": "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2"
+        }
+      }
+    }
+  ]
 }
 ```
 

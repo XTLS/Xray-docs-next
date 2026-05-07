@@ -10,24 +10,32 @@ Standard Wireguard protocol implementation.
 
 ```json
 {
-  "secretKey": "PRIVATE_KEY",
-  "address": [
-    // optional, default ["10.0.0.1", "fd59:7153:2388:b5fd:0000:0000:0000:0001"]
-    "IPv4_CIDR",
-    "IPv6_CIDR",
-    "and more..."
-  ],
-  "peers": [
+  "outbounds": [
     {
-      "endpoint": "ENDPOINT_ADDR",
-      "publicKey": "PUBLIC_KEY"
+      // ...
+      "settings": {
+        // [!code focus:18]
+        "secretKey": "PRIVATE_KEY",
+        "address": [
+          // optional, default ["10.0.0.1", "fd59:7153:2388:b5fd:0000:0000:0000:0001"]
+          "IPv4_CIDR",
+          "IPv6_CIDR",
+          "and more..."
+        ],
+        "peers": [
+          {
+            "endpoint": "ENDPOINT_ADDR",
+            "publicKey": "PUBLIC_KEY"
+          }
+        ],
+        "noKernelTun": false,
+        "mtu": 1420, // optional, default 1420
+        "reserved": [1, 2, 3],
+        "workers": 2, // optional, default runtime.NumCPU()
+        "domainStrategy": "ForceIP"
+      }
     }
-  ],
-  "noKernelTun": false,
-  "mtu": 1420, // optional, default 1420
-  "reserved": [1, 2, 3],
-  "workers": 2, // optional, default runtime.NumCPU()
-  "domainStrategy": "ForceIP"
+  ]
 }
 ```
 

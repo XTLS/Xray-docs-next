@@ -10,12 +10,20 @@ Standard Socks protocol implementation, compatible with Socks 5.
 
 ```json
 {
-  "address": "127.0.0.1",
-  "port": 1234,
-  "user": "test user",
-  "pass": "test pass",
-  "level": 0,
-  "email": "love@xray.com"
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:6]
+        "address": "127.0.0.1",
+        "port": 1234,
+        "user": "test user",
+        "pass": "test pass",
+        "level": 0,
+        "email": "love@xray.com"
+      }
+    }
+  ]
 }
 ```
 

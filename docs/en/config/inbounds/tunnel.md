@@ -6,16 +6,24 @@ Tunnel, formerly known as dokodemo-door (Arbitrary Door), can listen on multiple
 
 ```json
 {
-  "allowedNetwork": "tcp",
-  "rewriteAddress": "8.8.8.8",
-  "rewritePort": 53,
-  "portMap": {
-    "5555": "1.1.1.1:7777",
-    "5556": ":8888", // overrides port only
-    "5557": "example.com:" // overrides address only
-  },
-  "followRedirect": false,
-  "userLevel": 0
+  "inbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:10]
+        "allowedNetwork": "tcp",
+        "rewriteAddress": "8.8.8.8",
+        "rewritePort": 53,
+        "portMap": {
+          "5555": "1.1.1.1:7777",
+          "5556": ":8888", // overrides port only
+          "5557": "example.com:" // overrides address only
+        },
+        "followRedirect": false,
+        "userLevel": 0
+      }
+    }
+  ]
 }
 ```
 

@@ -10,11 +10,19 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 ```json
 {
-  "address": "127.0.0.1",
-  "port": 1234,
-  "password": "password",
-  "email": "love@xray.com",
-  "level": 0
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:5]
+        "address": "127.0.0.1",
+        "port": 1234,
+        "password": "password",
+        "email": "love@xray.com",
+        "level": 0
+      }
+    }
+  ]
 }
 ```
 

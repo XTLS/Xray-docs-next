@@ -10,16 +10,24 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 ```json
 {
-  "users": [
+  "inbounds": [
     {
-      "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-      "level": 0,
-      "email": "love@xray.com"
+      // ...
+      "settings": {
+        // [!code focus:10]
+        "users": [
+          {
+            "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+            "level": 0,
+            "email": "love@xray.com"
+          }
+        ],
+        "default": {
+          "level": 0
+        }
+      }
     }
-  ],
-  "default": {
-    "level": 0
-  }
+  ]
 }
 ```
 

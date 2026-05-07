@@ -10,16 +10,24 @@ VMess depends on system time. Please ensure that the system UTC time of the devi
 
 ```json
 {
-  "users": [
+  "inbounds": [
     {
-      "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-      "level": 0,
-      "email": "love@xray.com"
+      // ...
+      "settings": {
+        // [!code focus:10]
+        "users": [
+          {
+            "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+            "level": 0,
+            "email": "love@xray.com"
+          }
+        ],
+        "default": {
+          "level": 0
+        }
+      }
     }
-  ],
-  "default": {
-    "level": 0
-  }
+  ]
 }
 ```
 

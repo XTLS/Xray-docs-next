@@ -10,14 +10,22 @@
 
 ```json
 {
-  "secretKey": "PRIVATE_KEY",
-  "peers": [
+  "inbounds": [
     {
-      "publicKey": "PUBLIC_KEY",
-      "allowedIPs": [""]
+      // ...
+      "settings": {
+        // [!code focus:8]
+        "secretKey": "PRIVATE_KEY",
+        "peers": [
+          {
+            "publicKey": "PUBLIC_KEY",
+            "allowedIPs": [""]
+          }
+        ],
+        "mtu": 1420 // необязательно, по умолчанию 1420
+      }
     }
-  ],
-  "mtu": 1420 // необязательно, по умолчанию 1420
+  ]
 }
 ```
 

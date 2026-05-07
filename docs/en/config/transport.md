@@ -10,40 +10,49 @@ Transport specifies a stable method for data transmission. Generally, both ends 
 
 ```json
 {
-  "network": "raw",
-  "security": "none",
-  "tlsSettings": {},
-  "realitySettings": {},
-  "rawSettings": {},
-  "xhttpSettings": {},
-  "kcpSettings": {},
-  "grpcSettings": {},
-  "wsSettings": {},
-  "httpupgradeSettings": {},
-  "hysteriaSettings": {},
-  "finalmask": {
-    "tcp": [],
-    "udp": [],
-    "quicParams": {}
-  },
-  "sockopt": {
-    "mark": 0,
-    "tcpMaxSeg": 1440,
-    "tcpFastOpen": false,
-    "tproxy": "off",
-    "domainStrategy": "AsIs",
-    "happyEyeballs": {},
-    "dialerProxy": "",
-    "acceptProxyProtocol": false,
-    "tcpKeepAliveInterval": 0,
-    "tcpKeepAliveIdle": 300,
-    "tcpUserTimeout": 10000,
-    "tcpCongestion": "bbr",
-    "interface": "wg0",
-    "v6only": false,
-    "tcpWindowClamp": 600,
-    "tcpMptcp": false
-  }
+  // outbound example; also applies to inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        // [!code focus:34]
+        "network": "raw",
+        "security": "none",
+        "tlsSettings": {},
+        "realitySettings": {},
+        "rawSettings": {},
+        "xhttpSettings": {},
+        "kcpSettings": {},
+        "grpcSettings": {},
+        "wsSettings": {},
+        "httpupgradeSettings": {},
+        "hysteriaSettings": {},
+        "finalmask": {
+          "tcp": [],
+          "udp": [],
+          "quicParams": {}
+        },
+        "sockopt": {
+          "mark": 0,
+          "tcpMaxSeg": 1440,
+          "tcpFastOpen": false,
+          "tproxy": "off",
+          "domainStrategy": "AsIs",
+          "happyEyeballs": {},
+          "dialerProxy": "",
+          "acceptProxyProtocol": false,
+          "tcpKeepAliveInterval": 0,
+          "tcpKeepAliveIdle": 300,
+          "tcpUserTimeout": 10000,
+          "tcpCongestion": "bbr",
+          "interface": "wg0",
+          "v6only": false,
+          "tcpWindowClamp": 600,
+          "tcpMptcp": false
+        }
+      }
+    }
+  ]
 }
 ```
 

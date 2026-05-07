@@ -8,24 +8,33 @@ Xray implementation of the underlying QUIC transport for Hysteria2, typically us
 
 ```json
 {
-  "version": 2,
-  "auth": "password",
-  "udpIdleTimeout": 60,
-  "masquerade": {
-    "type": "",
-
-    "dir": "",
-
-    "url": "",
-    "rewriteHost": false,
-    "insecure": false,
-
-    "content": "",
-    "headers": {
-      "key": "value"
-    },
-    "statusCode": 0
-  }
+  // outbound example; also applies to inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        "network": "hysteria",
+        "hysteriaSettings": {
+          // [!code focus:15]
+          "version": 2,
+          "auth": "password",
+          "udpIdleTimeout": 60,
+          "masquerade": {
+            "type": "",
+            "dir": "",
+            "url": "",
+            "rewriteHost": false,
+            "insecure": false,
+            "content": "",
+            "headers": {
+              "key": "value"
+            },
+            "statusCode": 0
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 

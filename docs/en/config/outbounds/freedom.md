@@ -1,4 +1,4 @@
-﻿# Freedom (fragment, noises)
+# Freedom (fragment, noises)
 
 Freedom is an outbound protocol used to send (normal) TCP or UDP data to any network.
 
@@ -10,31 +10,39 @@ This outbound has a default safety policy in server-side and reverse-proxy scena
 
 ```json
 {
-  "domainStrategy": "AsIs",
-  "redirect": "127.0.0.1:3366",
-  "userLevel": 0,
-  "fragment": {
-    "packets": "tlshello",
-    "length": "100-200",
-    "interval": "10-20" // Unit: ms
-  },
-  "noises": [
+  "outbounds": [
     {
-      "type": "base64",
-      "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
-      "delay": "10-16"
-    }
-  ],
-  "proxyProtocol": 0,
-  "finalRules": [
-    {
-      "action": "block",
-      "network": "tcp",
-      "port": "22,25,465,587"
-    },
-    {
-      "action": "block",
-      "ip": ["geoip:cn"]
+      // ...
+      "settings": {
+        // [!code focus:27]
+        "domainStrategy": "AsIs",
+        "redirect": "127.0.0.1:3366",
+        "userLevel": 0,
+        "fragment": {
+          "packets": "tlshello",
+          "length": "100-200",
+          "interval": "10-20" // Unit: ms
+        },
+        "noises": [
+          {
+            "type": "base64",
+            "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
+            "delay": "10-16"
+          }
+        ],
+        "proxyProtocol": 0,
+        "finalRules": [
+          {
+            "action": "block",
+            "network": "tcp",
+            "port": "22,25,465,587"
+          },
+          {
+            "action": "block",
+            "ip": ["geoip:cn"]
+          }
+        ]
+      }
     }
   ]
 }

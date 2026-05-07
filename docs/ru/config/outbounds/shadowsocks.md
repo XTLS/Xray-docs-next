@@ -31,14 +31,22 @@
 
 ```json
 {
-  "email": "love@xray.com",
-  "address": "127.0.0.1",
-  "port": 1234,
-  "method": "метод_шифрования",
-  "password": "пароль",
-  "uot": true,
-  "UoTVersion": 2,
-  "level": 0
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:8]
+        "email": "love@xray.com",
+        "address": "127.0.0.1",
+        "port": 1234,
+        "method": "метод_шифрования",
+        "password": "пароль",
+        "uot": true,
+        "UoTVersion": 2,
+        "level": 0
+      }
+    }
+  ]
 }
 ```
 

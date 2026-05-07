@@ -12,9 +12,17 @@ The `hysteria protocol` itself has no authentication. When using with a non `hys
 
 ```json
 {
-  "version": 2,
-  "address": "192.168.108.1",
-  "port": 3128
+  "outbounds": [
+    {
+      // ...
+      "settings": {
+        // [!code focus:3]
+        "version": 2,
+        "address": "192.168.108.1",
+        "port": 3128
+      }
+    }
+  ]
 }
 ```
 

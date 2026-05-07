@@ -39,14 +39,26 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
 
 ```json
 {
-  "authority": "grpc.example.com",
-  "serviceName": "name",
-  "multiMode": false,
-  "user_agent": "custom user agent",
-  "idle_timeout": 60,
-  "health_check_timeout": 20,
-  "permit_without_stream": false,
-  "initial_windows_size": 0
+  // outbound 示例，同样可用于 inbound
+  "outbounds": [
+    {
+      // ...
+      "streamSettings": {
+        "network": "grpc",
+        "grpcSettings": {
+          // [!code focus:8]
+          "authority": "grpc.example.com",
+          "serviceName": "name",
+          "multiMode": false,
+          "user_agent": "custom user agent",
+          "idle_timeout": 60,
+          "health_check_timeout": 20,
+          "permit_without_stream": false,
+          "initial_windows_size": 0
+        }
+      }
+    }
+  ]
 }
 ```
 
