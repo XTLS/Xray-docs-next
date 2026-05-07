@@ -15,6 +15,7 @@ VMess depends on system time. Please ensure that the system UTC time of the devi
   "inbounds": [
     {
       // ...
+      "protocol": "vmess",
       "settings": {
         // [!code focus:10]
         "users": [

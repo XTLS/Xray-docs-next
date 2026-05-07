@@ -36,6 +36,7 @@
   "inbounds": [
     {
       // ...
+      "protocol": "shadowsocks",
       "settings": {
         // [!code focus:11]
         "network": "tcp,udp",

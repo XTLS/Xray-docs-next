@@ -17,6 +17,7 @@
   "outbounds": [
     {
       // ...
+      "protocol": "hysteria",
       "settings": {
         // [!code focus:3]
         "version": 2,

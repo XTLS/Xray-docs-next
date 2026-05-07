@@ -36,6 +36,7 @@
   "outbounds": [
     {
       // ...
+      "protocol": "shadowsocks",
       "settings": {
         // [!code focus:8]
         "email": "love@xray.com",

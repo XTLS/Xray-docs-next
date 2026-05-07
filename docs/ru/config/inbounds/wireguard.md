@@ -15,6 +15,7 @@
   "inbounds": [
     {
       // ...
+      "protocol": "wireguard",
       "settings": {
         // [!code focus:8]
         "secretKey": "PRIVATE_KEY",

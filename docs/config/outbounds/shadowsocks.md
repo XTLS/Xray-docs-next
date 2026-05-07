@@ -36,6 +36,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
   "outbounds": [
     {
       // ...
+      "protocol": "shadowsocks",
       "settings": {
         // [!code focus:8]
         "email": "love@xray.com",

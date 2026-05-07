@@ -15,6 +15,7 @@ Trojan is designed to work over correctly configured encrypted TLS tunnels.
   "inbounds": [
     {
       // ...
+      "protocol": "trojan",
       "settings": {
         // [!code focus:12]
         "users": [

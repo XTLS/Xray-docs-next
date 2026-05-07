@@ -15,6 +15,7 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
   "outbounds": [
     {
       // ...
+      "protocol": "trojan",
       "settings": {
         // [!code focus:5]
         "address": "127.0.0.1",

@@ -15,6 +15,7 @@ VMess depends on system time. Please ensure that the UTC time of the system runn
   "outbounds": [
     {
       // ...
+      "protocol": "vmess",
       "settings": {
         // [!code focus:6]
         "address": "127.0.0.1",

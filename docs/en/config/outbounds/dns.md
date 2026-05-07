@@ -15,6 +15,7 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
   "outbounds": [
     {
       // ...
+      "protocol": "dns",
       "settings": {
         // [!code focus:15]
         "rewriteNetwork": "udp",

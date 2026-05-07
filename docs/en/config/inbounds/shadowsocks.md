@@ -36,6 +36,7 @@ Under the "none" encryption method, traffic will be transmitted in plain text. T
   "inbounds": [
     {
       // ...
+      "protocol": "shadowsocks",
       "settings": {
         // [!code focus:11]
         "network": "tcp,udp",

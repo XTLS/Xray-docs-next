@@ -11,6 +11,7 @@ Loopback - это исходящий протокол данных, которы
   "outbounds": [
     {
       // ...
+      "protocol": "loopback",
       "settings": {
         // [!code focus:1]
         "inboundTag": "TagUseAsInbound"

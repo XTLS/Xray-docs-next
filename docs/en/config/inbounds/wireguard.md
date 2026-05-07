@@ -15,6 +15,7 @@ User-space WireGuard protocol implementation.
   "inbounds": [
     {
       // ...
+      "protocol": "wireguard",
       "settings": {
         // [!code focus:8]
         "secretKey": "PRIVATE_KEY",

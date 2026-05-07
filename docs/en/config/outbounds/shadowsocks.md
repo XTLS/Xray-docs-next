@@ -36,6 +36,7 @@ Under the "none" encryption method, traffic will be transmitted in plain text. T
   "outbounds": [
     {
       // ...
+      "protocol": "shadowsocks",
       "settings": {
         // [!code focus:8]
         "email": "love@xray.com",

@@ -17,6 +17,7 @@ The `hysteria protocol` itself has no authentication. When using with a non `hys
   "outbounds": [
     {
       // ...
+      "protocol": "hysteria",
       "settings": {
         // [!code focus:3]
         "version": 2,

@@ -17,6 +17,7 @@
   "inbounds": [
     {
       // ...
+      "protocol": "socks",
       "settings": {
         // [!code focus:10]
         "auth": "noauth",

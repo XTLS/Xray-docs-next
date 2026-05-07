@@ -13,6 +13,7 @@
   "inbounds": [
     {
       // ...
+      "protocol": "hysteria",
       "settings": {
         // [!code focus:8]
         "version": 2,

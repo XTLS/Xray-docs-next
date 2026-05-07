@@ -11,6 +11,7 @@
   "inbounds": [
     {
       // ...
+      "protocol": "tunnel",
       "settings": {
         // [!code focus:10]
         "allowedNetwork": "tcp",

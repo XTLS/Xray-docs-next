@@ -15,6 +15,7 @@ This outbound has a default safety policy in server-side and reverse-proxy scena
   "outbounds": [
     {
       // ...
+      "protocol": "freedom",
       "settings": {
         // [!code focus:27]
         "domainStrategy": "AsIs",

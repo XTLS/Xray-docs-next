@@ -15,6 +15,7 @@ Trojan is designed to work over a correctly configured encrypted TLS tunnel.
   "outbounds": [
     {
       // ...
+      "protocol": "trojan",
       "settings": {
         // [!code focus:5]
         "address": "127.0.0.1",

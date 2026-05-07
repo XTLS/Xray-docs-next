@@ -19,6 +19,7 @@ HTTP 协议。
   "outbounds": [
     {
       // ...
+      "protocol": "http",
       "settings": {
         // [!code focus:10]
         "address": "192.168.108.1",

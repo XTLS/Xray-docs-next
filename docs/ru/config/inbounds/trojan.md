@@ -15,6 +15,7 @@ Trojan предназначен для работы в правильно нас
   "inbounds": [
     {
       // ...
+      "protocol": "trojan",
       "settings": {
         // [!code focus:12]
         "users": [

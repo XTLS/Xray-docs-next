@@ -15,6 +15,7 @@
   "outbounds": [
     {
       // ...
+      "protocol": "wireguard",
       "settings": {
         // [!code focus:18]
         "secretKey": "PRIVATE_KEY",

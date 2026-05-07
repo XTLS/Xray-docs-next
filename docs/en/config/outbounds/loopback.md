@@ -11,6 +11,7 @@ Loopback is an outbound data protocol. Its function is to re-inject data sent th
   "outbounds": [
     {
       // ...
+      "protocol": "loopback",
       "settings": {
         // [!code focus:1]
         "inboundTag": "TagUseAsInbound"

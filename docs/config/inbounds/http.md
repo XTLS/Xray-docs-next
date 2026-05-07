@@ -28,6 +28,7 @@ HTTP 协议。
   "inbounds": [
     {
       // ...
+      "protocol": "http",
       "settings": {
         // [!code focus:8]
         "users": [

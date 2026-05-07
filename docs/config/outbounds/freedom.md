@@ -15,6 +15,7 @@ Freedom 是一个出站协议，可以用来向任意网络发送（正常的）
   "outbounds": [
     {
       // ...
+      "protocol": "freedom",
       "settings": {
         // [!code focus:27]
         "domainStrategy": "AsIs",

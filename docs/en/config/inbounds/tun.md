@@ -11,6 +11,7 @@ Creates a TUN interface; traffic sent to this interface will be processed by Xra
   "inbounds": [
     {
       // ...
+      "protocol": "tun",
       "settings": {
         // [!code focus:7]
         "name": "xray0",

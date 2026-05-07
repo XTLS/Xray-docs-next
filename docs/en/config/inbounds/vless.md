@@ -13,6 +13,7 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
   "inbounds": [
     {
       // ...
+      "protocol": "vless",
       "settings": {
         // [!code focus:15]
         "users": [

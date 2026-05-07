@@ -15,6 +15,7 @@ Trojan предназначен для работы в правильно нас
   "outbounds": [
     {
       // ...
+      "protocol": "trojan",
       "settings": {
         // [!code focus:5]
         "address": "127.0.0.1",

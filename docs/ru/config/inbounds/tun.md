@@ -11,6 +11,7 @@
   "inbounds": [
     {
       // ...
+      "protocol": "tun",
       "settings": {
         // [!code focus:7]
         "name": "xray0",

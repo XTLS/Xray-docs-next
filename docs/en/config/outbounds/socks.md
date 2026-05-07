@@ -15,6 +15,7 @@ Standard Socks protocol implementation, compatible with Socks 5.
   "outbounds": [
     {
       // ...
+      "protocol": "socks",
       "settings": {
         // [!code focus:6]
         "address": "127.0.0.1",

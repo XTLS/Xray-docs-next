@@ -11,6 +11,7 @@ Tunnel（隧道），旧称 dokodemo-door（任意门），可以监听数个本
   "inbounds": [
     {
       // ...
+      "protocol": "tunnel",
       "settings": {
         // [!code focus:10]
         "allowedNetwork": "tcp",

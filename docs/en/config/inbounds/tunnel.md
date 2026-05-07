@@ -11,6 +11,7 @@ Tunnel, formerly known as dokodemo-door (Arbitrary Door), can listen on multiple
   "inbounds": [
     {
       // ...
+      "protocol": "tunnel",
       "settings": {
         // [!code focus:10]
         "allowedNetwork": "tcp",

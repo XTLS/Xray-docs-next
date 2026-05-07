@@ -15,6 +15,7 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
   "outbounds": [
     {
       // ...
+      "protocol": "vmess",
       "settings": {
         // [!code focus:6]
         "address": "127.0.0.1",
