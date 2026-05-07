@@ -1,0 +1,23 @@
+/* .vitepress/theme/style/code-focus.css */
+
+:root {
+  --vp-code-focus-blur: 0rem;
+  --vp-code-focus-dim-opacity: 0.382;
+  --vp-code-focus-transition-duration: 0.35s;
+}
+
+.vp-doc [class*="language-"] .has-focused-lines .line:not(.has-focus) {
+  filter: blur(var(--vp-code-focus-blur));
+  opacity: var(--vp-code-focus-dim-opacity);
+  transition:
+    filter var(--vp-code-focus-transition-duration),
+    opacity var(--vp-code-focus-transition-duration);
+}
+
+.vp-doc
+  [class*="language-"]:hover
+  .has-focused-lines
+  .line:not(.has-focus) {
+  filter: blur(0);
+  opacity: 1;
+}
