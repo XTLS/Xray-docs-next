@@ -106,7 +106,6 @@ Xray предлагает два способа проверки:
   - 06_outbounds.json
   - 07_transport.json
   - 08_stats.json
-  - 09_reverse.json
 - `/usr/local/share/xray/`: Каталог с файлами ресурсов, содержит файлы геолокационных данных от Loyalsoldier (права доступа те же, что и выше)
   - geoip.dat
   - geosite.dat

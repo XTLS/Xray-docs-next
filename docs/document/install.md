@@ -113,7 +113,6 @@ ghcr.io/xtls/xray-core 版本映像：
   - 06_outbounds.json
   - 07_transport.json
   - 08_stats.json
-  - 09_reverse.json
 - `/usr/local/share/xray/`：资源文件目录，存放了 Loyalsoldier 版本地理位置数据文件（权限同上）
   - geoip.dat
   - geosite.dat

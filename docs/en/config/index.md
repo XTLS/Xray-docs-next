@@ -19,7 +19,6 @@ The format is as follows:
   "outbounds": [],
   "transport": {},
   "stats": {},
-  "reverse": {},
   "fakedns": {},
   "metrics": {},
   "observatory": {},
@@ -102,10 +101,6 @@ Used to configure how Xray establishes and uses network connections with other s
 > stats: [StatsObject](./stats.md)
 
 Used to configure traffic statistics.
-
-> reverse: [ReverseObject](./reverse.md)
-
-Reverse proxy. Can forward server-side traffic to the client, i.e., reverse traffic forwarding.
 
 > fakedns: [FakeDnsObject](./fakedns.md)
 

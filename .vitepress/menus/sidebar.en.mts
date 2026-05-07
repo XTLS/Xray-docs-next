@@ -35,7 +35,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Inbounds", link: "/en/config/inbound.md" },
         { text: "Outbounds (Mux, XUDP)", link: "/en/config/outbound.md" },
         { text: "Local Policy", link: "/en/config/policy.md" },
-        { text: "Reverse Proxy", link: "/en/config/reverse.md" },
         { text: "Routing", link: "/en/config/routing.md" },
         { text: "Statistics", link: "/en/config/stats.md" },
         {

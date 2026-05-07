@@ -110,7 +110,6 @@ ghcr.io/xtls/xray-core version image:
   - 06_outbounds.json
   - 07_transport.json
   - 08_stats.json
-  - 09_reverse.json
 - `/usr/local/share/xray/`: Resource file directory, stores Loyalsoldier version geolocation data files (Permissions same as above)
   - geoip.dat
   - geosite.dat

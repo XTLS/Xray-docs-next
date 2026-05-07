@@ -1,5 +1,9 @@
 # Reverse Proxy
 
+::: danger
+This feature has been deprecated. Please use the VLESS reverse proxy.
+:::
+
 A reverse proxy can forward traffic from the server side to the client side, effectively performing reverse traffic forwarding.
 
 ::: tip

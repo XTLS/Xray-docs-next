@@ -44,7 +44,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/ru/config/outbound.md"
         },
         { text: "Локальные политики", link: "/ru/config/policy.md" },
-        { text: "Обратный прокси", link: "/ru/config/reverse.md" },
         { text: "Маршрутизация", link: "/ru/config/routing.md" },
         { text: "Статистика", link: "/ru/config/stats.md" },
         {

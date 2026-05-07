@@ -19,7 +19,6 @@
   "outbounds": [],
   "transport": {},
   "stats": {},
-  "reverse": {},
   "fakedns": {},
   "metrics": {},
   "observatory": {},
@@ -105,10 +104,6 @@
 > stats: [StatsObject](./stats.md)
 
 Используется для настройки сбора статистики трафика.
-
-> reverse: [ReverseObject](./reverse.md)
-
-Обратный прокси. Позволяет перенаправлять трафик с сервера на клиент, т.е. перенаправлять трафик в обратном направлении.
 
 > fakedns: [FakeDnsObject](./fakedns.md)
 

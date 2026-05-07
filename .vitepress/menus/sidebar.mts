@@ -29,7 +29,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "入站代理", link: "/config/inbound.md" },
         { text: "出站代理（Mux、XUDP）", link: "/config/outbound.md" },
         { text: "本地策略", link: "/config/policy.md" },
-        { text: "反向代理", link: "/config/reverse.md" },
         { text: "路由", link: "/config/routing.md" },
         { text: "统计信息", link: "/config/stats.md" },
         {
