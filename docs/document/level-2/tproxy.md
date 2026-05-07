@@ -92,7 +92,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
       "tag": "dns-out",
       "protocol": "dns",
       "settings": {
-        "address": "8.8.8.8"
+        "rewriteAddress": "8.8.8.8"
       },
       "proxySettings": {
         "tag": "proxy"

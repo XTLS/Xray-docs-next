@@ -10,9 +10,9 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
 
 ```json
 {
-  "network": "udp",
-  "address": "1.1.1.1",
-  "port": 53,
+  "rewriteNetwork": "udp",
+  "rewriteAddress": "1.1.1.1",
+  "rewritePort": 53,
   "userLevel": 0,
   "rules": [
     {
@@ -30,15 +30,15 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
 
 The example above only demonstrates the field syntax. See the full example below for a complete configuration.
 
-> `network`: [ "tcp" | "udp" ]
+> `rewriteNetwork`: [ "tcp" | "udp" ]
 
 Modifies the transport protocol used for DNS traffic. Available values are `"tcp"` and `"udp"`. If omitted, the original transport method is preserved.
 
-> `address`: address
+> `rewriteAddress`: address
 
 Modifies the DNS server address. If omitted, the address specified by the source is preserved.
 
-> `port`: number
+> `rewritePort`: number
 
 Modifies the DNS server port. If omitted, the port specified by the source is preserved.
 
@@ -70,7 +70,7 @@ All matching conditions in a rule are combined with AND logic. If a condition is
 
 Defines the action to take when the rule matches.
 
-- `direct`: Allows the query directly to the target DNS server. If outbound-level `network`, `address`, or `port` is also configured, the query is forwarded to the rewritten target.
+- `direct`: Allows the query directly to the target DNS server. If outbound-level `rewriteNetwork`, `rewriteAddress`, or `rewritePort` is also configured, the query is forwarded to the rewritten target.
 - `hijack`: Imports the query into the built-in [DNS server](../dns.md) for further processing. This can be used for additional routing based on the built-in DNS configuration. Currently, only A and AAAA records are supported.
 - `drop`: Drops the request directly without returning a response.
 - `reject`: Returns an explicit refusal response. Compared with `drop`, this can prevent some applications from waiting too long for a DNS timeout or repeatedly retrying.
