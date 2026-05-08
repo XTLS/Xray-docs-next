@@ -28,13 +28,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "FakeDNS", link: "/config/fakedns.md" },
         { text: "入站代理", link: "/config/inbound.md" },
         { text: "出站代理（Mux、XUDP）", link: "/config/outbound.md" },
+        { text: "传输配置", link: "/config/transport.md" },
         { text: "本地策略", link: "/config/policy.md" },
         { text: "路由", link: "/config/routing.md" },
         { text: "统计信息", link: "/config/stats.md" },
-        {
-          text: "传输配置",
-          link: "/config/transport.md"
-        },
         { text: "Metrics", link: "/config/metrics.md" },
         { text: "连接观测", link: "/config/observatory.md" },
         { text: "地理数据文件", link: "/config/geodata.md" }

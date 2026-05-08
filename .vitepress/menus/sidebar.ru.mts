@@ -39,17 +39,14 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Встроенный DNS-сервер", link: "/ru/config/dns.md" },
         { text: "FakeDNS", link: "/ru/config/fakedns.md" },
         { text: "Входящие подключения", link: "/ru/config/inbound.md" },
-        {
-          text: "Исходящие подключения",
-          link: "/ru/config/outbound.md"
-        },
-        { text: "Локальные политики", link: "/ru/config/policy.md" },
-        { text: "Маршрутизация", link: "/ru/config/routing.md" },
-        { text: "Статистика", link: "/ru/config/stats.md" },
+        { text: "Исходящие подключения", link: "/ru/config/outbound.md" },
         {
           text: "Конфигурация транспорта",
           link: "/ru/config/transport.md"
         },
+        { text: "Локальные политики", link: "/ru/config/policy.md" },
+        { text: "Маршрутизация", link: "/ru/config/routing.md" },
+        { text: "Статистика", link: "/ru/config/stats.md" },
         { text: "Метрики", link: "/ru/config/metrics.md" },
         {
           text: "Мониторинг подключений",
@@ -163,7 +160,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         {
           text: "Дополнительные настройки",
           items: [
-            { text: "FinalMask", link: "/ru/config/transports/finalmask.md" },
+            {
+              text: "FinalMask",
+              link: "/ru/config/transports/finalmask.md"
+            },
             { text: "Sockopt", link: "/ru/config/transports/sockopt.md" }
           ]
         }

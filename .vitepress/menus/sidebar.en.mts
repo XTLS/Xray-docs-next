@@ -34,13 +34,13 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "FakeDNS", link: "/en/config/fakedns.md" },
         { text: "Inbounds", link: "/en/config/inbound.md" },
         { text: "Outbounds (Mux, XUDP)", link: "/en/config/outbound.md" },
-        { text: "Local Policy", link: "/en/config/policy.md" },
-        { text: "Routing", link: "/en/config/routing.md" },
-        { text: "Statistics", link: "/en/config/stats.md" },
         {
           text: "Transport Configuration",
           link: "/en/config/transport.md"
         },
+        { text: "Local Policy", link: "/en/config/policy.md" },
+        { text: "Routing", link: "/en/config/routing.md" },
+        { text: "Statistics", link: "/en/config/stats.md" },
         { text: "Metrics", link: "/en/config/metrics.md" },
         { text: "Observatory", link: "/en/config/observatory.md" },
         { text: "Geodata Files", link: "/en/config/geodata.md" }
@@ -115,7 +115,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
             },
             { text: "mKCP", link: "/en/config/transports/mkcp.md" },
             { text: "gRPC", link: "/en/config/transports/grpc.md" },
-            { text: "WebSocket", link: "/en/config/transports/websocket.md" },
+            {
+              text: "WebSocket",
+              link: "/en/config/transports/websocket.md"
+            },
             {
               text: "HTTPUpgrade",
               link: "/en/config/transports/httpupgrade.md"
@@ -133,7 +136,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         {
           text: "Additional Configuration",
           items: [
-            { text: "FinalMask", link: "/en/config/transports/finalmask.md" },
+            {
+              text: "FinalMask",
+              link: "/en/config/transports/finalmask.md"
+            },
             { text: "Sockopt", link: "/en/config/transports/sockopt.md" }
           ]
         }
