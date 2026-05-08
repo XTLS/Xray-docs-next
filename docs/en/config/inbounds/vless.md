@@ -47,8 +47,9 @@ Each item is a user [UserObject](#userobject).
 
 [VLESS Encryption](https://github.com/XTLS/Xray-core/pull/5067) settings. Cannot be left empty; to disable, explicitly set it to `"none"`.
 
-It is recommended for most users to use `./xray vlessenc` to automatically generate this field to ensure no errors in writing. The detailed configuration below is recommended for advanced users only.
+It is recommended for most users to use the `xray vlessenc` command to automatically generate this field to avoid configuration mistakes. The detailed configuration below is recommended for advanced users only.
 
+::: details Detailed configuration
 Its format is a string of detailed configuration fields connected by `.`. For example: `mlkem768x25519plus.native.600s.100-111-1111.75-0-111.50-0-3333.ptjHQxBQxTJ9MWr2cd5qWIflBSACHOevTauCQwa_71U`. This document refers to the individual parts separated by dots as blocks.
 
 - The 1st block is the handshake method. Currently, there is only `mlkem768x25519plus`. Requires the server and client to match.
@@ -63,6 +64,7 @@ Following this is padding. After the connection is established, the server sends
 The first padding block has special requirements: it requires 100% probability and a minimum length greater than 0. If no padding exists, the core automatically uses `100-111-1111.75-0-111.50-0-3333` as the padding setting.
 
 The last block is identified by the core as the parameter used to authenticate the client. It can be generated using `./xray x25519` (using the PrivateKey part) or `./xray mlkem768` (using the Seed part). It must correspond to the client. `mlkem768` is a post-quantum algorithm that prevents the private key from being cracked by quantum computers (in the future) to impersonate the server if client parameters are leaked. This parameter is only used for verification; the handshake process is post-quantum secure regardless, and existing encrypted data cannot be cracked by future quantum computers.
+:::
 
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
@@ -77,7 +79,7 @@ For specific fallback configurations, please click [FallbackObject](../features/
   "level": 0,
   "email": "love@xray.com",
   "flow": "xtls-rprx-vision",
-  "reverse" {}
+  "reverse": {}
 }
 ```
 
