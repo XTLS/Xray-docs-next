@@ -121,11 +121,9 @@ XTLS is only available under the following combinations:
 
 > `reverse`: struct
 
-VLESS simplified reverse proxy configuration. It functions the same as the core's internal general reverse proxy but with simpler configuration.
+VLESS simplified reverse proxy configuration.
 
 The presence of this item indicates that connections from this user can be used to establish a reverse proxy tunnel, while disabling normal forward proxy usage.
-
-Current syntax:
 
 ```json
 "reverse": {
@@ -136,3 +134,7 @@ Current syntax:
 `tag` is the outbound proxy tag for this reverse proxy. Routing traffic to this outbound using routing rules will forward it through the reverse proxy to the connected client's routing system (see VLESS Outbound for client configuration details).
 
 When multiple different connections (potentially from different devices) are connected, the core will randomly select one to dispatch reverse proxy data for each request.
+
+::: tip
+Full tutorial: [VLESS Reverse Proxy Examples](../../document/level-2/vless_reverse.md)
+:::

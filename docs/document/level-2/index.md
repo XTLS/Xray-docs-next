@@ -33,3 +33,7 @@ Xray v1.6.5 新增 WireGuard 出站的使用介绍。
 [Xray 流量统计](./traffic_stats.md) by <img src="https://avatars.githubusercontent.com/u/1588741?s=32" width="32" height="32" alt="a"/> [@yuhan6665](https://github.com/yuhan6665)
 
 适配 Xray 的流量统计和脚本。
+
+[VLESS 反向代理](./vless_reverse.md)
+
+VLESS 反向代理教程。
