@@ -50,7 +50,7 @@ A map mapping local ports to required remote addresses/ports (if the inbound lis
 
 When set to `true`, dokodemo-door will recognize data forwarded by iptables and forward it to the corresponding target address.
 
-Please refer to the `tproxy` setting in [Transport Configuration](../transport.md#sockoptobject).
+Please refer to the `tproxy` setting in [Sockopt](../transports/sockopt.md#sockoptobject).
 
 > `userLevel`: number
 

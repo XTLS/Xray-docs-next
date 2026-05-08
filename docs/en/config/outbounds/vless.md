@@ -84,7 +84,7 @@ Currently, the following flow control modes are available in the outbound protoc
 
 XTLS is available only in the following combinations:
 
-- **TCP+TLS/Reality**: In this case, if transmitting TLS 1.3, the core will attempt to Splice encrypted data at the bottom layer. If successful, it saves all core IO overhead.
+- **TCP+TLS/REALITY**: In this case, if transmitting TLS 1.3, the core will attempt to Splice encrypted data at the bottom layer. If successful, it saves all core IO overhead.
 - **VLESS Encryption**: No underlying transport restrictions. If the underlying transport is not TCP, it only attempts to penetrate Encryption, saving Encryption overhead. If it is TCP, it will still attempt to perform Splice.
 
 ::: tip About Splice

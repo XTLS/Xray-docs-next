@@ -38,7 +38,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Routing", link: "/en/config/routing.md" },
         { text: "Statistics", link: "/en/config/stats.md" },
         {
-          text: "Transport (uTLS, REALITY)",
+          text: "Transport Configuration",
           link: "/en/config/transport.md"
         },
         { text: "Metrics", link: "/en/config/metrics.md" },
@@ -101,23 +101,42 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       ]
     },
     {
-      text: "Transports",
+      text: "Transport Configuration",
       link: "/en/config/transports/",
       collapsed: true,
       items: [
-        { text: "RAW", link: "/en/config/transports/raw.md" },
         {
-          text: "XHTTP: Beyond REALITY",
-          link: "/en/config/transports/xhttp.md"
+          text: "Transport Methods",
+          items: [
+            { text: "RAW", link: "/en/config/transports/raw.md" },
+            {
+              text: "XHTTP: Beyond REALITY",
+              link: "/en/config/transports/xhttp.md"
+            },
+            { text: "mKCP", link: "/en/config/transports/mkcp.md" },
+            { text: "gRPC", link: "/en/config/transports/grpc.md" },
+            { text: "WebSocket", link: "/en/config/transports/websocket.md" },
+            {
+              text: "HTTPUpgrade",
+              link: "/en/config/transports/httpupgrade.md"
+            },
+            { text: "Hysteria", link: "/en/config/transports/hysteria.md" }
+          ]
         },
-        { text: "mKCP", link: "/en/config/transports/mkcp.md" },
-        { text: "gRPC", link: "/en/config/transports/grpc.md" },
-        { text: "WebSocket", link: "/en/config/transports/websocket.md" },
         {
-          text: "HTTPUpgrade",
-          link: "/en/config/transports/httpupgrade.md"
+          text: "Transport Security",
+          items: [
+            { text: "REALITY", link: "/en/config/transports/reality.md" },
+            { text: "TLS", link: "/en/config/transports/tls.md" }
+          ]
         },
-        { text: "Hysteria", link: "/en/config/transports/hysteria.md" }
+        {
+          text: "Additional Configuration",
+          items: [
+            { text: "FinalMask", link: "/en/config/transports/finalmask.md" },
+            { text: "Sockopt", link: "/en/config/transports/sockopt.md" }
+          ]
+        }
       ]
     }
   ],

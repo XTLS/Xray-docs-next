@@ -118,7 +118,7 @@ Currently, the following flow control modes are available in the inbound protoco
 
 XTLS is only available under the following combinations:
 
-- TCP+TLS/Reality: In this case, encrypted data is directly copied at the underlying layer (if transmitting TLS 1.3).
+- TCP+TLS/REALITY: In this case, encrypted data is directly copied at the underlying layer (if transmitting TLS 1.3).
 - VLESS Encryption: No underlying transport restrictions. If the underlying layer does not support direct copying (see above), it only penetrates Encryption.
 
 > `reverse`: struct

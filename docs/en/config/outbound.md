@@ -63,9 +63,9 @@ The identifier for this outbound connection, used to locate this connection in o
 When not empty, its value must be **unique** among all `tag`s.
 :::
 
-> `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
+> `streamSettings`: [StreamSettingsObject](./transport.md)
 
-The underlying transport method is the way the current Xray node connects with other nodes.
+Transport configuration for this outbound.
 
 > `proxySettings`: [ProxySettingsObject](#proxysettingsobject)
 
@@ -79,10 +79,10 @@ Specific configuration related to Mux.
 
 If this outbound attempts to send a domain request, this controls whether it is resolved/how it is resolved to an IP before sending.
 
-The default value is `AsIs`, meaning it is sent to the remote server as is. All parameter meanings are roughly equivalent to `domainStrategy` in [sockopt](./transport.md#sockoptobject).
+The default value is `AsIs`, meaning it is sent to the remote server as is. All parameter meanings are roughly equivalent to `domainStrategy` in [Sockopt](./transports/sockopt.md#sockoptobject).
 
 ::: tip
-This controls **proxied requests**. If the address of the outbound proxy server is a domain name, and you need to select a resolution strategy for the domain name itself, you should configure `domainStrategy` in [sockopt](./transport.md#sockoptobject).
+This controls **proxied requests**. If the address of the outbound proxy server is a domain name, and you need to select a resolution strategy for the domain name itself, you should configure `domainStrategy` in [Sockopt](./transports/sockopt.md#sockoptobject).
 :::
 
 ### ProxySettingsObject
@@ -99,15 +99,15 @@ This controls **proxied requests**. If the address of the outbound proxy server 
 When the identifier of another outbound is specified, data sent by this outbound will be forwarded to the specified outbound for transmission.
 
 ::: danger
-This option conflicts with [SockOpt.dialerProxy](./transport.md#sockoptobject). Choose one as needed.
+This option conflicts with [Sockopt.dialerProxy](./transports/sockopt.md#sockoptobject). Choose one as needed.
 
-By default, this forwarding method **does not go through** the underlying transport method (REALITY/XHTTP/gRPC...), meaning the `streamSettings` of this outbound will not take effect.<br>
-If you need forwarding that supports underlying transport methods, please use `SockOpt.dialerProxy` instead or set `transportLayer` to `true`.
+By default, this forwarding method **ignores** this outbound's own transport configuration (such as XHTTP, REALITY, or Sockopt), meaning the `streamSettings` of this outbound will not take effect.<br>
+If you need forwarding that works together with `streamSettings`, please use `Sockopt.dialerProxy` instead or set `transportLayer` to `true` here.
 :::
 
 > `transportLayer`: true | false
 
-`true` converts this setting to `SockOpt.dialerProxy` to support forwarding via underlying transport methods. The default is `false`, meaning no conversion.
+`true` converts this setting to `Sockopt.dialerProxy` so the forwarding can use this outbound's `streamSettings`. The default is `false`.
 
 ### MuxObject
 

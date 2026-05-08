@@ -1,6 +1,8 @@
-# Xray Transport Layer
+# Xray Transport Configuration
 
-Xray supports the following transport layers:
+Xray supports the following transport configuration categories:
+
+## Transport Methods
 
 - [RAW](raw.md)
 - [XHTTP: Beyond REALITY](xhttp.md)
@@ -9,3 +11,13 @@ Xray supports the following transport layers:
 - [WebSocket](websocket.md)
 - [HTTPUpgrade](httpupgrade.md)
 - [Hysteria](hysteria.md)
+
+## Transport Security
+
+- [REALITY](reality.md)
+- [TLS](tls.md)
+
+## Additional Configuration
+
+- [FinalMask](finalmask.md)
+- [Sockopt](sockopt.md)

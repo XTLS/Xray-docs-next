@@ -38,7 +38,7 @@ The solution is not to listen on `0.0.0.0` but to listen on the specific IP addr
 
 Supports Unix domain sockets in absolute path format, such as `"/dev/shm/domain.socket"`. You can add `@` at the beginning to represent [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html), and `@@` for abstract with padding.
 
-When filling in a Unix domain socket, `port` and `allocate` will be ignored. The protocol can currently be VLESS, VMess, or Trojan, and applies only to TCP-based underlying transports, such as `tcp`, `websocket`, `grpc`. UDP-based transports like `mkcp` are not supported.
+When filling in a Unix domain socket, `port` and `allocate` will be ignored. The protocol can currently be VLESS, VMess, or Trojan, and applies only to TCP-based transport methods, such as `tcp`, `websocket`, `grpc`. UDP-based transports like `mkcp` are not supported.
 
 When filling in a Unix domain socket, you can use the format `"/dev/shm/domain.socket,0666"`, i.e., adding a comma and access permission indicators after the socket, to specify the access permissions of the socket. This can be used to solve socket permission issues that occur by default.
 
@@ -62,9 +62,9 @@ Connection protocol name. See the list of available [Inbound Protocols](./inboun
 
 Specific configuration content, which varies by protocol. See `InboundConfigurationObject` in each protocol section for details.
 
-> `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
+> `streamSettings`: [StreamSettingsObject](./transport.md)
 
-Underlying transport method (transport) is the way the current Xray node connects with other nodes.
+Transport configuration for this inbound.
 
 > `tag`: string
 > The identifier of this inbound connection, used to locate this connection in other configurations.

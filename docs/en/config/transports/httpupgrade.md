@@ -7,9 +7,9 @@ Its design is not recommended for standalone use; instead, it is intended to wor
 **It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113) to avoid significant traffic fingerprints such as HTTPUpgrade's "ALPN is http/1.1".**
 :::
 
-## HttpUpgradeObject
+## HTTPUpgradeObject
 
-`HttpUpgradeObject` corresponds to the `httpupgradeSettings` item in [`StreamSettingsObject`](../transport.md#streamsettingsobject).
+`HTTPUpgradeObject` corresponds to the `httpupgradeSettings` item in [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {
