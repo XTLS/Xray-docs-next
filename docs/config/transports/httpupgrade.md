@@ -7,9 +7,9 @@
 **推荐换用 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113)，以避免 HTTPUpgrade “ALPN 是 http/1.1” 等显著流量特征。**
 :::
 
-## HttpUpgradeObject
+## HTTPUpgradeObject
 
-`HttpUpgradeObject` 对应 [`StreamSettingsObject`](../transport.md#streamsettingsobject) 中的 `httpupgradeSettings` 项。
+`HTTPUpgradeObject` 对应 [`StreamSettingsObject`](../transport.md#streamsettingsobject) 中的 `httpupgradeSettings` 项。
 
 ```json
 {

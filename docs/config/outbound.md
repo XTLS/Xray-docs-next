@@ -63,9 +63,9 @@
 当其不为空时，其值必须在所有 `tag` 中 **唯一**。
 :::
 
-> `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
+> `streamSettings`: [StreamSettingsObject](./transport.md)
 
-底层传输方式（transport）是当前 Xray 节点和其它节点对接的方式。
+此出站的传输配置。
 
 > `proxySettings`: [ProxySettingsObject](#proxysettingsobject)
 
@@ -79,10 +79,10 @@ Mux 相关的具体配置。
 
 如果此出站尝试发送一个域名请求，控制其是否被解析/如何解析为 IP 并发送。
 
-默认值为 `AsIs` 即保持原样发送到远端服务器。所有参数含义均约等于 [sockopt](./transport.md#sockoptobject) 中的 `domainStrategy`。
+默认值为 `AsIs` 即保持原样发送到远端服务器。所有参数含义均约等于 [sockopt](./transports/sockopt.md#sockoptobject) 中的 `domainStrategy`。
 
 ::: tip
-这里控制的是**被代理的请求**，如果出站代理服务器的地址是域名，并需要为这个域名本身选择解析策略，则应配置 [sockopt](./transport.md#sockoptobject) 中的 `domainStrategy`。
+这里控制的是**被代理的请求**，如果出站代理服务器的地址是域名，并需要为这个域名本身选择解析策略，则应配置 [sockopt](./transports/sockopt.md#sockoptobject) 中的 `domainStrategy`。
 :::
 
 ### ProxySettingsObject
@@ -99,15 +99,15 @@ Mux 相关的具体配置。
 当指定另一个 outbound 的标识时，此 outbound 发出的数据，将被转发至所指定的 outbound 发出。
 
 ::: danger
-此选项与 [SockOpt.dialerProxy](./transport.md#sockoptobject) 冲突，根据需要任选其一即可。
+此选项与 [Sockopt.dialerProxy](./transports/sockopt.md#sockoptobject) 冲突，根据需要任选其一即可。
 
-默认情况下，这种转发方式**不经过**底层传输方式 (REALITY/XHTTP/gRPC...)，也就是此 outbound 的 `streamSettings` 将不起作用。<br>
-如果需要使用支持底层传输方式的转发，请改用 `SockOpt.dialerProxy` 或者将 `transportLayer` 设为 `true`。
+默认情况下，这种转发方式**会忽略**此出站自己的 `传输配置` (如有 XHTTP/REALITY/Sockopt...)，也就是此 outbound 的 `streamSettings` 将不起作用。<br>
+如果需要使用支持 `streamSettings` 方式的转发，请改用 `Sockopt.dialerProxy` 或者将这里的 `transportLayer` 设为 `true`。
 :::
 
 > `transportLayer`: true | false
 
-`true` 将此设置转化为 `SockOpt.dialerProxy` 来支持底层传输方式的转发，默认为 `false` 即不转化。
+`true` 将此设置转化为 `Sockopt.dialerProxy` 来支持此出站的 `streamSettings`，默认为 `false` 即不转化。
 
 ### MuxObject
 

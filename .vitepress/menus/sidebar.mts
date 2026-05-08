@@ -32,7 +32,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "路由", link: "/config/routing.md" },
         { text: "统计信息", link: "/config/stats.md" },
         {
-          text: "传输方式（uTLS、REALITY）",
+          text: "传输配置",
           link: "/config/transport.md"
         },
         { text: "Metrics", link: "/config/metrics.md" },
@@ -89,20 +89,42 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       ]
     },
     {
-      text: "底层传输",
+      text: "传输配置",
       link: "/config/transports/",
       collapsed: true,
       items: [
-        { text: "RAW", link: "/config/transports/raw.md" },
         {
-          text: "XHTTP: Beyond REALITY",
-          link: "/config/transports/xhttp.md"
+          text: "传输方式",
+          items: [
+            { text: "RAW", link: "/config/transports/raw.md" },
+            {
+              text: "XHTTP: Beyond REALITY",
+              link: "/config/transports/xhttp.md"
+            },
+            { text: "mKCP", link: "/config/transports/mkcp.md" },
+            { text: "gRPC", link: "/config/transports/grpc.md" },
+            { text: "WebSocket", link: "/config/transports/websocket.md" },
+            {
+              text: "HTTPUpgrade",
+              link: "/config/transports/httpupgrade.md"
+            },
+            { text: "Hysteria", link: "/config/transports/hysteria.md" }
+          ]
         },
-        { text: "mKCP", link: "/config/transports/mkcp.md" },
-        { text: "gRPC", link: "/config/transports/grpc.md" },
-        { text: "WebSocket", link: "/config/transports/websocket.md" },
-        { text: "HTTPUpgrade", link: "/config/transports/httpupgrade.md" },
-        { text: "Hysteria", link: "/config/transports/hysteria.md" }
+        {
+          text: "传输安全",
+          items: [
+            { text: "REALITY", link: "/config/transports/reality.md" },
+            { text: "TLS", link: "/config/transports/tls.md" }
+          ]
+        },
+        {
+          text: "附加配置",
+          items: [
+            { text: "FinalMask", link: "/config/transports/finalmask.md" },
+            { text: "Sockopt", link: "/config/transports/sockopt.md" }
+          ]
+        }
       ]
     }
   ],

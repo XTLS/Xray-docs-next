@@ -350,7 +350,7 @@ Winter cannot cover the NEXT FUTURE...
 
 ## 2022.8.28 <Badge>[v1.5.10](https://github.com/XTLS/Xray-core/releases/tag/v1.5.10)</Badge>
 
-底层传输支持更合理的 TCP Keepalive 配置了。
+`sockopt` 支持更合理的 TCP Keepalive 配置了。
 
 ## 2022.6.20 <Badge>[v1.5.8](https://github.com/XTLS/Xray-core/releases/tag/v1.5.8)</Badge>
 

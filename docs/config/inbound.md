@@ -38,7 +38,7 @@
 
 支持填写 Unix domain socket，格式为绝对路径，形如 `"/dev/shm/domain.socket"`，可在开头加 `@` 代表 [abstract](https://www.man7.org/linux/man-pages/man7/unix.7.html)，`@@` 则代表带 padding 的 abstract。
 
-填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，仅适用于基于 TCP 的底层传输，如 `tcp` `websocket` `grpc`. 不支持基于 UDP 的传输，如 `mkcp`.
+填写 Unix domain socket 时，`port` 和 `allocate` 将被忽略，协议目前可选 VLESS、VMess、Trojan，仅适用于基于 TCP 的传输方式，如 `tcp` `websocket` `grpc`. 不支持基于 UDP 的传输，如 `mkcp`.
 
 填写 Unix domain socket 时，填写为形如 `"/dev/shm/domain.socket,0666"` 的形式，即 socket 后加逗号及访问权限指示符，即可指定 socket 的访问权限，可用于解决默认情况下出现的 socket 访问权限问题。
 
@@ -62,9 +62,9 @@
 
 具体的配置内容，视协议不同而不同。详见每个协议中的 `InboundConfigurationObject`。
 
-> `streamSettings`: [StreamSettingsObject](./transport.md#streamsettingsobject)
+> `streamSettings`: [StreamSettingsObject](./transport.md)
 
-底层传输方式（transport）是当前 Xray 节点和其它节点对接的方式
+此入站的传输配置。
 
 > `tag`: string
 
