@@ -47,7 +47,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Маршрутизация", link: "/ru/config/routing.md" },
         { text: "Статистика", link: "/ru/config/stats.md" },
         {
-          text: "Способы передачи",
+          text: "Конфигурация транспорта",
           link: "/ru/config/transport.md"
         },
         { text: "Метрики", link: "/ru/config/metrics.md" },
@@ -125,28 +125,47 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       ]
     },
     {
-      text: "Способы передачи",
+      text: "Конфигурация транспорта",
       link: "/ru/config/transports/",
       collapsed: true,
       items: [
-        { text: "RAW", link: "/ru/config/transports/raw.md" },
         {
-          text: "XHTTP: За пределами REALITY",
-          link: "/ru/config/transports/xhttp.md"
+          text: "Способы передачи",
+          items: [
+            { text: "RAW", link: "/ru/config/transports/raw.md" },
+            {
+              text: "XHTTP: За пределами REALITY",
+              link: "/ru/config/transports/xhttp.md"
+            },
+            { text: "mKCP", link: "/ru/config/transports/mkcp.md" },
+            { text: "gRPC", link: "/ru/config/transports/grpc.md" },
+            {
+              text: "WebSocket",
+              link: "/ru/config/transports/websocket.md"
+            },
+            {
+              text: "HTTPUpgrade",
+              link: "/ru/config/transports/httpupgrade.md"
+            },
+            {
+              text: "Hysteria",
+              link: "/ru/config/transports/hysteria.md"
+            }
+          ]
         },
-        { text: "mKCP", link: "/ru/config/transports/mkcp.md" },
-        { text: "gRPC", link: "/ru/config/transports/grpc.md" },
         {
-          text: "WebSocket",
-          link: "/ru/config/transports/websocket.md"
+          text: "Безопасность транспорта",
+          items: [
+            { text: "REALITY", link: "/ru/config/transports/reality.md" },
+            { text: "TLS", link: "/ru/config/transports/tls.md" }
+          ]
         },
         {
-          text: "HTTPUpgrade",
-          link: "/ru/config/transports/httpupgrade.md"
-        },
-        {
-          text: "Hysteria",
-          link: "/ru/config/transports/hysteria.md"
+          text: "Дополнительные настройки",
+          items: [
+            { text: "FinalMask", link: "/ru/config/transports/finalmask.md" },
+            { text: "Sockopt", link: "/ru/config/transports/sockopt.md" }
+          ]
         }
       ]
     }

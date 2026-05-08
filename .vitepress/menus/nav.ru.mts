@@ -9,7 +9,7 @@ export const nav: DefaultTheme.Config["nav"] = [
       { text: "Базовая конфигурация", link: "/ru/config/" },
       { text: "Входящие подключения", link: "/ru/config/inbounds/" },
       { text: "Исходящие подключения", link: "/ru/config/outbounds/" },
-      { text: "Транспортный уровень", link: "/ru/config/transports/" }
+      { text: "Конфигурация транспорта", link: "/ru/config/transports/" }
     ]
   },
   {

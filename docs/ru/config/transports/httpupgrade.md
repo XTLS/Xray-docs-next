@@ -8,9 +8,9 @@
 **Рекомендуется переключиться на [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113#discussioncomment-11468947), чтобы избежать значительных характеристик трафика, таких как HTTPUpgrade «ALPN is http/1.1».**
 :::
 
-## HttpUpgradeObject
+## HTTPUpgradeObject
 
-`HttpUpgradeObject` соответствует элементу `httpupgradeSettings` в [`StreamSettingsObject`](../transport.md#streamsettingsobject).
+`HTTPUpgradeObject` соответствует элементу `httpupgradeSettings` в [`StreamSettingsObject`](../transport.md#streamsettingsobject).
 
 ```json
 {

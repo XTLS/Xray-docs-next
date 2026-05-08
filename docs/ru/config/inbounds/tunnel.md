@@ -52,7 +52,7 @@
 
 Если значение равно `true`, dokodemo-door будет распознавать данные, перенаправленные iptables, и пересылать их на соответствующий целевой адрес.
 
-См. настройку `tproxy` в разделе [Конфигурация транспорта](../transport.md#sockoptobject).
+См. настройку `tproxy` в разделе [Sockopt](../transports/sockopt.md#sockoptobject).
 
 > `userLevel`: number
 
