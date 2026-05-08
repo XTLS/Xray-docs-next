@@ -246,6 +246,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         {
           text: "Traffic Statistics",
           link: "/en/document/level-2/traffic_stats.md"
+        },
+        {
+          text: "VLESS Reverse Proxy",
+          link: "/en/document/level-2/vless_reverse.md"
         }
       ]
     }
