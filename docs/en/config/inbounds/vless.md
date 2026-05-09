@@ -16,7 +16,7 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
       "protocol": "vless",
       "settings": {
         // [!code focus:15]
-        "users": [
+        "clients": [
           {
             "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
             "level": 0,
@@ -37,11 +37,11 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
 }
 ```
 
-> `users`: \[ [UserObject](#userobject) \]
+> `clients`: \[ [ClientObject](#userobject) \]
 
-An array representing a group of users approved by the server.
+An array representing a group of clients approved by the server.
 
-Each item is a user [UserObject](#userobject).
+Each item is a client [ClientObject](#clientobject).
 
 > `decryption`: "none"
 
@@ -71,7 +71,7 @@ The last block is identified by the core as the parameter used to authenticate t
 An array containing a series of powerful fallback distribution configurations (optional).
 For specific fallback configurations, please click [FallbackObject](../features/fallback.md#fallbacks-configuration).
 
-### UserObject
+### ClientObject
 
 ```json
 {
@@ -85,8 +85,8 @@ For specific fallback configurations, please click [FallbackObject](../features/
 
 > `id`: string
 
-The user ID for VLESS. It can be any string less than 30 bytes or a valid UUID.
-A custom string and its mapped UUID are equivalent, which means you can write the id in the configuration file to identify the same user like this:
+The client ID for VLESS. It can be any string less than 30 bytes or a valid UUID.
+A custom string and its mapped UUID are equivalent, which means you can write the id in the configuration file to identify the same client like this:
 
 - Write `"id": "我爱🍉老师1314"`,
 - Or write `"id": "5783a3e7-e373-51cd-8642-c83782b807c5"` (This UUID is the UUID mapping of `我爱🍉老师1314`).
@@ -105,7 +105,7 @@ The value of `level` corresponds to the `level` value in [policy](../policy.md#p
 
 > `email`: string
 
-User email, used to distinguish traffic from different users (reflected in logs and statistics).
+Email address, used to distinguish traffic from different clients (reflected in logs and statistics).
 
 > `flow`: string
 
