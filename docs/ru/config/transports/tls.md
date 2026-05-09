@@ -4,6 +4,8 @@ TLS — это обычный механизм защиты транспорта
 
 Он используется для настройки шифрования транспортного уровня, проверки сертификатов, отпечатков клиента и связанных параметров сертификата.
 
+Поддерживается использование вместе с транспортами `RAW`, `XHTTP`, `mKCP`, `gRPC`, `WebSocket`, `HTTPUpgrade` и `Hysteria`.
+
 ## TLSObject
 
 `TLSObject` соответствует полю `tlsSettings` в [`StreamSettingsObject`](../transport.md#streamsettingsobject).

@@ -2,6 +2,8 @@
 
 REALITY is a modified form of TLS that uses the appearance and handshake characteristics of a target site as camouflage.
 
+REALITY can only be used together with the `RAW`, `XHTTP`, and `gRPC` transport methods.
+
 :::: tip
 REALITY is currently one of the most secure transport-security schemes, and from the outside its traffic shape is consistent with ordinary web browsing.<br>
 Enabling REALITY together with a suitable XTLS Vision flow-control mode can improve performance by several times or even more than ten times.

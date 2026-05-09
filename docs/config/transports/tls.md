@@ -4,6 +4,8 @@ TLS 是常见的传输层加密方式。
 
 可用于为传输层提供加密、证书校验与客户端指纹等相关配置。
 
+支持与 `RAW`、`XHTTP`、`mKCP`、`gRPC`、`WebSocket`、`HTTPUpgrade`、`Hysteria` 传输方式组合使用。
+
 ## TLSObject
 
 `TLSObject` 对应 [`StreamSettingsObject`](../transport.md#streamsettingsobject) 中的 `tlsSettings` 项。

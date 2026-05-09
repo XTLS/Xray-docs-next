@@ -1,6 +1,6 @@
 # Xray Transport Configuration
 
-Xray supports the following transport configuration categories:
+Xray supports the following transport configuration categories
 
 ## Transport Methods
 

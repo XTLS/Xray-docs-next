@@ -2,6 +2,8 @@
 
 REALITY 是对 TLS 的一种修改，通过借用目标站点的 TLS 外观与握手特征来完成伪装。
 
+REALITY 仅支持与 `RAW`、`XHTTP`、`gRPC` 三种传输方式组合使用。
+
 :::: tip
 REALITY 是目前最安全的传输安全方案之一, 且外部看来流量类型和正常上网具有一致性。<br>
 启用 REALITY 并且配置合适的 XTLS Vision 流控模式, 可以达到数倍甚至十几倍的性能提升。
