@@ -21,38 +21,36 @@ hero:
       link: /about/sponsor.md
 
 features:
-  - title: 极速协议
-    icon: 🚀
-    details: 原创 VLESS 与 XTLS 协议，摆脱冗余加密，释放CPU算力
+  - title: 原创协议
+    icon: 🧬
+    details: VLESS、XTLS、Mux.Cool、XUDP、XHTTP、REALITY 等原创协议，覆盖代理、流控、复用、传输与安全等各个层面
+  - title: 强大路由
+    icon: 🔀
+    details: 灵活的路由与 DNS 系统，支持按域名、IP、端口、协议、进程、用户等条件细粒度调度流量，适用于正向代理分流与反向代理异地组网
+  - title: 流量伪装
+    icon: 🎭
+    details: VLESS 回落、REALITY、XTLS 流控与 FinalMask 等方案，从多个层面降低流量特征并增强抗探测能力
   - title: 自由组合
     icon: 🧩
-    details: 完善的回落机制，有效防止主动探测，多服务共享端口
+    details: 代理协议、流控模式、传输层与路由系统可自由组合，灵活适配不同场景
   - title: 超低占用
     icon: 🌱
-    details: OpenWRT RaspberryPi 等各种精简设备皆可使用
-  - title: 强大路由
-    icon: ⚙️
-    details: 高可定制化的路由系统，满足各类使用需求，充分发挥网络性能
-  - title: 完整兼容
-    icon: 🤝
-    details: 完整兼容 v2ray-core 配置文件与 API 调用
-  - title: 亲和力
+    details: VLESS 摆脱冗余加密、Splice 降低转发开销，OpenWRT、树莓派等低功耗设备皆可使用
+  - title: 社区共建
     icon: 💖
     details: 活跃的社区讨论及贡献，MPL 2.0 开源许可协议
 ---
 
 ## XTLS ? Xray ? V2Ray ?
 
-**XTLS are brilliant ideas for TLS we study, while Xray is the best practice we maintain.**
+> **XTLS are brilliant ideas for TLS we study, while Xray is the best practice we maintain.**
 
-- Xray-core 是 v2ray-core 的超集，含更好的整体性能和 XTLS 等一系列增强，且~~完全~~兼容 v2ray-core 的功能及配置。
+- Xray-core 最初源自 v2ray-core，但已经长期独立演进；不应再将其视为与 v2ray-core 完全兼容的替代品。
   - 只有一个可执行文件，含 ctl 的功能，run 为默认指令
-  - 配置上~~完全~~兼容，环境变量和 API 对应要改为以 XRAY\_ 开头
+  - 部分配置结构和使用习惯与 v2ray-core 接近，但环境变量、API 前缀及诸多特性已经不同
   - 全平台开放了裸协议的 ReadV
-  - 提供完整的 VLESS XTLS 支持，均有 ReadV
-  - 提供了 XTLS 多种流控模式, 性能一骑绝尘!
-
-> “配置兼容，整体更好”
+  - 提供完整的 VLESS、XTLS Vision 与 REALITY 支持
+  - 提供了 XTLS 多种流控模式，在合适场景下可结合 Splice 获得极高性能
 
 ### 我们是谁？
 
@@ -62,25 +60,29 @@ features:
 
 欢迎帮助 Xray 变得更强！
 
-- 🖥️ 帮助开发和测试 Xray, 提交高质量的 Pull request.
+- 🖥️ 帮助开发和测试 Xray, 提交高质量的 Pull Request.
 - 📩 在 [GitHub Issues](https://github.com/XTLS/Xray-core/issues) 或 [讨论区](https://github.com/XTLS/Xray-core/discussions)发起建设性或有意义的 issue 与 discussion.
 - 📝 写下您的使用心得并提交至 Xray 的 [文档网站](https://github.com/XTLS/Xray-docs-next).
 - 💬 在 Telegram 群帮助群友/灌水.
-- **...事实上,每一份对 Xray 的支持都会让 Xray 变得更强大**
+- **...事实上,每一份对 Xray 的支持都会让 Xray 变得更强大.**
 
 ### Telegram
 
 - [Project X 交流群](https://t.me/projectXray)
-  - 交流群可在底线之上随便水，不要撕逼，没有滥权。
+  - 中文 / English 用户群。可在底线之上随便水，不要撕逼，没有滥权。
   - 有问题尽管随便问，知道的尽量回答。
-  - 禁政治，禁 NSFW
+  - 禁广告，禁政治，禁 NSFW。
 
-- [Project VLESS Group](https://t.me/projectVless)
-  - 对非中文参与的官方用户群。 [Project X](https://t.me/projectXray) 的姊妹群。
+- [Project VLESS 交流群](https://t.me/projectVless)
+  - Russian 用户群。 [Project X](https://t.me/projectXray) 的姊妹群。
+  - 禁广告，禁人身攻击，禁政治。
+
+- [Project XHTTP 交流群](https://t.me/projectXHTTP)
+  - Persian 用户群。 [Project X](https://t.me/projectXray) 的姊妹群。
   - 禁广告，禁人身攻击，禁政治。
 
 - [Project X 频道](https://t.me/projectXtls)
-  - 发布 Project X 的最新资讯
+  - 发布 Project X 的最新资讯。
 
 ### 致谢
 

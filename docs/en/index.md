@@ -20,38 +20,36 @@ hero:
       link: /en/about/sponsor.md
 
 features:
-  - title: High-speed protocol
-    icon: 🚀
-    details: Original VLESS and XTLS protocols, free from redundant encryption, release CPU power
+  - title: Original protocols
+    icon: 🧬
+    details: Original protocols such as VLESS, XTLS, Mux.Cool, XUDP, XHTTP, and REALITY cover proxying, flow control, multiplexing, transport, and security.
+  - title: Powerful routing
+    icon: 🔀
+    details: A flexible routing and DNS system supports fine-grained traffic scheduling by domain, IP, port, protocol, process, user, and more for both forward-proxy splitting and reverse-proxy networking.
+  - title: Traffic camouflage
+    icon: 🎭
+    details: VLESS fallback, REALITY, XTLS flow control, FinalMask, and related approaches reduce traffic fingerprints and improve resistance to detection at multiple layers.
   - title: Free combination
     icon: 🧩
-    details: Perfect fallback mechanism, effectively prevent active detection, multi-service sharing ports
-  - title: Ultra-low occupancy
+    details: Proxy protocols, flow-control modes, transport layers, and the routing system can be freely combined to fit different scenarios.
+  - title: Ultra-low overhead
     icon: 🌱
-    details: OpenWRT RaspberryPi and other simplified devices can be used
-  - title: Powerful routing
-    icon: ⚙️
-    details: Highly customizable routing system to meet various usage requirements and fully exploit network performance
-  - title: Full compatibility
-    icon: 🤝
-    details: Fully compatible with v2ray-core configuration files and API calls
-  - title: Affinity
+    details: VLESS removes redundant encryption, and Splice cuts forwarding overhead, making OpenWRT, Raspberry Pi, and other lightweight devices practical targets.
+  - title: Community-driven
     icon: 💖
-    details: Active community discussions and contributions, MPL 2.0 open source license
+    details: Active community discussion and contributions under the MPL 2.0 open-source license.
 ---
 
 ## XTLS? Xray? V2Ray?
 
-**XTLS are brilliant ideas for TLS we study, while Xray is the best practice we maintain.**
+> **XTLS are brilliant ideas for TLS we study, while Xray is the best practice we maintain.**
 
-- Xray-core is a superset of v2ray-core, with better overall performance and enhancements such as XTLS, and it's~~completely~~compatible with v2ray-core functionality and configuration.
+- Xray-core originally branched from v2ray-core, but it has evolved independently for a long time and should no longer be treated as a fully compatible drop-in replacement.
   - Only one executable file, including ctl functionality, run is the default command
-  - Configuration is~~completely~~compatible, environment variables and API calls need to be changed to start with XRAY\_
+  - Some configuration structures and usage patterns still resemble v2ray-core, but environment variables, API prefixes, and many features are already different
   - Exposed raw protocol's ReadV on all platforms
-  - Provides complete VLESS & Trojan XTLS support, both with ReadV
-  - Provides multiple XTLS flow control modes, unrivaled performance!
-
-> "Configuration compatible, overall better"
+  - Provides complete support for VLESS, XTLS Vision, and REALITY
+  - Provides multiple XTLS flow-control modes and can deliver extremely high performance with Splice in suitable scenarios
 
 ### Who are we?
 
@@ -65,21 +63,25 @@ Welcome to help Xray become stronger!
 - 📩 Initiate constructive or meaningful issues and discussions in [GitHub Issues](https://github.com/XTLS/Xray-core/issues) or [Discussion area](https://github.com/XTLS/Xray-core/discussions).
 - 📝 Write down your usage experience and submit it to Xray's [documentation website](https://github.com/XTLS/Xray-docs-next).
 - 💬 Help group members/chat in Telegram group.
-- **...In fact, every support for Xray will make Xray stronger**
+- **...In fact, every support for Xray will make Xray stronger.**
 
 ### Telegram
 
 - [Project X Discussion Group](https://t.me/projectXray)
-  - You can chat freely above the bottom line in the discussion group, don't fight, no abuse of power.
+  - Chinese / English user group. Chat freely within the rules, no fighting, no abuse of power.
   - Feel free to ask questions, and try to answer those you know.
-  - No politics, No NSFW
+  - No advertising, no politics, no NSFW.
 
 - [Project VLESS Group](https://t.me/projectVless)
-  - The official Xray-core group for non-Chinese participants. Sister group of [Project X](https://t.me/projectXray)
+  - Russian user group. Sister group of [Project X](https://t.me/projectXray).
+  - No advertising, no insults, no politics.
+
+- [Project XHTTP Group](https://t.me/projectXHTTP)
+  - Persian user group. Sister group of [Project X](https://t.me/projectXray).
   - No advertising, No insults, No politics.
 
 - [Project X Channel](https://t.me/projectXtls)
-  - Publish the latest news of Project X
+  - Publish the latest news of Project X.
 
 ### Thanks
 
