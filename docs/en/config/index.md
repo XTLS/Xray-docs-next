@@ -9,7 +9,6 @@ The format is as follows:
 
 ```json
 {
-  "version": {},
   "log": {},
   "api": {},
   "dns": {},
@@ -17,13 +16,13 @@ The format is as follows:
   "policy": {},
   "inbounds": [],
   "outbounds": [],
-  "transport": {},
   "stats": {},
   "fakedns": {},
   "metrics": {},
   "observatory": {},
   "burstObservatory": {},
-  "geodata": {}
+  "geodata": {},
+  "version": {}
 }
 ```
 
@@ -167,21 +166,6 @@ List the parts of my question that are not confirmed by the official documentati
 
 ## Basic Configuration Modules
 
-> version
-
-Optional. Controls the version on which this config can run. This prevents accidental running on unexpected client versions when sharing the config. The client will check if the current version matches this requirement at runtime.
-
-```json
-"version": {
-    "min": "25.8.3",
-    "max": ""
-}
-```
-
-Both `min` and `max` are optional. Not setting them or leaving them empty means no restrictions. It does not need to be an actual existing version, as long as it complies with the Xray version syntax x.y.z.
-
-25.8.3 is the version where Xray added this feature. Setting a version lower than this is meaningless (older versions will not check it).
-
 > log:[LogObject](./log.md)
 
 Log configuration, controls how Xray outputs logs.
@@ -210,10 +194,6 @@ An array. Each element is an inbound connection configuration.
 
 An array. Each element is an outbound connection configuration.
 
-> transport: [TransportObject](./transport.md)
-
-Used to configure how Xray establishes and uses network connections with other servers.
-
 > stats: [StatsObject](./stats.md)
 
 Used to configure traffic statistics.
@@ -237,3 +217,20 @@ Burst connection observatory. Detects the connection status of outbound proxies.
 > geodata: [GeodataObject](./geodata.md)
 
 Automatic update and hot reload for geodata files.
+
+> version
+
+Optional. Controls the version on which this config can run. This prevents accidental running on unexpected client versions when sharing the config. The client will check if the current version matches this requirement at runtime.
+
+```json
+{
+  "version": {
+    "min": "25.8.3",
+    "max": ""
+  }
+}
+```
+
+Both `min` and `max` are optional. Not setting them or leaving them empty means no restrictions. It does not need to be an actual existing version, as long as it complies with the Xray version syntax x.y.z.
+
+25.8.3 is the version where Xray added this feature. Setting a version lower than this is meaningless (older versions will not check it).

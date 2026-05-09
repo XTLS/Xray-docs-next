@@ -111,8 +111,12 @@ ghcr.io/xtls/xray-core 版本映像：
   - 04_policy.json
   - 05_inbounds.json
   - 06_outbounds.json
-  - 07_transport.json
-  - 08_stats.json
+  - 07_stats.json
+  - 08_fakedns.json
+  - 09_metrics.json
+  - 10_observatory.json
+  - 11_geodata.json
+  - 99_version.json
 - `/usr/local/share/xray/`：资源文件目录，存放了 Loyalsoldier 版本地理位置数据文件（权限同上）
   - geoip.dat
   - geosite.dat

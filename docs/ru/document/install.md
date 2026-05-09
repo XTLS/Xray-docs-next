@@ -98,14 +98,19 @@ Xray предлагает два способа проверки:
 
 - `/usr/local/bin/xray`: Основная программа Xray (владелец root:root, права доступа к файлу 755)
 - `/usr/local/etc/xray/`: Каталог конфигурационных файлов (точка монтирования) (владелец каталога root:root, права доступа к каталогу 755, права доступа к файлам 644)
+  - 00_log.json
   - 01_api.json
   - 02_dns.json
   - 03_routing.json
   - 04_policy.json
   - 05_inbounds.json
   - 06_outbounds.json
-  - 07_transport.json
-  - 08_stats.json
+  - 07_stats.json
+  - 08_fakedns.json
+  - 09_metrics.json
+  - 10_observatory.json
+  - 11_geodata.json
+  - 99_version.json
 - `/usr/local/share/xray/`: Каталог с файлами ресурсов, содержит файлы геолокационных данных от Loyalsoldier (права доступа те же, что и выше)
   - geoip.dat
   - geosite.dat
