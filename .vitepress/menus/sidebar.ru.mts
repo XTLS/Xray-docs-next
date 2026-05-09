@@ -280,12 +280,12 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/ru/document/level-2/tproxy_ipv4_and_ipv6.md"
         },
         {
-          text: "Создание TLS-туннеля с Nginx или Haproxy для скрытия отпечатков",
-          link: "/ru/document/level-2/nginx_or_haproxy_tls_tunnel.md"
-        },
-        {
           text: "Прозрачный прокси GID",
           link: "/ru/document/level-2/iptables_gid.md"
+        },
+        {
+          text: "Создание TLS-туннеля с Nginx или Haproxy для скрытия отпечатков",
+          link: "/ru/document/level-2/nginx_or_haproxy_tls_tunnel.md"
         },
         {
           text: "Перенаправление исходящего трафика",

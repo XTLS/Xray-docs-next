@@ -20,15 +20,15 @@ Configuration tutorial for Xray-based TProxy Transparent Proxy (IPv4 and IPv6).
 
 ---
 
-[Using Nginx or HAProxy to Build TLS Tunnels to Hide Fingerprints](./nginx_or_haproxy_tls_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@SQLimit](https://github.com/SQLimit)
-
-Using Nginx or HAProxy on both ends to build a TLS tunnel for fingerprint hiding.
-
----
-
 [[Transparent Proxy] Bypassing Xray Traffic via GID](./iptables_gid.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@kirin](https://github.com/kirin10000)
 
 A new method to bypass Xray traffic in transparent proxies implemented via iptables/nftables.
+
+---
+
+[Using Nginx or HAProxy to Build TLS Tunnels to Hide Fingerprints](./nginx_or_haproxy_tls_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@SQLimit](https://github.com/SQLimit)
+
+Using Nginx or HAProxy on both ends to build a TLS tunnel for fingerprint hiding.
 
 ---
 
@@ -50,6 +50,6 @@ Traffic statistics and scripts adapted for Xray.
 
 ---
 
-[VLESS Reverse Proxy](./vless_reverse.md)
+[VLESS Reverse Proxy](./vless_reverse.md) by <img src="https://avatars.githubusercontent.com/u/197331664?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@Meo597](https://github.com/Meo597)
 
 VLESS reverse proxy tutorial.

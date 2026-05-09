@@ -253,12 +253,12 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/en/document/level-2/tproxy_ipv4_and_ipv6.md"
         },
         {
-          text: "Hide Fingerprint with Nginx/Haproxy TLS Tunnel",
-          link: "/en/document/level-2/nginx_or_haproxy_tls_tunnel.md"
-        },
-        {
           text: "GID Transparent Proxy",
           link: "/en/document/level-2/iptables_gid.md"
+        },
+        {
+          text: "Hide Fingerprint with Nginx/Haproxy TLS Tunnel",
+          link: "/en/document/level-2/nginx_or_haproxy_tls_tunnel.md"
         },
         {
           text: "Outbound Traffic Redirection",

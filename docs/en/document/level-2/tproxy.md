@@ -161,7 +161,7 @@ This configuration hijacks all traffic sent to port 53 to solve DNS pollution is
 
 ## Policy Routing Configuration
 
-```bash
+```sh
 sudo ip route add local default dev lo table 100 # Add routing table 100
 sudo ip rule add fwmark 1 table 100 # Set rules for routing table 100
 ```
@@ -170,9 +170,13 @@ sudo ip rule add fwmark 1 table 100 # Set rules for routing table 100
 
 ::: warning Note
 Choose either **nftables** or **iptables** configuration. Do not use both simultaneously.
+
+Write the selected configuration to a file, make it executable, and then run that file as root.
 :::
 
-```nftables
+::: code-group
+
+```bash [nftables.conf]
 #!/usr/sbin/nft -f
 
 flush ruleset
@@ -210,12 +214,7 @@ table ip xray {
 }
 ```
 
-::: tip Usage
-
-Write the above configuration to a file (e.g., `nft.conf`), then give the file executable permissions, and finally execute the file with root privileges (`# ./nft.conf`).
-:::
-
-```bash
+```bash [iptables.sh]
 iptables -t mangle -N XRAY
 iptables -t mangle -A XRAY -d 10.0.0.0/8 -j RETURN
 iptables -t mangle -A XRAY -d 100.64.0.0/10 -j RETURN
@@ -250,13 +249,31 @@ iptables -t mangle -A XRAY_SELF -p udp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j XRAY_SELF
 ```
 
+:::
+
 After the configuration is complete, change the default gateway of other devices in the LAN to the IP of this device to bypass the firewall directly. After successfully testing on both other hosts and the local machine, you can proceed to the next step.
 
 ## Persistence and Auto-start
 
-First, move the edited `nftables` configuration file to the `/etc` directory and rename it to `nftables.conf`. Then edit `/lib/systemd/system/nftables.service`.
+Depending on which Netfilter option you selected above, use the corresponding persistence method here.
 
-```ini
+- **If using `nftables`**
+
+  Move the edited configuration file to the `/etc` directory, then edit `/lib/systemd/system/nftables.service`.
+
+- **If using `iptables`**
+
+  It is recommended to install `iptables-persistent` directly.
+
+  During the installation process, you will be prompted whether to save the current configuration. If the `iptables` rules have already been applied to the system, select "Yes". If not, that is fine too; after installation, apply the configuration and then execute `netfilter-persistent save` (root privileges required).
+
+  After that, edit `/lib/systemd/system/netfilter-persistent.service`.
+
+Finally, enable the selected service.
+
+::: code-group
+
+```ini [nftables.service]
 [Unit]
 Description=nftables
 Documentation=man:nft(8) http://wiki.nftables.org
@@ -279,15 +296,7 @@ ExecStop=/usr/sbin/nft flush ruleset ; /usr/sbin/ip route del local default dev 
 WantedBy=sysinit.target
 ```
 
-Finally, enable it.
-
-For persistence with `iptables`, it is recommended to install `iptables-persistent` directly.
-
-During the installation process, you will be prompted to "Save current IPv4 rules?". If you have already applied the iptables configuration to the system, select "Yes". If not, it doesn't matter; after installation, apply the configuration and then execute `netfilter-persistent save` (root privileges required).
-
-After that, edit `/lib/systemd/system/netfilter-persistent.service`.
-
-```ini
+```ini [netfilter-persistent.service]
 [Unit]
 Description=netfilter persistent configuration
 DefaultDependencies=no
@@ -306,3 +315,5 @@ ExecStop=/usr/sbin/netfilter-persistent stop ; /usr/sbin/ip route flush dev lo t
 [Install]
 WantedBy=multi-user.target
 ```
+
+:::

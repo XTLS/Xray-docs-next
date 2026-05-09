@@ -20,15 +20,15 @@
 
 ---
 
-[Nginx 或 Haproxy 搭建 TLS 隧道隐藏指纹](./nginx_or_haproxy_tls_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@SQLimit](https://github.com/SQLimit)
-
-双端使用 Nginx 或 Haproxy 搭建 TLS 隧道隐藏指纹
-
----
-
 [[透明代理]通过 gid 规避 Xray 流量](./iptables_gid.md) by <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@kirin](https://github.com/kirin10000)
 
 在 iptables/nftables 实现的透明代理中，一种新的规避 Xray 流量的方式。
+
+---
+
+[Nginx 或 Haproxy 搭建 TLS 隧道隐藏指纹](./nginx_or_haproxy_tls_tunnel.md) by <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@SQLimit](https://github.com/SQLimit)
+
+双端使用 Nginx 或 Haproxy 搭建 TLS 隧道隐藏指纹
 
 ---
 
@@ -50,6 +50,6 @@ Xray v1.6.5 新增 WireGuard 出站的使用介绍。
 
 ---
 
-[VLESS 反向代理](./vless_reverse.md)
+[VLESS 反向代理](./vless_reverse.md) by <img src="https://avatars.githubusercontent.com/u/197331664?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@Meo597](https://github.com/Meo597)
 
 VLESS 反向代理教程。

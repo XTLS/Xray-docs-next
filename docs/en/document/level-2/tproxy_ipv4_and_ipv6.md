@@ -262,7 +262,7 @@ If the Xray program is not installed on the side router, you can manually downlo
 
 ### First, Set Policy Routing
 
-```bash
+```sh
 # Set policy routing v4
 ip rule add fwmark 1 table 100
 ip route add local 0.0.0.0/0 dev lo table 100
@@ -291,7 +291,7 @@ If you use **Method 2** below, the `default via` would be the side router's IP. 
 
 If you specified the default gateway as the side router on the main router (i.e., "LAN Device Internet Setup Method 2" below), then you need to set the above `# Direct connection goes out from the main router`. besides setting it via `iproute2` command line, you can also set a static IP via `dhcpcd` or `systemctl-network`. Here we take `dhcpcd` as an example. Edit the `/etc/dhcpcd.conf` file and add the following configuration at the bottom. Modify the specific IP according to your actual situation. The `interface` can be viewed via `# ip link show` to see the network port or wireless device to be configured.
 
-```
+```ini
 interface enp0s25
 static ip_address=192.168.31.100/24
 static ip6_address=fd00:6868:6868::8888/64
@@ -304,13 +304,13 @@ By setting the IP and gateway via static IP this way, there is no need to set `#
 ::: warning Note
 
 Choose **either** the following nftables configuration **or** iptables configuration. Do not use both simultaneously.
+
+Write the selected configuration to a file, make it executable, and then run that file as root.
 :::
 
-### Using iptables
+::: code-group
 
-This configuration writes IPv4 and IPv6 into the same file.
-
-```bash
+```bash [iptables.rules]
 # Proxy LAN devices v4
 iptables -t mangle -N XRAY
 iptables -t mangle -A XRAY -d 127.0.0.1/32 -j RETURN
@@ -369,18 +369,7 @@ ip6tables -t mangle -I PREROUTING -p tcp -m socket -j DIVERT
 
 ```
 
-::: tip Usage
-
-Write the above configuration into a file (e.g., `iptables.rules`), then grant executable permission to the file: `# chmod 700 ./iptables.rules`.
-
-Finally, execute the file with root privileges: `# ./iptables.rules` or `# source iptables.rules`.
-:::
-
-### Using nftables
-
-This merges IPv4 and IPv6.
-
-```
+```bash [nftables.rules]
 #!/usr/sbin/nft -f
 
 flush ruleset
@@ -419,11 +408,6 @@ table inet xray {
 
 ```
 
-::: tip Usage
-
-Write the above configuration into a file (e.g., `nftables.rules`), then grant executable permission to the file: `# chmod 700 ./nftables.rules`.
-
-Finally, execute the file with root privileges: `# ./nftables.rules` or `# source nftables.rules`.
 :::
 
 Where gateway addresses `192.168.0.0/16`, `fd00::/8`, etc., can be [obtained](https://xtls.github.io/document/level-2/iptables_gid.html#_4-%E8%AE%BE%E7%BD%AE-iptables-%E8%A7%84%E5%88%99) by `ip address | grep -w inet | awk '{print $2}'` and `ip address | grep -w inet6 | awk '{print $2}'`.
@@ -438,13 +422,19 @@ If the prefixes `192.168`, `fd00:` are the same, you don't need to change them. 
 
 First, confirm that you have run the corresponding Netfilter commands above and successfully tested the transparent proxy configuration to ensure the output files are correct.
 
-#### If using iptables configuration
+- **If using `iptables`**
 
-1. First, save the iptables configuration to `iptables.rulesv4` and `iptables.rulesv6` files: `# iptables-save > /root/iptables.rulesv4` and `# ip6tables-save > /root/iptables.rulesv6`.
+  First, save the configuration to `iptables.rulesv4` and `iptables.rulesv6` with `# iptables-save > /root/iptables.rulesv4` and `# ip6tables-save > /root/iptables.rulesv6`.
 
-2. Then create a file named `tproxyrules.service` in the `/etc/systemd/system/` directory, add the following content, and save it:
+- **If using `nftables`**
 
-```
+  First, save the configuration to `nftables.rulesv46` with `# nft list ruleset > /root/nftables.rulesv46`.
+
+Then create `tproxyrules.service` under `/etc/systemd/system/`, write the corresponding content for the chosen option, and finally run `systemctl enable tproxyrules`.
+
+::: code-group
+
+```ini [iptables tproxyrules.service]
 [Unit]
 Description=Tproxy rules
 
@@ -473,15 +463,7 @@ ExecStop=/sbin/ip rule del fwmark 1 table 100 ; \
 WantedBy=multi-user.target
 ```
 
-1. Finally, execute the command `systemctl enable tproxyrules`.
-
-#### If using nftables configuration
-
-1. First, write the nftables configuration to the `nftables.rulesv46` file: `# nft list ruleset > /root/nftables.rulesv46`.
-
-2. Create a file named `tproxyrules.service` in the `/etc/systemd/system/` directory, then add the following content and save it:
-
-```
+```ini [nftables tproxyrules.service]
 [Unit]
 Description=Tproxy rules
 
@@ -508,7 +490,7 @@ ExecStop=/sbin/ip rule del fwmark 1 table 100 ; \
 WantedBy=multi-user.target
 ```
 
-1. Finally, execute the command `systemctl enable tproxyrules`.
+:::
 
 ::: tip tproxyrules.service
 

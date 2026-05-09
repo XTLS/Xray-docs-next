@@ -223,12 +223,12 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/document/level-2/tproxy_ipv4_and_ipv6.md"
         },
         {
-          text: "Nginx 或 Haproxy 搭建 TLS 隧道隐藏指纹",
-          link: "/document/level-2/nginx_or_haproxy_tls_tunnel.md"
-        },
-        {
           text: "GID 透明代理",
           link: "/document/level-2/iptables_gid.md"
+        },
+        {
+          text: "Nginx 或 Haproxy 搭建 TLS 隧道隐藏指纹",
+          link: "/document/level-2/nginx_or_haproxy_tls_tunnel.md"
         },
         { text: "出站流量重定向", link: "/document/level-2/redirect.md" },
         {

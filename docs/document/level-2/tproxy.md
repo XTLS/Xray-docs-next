@@ -161,7 +161,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
 
 ## 策略路由配置
 
-```
+```sh
 sudo ip route add local default dev lo table 100 # 添加路由表 100
 sudo ip rule add fwmark 1 table 100 # 为路由表 100 设定规则
 ```
@@ -170,9 +170,13 @@ sudo ip rule add fwmark 1 table 100 # 为路由表 100 设定规则
 
 ::: warning 注意
 nftables 配置与 iptables 配置二选一，不可同时使用。
+
+将所选配置写入文件，赋予可执行权限后，再使用 root 权限执行该文件即可。
 :::
 
-```nftables
+::: code-group
+
+```bash [nftables.conf]
 #!/usr/sbin/nft -f
 
 flush ruleset
@@ -210,12 +214,7 @@ table ip xray {
 }
 ```
 
-::: tip 使用方法
-
-将上述配置写入一个文件（如 `nft.conf`），之后将该文件赋予可执行权限，最后使用 root 权限执行该文件即可（`# ./nft.conf`）。
-:::
-
-```bash
+```bash [iptables.sh]
 iptables -t mangle -N XRAY
 iptables -t mangle -A XRAY -d 10.0.0.0/8 -j RETURN
 iptables -t mangle -A XRAY -d 100.64.0.0/10 -j RETURN
@@ -250,13 +249,31 @@ iptables -t mangle -A XRAY_SELF -p udp -j MARK --set-mark 1
 iptables -t mangle -A OUTPUT -j XRAY_SELF
 ```
 
+:::
+
 配置完成后，将局域网内其它设备的默认网关改为该设备 IP，就可以直接翻墙了。在其它主机和本机皆测试成功后，可进行下一步配置。
 
 ## 配置永久化与开机自启
 
-首先将已经编辑好的 nftables 配置文件移动到 `/etc` 目录下，并重命名为 `nftables.conf`。然后编辑 `/lib/systemd/system/nftables.service`。
+根据前面 Netfilter 配置中的选择，这里应使用对应的持久化方式。
 
-```ini
+- **如果使用 `nftables`**
+
+  先将已经编辑好的配置文件移动到 `/etc` 目录下，然后编辑 `/lib/systemd/system/nftables.service`
+
+- **如果使用 `iptables`**
+
+  建议直接安装 `iptables-persistent`
+
+  安装过程中会提示你选择“是否保存配置”，如果已经将 `iptables` 配置写入系统，那么此时选择“是”即可；如果尚未写入也没有关系，安装完毕后将配置写入，然后执行 `netfilter-persistent save` 即可（需要 root 权限）
+
+  之后编辑 `/lib/systemd/system/netfilter-persistent.service`
+
+最后 enable 所选服务即可。
+
+::: code-group
+
+```ini [nftables.service]
 [Unit]
 Description=nftables
 Documentation=man:nft(8) http://wiki.nftables.org
@@ -279,15 +296,7 @@ ExecStop=/usr/sbin/nft flush ruleset ; /usr/sbin/ip route del local default dev 
 WantedBy=sysinit.target
 ```
 
-最后 enable 即可。
-
-关于 iptables 的永久化，建议直接安装 `iptables-persistent`。
-
-安装过程中会提示你选择“是否保存配置”，如果已经将 iptables 配置写入系统，那么此时选择“是”即可；如果尚未写入也没有关系，安装完毕后将配置写入，然后执行 `netfilter-persistent save` 即可（需要 root 权限）。
-
-之后编辑 `/lib/systemd/system/netfilter-persistent.service`。
-
-```ini
+```ini [netfilter-persistent.service]
 [Unit]
 Description=netfilter persistent configuration
 DefaultDependencies=no
@@ -306,3 +315,5 @@ ExecStop=/usr/sbin/netfilter-persistent stop ; /usr/sbin/ip route flush dev lo t
 [Install]
 WantedBy=multi-user.target
 ```
+
+:::

@@ -20,15 +20,15 @@
 
 ---
 
-[Создание TLS-туннеля с помощью Nginx или Haproxy для скрытия отпечатков](./nginx_or_haproxy_tls_tunnel.md) от <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@SQLimit](https://github.com/SQLimit)
-
-Создание TLS-туннеля с помощью Nginx или Haproxy на стороне клиента и сервера для скрытия отпечатков.
-
----
-
 [[Прозрачное проксирование] Исключение трафика Xray с помощью GID](./iptables_gid.md) от <img src="https://avatars2.githubusercontent.com/u/57820613?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@kirin](https://github.com/kirin10000)
 
 Новый способ исключения трафика Xray при реализации прозрачного проксирования с помощью iptables/nftables.
+
+---
+
+[Создание TLS-туннеля с помощью Nginx или Haproxy для скрытия отпечатков](./nginx_or_haproxy_tls_tunnel.md) от <img src="https://avatars.githubusercontent.com/u/110686480?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@SQLimit](https://github.com/SQLimit)
+
+Создание TLS-туннеля с помощью Nginx или Haproxy на стороне клиента и сервера для скрытия отпечатков.
 
 ---
 
@@ -50,6 +50,6 @@
 
 ---
 
-[Обратный прокси VLESS](./vless_reverse.md)
+[Обратный прокси VLESS](./vless_reverse.md) by <img src="https://avatars.githubusercontent.com/u/197331664?s=32" width="24" height="24" alt="a" style="display:inline-block;vertical-align:middle;border-radius:50%;margin:0 0.25em;"/> [@Meo597](https://github.com/Meo597)
 
 Руководство по обратному проксированию VLESS.
