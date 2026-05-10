@@ -22,11 +22,11 @@ hero:
 
 features:
   - title: 原创协议
-    icon: 🧬
-    details: VLESS、XTLS、Mux.Cool、XUDP、XHTTP、REALITY 等原创协议，覆盖代理、流控、复用、传输与安全等各个层面
+    icon: 📄
+    details: VLESS、XTLS、XUDP、XHTTP、REALITY 等原创协议，覆盖代理、流控、复用、传输与安全等各个层面
   - title: 强大路由
     icon: 🔀
-    details: 灵活的路由与 DNS 系统，支持按域名、IP、端口、协议、进程、用户等条件细粒度调度流量，适用于正向代理分流与反向代理异地组网
+    details: 灵活的路由与 DNS 系统，支持按域名、IP、端口、协议、进程、用户等条件细粒度调度流量
   - title: 流量伪装
     icon: 🎭
     details: VLESS 回落、REALITY、XTLS 流控与 FinalMask 等方案，从多个层面降低流量特征并增强抗探测能力
@@ -34,7 +34,7 @@ features:
     icon: 🧩
     details: 代理协议、流控模式、传输层与路由系统可自由组合，灵活适配不同场景
   - title: 超低占用
-    icon: 🌱
+    icon: 📊
     details: VLESS 摆脱冗余加密、Splice 降低转发开销，OpenWRT、树莓派等低功耗设备皆可使用
   - title: 社区共建
     icon: 💖
@@ -69,20 +69,16 @@ features:
 ### Telegram
 
 - [Project X 交流群](https://t.me/projectXray)
-  - 中文 / English 用户群。可在底线之上随便水，不要撕逼，没有滥权。
-  - 有问题尽管随便问，知道的尽量回答。
-  - 禁广告，禁政治，禁 NSFW。
+  - 中文 / English 用户群。主要群聊。
 
 - [Project VLESS 交流群](https://t.me/projectVless)
   - Russian 用户群。 [Project X](https://t.me/projectXray) 的姊妹群。
-  - 禁广告，禁人身攻击，禁政治。
 
 - [Project XHTTP 交流群](https://t.me/projectXHTTP)
   - Persian 用户群。 [Project X](https://t.me/projectXray) 的姊妹群。
-  - 禁广告，禁人身攻击，禁政治。
 
 - [Project X 频道](https://t.me/projectXtls)
-  - 发布 Project X 的最新资讯。
+  - 发布 Project X 的资讯。
 
 ### 致谢
 

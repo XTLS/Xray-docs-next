@@ -21,11 +21,11 @@ hero:
 
 features:
   - title: Original protocols
-    icon: 🧬
-    details: Original protocols such as VLESS, XTLS, Mux.Cool, XUDP, XHTTP, and REALITY cover proxying, flow control, multiplexing, transport, and security.
+    icon: 📄
+    details: Original protocols such as VLESS, XTLS, XUDP, XHTTP, and REALITY cover proxying, flow control, multiplexing, transport, and security.
   - title: Powerful routing
     icon: 🔀
-    details: A flexible routing and DNS system supports fine-grained traffic scheduling by domain, IP, port, protocol, process, user, and more for both forward-proxy splitting and reverse-proxy networking.
+    details: A flexible routing and DNS system supports fine-grained traffic scheduling by domain, IP, port, protocol, process, user, and more.
   - title: Traffic camouflage
     icon: 🎭
     details: VLESS fallback, REALITY, XTLS flow control, FinalMask, and related approaches reduce traffic fingerprints and improve resistance to detection at multiple layers.
@@ -33,7 +33,7 @@ features:
     icon: 🧩
     details: Proxy protocols, flow-control modes, transport layers, and the routing system can be freely combined to fit different scenarios.
   - title: Ultra-low overhead
-    icon: 🌱
+    icon: 📊
     details: VLESS removes redundant encryption, and Splice cuts forwarding overhead, making OpenWRT, Raspberry Pi, and other lightweight devices practical targets.
   - title: Community-driven
     icon: 💖
@@ -68,17 +68,13 @@ Welcome to help Xray become stronger!
 ### Telegram
 
 - [Project X Discussion Group](https://t.me/projectXray)
-  - Chinese / English user group. Chat freely within the rules, no fighting, no abuse of power.
-  - Feel free to ask questions, and try to answer those you know.
-  - No advertising, no politics, no NSFW.
+  - Chinese / English user group. Main chat group.
 
 - [Project VLESS Group](https://t.me/projectVless)
   - Russian user group. Sister group of [Project X](https://t.me/projectXray).
-  - No advertising, no insults, no politics.
 
 - [Project XHTTP Group](https://t.me/projectXHTTP)
   - Persian user group. Sister group of [Project X](https://t.me/projectXray).
-  - No advertising, No insults, No politics.
 
 - [Project X Channel](https://t.me/projectXtls)
   - Publish the latest news of Project X.
@@ -94,7 +90,7 @@ Welcome to help Xray become stronger!
 ### More about project X
 
 - If you would like to learn more about project X's history and growth, please click [here](./about/news.md)
-- Now Project X releases NFTs! If you would like to have one Project X NFT, or want to donate to or sponsoring Project X, please click [here](https://github.com/XTLS/Xray-core/discussions/3633#discussioncomment-10240940)
+- Now Project X releases NFTs! If you would like to have one Project X NFT, or want to donate to or sponsoring Project X, please click [here](https://github.com/XTLS/Xray-core/discussions/3633)
 
 ### License
 
