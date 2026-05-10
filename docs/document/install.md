@@ -74,8 +74,8 @@ Xray 提供两种验证方式：
 - [ghcr.io/xtls/xray-core](https://ghcr.io/xtls/xray-core)（**官方**）<br>
   无 root 权限、无 shell 环境、支持更多的架构。由官方库编译并构建支持追溯。牺牲了便利性来追求更极端的安全性
   ::: details 文件结构
-  - `/usr/local/bin/xray`：Xray 主程序（拥有者是 root:root、文件权限 755）
-  - `/usr/local/etc/xray/`：配置文件目录（挂载点）（拥有者是 root:root、目录权限 755、文件权限 644）
+  - `/usr/local/bin/xray`：Xray 主程序（拥有者是 `root:root`、文件权限 `755`）
+  - `/usr/local/etc/xray/`：配置文件目录（挂载点）（拥有者是 `root:root`、目录权限 `755`、文件权限 `644`）
     - 00_log.json
     - 01_api.json
     - 02_dns.json
@@ -89,10 +89,10 @@ Xray 提供两种验证方式：
     - 10_observatory.json
     - 11_geodata.json
     - 99_version.json
-  - `/usr/local/share/xray/`：资源文件目录，存放了 Loyalsoldier 版本地理位置数据文件（权限同上）
+  - `/usr/local/share/xray/`：资源文件目录，存放了 Loyalsoldier 版本地理位置数据文件（拥有者是 `65532:65532`、目录权限 `755`、文件权限 `644`）
     - geoip.dat
     - geosite.dat
-  - `/var/log/xray/`：日志文件目录（挂载点）（目录拥有者是 root:root、权限 755；文件拥有者是 65532:65532、权限 600）
+  - `/var/log/xray/`：日志文件目录（挂载点）（目录拥有者是 `root:root`、权限 `755`；文件拥有者是 `65532:65532`、权限 `600`）
     - access.log
     - error.log
 
