@@ -4,17 +4,19 @@
 
 官方 Release 支持以下平台
 
-| 平台    | 最低版本                                                        | 架构                                                                |
-| :------ | :-------------------------------------------------------------- | :------------------------------------------------------------------ |
-| Windows | 7 及之后版本 <sup><a href="#platform-note-1">[1]</a></sup>      | x86 / amd64 / arm32 / arm64                                         |
-| macOS   | 10.10 Yosemite 及之后版本                                       | amd64 / arm64                                                       |
-| Linux   | 2.6.23 及之后版本 <sup><a href="#platform-note-2">[2]</a></sup> | x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64 |
-| FreeBSD | -                                                               | x86 / amd64                                                         |
-| OpenBSD | -                                                               | x86 / amd64                                                         |
+| 平台                                                  | 架构                                                                |
+| :---------------------------------------------------- | :------------------------------------------------------------------ |
+| Windows <sup><a href="#platform-note-1">[1]</a></sup> | x86 / amd64 / arm32 / arm64                                         |
+| macOS                                                 | amd64 / arm64                                                       |
+| Linux                                                 | x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64 |
+| FreeBSD                                               | x86 / amd64                                                         |
+| OpenBSD                                               | x86 / amd64                                                         |
 
-<small id="platform-note-1">[1] Windows 7 中使用 1.8.4、1.8.6 的常规版本以及 1.8.18 以后的 `win7` 版本，需要系统安装 **KB4474419**；推荐同时安装 KB4490628 以便联网后接受后续操作系统安全更新。从 v25 开始，在 Windows 7 上运行 `win7` 版本只需安装 SP1 即可正常运行，但对联网系统仍强烈建议安装后续操作系统安全更新。</small>
+<small id="platform-note-1">[1] Windows 7 已被 golang 官方停止支持，Xray 使用 patched go 独立发布构建提供支持，win7 用户请使用 -win7 后缀的发布。</small>
 
-<small id="platform-note-2">[2] 包括但不限于 Debian 7 / 8、Ubuntu 12.04 / 14.04 及后续版本、CentOS 7 / 8、Arch Linux 等。</small>
+Xray 积极跟进 golang 版本，除 win7 外最低操作系统版本支持请参考发布时对应的最新的 go release note。
+
+未像部分类似项目一样提供 amd64 v2 v3 等构建，因为经过测试性能并没有明显提升，关键函数中很多使用了运行时检测来自动使用扩展指令集。
 
 ## 下载 Xray
 

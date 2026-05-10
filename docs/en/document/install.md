@@ -4,17 +4,19 @@
 
 Official Releases support the following platforms
 
-| Platform | Minimum Version                                                | Architectures                                                       |
-| :------- | :------------------------------------------------------------- | :------------------------------------------------------------------ |
-| Windows  | 7 and later <sup><a href="#platform-note-1">[1]</a></sup>      | x86 / amd64 / arm32 / arm64                                         |
-| macOS    | 10.10 Yosemite and later                                       | amd64 / arm64                                                       |
-| Linux    | 2.6.23 and later <sup><a href="#platform-note-2">[2]</a></sup> | x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64 |
-| FreeBSD  | -                                                              | x86 / amd64                                                         |
-| OpenBSD  | -                                                              | x86 / amd64                                                         |
+| Platform                                              | Architectures                                                       |
+| :---------------------------------------------------- | :------------------------------------------------------------------ |
+| Windows <sup><a href="#platform-note-1">[1]</a></sup> | x86 / amd64 / arm32 / arm64                                         |
+| macOS                                                 | amd64 / arm64                                                       |
+| Linux                                                 | x86 / amd64 / arm / arm64 / mips64 / mips / ppc64 / s390x / riscv64 |
+| FreeBSD                                               | x86 / amd64                                                         |
+| OpenBSD                                               | x86 / amd64                                                         |
 
-<small id="platform-note-1">[1] On Windows 7, regular versions 1.8.4 and 1.8.6, as well as `win7` builds after 1.8.18, require **KB4474419** to be installed. Installing KB4490628 is also recommended so the system can continue receiving later security updates after connecting to the internet. Starting from v25, the `win7` build on Windows 7 only requires SP1 to run normally, but installing later OS security updates is still strongly recommended for networked systems.</small>
+<small id="platform-note-1">[1] Windows 7 is no longer officially supported by golang. Xray uses a patched go to provide separately published builds for it; Windows 7 users should use the releases with the `-win7` suffix.</small>
 
-<small id="platform-note-2">[2] Including but not limited to Debian 7 / 8, Ubuntu 12.04 / 14.04 and later, CentOS 7 / 8, Arch Linux, and more.</small>
+Xray actively keeps up with golang versions. For minimum OS version support other than win7, please refer to the latest go release notes corresponding to the time of release.
+
+Builds for amd64 v2/v3 etc. are not provided as some similar projects do, because testing showed no significant performance improvement, and many critical functions already use runtime detection to automatically use extended instruction sets.
 
 ## Download Xray
 
