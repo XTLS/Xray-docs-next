@@ -10,7 +10,7 @@ Xray provides the following environment variables to modify some underlying conf
 This environment variable specifies a folder location that should contain the `geoip.dat` and `geosite.dat` files.
 If no variable value is specified, the program will look for resource files in the following order:
 
-```
+```text
 ./
 /usr/local/share/xray
 /usr/share/xray
@@ -48,7 +48,6 @@ By default, on startup Xray uses a custom JSON parser that strips comments and o
 - xray.buf.readv
 - xray.buf.splice
 - xray.vmess.padding
-- xray.cone.disabled
 
 - xray.ray.buffer.size
 - xray.browser.dialer

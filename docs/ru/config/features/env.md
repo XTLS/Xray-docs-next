@@ -10,7 +10,7 @@ Xray предоставляет следующие переменные сред
 Эта переменная среды указывает расположение папки, которая должна содержать файлы `geoip.dat` и `geosite.dat`.
 Если значение переменной не указано, программа будет искать файлы ресурсов в следующем порядке:
 
-```
+```text
 ./
 /usr/local/share/xray
 /usr/share/xray
@@ -46,7 +46,6 @@ Xray предоставляет следующие переменные сред
 - xray.buf.readv
 - xray.buf.splice
 - xray.vmess.padding
-- xray.cone.disabled
 
 - xray.ray.buffer.size
 - xray.browser.dialer
