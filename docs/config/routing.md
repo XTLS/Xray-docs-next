@@ -298,6 +298,8 @@ HTTP 请求头。
 
 负载均衡器配置。当一个负载均衡器生效时，它会从指定的 outbound 中，按配置选出一个最合适的 outbound，进行流量转发。
 
+部分功能需要两个观测站 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 的其中一个的信息，见具体说明。
+
 ```json
 {
   "tag": "balancer",
@@ -321,8 +323,6 @@ HTTP 请求头。
 
 如果根据连接观测结果所有 outbound 都无法连接，则使用这个配置项指定的 outbound。
 
-注意：需要添加 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项
-
 > `strategy`: [StrategyObject](#strategyobject)
 
 #### StrategyObject
@@ -338,12 +338,13 @@ HTTP 请求头。
 
 - `random` 默认值。随机选择匹配到的出站代理。
 - `roundRobin` 按顺序选择匹配到的出站代理。
-- `leastPing` 根据连接观测结果选择延迟最小的匹配到的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
-- `leastLoad` 根据连接观测结果选择最稳定的出站代理。需要添加 [observatory](./observatory.md#observatoryobject) 或者 [burstObservatory](./observatory.md#burstobservatoryobject) 配置项。
 
-::: tip
-无论哪一种模式，一旦其所有的 `selector` 对应节点同时配置了 `observatory` 或 `burstObservatory`，则可以过滤出健康节点。若没有任何健康节点可用，会尝试 `fallbackTag`
-:::
+以上两种可选拥有观测站，如果设置了 `fallbackTag` 且有观测站会自动排除掉被观测为不可用的出站（没有观测数据的会假设存活）。
+
+- `leastPing` 根据连接观测结果选择延迟最小的匹配到的出站代理。
+- `leastLoad` 根据连接观测结果选择最稳定的出站代理。
+
+以上两种必须配合观测站使用，并且未被观测站覆盖的节点会被直接排除。如果全部不可用且 `fallbackTag` 也未设置则会选择默认出站
 
 > `settings`: [StrategySettingsObject](#strategysettingsobject)
 

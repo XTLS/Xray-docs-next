@@ -298,6 +298,8 @@ HTTP request headers.
 
 Load balancer configuration. When a load balancer takes effect, it selects the most suitable outbound from the specified outbounds according to the configuration and forwards the traffic.
 
+Some features require information from either of the two observatories — [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject); see the specific descriptions.
+
 ```json
 {
   "tag": "balancer",
@@ -321,8 +323,6 @@ Generally matches multiple outbounds to distribute load among them.
 
 If all outbounds cannot be connected based on observation results, the outbound specified by this configuration item is used.
 
-Note: Requires adding [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject) configuration items.
-
 > `strategy`: [StrategyObject](#strategyobject)
 
 #### StrategyObject
@@ -338,12 +338,13 @@ Note: Requires adding [observatory](./observatory.md#observatoryobject) or [burs
 
 - `random`: Default value. Randomly selects a matched outbound proxy.
 - `roundRobin`: Selects matched outbound proxies in order.
-- `leastPing`: Selects the matched outbound proxy with the lowest latency based on observation results. Requires [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject).
-- `leastLoad`: Selects the most stable outbound proxy based on observation results. Requires [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject).
 
-::: tip
-Regardless of the mode, if all nodes corresponding to its `selector` have `observatory` or `burstObservatory` configured, healthy nodes can be filtered out. If no healthy nodes are available, it attempts `fallbackTag`.
-:::
+The two strategies above can optionally use an observatory. If `fallbackTag` is set and an observatory is present, outbounds observed as unavailable will be automatically excluded (those without observation data are assumed to be alive).
+
+- `leastPing`: Selects the matched outbound proxy with the lowest latency based on observation results.
+- `leastLoad`: Selects the most stable outbound proxy based on observation results.
+
+The two strategies above must be used together with an observatory, and nodes not covered by the observatory will be directly excluded. If all are unavailable and `fallbackTag` is not set, the default outbound will be selected.
 
 > `settings`: [StrategySettingsObject](#strategysettingsobject)
 
