@@ -336,8 +336,8 @@ Note: Requires adding [observatory](./observatory.md#observatoryobject) or [burs
 
 > `type` : "random" | "roundRobin" | "leastPing" | "leastLoad"
 
-- `random`: Default value. Randomly selects a matched outbound proxy.
-- `roundRobin`: Selects matched outbound proxies in order.
+- `random`: Default value. Randomly selects a matched outbound proxy. If a `fallbackTag` is set and [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject) is configured, proxies that fail the health check are excluded before selection. If the fallbackTag is not specified or the observatory is not configured, the selection is made from all matching outbound proxies, including those that are potentially unavailable.
+- `roundRobin`: Selects matched outbound proxies in order. If a `fallbackTag` is set and [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject) is configured, proxies that fail the health check are excluded before selection. If the fallbackTag is not specified or the observatory is not configured, the selection is made from all matching outbound proxies, including those that are potentially unavailable.
 - `leastPing`: Selects the matched outbound proxy with the lowest latency based on observation results. Requires [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject).
 - `leastLoad`: Selects the most stable outbound proxy based on observation results. Requires [observatory](./observatory.md#observatoryobject) or [burstObservatory](./observatory.md#burstobservatoryobject).
 
