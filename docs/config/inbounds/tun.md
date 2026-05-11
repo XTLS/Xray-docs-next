@@ -2,6 +2,8 @@
 
 创建一个 TUN 接口，发往此接口的流量将由 Xray 处理。目前支持 Windows、Linux、macOS 和 FreeBSD。
 
+Android 需要外部 APP 传入 TUN FD，使用 VPN Service 重定向流量。无法独立使用，仅作为 APP 将流量接入 Xray 的方式。
+
 ## InboundConfigurationObject
 
 `InboundConfigurationObject` 对应 [`InboundObject`](../inbound.md) 中的 `settings` 项。
@@ -51,7 +53,9 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 > `autoSystemRoutingTable`: [string]
 
-自动写入系统路由表的目标网段列表。每一项均为 CIDR，例如 `"0.0.0.0/0"` 表示所有 IPv4 流量，`"::/0"` 表示所有 IPv6 流量。
+自动写入系统路由表要导入该 TUN 接口的目标网段列表。每一项均为 CIDR，例如 `"0.0.0.0/0"` 表示所有 IPv4 流量，`"::/0"` 表示所有 IPv6 流量。
+
+当前仅支持 Windows。其他系统需要手动配置路由表。
 
 > `autoOutboundsInterface`: string
 

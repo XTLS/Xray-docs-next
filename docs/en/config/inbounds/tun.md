@@ -2,6 +2,8 @@
 
 Creates a TUN interface; traffic sent to this interface will be processed by Xray. Currently, Windows, Linux, macOS, and FreeBSD are supported.
 
+On Android, the TUN FD must be passed in from an external app, which uses VPN Service to redirect traffic. It cannot run standalone and only serves as a way for an app to feed traffic into Xray.
+
 ## InboundConfigurationObject
 
 `InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
@@ -51,7 +53,9 @@ The value of `userLevel` corresponds to the `level` value in [policy](../policy.
 
 > `autoSystemRoutingTable`: [string]
 
-The list of destination prefixes that Xray should add to the system routing table automatically. Each item is a CIDR. For example, `"0.0.0.0/0"` means all IPv4 traffic, and `"::/0"` means all IPv6 traffic.
+The list of destination prefixes that Xray should add to the system routing table automatically so that the traffic is directed into this TUN interface. Each item is a CIDR. For example, `"0.0.0.0/0"` means all IPv4 traffic, and `"::/0"` means all IPv6 traffic.
+
+Currently only supported on Windows. On other systems, the routing table must be configured manually.
 
 > `autoOutboundsInterface`: string
 
