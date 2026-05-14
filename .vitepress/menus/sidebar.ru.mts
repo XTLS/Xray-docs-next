@@ -26,6 +26,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         {
           text: "Конфигурация из нескольких файлов",
           link: "/ru/config/features/multiple.md"
+        },
+        {
+          text: "Обратный прокси / NAT Traversal",
+          link: "/ru/document/level-2/vless_reverse.md"
         }
       ]
     },

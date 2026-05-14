@@ -1,9 +1,10 @@
-# Reverse Proxy
+# Legacy Reverse Proxy
 
 ::: danger
-This feature has been deprecated. Please use the VLESS reverse proxy.
+The legacy reverse proxy has been deprecated. Please use the [VLESS reverse proxy](/en/document/level-2/vless_reverse.md).
 :::
 
+:::: details Legacy reverse proxy documentation (deprecated)
 A reverse proxy can forward traffic from the server side to the client side, effectively performing reverse traffic forwarding.
 
 ::: tip
@@ -262,3 +263,5 @@ Routing Configuration:
   ]
 }
 ```
+
+::::

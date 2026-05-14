@@ -433,3 +433,302 @@ VLESS reverse proxy can cover at least two types of scenarios:
 - Let users connect to a public server and then roam back home through the reverse tunnel.
 
 Both use the same reverse connection mechanism. The main difference lies in how the public side routes the traffic and how the private side continues processing it. Once you understand that, you can freely extend the model between "port mapping" and "remote roaming" according to your own needs.
+
+## Advanced Technique: Advanced Load Balancing
+
+If multiple inbounds on the public side use the same reverse tag, they still end up producing only one outbound. You can think of this as multiple lines hanging off the same availability pool, with one live line chosen at random each time it is used.
+
+This makes more flexible many-to-many setups possible. If one line is temporarily unavailable, for example because the corresponding internal device has not connected yet, it simply does not enter the current availability pool. Subsequent traffic is then forwarded automatically to other lines that are still online, with no manual switching required.
+
+In other words, `reverse.tag` has the same "same tag means merge into one connection pool" semantics on both sides:
+
+- Multiple clients on the public side that share the same `reverse-out` converge into one outbound pool;
+- Multiple VLESS outbounds on the internal side that share the same `reverse-in` converge into one inbound pool.
+
+So it naturally scales to N-to-N. A more common real deployment looks like this: externally there is only one service domain, for example `www.example.com`, and GeoDNS sends visitors to the nearest public server in Los Angeles or Tokyo. On the internal side, connections are established back to `us-reverse.example.com` and `jp-reverse.example.com`. Then deploy two internal devices, one at home and one in the office. Both home and office connect to both Los Angeles and Tokyo, so each public node maintains an availability pool of "home + office". During actual forwarding, one available line is selected at random from the currently established connections. If one endpoint goes offline, it disappears from the pool automatically.
+
+Below is a minimal snippet that keeps only the reverse-related parts and continues using the "public entry port mapped to an internal service" style.
+
+### Los Angeles Public Server
+
+```json
+{
+  "inbounds": [
+    {
+      "port": 8443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "us-home-uuid",
+            "reverse": {
+              "tag": "reverse-out"
+            }
+          },
+          {
+            "id": "us-office-uuid",
+            "reverse": {
+              "tag": "reverse-out"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "port": 443,
+      "protocol": "tunnel",
+      "tag": "portal"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["portal"],
+        "outboundTag": "reverse-out"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    }
+  ]
+}
+```
+
+### Tokyo Public Server
+
+Exactly the same idea, except that the UUIDs are changed to `jp-home-uuid` and `jp-office-uuid`.
+
+### Home Internal Device
+
+```json
+{
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["reverse-in"],
+        "outboundTag": "reverse-direct"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "reverse-direct",
+      "settings": {
+        "redirect": "192.168.1.123:80",
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.123",
+            "port": "80"
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "vless",
+      "settings": {
+        "address": "us-reverse.example.com",
+        "port": 8443,
+        "id": "us-home-uuid",
+        "reverse": {
+          "tag": "reverse-in"
+        }
+      }
+    },
+    {
+      "protocol": "vless",
+      "settings": {
+        "address": "jp-reverse.example.com",
+        "port": 8443,
+        "id": "jp-home-uuid",
+        "reverse": {
+          "tag": "reverse-in"
+        }
+      }
+    }
+  ]
+}
+```
+
+### Office Internal Device
+
+Exactly the same as the home internal device, except that the UUIDs are changed to `us-office-uuid` and `jp-office-uuid`, and `redirect` is changed to the internal service that the office side should expose.
+
+## Advanced Technique: Preserve the Real Visitor IP
+
+If you want the internal Web service to see the real visitor IP instead of identifying the source as the internal-side Xray machine, you can enable `proxyProtocol` on the internal-side `freedom` outbound. If it is not enabled, the backend Web server usually sees the source address of the internal-side Xray machine. If it is enabled, Xray sends a PROXY protocol header first when forwarding the connection to the backend specified by `redirect`, so that the real source address is passed along to the Web server.
+
+For example:
+
+```json
+{
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "reverse-direct",
+      "settings": {
+        "redirect": "192.168.1.123:80",
+        "proxyProtocol": 1,
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.123",
+            "port": "80"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+In that case, the backend pointed to by `redirect` cannot just be an ordinary HTTP listener. It must explicitly enable PROXY protocol as well. Suppose the Web server is `192.168.1.123` and the internal-side Xray address is `192.168.1.10`. With `nginx`, for example, it can be configured like this:
+
+```nginx
+server {
+    listen 80 proxy_protocol;
+    server_name _;
+
+    set_real_ip_from 192.168.1.10;
+    real_ip_header proxy_protocol;
+
+    location / {
+        root /srv/www/html;
+        index index.html;
+    }
+}
+```
+
+The `set_real_ip_from 192.168.1.10;` line above means that only the PROXY protocol header sent by the internal-side Xray is trusted. `192.168.1.10` here is only an example; replace it with the actual IP of your internal Xray machine. `proxyProtocol` can be either `1` or `2`. As long as the backend supports it, the `nginx` side configuration remains the same.
+
+## Advanced Technique: Fine-Grained Routing by Domain and Visitor IP on the Internal Side
+
+If you want external users to reach more than one internal site and those sites are not all on the same machine, you can enable `sniffing` directly on the reverse proxy entry, extract the domain name from the HTTP Host or TLS SNI, and then route traffic by domain to different `freedom` outbounds. This way the public side keeps only one entry, while the internal side can still fan traffic out to different hosts by site.
+
+At the same time, the VLESS reverse proxy preserves the real visitor source IP. Once the traffic enters the internal-side routing system, you can continue using `sourceIP` for finer control, for example sending some sources directly to `blackhole`, or steering specific sources to another backend group. Here is a combined example:
+
+```json
+{
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "inboundTag": ["reverse-in"],
+        "sourceIP": ["!geoip:cn"],
+        "outboundTag": "reverse-block"
+      },
+      {
+        "inboundTag": ["reverse-in"],
+        "domain": ["full:admin.example.com"],
+        "outboundTag": "reverse-admin"
+      },
+      {
+        "inboundTag": ["reverse-in"],
+        "domain": ["domain:blog.example.com"],
+        "outboundTag": "reverse-blog"
+      },
+      {
+        "inboundTag": ["reverse-in"],
+        "outboundTag": "reverse-default"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "reverse-block"
+    },
+    {
+      "protocol": "freedom",
+      "tag": "reverse-admin",
+      "settings": {
+        "redirect": "192.168.1.10:8443",
+        "proxyProtocol": 1,
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.10",
+            "port": "8443"
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "reverse-blog",
+      "settings": {
+        "redirect": "192.168.1.20:8080",
+        "proxyProtocol": 1,
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.20",
+            "port": "8080"
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "reverse-default",
+      "settings": {
+        "redirect": "192.168.1.30:80",
+        "proxyProtocol": 1,
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.30",
+            "port": "80"
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "vless",
+      "settings": {
+        "address": "yourserver.com",
+        "port": 8443,
+        "id": "ac04551d-6ebf-4685-86e2-17c12491f7f4",
+        "flow": "xtls-rprx-vision",
+        "reverse": {
+          "tag": "reverse-in",
+          "sniffing": {
+            "enabled": true,
+            "destOverride": ["http", "tls"]
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+The key points of this example are:
+
+- `reverse.sniffing` is enabled under `reverse` on the internal-side VLESS outbound, which means sniffing is performed on connections entering from the reverse proxy entry;
+- Routing rules are evaluated in order, so restrictive rules like `sourceIP -> blackhole` should be placed first;
+- `proxyProtocol` is only used to pass the real visitor IP further to the backend application. If you only want to route inside Xray by `sourceIP`, you can leave it disabled.
+
+With this setup, one public entry can serve multiple internal sites, and the internal side can still perform more flexible rejection, steering, and auditing based on the visitor source address.
+
+## Security Notes
+
+The following points are more about deployment safety and boundary control. It is recommended to read through them before using this in production:
+
+- A UUID used for reverse proxying cannot be shared with normal forward proxy clients. It must be created separately. Also, reverse proxy UUIDs should be protected carefully. Once a client configuration leaks, an attacker may try to hijack your reverse proxy tunnel.
+- For the connection used in private network penetration, even if `XTLS Vision` is enabled, the current practical benefits are still mainly things like `padding`. It is not the same as the commonly discussed "direct exposure" effect. Whether the connection facing end users should also enable XTLS depends on your actual link structure and threat model.
+- The internal `freedom` outbound that receives reverse proxy traffic, often called the `direct` outbound, should be configured according to the principle of least privilege. Set the default outbound to `blackhole`, only route explicitly allowed targets to a dedicated `freedom`, and then use `finalRules` to allow only the necessary addresses and ports.
+- If you are using a penetration service provided by someone else for remote access home, or if you do not fully trust the public VPS, it is recommended not to let reverse proxy traffic land directly on your real internal services. Instead, deploy another server on the internal side with `VLESS Encryption` enabled specifically to receive that traffic, and let it forward traffic to the actual service. This adds authentication and data protection; otherwise anyone with sufficient access to the public server may be able to roam through your internal network.
+- When traffic is delivered to the internal side through inbound protocols such as `VLESS`, the protocol shown by `Source` or `Local` in the routing system is not necessarily the same as the final `Target`. When using conditions such as `source`, `local`, or `network`, rely on the actual traffic shape instead of assuming they are all equivalent.
+- HTTP-based inbounds such as `XHTTP` and `WebSocket` currently read `X-Forwarded-For` by default. If there is no HTTP reverse proxy in front that you trust, the header can be forged by the client. Therefore, do not use it directly for strict security decisions such as IP whitelists, blacklists, or audit attribution.

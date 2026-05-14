@@ -433,3 +433,302 @@ VLESS 反向代理至少可以覆盖两类场景：
 - 让用户接入公网服务器后再通过反向通道漫游回家。
 
 两者使用的是同一套反向连接机制，区别主要在公网侧如何路由流量，以及内网侧如何继续处理这些流量。理解这一点之后，就可以按自己的场景在“端口映射”和“远程漫游”之间自由扩展。
+
+## 进阶技巧：高级负载均衡
+
+如果公网端存在多个入站使用相同的 reverse tag，最终也只会对应产生一个出站；可以把它理解为多条线路同时挂在同一个可用池中，每次使用时随机选一路。
+
+这种方式可以实现更灵活的多对多配置。假如某条线路暂时不可用，例如对应的内网端还没有连上来，那么它就不会进入当前可用池，后续流量会自动转发到其它仍然在线的线路上，无需手动切换。
+
+不难看出，`reverse.tag` 在两侧都是“同 tag 合并为一个连接池”的语义：
+
+- 公网侧多个 client 共用同一个 `reverse-out`，会收敛为同一个出站池；
+- 内网侧多个 VLESS 出站共用同一个 `reverse-in`，会收敛为同一个入口池。
+
+所以它天然可以扩展成 N 对 N。更常见的实际部署是：对外只有一个业务域名，例如 `www.example.com`，再通过 GeoDNS 把访客就近分配到美西和东京两台公网服务器；而内网端则分别回连 `us-reverse.example.com` 和 `jp-reverse.example.com` 这两个公网节点。再部署两个内网端：家里和办公室。家里、办公室都分别连到美西和东京，于是每个公网端都会维护一个“家里 + 办公室”的可用池。实际转发时，会从当前已建立的连接里随机选一条可用线路；某一端离线后，它会自动从池里消失。
+
+下面给一个极简片段，只保留 reverse 相关部分，继续沿用“公网入口端口映射到内网服务”的写法。
+
+### 美西公网端
+
+```json
+{
+  "inbounds": [
+    {
+      "port": 8443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "us-home-uuid",
+            "reverse": {
+              "tag": "reverse-out"
+            }
+          },
+          {
+            "id": "us-office-uuid",
+            "reverse": {
+              "tag": "reverse-out"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "port": 443,
+      "protocol": "tunnel",
+      "tag": "portal"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["portal"],
+        "outboundTag": "reverse-out"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    }
+  ]
+}
+```
+
+### 东京公网端
+
+完全同理，只是把 UUID 换成 `jp-home-uuid` 和 `jp-office-uuid`。
+
+### 家里内网端
+
+```json
+{
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["reverse-in"],
+        "outboundTag": "reverse-direct"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "reverse-direct",
+      "settings": {
+        "redirect": "192.168.1.123:80",
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.123",
+            "port": "80"
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "vless",
+      "settings": {
+        "address": "us-reverse.example.com",
+        "port": 8443,
+        "id": "us-home-uuid",
+        "reverse": {
+          "tag": "reverse-in"
+        }
+      }
+    },
+    {
+      "protocol": "vless",
+      "settings": {
+        "address": "jp-reverse.example.com",
+        "port": 8443,
+        "id": "jp-home-uuid",
+        "reverse": {
+          "tag": "reverse-in"
+        }
+      }
+    }
+  ]
+}
+```
+
+### 办公室内网端
+
+和家里内网端完全同理，只是把 UUID 换成 `us-office-uuid` 和 `jp-office-uuid`，并把 `redirect` 改成办公室要暴露的内网服务。
+
+## 进阶技巧：透传真实访客 IP
+
+如果你希望内网 Web 服务看到真实访客 IP，而不是把访问来源识别成内网侧 Xray 那台机器的 IP 地址，可以在内网侧的 `freedom` 出站里开启 `proxyProtocol`。不开启时，后端 WebServer 看到的源地址通常就是内网侧 Xray 的 IP；开启后，Xray 在把连接转发到 `redirect` 指定的后端时，会先发送一段 PROXY protocol 头，把真实源地址一并传给 WebServer。
+
+例如：
+
+```json
+{
+  "outbounds": [
+    {
+      "protocol": "freedom",
+      "tag": "reverse-direct",
+      "settings": {
+        "redirect": "192.168.1.123:80",
+        "proxyProtocol": 1,
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.123",
+            "port": "80"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+此时 `redirect` 指向的后端不能只是普通的 HTTP 监听，而必须显式开启 PROXY protocol。假设 WebServer 就是 `192.168.1.123`，而内网侧 Xray 的地址是 `192.168.1.10`，以 `nginx` 为例可以这样配置：
+
+```nginx
+server {
+    listen 80 proxy_protocol;
+    server_name _;
+
+    set_real_ip_from 192.168.1.10;
+    real_ip_header proxy_protocol;
+
+    location / {
+        root /srv/www/html;
+        index index.html;
+    }
+}
+```
+
+上面的 `set_real_ip_from 192.168.1.10;` 表示只信任来自内网侧 Xray 的 PROXY protocol 头；这里的 `192.168.1.10` 只是示例，请改成你那台内网 Xray 的实际 IP。`proxyProtocol` 可选 `1` 或 `2`，只要后端支持，`nginx` 这一侧的写法保持不变。
+
+## 进阶技巧：在内网侧按域名与访客 IP 精细分流
+
+如果你希望外部能够访问到的内网站点不止一个，而且这些站点并不在同一台机器上，那么可以直接在反向代理入口上开启 `sniffing`，先从 HTTP Host 或 TLS SNI 中嗅探出域名，再按域名把流量送到不同的 `freedom` 出站。这样公网侧只需要保留一个入口，内网侧就能继续按站点拆分到不同主机。
+
+同时，VLESS 反向代理会保留真实的访客源 IP，因此这些流量进入内网侧的路由系统后，还可以继续结合 `sourceIP` 做更细的控制，例如对某些来源直接 `blackhole`，或者把特定来源引导到另一组后端。下面给出一个组合示例：
+
+```json
+{
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "inboundTag": ["reverse-in"],
+        "sourceIP": ["!geoip:cn"],
+        "outboundTag": "reverse-block"
+      },
+      {
+        "inboundTag": ["reverse-in"],
+        "domain": ["full:admin.example.com"],
+        "outboundTag": "reverse-admin"
+      },
+      {
+        "inboundTag": ["reverse-in"],
+        "domain": ["domain:blog.example.com"],
+        "outboundTag": "reverse-blog"
+      },
+      {
+        "inboundTag": ["reverse-in"],
+        "outboundTag": "reverse-default"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    },
+    {
+      "protocol": "blackhole",
+      "tag": "reverse-block"
+    },
+    {
+      "protocol": "freedom",
+      "tag": "reverse-admin",
+      "settings": {
+        "redirect": "192.168.1.10:8443",
+        "proxyProtocol": 1,
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.10",
+            "port": "8443"
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "reverse-blog",
+      "settings": {
+        "redirect": "192.168.1.20:8080",
+        "proxyProtocol": 1,
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.20",
+            "port": "8080"
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "reverse-default",
+      "settings": {
+        "redirect": "192.168.1.30:80",
+        "proxyProtocol": 1,
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp",
+            "ip": "192.168.1.30",
+            "port": "80"
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "vless",
+      "settings": {
+        "address": "yourserver.com",
+        "port": 8443,
+        "id": "ac04551d-6ebf-4685-86e2-17c12491f7f4",
+        "flow": "xtls-rprx-vision",
+        "reverse": {
+          "tag": "reverse-in",
+          "sniffing": {
+            "enabled": true,
+            "destOverride": ["http", "tls"]
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+这个例子的要点是：
+
+- `reverse.sniffing` 开在内网侧 VLESS 出站的 `reverse` 下，表示对从反向代理入口进来的连接执行嗅探；
+- 路由规则有先后顺序，所以像 `sourceIP -> blackhole` 这样的限制规则应当放在前面；
+- `proxyProtocol` 只负责把真实访客 IP 继续传给后端应用，如果你只想在 Xray 路由里按 `sourceIP` 分流，也可以不启用它。
+
+这样配置后，一个公网入口就可以同时承接多个内网站点，并且还能在内网侧根据访客来源地址继续做拒绝、分流、审计等更灵活的处理。
+
+## 安全注意事项
+
+下面这些点更偏部署安全与边界控制，建议在正式使用前通读一遍：
+
+- 用于反向代理的 UUID 无法与正向代理（普通客户端）共用，只能单独新建。此外反向代理 UUID 要妥善保管，否则一旦客户端配置泄露，攻击者就可能尝试劫持你的反向代理通道。
+- 用于内网穿透的那条连接，即使开启了 `XTLS Vision`，当前主要获得的也是 `padding` 等收益，并不等同于常说的“裸奔”效果。至于面向最终用户的那条连接是否也要开启 XTLS，需要结合你的链路形态和威胁模型自行评估。
+- 承接反向代理流量的内网 `freedom`（也就是常说的 `direct`）出站，建议按最小权限原则配置。把默认出站设为 `blackhole`，只把允许访问的目标显式路由到专用 `freedom`。再通过 `finalRules` 只放行必要的地址和端口。
+- 如果你使用的是别人提供的穿透服务用于远程回家，或者你并不完全信任公网 VPS，建议不要让反向代理流量直接落到真实内网业务。可以在内网再部署一个带 `VLESS Encryption` 的服务端专门承接这部分流量，再由它转发给实际业务，以补上身份认证和数据保护，否则有权限接触到公网服务器的人可以漫游你的内网。
+- 通过 `VLESS` 等入站协议把流量送到内网端时，路由系统里看到的 `Source` / `Local` 所属协议，不一定与最终 `Target` 一致。涉及 `source`、`local`、`network` 等条件时，应以实际流量形态为准，不要想当然地把它们等同起来。
+- `XHTTP`、`WebSocket` 等基于 HTTP 的入站当前会默认读取 `X-Forwarded-For`。如果前面没有你自己信任的 HTTP 反向代理，这个头可以被客户端伪造，因此不要直接拿它做严格的安全判断，例如 IP 白名单、黑名单或审计归因。

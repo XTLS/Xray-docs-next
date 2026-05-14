@@ -20,6 +20,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         {
           text: "Multiple Configurations",
           link: "/en/config/features/multiple.md"
+        },
+        {
+          text: "Reverse Proxy / NAT Traversal",
+          link: "/en/document/level-2/vless_reverse.md"
         }
       ]
     },

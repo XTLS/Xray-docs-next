@@ -14,7 +14,11 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/config/features/browser_dialer.md"
         },
         { text: "环境变量", link: "/config/features/env.md" },
-        { text: "多文件配置", link: "/config/features/multiple.md" }
+        { text: "多文件配置", link: "/config/features/multiple.md" },
+        {
+          text: "反向代理 / 内网穿透",
+          link: "/document/level-2/vless_reverse.md"
+        }
       ]
     },
     {
