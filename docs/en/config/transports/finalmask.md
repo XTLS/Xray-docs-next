@@ -306,7 +306,9 @@ The same meanings as in the TCP version apply here.
 }
 ```
 
-`listenIp`: the IP address to listen on.
+`listenIp`: the IP address to listen on. Defaults to `"0.0.0.0"`.
+
+Note that this differs from the usual TCP/UDP listening on `"0.0.0.0"` and `"::"`. Because ICMP over IPv4 and ICMPv6 over IPv6 are not interchangeable protocols, specifying `"0.0.0.0"` here means listening only for ICMP over IPv4, and vice versa.
 
 `id`: when multiple clients share the same IP, it is recommended that the server keep this value at `0`.
 
