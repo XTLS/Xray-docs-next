@@ -8,7 +8,7 @@ Xray uses Go-style commands and parameters.
 
 You can run `xray help` to get the most basic usage of Xray, as well as available commands and descriptions.
 
-```
+```bash
 Xray is a platform for building proxies.
 
 Usage:
@@ -38,11 +38,11 @@ Specify one or more configuration files and run.
 
 Usage:
 
-```
- xray run [-c config.json] [-confdir dir]
+```bash
+xray run [-c config.json] [-confdir dir]
 ```
 
-```
+```bash
 Run Xray with config, the default command.
 
 The -config=file, -c=file flags set the config files for
@@ -59,15 +59,52 @@ without launching the server.
 The -dump flag tells Xray to print the merged config.
 ```
 
-`-config=` / `-c=` are used to specify the location of the configuration file(s) to use. Supports multi-file configuration.
-`-confdir=` is used to specify a folder containing multiple configuration files.
-`-format=` is used to specify the format of the configuration files.
-`-test` is used to test the validity of the configuration files.
-`-dump` is used to display the result after merging multiple configuration files.
+- `-config=` / `-c=` are used to specify the location of the configuration file(s) to use.
+- `-confdir=` is used to specify a folder containing multiple configuration files. All configuration files in that directory will be [merged automatically](/en/config/features/multiple.md).
+- `-format=` is used to specify the format of the configuration files.
+- `-test` is used to test the validity of the configuration files.
+- `-dump` is used to display the result after merging multiple configuration files.
 
 ::: tip
 In addition to the default JSON format, configuration files can also use TOML and YAML. If no format is specified, it will be identified by the file extension.
 :::
+
+:::: tip
+`-config=` / `-c=` supports not only local file paths, but also standard input and remote URLs.
+
+::: details Expand to view supported `-config` forms and examples
+`-config=` can be repeated to specify multiple configuration sources. For example:
+
+```bash
+xray run -config base.json -config routing.json -config outbounds.yaml
+```
+
+Xray reads these configuration files in argument order and [merges them automatically](/en/config/features/multiple.md) into the final configuration.
+
+In addition to common local absolute and relative file paths, the following forms are also supported:
+
+- `stdin:`: Read configuration content from standard input. This is useful when piping, redirecting, or generating configuration dynamically from another program. After the input is complete, the caller must close the standard input stream, otherwise Xray will continue waiting for the end of input.
+- URLs starting with `http://` or `https://`: Download configuration content from a remote address. The protocol prefix must be lowercase. **This method carries security risks. Do not use it unless you clearly know what you are doing.**
+- `http+unix://`: Read configuration over an HTTP request sent through a Unix Domain Socket, in a form such as `http+unix:///path/to/socket.sock/api/endpoint`. This is useful when configuration is provided dynamically by a local service that only listens on a Unix socket.
+
+Examples:
+
+```bash
+# Read from a local file
+xray run -config ./config.json
+
+# Read from standard input
+cat config.json | xray run -config stdin:
+
+# Read from a remote URL
+xray run -config https://example.com/xray/config.json
+
+# Read through an HTTP endpoint on a Unix Domain Socket
+xray run -config http+unix:///run/xray-config.sock/config.json
+```
+
+:::
+::::
 
 ::: tip
 When `-config` is not specified, Xray will attempt to load `config.json` from the following paths in order:
@@ -76,8 +113,8 @@ When `-config` is not specified, Xray will attempt to load `config.json` from th
 - The path specified by `Xray.location.asset` in [Environment Variables](../config/features/env.md#resource-file-path)
   :::
 
-```
- xray run -dump
+```bash
+xray run -dump
 ```
 
 Used to output the result after merging multi-file configurations.
@@ -88,8 +125,8 @@ Output Xray version, Golang version, and other information.
 
 Usage:
 
-```
- xray version
+```bash
+xray version
 ```
 
 ### xray api
@@ -98,11 +135,11 @@ Call Xray's gRPC API. Needs to be enabled in the configuration file.
 
 Usage:
 
-```
+```bash
 xray api <command> [arguments]
 ```
 
-```
+```bash
         restartlogger Restart the logger
         stats         Get statistics
         statsquery    Query statistics
@@ -119,7 +156,7 @@ Convert configuration files to protobuf or convert typedMessage to JSON.
 
 Usage:
 
-```
+```bash
 xray convert <command> [arguments]
 
 The commands are:
@@ -174,11 +211,11 @@ Some tools related to TLS.
 
 Usage:
 
-```
+```bash
 xray tls <command> [arguments]
 ```
 
-```
+```bash
         cert          Generate TLS certificates
         ping          Ping the domain with TLS handshake
         certChainHash Calculate TLS certificates hash.
@@ -190,7 +227,7 @@ Generate UUID.
 
 Usage:
 
-```
+```bash
 xray uuid [-i "example"]
 ```
 
@@ -200,7 +237,7 @@ Generate x25519 key pair.
 
 Usage:
 
-```
+```bash
 xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding ]
 ```
 
@@ -210,7 +247,7 @@ Generate WireGuard curve25519 key pair.
 
 Usage:
 
-```
+```bash
 xray wg [-i "(base64.StdEncoding)"]
 ```
 
@@ -227,7 +264,7 @@ Generate MLDSA-65 post-quantum signature key pair for REALITY.
 
 Usage:
 
-```
+```bash
 xray mldsa65 [-i "seed (base64.StdEncoding)"]
 ```
 
@@ -237,7 +274,7 @@ Generate ML-KEM-768 post-quantum key exchange key pair for VLESS Encryption.
 
 Usage:
 
-```
+```bash
 xray mlkem768 [-i "seed (base64.StdEncoding)"]
 ```
 
@@ -247,6 +284,6 @@ Generate encryption/decryption option content that can be directly used for VLES
 
 Usage:
 
-```
+```bash
 xray vlessenc
 ```

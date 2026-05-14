@@ -8,7 +8,7 @@ Xray использует команды и аргументы в стиле Go.
 
 Вы можете запустить `xray help`, чтобы получить список всех базовых команд Xray, а также их описание и примеры использования.
 
-```
+```bash
 Xray is a platform for building proxies.
 
 Usage:
@@ -38,11 +38,11 @@ Use "xray help <command>" for more information about a command.
 
 Использование:
 
-```
- xray run [-c config.json] [-confdir dir]
+```bash
+xray run [-c config.json] [-confdir dir]
 ```
 
-```
+```bash
 Run Xray with config, the default command.
 
 The -config=file, -c=file flags set the config files for
@@ -59,15 +59,52 @@ without launching the server.
 The -dump flag tells Xray to print the merged config.
 ```
 
-`-config=` / `-c=`: Указывает путь к файлу конфигурации, поддерживается использование нескольких файлов.
-`-confdir=`: Указывает путь к папке, содержащей несколько файлов конфигурации.
-`-format=`: Задает формат файлов конфигурации.
-`-test`: Проверяет корректность файлов конфигурации.
-`-dump`: Выводит объединенный результат слияния нескольких файлов конфигурации.
+- `-config=` / `-c=`: Указывает расположение используемого файла конфигурации.
+- `-confdir=`: Указывает путь к папке, содержащей несколько файлов конфигурации. Все файлы конфигурации в этом каталоге будут [объединены автоматически](/ru/config/features/multiple.md).
+- `-format=`: Задает формат файлов конфигурации.
+- `-test`: Проверяет корректность файлов конфигурации.
+- `-dump`: Выводит объединенный результат слияния нескольких файлов конфигурации.
 
 ::: tip
 Помимо формата JSON по умолчанию, файлы конфигурации также могут быть в формате TOML или YAML. Если формат не указан явно, он определяется по расширению файла.
 :::
+
+:::: tip
+`-config=` / `-c=` поддерживает не только локальные пути к файлам, но и стандартный ввод, а также удаленные адреса.
+
+::: details Разверните, чтобы посмотреть поддерживаемые формы `-config` и примеры
+`-config=` можно указывать несколько раз, чтобы задать несколько источников конфигурации. Например:
+
+```bash
+xray run -config base.json -config routing.json -config outbounds.yaml
+```
+
+Xray прочитает эти файлы конфигурации в порядке аргументов и [автоматически объединит их](/ru/config/features/multiple.md) в итоговую конфигурацию.
+
+Помимо обычных абсолютных и относительных путей к локальным файлам, поддерживаются и следующие формы:
+
+- `stdin:`: Чтение содержимого конфигурации из стандартного ввода. Это удобно при использовании конвейеров, перенаправления или когда конфигурация динамически генерируется другой программой. После завершения ввода вызывающая сторона должна закрыть поток стандартного ввода, иначе Xray продолжит ждать окончания ввода.
+- URL, начинающиеся с `http://` или `https://`: Загрузка содержимого конфигурации с удаленного адреса. Префикс протокола должен быть записан строчными буквами. **Этот способ связан с рисками безопасности. Не используйте его, если вы не вполне понимаете, что делаете.**
+- `http+unix://`: Чтение конфигурации через HTTP-запрос, отправленный через Unix Domain Socket, в формате вроде `http+unix:///path/to/socket.sock/api/endpoint`. Это удобно, если конфигурация динамически выдается локальным сервисом, который слушает только Unix-сокет.
+
+Примеры:
+
+```bash
+# Чтение из локального файла
+xray run -config ./config.json
+
+# Чтение из стандартного ввода
+cat config.json | xray run -config stdin:
+
+# Чтение с удаленного адреса
+xray run -config https://example.com/xray/config.json
+
+# Чтение через HTTP-эндпоинт на Unix Domain Socket
+xray run -config http+unix:///run/xray-config.sock/config.json
+```
+
+:::
+::::
 
 ::: tip
 Когда `-config` не указан, Xray последовательно попытается загрузить `config.json` из следующих путей:
@@ -76,8 +113,8 @@ The -dump flag tells Xray to print the merged config.
 - Путь, указанный в переменной окружения `Xray.location.asset` в [переменных окружения](../config/features/env.md#Путь-к-файлам-ресурсов)
   :::
 
-```
- xray run -dump
+```bash
+xray run -dump
 ```
 
 Выводит результат слияния нескольких файлов конфигурации.
@@ -88,8 +125,8 @@ The -dump flag tells Xray to print the merged config.
 
 Использование:
 
-```
- xray version
+```bash
+xray version
 ```
 
 ### xray api
@@ -98,11 +135,11 @@ The -dump flag tells Xray to print the merged config.
 
 Использование:
 
-```
+```bash
 xray api <command> [arguments]
 ```
 
-```
+```bash
         restartlogger Restart the logger
         stats         Get statistics
         statsquery    Query statistics
@@ -119,7 +156,7 @@ Convert config to protobuf, or convert typedMessage to JSON
 
 usage:
 
-```
+```bash
 xray convert <command> [arguments]
 
 The commands are:
@@ -174,11 +211,11 @@ xray help convert json
 
 Использование:
 
-```
+```bash
 xray tls <command> [arguments]
 ```
 
-```
+```bash
         cert          Generate TLS certificates
         ping          Ping the domain with TLS handshake
         certChainHash Calculate TLS certificates hash.
@@ -190,7 +227,7 @@ xray tls <command> [arguments]
 
 Использование:
 
-```
+```bash
 xray uuid [-i "example"]
 ```
 
@@ -200,7 +237,7 @@ xray uuid [-i "example"]
 
 Использование:
 
-```
+```bash
 xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding ]
 ```
 
@@ -210,7 +247,7 @@ xray x25519 [-i "(base64.RawURLEncoding)" --std-encoding ]
 
 Использование:
 
-```
+```bash
 xray wg [-i "(base64.StdEncoding)"]
 ```
 
@@ -227,7 +264,7 @@ xray wg [-i "(base64.StdEncoding)"]
 
 Использование:
 
-```
+```bash
 xray mldsa65 [-i "seed (base64.StdEncoding)"]
 ```
 
@@ -237,7 +274,7 @@ xray mldsa65 [-i "seed (base64.StdEncoding)"]
 
 Использование:
 
-```
+```bash
 xray mlkem768 [-i "seed (base64.StdEncoding)"]
 ```
 
@@ -247,6 +284,6 @@ xray mlkem768 [-i "seed (base64.StdEncoding)"]
 
 Использование:
 
-```
+```bash
 xray vlessenc
 ```
