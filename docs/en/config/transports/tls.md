@@ -140,9 +140,14 @@ This feature only **simulates** the `TLS Client Hello` fingerprint. Behavior and
 :::
 
 ::: tip
-When this feature is enabled, some TLS options that affect TLS fingerprints are overridden by the uTLS library and stop taking effect, such as ALPN.
-The parameters still passed through are:
-`"serverName" "disableSystemRoot" "pinnedPeerCertSha256" "masterKeyLog"`
+When this feature is enabled, some TLS options that affect TLS fingerprints are overridden by the uTLS library and stop taking effect.
+The parameters still passed through are: `"serverName" "disableSystemRoot" "pinnedPeerCertSha256" "masterKeyLog"`.
+
+ALPN has special behavior.
+
+By default, the most common `h2,http/1.1` is forced as ALPN. For WebSocket and HttpUpgrade transports, `http/1.1` is used by default — otherwise negotiating to `h2` would prevent the connection from succeeding — but you may manually set it to `h2,http/1.1` if you are sure the server supports completing the handshake with this ALPN.
+
+If ECH is enabled, the outer ALPN is always shown as `h2,http/1.1`. The inner ALPN is forced to `http/1.1` for WebSocket or HttpUpgrade transports to allow the handshake to complete; for other protocols the user-configured ALPN is honored.
 :::
 
 > `pinnedPeerCertSha256`: string
