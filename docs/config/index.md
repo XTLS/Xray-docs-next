@@ -2,6 +2,10 @@
 
 > **这个章节将告诉您所有的 Xray 配置细节，掌握这些内容，在您手中 Xray 将发挥更大威力。**
 
+::: warning 版本说明
+本文档与[最新 release](https://github.com/XTLS/Xray-core/releases)同步；而一键脚本大多安装 GitHub 标记为 `Latest` 的版本，它有时不是最新 release，因此部分字段可能无效或行为与文档描述不一致。
+:::
+
 ## 概述
 
 Xray 的配置文件为 json 格式, 客户端和服务端的配置格式没有区别, 只是实际的配置内容不一样。

@@ -2,6 +2,10 @@
 
 > **This chapter will tell you all the details of Xray configuration. Mastering this content will allow you to unleash the greater power of Xray.**
 
+::: warning Version note
+This documentation tracks the [latest release](https://github.com/XTLS/Xray-core/releases); most one-click scripts install the version GitHub marks as `Latest`, which is sometimes not the newest release, so some fields may be invalid or behave differently from what the documentation describes.
+:::
+
 ## Overview
 
 The configuration file for Xray is in JSON format. There is no difference in the configuration format between the client and the server; only the actual configuration content differs.
