@@ -1,9 +1,10 @@
 # VLESS Reverse Proxy Examples
 
-This article demonstrates how to use Xray's VLESS reverse proxy capability to send traffic back into a remote private network through a public server. Two common use cases are covered here:
+This article demonstrates how to use Xray's VLESS reverse proxy capability to send traffic back into a remote private network through a public server, or even continue out to the public internet through a home broadband connection. Three common use cases are covered here:
 
 - `Ingress forwarding`: remote port mapping that maps a public entry port to a remote internal Web service;
-- `Remote return home`: remote private-network roaming where a user relays through a public server and continues accessing resources inside the home network.
+- `Remote return home`: remote private-network roaming where a user relays through a public server and continues accessing resources inside the home network;
+- `Home broadband egress`: the user relays through a public server, sends selected traffic back to a device at home, and then accesses the public internet through the home broadband uplink.
 
 ## Ingress Forwarding
 
@@ -212,13 +213,12 @@ Remote private-network roaming where the user relays through a public server and
 
 ### Scenario Description
 
-This part is not about exposing a public port for external access. Instead, the user first connects to VLESS on the public server, then uses the already-established reverse tunnel to send that user's traffic back to the internal device at home for further handling.
+This part is not about exposing a public port for external access. Instead, the user first connects to the public Xray server, then uses the already-established reverse tunnel to send that user's traffic back to the internal device at home for further handling.
 
 This usage is closer to:
 
 - Accessing home LAN resources while roaming outside;
-- Sending a specific user's egress back through the home network;
-- Relaying through a public server, then returning to the home network to access a NAS, router panel, home DNS, or other internal services.
+- Relaying through a public server, then returning to the home network to access a NAS, router panel, or other internal services.
 
 ```mermaid
 flowchart LR
@@ -228,7 +228,7 @@ flowchart LR
     H[Home LAN Resources]
 
     I -- Actively establishes a VLESS reverse connection --> S
-    U -- Connects to the VLESS inbound on the public server --> S
+    U -- Connects to the Xray entry on the public server --> S
     S -- User traffic forwarded through reverse --> I
     I -- Accesses the home LAN again --> H
 ```
@@ -238,9 +238,9 @@ flowchart LR
 Compared with the first part, the biggest difference here is not the reverse connection itself, but the routing target on the public side:
 
 - The first part uses `inboundTag -> reverse-out` to map a specific entry port back into the private network;
-- The second part uses `user -> reverse-out` to hand a specific user's proxied traffic over to the internal device for continued processing.
+- This part uses `user -> reverse-out` to hand a specific user's proxied traffic over to the internal device for continued processing.
 
-In other words, the public server acts more like a relay station here. The user is not directly "accessing a service exposed through a public port mapping," but rather "first connecting to the VLESS inbound on the public server, then continuing from the device at home."
+In other words, the public server acts more like a relay station here. The user is not directly "accessing a service exposed through a public port mapping," but rather "first connecting to the Xray entry on the public server, then continuing from the device at home."
 
 ### Public Server Configuration
 
@@ -407,7 +407,7 @@ sequenceDiagram
     U->>S: Connect using roam@example.com
     S->>S: user route matches reverse-out
     S->>I: Send user traffic into reverse tunnel
-    I->>H: Access NAS / router / home DNS / internal services
+    I->>H: Access NAS / router / internal services
     H-->>I: Return response
     I-->>S: Return through reverse tunnel
     S-->>U: Respond to user
@@ -416,36 +416,271 @@ sequenceDiagram
 ### How This Differs from the First Part
 
 - The first part is "map a public entry port to a fixed service in a remote private network"; without extra authentication, anyone on the internet can access that service.
-- The second part is "let a specific user first connect to the public Xray server, then use the reverse proxy to continue back home."
+- This part is "let a specific user first connect to the public Xray server, then use the reverse proxy to continue back home."
 - The first part is more like remote port mapping, also known as private network penetration;
-- The second part is more like remote roaming or lightweight cross-site networking.
+- This part is more like remote roaming or lightweight cross-site networking.
 
 ### Security Recommendations
 
 - If there are multiple roaming users, it is recommended that each user have an independent UUID or identifier;
 - The sample configuration uses only VLESS-enc for simplicity. In real deployments, you may need REALITY, XHTTP, or similar traffic camouflage methods.
 
+::: tip Extension
+If what you need is not a "visit a few fixed internal resources" point-to-site pattern, but rather site-to-site L4 networking, you can combine this with routing tables plus TUN, or let Xray act as a gateway for transparent proxying.
+:::
+
+## Home Broadband Egress
+
+Send selected traffic back to a device at home, then continue out to the public internet through the home broadband uplink.
+
+### Scenario Description
+
+This part is not about accessing a NAS, router panel, or other internal services at home. Instead, the user first connects to the public Xray server, then uses the already-established reverse tunnel to send part of the traffic back to a device at home, and finally continues out to the public internet through the home broadband connection.
+
+This usage is closer to:
+
+- Making selected traffic use the residential egress IP of your home broadband;
+- Situations where your home does not have a dedicated public IP, where you cannot do IPv4 port forwarding or open the IPv6 firewall, or where you simply do not want to expose ports and maintain DDNS;
+- Letting the public server handle user access first, then sending only the traffic that needs home-broadband egress back to the device at home.
+
+::: tip
+One concrete use case is wanting home broadband egress so ChatGPT does not get "dumber." Unlike streaming unlocks, this requires a genuinely dedicated residential egress IP. In reality, the person who can offer that "real home broadband" is often your friend, and changing settings on their ONT or router is extremely inconvenient. The easiest option is often to hand them a device that works as long as it has internet access, which is exactly the kind of scenario where VLESS reverse proxy fits.
+
+Thinking bigger, even the phone your very generous friend uses every day can run Xray 24 x 7 as the egress device. The effect is the same on cellular. This is where friendship gets tested.
+:::
+
+```mermaid
+flowchart LR
+    U[External User Device]
+    S[Public Server]
+    I[Home Device]
+    P[Public Target]
+
+    I -- Actively establishes a VLESS reverse connection --> S
+    U -- Connects to the Xray entry on the public server --> S
+    S -- Selected traffic forwarded through reverse --> I
+    I -- Accesses the public internet through home broadband --> P
+```
+
+### Configuration Idea
+
+This is almost the same as the second part. The only difference is what the routing targets. The second part uses `user -> reverse-out`, while this part uses `specific domains -> reverse-out`. The reverse connection itself between the public server and the home device does not change.
+
+### Public Server Configuration
+
+In this example:
+
+- The first UUID is still used by the home device to establish the reverse connection;
+- The second UUID is used by the external user to access the public server;
+- Routing forwards traffic for `geosite:openai` to `reverse-out`.
+
+The public-server side is almost the same as in the second part. The only change is that routing is now based on `domain` instead of `user`.
+
+```json
+{
+  "inbounds": [
+    {
+      "listen": "0.0.0.0",
+      "port": 8443,
+      "protocol": "vless",
+      // Enable sniffing here, otherwise domain-based routing may not see the target domain name
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls", "quic"]
+      },
+      "settings": {
+        "decryption": "mlkem768x25519plus.native.600s.aCF82eKiK6g0DIbv0_nsjbHC4RyKCc9NRjl-X9lyi0k",
+        "clients": [
+          {
+            "id": "ac04551d-6ebf-4685-86e2-17c12491f7f4",
+            "flow": "xtls-rprx-vision",
+            "reverse": {
+              "tag": "reverse-out"
+            }
+          },
+          {
+            "id": "e8758aff-d830-4d08-a59e-271df65b995a",
+            "flow": "xtls-rprx-vision"
+          }
+        ]
+      }
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "domain": ["geosite:openai"],
+        "outboundTag": "reverse-out"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    }
+  ]
+}
+```
+
+What these rules mean:
+
+- The home device calls back to the public server with the first UUID;
+- The external user connects to the public server with the second UUID;
+- This public inbound is recommended to enable `sniffing`, otherwise domain-based routing may not see the target domain name;
+- Any request that matches `geosite:openai` is sent into `reverse-out`;
+- Other traffic that does not match continues through the default `freedom`, meaning it stays on the public server for local egress.
+
+### Home Device Configuration
+
+The home-device side is also almost the same as in the second part. This time, however, it no longer allows only one internal subnet. Instead, it allows all non-private addresses so traffic can continue to the public internet through the home broadband connection.
+
+```json
+{
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["reverse-in"],
+        "outboundTag": "home-direct"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    },
+    {
+      "protocol": "freedom",
+      "tag": "home-direct",
+      "settings": {
+        "finalRules": [
+          {
+            "action": "allow",
+            "network": "tcp,udp",
+            "ip": ["!geoip:private"]
+          }
+        ]
+      }
+    },
+    {
+      "protocol": "vless",
+      "settings": {
+        "address": "yourserver.com",
+        "port": 8443,
+        "encryption": "mlkem768x25519plus.native.0rtt.2PcBa3Yz0zBdt4p8-PkJMzx9hIj2Ve-UmrnmZRPnpRk",
+        "id": "ac04551d-6ebf-4685-86e2-17c12491f7f4",
+        "flow": "xtls-rprx-vision",
+        "reverse": {
+          "tag": "reverse-in"
+        }
+      }
+    }
+  ]
+}
+```
+
+What these rules mean:
+
+- Any traffic that enters from `reverse-in` is handed to `home-direct`;
+- `home-direct` uses `finalRules` to allow only public-internet traffic.
+
+### User Device Configuration
+
+On the user-device side, a classic "`cn -> direct`, everything else proxied" setup is enough:
+
+```json
+{
+  "routing": {
+    "rules": [
+      {
+        "domain": ["geosite:cn"],
+        "outboundTag": "direct"
+      },
+      {
+        "ip": ["geoip:private", "geoip:cn"],
+        "outboundTag": "direct"
+      }
+    ]
+  },
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "tag": "to-server",
+      "settings": {
+        "address": "yourserver.com",
+        "port": 8443,
+        "encryption": "mlkem768x25519plus.native.0rtt.2PcBa3Yz0zBdt4p8-PkJMzx9hIj2Ve-UmrnmZRPnpRk",
+        "id": "e8758aff-d830-4d08-a59e-271df65b995a",
+        "flow": "xtls-rprx-vision"
+      }
+    },
+    {
+      "protocol": "freedom",
+      "tag": "direct"
+    }
+  ]
+}
+```
+
+What these rules mean:
+
+- Domestic domains and domestic IPs continue to connect directly from the local network;
+- Other traffic that does not match goes through `to-server` by default, meaning it is sent to the public server;
+- Once it reaches the public server, the `geosite:openai -> reverse-out` rule from the previous section decides which traffic should use home broadband.
+
+### Request Flow
+
+```mermaid
+sequenceDiagram
+    participant U as External User Device
+    participant S as Public Server
+    participant I as Home Device
+    participant P as Public Target
+
+    I->>S: Establish VLESS reverse connection
+    U->>S: Connect to the public server
+    U->>S: Request traffic that needs home broadband egress
+    S->>S: Route matches reverse-out
+    S->>I: Send selected traffic into the reverse tunnel
+    I->>P: Access the public internet through home broadband
+    P-->>I: Return response
+    I-->>S: Return through the reverse tunnel
+    S-->>U: Respond to user
+```
+
+### How This Differs from the Second Part
+
+- The second part is "return home to access internal resources";
+- This part is "return home to borrow the home broadband egress for public internet access";
+- In the second part, routing is mainly about "which users need to go home";
+- In this part, routing is mainly about "which domains need to use home broadband".
+
 ## Summary
 
-VLESS reverse proxy can cover at least two types of scenarios:
+At this point, the article has covered three primary scenarios and one extension capability for VLESS reverse proxy:
 
-- Map a public entry port to a fixed service inside a remote private network;
-- Let users connect to a public server and then roam back home through the reverse tunnel.
+- Remote port mapping: map a public entry port to a specific service in a remote private network;
+- Point-to-site VPN: let users connect to a public server and then roam back home through the reverse tunnel;
+- Site-to-site VPN: use the same mechanism as a building block for site-to-site L4 networking;
+- Home broadband egress: send selected traffic back home through a public server, then continue out through the home broadband connection.
 
-Both use the same reverse connection mechanism. The main difference lies in how the public side routes the traffic and how the private side continues processing it. Once you understand that, you can freely extend the model between "port mapping" and "remote roaming" according to your own needs.
+All of these use the same reverse connection mechanism. The main difference lies in how the public side routes the traffic and how the private side continues processing it. This article only lists several common patterns; the more important part is understanding the mechanism itself. Once you really grasp it, you can keep extending it to fit your own needs.
 
 ## Advanced Technique: Advanced Load Balancing
 
+If you have multiple ingress points, multiple egress points, or multi-site call-backs from different regions, and you want a group of reverse-proxy paths to fail over and spread traffic automatically, you can make multiple connections share the same `reverse.tag` and place them into one availability pool.
+
 If multiple inbounds on the public side use the same reverse tag, they still end up producing only one outbound. You can think of this as multiple lines hanging off the same availability pool, with one live line chosen at random each time it is used.
 
-This makes more flexible many-to-many setups possible. If one line is temporarily unavailable, for example because the corresponding internal device has not connected yet, it simply does not enter the current availability pool. Subsequent traffic is then forwarded automatically to other lines that are still online, with no manual switching required.
+If one line is temporarily unavailable, for example because the corresponding internal device has not connected yet, it simply does not enter the current availability pool. Subsequent traffic is then forwarded automatically to other lines that are still online, with no manual switching required.
 
-In other words, `reverse.tag` has the same "same tag means merge into one connection pool" semantics on both sides:
+The same naming rule is allowed on the internal side as well: multiple VLESS outbounds can also share one `reverse-in`.
+
+In other words, `reverse.tag` allows duplicates on both sides, and duplicate tags are merged together:
 
 - Multiple clients on the public side that share the same `reverse-out` converge into one outbound pool;
 - Multiple VLESS outbounds on the internal side that share the same `reverse-in` converge into one inbound pool.
 
-So it naturally scales to N-to-N. A more common real deployment looks like this: externally there is only one service domain, for example `www.example.com`, and GeoDNS sends visitors to the nearest public server in Los Angeles or Tokyo. On the internal side, connections are established back to `us-reverse.example.com` and `jp-reverse.example.com`. Then deploy two internal devices, one at home and one in the office. Both home and office connect to both Los Angeles and Tokyo, so each public node maintains an availability pool of "home + office". During actual forwarding, one available line is selected at random from the currently established connections. If one endpoint goes offline, it disappears from the pool automatically.
+So it naturally scales to N-to-N. A more common real deployment looks like this: externally there is only one service domain, for example `www.example.com`, and GeoDNS sends visitors to the nearest public server in Los Angeles or Tokyo. On the internal side, connections are established back to `us-reverse.example.com` and `jp-reverse.example.com`. Then deploy two internal devices, one at home and one in the office, and have both connect to both Los Angeles and Tokyo. Each public node then maintains an availability pool of "home + office". During actual forwarding, one available line is selected at random from the currently established connections. If one endpoint goes offline, it disappears from the pool automatically.
 
 Below is a minimal snippet that keeps only the reverse-related parts and continues using the "public entry port mapped to an internal service" style.
 
@@ -557,6 +792,10 @@ Exactly the same idea, except that the UUIDs are changed to `jp-home-uuid` and `
 ### Office Internal Device
 
 Exactly the same as the home internal device, except that the UUIDs are changed to `us-office-uuid` and `jp-office-uuid`, and `redirect` is changed to the internal service that the office side should expose.
+
+::: tip Extension
+If you want selection here to be more than "pick a random line from the currently available connections," and instead make finer decisions based on latency, stability, or observations, you can combine this further with [`routing.balancer`](../../config/routing.md#balancerobject) to design the outbound selection policy.
+:::
 
 ## Advanced Technique: Preserve the Real Visitor IP
 
@@ -731,4 +970,4 @@ The following points are more about deployment safety and boundary control. It i
 - The internal `freedom` outbound that receives reverse proxy traffic, often called the `direct` outbound, should be configured according to the principle of least privilege. Set the default outbound to `blackhole`, only route explicitly allowed targets to a dedicated `freedom`, and then use `finalRules` to allow only the necessary addresses and ports.
 - If you are using a penetration service provided by someone else for remote access home, or if you do not fully trust the public VPS, it is recommended not to let reverse proxy traffic land directly on your real internal services. Instead, deploy another server on the internal side with `VLESS Encryption` enabled specifically to receive that traffic, and let it forward traffic to the actual service. This adds authentication and data protection; otherwise anyone with sufficient access to the public server may be able to roam through your internal network.
 - When traffic is delivered to the internal side through inbound protocols such as `VLESS`, the protocol shown by `Source` or `Local` in the routing system is not necessarily the same as the final `Target`. When using conditions such as `source`, `local`, or `network`, rely on the actual traffic shape instead of assuming they are all equivalent.
-- HTTP-based inbounds such as `XHTTP` and `WebSocket` currently read `X-Forwarded-For` by default. If there is no HTTP reverse proxy in front that you trust, the header can be forged by the client. Therefore, do not use it directly for strict security decisions such as IP whitelists, blacklists, or audit attribution.
+- The three HTTP-based inbounds `XHTTP`, `WebSocket`, and `HTTPUpgrade` trust `X-Forwarded-For` by default. If there is no HTTP reverse proxy in front that you trust, consider combining this with [`sockopt.trustedXForwardedFor`](../../config/transports/sockopt.md#trustedxforwardedfor) to control when it is trusted and to avoid client-forged source IPs.
