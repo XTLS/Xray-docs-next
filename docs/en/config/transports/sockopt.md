@@ -16,7 +16,7 @@ It can be used to tune transparent proxying, DNS resolution strategy, and many o
       // ...
       "streamSettings": {
         "sockopt": {
-          // [!code focus:18]
+          // [!code focus:19]
           "mark": 0,
           "tcpMaxSeg": 1440,
           "tcpFastOpen": false,
@@ -25,6 +25,7 @@ It can be used to tune transparent proxying, DNS resolution strategy, and many o
           "happyEyeballs": {},
           "dialerProxy": "",
           "acceptProxyProtocol": false,
+          "trustedXForwardedFor": [],
           "tcpKeepAliveInterval": 0,
           "tcpKeepAliveIdle": 300,
           "tcpUserTimeout": 10000,
@@ -150,6 +151,29 @@ Inbound-only. Controls whether PROXY protocol is accepted.
 Common reverse proxies such as HAProxy and Nginx can be configured to send it, and VLESS fallback `xver` can also send it.
 
 When set to `true`, the peer must send PROXY protocol v1 or v2 immediately after the underlying TCP connection is established, otherwise the connection is closed.
+
+> `trustedXForwardedFor`: [ string ]
+
+Only applies to the three HTTP-based inbounds: `XHTTP`, `WebSocket`, and `HTTPUpgrade`.
+
+It controls when Xray trusts `X-Forwarded-For` and uses it to overwrite `SourceIP`.
+
+If left unset, the old behavior remains: as long as the request contains `X-Forwarded-For`, Xray reads it.
+
+After setting this field, each array item is treated as an additional required header name. Xray trusts `X-Forwarded-For` only when the request also contains at least one of those headers. The header values do not matter; only the presence of the key is checked.
+
+::: details Example and use case
+
+```json
+"sockopt": {
+  "trustedXForwardedFor": ["ABCDEF", "XYZ"]
+}
+```
+
+This means the request must additionally contain either `ABCDEF` or `XYZ`, otherwise Xray will not accept the `X-Forwarded-For` value from that same request as the source IP.
+
+In practice, you can have a trusted HTTP reverse proxy such as a CDN or Nginx inject a custom header known only to the server side, which helps prevent clients from forging the source IP.
+:::
 
 > `tcpKeepAliveIdle`: number
 

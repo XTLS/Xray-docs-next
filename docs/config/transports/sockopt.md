@@ -16,7 +16,7 @@ Sockopt 用于配置底层网络行为。
       // ...
       "streamSettings": {
         "sockopt": {
-          // [!code focus:18]
+          // [!code focus:19]
           "mark": 0,
           "tcpMaxSeg": 1440,
           "tcpFastOpen": false,
@@ -25,6 +25,7 @@ Sockopt 用于配置底层网络行为。
           "happyEyeballs": {},
           "dialerProxy": "",
           "acceptProxyProtocol": false,
+          "trustedXForwardedFor": [],
           "tcpKeepAliveInterval": 0,
           "tcpKeepAliveIdle": 300,
           "tcpUserTimeout": 10000,
@@ -155,6 +156,29 @@ Sockopt 用于配置底层网络行为。
 常见的反代软件（如 HAProxy、Nginx）都可以配置发送它，VLESS fallbacks xver 也可以发送它。
 
 填写 `true` 时，最底层 TCP 连接建立后，请求方必须先发送 PROXY protocol v1 或 v2，否则连接会被关闭。
+
+> `trustedXForwardedFor`: [ string ]
+
+仅用于 `XHTTP`、`WebSocket`、`HTTPUpgrade` 这三个基于 HTTP 的 inbound。
+
+用于限制何时信任请求头里的 `X-Forwarded-For`，并用它覆写 `SourceIP`。
+
+默认不设置时，仍保持旧行为：只要请求中带有 `X-Forwarded-For`，Xray 就会读取它。
+
+设置后，数组中的每一项都表示一个额外要求存在的请求头名。只有当请求中存在其中任意一个头时，Xray 才会信任 `X-Forwarded-For`；这些头的值无所谓，只检查键是否存在。
+
+::: details 示例与用途
+
+```json
+"sockopt": {
+  "trustedXForwardedFor": ["ABCDEF", "XYZ"]
+}
+```
+
+这表示请求中必须额外出现 `ABCDEF` 或 `XYZ` 这两个头里的任意一个，Xray 才会接受同一请求中的 `X-Forwarded-For` 作为来源 IP。
+
+通常可以让 CDN、Nginx 等你自己信任的 HTTP 反代额外注入一个只有服务端知道的自定义请求头，以避免客户端伪造来源 IP。
+:::
 
 > `tcpKeepAliveIdle`: number
 
