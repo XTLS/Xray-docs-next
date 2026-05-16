@@ -162,19 +162,6 @@ If left unset, the old behavior remains: as long as the request contains `X-Forw
 
 After setting this field, each array item is treated as an additional required header name. Xray trusts `X-Forwarded-For` only when the request also contains at least one of those headers. The header values do not matter; only the presence of the key is checked.
 
-::: details Example and use case
-
-```json
-"sockopt": {
-  "trustedXForwardedFor": ["ABCDEF", "XYZ"]
-}
-```
-
-This means the request must additionally contain either `ABCDEF` or `XYZ`, otherwise Xray will not accept the `X-Forwarded-For` value from that same request as the source IP.
-
-In practice, you can have a trusted HTTP reverse proxy such as a CDN or Nginx inject a custom header known only to the server side, which helps prevent clients from forging the source IP.
-:::
-
 > `tcpKeepAliveIdle`: number
 
 TCP idle threshold in seconds. Once a TCP connection has been idle for this long, Keep-Alive probes begin.
