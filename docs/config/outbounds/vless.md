@@ -112,9 +112,11 @@ VLESS 极简反向代理配置，会保留公网端的真实源 IP 信息。
 存在此项代表该出站可以被用作 VLESS 反向代理出站，其会自动向服务端建立连接注册反向代理隧道。
 
 ```json
-"reverse": {
-  "tag": "r-inbound",
-  "sniffing" : {}
+{
+  "reverse": {
+    "tag": "r-inbound",
+    "sniffing": {}
+  }
 }
 ```
 

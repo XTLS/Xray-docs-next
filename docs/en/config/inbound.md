@@ -129,11 +129,13 @@ If you need to troubleshoot the cause of certain problems, you can test by disab
 :::
 
 ```json
-"domainsExcluded": [
+{
+  "domainsExcluded": [
     "courier.push.apple.com", // iOS push notifications
     "Mijia Cloud", // Mijia smart devices
     "dlg.io.mi.com"
-]
+  ]
+}
 ```
 
 > `ipsExcluded`: [string]

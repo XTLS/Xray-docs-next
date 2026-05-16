@@ -145,12 +145,13 @@ Xray будет использовать доменные имена, обнар
 :::
 
 ```json
-"domainsExcluded": [
+{
+  "domainsExcluded": [
     "courier.push.apple.com", // Push-уведомления iOS
     "Mijia Cloud", // Умные устройства Mijia
     "dlg.io.mi.com"
-]
-
+  ]
+}
 ```
 
 > `ipsExcluded`: [string]

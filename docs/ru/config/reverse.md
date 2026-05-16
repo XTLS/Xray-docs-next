@@ -121,13 +121,15 @@
 Конфигурация обратного прокси:
 
 ```json
-"reverse": {
-  "bridges": [
-    {
-      "tag": "bridge",
-      "domain": "reverse-proxy.xray.internal"
-    }
-  ]
+{
+  "reverse": {
+    "bridges": [
+      {
+        "tag": "bridge",
+        "domain": "reverse-proxy.xray.internal"
+      }
+    ]
+  }
 }
 ```
 
@@ -199,13 +201,15 @@ outbound:
 Конфигурация обратного прокси:
 
 ```json
-"reverse": {
-  "portals": [
-    {
-      "tag": "portal",
-      "domain": "reverse-proxy.xray.internal" // Должно совпадать с конфигурацией bridge
-    }
-  ]
+{
+  "reverse": {
+    "portals": [
+      {
+        "tag": "portal",
+        "domain": "reverse-proxy.xray.internal" // Должно совпадать с конфигурацией bridge
+      }
+    ]
+  }
 }
 ```
 

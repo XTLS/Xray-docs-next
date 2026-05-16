@@ -121,13 +121,15 @@ The `bridge` usually requires two outbounds: one for connecting to the `portal` 
 Reverse Proxy Configuration:
 
 ```json
-"reverse": {
-  "bridges": [
-    {
-      "tag": "bridge",
-      "domain": "reverse-proxy.xray.internal"
-    }
-  ]
+{
+  "reverse": {
+    "bridges": [
+      {
+        "tag": "bridge",
+        "domain": "reverse-proxy.xray.internal"
+      }
+    ]
+  }
 }
 ```
 
@@ -199,13 +201,15 @@ The `portal` usually requires two inbounds: one to receive connections from the 
 Reverse Proxy Configuration:
 
 ```json
-"reverse": {
-  "portals": [
-    {
-      "tag": "portal",
-      "domain": "reverse-proxy.xray.internal" // Must be the same as the bridge configuration
-    }
-  ]
+{
+  "reverse": {
+    "portals": [
+      {
+        "tag": "portal",
+        "domain": "reverse-proxy.xray.internal" // Must be the same as the bridge configuration
+      }
+    ]
+  }
 }
 ```
 

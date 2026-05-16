@@ -121,13 +121,15 @@
 反向代理配置:
 
 ```json
-"reverse": {
-  "bridges": [
-    {
-      "tag": "bridge",
-      "domain": "reverse-proxy.xray.internal"
-    }
-  ]
+{
+  "reverse": {
+    "bridges": [
+      {
+        "tag": "bridge",
+        "domain": "reverse-proxy.xray.internal"
+      }
+    ]
+  }
 }
 ```
 
@@ -198,13 +200,15 @@ outbound:
 反向代理配置:
 
 ```json
-"reverse": {
-  "portals": [
-    {
-      "tag": "portal",
-      "domain": "reverse-proxy.xray.internal" // 必须和 bridge 的配置一样
-    }
-  ]
+{
+  "reverse": {
+    "portals": [
+      {
+        "tag": "portal",
+        "domain": "reverse-proxy.xray.internal" // 必须和 bridge 的配置一样
+      }
+    ]
+  }
 }
 ```
 

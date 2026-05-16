@@ -112,9 +112,11 @@ VLESS minimalist reverse proxy configuration. It preserves the real source IP in
 The existence of this item indicates that this outbound can be used as a VLESS reverse proxy outbound, and it will automatically establish a connection to the server to register the reverse proxy tunnel.
 
 ```json
-"reverse": {
-  "tag": "r-inbound",
-  "sniffing" : {}
+{
+  "reverse": {
+    "tag": "r-inbound",
+    "sniffing": {}
+  }
 }
 ```
 

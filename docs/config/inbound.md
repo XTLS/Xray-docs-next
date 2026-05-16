@@ -130,12 +130,13 @@ Xray只会嗅探 `destOverride` 中协议的域名用作路由，如果只想进
 :::
 
 ```json
-"domainsExcluded": [
+{
+  "domainsExcluded": [
     "courier.push.apple.com", // iOS 推送通知
     "Mijia Cloud", // 米家智能设备
     "dlg.io.mi.com"
-]
-
+  ]
+}
 ```
 
 > `ipsExcluded`: [string]

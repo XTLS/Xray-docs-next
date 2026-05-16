@@ -48,42 +48,44 @@ The list of enabled APIs. See [API List](#supported-api-list) for available valu
 You can add an `api` inbound in the `inbounds` configuration:
 
 ```json
-"inbounds": [
-  {
-    "listen": "127.0.0.1",
-    "port": 10085,
-    "protocol": "dokodemo-door",
-    "settings": {
-      "rewriteAddress": "127.0.0.1"
-    },
-    "tag": "api"
-  }
-]
+{
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "port": 10085,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "rewriteAddress": "127.0.0.1"
+      },
+      "tag": "api"
+    }
+  ]
+}
 ```
 
 Add a routing rule for the `api` inbound in the `routing` configuration:
 
 ```json
-"routing": {
-  "rules": [
-    {
-      "inboundTag": [
-        "api"
-      ],
-      "outboundTag": "api"
-    }
-  ]
+{
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["api"],
+        "outboundTag": "api"
+      }
+    ]
+  }
 }
 ```
 
 Add `api` in the basic configuration:
 
 ```json
-"api": {
-  "tag": "api",
-  "services": [
-    "StatsService"
-  ]
+{
+  "api": {
+    "tag": "api",
+    "services": ["StatsService"]
+  }
 }
 ```
 

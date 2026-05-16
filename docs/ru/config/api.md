@@ -52,42 +52,44 @@ IP-адрес и порт, на котором прослушивает API-се
 Можно добавить входящее подключение api в раздел inbounds:
 
 ```json
-"inbounds": [
-  {
-    "listen": "127.0.0.1",
-    "port": 10085,
-    "protocol": "dokodemo-door",
-    "settings": {
-      "rewriteAddress": "127.0.0.1"
-    },
-    "tag": "api"
-  }
-]
+{
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "port": 10085,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "rewriteAddress": "127.0.0.1"
+      },
+      "tag": "api"
+    }
+  ]
+}
 ```
 
 Добавить правило маршрутизации для входящего подключения api в раздел routing:
 
 ```json
-"routing": {
-  "rules": [
-    {
-      "inboundTag": [
-        "api"
-      ],
-      "outboundTag": "api"
-    }
-  ]
+{
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["api"],
+        "outboundTag": "api"
+      }
+    ]
+  }
 }
 ```
 
 Добавить api в основные настройки:
 
 ```json
-"api": {
-  "tag": "api",
-  "services": [
-    "StatsService"
-  ]
+{
+  "api": {
+    "tag": "api",
+    "services": ["StatsService"]
+  }
 }
 ```
 

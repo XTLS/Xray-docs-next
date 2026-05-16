@@ -128,8 +128,10 @@ VLESS 极简反向代理配置。
 存在此项代表来自该用户的连接可以被用作可以用于建立反向代理隧道，同时禁用普通的正向代理用途。
 
 ```json
-"reverse": {
-  "tag": "r-outbound"
+{
+  "reverse": {
+    "tag": "r-outbound"
+  }
 }
 ```
 

@@ -48,42 +48,44 @@ API 服务监听的 IP 和端口。这是一个可选配置项。
 可以在 inbounds 配置中增加一个 api 的 inbound
 
 ```json
-"inbounds": [
-  {
-    "listen": "127.0.0.1",
-    "port": 10085,
-    "protocol": "dokodemo-door",
-    "settings": {
-      "rewriteAddress": "127.0.0.1"
-    },
-    "tag": "api"
-  }
-]
+{
+  "inbounds": [
+    {
+      "listen": "127.0.0.1",
+      "port": 10085,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "rewriteAddress": "127.0.0.1"
+      },
+      "tag": "api"
+    }
+  ]
+}
 ```
 
 在路由配置中增加针对 api inbound 的路由规则
 
 ```json
-"routing": {
-  "rules": [
-    {
-      "inboundTag": [
-        "api"
-      ],
-      "outboundTag": "api"
-    }
-  ]
+{
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["api"],
+        "outboundTag": "api"
+      }
+    ]
+  }
 }
 ```
 
 在基础配置中增加 api
 
 ```json
-"api": {
-  "tag": "api",
-  "services": [
-    "StatsService"
-  ]
+{
+  "api": {
+    "tag": "api",
+    "services": ["StatsService"]
+  }
 }
 ```
 

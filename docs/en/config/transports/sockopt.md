@@ -236,15 +236,17 @@ An array for advanced users to specify any needed socket option. In theory, all 
 Make sure you understand socket programming before using it.
 
 ```json
-"customSockopt": [
-  {
-    "system": "linux",
-    "type": "str",
-    "level": "6",
-    "opt": "13",
-    "value": "bbr"
-  }
-]
+{
+  "customSockopt": [
+    {
+      "system": "linux",
+      "type": "str",
+      "level": "6",
+      "opt": "13",
+      "value": "bbr"
+    }
+  ]
+}
 ```
 
 > `system`: ""
@@ -282,11 +284,13 @@ Do not use this together with the `domainStrategy` on a `Freedom` outbound, beca
 ### HappyEyeballsObject
 
 ```json
-"happyEyeballs": {
+{
+  "happyEyeballs": {
     "tryDelayMs": 250,
     "prioritizeIPv6": false,
     "interleave": 1,
     "maxConcurrentTry": 4
+  }
 }
 ```
 
