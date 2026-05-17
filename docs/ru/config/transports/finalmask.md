@@ -16,7 +16,7 @@ FinalMask добавляет последний слой маскировки п
       // ...
       "streamSettings": {
         "finalmask": {
-          // [!code focus:30]
+          // [!code focus:31]
           "tcp": [
             {
               "type": "",
@@ -31,6 +31,7 @@ FinalMask добавляет последний слой маскировки п
           ],
           "quicParams": {
             "congestion": "force-brutal",
+            "bbrProfile": "standard",
             "debug": false,
             "brutalUp": "60 mbps",
             "brutalDown": 0,
@@ -319,6 +320,7 @@ FinalMask добавляет последний слой маскировки п
 ```json
 {
   "congestion": "force-brutal",
+  "bbrProfile": "standard",
   "debug": false,
   "brutalUp": "60 mbps",
   "brutalDown": 0,
@@ -348,6 +350,10 @@ FinalMask добавляет последний слой маскировки п
 `brutal` согласует фиксированную скорость отправки пакетов с другой стороной или откатывается к BBR. Поддерживается только в Hysteria, потому что у XHTTP нет механизма согласования.
 
 `force-brutal` работает так же, как `brutal`, но принудительно использует фиксированную исходящую скорость из `brutalUp`, игнорируя переговоры с другой стороной.
+
+> `bbrProfile`: conservative | standard | aggressive
+
+Управляет пресетом BBR, когда QUIC использует алгоритм BBR. По умолчанию — `standard`. `conservative` — чуть более осторожный, `aggressive` — чуть более агрессивный.
 
 > `debug`: false | true
 

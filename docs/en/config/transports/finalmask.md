@@ -16,7 +16,7 @@ It can be used for multiple kinds of TCP and UDP camouflage, as well as QUIC-rel
       // ...
       "streamSettings": {
         "finalmask": {
-          // [!code focus:30]
+          // [!code focus:31]
           "tcp": [
             {
               "type": "",
@@ -31,6 +31,7 @@ It can be used for multiple kinds of TCP and UDP camouflage, as well as QUIC-rel
           ],
           "quicParams": {
             "congestion": "force-brutal",
+            "bbrProfile": "standard",
             "debug": false,
             "brutalUp": "60 mbps",
             "brutalDown": 0,
@@ -319,6 +320,7 @@ Note that this differs from the usual TCP/UDP listening on `"0.0.0.0"` and `"::"
 ```json
 {
   "congestion": "force-brutal",
+  "bbrProfile": "standard",
   "debug": false,
   "brutalUp": "60 mbps",
   "brutalDown": 0,
@@ -348,6 +350,10 @@ Congestion-control algorithm. Hysteria defaults to `brutal`. XHTTP H3 defaults t
 `brutal` negotiates a fixed packet-sending rate with the peer, or falls back to BBR. It is supported only by Hysteria, because XHTTP has no negotiation mechanism.
 
 `force-brutal` is the same as `brutal`, but it forcibly uses the fixed upstream rate from `brutalUp` and ignores peer negotiation.
+
+> `bbrProfile`: conservative | standard | aggressive
+
+Controls the BBR preset when QUIC congestion control is set to BBR. Defaults to `standard`. `conservative` is slightly more cautious, `aggressive` is slightly more aggressive.
 
 > `debug`: false | true
 

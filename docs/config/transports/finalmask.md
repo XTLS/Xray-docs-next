@@ -16,7 +16,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
       // ...
       "streamSettings": {
         "finalmask": {
-          // [!code focus:30]
+          // [!code focus:31]
           "tcp": [
             {
               "type": "",
@@ -31,6 +31,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
           ],
           "quicParams": {
             "congestion": "force-brutal",
+            "bbrProfile": "standard",
             "debug": false,
             "brutalUp": "60 mbps",
             "brutalDown": 0,
@@ -319,6 +320,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 ```json
 {
   "congestion": "force-brutal",
+  "bbrProfile": "standard",
   "debug": false,
   "brutalUp": "60 mbps",
   "brutalDown": 0,
@@ -348,6 +350,10 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 `brutal`: 与对端协商固定发包速率或降级到 BBR，只支持 Hysteria 传输（因为 XHTTP 无协商机制）。
 
 `force-brutal`: 同 `brutal`，但强制使上行使用 `brutalUp` 固定发包速率，无视对端协商。
+
+> `bbrProfile`: conservative | standard | aggressive
+
+当 QUIC 阻塞控制被选择为 BBR 时，控制其 BBR 预设。 默认为 `standard`，`conservative` 稍微更保守，`aggressive` 则稍微更激进。
 
 > `debug`: false | true
 
