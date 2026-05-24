@@ -55,19 +55,31 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-> `tcp[n].type`: header-custom | fragment | sudoku
+## TCPMask
 
-数组第一个为最外层伪装。
+一个数组，用以伪装核心发出的 TCP流量，数组第一个为最外层伪装。
 
-用于搭配 raw | httpupgarde | websocket | grpc | xhttp 传输层。
+```json
+{
+  "finalmask": {
+    // [!code focus:6]
+    "tcp": [
+      {
+        "type": "",
+        "settings": {}
+      }
+    ]
+  }
+}
+```
 
-`header-custom`:
+> `type`: header-custom | fragment | sudoku
 
-`fragment`:
+该层伪装的类型。
 
-`sudoku`:
+> `settings`: header-custom | fragment | sudoku
 
-> `tcp[n].settings`: header-custom | fragment | sudoku
+该伪装类型的具体设置（每个类型的字段见下）
 
 ### header-custom
 
@@ -130,6 +142,20 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
+控制发出的 TCP 分片，在某些情况下可以欺骗审查系统，比如绕过 SNI 黑名单。
+
+`"length"`、`"delay"`、`"maxSplit"` 均为 [Int32Range](../../development/intro/guide.md#int32range) 类型
+
+`"packets"`：支持两种分片方式 "1-3" 是 TCP 的流切片，应用于客户端第 1 至第 3 次写数据。"tlshello" 是 TLS 握手包切片。
+
+`"length"`：分片包长 (byte)，不能为 0。
+
+`"delay"`：分片间隔（ms）
+
+当其为 0 且设置 `"packets": "tlshello"` 时，被分片的 Client Hello 将会在一个TCP包中发送（如果其原始大小未超过MSS或MTU导致被系统自动分片）
+
+`"maxSplit"`：最大分片次数，限制单个包被分割的片数。为 0 表示不限制。
+
 ### sudoku
 
 ```json
@@ -147,51 +173,35 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 含义见其 [官方文档](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.zh_CN.md) 文档字段
 
-> `udp[n].type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+## UDPMask
 
-数组第一个为最外层伪装。
+一个数组，用以伪装核心发出的 UDP 流量，数组第一个为最外层伪装。
 
-用于搭配 raw udp | kcp | hysteria | xhttp h3 传输层。
+```json
+{
+  "finalmask": {
+    // [!code focus:6]
+    "udp": [
+      {
+        "type": "",
+        "settings": {}
+      }
+    ]
+  }
+}
+```
 
-`header-custom`: 总是合包到数据包头。
+> `type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
-`header-dns`: 原 mKCP 的 DNS 伪装。某些校园网在未登录的情况下允许 DNS 查询，给 KCP 添加 DNS 头。
+该层伪装的类型。
 
-`header-dtls`: 原 mKCP 的 DTLS 伪装。伪装成 DTLS 1.2 数据包。无额外配置。
+> `settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
 
-`header-srtp`: 原 mKCP 的 SRTP 伪装。伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。无额外配置。
-
-`header-utp`: 原 mKCP 的 uTP 伪装。伪装成 uTP 数据包，会被识别为 BT 下载数据。无额外配置。
-
-`header-wechat`: 原 mKCP 的 WeChat Video 伪装。伪装成微信视频通话的数据包。无额外配置。
-
-`header-wireguard`: 原 mKCP 的 WireGuard 伪装。伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）无额外配置。
-
-`mkcp-original`: mKCP 曾经默认应用的简单混淆，你可能需要配置它来连接以前的 mKCP 服务器。无额外配置。
-
-`mkcp-aes128gcm`: 对应原 mKCP 的 `seed` 功能。使用 AES-128-GCM 进行混淆。
-
-`noise`: 在发送数据前发送的噪声。
-
-`salamander`: Salamander 混淆。（来自 Hysteria2）
-
-`sudoku`:
-
-`xdns`: 利用 DNS 查询来传输数据（类似 DNSTT）。它将执行标准的 DNS TXT 查询来传输载荷。
-
-由于技术限制，它给出的 MTU 非常小，无法使用 QUIC，建议搭配 mKCP 使用。推荐的 MTU 值：客户端 130，服务端 900。
-
-因为执行的查询是标准的，它可以透过任何 UDP DNS 服务器进行转发，尽管效率可能十分不理想。
-
-要使用这个功能，需要服务端监听 53 端口，然后代理协议将目标指向一个 DNS 服务器（如 8.8.8.8:53），并且你拥有 `domain` 的域名，然后将其 NS 记录指向服务端。
-
-比如持有 example.com，那么设置 a.example.com A记录 指向 ip，设置 t.example.com NS记录 指向 t.example.com，最后使用的是 t.example.com。设置 A记录 的不能为 NS记录 的子域。
-
-`xicmp`: 要求至少 `CAP_NET_RAW` 权限且在最外层，也就是数组第一个，不可搭配 `udpHop` 与 `dialerProxy`。
-
-> `udp[n].settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+该伪装类型的具体设置（每个类型的字段见下）
 
 ### header-custom
+
+总是合包到数据包头。
 
 ```json
 {
@@ -224,13 +234,41 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ### header-dns
 
+原 mKCP 的 DNS 伪装。某些校园网在未登录的情况下允许 DNS 查询，给 KCP 添加 DNS 头。
+
 ```json
 {
   "domain": "www.example.com"
 }
 ```
 
+### header-dtls
+
+原 mKCP 的 DTLS 伪装。伪装成 DTLS 1.2 数据包。无额外配置。
+
+### header-srtp
+
+原 mKCP 的 SRTP 伪装。伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。无额外配置。
+
+### header-utp
+
+原 mKCP 的 uTP 伪装。伪装成 uTP 数据包，会被识别为 BT 下载数据。无额外配置。
+
+### header-wechat
+
+原 mKCP 的 WeChat Video 伪装。伪装成微信视频通话的数据包。无额外配置。
+
+### header-wireguard
+
+原 mKCP 的 WireGuard 伪装。伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）无额外配置。
+
+### mkcp-original
+
+mKCP 曾经默认应用的简单混淆，你可能需要配置它来连接以前的 mKCP 服务器。无额外配置。
+
 ### mkcp-aes128gcm
+
+对应原 mKCP 的 `seed` 功能。使用 AES-128-GCM 进行混淆。
 
 ```json
 {
@@ -240,9 +278,11 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ### noise
 
+在发送数据前发送的噪声。
+
 ```json
 {
-  "reset": 0,
+  "reset": "30-60",
   "noise": [
     {
       "rand": "1-8192",
@@ -255,17 +295,21 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-`noise[n].rand`: 添加随机或指定长度随机字节，与 `packet` 冲突。
+`reset`: [Int32Range](../../development/intro/guide.md#int32range) 类型，单位秒。噪声发送后经过该时间后重置，允许对同一地址再次发送噪声。为 0 表示不重置（仅发送一次）。
 
-`noise[n].randRange`: 随机字节范围，默认 0-255。
+`rand`: 添加随机或指定长度随机字节，与 `packet` 冲突。
 
-`noise[n].type`: `packet` 类型，`array | str | hex | base64`，默认为 array。
+`randRange`: 随机字节范围，默认 0-255。
 
-`noise[n].packet`: 添加固定数据，与 `rand` 冲突
+`type`: `packet` 类型，`array | str | hex | base64`，默认为 array。
 
-`noise[n].delay`: 单位毫秒，发送噪声后延迟指定时间后再发下一个。
+`packet`: 添加固定数据，与 `rand` 冲突
+
+`delay`: 单位毫秒，发送噪声后延迟指定时间后再发下一个。
 
 ### salamander
+
+Salamander 混淆。（来自 Hysteria2）
 
 ```json
 {
@@ -292,13 +336,32 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ### xdns
 
+利用 DNS 查询来传输数据（类似 DNSTT）。它将执行标准的 DNS 查询来传输载荷，支持 TXT、A、AAAA 查询类型。
+
+由于技术限制，它给出的 MTU 非常小，无法使用 QUIC，建议搭配 mKCP 使用。推荐的 MTU 值：客户端 130，服务端若为 TXT（几乎传递原始字节信息） 则 900， AAAA 酌情修改为 1/2 以下，A 则为 1/8 以下（理论编码性能差距，实际取决于中间转发器能容忍回复中存在多少 AAAA/A 记录）。
+
+因为执行的查询是标准的，它可以透过任何 UDP DNS 服务器进行转发，尽管效率可能十分不理想。
+
+要使用这个功能，需要服务端监听 53 端口，然后代理协议将目标指向一个 DNS 服务器（如 8.8.8.8:53），并且你拥有 `domains` 中的域名，然后将其 NS 记录指向服务端。
+
+比如持有 example.com，那么设置 a.example.com A记录 指向 ip，设置 t.example.com NS记录 指向 t.example.com，最后使用的是 t.example.com。设置 A记录 的不能为 NS记录 的子域。
+
 ```json
 {
-  "domain": "www.example.com"
+  "domains": ["t.example.com"],
+  "resolvers": ["t.example.com+udp://8.8.8.8:53"]
 }
 ```
 
+`domains`: 服务端使用，域名列表。支持指定查询类型 `domain:method`，method 可为 `txt`、`a`、`aaaa`，不指定则不限制查询类型。
+
+`resolvers`: 客户端使用，DNS 解析器列表。格式为 `domain[:method]+udp://server:port`，method 可为 `txt`（默认）、`a`、`aaaa`。
+
+`domains` 与 `resolvers` 至少填写一个。
+
 ### xicmp
+
+要求至少 `CAP_NET_RAW` 权限且在最外层，也就是数组第一个，不可搭配 `udpHop` 与 `dialerProxy`。
 
 ```json
 {
@@ -313,33 +376,36 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `id`: 如果同 ip 下有多客户端，建议服务端保持为 0。
 
-> `quicParams`: [quicParamsObject](#quicParams)
-
-### quicParams
+## quicParams
 
 ```json
 {
-  "congestion": "force-brutal",
-  "bbrProfile": "standard",
-  "debug": false,
-  "brutalUp": "60 mbps",
-  "brutalDown": 0,
-  "udpHop": {
-    "ports": "20000-50000",
-    "interval": "5-10"
-  },
-  "initStreamReceiveWindow": 8388608,
-  "maxStreamReceiveWindow": 8388608,
-  "initConnectionReceiveWindow": 20971520,
-  "maxConnectionReceiveWindow": 20971520,
-  "maxIdleTimeout": 30,
-  "keepAlivePeriod": 0,
-  "disablePathMTUDiscovery": false,
-  "maxIncomingStreams": 1024
+  "finalmask": {
+    // [!code focus:19]
+    "quicParams": {
+      "congestion": "force-brutal",
+      "bbrProfile": "standard",
+      "debug": false,
+      "brutalUp": "60 mbps",
+      "brutalDown": 0,
+      "udpHop": {
+        "ports": "20000-50000",
+        "interval": "5-10"
+      },
+      "initStreamReceiveWindow": 8388608,
+      "maxStreamReceiveWindow": 8388608,
+      "initConnectionReceiveWindow": 20971520,
+      "maxConnectionReceiveWindow": 20971520,
+      "maxIdleTimeout": 30,
+      "keepAlivePeriod": 0,
+      "disablePathMTUDiscovery": false,
+      "maxIncomingStreams": 1024
+    }
+  }
 }
 ```
 
-用于 XHTTP H3 以及 hysteria 的 QUIC 配置调整。其中 XHTTP
+用于 XHTTP H3 以及 hysteria 的 QUIC 配置调整。
 
 > `congestion`: reno | bbr | brutal | force-brutal
 
@@ -347,9 +413,11 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `reno`/`bbr`: 知名算法。
 
-`brutal`: 与对端协商固定发包速率或降级到 BBR，只支持 Hysteria 传输（因为 XHTTP 无协商机制）。
+`brutal`: 与对端协商固定发包速率或降级到 BBR。
 
 `force-brutal`: 同 `brutal`，但强制使上行使用 `brutalUp` 固定发包速率，无视对端协商。
+
+注意 XHTTP H3 因为无协商机制所以无法使用 `brutal` 模式，但是支持无协商过程的 `force-brutal`。
 
 > `bbrProfile`: conservative | standard | aggressive
 
