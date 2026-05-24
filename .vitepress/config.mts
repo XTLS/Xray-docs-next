@@ -235,10 +235,7 @@ export default defineConfig({
           options: {
             miniSearch: {
               options: {
-                tokenize: (str) =>
-                  str
-                    .split(/[\s.,;!?'"(){}[\]\-_+=&%$#@~`^<>|\\]+/)
-                    .filter(Boolean)
+                tokenize: (str) => str.match(/[\p{L}\p{N}]+/gu) ?? []
               }
             },
             translations: {
