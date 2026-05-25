@@ -16,8 +16,8 @@
       // ...
       "streamSettings": {
         "network": "raw",
+        // [!code focus:6]
         "rawSettings": {
-          // [!code focus:4]
           "acceptProxyProtocol": false,
           "header": {
             "type": "none"

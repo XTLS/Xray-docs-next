@@ -14,8 +14,8 @@ On Android, the TUN FD must be passed in from an external app, which uses VPN Se
     {
       // ...
       "protocol": "tun",
+      // [!code focus:9]
       "settings": {
-        // [!code focus:7]
         "name": "xray0",
         "mtu": 1500,
         "gateway": ["10.0.0.1/16", "fc00::1/64"],

@@ -16,8 +16,8 @@
     {
       // ...
       "protocol": "socks",
+      // [!code focus:8]
       "settings": {
-        // [!code focus:6]
         "address": "127.0.0.1",
         "port": 1234,
         "user": "test user",

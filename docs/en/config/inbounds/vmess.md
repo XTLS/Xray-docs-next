@@ -16,8 +16,8 @@ VMess depends on system time. Please ensure that the system UTC time of the devi
     {
       // ...
       "protocol": "vmess",
+      // [!code focus:12]
       "settings": {
-        // [!code focus:10]
         "users": [
           {
             "id": "5783a3e7-e373-51cd-8642-c83782b807c5",

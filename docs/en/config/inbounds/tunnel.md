@@ -12,8 +12,8 @@ Tunnel, formerly known as dokodemo-door (Arbitrary Door), can listen on multiple
     {
       // ...
       "protocol": "tunnel",
+      // [!code focus:12]
       "settings": {
-        // [!code focus:10]
         "allowedNetwork": "tcp",
         "rewriteAddress": "8.8.8.8",
         "rewritePort": 53,

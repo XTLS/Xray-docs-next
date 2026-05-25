@@ -18,8 +18,8 @@ TLS 是常见的传输层加密方式。
       // ...
       "streamSettings": {
         "security": "tls",
+        // [!code focus:20]
         "tlsSettings": {
-          // [!code focus:18]
           "serverName": "xray.com",
           "verifyPeerCertByName": "",
           "rejectUnknownSni": false,

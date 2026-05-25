@@ -37,8 +37,8 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
     {
       // ...
       "protocol": "shadowsocks",
+      // [!code focus:13]
       "settings": {
-        // [!code focus:11]
         "network": "tcp,udp",
         "method": "aes-256-gcm",
         "password": "114514",

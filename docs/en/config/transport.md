@@ -24,8 +24,8 @@ For direct outbounds such as [Freedom](./outbounds/freedom.md), the peer is usua
   "outbounds": [
     {
       // ...
+      // [!code focus:18]
       "streamSettings": {
-        // [!code focus:16]
         // Transport methods
         "network": "raw",
         "rawSettings": {},

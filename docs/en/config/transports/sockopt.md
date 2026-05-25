@@ -15,8 +15,8 @@ It can be used to tune transparent proxying, DNS resolution strategy, and many o
     {
       // ...
       "streamSettings": {
+        // [!code focus:21]
         "sockopt": {
-          // [!code focus:19]
           "mark": 0,
           "tcpMaxSeg": 1440,
           "tcpFastOpen": false,

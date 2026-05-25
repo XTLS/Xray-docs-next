@@ -15,8 +15,8 @@ Sockopt 用于配置底层网络行为。
     {
       // ...
       "streamSettings": {
+        // [!code focus:21]
         "sockopt": {
-          // [!code focus:19]
           "mark": 0,
           "tcpMaxSeg": 1440,
           "tcpFastOpen": false,

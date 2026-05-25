@@ -15,8 +15,8 @@ FinalMask добавляет последний слой маскировки п
     {
       // ...
       "streamSettings": {
+        // [!code focus:33]
         "finalmask": {
-          // [!code focus:31]
           "tcp": [
             {
               "type": "",

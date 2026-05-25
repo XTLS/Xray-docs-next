@@ -16,8 +16,8 @@ User-space WireGuard protocol implementation.
     {
       // ...
       "protocol": "wireguard",
+      // [!code focus:10]
       "settings": {
-        // [!code focus:8]
         "secretKey": "PRIVATE_KEY",
         "peers": [
           {

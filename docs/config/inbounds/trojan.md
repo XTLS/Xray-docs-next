@@ -16,8 +16,8 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
     {
       // ...
       "protocol": "trojan",
+      // [!code focus:14]
       "settings": {
-        // [!code focus:12]
         "users": [
           {
             "password": "password",

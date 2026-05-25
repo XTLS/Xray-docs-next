@@ -16,8 +16,8 @@ Trojan предназначен для работы в правильно нас
     {
       // ...
       "protocol": "trojan",
+      // [!code focus:7]
       "settings": {
-        // [!code focus:5]
         "address": "127.0.0.1",
         "port": 1234,
         "password": "password",

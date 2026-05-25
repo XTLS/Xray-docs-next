@@ -15,8 +15,8 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
     {
       // ...
       "streamSettings": {
+        // [!code focus:33]
         "finalmask": {
-          // [!code focus:31]
           "tcp": [
             {
               "type": "",

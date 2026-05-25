@@ -29,8 +29,8 @@ Use the following environment variables in Linux to enable a global HTTP proxy f
     {
       // ...
       "protocol": "http",
+      // [!code focus:10]
       "settings": {
-        // [!code focus:8]
         "users": [
           {
             "user": "my-username",

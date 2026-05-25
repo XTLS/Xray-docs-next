@@ -29,8 +29,8 @@ HTTP 协议。
     {
       // ...
       "protocol": "http",
+      // [!code focus:10]
       "settings": {
-        // [!code focus:8]
         "users": [
           {
             "user": "my-username",

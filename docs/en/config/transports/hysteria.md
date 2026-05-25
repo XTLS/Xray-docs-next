@@ -14,8 +14,8 @@ Xray implementation of the underlying QUIC transport for Hysteria2, typically us
       // ...
       "streamSettings": {
         "network": "hysteria",
+        // [!code focus:17]
         "hysteriaSettings": {
-          // [!code focus:15]
           "version": 2,
           "auth": "password",
           "udpIdleTimeout": 60,

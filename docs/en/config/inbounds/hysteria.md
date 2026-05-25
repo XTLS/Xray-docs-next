@@ -14,8 +14,8 @@ The `hysteria protocol` itself has no authentication; `users` only take effect w
     {
       // ...
       "protocol": "hysteria",
+      // [!code focus:10]
       "settings": {
-        // [!code focus:8]
         "version": 2,
         "users": [
           {

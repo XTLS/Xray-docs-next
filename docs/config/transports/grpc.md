@@ -45,8 +45,8 @@ gRPC（HTTP/2）内置多路复用，不建议使用 gRPC 与 HTTP/2 时启用 m
       // ...
       "streamSettings": {
         "network": "grpc",
+        // [!code focus:10]
         "grpcSettings": {
-          // [!code focus:8]
           "authority": "grpc.example.com",
           "serviceName": "name",
           "multiMode": false,

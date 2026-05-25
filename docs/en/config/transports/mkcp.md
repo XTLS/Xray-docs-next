@@ -20,8 +20,8 @@ Please ensure that the firewall configuration on the host is correct.
       // ...
       "streamSettings": {
         "network": "mkcp",
+        // [!code focus:9]
         "kcpSettings": {
-          // [!code focus:7]
           "mtu": 1350,
           "tti": 20,
           "uplinkCapacity": 5,

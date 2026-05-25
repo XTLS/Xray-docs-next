@@ -18,8 +18,8 @@
     {
       // ...
       "protocol": "socks",
+      // [!code focus:12]
       "settings": {
-        // [!code focus:10]
         "auth": "noauth",
         "users": [
           {

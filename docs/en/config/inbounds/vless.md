@@ -14,8 +14,8 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
     {
       // ...
       "protocol": "vless",
+      // [!code focus:17]
       "settings": {
-        // [!code focus:15]
         "users": [
           {
             "id": "5783a3e7-e373-51cd-8642-c83782b807c5",

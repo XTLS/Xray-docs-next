@@ -45,8 +45,8 @@ If you are using fallback, please note the following:
       // ...
       "streamSettings": {
         "network": "grpc",
+        // [!code focus:10]
         "grpcSettings": {
-          // [!code focus:8]
           "authority": "grpc.example.com",
           "serviceName": "name",
           "multiMode": false,

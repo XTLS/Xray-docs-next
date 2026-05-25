@@ -16,8 +16,8 @@ This outbound has a default safety policy in server-side and reverse-proxy scena
     {
       // ...
       "protocol": "freedom",
+      // [!code focus:29]
       "settings": {
-        // [!code focus:27]
         "domainStrategy": "AsIs",
         "redirect": "127.0.0.1:3366",
         "userLevel": 0,

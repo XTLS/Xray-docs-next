@@ -18,8 +18,8 @@
     {
       // ...
       "protocol": "hysteria",
+      // [!code focus:5]
       "settings": {
-        // [!code focus:3]
         "version": 2,
         "address": "192.168.108.1",
         "port": 3128

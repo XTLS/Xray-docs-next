@@ -16,8 +16,8 @@ It can be combined with various protocols in multiple modes.
       // ...
       "streamSettings": {
         "network": "raw",
+        // [!code focus:6]
         "rawSettings": {
-          // [!code focus:4]
           "acceptProxyProtocol": false,
           "header": {
             "type": "none"

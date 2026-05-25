@@ -26,8 +26,8 @@ For more information, see the [REALITY project](https://github.com/XTLS/REALITY)
       // ...
       "streamSettings": {
         "security": "reality",
+        // [!code focus:30]
         "realitySettings": {
-          // [!code focus:28]
           // Inbound (server-side) settings
           "show": false,
           "target": "example.com:443",

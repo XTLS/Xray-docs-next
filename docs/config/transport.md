@@ -24,8 +24,8 @@
   "outbounds": [
     {
       // ...
+      // [!code focus:18]
       "streamSettings": {
-        // [!code focus:16]
         // 传输方式
         "network": "raw",
         "rawSettings": {},

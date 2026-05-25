@@ -16,8 +16,8 @@ User-space Wireguard 协议实现。
     {
       // ...
       "protocol": "wireguard",
+      // [!code focus:10]
       "settings": {
-        // [!code focus:8]
         "secretKey": "PRIVATE_KEY",
         "peers": [
           {

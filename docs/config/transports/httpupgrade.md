@@ -19,8 +19,8 @@
       // ...
       "streamSettings": {
         "network": "httpupgrade",
+        // [!code focus:8]
         "httpupgradeSettings": {
-          // [!code focus:6]
           "acceptProxyProtocol": false,
           "path": "/",
           "host": "xray.com",

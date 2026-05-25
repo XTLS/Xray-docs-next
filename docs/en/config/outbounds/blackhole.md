@@ -12,8 +12,8 @@ Blackhole is an outbound data protocol that blocks all outbound data. When used 
     {
       // ...
       "protocol": "blackhole",
+      // [!code focus:5]
       "settings": {
-        // [!code focus:3]
         "response": {
           "type": "none"
         }

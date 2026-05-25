@@ -15,8 +15,8 @@ It can be used for multiple kinds of TCP and UDP camouflage, as well as QUIC-rel
     {
       // ...
       "streamSettings": {
+        // [!code focus:33]
         "finalmask": {
-          // [!code focus:31]
           "tcp": [
             {
               "type": "",

@@ -18,8 +18,8 @@ It supports use with the `RAW`, `XHTTP`, `mKCP`, `gRPC`, `WebSocket`, `HTTPUpgra
       // ...
       "streamSettings": {
         "security": "tls",
+        // [!code focus:20]
         "tlsSettings": {
-          // [!code focus:18]
           "serverName": "xray.com",
           "verifyPeerCertByName": "",
           "rejectUnknownSni": false,

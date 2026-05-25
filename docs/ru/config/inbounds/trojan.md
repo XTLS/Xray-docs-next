@@ -16,8 +16,8 @@ Trojan предназначен для работы в правильно нас
     {
       // ...
       "protocol": "trojan",
+      // [!code focus:14]
       "settings": {
-        // [!code focus:12]
         "users": [
           {
             "password": "password",

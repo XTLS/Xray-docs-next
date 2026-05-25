@@ -20,8 +20,8 @@ HTTP 协议。
     {
       // ...
       "protocol": "http",
+      // [!code focus:12]
       "settings": {
-        // [!code focus:10]
         "address": "192.168.108.1",
         "port": 3128,
         "user": "my-username",

@@ -16,8 +16,8 @@ Trojan is designed to work over a correctly configured encrypted TLS tunnel.
     {
       // ...
       "protocol": "trojan",
+      // [!code focus:7]
       "settings": {
-        // [!code focus:5]
         "address": "127.0.0.1",
         "port": 1234,
         "password": "password",

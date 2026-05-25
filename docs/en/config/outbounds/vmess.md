@@ -16,8 +16,8 @@ VMess depends on system time. Please ensure that the UTC time of the system runn
     {
       // ...
       "protocol": "vmess",
+      // [!code focus:8]
       "settings": {
-        // [!code focus:6]
         "address": "127.0.0.1",
         "port": 37192,
         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",

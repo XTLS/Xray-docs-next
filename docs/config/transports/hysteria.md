@@ -14,8 +14,8 @@ Hysteria2 的底层 QUIC 传输的 Xray 实现，通常搭配 hysteria[出站](.
       // ...
       "streamSettings": {
         "network": "hysteria",
+        // [!code focus:17]
         "hysteriaSettings": {
-          // [!code focus:14]
           "version": 2,
           "auth": "password",
           "udpIdleTimeout": 60,

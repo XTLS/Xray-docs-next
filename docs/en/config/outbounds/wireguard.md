@@ -16,8 +16,8 @@ Standard Wireguard protocol implementation.
     {
       // ...
       "protocol": "wireguard",
+      // [!code focus:20]
       "settings": {
-        // [!code focus:18]
         "secretKey": "PRIVATE_KEY",
         "address": [
           // optional, default ["10.0.0.1", "fd59:7153:2388:b5fd:0000:0000:0000:0001"]

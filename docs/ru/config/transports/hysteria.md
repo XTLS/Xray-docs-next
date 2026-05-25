@@ -14,8 +14,8 @@
       // ...
       "streamSettings": {
         "network": "hysteria",
+        // [!code focus:17]
         "hysteriaSettings": {
-          // [!code focus:15]
           "version": 2,
           "auth": "password",
           "udpIdleTimeout": 60,
