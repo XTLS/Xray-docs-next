@@ -150,28 +150,26 @@ The default value `UseIP` allows querying both A + AAAA records. When a query in
 `UseSystem` adapts to the operating system's network environment. Before querying, it checks whether there are IPv4 and IPv6 default gateways, thereby limiting the capabilities of all servers and setting the default query type. It checks in real-time on graphical OS environments and only once on command-line environments.
 
 ```json
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://8.8.8.8/dns-query",
-                "domains": [
-                    "geosite:netflix"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv4" // netflix domain queries A record
-            },
-            {
-                "address": "https://1.1.1.1/dns-query",
-                "domains": [
-                    "geosite:openai"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // openai domain queries AAAA record
-            }
-        ],
-        "queryStrategy": "UseIP" // Globally query both A and AAAA records
-    }
+{
+  "dns": {
+    "servers": [
+      "https://1.1.1.1/dns-query",
+      {
+        "address": "https://8.8.8.8/dns-query",
+        "domains": ["geosite:netflix"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv4" // netflix domain queries A record
+      },
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "domains": ["geosite:openai"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6" // openai domain queries AAAA record
+      }
+    ],
+    "queryStrategy": "UseIP" // Globally query both A and AAAA records
+  }
+}
 ```
 
 ::: tip TIP 1
@@ -189,20 +187,20 @@ Global `"queryStrategy": "UseIP"` does not conflict with sub-item `"queryStrateg
 Global `"queryStrategy": "UseIP"` does not conflict with sub-item `"queryStrategy": "UseIPv4"`.
 
 ```json
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://8.8.8.8/dns-query",
-                "domains": [
-                    "geosite:netflix"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // Global "UseIPv4" conflicts with sub-item "UseIPv6"
-            }
-        ],
-        "queryStrategy": "UseIPv4"
-    }
+{
+  "dns": {
+    "servers": [
+      "https://1.1.1.1/dns-query",
+      {
+        "address": "https://8.8.8.8/dns-query",
+        "domains": ["geosite:netflix"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6" // Global "UseIPv4" conflicts with sub-item "UseIPv6"
+      }
+    ],
+    "queryStrategy": "UseIPv4"
+  }
+}
 ```
 
 The sub-item query for the Netflix domain returns an empty response due to the conflicting `"queryStrategy"` value. The Netflix domain is then queried by `https://1.1.1.1/dns-query`, returning an A record.

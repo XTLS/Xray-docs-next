@@ -403,45 +403,43 @@ Weight value. The larger the value, the less likely the corresponding node is to
 ### Load Balancer Configuration Example
 
 ```json
-    "routing": {
-        "rules": [
-            {
-                "inboundTag": [
-                    "in"
-                ],
-                "balancerTag": "round"
-            }
-        ],
-        "balancers" : [
-            {
-                "selector": [
-                    "out"
-                ],
-                "strategy": {
-                    "type":"roundRobin"
-                },
-                "tag": "round"
-            }
-        ]
-    },
-
-    "inbounds": [
-        {
-            // Inbound config
-            "tag": "in"
-        }
+{
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["in"],
+        "balancerTag": "round"
+      }
     ],
-
-    "outbounds": [
-        {
-            // Outbound config
-            "tag": "out1"
+    "balancers": [
+      {
+        "selector": ["out"],
+        "strategy": {
+          "type": "roundRobin"
         },
-        {
-            // Outbound config
-            "tag": "out2"
-        }
+        "tag": "round"
+      }
     ]
+  },
+
+  "inbounds": [
+    {
+      // Inbound config
+      "tag": "in"
+    }
+  ],
+
+  "outbounds": [
+    {
+      // Outbound config
+      "tag": "out1"
+    },
+    {
+      // Outbound config
+      "tag": "out2"
+    }
+  ]
+}
 ```
 
 ### Predefined Domain List

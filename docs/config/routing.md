@@ -403,45 +403,43 @@ HTTP 请求头。
 ### 负载均衡配置示例
 
 ```json
-    "routing": {
-        "rules": [
-            {
-                "inboundTag": [
-                    "in"
-                ],
-                "balancerTag": "round"
-            }
-        ],
-        "balancers" : [
-            {
-                "selector": [
-                    "out"
-                ],
-                "strategy": {
-                    "type":"roundRobin"
-                },
-                "tag": "round"
-            }
-        ]
-    },
-
-    "inbounds": [
-        {
-            // 入站配置
-            "tag": "in"
-        }
+{
+  "routing": {
+    "rules": [
+      {
+        "inboundTag": ["in"],
+        "balancerTag": "round"
+      }
     ],
-
-    "outbounds": [
-        {
-            // 出站配置
-            "tag": "out1"
+    "balancers": [
+      {
+        "selector": ["out"],
+        "strategy": {
+          "type": "roundRobin"
         },
-        {
-            // 出站配置
-            "tag": "out2"
-        }
+        "tag": "round"
+      }
     ]
+  },
+
+  "inbounds": [
+    {
+      // 入站配置
+      "tag": "in"
+    }
+  ],
+
+  "outbounds": [
+    {
+      // 出站配置
+      "tag": "out1"
+    },
+    {
+      // 出站配置
+      "tag": "out2"
+    }
+  ]
+}
 ```
 
 ### 预定义域名列表

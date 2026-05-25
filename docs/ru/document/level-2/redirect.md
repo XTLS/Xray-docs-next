@@ -95,17 +95,13 @@ lsmod | grep wireguard
 ```json
 {
   "api": {
-    "services": [
-      "HandlerService",
-      "LoggerService",
-      "StatsService"
-    ],
+    "services": ["HandlerService", "LoggerService", "StatsService"],
     "tag": "api"
   },
   "inbounds": [
     {
       "listen": "127.0.0.1",
-      "port": <port>,
+      "port": 12345, // <port>
       "protocol": "dokodemo-door",
       "settings": {
         "rewriteAddress": "127.0.0.1"
@@ -127,13 +123,13 @@ lsmod | grep wireguard
       "tag": "wg0",
       "streamSettings": {
         "sockopt": {
-          "mark": <mark>
+          "mark": 255 // <mark>
         }
       },
       "settings": {
         "domainStrategy": "UseIPv6"
       }
-    },  // Трафик с меткой fwmark, равной <mark>, будет направлен через UseIPv6/UseIPv4.
+    }, // Трафик с меткой fwmark, равной <mark>, будет направлен через UseIPv6/UseIPv4.
     //            <--Выберите один из вариантов-->   Вариант 2: sendThrough
     {
       "tag": "wg0",
@@ -174,9 +170,7 @@ lsmod | grep wireguard
   "routing": {
     "rules": [
       {
-        "inboundTag": [
-          "api"
-        ],
+        "inboundTag": ["api"],
         "outboundTag": "api"
       },
       {
@@ -189,9 +183,7 @@ lsmod | grep wireguard
       },
       {
         "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ]
+        "protocol": ["bittorrent"]
       }
     ]
   },

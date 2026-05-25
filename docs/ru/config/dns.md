@@ -147,28 +147,26 @@ IP-адрес, используемый в расширении EDNS Client Subn
 `UseSystem` адаптируется к сетевой среде операционной системы. Перед запросом проверяется наличие шлюзов по умолчанию для IPv4 и IPv6, чтобы ограничить возможности серверов и установить тип запроса. В ОС с графическим интерфейсом проверка выполняется в реальном времени, в среде командной строки — только один раз.
 
 ```json
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://8.8.8.8/dns-query",
-                "domains": [
-                    "geosite:netflix"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv4" // Для доменов netflix запрашивать A запись
-            },
-            {
-                "address": "https://1.1.1.1/dns-query",
-                "domains": [
-                    "geosite:openai"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // Для доменов openai запрашивать AAAA запись
-            }
-        ],
-        "queryStrategy": "UseIP" // Глобально запрашивать одновременно A и AAAA записи
-    }
+{
+  "dns": {
+    "servers": [
+      "https://1.1.1.1/dns-query",
+      {
+        "address": "https://8.8.8.8/dns-query",
+        "domains": ["geosite:netflix"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv4" // Для доменов netflix запрашивать A запись
+      },
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "domains": ["geosite:openai"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6" // Для доменов openai запрашивать AAAA запись
+      }
+    ],
+    "queryStrategy": "UseIP" // Глобально запрашивать одновременно A и AAAA записи
+  }
+}
 ```
 
 ::: tip TIP 1
@@ -186,20 +184,20 @@ IP-адрес, используемый в расширении EDNS Client Subn
 Глобальный `"queryStrategy": "UseIP"` и вложенный `"queryStrategy": "UseIPv4"` — не конфликтуют.
 
 ```json
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://8.8.8.8/dns-query",
-                "domains": [
-                    "geosite:netflix"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // Конфликт: глобальный "UseIPv4" и "UseIPv6" вложенного элемента
-            }
-        ],
-        "queryStrategy": "UseIPv4"
-    }
+{
+  "dns": {
+    "servers": [
+      "https://1.1.1.1/dns-query",
+      {
+        "address": "https://8.8.8.8/dns-query",
+        "domains": ["geosite:netflix"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6" // Конфликт: глобальный "UseIPv4" и "UseIPv6" вложенного элемента
+      }
+    ],
+    "queryStrategy": "UseIPv4"
+  }
+}
 ```
 
 Запрос домена Netflix получит пустой ответ из-за конфликта значений `"queryStrategy"`. Домен Netflix будет запрошен через `https://1.1.1.1/dns-query` и получит запись A.

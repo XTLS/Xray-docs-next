@@ -75,7 +75,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 
 2. Запустите `wgcf-cli register` для регистрации. Вывод:
 
-```json
+```
 ❯ wgcf-cli register
 {
     "endpoint": {
@@ -157,7 +157,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 
 Добавьте следующие правила к существующим правилам маршрутизации:
 
-```json
+```
             {
                 "domain": [
                     "geosite:cn"
@@ -201,7 +201,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
       "protocol": "vmess",
       "settings": {
         "address": "IP-адрес",
-        "port": Порт,
+        "port": 12345, // Порт
         "id": "UUID",
         "security": "auto"
       },

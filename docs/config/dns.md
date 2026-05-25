@@ -150,28 +150,26 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 `UseSystem` 自适应操作系统网络环境。查询前分别检查是否有 IPv4 和 IPv6 的默认网关，以此限制所有服务器的能力并设置查询类型的默认值。在图形环境操作系统上实时检查，在命令行环境只检查一次。
 
 ```json
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://8.8.8.8/dns-query",
-                "domains": [
-                    "geosite:netflix"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv4" // netflix 的域名查询 A 记录
-            },
-            {
-                "address": "https://1.1.1.1/dns-query",
-                "domains": [
-                    "geosite:openai"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // openai 的域名查询 AAAA 记录
-            }
-        ],
-        "queryStrategy": "UseIP" // 全局同时查询 A 和 AAAA 记录
-    }
+{
+  "dns": {
+    "servers": [
+      "https://1.1.1.1/dns-query",
+      {
+        "address": "https://8.8.8.8/dns-query",
+        "domains": ["geosite:netflix"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv4" // netflix 的域名查询 A 记录
+      },
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "domains": ["geosite:openai"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6" // openai 的域名查询 AAAA 记录
+      }
+    ],
+    "queryStrategy": "UseIP" // 全局同时查询 A 和 AAAA 记录
+  }
+}
 ```
 
 ::: tip TIP 1
@@ -189,20 +187,20 @@ EDNS Client Subnet 扩展中使用的 IP 地址。
 全局 `"queryStrategy": "UseIP"` 与 子项 `"queryStrategy": "UseIPv4"` 不冲突。
 
 ```json
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://8.8.8.8/dns-query",
-                "domains": [
-                    "geosite:netflix"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // 全局 "UseIPv4" 与 子项 "UseIPv6" 冲突
-            }
-        ],
-        "queryStrategy": "UseIPv4"
-    }
+{
+  "dns": {
+    "servers": [
+      "https://1.1.1.1/dns-query",
+      {
+        "address": "https://8.8.8.8/dns-query",
+        "domains": ["geosite:netflix"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6" // 全局 "UseIPv4" 与 子项 "UseIPv6" 冲突
+      }
+    ],
+    "queryStrategy": "UseIPv4"
+  }
+}
 ```
 
 子项 netflix 的域名查询由于 `"queryStrategy"` 值冲突，得到空响应。netflix 的域名由 `https://1.1.1.1/dns-query` 查询，得到 A 记录。

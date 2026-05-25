@@ -125,7 +125,7 @@ The configuration file should listen on port 12345 and enable tproxy:
   ],
   "outbounds": [
     {
-      Your_Server_Configuration
+      // Your Server Configuration
     }
   ]
 }

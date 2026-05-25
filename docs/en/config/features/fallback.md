@@ -11,11 +11,13 @@ Currently, you can use the fallback feature by configuring `fallbacks` when usin
 ## Fallbacks Configuration
 
 ```json
+{
   "fallbacks": [
     {
       "dest": 80
     }
   ]
+}
 ```
 
 > `fallbacks`: \[ [FallbackObject](#fallbackobject) \]

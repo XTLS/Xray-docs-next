@@ -106,20 +106,20 @@ MTU нижнего уровня tun в Wireguard.
 Примечание: В настройках `Freedom` доступны опции, такие как `UseIP`, которые здесь отсутствуют, так как Wireguard требует наличия действительного IP-адреса.
 
 ```json
-    "dns": {
-        "servers": [
-            "https://1.1.1.1/dns-query",
-            {
-                "address": "https://1.1.1.1/dns-query",
-                "domains": [
-                    "geosite:openai"
-                ],
-                "skipFallback": true,
-                "queryStrategy": "UseIPv6" // Запрос только AAAA-записей
-            }
-        ],
-        "queryStrategy": "UseIP" // Запрос A и AAAA одновременно. Если не указано, используется значение по умолчанию UseIP.
-    }
+{
+  "dns": {
+    "servers": [
+      "https://1.1.1.1/dns-query",
+      {
+        "address": "https://1.1.1.1/dns-query",
+        "domains": ["geosite:openai"],
+        "skipFallback": true,
+        "queryStrategy": "UseIPv6" // Запрос только AAAA-записей
+      }
+    ],
+    "queryStrategy": "UseIP" // Запрос A и AAAA одновременно. Если не указано, используется значение по умолчанию UseIP.
+  }
+}
 ```
 
 ### Peers

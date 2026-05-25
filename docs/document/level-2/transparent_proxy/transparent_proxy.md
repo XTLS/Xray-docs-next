@@ -125,7 +125,7 @@ Linux 使用`Netfilter`来管理网络，`Netfilter`模型如下：
   ],
   "outbounds": [
     {
-      你的服务器配置
+      // 你的服务器配置
     }
   ]
 }

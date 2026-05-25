@@ -70,7 +70,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 
 1. Run `wgcf-cli register` to register. Output:
 
-```json
+```
 ❯ wgcf-cli register
 {
     "endpoint": {
@@ -151,7 +151,7 @@ Recommended routing strategy: `IPIfNonMatch`.
 
 Add the following to your existing routing rules:
 
-```json
+```
             {
                 "domain": [
                     "geosite:cn"
@@ -195,7 +195,7 @@ Add the following to your existing routing rules:
       "protocol": "vmess",
       "settings": {
         "address": "My_Server_IP",
-        "port": My_Port,
+        "port": 12345, // My_Port
         "id": "My_UUID",
         "security": "auto"
       },

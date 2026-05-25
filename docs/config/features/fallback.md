@@ -11,11 +11,13 @@ fallback 也可以将不同类型的流量根据 path 进行分流, 从而实现
 ## fallbacks 配置
 
 ```json
+{
   "fallbacks": [
     {
       "dest": 80
     }
   ]
+}
 ```
 
 > `fallbacks`: \[ [FallbackObject](#fallbackobject) \]

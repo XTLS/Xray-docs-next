@@ -1,23 +1,16 @@
 name: Post Check
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push, pull_request]
 
 jobs:
-  check:
+  check-focus:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+      - run: python .github/check-scripts/check_code_focus.py
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Check code focus blocks
-        run: python .github/check-scripts/check_code_focus.py
+  check-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - run: python .github/check-scripts/check_json.py

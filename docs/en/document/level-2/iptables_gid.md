@@ -108,7 +108,7 @@ Configure Xray `dokodemo-door` to listen on port 12345, enable `followRedirect` 
   ],
   "outbounds": [
     {
-      Your Server Configuration
+      // Your Server Configuration
     }
   ]
 }

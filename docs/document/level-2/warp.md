@@ -70,7 +70,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 
 2. 运行 `wgcf-cli register` 进行注册，输出：
 
-```json
+```
 ❯ wgcf-cli register
 {
     "endpoint": {
@@ -151,7 +151,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 
 在现有路由中新增以下
 
-```json
+```
             {
                 "domain": [
                     "geosite:cn"
@@ -195,7 +195,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
       "protocol": "vmess",
       "settings": {
         "address": "我的IP",
-        "port": 我的端口,
+        "port": 12345, // 你的端口
         "id": "我的UUID",
         "security": "auto"
       },

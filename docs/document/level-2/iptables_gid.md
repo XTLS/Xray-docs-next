@@ -112,7 +112,7 @@ iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF
   ],
   "outbounds": [
     {
-      你的服务器配置
+      // 你的服务器配置
     }
   ]
 }
