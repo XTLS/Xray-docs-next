@@ -161,7 +161,6 @@ FakeDNS будет использовать этот блок IP-адресов 
 {
   "dns": {
     "servers": [
-      // [!code focus:13]
       {
         "address": "fakedns",
         "domains": [

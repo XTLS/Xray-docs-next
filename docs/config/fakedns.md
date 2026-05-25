@@ -158,7 +158,6 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
 {
   "dns": {
     "servers": [
-      // [!code focus:13]
       {
         "address": "fakedns",
         "domains": [

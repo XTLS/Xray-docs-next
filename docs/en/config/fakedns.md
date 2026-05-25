@@ -158,7 +158,6 @@ When using DNS routing (traffic splitting), to ensure `fakedns` has high priorit
 {
   "dns": {
     "servers": [
-      // [!code focus:13]
       {
         "address": "fakedns",
         "domains": [
