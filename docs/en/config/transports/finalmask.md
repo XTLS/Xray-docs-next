@@ -232,49 +232,18 @@ Always merged into the packet header.
 
 `client[n].packet`: adds fixed data. Conflicts with `rand`.
 
-### header-dns
-
-The old mKCP DNS camouflage. Some campus networks allow DNS queries before login, so this adds a DNS header to KCP.
+### mkcp-legacy
 
 ```json
 {
-  "domain": "www.example.com"
+  "header": "", // dns dtls srtp utp wechat wireguard
+  "value": "" // password domain
 }
 ```
 
-### header-dtls
+`header`: empty for original & aes128gcm
 
-The old mKCP DTLS camouflage. It disguises packets as DTLS 1.2 traffic. No extra settings.
-
-### header-srtp
-
-The old mKCP SRTP camouflage. It disguises packets as SRTP traffic and may be recognized as video-call traffic such as FaceTime. No extra settings.
-
-### header-utp
-
-The old mKCP uTP camouflage. It disguises packets as uTP traffic and may be recognized as BitTorrent download traffic. No extra settings.
-
-### header-wechat
-
-The old mKCP WeChat Video camouflage. It disguises packets as WeChat video-call traffic. No extra settings.
-
-### header-wireguard
-
-The old mKCP WireGuard camouflage. It disguises packets as WireGuard traffic, though it is not the real WireGuard protocol. No extra settings.
-
-### mkcp-original
-
-The simple obfuscation that used to be the default in mKCP. You may need it to connect to older mKCP servers. No extra settings.
-
-### mkcp-aes128gcm
-
-Corresponds to the old mKCP `seed` feature. It uses AES-128-GCM for obfuscation.
-
-```json
-{
-  "password": "your-password"
-}
-```
+`value`: empty for original
 
 ### noise
 

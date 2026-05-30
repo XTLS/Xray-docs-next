@@ -232,49 +232,18 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `client[n].packet`: 添加固定数据，与 `rand` 冲突。
 
-### header-dns
-
-原 mKCP 的 DNS 伪装。某些校园网在未登录的情况下允许 DNS 查询，给 KCP 添加 DNS 头。
+### mkcp-legacy
 
 ```json
 {
-  "domain": "www.example.com"
+  "header": "", // dns dtls srtp utp wechat wireguard
+  "value": "" // password domain
 }
 ```
 
-### header-dtls
+`header`: empty for original & aes128gcm
 
-原 mKCP 的 DTLS 伪装。伪装成 DTLS 1.2 数据包。无额外配置。
-
-### header-srtp
-
-原 mKCP 的 SRTP 伪装。伪装成 SRTP 数据包，会被识别为视频通话数据（如 FaceTime）。无额外配置。
-
-### header-utp
-
-原 mKCP 的 uTP 伪装。伪装成 uTP 数据包，会被识别为 BT 下载数据。无额外配置。
-
-### header-wechat
-
-原 mKCP 的 WeChat Video 伪装。伪装成微信视频通话的数据包。无额外配置。
-
-### header-wireguard
-
-原 mKCP 的 WireGuard 伪装。伪装成 WireGuard 数据包。（并不是真正的 WireGuard 协议）无额外配置。
-
-### mkcp-original
-
-mKCP 曾经默认应用的简单混淆，你可能需要配置它来连接以前的 mKCP 服务器。无额外配置。
-
-### mkcp-aes128gcm
-
-对应原 mKCP 的 `seed` 功能。使用 AES-128-GCM 进行混淆。
-
-```json
-{
-  "password": "your-password"
-}
-```
+`value`: empty for original
 
 ### noise
 
