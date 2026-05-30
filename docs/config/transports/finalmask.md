@@ -382,7 +382,7 @@ Salamander 混淆。（来自 Hysteria2）
 
 ```json
 {
-  "url": "realm://public@realm.hy2.io/your-realm-name",
+  "url": "realm://public@xxx/your-realm-name",
   "stunServers": [
     "stun.nextcloud.com:3478",
     "global.stun.twilio.com:3478"
@@ -391,7 +391,7 @@ Salamander 混淆。（来自 Hysteria2）
 }
 ```
 
-`url`: scheme://token@host[:port]/id
+`url`: realm[+http]://token@host[:port]/id
 
 `stunServers`: 多个 ipv4/ipv6 用于进行 NAT 端口预测
 

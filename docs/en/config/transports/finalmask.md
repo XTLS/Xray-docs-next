@@ -382,7 +382,7 @@ Self-built https://github.com/apernet/hysteria-realm-server
 
 ```json
 {
-  "url": "realm://public@realm.hy2.io/your-realm-name",
+  "url": "realm://public@xxx/your-realm-name",
   "stunServers": [
     "stun.nextcloud.com:3478",
     "global.stun.twilio.com:3478"
@@ -391,7 +391,7 @@ Self-built https://github.com/apernet/hysteria-realm-server
 }
 ```
 
-`url`: scheme://token@host[:port]/id
+`url`: realm[+http]://token@host[:port]/id
 
 `stunServers`: Multiple IPv4/IPv6 addresses are used for NAT port prediction
 
