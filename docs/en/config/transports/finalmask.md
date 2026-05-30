@@ -361,20 +361,16 @@ At least one of `domains` and `resolvers` must be set.
 
 ### xicmp
 
-Requires at least `CAP_NET_RAW` permissions and must be the outermost layer, which means the first item in the array. It cannot be used together with `udpHop` or `dialerProxy`.
-
 ```json
 {
-  "listenIp": "0.0.0.0",
-  "id": 0
+  "dgram": false, // optional
+  "ips": [] // optional
 }
 ```
 
-`listenIp`: the IP address to listen on. The default is `"0.0.0.0"`.
+`dgram`: Lower permissions, client-side only (Linux, Mac, iOS)
 
-Note that this differs from the usual TCP/UDP listening addresses `"0.0.0.0"` and `"::"`. Because ICMP over IPv4 and ICMPv6 over IPv6 are not interchangeable protocols, specifying `"0.0.0.0"` here means listening only for IPv4 ICMP, and the same applies in reverse.
-
-`id`: if multiple clients share the same IP, it is recommended that the server keep this as `0`.
+`ips`: ips
 
 ## quicParams
 
