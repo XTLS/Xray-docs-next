@@ -376,6 +376,29 @@ Salamander 混淆。（来自 Hysteria2）
 
 `id`: 如果同 ip 下有多客户端，建议服务端保持为 0。
 
+### realm
+
+自建 https://github.com/apernet/hysteria-realm-server
+
+```json
+{
+  "url": "realm://public@realm.hy2.io/your-realm-name",
+  "stunServers": [
+    "stun.nextcloud.com:3478",
+    "global.stun.twilio.com:3478"
+  ],
+  "tlsConfig": {}
+}
+```
+
+`url`: scheme://token@host[:port]/id
+
+`stunServers`: 多个 ipv4/ipv6 用于进行 NAT 端口预测
+
+`tlsConfig`: 同 tlsSettings
+
+连接不通需要 debug 级别日志，可能的影响因素有 stun提供商 realm提供商 punch包影响了quic握手（极小概率）
+
 ## quicParams
 
 ```json

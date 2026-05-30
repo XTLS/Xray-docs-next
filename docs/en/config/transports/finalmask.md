@@ -376,6 +376,29 @@ Note that this differs from the usual TCP/UDP listening addresses `"0.0.0.0"` an
 
 `id`: if multiple clients share the same IP, it is recommended that the server keep this as `0`.
 
+### realm
+
+Self-built https://github.com/apernet/hysteria-realm-server
+
+```json
+{
+  "url": "realm://public@realm.hy2.io/your-realm-name",
+  "stunServers": [
+    "stun.nextcloud.com:3478",
+    "global.stun.twilio.com:3478"
+  ],
+  "tlsConfig": {}
+}
+```
+
+`url`: scheme://token@host[:port]/id
+
+`stunServers`: Multiple IPv4/IPv6 addresses are used for NAT port prediction
+
+`tlsConfig`: Same as tlsSettings
+
+Connection failures require debug-level logging. Possible contributing factors include the STUN provider, the Realm provider, and punch packets affecting the QUIC handshake (extremely low probability)
+
 ## quicParams
 
 ```json
