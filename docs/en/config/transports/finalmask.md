@@ -387,7 +387,7 @@ Self-built https://github.com/apernet/hysteria-realm-server
     "stun.nextcloud.com:3478",
     "global.stun.twilio.com:3478"
   ],
-  "tlsConfig": {}
+  "tlsConfig": {} // optional
 }
 ```
 

@@ -387,7 +387,7 @@ Salamander 混淆。（来自 Hysteria2）
     "stun.nextcloud.com:3478",
     "global.stun.twilio.com:3478"
   ],
-  "tlsConfig": {}
+  "tlsConfig": {} // optional
 }
 ```
 

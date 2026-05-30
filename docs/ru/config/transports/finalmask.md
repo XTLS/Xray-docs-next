@@ -387,7 +387,7 @@ FinalMask добавляет последний слой маскировки п
     "stun.nextcloud.com:3478",
     "global.stun.twilio.com:3478"
   ],
-  "tlsConfig": {}
+  "tlsConfig": {} // optional
 }
 ```
 
