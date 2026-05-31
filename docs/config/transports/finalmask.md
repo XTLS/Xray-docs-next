@@ -330,20 +330,16 @@ Salamander 混淆。（来自 Hysteria2）
 
 ### xicmp
 
-要求至少 `CAP_NET_RAW` 权限且在最外层，也就是数组第一个，不可搭配 `udpHop` 与 `dialerProxy`。
-
 ```json
 {
-  "listenIp": "0.0.0.0",
-  "id": 0
+  "dgram": false, // optional
+  "ips": [] // optional
 }
 ```
 
-`listenIp`: 监听的 ip，默认 `"0.0.0.0"`
+`dgram`: 更低的权限，仅客户端 (Linux, Mac, iOS)
 
-注意此处与常规的 TCP/UDP 监听通用 `"0.0.0.0"` 与 `"::"` 不同，由于基于 IPv4 的 ICMP 和 基于 IPv6 的 ICMPv6 的协议不通用，此处指定为 `"0.0.0.0"` 代表只监听使用 IPv4 的 ICMP，反之亦然。
-
-`id`: 如果同 ip 下有多客户端，建议服务端保持为 0。
+`ips`: ips
 
 ## quicParams
 
