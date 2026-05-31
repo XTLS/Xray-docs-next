@@ -341,6 +341,29 @@ FinalMask добавляет последний слой маскировки п
 
 `ips`: ips
 
+### realm
+
+Самодельный https://github.com/apernet/hysteria-realm-server
+
+```json
+{
+  "url": "realm://public@xxx/your-realm-name",
+  "stunServers": [
+    "stun.nextcloud.com:3478",
+    "global.stun.twilio.com:3478"
+  ],
+  "tlsConfig": {} // optional
+}
+```
+
+`url`: realm[+http]://token@host[:port]/id
+
+`stunServers`: Для предсказания портов NAT используется несколько адресов IPv4/IPv6
+
+`tlsConfig`: То же, что tlsSettings
+
+Для регистрации сбоев соединения требуется уровень отладки. К возможным факторам, способствующим возникновению проблем, относятся поставщик STUN, поставщик Realm и пакеты данных, влияющие на рукопожатие QUIC (вероятность крайне низка)
+
 ## quicParams
 
 ```json

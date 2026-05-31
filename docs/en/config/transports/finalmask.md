@@ -341,6 +341,29 @@ At least one of `domains` and `resolvers` must be set.
 
 `ips`: ips
 
+### realm
+
+Self-built https://github.com/apernet/hysteria-realm-server
+
+```json
+{
+  "url": "realm://public@xxx/your-realm-name",
+  "stunServers": [
+    "stun.nextcloud.com:3478",
+    "global.stun.twilio.com:3478"
+  ],
+  "tlsConfig": {} // optional
+}
+```
+
+`url`: realm[+http]://token@host[:port]/id
+
+`stunServers`: Multiple IPv4/IPv6 addresses are used for NAT port prediction
+
+`tlsConfig`: Same as tlsSettings
+
+Connection failures require debug-level logging. Possible contributing factors include the STUN provider, the Realm provider, and punch packets affecting the QUIC handshake (extremely low probability)
+
 ## quicParams
 
 ```json
