@@ -4,7 +4,7 @@ DNS is an outbound protocol used to receive DNS queries sent in by routing, then
 
 This outbound only supports traditional plaintext DNS queries over UDP and TCP; non-plaintext DNS protocols such as DoH, DoT, and DoQ are not applicable to this outbound. Common scenarios include TUN, transparent proxy, or `dokodemo-door` receiving DNS traffic and then routing sending that traffic to this outbound.
 
-It can allow queries to the target DNS server, `hijack` them to the built-in [DNS server](../dns.md) for further processing, drop them, or explicitly refuse them according to rules. It can also rewrite the target address, port, and transport protocol.
+It can allow queries to the target DNS server, `hijack` them to the built-in [DNS server](../dns.md) for further processing, drop them, or return responses with a specified RCODE according to rules. It can also rewrite the target address, port, and transport protocol.
 
 ## OutboundConfigurationObject
 
@@ -16,7 +16,7 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
     {
       // ...
       "protocol": "dns",
-      // [!code focus:17]
+      // [!code focus:18]
       "settings": {
         "rewriteNetwork": "udp",
         "rewriteAddress": "1.1.1.1",
@@ -24,7 +24,8 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
         "userLevel": 0,
         "rules": [
           {
-            "action": "reject",
+            "action": "return",
+            "rCode": 5,
             "domain": ["domain:example.com"]
           },
           {
@@ -63,28 +64,29 @@ The value of `userLevel` corresponds to the `level` value in [policy](../policy.
 
 Matches DNS query rules in order, and supports fine-grained control by `qType` and `domain`.
 
-If no rule is matched, the built-in fallback rule is used: A and AAAA queries are imported into the built-in DNS module, while other query types are explicitly refused.
+If no rule is matched, the built-in fallback rule is used: A and AAAA queries are imported into the built-in DNS module, while other query types return an empty response with RCODE `0`.
 
 ### RuleObject
 
 ```json
 {
-  "action": "hijack",
-  "qType": 1,
-  "domain": ["geosite:cn"]
+  "action": "return",
+  "qType": 65,
+  "rCode": 5,
+  "domain": ["domain:example.com"]
 }
 ```
 
 All matching conditions in a rule are combined with AND logic. If a condition is omitted, that condition is not restricted.
 
-> `action`: [ "direct" | "hijack" | "drop" | "reject" ]
+> `action`: [ "direct" | "hijack" | "drop" | "return" ]
 
 Defines the action to take when the rule matches.
 
 - `direct`: Allows the query directly to the target DNS server. If outbound-level `rewriteNetwork`, `rewriteAddress`, or `rewritePort` is also configured, the query is forwarded to the rewritten target.
 - `hijack`: Imports the query into the built-in [DNS server](../dns.md) for further processing. This can be used for additional routing based on the built-in DNS configuration. Currently, only A and AAAA records are supported.
 - `drop`: Drops the request directly without returning a response.
-- `reject`: Returns an explicit refusal response. Compared with `drop`, this can prevent some applications from waiting too long for a DNS timeout or repeatedly retrying.
+- `return`: Returns a DNS response whose response code is specified by `rCode`. Compared with `drop`, this can prevent some applications from waiting too long for a DNS timeout or repeatedly retrying.
 
 > `qType`: number | string
 
@@ -94,6 +96,10 @@ Matches DNS query types. The forms are as follows:
 - String: can be a digits-only string such as `"qType": "28"`, or a numeric range such as `"qType": "5-10"`, which represents the 6 types from type 5 to type 10. Commas can be used for segmentation, such as `11,13,15-17`, which represents the 5 types: type 11, type 13, and type 15 to type 17.
 
 For specific type numbers, refer to the [IANA documentation](https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml).
+
+> `rCode`: number
+
+The DNS RCODE used when returning a response, in the range `0` to `65535`. It only takes effect when `action` is `return`; if omitted, it defaults to `0`.
 
 > `domain`: [string]
 
