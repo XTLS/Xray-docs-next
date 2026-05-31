@@ -29,7 +29,7 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
           },
           {
             "action": "direct",
-            "qtype": 65,
+            "qType": 65,
             "domain": ["geosite:geolocation-!cn"]
           }
         ]
@@ -61,7 +61,7 @@ The value of `userLevel` corresponds to the `level` value in [policy](../policy.
 
 > `rules`: \[[RuleObject](#ruleobject)\]
 
-Matches DNS query rules in order, and supports fine-grained control by `qtype` and `domain`.
+Matches DNS query rules in order, and supports fine-grained control by `qType` and `domain`.
 
 If no rule is matched, the built-in fallback rule is used: A and AAAA queries are imported into the built-in DNS module, while other query types are explicitly refused.
 
@@ -70,7 +70,7 @@ If no rule is matched, the built-in fallback rule is used: A and AAAA queries ar
 ```json
 {
   "action": "hijack",
-  "qtype": 1,
+  "qType": 1,
   "domain": ["geosite:cn"]
 }
 ```
@@ -86,12 +86,12 @@ Defines the action to take when the rule matches.
 - `drop`: Drops the request directly without returning a response.
 - `reject`: Returns an explicit refusal response. Compared with `drop`, this can prevent some applications from waiting too long for a DNS timeout or repeatedly retrying.
 
-> `qtype`: number | string
+> `qType`: number | string
 
 Matches DNS query types. The forms are as follows:
 
-- Integer value: a specific query type, such as `"qtype": 1` for an A query, or `"qtype": 28` for an AAAA query.
-- String: can be a digits-only string such as `"qtype": "28"`, or a numeric range such as `"qtype": "5-10"`, which represents the 6 types from type 5 to type 10. Commas can be used for segmentation, such as `11,13,15-17`, which represents the 5 types: type 11, type 13, and type 15 to type 17.
+- Integer value: a specific query type, such as `"qType": 1` for an A query, or `"qType": 28` for an AAAA query.
+- String: can be a digits-only string such as `"qType": "28"`, or a numeric range such as `"qType": "5-10"`, which represents the 6 types from type 5 to type 10. Commas can be used for segmentation, such as `11,13,15-17`, which represents the 5 types: type 11, type 13, and type 15 to type 17.
 
 For specific type numbers, refer to the [IANA documentation](https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml).
 
