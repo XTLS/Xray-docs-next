@@ -219,7 +219,7 @@ inbound:
   // 直接接收来自公网的请求
   "tag": "external",
   "port": 80,
-  "protocol": "dokodemo-door",
+  "protocol": "tunnel",
   "settings": {
     "allowedNetwork": "tcp",
     "rewriteAddress": "127.0.0.1",

@@ -32,7 +32,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
     {
       "tag": "all-in",
       "port": 12345,
-      "protocol": "dokodemo-door",
+      "protocol": "tunnel",
       "settings": {
         "allowedNetwork": "tcp,udp",
         "followRedirect": true

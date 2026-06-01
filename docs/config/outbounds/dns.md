@@ -2,7 +2,7 @@
 
 DNS 是一个出站协议，用于接收由 routing 送入的 DNS 查询，并按规则转发或处理。
 
-此出站只支持传统明文 DNS，即基于 UDP 和 TCP 的查询；DoH、DoT、DoQ 等非传统明文 DNS 不适用于此出站。常见场景是 TUN、透明代理或 `dokodemo-door` 接收到 DNS 流量后，再由 routing 将其分流到此出站。
+此出站只支持传统明文 DNS，即基于 UDP 和 TCP 的查询；DoH、DoT、DoQ 等非传统明文 DNS 不适用于此出站。常见场景是 TUN、透明代理或 `tunnel` 接收到 DNS 流量后，再由 routing 将其分流到此出站。
 
 它可以按规则将查询放行到目标 DNS 服务器、`hijack` 到内置的 [DNS 服务器](../dns.md) 进一步处理、直接丢弃或按指定 RCODE 返回响应，也可以改写目标地址、端口和传输协议。
 

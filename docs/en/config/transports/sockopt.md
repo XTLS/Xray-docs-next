@@ -84,7 +84,7 @@ Whether to enable transparent proxying. Linux only.
 Transparent proxying requires root or `CAP_NET_ADMIN`.
 
 ::: danger
-When [Dokodemo-door](../inbounds/tunnel.md) has `followRedirect` set to `true`, and `tproxy` is empty in Sockopt, the `tproxy` value is set to `"redirect"`.
+When [tunnel](../inbounds/tunnel.md) has `followRedirect` set to `true`, and `tproxy` is empty in Sockopt, the `tproxy` value is set to `"redirect"`.
 :::
 
 > `domainStrategy`: "AsIs"<br>

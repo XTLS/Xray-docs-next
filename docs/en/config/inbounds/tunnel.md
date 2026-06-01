@@ -48,7 +48,7 @@ A map mapping local ports to required remote addresses/ports (if the inbound lis
 
 > `followRedirect`: true | false
 
-When set to `true`, dokodemo-door will recognize data forwarded by iptables and forward it to the corresponding target address.
+When set to `true`, tunnel will recognize data forwarded by iptables and forward it to the corresponding target address.
 
 Please refer to the `tproxy` setting in [Sockopt](../transports/sockopt.md#sockoptobject).
 
@@ -62,7 +62,7 @@ The value of `userLevel` corresponds to the value of `level` in [policy](../poli
 
 The "Arbitrary Door" has two main uses: one is for transparent proxy (see below), and the other is for mapping a port.
 
-Sometimes some services do not support forward proxies like Socks5, and using Tun or Tproxy is overkill. If these services only communicate with a single IP and port (e.g., iperf, Minecraft server, Wireguard endpoint), you can use dokodemo-door.
+Sometimes some services do not support forward proxies like Socks5, and using Tun or Tproxy is overkill. If these services only communicate with a single IP and port (e.g., iperf, Minecraft server, Wireguard endpoint), you can use `tunnel`.
 
 For example, the following Config (assuming the default outbound is a valid proxy):
 

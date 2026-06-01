@@ -48,7 +48,7 @@ Tunnel（隧道），旧称 dokodemo-door（任意门），可以监听数个本
 
 > `followRedirect`: true | false
 
-当值为 `true` 时，dokodemo-door 会识别出由 iptables 转发而来的数据，并转发到相应的目标地址。
+当值为 `true` 时，tunnel 会识别出由 iptables 转发而来的数据，并转发到相应的目标地址。
 
 可参考 [传输配置](../transports/sockopt.md#sockoptobject) 中的 `tproxy` 设置。
 

@@ -5,7 +5,7 @@
 ## 查看流量信息
 
 配置方法与 v2fly 一致。
-查看流量信息是 xray 命令行的其中一个功能。配置内设置的 api dokodemo-door 端口，即为 `--server` 参数的端口。
+查看流量信息是 xray 命令行的其中一个功能。配置内设置的 api tunnel 端口，即为 `--server` 参数的端口。
 
 ```bash
 xray api statsquery --server=127.0.0.1:10085 #查看所有流量

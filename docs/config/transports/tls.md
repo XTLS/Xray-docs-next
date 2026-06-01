@@ -51,13 +51,13 @@ TLS 是常见的传输层加密方式。
 
 当留空时，自动使用 address 中的值（如果是域名）。
 
-特殊值 `"FromMitM"`, 这会使其使用入来自 dokodemo-door 入站解密的 TLS 中包含的 SNI.
+特殊值 `"FromMitM"`, 这会使其使用入来自 tunnel 入站解密的 TLS 中包含的 SNI.
 
 > `verifyPeerCertByName`: string
 
 仅客户端，用于校验证书使用的 SNI，可以用 `,` 分割多个域名(只需要证书中有一个 SAN 在该列表中即可), 将会覆盖本用于校验的 `serverName`, 用于域前置等特殊目的。
 
-特殊值 `"FromMitM"`, 这会使其额外加入来自 dokodemo-door 入站解密的 TLS 中包含的 SNI.
+特殊值 `"FromMitM"`, 这会使其额外加入来自 tunnel 入站解密的 TLS 中包含的 SNI.
 
 > `rejectUnknownSni`: bool
 
@@ -67,7 +67,7 @@ TLS 是常见的传输层加密方式。
 
 一个字符串数组，指定了 TLS 握手时指定的 ALPN 数值。默认值为 `["h2", "http/1.1"]`。
 
-特殊值：`["FromMitM"]` (有且仅有这一个元素时) 会使出站 TLS 使用来自 dokodemo-door 入站解密的 TLS 连接使用的 alpn.
+特殊值：`["FromMitM"]` (有且仅有这一个元素时) 会使出站 TLS 使用来自 tunnel 入站解密的 TLS 连接使用的 alpn.
 
 > `minVersion`: string
 

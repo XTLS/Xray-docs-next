@@ -111,7 +111,7 @@ Linux 使用`Netfilter`来管理网络，`Netfilter`模型如下：
   "inbounds": [
     {
       "port": 12345,
-      "protocol": "dokodemo-door",
+      "protocol": "tunnel",
       "settings": {
         "allowedNetwork": "tcp,udp",
         "followRedirect": true

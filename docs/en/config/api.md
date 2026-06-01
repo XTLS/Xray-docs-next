@@ -53,7 +53,7 @@ You can add an `api` inbound in the `inbounds` configuration:
     {
       "listen": "127.0.0.1",
       "port": 10085,
-      "protocol": "dokodemo-door",
+      "protocol": "tunnel",
       "settings": {
         "rewriteAddress": "127.0.0.1"
       },

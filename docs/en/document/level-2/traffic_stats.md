@@ -5,7 +5,7 @@ Please familiarize yourself with the [Traffic Statistics Plain Language Guide](h
 ## Viewing Traffic Information
 
 The configuration method is consistent with v2fly.
-Viewing traffic information is one of the features of the xray command line. The `api dokodemo-door` port set in the configuration corresponds to the port for the `--server` parameter.
+Viewing traffic information is one of the features of the xray command line. The `api tunnel` port set in the configuration corresponds to the port for the `--server` parameter.
 
 ```bash
 xray api statsquery --server=127.0.0.1:10085 # View all traffic statistics

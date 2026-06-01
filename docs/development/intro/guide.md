@@ -102,7 +102,7 @@ Xray-core
 ├── common     // 公用代码
 ├── proxy      // 通讯协议
 │   ├── blackhole
-│   ├── dokodemo-door
+│   ├── dokodemo
 │   ├── freedom
 │   ├── socks
 │   ├── vmess
