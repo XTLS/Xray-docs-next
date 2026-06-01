@@ -103,7 +103,7 @@ lsmod | grep wireguard
     {
       "listen": "127.0.0.1",
       "port": 12345, // <port>
-      "protocol": "dokodemo-door",
+      "protocol": "tunnel",
       "settings": {
         "rewriteAddress": "127.0.0.1"
       },

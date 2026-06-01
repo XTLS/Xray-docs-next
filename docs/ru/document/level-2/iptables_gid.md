@@ -96,7 +96,7 @@ iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF
   "inbounds": [
     {
       "port": 12345,
-      "protocol": "dokodemo-door",
+      "protocol": "tunnel",
       "settings": {
         "allowedNetwork": "tcp,udp",
         "followRedirect": true

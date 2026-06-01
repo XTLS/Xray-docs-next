@@ -87,14 +87,14 @@ iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF
 
 ### 2. Prepare Xray Configuration File
 
-Configure Xray `dokodemo-door` to listen on port 12345, enable `followRedirect` and `tproxy`. Setting `sniffing` is not required:
+Configure Xray `tunnel` to listen on port 12345, enable `followRedirect` and `tproxy`. Setting `sniffing` is not required:
 
 ```json
 {
   "inbounds": [
     {
       "port": 12345,
-      "protocol": "dokodemo-door",
+      "protocol": "tunnel",
       "settings": {
         "allowedNetwork": "tcp,udp",
         "followRedirect": true
@@ -184,7 +184,7 @@ iptables -t mangle -A XRAY -d 224.0.0.0/3 -j RETURN
 iptables -t mangle -A XRAY ! -s Gateway_LAN_IPv4_Subnet -j RETURN
 
 # Mark TCP packets with 1, forward to port 12345
-# Traffic is accepted by Xray dokodemo-door only if mark is set to 1
+# Traffic is accepted by Xray tunnel only if mark is set to 1
 iptables -t mangle -A XRAY -p tcp -j TPROXY --on-port 12345 --tproxy-mark 1
 iptables -t mangle -A XRAY -p udp -j TPROXY --on-port 12345 --tproxy-mark 1
 # Apply rules

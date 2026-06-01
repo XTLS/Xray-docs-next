@@ -51,13 +51,13 @@ Server name. The server certificate's SAN must contain this value. It can be a d
 
 When left empty, the value in `address` is used automatically if that value is a domain name.
 
-Special value `"FromMitM"` causes Xray to use the SNI extracted from TLS decrypted by a `dokodemo-door` inbound.
+Special value `"FromMitM"` causes Xray to use the SNI extracted from TLS decrypted by a `tunnel` inbound.
 
 > `verifyPeerCertByName`: string
 
 Client-only. The SNI used for certificate verification. Multiple domain names can be separated with `,`; it is enough for any one SAN in the certificate to match one of them. This overrides the `serverName` used for verification and is intended for special cases such as domain fronting.
 
-Special value `"FromMitM"` causes Xray to additionally include the SNI extracted from TLS decrypted by a `dokodemo-door` inbound.
+Special value `"FromMitM"` causes Xray to additionally include the SNI extracted from TLS decrypted by a `tunnel` inbound.
 
 > `rejectUnknownSni`: bool
 
@@ -67,7 +67,7 @@ When set to `true`, the server rejects the TLS handshake if the received SNI doe
 
 An array of strings that specifies the ALPN values used during TLS handshake. The default value is `["h2", "http/1.1"]`.
 
-Special value `["FromMitM"]`, when it is the only element, causes outbound TLS to reuse the ALPN from the TLS connection decrypted by a `dokodemo-door` inbound.
+Special value `["FromMitM"]`, when it is the only element, causes outbound TLS to reuse the ALPN from the TLS connection decrypted by a `tunnel` inbound.
 
 > `minVersion`: string
 

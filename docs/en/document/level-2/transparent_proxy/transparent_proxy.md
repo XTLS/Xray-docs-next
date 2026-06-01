@@ -111,7 +111,7 @@ The configuration file should listen on port 12345 and enable tproxy:
   "inbounds": [
     {
       "port": 12345,
-      "protocol": "dokodemo-door",
+      "protocol": "tunnel",
       "settings": {
         "allowedNetwork": "tcp,udp",
         "followRedirect": true

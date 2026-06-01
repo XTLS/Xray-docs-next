@@ -220,7 +220,7 @@ Inbounds:
   // Directly receive requests from the public internet
   "tag": "external",
   "port": 80,
-  "protocol": "dokodemo-door",
+  "protocol": "tunnel",
   "settings": {
     "allowedNetwork": "tcp",
     "rewriteAddress": "127.0.0.1",

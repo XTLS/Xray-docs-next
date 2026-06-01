@@ -102,7 +102,7 @@ Xray-core
 ├── common     // Common code
 ├── proxy      // Communication protocols
 │   ├── blackhole
-│   ├── dokodemo-door
+│   ├── dokodemo-
 │   ├── freedom
 │   ├── socks
 │   ├── vmess

@@ -17,7 +17,7 @@ A more direct (and hopefully better) way to export statistics.
 
 > `tag`: string
 
-The outbound proxy tag corresponding to metrics. You can access it by setting up a dokodemo-door inbound + routing rules that point the dokodemo-door to this outbound.
+The outbound proxy tag corresponding to metrics. You can access it by setting up a `tunnel` inbound + routing rules that point the `tunnel` to this outbound.
 
 > `listen`: string
 

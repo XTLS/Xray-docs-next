@@ -53,7 +53,7 @@ API 服务监听的 IP 和端口。这是一个可选配置项。
     {
       "listen": "127.0.0.1",
       "port": 10085,
-      "protocol": "dokodemo-door",
+      "protocol": "tunnel",
       "settings": {
         "rewriteAddress": "127.0.0.1"
       },
