@@ -348,10 +348,10 @@ So far, we have used `systemctl` related commands like `start`, `status`, `reloa
     net.ipv4.tcp_congestion_control=bbr
     ```
 
-9.  Reboot the VPS to make the `BBR` settings take effect.
+9.  Read the configuration to make the `BBR` settings take effect.
 
     ```shell
-    sudo reboot
+    sudo sysctl --system
     ```
 
 10. Confirm `BBR` is enabled

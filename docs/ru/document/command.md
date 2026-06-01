@@ -20,6 +20,7 @@ The commands are:
         run          Запустить Xray с конфигурацией
         version      Показать текущую версию Xray
         api          Вызвать API в процессе Xray
+        convert      Конвертировать конфигурации
         tls          Инструменты TLS
         uuid         Сгенерировать UUIDv4 или UUIDv5 (VLESS)
         x25519       Сгенерировать ключевую пару для обмена ключами X25519 (REALITY, VLESS Encryption)

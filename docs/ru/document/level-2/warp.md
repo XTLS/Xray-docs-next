@@ -101,7 +101,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
 - Полный файл будет сохранен в файле `wgcf.json` в текущем каталоге.
 
 3.  Запустите `wgcf-cli generate --xray`, чтобы создать исходящий WireGuard.
-    Содержимое будет сохранено в файле `wgcf.json.xray.json`.
+    Содержимое будет сохранено в файле `wgcf.xray.json`.
 
 - Пример файла:
 

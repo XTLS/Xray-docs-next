@@ -78,13 +78,13 @@ Run `go tool dist list` to view all supported systems and architectures.
 Use the following command to build (`<short commit ID>` should be replaced with the first seven characters of the corresponding commit SHA-256):
 
 ```bash
-CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="all=-l=4" -ldflags="-X [github.com/xtls/xray-core/core.build=](https://github.com/xtls/xray-core/core.build=)<short commit ID> -s -w -buildid=" -v ./main
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="all=-l=4" -ldflags="-X github.com/xtls/xray-core/core.build=<short commit ID> -s -w -buildid=" -v ./main
 ```
 
 For MIPS/MIPSLE architectures, you should use:
 
 ```bash
-CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="-l=4" -ldflags="-X [github.com/xtls/xray-core/core.build=](https://github.com/xtls/xray-core/core.build=)<short commit ID> -s -w -buildid=" -v ./main
+CGO_ENABLED=0 go build -o xray -trimpath -buildvcs=false -gcflags="-l=4" -ldflags="-X github.com/xtls/xray-core/core.build=<short commit ID> -s -w -buildid=" -v ./main
 ```
 
 ::: warning
