@@ -356,7 +356,7 @@ FinalMask добавляет последний слой маскировки п
 }
 ```
 
-`url`: realm[+http]://token@host[:port]/id
+`url`: realm[+http]\://token@host[:port]/id
 
 `stunServers`: Для предсказания портов NAT используется несколько адресов IPv4/IPv6
 

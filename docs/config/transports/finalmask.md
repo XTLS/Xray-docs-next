@@ -356,7 +356,7 @@ Salamander 混淆。（来自 Hysteria2）
 }
 ```
 
-`url`: realm[+http]://token@host[:port]/id
+`url`: realm[+http]\://token@host[:port]/id
 
 `stunServers`: 多个 ipv4/ipv6 用于进行 NAT 端口预测
 
