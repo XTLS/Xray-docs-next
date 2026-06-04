@@ -313,7 +313,7 @@ Since the queries are standard, they can be forwarded through any UDP DNS server
 
 To use this feature, the server needs to listen on port 53, then the proxy protocol should point to a DNS server such as `8.8.8.8:53`, and you must own one of the domains in `domains`, then point its NS record to the server.
 
-For example, if you own `example.com`, set an A record like `a.example.com` to the server IP, set an NS record like `t.example.com` to `t.example.com`, and then use `t.example.com`. The host used for the A record must not be a subdomain of the host used for the NS record.
+For example, if you own `example.com`, set an A record like `a.example.com` to the server IP, set an NS record like `t.example.com` to `a.example.com`, and then use `t.example.com`. The host used for the A record must not be a subdomain of the host used for the NS record.
 
 ```json
 {
