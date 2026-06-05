@@ -63,6 +63,8 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 默认值为 `null`，即未配置。可填写具体接口名，也可填写 `"auto"` 让 Xray 自动选择。如果配置了 `autoSystemRoutingTable` 但未显式指定此项，Xray 会自动按 `"auto"` 处理。
 
+Xray 会为所有的出站都绑定选定的网络接口，配置了 `sendThrough` 或 `sockopt`->`interface` 的出站除外。
+
 ## 使用提示
 
 如果未配置 `autoSystemRoutingTable`，仍需要手动配置路由将数据导向创建的 TUN 接口，否则它只是个接口。
@@ -75,4 +77,6 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 注意可能的流量回环的问题，设置路由后可能将 Xray 发出的请求发回 Xray 造成回环！
 优先使用 `autoOutboundsInterface` 避免此问题；如果你需要手动控制，也可以使用 `sockopt` 中的 `interface` 绑定实际的物理网络接口。`ipconfig` (Windows) `ip a` (Linux) 将有助于找到你需要的接口名。
 或者使用出站的 `sendThrough` 它直接在 OutboundObject 中可用，没有 sockOpt.interface 那么深的嵌套层级，这里需要使用的是网卡上的 IP，比如 192.168.1.2 （如你所见它的缺点是不能自动支持双栈，请按你出站的实际使用的 IP 选择）。
+
+使用 `autoOutboundsInterface` 后，由于所有的出站都会被绑定选定的接口，出站不再能依赖系统路由表去将 `address`  路由到其所需的接口。如果 `address` 需要使用特定的接口，则需在出站中通过 `sendThrough` 或 `sockopt`->`interface` 手动指定。
 :::

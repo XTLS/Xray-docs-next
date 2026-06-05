@@ -63,6 +63,8 @@ Automatically binds Xray outbounds to a physical network interface, so that traf
 
 The default value is `null`, which means not configured. You can specify an interface name explicitly, or use `"auto"` to let Xray choose one automatically. If `autoSystemRoutingTable` is configured but this field is omitted, Xray treats it as `"auto"`.
 
+Xray will bind all outbounds with the selected network interface, except those which set `sendThrough` or `sockopt`->`interface`.
+
 ## Usage Tips
 
 If `autoSystemRoutingTable` is not configured, you still need to add routes manually to direct traffic to the created TUN interface; otherwise, it remains just an interface.
@@ -75,4 +77,6 @@ If you only want to proxy specific process(es), the process name routing in the 
 Be aware of potential traffic loop issues. After setting routes, requests initiated by Xray might be sent back to Xray, causing a loop!
 Prefer `autoOutboundsInterface` to avoid this problem. If you need manual control, you can still use `interface` in `sockopt` to bind to the actual physical network interface. `ipconfig` (Windows) or `ip a` (Linux) will help you find the interface name you need.
 Alternatively, use the outbound `sendThrough` setting. It is available directly in `OutboundObject` without the deep nesting level of `sockOpt.interface`. Here you need to use the IP address on the network card, such as 192.168.1.2 (As you can see, its disadvantage is that it cannot automatically support dual-stack; please choose according to the IP actually used for your outbound connection).
+
+With `autoOutboundsInterface`, as outbounds are bound to the selected network interface, outbounds cannot rely on system route table to route `address` to its desired interface. If `address` needs to use a specific interface, you need to set so manually using `sendThrough` or `sockopt`->`interface` in the outbound .
 :::
