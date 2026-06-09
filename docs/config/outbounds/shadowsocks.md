@@ -37,15 +37,13 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
     {
       // ...
       "protocol": "shadowsocks",
-      // [!code focus:10]
+      // [!code focus:8]
       "settings": {
         "email": "love@xray.com",
         "address": "127.0.0.1",
         "port": 1234,
         "method": "加密方式",
         "password": "密码",
-        "uot": true,
-        "UoTVersion": 2,
         "level": 0
       }
     }
@@ -72,16 +70,6 @@ Shadowsocks 加密方式，必填。
 > `password`: string
 
 Shadowsocks 认证密码，必填。
-
-> `uot`: bool
-
-启用`udp over tcp`。
-
-> `UoTVersion`: number
-
-`UDP over TCP` 的实现版本。
-
-当前可选值：`1`, `2`
 
 - Shadowsocks 2022
 

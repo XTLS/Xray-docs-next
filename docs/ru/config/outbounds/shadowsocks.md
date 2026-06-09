@@ -37,15 +37,13 @@
     {
       // ...
       "protocol": "shadowsocks",
-      // [!code focus:10]
+      // [!code focus:8]
       "settings": {
         "email": "love@xray.com",
         "address": "127.0.0.1",
         "port": 1234,
         "method": "метод_шифрования",
         "password": "пароль",
-        "uot": true,
-        "UoTVersion": 2,
         "level": 0
       }
     }
@@ -72,16 +70,6 @@
 > `password`: string
 
 Пароль аутентификации Shadowsocks. Обязательный параметр.
-
-> `uot`: bool
-
-Включить `udp over tcp`.
-
-> `UoTVersion`: number
-
-Версия реализации `UDP over TCP`.
-
-Допустимые значения: `1`, `2`.
 
 - Shadowsocks 2022
 

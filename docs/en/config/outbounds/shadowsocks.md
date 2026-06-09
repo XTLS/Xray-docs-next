@@ -37,15 +37,13 @@ Under the "none" encryption method, traffic will be transmitted in plain text. T
     {
       // ...
       "protocol": "shadowsocks",
-      // [!code focus:10]
+      // [!code focus:8]
       "settings": {
         "email": "love@xray.com",
         "address": "127.0.0.1",
         "port": 1234,
         "method": "Encryption Method",
         "password": "Password",
-        "uot": true,
-        "UoTVersion": 2,
         "level": 0
       }
     }
@@ -72,16 +70,6 @@ Shadowsocks encryption method. Required.
 > `password`: string
 
 Shadowsocks authentication password. Required.
-
-> `uot`: bool
-
-Enable `udp over tcp`.
-
-> `UoTVersion`: number
-
-Implementation version of `UDP over TCP`.
-
-Current optional values: `1`, `2`.
 
 - Shadowsocks 2022
 
