@@ -240,6 +240,7 @@ Make sure you understand socket programming before using it.
   "customSockopt": [
     {
       "system": "linux",
+      "network": "tcp",
       "type": "str",
       "level": "6",
       "opt": "13",
@@ -252,6 +253,10 @@ Make sure you understand socket programming before using it.
 > `system`: ""
 
 Optional. Restricts the option to a specific operating system. If the current system does not match, the option is skipped. Supported values are `linux`, `windows`, and `darwin`, all in lowercase. If left empty, the option is applied directly.
+
+> `network`: ""
+
+Optional. Restricts the option to a specific network type. Supported values are `tcp`, `tcp4`, `tcp6`, `udp`, `udp4`, and `udp6`. A value without a numeric suffix means the sockopt is applied to both stacks. Note that an IPv4 target does **not** guarantee that the network passed in by the standard library is `tcp4`/`udp4` — for example, the system may use an IPv6 socket to connect to an IPv4 address. Verify the standard library behavior before using this.
 
 > `type`: ""
 
