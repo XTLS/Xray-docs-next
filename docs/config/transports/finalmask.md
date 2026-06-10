@@ -313,7 +313,7 @@ Salamander 混淆。（来自 Hysteria2）
 
 要使用这个功能，需要服务端监听 53 端口，然后代理协议将目标指向一个 DNS 服务器（如 8.8.8.8:53），并且你拥有 `domains` 中的域名，然后将其 NS 记录指向服务端。
 
-比如持有 example.com，那么设置 a.example.com A记录 指向 ip，设置 t.example.com NS记录 指向 t.example.com，最后使用的是 t.example.com。设置 A记录 的不能为 NS记录 的子域。
+比如持有 example.com，那么设置 a.example.com A记录 指向 ip，设置 t.example.com NS记录 指向 a.example.com，最后使用的是 t.example.com。设置 A记录 的不能为 NS记录 的子域。
 
 ```json
 {
