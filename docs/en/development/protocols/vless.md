@@ -60,6 +60,8 @@ Schedulers don't need to wrap everything on the outside like Encryption below, b
 BETA 2 is expected to launch two elementary Schedulers: Zstd compression and dynamic data expansion. Advanced operations involve controlling and allocating from a macro level, which is postponed for now.
 
 ## Encryption
+ 
+ See [VLESS Encryption](https://github.com/XTLS/Xray-core/pull/5067).
 
 Unlike VMess's high coupling, VLESS servers and clients will soon be able to agree on an encryption method in advance, wrapping only one layer of encryption on the outside. This is somewhat similar to using TLS; it doesn't affect any carried data and can be understood as swapping the underlying layer from TLS to a preset agreed encryption. Compared to high coupling, this method is more reasonable and flexible: if a security issue arises with one encryption method, just discard it and switch to another, very convenient. VLESS servers will also allow different encryption methods to coexist.
 
