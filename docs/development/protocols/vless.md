@@ -60,6 +60,7 @@ Schedulers 没必要像下面的 Encryption 一样整个套在外面，因为头
 BETA 2 预计推出两个初级的 Scheduler：Zstd 压缩、数据量动态扩充。进阶操作才是从宏观层面来控制、分配，暂时咕咕。
 
 ## Encryption
+
 目前实现见 [VLESS Encryption](https://github.com/XTLS/Xray-core/pull/5067)
 
 与 VMess 的高度耦合不同，VLESS 的服务端、客户端不久后可以提前约定好加密方式，仅在外面套一层加密。这有点类似于使用 TLS，不影响承载的任何数据，也可以理解成底层就是从 TLS 换成预设约定加密。相对于高度耦合，这种方式更合理且灵活：一种加密方式出了安全性问题，直接扔掉并换用其它的就行了，十分方便。VLESS 服务端还会允许不同的加密方式共存。
