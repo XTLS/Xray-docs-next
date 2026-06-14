@@ -378,7 +378,7 @@ The maximum acceptable RTT duration for speed tests.
 
 > `tolerance`: float number
 
-The maximum acceptable failure rate for speed tests. For example, 0.01 means accepting a 1% failure rate. (Seemingly unimplemented).
+The maximum acceptable failure rate for speed tests. For example, 0.01 means accepting a 1% failure rate.
 
 > `baselines`: \[ string \]
 
