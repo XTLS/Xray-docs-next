@@ -252,7 +252,7 @@ Make sure you understand socket programming before using it.
 
 > `system`: ""
 
-Optional. Restricts the option to a specific operating system. If the current system does not match, the option is skipped. Supported values are `linux`, `windows`, and `darwin`, all in lowercase. If left empty, the option is applied directly.
+Optional. Restricts the option to a specific operating system, using lowercase. If the current system does not match, the option is skipped. If left empty, the option is applied directly. Supported values are `linux`, `windows`, `darwin`, and `android` (`android` is only for dedicated Android builds; running a Linux build on Android still counts as `linux`).
 
 > `network`: ""
 
