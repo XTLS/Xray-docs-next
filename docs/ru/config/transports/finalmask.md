@@ -73,14 +73,6 @@ FinalMask добавляет последний слой маскировки п
 }
 ```
 
-> `type`: header-custom | fragment | sudoku
-
-Тип этого слоя маскировки.
-
-> `settings`: header-custom | fragment | sudoku
-
-Конкретные настройки для этого типа маскировки. Поля каждого типа приведены ниже.
-
 ### header-custom
 
 ```json
@@ -190,14 +182,6 @@ FinalMask добавляет последний слой маскировки п
   }
 }
 ```
-
-> `type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
-
-Тип этого слоя маскировки.
-
-> `settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
-
-Конкретные настройки для этого типа маскировки. Поля каждого типа приведены ниже.
 
 ### header-custom
 

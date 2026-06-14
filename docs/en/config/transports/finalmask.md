@@ -73,14 +73,6 @@ An array used to camouflage TCP traffic emitted by the core. The first item in t
 }
 ```
 
-> `type`: header-custom | fragment | sudoku
-
-The type of this camouflage layer.
-
-> `settings`: header-custom | fragment | sudoku
-
-The concrete settings for this camouflage type. See the fields for each type below.
-
 ### header-custom
 
 ```json
@@ -190,14 +182,6 @@ An array used to camouflage UDP traffic emitted by the core. The first item in t
   }
 }
 ```
-
-> `type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
-
-The type of this camouflage layer.
-
-> `settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
-
-The concrete settings for this camouflage type. See the fields for each type below.
 
 ### header-custom
 

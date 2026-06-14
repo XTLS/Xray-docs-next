@@ -73,14 +73,6 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-> `type`: header-custom | fragment | sudoku
-
-该层伪装的类型。
-
-> `settings`: header-custom | fragment | sudoku
-
-该伪装类型的具体设置（每个类型的字段见下）
-
 ### header-custom
 
 ```json
@@ -190,14 +182,6 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
   }
 }
 ```
-
-> `type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
-
-该层伪装的类型。
-
-> `settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
-
-该伪装类型的具体设置（每个类型的字段见下）
 
 ### header-custom
 
