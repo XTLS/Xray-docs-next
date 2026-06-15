@@ -51,6 +51,10 @@
 
 Если `users` не пуст, HTTP-прокси будет выполнять проверку подлинности Basic Authentication для входящих соединений.
 
+::: tip
+До версии [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e) это поле называлось `accounts`
+:::
+
 > `allowTransparent`: true | false
 
 Если установлено значение `true`, будут перенаправляться все HTTP-запросы, а не только прокси-запросы.

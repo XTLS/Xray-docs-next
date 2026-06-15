@@ -52,6 +52,10 @@ Socks 协议的认证方式，支持 `"noauth"` 匿名方式和 `"password"` 用
 
 默认值为空。
 
+::: tip
+在 [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e) 以前这个字段叫做 `accounts`
+:::
+
 > `udp`: true | false
 
 是否开启 UDP 协议的支持。

@@ -51,6 +51,10 @@ HTTP 协议。
 
 当 `users` 非空时，HTTP 代理将对入站连接进行 Basic Authentication 验证。
 
+::: tip
+在 [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e) 以前这个字段叫做 `accounts`
+:::
+
 > `allowTransparent`: true | false
 
 当为 `true` 时，会转发所有 HTTP 请求，而非只是代理请求。

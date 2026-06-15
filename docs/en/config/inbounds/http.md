@@ -51,6 +51,10 @@ An array where each element is a user account. Default value is empty.
 
 When `users` is not empty, the HTTP proxy will perform Basic Authentication on inbound connections.
 
+::: tip
+Before [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e), this field was called `accounts`
+:::
+
 > `allowTransparent`: true | false
 
 When set to `true`, all HTTP requests will be forwarded, not just proxy requests.

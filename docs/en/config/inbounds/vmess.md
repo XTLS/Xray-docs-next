@@ -42,6 +42,10 @@ Each item is a [UserObject](#userobject).
 
 When this configuration is used for dynamic ports, Xray will automatically create users.
 
+::: tip
+Before [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e), this field was called `clients`
+:::
+
 > `default`: [DefaultObject](#defaultobject)
 
 Optional. Default configuration for `users`. Only valid when used in conjunction with `detour`.

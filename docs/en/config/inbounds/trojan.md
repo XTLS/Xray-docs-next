@@ -42,6 +42,10 @@ An array representing a group of users accepted by the server.
 
 Each item is a [UserObject](#userobject).
 
+::: tip
+Before [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e), this field was called `clients`
+:::
+
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
 An array containing a series of powerful fallback configurations (optional).

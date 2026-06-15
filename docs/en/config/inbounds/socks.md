@@ -52,6 +52,10 @@ This option is only valid when `auth` is set to `password`.
 
 Default value is empty.
 
+::: tip
+Before [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e), this field was called `accounts`
+:::
+
 > `udp`: true | false
 
 Whether to enable UDP protocol support.

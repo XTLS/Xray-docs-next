@@ -42,6 +42,10 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
 
 其中每一项是一个用户 [UserObject](#userobject)。
 
+::: tip
+在 [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e) 以前这个字段叫做 `clients`
+:::
+
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
 
 一个数组，包含一系列强大的回落分流配置（可选）。

@@ -43,6 +43,10 @@ An array representing a group of users approved by the server.
 
 Each item is a user [UserObject](#userobject).
 
+::: tip
+Before [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e), this field was called `clients`
+:::
+
 > `decryption`: "none"
 
 [VLESS Encryption](https://github.com/XTLS/Xray-core/pull/5067) settings. Cannot be left empty; to disable, explicitly set it to `"none"`.

@@ -105,6 +105,10 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 
 当存在此选项时，代表启用多用户模式。
 
+::: tip
+在 [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e) 以前这个字段叫做 `clients`
+:::
+
 ### UserObject
 
 ```json

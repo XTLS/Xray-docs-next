@@ -38,6 +38,10 @@ Hysteria 版本，必须为 2。
 
 一个数组，代表一组服务端认可的用户。
 
+::: tip
+在 [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e) 以前这个字段叫做 `clients`
+:::
+
 ### UserObject
 
 ```json

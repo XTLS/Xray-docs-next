@@ -42,6 +42,10 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 当此配置用作动态端口时，Xray 会自动创建用户。
 
+::: tip
+在 [`v26.5.9`](https://github.com/XTLS/Xray-core/commit/c42deab55cc0dcc73eca5487206446fb76c5f79e) 以前这个字段叫做 `clients`
+:::
+
 > `default`: [DefaultObject](#defaultobject)
 
 可选，`users` 的默认配置。仅在配合 `detour` 时有效。
