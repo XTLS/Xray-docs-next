@@ -57,7 +57,7 @@ It can be used for multiple kinds of TCP and UDP camouflage, as well as QUIC-rel
 
 ## TCPMask
 
-An array used to camouflage TCP traffic emitted by the core. The first item in the array is the outermost camouflage layer.
+An array used to camouflage TCP traffic emitted by the core. The first item in the array is the innermost camouflage layer.
 
 ```json
 {
@@ -77,7 +77,7 @@ An array used to camouflage TCP traffic emitted by the core. The first item in t
 
 The type of this camouflage layer.
 
-> `settings`: string
+> `settings`: object
 
 The concrete settings for this camouflage type.
 
@@ -189,7 +189,7 @@ For the meaning of these fields, see the [upstream documentation](https://github
 
 ## UDPMask
 
-An array used to camouflage UDP traffic emitted by the core. The first item in the array is the outermost camouflage layer.
+An array used to camouflage UDP traffic emitted by the core. The first item in the array is the innermost camouflage layer.
 
 ```json
 {
@@ -209,7 +209,7 @@ An array used to camouflage UDP traffic emitted by the core. The first item in t
 
 The type of this camouflage layer.
 
-> `settings`: string
+> `settings`: object
 
 The concrete settings for this camouflage type.
 
@@ -323,12 +323,21 @@ Salamander obfuscation. From Hysteria2.
 ```json
 {
   "type": "salamander",
-  // [!code focus:3]
+  // [!code focus:4]
   "settings": {
-    "password": "your-password"
+    "password": "your-password",
+    "packetSize": "512-1200"
   }
 }
 ```
+
+`password`: the obfuscation password.
+
+#### gecko
+
+`packetSize`: [Int32Range](../../development/intro/guide.md#int32range)
+
+When non-empty, enables Gecko obfuscation, which applies additional fragmentation-and-padding obfuscation to QUIC long-header packets (short-header packets use Salamander directly). `packetSize` specifies the fragment size, and its upper bound must not exceed 2048.
 
 ### sudoku
 

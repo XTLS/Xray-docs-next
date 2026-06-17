@@ -57,7 +57,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ## TCPMask
 
-一个数组，用以伪装核心发出的 TCP流量，数组第一个为最外层伪装。
+一个数组，用以伪装核心发出的 TCP流量，数组第一个为最内层伪装。
 
 ```json
 {
@@ -77,7 +77,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 该层伪装的类型。
 
-> `settings`: string
+> `settings`: object
 
 该伪装类型的具体设置。
 
@@ -189,7 +189,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ## UDPMask
 
-一个数组，用以伪装核心发出的 UDP 流量，数组第一个为最外层伪装。
+一个数组，用以伪装核心发出的 UDP 流量，数组第一个为最内层伪装。
 
 ```json
 {
@@ -209,7 +209,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 该层伪装的类型。
 
-> `settings`: string
+> `settings`: object
 
 该伪装类型的具体设置。
 
@@ -323,12 +323,21 @@ Salamander 混淆。（来自 Hysteria2）
 ```json
 {
   "type": "salamander",
-  // [!code focus:3]
+  // [!code focus:4]
   "settings": {
-    "password": "your-password"
+    "password": "your-password",
+    "packetSize": "512-1200"
   }
 }
 ```
+
+`password`: 混淆密码。
+
+#### gecko
+
+`packetSize`: [Int32Range](../../development/intro/guide.md#int32range)
+
+不为空则启用 Gecko 混淆，对 QUIC 的长包头数据包进行额外分片填充混淆（短包头直接使用 Salamander），packetSize 指定具体分片大小，上限不能超过 2048。
 
 ### sudoku
 
