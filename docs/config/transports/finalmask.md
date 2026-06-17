@@ -73,51 +73,57 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-> `type`: header-custom | fragment | sudoku
+> `type`: string
 
 该层伪装的类型。
 
-> `settings`: header-custom | fragment | sudoku
+> `settings`: string
 
-该伪装类型的具体设置（每个类型的字段见下）
+该伪装类型的具体设置。
+
+每个类型的字段见下
 
 ### header-custom
 
 ```json
 {
-  "clients": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
+  "type": "header-custom",
+  // [!code focus:35]
+  "settings": {
+    "clients": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
+    ],
+    "servers": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
+    ],
+    "errors": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
     ]
-  ],
-  "servers": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
-    ]
-  ],
-  "errors": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
-    ]
-  ]
+  }
 }
 ```
 
@@ -135,10 +141,14 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ```json
 {
-  "packets": "tlshello",
-  "length": "100-200",
-  "delay": "10-20",
-  "maxSplit": "3-6"
+  "type": "fragment",
+  // [!code focus:6]
+  "settings": {
+    "packets": "tlshello",
+    "length": "100-200",
+    "delay": "10-20",
+    "maxSplit": "3-6"
+  }
 }
 ```
 
@@ -160,14 +170,18 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ```json
 {
-  "password": "",
-  "ascii": "",
+  "type": "sudoku",
+  // [!code focus:10]
+  "settings": {
+    "password": "",
+    "ascii": "",
 
-  "customTable": "", // 官方文档字段名为 custom_table
-  "customTables": [""], // 官方文档字段名为 custom_tables
+    "customTable": "", // 官方文档字段名为 custom_table
+    "customTables": [""], // 官方文档字段名为 custom_tables
 
-  "paddingMin": 0, // 官方文档字段名为 padding_min
-  "paddingMax": 0 // 官方文档字段名为 padding_max
+    "paddingMin": 0, // 官方文档字段名为 padding_min
+    "paddingMax": 0 // 官方文档字段名为 padding_max
+  }
 }
 ```
 
@@ -191,13 +205,15 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 }
 ```
 
-> `type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `type`: string
 
 该层伪装的类型。
 
-> `settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `settings`: string
 
-该伪装类型的具体设置（每个类型的字段见下）
+该伪装类型的具体设置。
+
+每个类型的字段见下
 
 ### header-custom
 
@@ -205,22 +221,26 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ```json
 {
-  "client": [
-    {
-      "rand": 0,
-      "randRange": "0-255",
-      "type": "",
-      "packet": []
-    }
-  ],
-  "server": [
-    {
-      "rand": 0,
-      "randRange": "0-255",
-      "type": "",
-      "packet": []
-    }
-  ]
+  "type": "header-custom",
+  // [!code focus:18]
+  "settings": {
+    "client": [
+      {
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ],
+    "server": [
+      {
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ]
+  }
 }
 ```
 
@@ -236,14 +256,30 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ```json
 {
-  "header": "", // dns dtls srtp utp wechat wireguard
-  "value": "" // password domain
+  "type": "mkcp-legacy",
+  // [!code focus:4]
+  "settings": {
+    "header": "", // dns dtls srtp utp wechat wireguard
+    "value": "" // password domain
+  }
 }
 ```
 
-`header`: empty for original & aes128gcm
+旧 mKCP 的包头伪装/混淆，`value` 的含义随 `header` 变化。注意伪造只是简单的包头伪造，不代表实现了完整协议。
 
-`value`: empty for original
+> 为空时: 进行 AES-128-GCM 加密，`value` 为其密码，若 `value` 为空则改为使用默认的简单 xor 混淆。
+
+> `dns`: 伪造为 DNS 查询，`value` 为指定的域名，为空时默认 `www.baidu.com`。
+
+> `dtls`: 伪造为 DTLS 1.2 应用数据，`value` 无作用。
+
+> `srtp`: 伪造为 SRTP。`value` 无作用。
+
+> `utp`: 伪造为 uTP（BitTorrent）。`value` 无作用。
+
+> `wechat`: 伪造为微信视频通话。`value` 无作用。
+
+> `wireguard`: 伪造为 WireGuard。`value` 无作用。
 
 ### noise
 
@@ -251,16 +287,20 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 ```json
 {
-  "reset": "30-60",
-  "noise": [
-    {
-      "rand": "1-8192",
-      "randRange": "0-255",
-      "type": "",
-      "packet": [],
-      "delay": "10-20"
-    }
-  ]
+  "type": "noise",
+  // [!code focus:12]
+  "settings": {
+    "reset": "30-60",
+    "noise": [
+      {
+        "rand": "1-8192",
+        "randRange": "0-255",
+        "type": "",
+        "packet": [],
+        "delay": "10-20"
+      }
+    ]
+  }
 }
 ```
 
@@ -282,7 +322,11 @@ Salamander 混淆。（来自 Hysteria2）
 
 ```json
 {
-  "password": "your-password"
+  "type": "salamander",
+  // [!code focus:3]
+  "settings": {
+    "password": "your-password"
+  }
 }
 ```
 
@@ -290,14 +334,18 @@ Salamander 混淆。（来自 Hysteria2）
 
 ```json
 {
-  "password": "",
-  "ascii": "",
+  "type": "sudoku",
+  // [!code focus:10]
+  "settings": {
+    "password": "",
+    "ascii": "",
 
-  "customTable": "",
-  "customTables": [""],
+    "customTable": "",
+    "customTables": [""],
 
-  "paddingMin": 0,
-  "paddingMax": 0
+    "paddingMin": 0,
+    "paddingMax": 0
+  }
 }
 ```
 
@@ -317,8 +365,12 @@ Salamander 混淆。（来自 Hysteria2）
 
 ```json
 {
-  "domains": ["t.example.com"],
-  "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+  "type": "xdns",
+  // [!code focus:4]
+  "settings": {
+    "domains": ["t.example.com"],
+    "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+  }
 }
 ```
 
@@ -332,8 +384,12 @@ Salamander 混淆。（来自 Hysteria2）
 
 ```json
 {
-  "dgram": false, // optional
-  "ips": [] // optional
+  "type": "xicmp",
+  // [!code focus:4]
+  "settings": {
+    "dgram": false, // optional
+    "ips": [] // optional
+  }
 }
 ```
 
@@ -347,12 +403,16 @@ Salamander 混淆。（来自 Hysteria2）
 
 ```json
 {
-  "url": "realm://public@xxx/your-realm-name",
-  "stunServers": [
-    "stun.nextcloud.com:3478",
-    "global.stun.twilio.com:3478"
-  ],
-  "tlsConfig": {} // optional
+  "type": "realm",
+  // [!code focus:8]
+  "settings": {
+    "url": "realm://public@xxx/your-realm-name",
+    "stunServers": [
+      "stun.nextcloud.com:3478",
+      "global.stun.twilio.com:3478"
+    ],
+    "tlsConfig": {} // optional
+  }
 }
 ```
 

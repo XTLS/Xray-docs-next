@@ -73,51 +73,57 @@ An array used to camouflage TCP traffic emitted by the core. The first item in t
 }
 ```
 
-> `type`: header-custom | fragment | sudoku
+> `type`: string
 
 The type of this camouflage layer.
 
-> `settings`: header-custom | fragment | sudoku
+> `settings`: string
 
-The concrete settings for this camouflage type. See the fields for each type below.
+The concrete settings for this camouflage type.
+
+See the fields for each type below.
 
 ### header-custom
 
 ```json
 {
-  "clients": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
+  "type": "header-custom",
+  // [!code focus:35]
+  "settings": {
+    "clients": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
+    ],
+    "servers": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
+    ],
+    "errors": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
     ]
-  ],
-  "servers": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
-    ]
-  ],
-  "errors": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
-    ]
-  ]
+  }
 }
 ```
 
@@ -135,10 +141,14 @@ The concrete settings for this camouflage type. See the fields for each type bel
 
 ```json
 {
-  "packets": "tlshello",
-  "length": "100-200",
-  "delay": "10-20",
-  "maxSplit": "3-6"
+  "type": "fragment",
+  // [!code focus:6]
+  "settings": {
+    "packets": "tlshello",
+    "length": "100-200",
+    "delay": "10-20",
+    "maxSplit": "3-6"
+  }
 }
 ```
 
@@ -160,14 +170,18 @@ When it is `0` and `"packets": "tlshello"` is set, the fragmented Client Hello w
 
 ```json
 {
-  "password": "",
-  "ascii": "",
+  "type": "sudoku",
+  // [!code focus:10]
+  "settings": {
+    "password": "",
+    "ascii": "",
 
-  "customTable": "", // field name is custom_table in the upstream documentation
-  "customTables": [""], // field name is custom_tables in the upstream documentation
+    "customTable": "", // field name is custom_table in the upstream documentation
+    "customTables": [""], // field name is custom_tables in the upstream documentation
 
-  "paddingMin": 0, // field name is padding_min in the upstream documentation
-  "paddingMax": 0 // field name is padding_max in the upstream documentation
+    "paddingMin": 0, // field name is padding_min in the upstream documentation
+    "paddingMax": 0 // field name is padding_max in the upstream documentation
+  }
 }
 ```
 
@@ -191,13 +205,15 @@ An array used to camouflage UDP traffic emitted by the core. The first item in t
 }
 ```
 
-> `type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `type`: string
 
 The type of this camouflage layer.
 
-> `settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `settings`: string
 
-The concrete settings for this camouflage type. See the fields for each type below.
+The concrete settings for this camouflage type.
+
+See the fields for each type below.
 
 ### header-custom
 
@@ -205,22 +221,26 @@ Always merged into the packet header.
 
 ```json
 {
-  "client": [
-    {
-      "rand": 0,
-      "randRange": "0-255",
-      "type": "",
-      "packet": []
-    }
-  ],
-  "server": [
-    {
-      "rand": 0,
-      "randRange": "0-255",
-      "type": "",
-      "packet": []
-    }
-  ]
+  "type": "header-custom",
+  // [!code focus:18]
+  "settings": {
+    "client": [
+      {
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ],
+    "server": [
+      {
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ]
+  }
 }
 ```
 
@@ -236,14 +256,30 @@ Always merged into the packet header.
 
 ```json
 {
-  "header": "", // dns dtls srtp utp wechat wireguard
-  "value": "" // password domain
+  "type": "mkcp-legacy",
+  // [!code focus:4]
+  "settings": {
+    "header": "", // dns dtls srtp utp wechat wireguard
+    "value": "" // password domain
+  }
 }
 ```
 
-`header`: empty for original & aes128gcm
+Legacy mKCP packet-header camouflage/obfuscation. The meaning of `value` depends on `header`. Note that the forgery is only a simple packet-header forgery and does not mean the full protocol is implemented.
 
-`value`: empty for original
+> When empty: applies AES-128-GCM encryption with `value` as the password. If `value` is empty, it falls back to the default simple XOR obfuscation.
+
+> `dns`: forged as a DNS query. `value` is the specified domain; defaults to `www.baidu.com` when empty.
+
+> `dtls`: forged as DTLS 1.2 application data. `value` has no effect.
+
+> `srtp`: forged as SRTP. `value` has no effect.
+
+> `utp`: forged as uTP (BitTorrent). `value` has no effect.
+
+> `wechat`: forged as a WeChat video call. `value` has no effect.
+
+> `wireguard`: forged as WireGuard. `value` has no effect.
 
 ### noise
 
@@ -251,16 +287,20 @@ Noise sent before the actual data.
 
 ```json
 {
-  "reset": "30-60",
-  "noise": [
-    {
-      "rand": "1-8192",
-      "randRange": "0-255",
-      "type": "",
-      "packet": [],
-      "delay": "10-20"
-    }
-  ]
+  "type": "noise",
+  // [!code focus:12]
+  "settings": {
+    "reset": "30-60",
+    "noise": [
+      {
+        "rand": "1-8192",
+        "randRange": "0-255",
+        "type": "",
+        "packet": [],
+        "delay": "10-20"
+      }
+    ]
+  }
 }
 ```
 
@@ -282,7 +322,11 @@ Salamander obfuscation. From Hysteria2.
 
 ```json
 {
-  "password": "your-password"
+  "type": "salamander",
+  // [!code focus:3]
+  "settings": {
+    "password": "your-password"
+  }
 }
 ```
 
@@ -290,14 +334,18 @@ Salamander obfuscation. From Hysteria2.
 
 ```json
 {
-  "password": "",
-  "ascii": "",
+  "type": "sudoku",
+  // [!code focus:10]
+  "settings": {
+    "password": "",
+    "ascii": "",
 
-  "customTable": "",
-  "customTables": [""],
+    "customTable": "",
+    "customTables": [""],
 
-  "paddingMin": 0,
-  "paddingMax": 0
+    "paddingMin": 0,
+    "paddingMax": 0
+  }
 }
 ```
 
@@ -317,8 +365,12 @@ For example, if you own `example.com`, set an A record like `a.example.com` to t
 
 ```json
 {
-  "domains": ["t.example.com"],
-  "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+  "type": "xdns",
+  // [!code focus:4]
+  "settings": {
+    "domains": ["t.example.com"],
+    "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+  }
 }
 ```
 
@@ -332,8 +384,12 @@ At least one of `domains` and `resolvers` must be set.
 
 ```json
 {
-  "dgram": false, // optional
-  "ips": [] // optional
+  "type": "xicmp",
+  // [!code focus:4]
+  "settings": {
+    "dgram": false, // optional
+    "ips": [] // optional
+  }
 }
 ```
 
@@ -347,12 +403,16 @@ Self-built https://github.com/apernet/hysteria-realm-server
 
 ```json
 {
-  "url": "realm://public@xxx/your-realm-name",
-  "stunServers": [
-    "stun.nextcloud.com:3478",
-    "global.stun.twilio.com:3478"
-  ],
-  "tlsConfig": {} // optional
+  "type": "realm",
+  // [!code focus:8]
+  "settings": {
+    "url": "realm://public@xxx/your-realm-name",
+    "stunServers": [
+      "stun.nextcloud.com:3478",
+      "global.stun.twilio.com:3478"
+    ],
+    "tlsConfig": {} // optional
+  }
 }
 ```
 

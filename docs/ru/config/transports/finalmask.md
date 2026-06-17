@@ -73,51 +73,57 @@ FinalMask добавляет последний слой маскировки п
 }
 ```
 
-> `type`: header-custom | fragment | sudoku
+> `type`: string
 
 Тип этого слоя маскировки.
 
-> `settings`: header-custom | fragment | sudoku
+> `settings`: string
 
-Конкретные настройки для этого типа маскировки. Поля каждого типа приведены ниже.
+Конкретные настройки для этого типа маскировки.
+
+Поля каждого типа приведены ниже.
 
 ### header-custom
 
 ```json
 {
-  "clients": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
+  "type": "header-custom",
+  // [!code focus:35]
+  "settings": {
+    "clients": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
+    ],
+    "servers": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
+    ],
+    "errors": [
+      [
+        {
+          "delay": 0,
+          "rand": 0,
+          "randRange": "0-255",
+          "type": "",
+          "packet": []
+        }
+      ]
     ]
-  ],
-  "servers": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
-    ]
-  ],
-  "errors": [
-    [
-      {
-        "delay": 0,
-        "rand": 0,
-        "randRange": "0-255",
-        "type": "",
-        "packet": []
-      }
-    ]
-  ]
+  }
 }
 ```
 
@@ -135,10 +141,14 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "packets": "tlshello",
-  "length": "100-200",
-  "delay": "10-20",
-  "maxSplit": "3-6"
+  "type": "fragment",
+  // [!code focus:6]
+  "settings": {
+    "packets": "tlshello",
+    "length": "100-200",
+    "delay": "10-20",
+    "maxSplit": "3-6"
+  }
 }
 ```
 
@@ -160,14 +170,18 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "password": "",
-  "ascii": "",
+  "type": "sudoku",
+  // [!code focus:10]
+  "settings": {
+    "password": "",
+    "ascii": "",
 
-  "customTable": "", // в upstream-документации поле называется custom_table
-  "customTables": [""], // в upstream-документации поле называется custom_tables
+    "customTable": "", // в upstream-документации поле называется custom_table
+    "customTables": [""], // в upstream-документации поле называется custom_tables
 
-  "paddingMin": 0, // в upstream-документации поле называется padding_min
-  "paddingMax": 0 // в upstream-документации поле называется padding_max
+    "paddingMin": 0, // в upstream-документации поле называется padding_min
+    "paddingMax": 0 // в upstream-документации поле называется padding_max
+  }
 }
 ```
 
@@ -191,13 +205,15 @@ FinalMask добавляет последний слой маскировки п
 }
 ```
 
-> `type`: header-custom | header-dns | header-dtls | header-srtp | header-utp | header-wechat | header-wireguard | mkcp-original | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `type`: string
 
 Тип этого слоя маскировки.
 
-> `settings`: header-custom | header-dns | mkcp-aes128gcm | noise | salamander | sudoku | xdns | xicmp
+> `settings`: string
 
-Конкретные настройки для этого типа маскировки. Поля каждого типа приведены ниже.
+Конкретные настройки для этого типа маскировки.
+
+Поля каждого типа приведены ниже.
 
 ### header-custom
 
@@ -205,22 +221,26 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "client": [
-    {
-      "rand": 0,
-      "randRange": "0-255",
-      "type": "",
-      "packet": []
-    }
-  ],
-  "server": [
-    {
-      "rand": 0,
-      "randRange": "0-255",
-      "type": "",
-      "packet": []
-    }
-  ]
+  "type": "header-custom",
+  // [!code focus:18]
+  "settings": {
+    "client": [
+      {
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ],
+    "server": [
+      {
+        "rand": 0,
+        "randRange": "0-255",
+        "type": "",
+        "packet": []
+      }
+    ]
+  }
 }
 ```
 
@@ -236,14 +256,30 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "header": "", // dns dtls srtp utp wechat wireguard
-  "value": "" // password domain
+  "type": "mkcp-legacy",
+  // [!code focus:4]
+  "settings": {
+    "header": "", // dns dtls srtp utp wechat wireguard
+    "value": "" // password domain
+  }
 }
 ```
 
-`header`: empty for original & aes128gcm
+Маскировка/обфускация заголовка пакетов в стиле старого mKCP. Значение `value` зависит от `header`. Обратите внимание: подделка - это лишь простая подделка заголовка пакета и не означает реализацию полного протокола.
 
-`value`: empty for original
+> Когда пусто: применяется шифрование AES-128-GCM, где `value` - пароль. Если `value` пусто, вместо этого используется простая XOR-обфускация по умолчанию.
+
+> `dns`: подделка под DNS-запрос. `value` - указанный домен; при пустом значении по умолчанию `www.baidu.com`.
+
+> `dtls`: подделка под данные приложения DTLS 1.2. `value` не используется.
+
+> `srtp`: подделка под SRTP. `value` не используется.
+
+> `utp`: подделка под uTP (BitTorrent). `value` не используется.
+
+> `wechat`: подделка под видеозвонок WeChat. `value` не используется.
+
+> `wireguard`: подделка под WireGuard. `value` не используется.
 
 ### noise
 
@@ -251,16 +287,20 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "reset": "30-60",
-  "noise": [
-    {
-      "rand": "1-8192",
-      "randRange": "0-255",
-      "type": "",
-      "packet": [],
-      "delay": "10-20"
-    }
-  ]
+  "type": "noise",
+  // [!code focus:12]
+  "settings": {
+    "reset": "30-60",
+    "noise": [
+      {
+        "rand": "1-8192",
+        "randRange": "0-255",
+        "type": "",
+        "packet": [],
+        "delay": "10-20"
+      }
+    ]
+  }
 }
 ```
 
@@ -282,7 +322,11 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "password": "your-password"
+  "type": "salamander",
+  // [!code focus:3]
+  "settings": {
+    "password": "your-password"
+  }
 }
 ```
 
@@ -290,14 +334,18 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "password": "",
-  "ascii": "",
+  "type": "sudoku",
+  // [!code focus:10]
+  "settings": {
+    "password": "",
+    "ascii": "",
 
-  "customTable": "",
-  "customTables": [""],
+    "customTable": "",
+    "customTables": [""],
 
-  "paddingMin": 0,
-  "paddingMax": 0
+    "paddingMin": 0,
+    "paddingMax": 0
+  }
 }
 ```
 
@@ -317,8 +365,12 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "domains": ["t.example.com"],
-  "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+  "type": "xdns",
+  // [!code focus:4]
+  "settings": {
+    "domains": ["t.example.com"],
+    "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+  }
 }
 ```
 
@@ -332,8 +384,12 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "dgram": false, // optional
-  "ips": [] // optional
+  "type": "xicmp",
+  // [!code focus:4]
+  "settings": {
+    "dgram": false, // optional
+    "ips": [] // optional
+  }
 }
 ```
 
@@ -347,12 +403,16 @@ FinalMask добавляет последний слой маскировки п
 
 ```json
 {
-  "url": "realm://public@xxx/your-realm-name",
-  "stunServers": [
-    "stun.nextcloud.com:3478",
-    "global.stun.twilio.com:3478"
-  ],
-  "tlsConfig": {} // optional
+  "type": "realm",
+  // [!code focus:8]
+  "settings": {
+    "url": "realm://public@xxx/your-realm-name",
+    "stunServers": [
+      "stun.nextcloud.com:3478",
+      "global.stun.twilio.com:3478"
+    ],
+    "tlsConfig": {} // optional
+  }
 }
 ```
 
