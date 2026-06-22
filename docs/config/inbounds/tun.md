@@ -61,6 +61,8 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 自动为 Xray 的出站绑定物理网络接口，用于避免把 Xray 自己发出的流量再次送回 TUN 造成回环。
 
+相当于为所有出站自动设置 [sockopt](../transports/sockopt.md).interface（同时还会额外包括一些无法配置出站设置的请求，比如 内置 DNS 的各种 local 模式）可以被手动设置 sockopt 覆盖。
+
 默认值为 `null`，即未配置。可填写具体接口名，也可填写 `"auto"` 让 Xray 自动选择。如果配置了 `autoSystemRoutingTable` 但未显式指定此项，Xray 会自动按 `"auto"` 处理。
 
 ## 使用提示
