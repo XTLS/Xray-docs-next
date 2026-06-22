@@ -148,7 +148,6 @@ padding 的放置位置。仅在 `xPaddingObfsMode` 为 `true` 时生效。
 - `"header"` — padding 以独立的 HTTP 头部发送
 - `"query"` — padding 以查询参数形式附加在请求 URL 中
 
-
 > `xPaddingMethod`: "repeat-x" | "tokenish"
 
 padding 的生成方式。默认值为 `"repeat-x"`。
