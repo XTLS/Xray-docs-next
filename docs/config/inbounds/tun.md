@@ -2,7 +2,9 @@
 
 创建一个 TUN 接口，发往此接口的流量将由 Xray 处理。目前支持 Windows、Linux、macOS 和 FreeBSD。
 
-Android 需要外部 APP 传入 TUN FD，使用 VPN Service 重定向流量。无法独立使用，仅作为 APP 将流量接入 Xray 的方式。
+Android 和 iOS 需要外部 APP 通过环境变量 `XRAY_TUN_FD` 传入 TUN FD，使用系统指定的接口重定向流量。无法独立使用，仅作为 APP 将流量接入 Xray 的方式。
+
+Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特权实现。
 
 ## InboundConfigurationObject
 
