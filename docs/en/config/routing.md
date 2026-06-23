@@ -205,6 +205,8 @@ Example:
 
 If the connection originates from the local machine, match its process. If not from local, it is directly regarded as a match failure. Only supports Windows and Linux.
 
+In particular, on Android the client app needs to call `github.com/xtls/xray-core/common/net.RegisterAndroidProcessFinder()` to inject the finder provided by the Android API. This hook can customize the string returned to the core, enabling features such as app matching.
+
 This option is an array, where each item has three matching modes.
 
 1. **No slash**: Matches process name.

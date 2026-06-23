@@ -205,6 +205,8 @@ xxxxxxxx-xxxx-0000-xxxx-xxxxxxxxxxxx
 
 如果连接来自本机，匹配其进程。如果不来自本机则直接视作匹配失败。仅支持 Windows 和 Linux.
 
+特别的，安卓需要客户端 app 调用 `github.com/xtls/xray-core/common/net.RegisterAndroidProcessFinder()` 注入 Android API 提供的查找器。该 hook 可以自定义向核心返回的字符串以实现 app 匹配等功能。
+
 该选项为一个数组，数组内每一项有三种匹配模式。
 
 1. 不包含斜杠，匹配进程名字。
