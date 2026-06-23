@@ -145,8 +145,8 @@ See the fields for each type below.
   // [!code focus:6]
   "settings": {
     "packets": "tlshello",
-    "length": "100-200",
-    "delay": "10-20",
+    "lengths": ["3-5", "6-8", "10-20"],
+    "delays": ["10-20"],
     "maxSplit": "3-6"
   }
 }
@@ -158,9 +158,13 @@ Controls outgoing TCP fragmentation. In some cases it can deceive censorship sys
 
 `"packets"`: supports two fragmentation modes. `"1-3"` slices the TCP stream and applies to the client's 1st through 3rd write operations. `"tlshello"` fragments the TLS handshake packet.
 
-`"length"`: fragment size in bytes. It must not be `0`.
+`"lengths"`: fragment size in bytes.
 
-`"delay"`: delay between fragments in milliseconds.
+The n-th element of the array specifies the expected length of the n-th fragment split from the current packet being processed; the last element keeps applying to all subsequent fragments split from that packet. Entries other than the last may be `0`; when `0` is selected, no fragment is split out for that round — it just idles and waits out the corresponding delay before the next one.
+
+`"delays"`: interval between fragments in milliseconds.
+
+The n-th element of the array specifies how long to wait after sending the n-th fragment split from the current packet being processed; the last element keeps applying to all subsequent fragments split from that packet.
 
 When it is `0` and `"packets": "tlshello"` is set, the fragmented Client Hello will be sent in a single TCP packet, as long as its original size does not exceed the MSS or MTU and the system does not fragment it automatically.
 

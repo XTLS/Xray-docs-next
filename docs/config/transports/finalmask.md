@@ -145,8 +145,8 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
   // [!code focus:6]
   "settings": {
     "packets": "tlshello",
-    "length": "100-200",
-    "delay": "10-20",
+    "lengths": ["3-5", "6-8", "10-20"],
+    "delays": ["10-20"],
     "maxSplit": "3-6"
   }
 }
@@ -158,9 +158,13 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `"packets"`：支持两种分片方式 "1-3" 是 TCP 的流切片，应用于客户端第 1 至第 3 次写数据。"tlshello" 是 TLS 握手包切片。
 
-`"length"`：分片包长 (byte)，不能为 0。
+`"lengths"`：分片包长 (byte)
 
-`"delay"`：分片间隔（ms）
+数组的第 n 个表示当前处理的单个数据包所切出的第 n 个分片期望的长度，最后一项则持续对当前数据包后续切出的分片生效。除最后一项外可以为 0，若选中 0 则空转等待下次 delay
+
+`"delays"`：分片间隔（ms）
+
+数组的第 n 个表示当前处理的单个数据包所切出的第 n 个分片发送后等待的间隔，最后一项则持续对当前数据包后续切出的分片生效。
 
 当其为 0 且设置 `"packets": "tlshello"` 时，被分片的 Client Hello 将会在一个TCP包中发送（如果其原始大小未超过MSS或MTU导致被系统自动分片）
 
