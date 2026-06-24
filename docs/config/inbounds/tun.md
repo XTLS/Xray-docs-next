@@ -35,6 +35,8 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
 
 创建的 TUN 接口名。默认 `"xray0"`
 
+在 macOS 应为 `"utunN"`，其中 N 为正整数。
+
 > `mtu`: number
 
 接口的 MTU。默认值为 `1500`。
@@ -43,9 +45,11 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
 
 为 TUN 接口配置的地址前缀列表，通常分别填写 IPv4 / IPv6，例如 `"10.0.0.1/16"`、`"fc00::1/64"`。
 
+macOS 系统中，该项配置无效，Xray-core 会使用 `169.254.10.1/30`。
+
 > `dns`: [string]
 
-为 TUN 接口配置的 DNS 服务器列表，例如 `"1.1.1.1"`、`"8.8.8.8"`。
+该项配置只在 Windows 系统上有效，可为 TUN 接口配置的 DNS 服务器列表，例如 `"1.1.1.1"`、`"8.8.8.8"`。
 
 > `userLevel`: number
 
@@ -57,7 +61,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 自动写入系统路由表要导入该 TUN 接口的目标网段列表。每一项均为 CIDR，例如 `"0.0.0.0/0"` 表示所有 IPv4 流量，`"::/0"` 表示所有 IPv6 流量。
 
-当前仅支持 Windows。其他系统需要手动配置路由表。
+当前支持 Windows, macOS, Linux。FreeBSD 系统需要手动配置路由表。
 
 > `autoOutboundsInterface`: string
 
