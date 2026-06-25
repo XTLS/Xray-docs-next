@@ -40,6 +40,10 @@ The list of geodata files to download and replace.
 
 If reloading fails after the download, all files replaced by this update are rolled back together.
 
+::: tip
+If `assets` is not configured, the scheduled task only reloads the existing files and performs no downloads. You can still update these files by other means and let Xray reload them on schedule, but this is generally not recommended. Letting Xray download them itself works with the rollback mechanism to avoid startup failures caused by broken files.
+:::
+
 ### AssetObject
 
 ```json
