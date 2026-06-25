@@ -159,11 +159,9 @@ Sockopt 用于配置底层网络行为。
 
 > `trustedXForwardedFor`: [ string ]
 
-仅用于 `XHTTP`、`WebSocket`、`HTTPUpgrade` 这三个基于 HTTP 的 transport，以控制其是否认为 XFF（`X-Forwarded-For`）头来自可信的反向代理。
+仅适用于 `XHTTP`、`WebSocket`、`HTTPUpgrade`、`gRPC` 这四种基于 HTTP 的传输方式，用于控制是否信任 XFF（`X-Forwarded-For`）头，即是否将其视为来自可信反向代理。
 
-默认为空，为空时 Xray 无条件接受 XFF 头并使用其中的 IP 覆盖源 IP。
-
-当不为空时，检查该数组中设置的数个字符串的其中一个是否在请求中存在对应 Header（不论其内容为何）如果存在则使用其覆盖源 IP，否则 Xray 将无视该 XFF 头。
+Xray 会检查该数组中的各个字符串对应的 Header 是否出现在请求中；只要任意一项存在（无论其值为何），就允许使用 XFF 头的第 0 个值覆盖源 IP，否则将忽略该 XFF 头。
 
 > `tcpKeepAliveIdle`: number
 

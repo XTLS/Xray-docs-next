@@ -970,4 +970,3 @@ server {
 - 承接反向代理流量的内网 `freedom`（也就是常说的 `direct`）出站，建议按最小权限原则配置。把默认出站设为 `blackhole`，只把允许访问的目标显式路由到专用 `freedom`。再通过 `finalRules` 只放行必要的地址和端口。
 - 如果你使用的是别人提供的穿透服务用于远程回家，或者你并不完全信任公网 VPS，建议不要让反向代理流量直接落到真实内网业务。可以在内网再部署一个带 `VLESS Encryption` 的服务端专门承接这部分流量，再由它转发给实际业务，以补上身份认证和数据保护，否则有权限接触到公网服务器的人可以漫游你的内网。
 - 通过 `VLESS` 等入站协议把流量送到内网端时，路由系统里看到的 `Source` / `Local` 所属协议，不一定与最终 `Target` 一致。涉及 `source`、`local`、`network` 等条件时，应以实际流量形态为准，不要想当然地把它们等同起来。
-- `XHTTP`、`WebSocket`、`HTTPUpgrade` 这三个基于 HTTP 的入站默认会读取 `X-Forwarded-For`。如果你的前面链路里没有可信的 HTTP 反代，建议配合 [`sockopt.trustedXForwardedFor`](../../config/transports/sockopt.md#trustedxforwardedfor) 限制何时信任它，避免客户端伪造来源 IP。

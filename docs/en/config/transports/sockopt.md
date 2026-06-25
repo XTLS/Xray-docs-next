@@ -154,13 +154,9 @@ When set to `true`, the peer must send PROXY protocol v1 or v2 immediately after
 
 > `trustedXForwardedFor`: [ string ]
 
-Only applies to the three HTTP-based inbounds: `XHTTP`, `WebSocket`, and `HTTPUpgrade`.
+Only applies to the four HTTP-based transport methods: `XHTTP`, `WebSocket`, `HTTPUpgrade`, and `gRPC`. It controls whether to trust the XFF (`X-Forwarded-For`) header, that is, whether to treat it as coming from a trusted reverse proxy.
 
-It controls when Xray trusts `X-Forwarded-For` and uses it to overwrite `SourceIP`.
-
-If left unset, the old behavior remains: as long as the request contains `X-Forwarded-For`, Xray reads it.
-
-After setting this field, each array item is treated as an additional required header name. Xray trusts `X-Forwarded-For` only when the request also contains at least one of those headers. The header values do not matter; only the presence of the key is checked.
+Xray checks whether the headers corresponding to the strings in this array are present in the request. If any one of them is present, regardless of its value, Xray allows the value at index 0 in the XFF header to override the source IP; otherwise, it ignores the XFF header.
 
 > `tcpKeepAliveIdle`: number
 
