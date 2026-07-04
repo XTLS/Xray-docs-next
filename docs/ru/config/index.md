@@ -13,6 +13,7 @@
 
 ```json
 {
+  "env": {},
   "log": {},
   "api": {},
   "dns": {},
@@ -167,6 +168,10 @@ https://xtls.github.io/llms-full.txt
 ::::
 
 ## Основные модули конфигурации
+
+> env: [EnvObject](./features/env.md)
+
+Runtime-конфигурация среды. Может задавать каталог файлов ресурсов, каталог сертификатов и отдельные переключатели runtime-функций.
 
 > log: [LogObject](./log.md)
 

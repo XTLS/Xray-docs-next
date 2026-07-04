@@ -39,19 +39,42 @@ Xray 提供以下环境变量以供修改 Xray 的一些底层配置。
 
 默认情况下，Xray 在启动时会使用自定义的 JSON 解析器（该解析器会从配置中剔除注释及其他非标准字符）。如果你确认自己的配置文件严格遵循 JSON 标准（RFC8259），可以启用此选项以使用标准 JSON 解析器，在配置文件极大时（几十 MB 以上）可以提升其解析速度。
 
-## 其它可用的配置
+## 配置文件中的 `env`
 
-- xray.location.plugin
-- xray.location.tool
-- xray.location.cert
+Xray 配置文件根部可以写入 `env` 对象，用来设置部分运行时环境配置：
 
-- xray.buf.readv
-- xray.buf.splice
-- xray.vmess.padding
+```jsonc
+{
+  "env": {
+    "xray.location.asset": "/usr/local/share/xray",
+    "xray.location.cert": "/usr/local/share/xray",
+    "xray.ray.buffer.size": "0"
+  }
+}
+```
 
-- xray.ray.buffer.size
-- xray.browser.dialer
-- xray.xudp.show
-- xray.xudp.basekey
+`env` 中的值均为字符串。Xray 在读取并解析配置文件之后应用这些值，因此它适合配置运行时使用的资源路径和特性开关。
 
-这些选项对有特殊需求的用户开放，您可以阅读源代码来发现其用途。~PR Welcome~
+配置文件根 `env` 支持以下字段：
+
+| 字段 | 说明 |
+| --- | --- |
+| `xray.location.asset` | 资源文件目录，通常用于 `geoip.dat`、`geosite.dat` 等文件。 |
+| `xray.location.cert` | 证书文件目录。 |
+| `xray.buf.readv` | 控制读取缓冲相关行为。 |
+| `xray.buf.splice` | 控制 Freedom 出站 splice 相关行为。 |
+| `xray.vmess.padding` | 控制 VMess 出站 padding。 |
+| `xray.cone.disabled` | 设置为 `"true"` 时禁用 FullCone 行为。 |
+| `xray.ray.buffer.size` | 默认连接缓冲大小，单位为 MB；`"0"` 表示不限制。 |
+| `xray.browser.dialer` | Browser Dialer 地址，例如 `"127.0.0.1:8080"`。 |
+| `xray.xudp.show` | 控制 XUDP 日志显示。 |
+| `xray.xudp.basekey` | XUDP base key，使用 base64url 编码的 32 字节 key。 |
+| `xray.tun.fd` | 外部程序传入的 TUN 文件描述符，主要用于移动端或嵌入式场景。 |
+
+### 优先级和限制
+
+- 进程环境变量会先读取；配置文件根 `env` 会在配置解析完成后应用，并覆盖同名的可运行时更新字段。
+- 多配置文件合并时，后加载配置中的 `env` 字段会覆盖先前配置中的同名字段。
+- 未知字段会被忽略。
+- 空字符串不会取消已经存在的环境变量值。
+- `xray.json.strict`、`xray.location.config`、`xray.location.confdir` 只能通过进程环境变量提供，不能写入配置文件根 `env`。
