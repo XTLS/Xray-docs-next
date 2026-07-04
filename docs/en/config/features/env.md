@@ -57,19 +57,19 @@ All values in `env` are strings. Xray applies these values after the configurati
 
 The root `env` object supports the following fields:
 
-| Field | Description |
-| --- | --- |
-| `xray.location.asset` | Resource file directory, usually used for files such as `geoip.dat` and `geosite.dat`. |
-| `xray.location.cert` | Certificate file directory. |
-| `xray.buf.readv` | Controls read buffer related behavior. |
-| `xray.buf.splice` | Controls Freedom outbound splice related behavior. |
-| `xray.vmess.padding` | Controls VMess outbound padding. |
-| `xray.cone.disabled` | Set to `"true"` to disable FullCone behavior. |
-| `xray.ray.buffer.size` | Default connection buffer size in MB; `"0"` means unlimited. |
-| `xray.browser.dialer` | Browser Dialer address, for example `"127.0.0.1:8080"`. |
-| `xray.xudp.show` | Controls XUDP log output. |
-| `xray.xudp.basekey` | XUDP base key, encoded as a 32-byte base64url key. |
-| `xray.tun.fd` | TUN file descriptor passed by an external program, mainly for mobile or embedded scenarios. |
+| Field                  | Description                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------- |
+| `xray.location.asset`  | Resource file directory, usually used for files such as `geoip.dat` and `geosite.dat`.      |
+| `xray.location.cert`   | Certificate file directory.                                                                 |
+| `xray.buf.readv`       | Controls read buffer related behavior.                                                      |
+| `xray.buf.splice`      | Controls Freedom outbound splice related behavior.                                          |
+| `xray.vmess.padding`   | Controls VMess outbound padding.                                                            |
+| `xray.cone.disabled`   | Set to `"true"` to disable FullCone behavior.                                               |
+| `xray.ray.buffer.size` | Default connection buffer size in MB; `"0"` means unlimited.                                |
+| `xray.browser.dialer`  | Browser Dialer address, for example `"127.0.0.1:8080"`.                                     |
+| `xray.xudp.show`       | Controls XUDP log output.                                                                   |
+| `xray.xudp.basekey`    | XUDP base key, encoded as a 32-byte base64url key.                                          |
+| `xray.tun.fd`          | TUN file descriptor passed by an external program, mainly for mobile or embedded scenarios. |
 
 ### Priority and Restrictions
 
