@@ -163,7 +163,7 @@ https://xtls.github.io/llms-full.txt
 
 ## 基础配置模块
 
-> env: [EnvObject](./features/env.md)
+> env: [EnvObject](./env.md)
 
 运行时环境配置。可设置资源文件目录、证书目录以及部分运行时特性开关。
 

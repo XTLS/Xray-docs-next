@@ -171,7 +171,7 @@ List the parts of my question that are not confirmed by the official documentati
 
 ## Basic Configuration Modules
 
-> env: [EnvObject](./features/env.md)
+> env: [EnvObject](./env.md)
 
 Runtime environment configuration. It can set the resource file directory, certificate directory, and selected runtime feature switches.
 

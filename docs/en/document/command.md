@@ -110,7 +110,7 @@ xray run -config http+unix:///run/xray-config.sock/config.json
 When `-config` is not specified, Xray will attempt to load `config.json` from the following paths in order:
 
 - Working Directory
-- The path specified by `Xray.location.asset` in [Environment Variables](../config/features/env.md#resource-file-path)
+- The path specified by `Xray.location.asset` in [Environment Variables](../config/env.md#resource-file-path)
   :::
 
 ```bash
@@ -255,7 +255,7 @@ xray wg [-i "(base64.StdEncoding)"]
 When `-config` is not specified, Xray will attempt to load `config.json` from the following paths in order:
 
 - Working Directory
-- The path specified by `Xray.location.asset` in [Environment Variables](../config/features/env.md#resource-file-path)
+- The path specified by `Xray.location.asset` in [Environment Variables](../config/env.md#resource-file-path)
   :::
 
 ### xray mldsa65
