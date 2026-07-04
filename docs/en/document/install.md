@@ -87,6 +87,7 @@ Two different styles of Docker images are currently provided:
     - 09_metrics.json
     - 10_observatory.json
     - 11_geodata.json
+    - 12_env.json
     - 99_version.json
   - `/usr/local/share/xray/`: Resource file directory containing Loyalsoldier geolocation data files (owner: `65532:65532`, directory permissions: `755`, file permissions: `644`)
     - geoip.dat
