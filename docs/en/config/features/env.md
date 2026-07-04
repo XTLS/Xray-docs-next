@@ -54,4 +54,4 @@ By default, on startup Xray uses a custom JSON parser that strips comments and o
 - xray.xudp.show
 - xray.xudp.basekey
 
-These options are open to users with special needs; you can read the source code to discover their usage. ~PR Welcome~
+These options are open to users with special needs; you can read the source code to discover their usage. ~~PR Welcome~~
