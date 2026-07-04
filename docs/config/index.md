@@ -167,11 +167,11 @@ https://xtls.github.io/llms-full.txt
 
 运行时环境配置。可设置资源文件目录、证书目录以及部分运行时特性开关。
 
-> log:[LogObject](./log.md)
+> log: [LogObject](./log.md)
 
 日志配置，控制 Xray 输出日志的方式.
 
-> api:[ApiObject](./api.md)
+> api: [ApiObject](./api.md)
 
 提供了一些 API 接口供远程调用。
 

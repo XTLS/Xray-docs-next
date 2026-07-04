@@ -175,11 +175,11 @@ List the parts of my question that are not confirmed by the official documentati
 
 Runtime environment configuration. It can set the resource file directory, certificate directory, and selected runtime feature switches.
 
-> log:[LogObject](./log.md)
+> log: [LogObject](./log.md)
 
 Log configuration, controls how Xray outputs logs.
 
-> api:[ApiObject](./api.md)
+> api: [ApiObject](./api.md)
 
 Provides some API interfaces for remote calls.
 
