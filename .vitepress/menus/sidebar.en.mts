@@ -14,10 +14,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/en/config/features/browser_dialer.md"
         },
         {
-          text: "Environment Variables",
-          link: "/en/config/features/env.md"
-        },
-        {
           text: "Multiple Configurations",
           link: "/en/config/features/multiple.md"
         },
@@ -32,6 +28,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       link: "/en/config/",
       collapsed: true,
       items: [
+        { text: "Environment Configuration", link: "/en/config/env.md" },
         { text: "Log Configuration", link: "/en/config/log.md" },
         { text: "API Interface", link: "/en/config/api.md" },
         { text: "Built-in DNS Server", link: "/en/config/dns.md" },

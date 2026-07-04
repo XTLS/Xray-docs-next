@@ -20,10 +20,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/ru/config/features/browser_dialer.md"
         },
         {
-          text: "Переменные окружения",
-          link: "/ru/config/features/env.md"
-        },
-        {
           text: "Конфигурация из нескольких файлов",
           link: "/ru/config/features/multiple.md"
         },
@@ -38,6 +34,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       link: "/ru/config/",
       collapsed: true,
       items: [
+        { text: "Конфигурация среды", link: "/ru/config/env.md" },
         { text: "Настройка журнала", link: "/ru/config/log.md" },
         { text: "API", link: "/ru/config/api.md" },
         { text: "Встроенный DNS-сервер", link: "/ru/config/dns.md" },

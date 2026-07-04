@@ -13,7 +13,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           text: "Browser Dialer",
           link: "/config/features/browser_dialer.md"
         },
-        { text: "环境变量", link: "/config/features/env.md" },
         { text: "多文件配置", link: "/config/features/multiple.md" },
         {
           text: "反向代理 / 内网穿透",
@@ -26,6 +25,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       link: "/config/",
       collapsed: true,
       items: [
+        { text: "环境配置", link: "/config/env.md" },
         { text: "日志配置", link: "/config/log.md" },
         { text: "API 接口", link: "/config/api.md" },
         { text: "内置 DNS 服务器", link: "/config/dns.md" },
