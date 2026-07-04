@@ -78,3 +78,5 @@ The root `env` object supports the following fields:
 - Unknown fields are ignored.
 - Empty strings do not unset existing environment variable values.
 - `xray.json.strict`, `xray.location.config`, and `xray.location.confdir` can only be provided through process environment variables. They cannot be set in the root `env` object.
+
+These options are intended for users with special runtime integration needs.
