@@ -2,10 +2,6 @@
 
 [Trojan](https://trojan-gfw.github.io/trojan/protocol) 协议
 
-::: danger
-Trojan 被设计工作在正确配置的加密 TLS 隧道
-:::
-
 ## OutboundConfigurationObject
 
 `OutboundConfigurationObject` 对应 [`OutboundObject`](../outbound.md) 中的 `settings` 项。
@@ -28,6 +24,10 @@ Trojan 被设计工作在正确配置的加密 TLS 隧道
   ]
 }
 ```
+
+::: warning
+Trojan 必须配合传输安全 [TLS](https://xtls.github.io/config/transports/tls.html) 使用；只有当对端是 private 地址（如私有 IP、私有域名）且链路处于受信网络中时，才允许使用 `streamSettings.security: "none"`。公网环境中还要求启用 Mux；否则一旦内层载荷本身也是 TLS，就会形成 TiT，很容易被检测（[PoC](https://github.com/XTLS/Trojan-killer)）。
+:::
 
 > `address`: address
 

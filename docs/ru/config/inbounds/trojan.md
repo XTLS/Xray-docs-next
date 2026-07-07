@@ -2,10 +2,6 @@
 
 Протокол [Trojan](https://trojan-gfw.github.io/trojan/protocol).
 
-::: danger
-Trojan предназначен для работы в правильно настроенном зашифрованном TLS-туннеле.
-:::
-
 ## InboundConfigurationObject
 
 `InboundConfigurationObject` соответствует элементу `settings` в [`InboundObject`](../inbound.md).
@@ -35,6 +31,10 @@ Trojan предназначен для работы в правильно нас
   ]
 }
 ```
+
+::: warning
+Trojan должен использоваться с транспортной защитой [TLS](https://xtls.github.io/config/transports/tls.html); использовать `streamSettings.security: "none"` допустимо только тогда, когда адрес другой стороны является private-адресом (например, частным IP-адресом или частным доменным именем) и сам канал находится в доверенной сети. В публичных средах также требуется Mux; иначе, если внутренняя полезная нагрузка сама является TLS, это превращается в TiT и легко обнаруживается ([PoC](https://github.com/XTLS/Trojan-killer)).
+:::
 
 > `users`: \[ [UserObject](#userobject) \]
 

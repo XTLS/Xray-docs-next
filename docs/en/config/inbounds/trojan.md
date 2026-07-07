@@ -2,10 +2,6 @@
 
 [Trojan](https://trojan-gfw.github.io/trojan/protocol) protocol.
 
-::: danger
-Trojan is designed to work over correctly configured encrypted TLS tunnels.
-:::
-
 ## InboundConfigurationObject
 
 `InboundConfigurationObject` corresponds to the `settings` item in [`InboundObject`](../inbound.md).
@@ -35,6 +31,10 @@ Trojan is designed to work over correctly configured encrypted TLS tunnels.
   ]
 }
 ```
+
+::: warning
+Trojan must be used with transport-security [TLS](https://xtls.github.io/config/transports/tls.html); using `streamSettings.security: "none"` is only allowed when the peer is a private address (such as a private IP address or private domain name) and the link itself is trusted. In public environments, Mux is also required; otherwise, once the inner payload is itself TLS, it becomes TiT and can be easily detected ([PoC](https://github.com/XTLS/Trojan-killer)).
+:::
 
 > `users`: \[ [UserObject](#userobject) \]
 

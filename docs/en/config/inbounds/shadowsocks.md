@@ -14,7 +14,6 @@ Current compatibility is as follows:
   - aes-128-gcm
   - chacha20-poly1305 (or chacha20-ietf-poly1305)
   - xchacha20-poly1305 (or xchacha20-ietf-poly1305)
-  - none (or plain)
 
 The Shadowsocks 2022 new protocol format improves performance and includes complete replay protection, resolving the following security issues of the old protocol:
 
@@ -22,10 +21,6 @@ The Shadowsocks 2022 new protocol format improves performance and includes compl
 - The false positive rate of the original TCP replay filter increases over time
 - No UDP replay protection
 - TCP behavior that can be used for active probing
-
-::: danger
-Under the "none" encryption method, traffic will be transmitted in plain text. To ensure security, do not use it on public networks.
-:::
 
 ## InboundConfigurationObject
 

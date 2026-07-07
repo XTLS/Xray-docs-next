@@ -14,7 +14,6 @@
   - aes-128-gcm
   - chacha20-poly1305 或称 chacha20-ietf-poly1305
   - xchacha20-poly1305 或称 xchacha20-ietf-poly1305
-  - none 或 plain
 
 Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，解决了旧协议的以下安全问题：
 
@@ -22,10 +21,6 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
 - 原有 TCP 重放过滤器误报率随时间增加
 - 没有 UDP 重放保护
 - 可用于主动探测的 TCP 行为
-
-::: danger
-"none" 不加密方式下流量将明文传输。为确保安全性, 不要在公共网络上使用。
-:::
 
 ## InboundConfigurationObject
 
