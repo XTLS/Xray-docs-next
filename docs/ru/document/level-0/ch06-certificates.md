@@ -26,6 +26,14 @@
    ```shell
    wget -O -  https://get.acme.sh | sh
    ```
+::: warning
+Если команда зависает с ошибкой вида
+`Connecting to get.acme.sh (get.acme.sh)|2606:4700:20::...443... failed: Connection timed out`
+— скорее всего, на вашем сервере не работает IPv6, и wget пытается подключиться через него.
+Принудительно используйте IPv4, добавив флаг `-4`:
+
+    wget -4 -O - https://get.acme.sh | sh
+:::
 
 3. Сделайте команду `acme.sh` доступной:
 
