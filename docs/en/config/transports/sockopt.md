@@ -279,7 +279,8 @@ An RFC 8305 Happy Eyeballs implementation, TCP only. When the target is a domain
 Note that `UseIPv4v6` and `ForceIPv4v6` effectively reduce the usable list to IPv4 and only query IPv6 if IPv4 resolution fails. That is not recommended. Prefer `UseIP` or `ForceIP` together with `HappyEyeballs.interleave`.
 
 ::: warning
-Do not use this together with the `domainStrategy` on a `Freedom` outbound, because then `Sockopt` only sees the final IP after replacement.
+Do not use this feature together with this outbound's `targetStrategy`, because then `Sockopt` only sees the final IP after replacement.<br>
+Do not use it together with `dialerProxy` either, because that prevents `happyEyeballs` from taking effect.
 :::
 
 ### HappyEyeballsObject
