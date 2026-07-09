@@ -11,6 +11,12 @@ Loopback is a loopback outbound used to send traffic back to routing for further
 
 :::
 
+::: warning Avoid Loops
+
+Avoid letting rules or balancers after the loopback select the original outbound again, otherwise it may form an `outbound -> Loopback -> routing -> original outbound` loop.
+
+:::
+
 ## OutboundConfigurationObject
 
 `OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
