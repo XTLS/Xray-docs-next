@@ -16,7 +16,7 @@
     {
       // ...
       "protocol": "wireguard",
-      // [!code focus:20]
+      // [!code focus:19]
       "settings": {
         "secretKey": "PRIVATE_KEY",
         "address": [
@@ -34,7 +34,6 @@
         "noKernelTun": false,
         "mtu": 1420, // optional, default 1420
         "reserved": [1, 2, 3],
-        "workers": 2, // optional, default runtime.NumCPU()
         "domainStrategy": "ForceIP"
       }
     }
@@ -90,10 +89,6 @@ Wireguard 底层 tun 的MTU大小。
 > `reserved` \[ number \]
 
 Wireguard 保留字节，按需填写。
-
-> `workers`: int
-
-Wireguard 使用线程数，默认为系统的核心数。
 
 > `peers`: \[ [Peers](#peers) \]
 

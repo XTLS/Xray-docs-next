@@ -16,7 +16,7 @@
     {
       // ...
       "protocol": "wireguard",
-      // [!code focus:20]
+      // [!code focus:19]
       "settings": {
         "secretKey": "PRIVATE_KEY",
         "address": [
@@ -34,7 +34,6 @@
         "noKernelTun": false,
         "mtu": 1420, // необязательно, по умолчанию 1420
         "reserved": [1, 2, 3],
-        "workers": 2, // необязательно, по умолчанию runtime.NumCPU()
         "domainStrategy": "ForceIP"
       }
     }
@@ -90,10 +89,6 @@ MTU нижнего уровня tun в Wireguard.
 > `reserved` \[ number \]
 
 Зарезервированные байты Wireguard, заполняются при необходимости.
-
-> `workers`: int
-
-Количество потоков Wireguard. По умолчанию равно количеству ядер процессора.
 
 > `peers`: \[ [Peers](#peers) \]
 

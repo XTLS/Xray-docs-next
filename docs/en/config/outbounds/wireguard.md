@@ -16,7 +16,7 @@ Standard Wireguard protocol implementation.
     {
       // ...
       "protocol": "wireguard",
-      // [!code focus:20]
+      // [!code focus:19]
       "settings": {
         "secretKey": "PRIVATE_KEY",
         "address": [
@@ -34,7 +34,6 @@ Standard Wireguard protocol implementation.
         "noKernelTun": false,
         "mtu": 1420, // optional, default 1420
         "reserved": [1, 2, 3],
-        "workers": 2, // optional, default runtime.NumCPU()
         "domainStrategy": "ForceIP"
       }
     }
@@ -90,10 +89,6 @@ The structure of a Wireguard packet is as follows:
 > `reserved` \[ number \]
 
 Wireguard reserved bytes, fill as needed.
-
-> `workers`: int
-
-Number of threads used by Wireguard. Defaults to the number of system cores.
 
 > `peers`: \[ [Peers](#peers) \]
 
