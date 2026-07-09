@@ -141,7 +141,7 @@ TLS — это обычный механизм защиты транспорта
 
 ::: tip
 При использовании этой функции некоторые TLS-параметры, влияющие на отпечаток, будут перезаписаны библиотекой uTLS и перестанут действовать.
-Параметры, которые все равно передаются: `"serverName" "disableSystemRoot" "pinnedPeerCertSha256" "masterKeyLog"`.
+Параметры, которые все равно передаются: `"serverName" "disableSystemRoot" "pinnedPeerCertSha256" "masterKeyLog" "echConfigList" "echSockopt"`.
 
 Для ALPN действует особое поведение.
 
