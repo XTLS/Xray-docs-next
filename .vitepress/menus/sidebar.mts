@@ -3,24 +3,6 @@ import type { DefaultTheme } from "vitepress"
 export const sidebar: DefaultTheme.Config["sidebar"] = {
   "/config/": [
     {
-      text: "特性详解",
-      link: "/config/features/",
-      collapsed: true,
-      items: [
-        { text: "XTLS 深度剖析", link: "/config/features/xtls.md" },
-        { text: "Fallback 回落", link: "/config/features/fallback.md" },
-        {
-          text: "Browser Dialer",
-          link: "/config/features/browser_dialer.md"
-        },
-        { text: "多文件配置", link: "/config/features/multiple.md" },
-        {
-          text: "反向代理 / 内网穿透",
-          link: "/document/level-2/vless_reverse.md"
-        }
-      ]
-    },
-    {
       text: "基础配置",
       link: "/config/",
       collapsed: true,
@@ -39,6 +21,24 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Metrics", link: "/config/metrics.md" },
         { text: "连接观测", link: "/config/observatory.md" },
         { text: "地理数据文件", link: "/config/geodata.md" }
+      ]
+    },
+    {
+      text: "特性详解",
+      link: "/config/features/",
+      collapsed: true,
+      items: [
+        { text: "XTLS 深度剖析", link: "/config/features/xtls.md" },
+        { text: "Fallback 回落", link: "/config/features/fallback.md" },
+        {
+          text: "Browser Dialer",
+          link: "/config/features/browser_dialer.md"
+        },
+        { text: "多文件配置", link: "/config/features/multiple.md" },
+        {
+          text: "反向代理 / 内网穿透",
+          link: "/document/level-2/vless_reverse.md"
+        }
       ]
     },
     {

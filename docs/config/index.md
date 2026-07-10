@@ -165,7 +165,7 @@ https://xtls.github.io/llms-full.txt
 
 > env: [EnvObject](./env.md)
 
-运行时环境配置。可设置资源文件目录、证书目录以及部分运行时特性开关。
+设置进程环境变量。配置解析完成后生效，可用于 Xray 运行时选项，也可设置之后才读取的 Go 或依赖环境变量。
 
 > log: [LogObject](./log.md)
 

@@ -3,27 +3,6 @@ import type { DefaultTheme } from "vitepress"
 export const sidebar: DefaultTheme.Config["sidebar"] = {
   "/en/config/": [
     {
-      text: "Feature Details",
-      link: "/en/config/features/",
-      collapsed: true,
-      items: [
-        { text: "XTLS Deep Dive", link: "/en/config/features/xtls.md" },
-        { text: "Fallback", link: "/en/config/features/fallback.md" },
-        {
-          text: "Browser Dialer",
-          link: "/en/config/features/browser_dialer.md"
-        },
-        {
-          text: "Multiple Configurations",
-          link: "/en/config/features/multiple.md"
-        },
-        {
-          text: "Reverse Proxy / NAT Traversal",
-          link: "/en/document/level-2/vless_reverse.md"
-        }
-      ]
-    },
-    {
       text: "Basic Configuration",
       link: "/en/config/",
       collapsed: true,
@@ -45,6 +24,27 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Metrics", link: "/en/config/metrics.md" },
         { text: "Observatory", link: "/en/config/observatory.md" },
         { text: "Geodata Files", link: "/en/config/geodata.md" }
+      ]
+    },
+    {
+      text: "Feature Details",
+      link: "/en/config/features/",
+      collapsed: true,
+      items: [
+        { text: "XTLS Deep Dive", link: "/en/config/features/xtls.md" },
+        { text: "Fallback", link: "/en/config/features/fallback.md" },
+        {
+          text: "Browser Dialer",
+          link: "/en/config/features/browser_dialer.md"
+        },
+        {
+          text: "Multiple Configurations",
+          link: "/en/config/features/multiple.md"
+        },
+        {
+          text: "Reverse Proxy / NAT Traversal",
+          link: "/en/document/level-2/vless_reverse.md"
+        }
       ]
     },
     {

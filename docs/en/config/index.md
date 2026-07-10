@@ -173,7 +173,7 @@ List the parts of my question that are not confirmed by the official documentati
 
 > env: [EnvObject](./env.md)
 
-Runtime environment configuration. It can set the resource file directory, certificate directory, and selected runtime feature switches.
+Sets process environment variables after configuration parsing. It can configure Xray runtime options and variables read later by Go or other dependencies.
 
 > log: [LogObject](./log.md)
 

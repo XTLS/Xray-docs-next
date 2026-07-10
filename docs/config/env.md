@@ -1,14 +1,42 @@
 # 环境配置
 
-Xray 提供以下环境配置项，用于修改 Xray 的一些底层配置。
+Xray 可以通过配置文件根部的 `env` 对象或进程环境变量设置运行环境。
 
-## 资源文件路径
+## 配置文件中的 `env`
+
+配置文件根部可以写入 `env` 对象：
+
+```jsonc
+{
+  "env": {
+    "xray.location.asset": "/usr/local/share/xray",
+    "xray.location.cert": "/usr/local/share/xray",
+    "XRAY_RAY_BUFFER_SIZE": "0"
+  }
+}
+```
+
+`env` 的字段名和值都会按原样写入当前进程环境变量，且所有值都必须是字符串。字段不限于 Xray 定义的环境变量；Go 或其他依赖使用的环境变量也可以写入，但只有在应用 `env` 之后才读取该变量的代码会受到影响。
+
+### 生效时机
+
+- Xray 会先读取并合并全部配置文件，然后应用根 `env` 对象。
+- `xray.location.asset`、`xray.location.cert` 以及创建 Xray 实例时读取的运行时选项可以在根 `env` 中生效。
+- 定位或解析当前配置文件时就需要的变量必须在 Xray 启动前设置。根 `env` 中的 `xray.location.config`、`xray.location.confdir` 和 `xray.json.strict` 无法影响当前这次配置加载。
+- 多配置文件合并时，后加载配置中完全相同的 key 会覆盖先前的值。
+- 空字符串会把环境变量设置为空，但不会删除该环境变量。
+- 根 `env` 修改的是进程全局环境，不提供实例级隔离，也不会在配置构建失败或实例停止时自动恢复。
+
+## 进程环境变量
+
+Xray 自身的环境变量通常同时支持带点的小写名称和大写下划线名称。进程环境变量在读取配置前已经存在，因此也适用于配置定位和解析阶段。
+
+### 资源文件路径
 
 - 名称：`xray.location.asset` 或 `XRAY_LOCATION_ASSET`。
 - 默认值：特定 [FHS](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) 目录或 Xray 文件同路径。
 
-这个环境变量指定了一个文件夹位置，这个文件夹应当包含 geoip.dat 和 geosite.dat 文件。
-若无指定变量值，程序将会按以下顺序寻找资源文件：
+这个环境变量指定资源文件目录，其中通常包含 `geoip.dat` 和 `geosite.dat`。若未指定，程序会按以下顺序寻找资源文件：
 
 ```text
 ./
@@ -16,67 +44,30 @@ Xray 提供以下环境配置项，用于修改 Xray 的一些底层配置。
 /usr/share/xray
 ```
 
-## 配置文件位置
+### 证书文件路径
+
+- 名称：`xray.location.cert` 或 `XRAY_LOCATION_CERT`。
+- 默认值：和 Xray 文件同路径。
+
+这个环境变量指定相对证书文件的基础目录。
+
+### 配置文件位置
 
 - 名称：`xray.location.config` 或 `XRAY_LOCATION_CONFIG`。
 - 默认值：和 Xray 文件同路径。
 
-这个环境变量指定了一个文件夹位置，这个文件夹应当包含 config.json 文件。
+这个环境变量指定包含 `config.json` 的目录。
 
-## 多配置目录
+### 多配置目录
 
 - 名称：`xray.location.confdir` 或 `XRAY_LOCATION_CONFDIR`。
 - 默认值：`""`。
 
-这个目录内的 `.json` 文件会按文件名顺序读取，作为多配置选项。
+这个目录内的 `.json` 文件会按文件名顺序读取。启动参数 `confdir` 的优先级高于该环境变量。
 
-此项优先级低于启动参数 `confdir`。
-
-## 严格 JSON 解析器
+### 严格 JSON 解析器
 
 - 名称：`xray.json.strict` 或 `XRAY_JSON_STRICT`。
 - 默认值：`false`。
 
-默认情况下，Xray 在启动时会使用自定义的 JSON 解析器（该解析器会从配置中剔除注释及其他非标准字符）。如果你确认自己的配置文件严格遵循 JSON 标准（RFC8259），可以启用此选项以使用标准 JSON 解析器，在配置文件极大时（几十 MB 以上）可以提升其解析速度。
-
-## 配置文件中的 `env`
-
-Xray 配置文件根部可以写入 `env` 对象，用来设置部分运行时环境配置：
-
-```jsonc
-{
-  "env": {
-    "xray.location.asset": "/usr/local/share/xray",
-    "xray.location.cert": "/usr/local/share/xray",
-    "xray.ray.buffer.size": "0"
-  }
-}
-```
-
-`env` 中的值均为字符串。Xray 在读取并解析配置文件之后应用这些值，因此它适合配置运行时使用的资源路径和特性开关。
-
-配置文件根 `env` 支持以下字段：
-
-| 字段                   | 说明                                                        |
-| ---------------------- | ----------------------------------------------------------- |
-| `xray.location.asset`  | 资源文件目录，通常用于 `geoip.dat`、`geosite.dat` 等文件。  |
-| `xray.location.cert`   | 证书文件目录。                                              |
-| `xray.buf.readv`       | 控制读取缓冲相关行为。                                      |
-| `xray.buf.splice`      | 控制 Freedom 出站 splice 相关行为。                         |
-| `xray.vmess.padding`   | 控制 VMess 出站 padding。                                   |
-| `xray.cone.disabled`   | 设置为 `"true"` 时禁用 FullCone 行为。                      |
-| `xray.ray.buffer.size` | 默认连接缓冲大小，单位为 MB；`"0"` 表示不限制。             |
-| `xray.browser.dialer`  | Browser Dialer 地址，例如 `"127.0.0.1:8080"`。              |
-| `xray.xudp.show`       | 控制 XUDP 日志显示。                                        |
-| `xray.xudp.basekey`    | XUDP base key，使用 base64url 编码的 32 字节 key。          |
-| `xray.tun.fd`          | 外部程序传入的 TUN 文件描述符，主要用于移动端或嵌入式场景。 |
-
-### 优先级和限制
-
-- 进程环境变量会先读取；配置文件根 `env` 会在配置解析完成后应用，并覆盖同名的可运行时更新字段。
-- 多配置文件合并时，后加载配置中的 `env` 字段会覆盖先前配置中的同名字段。
-- 未知字段会被忽略。
-- 空字符串不会取消已经存在的环境变量值。
-- `xray.json.strict`、`xray.location.config`、`xray.location.confdir` 只能通过进程环境变量提供，不能写入配置文件根 `env`。
-
-这些选项主要面向有特殊运行时集成需求的用户。
+默认情况下，Xray 使用自定义 JSON 解析器剔除注释及其他非标准字符。配置文件严格遵循 JSON 标准（RFC 8259）时，可以启用此选项使用标准 JSON 解析器；对于几十 MB 以上的大型配置，解析速度可能有所提升。

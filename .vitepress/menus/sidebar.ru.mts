@@ -3,33 +3,6 @@ import type { DefaultTheme } from "vitepress"
 export const sidebar: DefaultTheme.Config["sidebar"] = {
   "/ru/config/": [
     {
-      text: "Обзор",
-      link: "/ru/config/features/",
-      collapsed: true,
-      items: [
-        {
-          text: "Глубокий анализ XTLS",
-          link: "/ru/config/features/xtls.md"
-        },
-        {
-          text: "Fallback",
-          link: "/ru/config/features/fallback.md"
-        },
-        {
-          text: "Browser Dialer",
-          link: "/ru/config/features/browser_dialer.md"
-        },
-        {
-          text: "Конфигурация из нескольких файлов",
-          link: "/ru/config/features/multiple.md"
-        },
-        {
-          text: "Обратный прокси / NAT Traversal",
-          link: "/ru/document/level-2/vless_reverse.md"
-        }
-      ]
-    },
-    {
       text: "Базовая конфигурация",
       link: "/ru/config/",
       collapsed: true,
@@ -56,6 +29,33 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         {
           text: "Файлы геоданных",
           link: "/ru/config/geodata.md"
+        }
+      ]
+    },
+    {
+      text: "Обзор",
+      link: "/ru/config/features/",
+      collapsed: true,
+      items: [
+        {
+          text: "Глубокий анализ XTLS",
+          link: "/ru/config/features/xtls.md"
+        },
+        {
+          text: "Fallback",
+          link: "/ru/config/features/fallback.md"
+        },
+        {
+          text: "Browser Dialer",
+          link: "/ru/config/features/browser_dialer.md"
+        },
+        {
+          text: "Конфигурация из нескольких файлов",
+          link: "/ru/config/features/multiple.md"
+        },
+        {
+          text: "Обратный прокси / NAT Traversal",
+          link: "/ru/document/level-2/vless_reverse.md"
         }
       ]
     },
