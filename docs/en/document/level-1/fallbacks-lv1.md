@@ -172,7 +172,7 @@ Now that you understand what the [Perfect Form of Fallback] is, you can get your
     ]
   },
   "streamSettings": {
-    "network": "tcp",
+    "method": "tcp",
     "security": "tls",
     "tlsSettings": {
       "alpn": ["http/1.1"],
@@ -249,7 +249,7 @@ How do we explain this configuration in plain language?
        ]
      },
      "streamSettings": {
-       "network": "tcp",
+       "method": "tcp",
        "security": "none",
        "tcpSettings": {
          "acceptProxyProtocol": true
@@ -280,7 +280,7 @@ How do we explain this configuration in plain language?
        "decryption": "none"
      },
      "streamSettings": {
-       "network": "ws",
+       "method": "ws",
        "security": "none",
        "wsSettings": {
          "acceptProxyProtocol": true, // Reminder: Delete this line if using Nginx/Caddy to reverse proxy WS
@@ -307,7 +307,7 @@ How do we explain this configuration in plain language?
        ]
      },
      "streamSettings": {
-       "network": "tcp",
+       "method": "tcp",
        "security": "none",
        "tcpSettings": {
          "acceptProxyProtocol": true,
@@ -345,7 +345,7 @@ How do we explain this configuration in plain language?
        ]
      },
      "streamSettings": {
-       "network": "ws",
+       "method": "ws",
        "security": "none",
        "wsSettings": {
          "acceptProxyProtocol": true, // Reminder: Delete this line if using Nginx/Caddy to reverse proxy WS

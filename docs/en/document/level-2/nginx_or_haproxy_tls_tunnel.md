@@ -119,7 +119,7 @@ Enable auto-start on boot:
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "tcp"
+        "method": "tcp"
       },
       "sniffing": {
         "enabled": true,
@@ -199,7 +199,7 @@ Enable auto-start on boot:
         "sockopt": {
           "mark": 255
         },
-        "network": "tcp"
+        "method": "tcp"
       }
     },
     {

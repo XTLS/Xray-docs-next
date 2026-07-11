@@ -13,7 +13,7 @@ Hysteria2 的底层 QUIC 传输的 Xray 实现，通常搭配 hysteria[出站](.
     {
       // ...
       "streamSettings": {
-        "network": "hysteria",
+        "method": "hysteria",
         // [!code focus:17]
         "hysteriaSettings": {
           "version": 2,

@@ -80,7 +80,7 @@ If the Xray program is not installed on the side router, you can manually downlo
         "sockopt": {
           "mark": 255
         },
-        "network": "tcp",
+        "method": "tcp",
         "security": "tls", // Note: must be tls when using xtls-rprx-vision flow
         "tlsSettings": {
           // Note: must be tlsSettings when using xtls-rprx-vision flow
@@ -228,7 +228,7 @@ If the Xray program is not installed on the side router, you can manually downlo
         ]
       },
       "streamSettings": {
-        "network": "tcp",
+        "method": "tcp",
         "security": "tls",
         "tlsSettings": {
           "certificates": [

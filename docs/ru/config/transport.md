@@ -27,7 +27,7 @@
       // [!code focus:18]
       "streamSettings": {
         // Способы передачи
-        "network": "raw",
+        "method": "raw",
         "rawSettings": {},
         "xhttpSettings": {},
         "kcpSettings": {},
@@ -50,37 +50,37 @@
 
 ### Способы передачи
 
-> `network`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria"
+> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria"
 
 Способ передачи, используемый потоком данных. Значение по умолчанию — `raw`.
 
 > `rawSettings`: [RawObject](./transports/raw.md)
 
-Настройки RAW для потока данных. Действуют только когда `network` равно `raw`.
+Настройки RAW для потока данных. Действуют только когда `method` равно `raw`.
 
 > `xhttpSettings`: [XHTTPObject](./transports/xhttp.md)
 
-Настройки XHTTP для потока данных. Действуют только когда `network` равно `xhttp`.
+Настройки XHTTP для потока данных. Действуют только когда `method` равно `xhttp`.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
-Настройки mKCP для потока данных. Действуют только когда `network` равно `mkcp`.
+Настройки mKCP для потока данных. Действуют только когда `method` равно `mkcp`.
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
-Настройки gRPC для потока данных. Действуют только когда `network` равно `grpc`.
+Настройки gRPC для потока данных. Действуют только когда `method` равно `grpc`.
 
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
-Настройки WebSocket для потока данных. Действуют только когда `network` равно `websocket`.
+Настройки WebSocket для потока данных. Действуют только когда `method` равно `websocket`.
 
 > `httpupgradeSettings`: [HTTPUpgradeObject](./transports/httpupgrade.md)
 
-Настройки HTTPUpgrade для потока данных. Действуют только когда `network` равно `httpupgrade`.
+Настройки HTTPUpgrade для потока данных. Действуют только когда `method` равно `httpupgrade`.
 
 > `hysteriaSettings`: [HysteriaObject](./transports/hysteria.md)
 
-Настройки Hysteria для потока данных. Действуют только когда `network` равно `hysteria`.
+Настройки Hysteria для потока данных. Действуют только когда `method` равно `hysteria`.
 
 ### Безопасность транспорта
 
@@ -126,7 +126,7 @@ REALITY сейчас является одной из самых сильных 
 
 ### Входящие/исходящие протоколы и способы передачи
 
-Эта таблица соответствует сочетанию `protocol + streamSettings.network`.
+Эта таблица соответствует сочетанию `protocol + streamSettings.method`.
 
 |                                                                       | `raw`          | `xhttp`        | `grpc`         | `websocket`    | `httpupgrade`  | `mkcp`         | `hysteria`     |
 | --------------------------------------------------------------------- | -------------- | -------------- | -------------- | -------------- | -------------- | -------------- | -------------- |
@@ -143,7 +143,7 @@ REALITY сейчас является одной из самых сильных 
 
 ### Способы передачи и безопасность транспорта
 
-Эта таблица соответствует сочетанию `streamSettings.network + streamSettings.security`.
+Эта таблица соответствует сочетанию `streamSettings.method + streamSettings.security`.
 
 |               | `none`            | `tls`          | `reality`         |
 | ------------- | ----------------- | -------------- | ----------------- |

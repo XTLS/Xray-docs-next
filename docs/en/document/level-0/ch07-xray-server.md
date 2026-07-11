@@ -206,7 +206,7 @@ First, various configurations can refer to the [official VLESS configuration exa
             ]
           },
           "streamSettings": {
-            "network": "tcp",
+            "method": "tcp",
             "security": "tls",
             "tlsSettings": {
               "alpn": "http/1.1",

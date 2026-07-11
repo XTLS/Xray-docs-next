@@ -216,7 +216,7 @@
            "level": 0
          },
          "streamSettings": {
-           "network": "tcp",
+           "method": "tcp",
            "security": "tls",
            "tlsSettings": {
              "serverName": "a-name.yourdomain.com", // 替换成你的真实域名

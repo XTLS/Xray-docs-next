@@ -18,7 +18,7 @@ Its design is not recommended for standalone use; instead, it is intended to wor
     {
       // ...
       "streamSettings": {
-        "network": "httpupgrade",
+        "method": "httpupgrade",
         // [!code focus:8]
         "httpupgradeSettings": {
           "acceptProxyProtocol": false,

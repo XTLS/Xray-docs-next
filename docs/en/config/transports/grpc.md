@@ -44,7 +44,7 @@ If you are using fallback, please note the following:
     {
       // ...
       "streamSettings": {
-        "network": "grpc",
+        "method": "grpc",
         // [!code focus:10]
         "grpcSettings": {
           "authority": "grpc.example.com",

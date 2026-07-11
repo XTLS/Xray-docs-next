@@ -90,7 +90,7 @@
         "level": 0
       },
       "streamSettings": {
-        "network": "tcp",
+        "method": "tcp",
         "security": "tls",
         "tlsSettings": {
           "serverName": "a-name.yourdomain.com",

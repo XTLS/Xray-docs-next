@@ -27,7 +27,7 @@ For direct outbounds such as [Freedom](./outbounds/freedom.md), the peer is usua
       // [!code focus:18]
       "streamSettings": {
         // Transport methods
-        "network": "raw",
+        "method": "raw",
         "rawSettings": {},
         "xhttpSettings": {},
         "kcpSettings": {},
@@ -50,37 +50,37 @@ For direct outbounds such as [Freedom](./outbounds/freedom.md), the peer is usua
 
 ### Transport Methods
 
-> `network`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria"
+> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria"
 
 Transport method used by the data stream. The default value is `raw`.
 
 > `rawSettings`: [RawObject](./transports/raw.md)
 
-RAW configuration for the data stream. Only valid when `network` is `raw`.
+RAW configuration for the data stream. Only valid when `method` is `raw`.
 
 > `xhttpSettings`: [XHTTPObject](./transports/xhttp.md)
 
-XHTTP configuration for the data stream. Only valid when `network` is `xhttp`.
+XHTTP configuration for the data stream. Only valid when `method` is `xhttp`.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
-mKCP configuration for the data stream. Only valid when `network` is `mkcp`.
+mKCP configuration for the data stream. Only valid when `method` is `mkcp`.
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
-gRPC configuration for the data stream. Only valid when `network` is `grpc`.
+gRPC configuration for the data stream. Only valid when `method` is `grpc`.
 
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
-WebSocket configuration for the data stream. Only valid when `network` is `websocket`.
+WebSocket configuration for the data stream. Only valid when `method` is `websocket`.
 
 > `httpupgradeSettings`: [HTTPUpgradeObject](./transports/httpupgrade.md)
 
-HTTPUpgrade configuration for the data stream. Only valid when `network` is `httpupgrade`.
+HTTPUpgrade configuration for the data stream. Only valid when `method` is `httpupgrade`.
 
 > `hysteriaSettings`: [HysteriaObject](./transports/hysteria.md)
 
-Hysteria configuration for the data stream. Only valid when `network` is `hysteria`.
+Hysteria configuration for the data stream. Only valid when `method` is `hysteria`.
 
 ### Transport Security
 
@@ -126,7 +126,7 @@ Both inbounds and outbounds can configure transport methods and transport securi
 
 ### Inbound/Outbound Protocols and Transport Methods
 
-This table corresponds to `protocol + streamSettings.network`.
+This table corresponds to `protocol + streamSettings.method`.
 
 |                                                                       | `raw`     | `xhttp`   | `grpc`    | `websocket` | `httpupgrade` | `mkcp`    | `hysteria` |
 | --------------------------------------------------------------------- | --------- | --------- | --------- | ----------- | ------------- | --------- | ---------- |
@@ -143,7 +143,7 @@ This table corresponds to `protocol + streamSettings.network`.
 
 ### Transport Methods and Transport Security
 
-This table corresponds to `streamSettings.network + streamSettings.security`.
+This table corresponds to `streamSettings.method + streamSettings.security`.
 
 |               | `none`        | `tls`     | `reality`     |
 | ------------- | ------------- | --------- | ------------- |

@@ -78,7 +78,7 @@
         "sockopt": {
           "mark": 255
         },
-        "network": "tcp",
+        "method": "tcp",
         "security": "tls", //注意使用 xtls-rprx-vision 流控此处需为 tls
         "tlsSettings": {
           //注意使用 xtls-rprx-vision 流控此处需为 tlsSettings
@@ -226,7 +226,7 @@
         ]
       },
       "streamSettings": {
-        "network": "tcp",
+        "method": "tcp",
         "security": "tls",
         "tlsSettings": {
           "certificates": [

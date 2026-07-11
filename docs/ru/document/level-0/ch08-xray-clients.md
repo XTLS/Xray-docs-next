@@ -215,7 +215,7 @@
             "level": 0
           },
           "streamSettings": {
-            "network": "tcp",
+            "method": "tcp",
             "security": "tls",
             "tlsSettings": {
               "serverName": "sub.yourdomain.com", // Замените на доменное имя вашего сервера

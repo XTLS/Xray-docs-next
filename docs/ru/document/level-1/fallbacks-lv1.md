@@ -172,7 +172,7 @@
     ]
   },
   "streamSettings": {
-    "network": "tcp",
+    "method": "tcp",
     "security": "tls",
     "tlsSettings": {
       "alpn": ["http/1.1"],
@@ -249,7 +249,7 @@
        ]
      },
      "streamSettings": {
-       "network": "tcp",
+       "method": "tcp",
        "security": "none",
        "tcpSettings": {
          "acceptProxyProtocol": true
@@ -280,7 +280,7 @@
        "decryption": "none"
      },
      "streamSettings": {
-       "network": "ws",
+       "method": "ws",
        "security": "none",
        "wsSettings": {
          "acceptProxyProtocol": true, // Напоминание: если вы используете Nginx/Caddy и т.д. для обратного проксирования WS, удалите эту строку
@@ -307,7 +307,7 @@
        ]
      },
      "streamSettings": {
-       "network": "tcp",
+       "method": "tcp",
        "security": "none",
        "tcpSettings": {
          "acceptProxyProtocol": true,
@@ -345,7 +345,7 @@
        ]
      },
      "streamSettings": {
-       "network": "ws",
+       "method": "ws",
        "security": "none",
        "wsSettings": {
          "acceptProxyProtocol": true, // Напоминание: если вы используете Nginx/Caddy и т.д. для обратного проксирования WS, удалите эту строку

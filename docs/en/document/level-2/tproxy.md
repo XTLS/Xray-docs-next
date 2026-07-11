@@ -72,7 +72,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
         "encryption": "none"
       },
       "streamSettings": {
-        "network": "tcp",
+        "method": "tcp",
         "security": "xtls",
         "sockopt": {
           "mark": 2

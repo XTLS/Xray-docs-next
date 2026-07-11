@@ -81,7 +81,7 @@
         "sockopt": {
           "mark": 255
         },
-        "network": "tcp",
+        "method": "tcp",
         "security": "tls", // При использовании управления потоком xtls-rprx-vision здесь должно быть указано tls.
         "tlsSettings": {
           // При использовании управления потоком xtls-rprx-vision здесь должно быть указано tlsSettings.
@@ -232,7 +232,7 @@
         ]
       },
       "streamSettings": {
-        "network": "tcp",
+        "method": "tcp",
         "security": "tls",
         "tlsSettings": {
           "certificates": [

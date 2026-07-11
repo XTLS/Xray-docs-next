@@ -214,7 +214,7 @@ Its disadvantage is probably that [hand-writing configuration files] is a bit tr
            "level": 0
          },
          "streamSettings": {
-           "network": "tcp",
+           "method": "tcp",
            "security": "tls",
            "tlsSettings": {
              "serverName": "a-name.yourdomain.com", // Replace with your real domain

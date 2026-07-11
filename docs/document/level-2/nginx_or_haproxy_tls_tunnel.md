@@ -120,7 +120,7 @@ WantedBy=multi-user.target
         "decryption": "none"
       },
       "streamSettings": {
-        "network": "tcp"
+        "method": "tcp"
       },
       "sniffing": {
         "enabled": true,
@@ -200,7 +200,7 @@ WantedBy=multi-user.target
         "sockopt": {
           "mark": 255
         },
-        "network": "tcp"
+        "method": "tcp"
       }
     },
     {

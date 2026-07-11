@@ -13,7 +13,7 @@
     {
       // ...
       "streamSettings": {
-        "network": "hysteria",
+        "method": "hysteria",
         // [!code focus:17]
         "hysteriaSettings": {
           "version": 2,

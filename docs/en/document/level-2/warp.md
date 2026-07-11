@@ -200,7 +200,7 @@ Add the following to your existing routing rules:
         "security": "auto"
       },
       "streamSettings": {
-        "network": "tcp"
+        "method": "tcp"
       }
     }
   ]

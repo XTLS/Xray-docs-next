@@ -117,7 +117,7 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
         ]
       },
       "streamSettings": {
-        "network": "tcp",
+        "method": "tcp",
         "security": "tls",
         "tlsSettings": {
           "alpn": ["h2", "http/1.1"],
@@ -142,7 +142,7 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
         ]
       },
       "streamSettings": {
-        "network": "ws",
+        "method": "ws",
         "wsSettings": {
           "acceptProxyProtocol": true,
           "path": "/vmessws"

@@ -213,7 +213,7 @@
             ]
           },
           "streamSettings": {
-            "network": "tcp",
+            "method": "tcp",
             "security": "tls",
             "tlsSettings": {
               "alpn": "http/1.1",

@@ -27,7 +27,7 @@
       // [!code focus:18]
       "streamSettings": {
         // 传输方式
-        "network": "raw",
+        "method": "raw",
         "rawSettings": {},
         "xhttpSettings": {},
         "kcpSettings": {},
@@ -50,37 +50,37 @@
 
 ### 传输方式
 
-> `network`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria"
+> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria"
 
 数据流所使用的传输方式类型，默认值为 `raw`。
 
 > `rawSettings`: [RawObject](./transports/raw.md)
 
-数据流的 RAW 配置，仅当 `network` 为 `raw` 时有效。
+数据流的 RAW 配置，仅当 `method` 为 `raw` 时有效。
 
 > `xhttpSettings`: [XHTTPObject](./transports/xhttp.md)
 
-数据流的 XHTTP 配置，仅当 `network` 为 `xhttp` 时有效。
+数据流的 XHTTP 配置，仅当 `method` 为 `xhttp` 时有效。
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
-数据流的 mKCP 配置，仅当 `network` 为 `mkcp` 时有效。
+数据流的 mKCP 配置，仅当 `method` 为 `mkcp` 时有效。
 
 > `grpcSettings`: [GRPCObject](./transports/grpc.md)
 
-数据流的 gRPC 配置，仅当 `network` 为 `grpc` 时有效。
+数据流的 gRPC 配置，仅当 `method` 为 `grpc` 时有效。
 
 > `wsSettings`: [WebSocketObject](./transports/websocket.md)
 
-数据流的 WebSocket 配置，仅当 `network` 为 `websocket` 时有效。
+数据流的 WebSocket 配置，仅当 `method` 为 `websocket` 时有效。
 
 > `httpupgradeSettings`: [HTTPUpgradeObject](./transports/httpupgrade.md)
 
-数据流的 HTTPUpgrade 配置，仅当 `network` 为 `httpupgrade` 时有效。
+数据流的 HTTPUpgrade 配置，仅当 `method` 为 `httpupgrade` 时有效。
 
 > `hysteriaSettings`: [HysteriaObject](./transports/hysteria.md)
 
-数据流的 Hysteria 配置，仅当 `network` 为 `hysteria` 时有效。
+数据流的 Hysteria 配置，仅当 `method` 为 `hysteria` 时有效。
 
 ### 传输安全
 
@@ -127,7 +127,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 
 ### 出入站协议与传输方式
 
-此表对应 `protocol + streamSettings.network`。
+此表对应 `protocol + streamSettings.method`。
 
 |                                                                       | `raw`  | `xhttp` | `grpc` | `websocket` | `httpupgrade` | `mkcp` | `hysteria` |
 | --------------------------------------------------------------------- | ------ | ------- | ------ | ----------- | ------------- | ------ | ---------- |
@@ -144,7 +144,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 
 ### 传输方式与传输安全
 
-此表对应 `streamSettings.network + streamSettings.security`。
+此表对应 `streamSettings.method + streamSettings.security`。
 
 |               | `none` | `tls` | `reality` |
 | ------------- | ------ | ----- | --------- |

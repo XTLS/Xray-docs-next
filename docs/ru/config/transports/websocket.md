@@ -23,7 +23,7 @@ WebSocket распознает заголовок X-Forwarded-For в HTTP-зап
     {
       // ...
       "streamSettings": {
-        "network": "websocket",
+        "method": "websocket",
         // [!code focus:9]
         "wsSettings": {
           "acceptProxyProtocol": false,

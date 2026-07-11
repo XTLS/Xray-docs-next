@@ -200,7 +200,7 @@ bash -c "$(curl -L wgcf-cli.vercel.app)"
         "security": "auto"
       },
       "streamSettings": {
-        "network": "tcp"
+        "method": "tcp"
       }
     }
   ]

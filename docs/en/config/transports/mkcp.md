@@ -19,7 +19,7 @@ Please ensure that the firewall configuration on the host is correct.
     {
       // ...
       "streamSettings": {
-        "network": "mkcp",
+        "method": "mkcp",
         // [!code focus:9]
         "kcpSettings": {
           "mtu": 1350,

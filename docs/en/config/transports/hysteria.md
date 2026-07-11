@@ -13,7 +13,7 @@ Xray implementation of the underlying QUIC transport for Hysteria2, typically us
     {
       // ...
       "streamSettings": {
-        "network": "hysteria",
+        "method": "hysteria",
         // [!code focus:17]
         "hysteriaSettings": {
           "version": 2,
