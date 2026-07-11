@@ -111,7 +111,7 @@ xray run -config http+unix:///run/xray-config.sock/config.json
 Когда `-config` не указан, Xray последовательно попытается загрузить `config.json` из следующих путей:
 
 - Рабочий каталог (Working Directory)
-- Путь, указанный в переменной окружения `Xray.location.asset` в [переменных окружения](../config/features/env.md#Путь-к-файлам-ресурсов)
+- Путь, указанный в переменной окружения `Xray.location.asset` в [переменных окружения](../config/env.md#путь-к-файлам-ресурсов)
   :::
 
 ```bash
@@ -256,7 +256,7 @@ xray wg [-i "(base64.StdEncoding)"]
 Если `-config` не указан, Xray попытается загрузить `config.json` из следующих мест:
 
 - Рабочий каталог (Working Directory);
-- Путь, указанный в переменной окружения `Xray.location.asset` (см. [Переменные окружения](../config/features/env.md#ресурсные-файлы)).
+- Путь, указанный в переменной окружения `Xray.location.asset` (см. [Переменные окружения](../config/env.md#путь-к-файлам-ресурсов)).
   :::
 
 ### xray mldsa65

@@ -13,6 +13,7 @@
 
 ```json
 {
+  "env": {},
   "log": {},
   "api": {},
   "dns": {},
@@ -167,6 +168,10 @@ https://xtls.github.io/llms-full.txt
 ::::
 
 ## Основные модули конфигурации
+
+> env: [EnvObject](./env.md)
+
+Переменные окружения для изменения некоторых базовых настроек Xray.
 
 > log: [LogObject](./log.md)
 

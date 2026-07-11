@@ -88,6 +88,7 @@ Xray 提供两种验证方式：
     - 09_metrics.json
     - 10_observatory.json
     - 11_geodata.json
+    - 12_env.json
     - 99_version.json
   - `/usr/local/share/xray/`：资源文件目录，存放了 Loyalsoldier 版本地理位置数据文件（拥有者是 `65532:65532`、目录权限 `755`、文件权限 `644`）
     - geoip.dat

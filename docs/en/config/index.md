@@ -13,6 +13,7 @@ The format is as follows:
 
 ```json
 {
+  "env": {},
   "log": {},
   "api": {},
   "dns": {},
@@ -170,11 +171,15 @@ List the parts of my question that are not confirmed by the official documentati
 
 ## Basic Configuration Modules
 
-> log:[LogObject](./log.md)
+> env: [EnvObject](./env.md)
+
+Environment variables for modifying some underlying configurations of Xray.
+
+> log: [LogObject](./log.md)
 
 Log configuration, controls how Xray outputs logs.
 
-> api:[ApiObject](./api.md)
+> api: [ApiObject](./api.md)
 
 Provides some API interfaces for remote calls.
 

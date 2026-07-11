@@ -87,6 +87,7 @@ Xray предоставляет два способа проверки:
     - 09_metrics.json
     - 10_observatory.json
     - 11_geodata.json
+    - 12_env.json
     - 99_version.json
   - `/usr/local/share/xray/`: каталог файлов ресурсов с геоданными Loyalsoldier (владелец: `65532:65532`, права на каталог: `755`, права на файлы: `644`)
     - geoip.dat

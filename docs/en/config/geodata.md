@@ -61,4 +61,4 @@ The resource download URL. It must be an HTTPS URL.
 
 The resource filename to write, such as `geoip.dat` or `geosite.dat`.
 
-The file is resolved using the [Resource File Path](./features/env.md#resource-file-path). It must be an existing regular file inside the resource directory; absolute paths and paths escaping the resource directory are not supported.
+The file is resolved using the [Resource File Path](./env.md#resource-file-path). It must be an existing regular file inside the resource directory; absolute paths and paths escaping the resource directory are not supported.
