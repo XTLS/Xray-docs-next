@@ -18,14 +18,14 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
       "protocol": "tun",
       // [!code focus:9]
       "settings": {
-        "name": "utun20",
+        "name": "utun10",
+        "desc": "xxx",
         "mtu": 1500,
         "gateway": ["10.0.0.1/16", "fc00::1/64"],
         "dns": ["1.1.1.1", "8.8.8.8"],
         "userLevel": 0,
         "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
-        "autoOutboundsInterface": "auto",
-        "desc": "xxx"
+        "autoOutboundsInterface": "auto"
       }
     }
   ]
@@ -37,6 +37,12 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
 创建的 TUN 接口名。默认 `"utunN"`
 
 其中 N 为 10~1024 之间的随机数
+
+> `desc`: string
+
+Windows 系统中的网络接口名称描述，默认为 `WinTun`。该字符串会与 "Tunnel" 拼接成 "xxx Tunnel"
+
+在 Windows 中使用 `route print` 可查看具体信息
 
 > `mtu`: number
 
@@ -71,12 +77,6 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 相当于为所有出站自动设置 [sockopt](../transports/sockopt.md).interface（同时还会额外包括一些无法配置出站设置的请求，比如 内置 DNS 的各种 local 模式）可以被手动设置 sockopt 覆盖。
 
 默认值为 `null`，即未配置。可填写具体接口名，也可填写 `"auto"` 让 Xray 自动选择。如果配置了 `autoSystemRoutingTable` 但未显式指定此项，Xray 会自动按 `"auto"` 处理。
-
-> `desc`: string
-
-Windows 系统中的网络接口名称描述，默认为 `WinTun`
-
-在 Windows 中使用 `route print` 可查看具体信息
 
 ## 使用提示
 
