@@ -19,7 +19,7 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
       // [!code focus:9]
       "settings": {
         "name": "utun10",
-        "desc": "xxx",
+        "desc": "Wintun",
         "mtu": 1500,
         "gateway": ["10.0.0.1/16", "fc00::1/64"],
         "dns": ["1.1.1.1", "8.8.8.8"],
@@ -40,7 +40,7 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
 
 > `desc`: string
 
-Windows 系统中的网络接口名称描述，默认为 `WinTun`。该字符串会与 "Tunnel" 拼接成 "xxx Tunnel"
+Windows 系统中的网络接口名称描述，默认为 `Wintun`。该字符串会与 "Tunnel" 拼接成 "xxx Tunnel"
 
 在 Windows 中使用 `route print` 可查看具体信息
 
