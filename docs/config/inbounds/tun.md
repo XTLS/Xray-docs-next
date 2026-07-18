@@ -16,9 +16,10 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
     {
       // ...
       "protocol": "tun",
-      // [!code focus:9]
+      // [!code focus:10]
       "settings": {
-        "name": "xray0",
+        "name": "utun10",
+        "desc": "Wintun",
         "mtu": 1500,
         "gateway": ["10.0.0.1/16", "fc00::1/64"],
         "dns": ["1.1.1.1", "8.8.8.8"],
@@ -33,19 +34,29 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
 
 > `name`: string
 
-创建的 TUN 接口名。默认 `"xray0"`
+创建的 TUN 接口名。默认 `"utunN"`
+
+其中 N 为 10~1024 之间的随机数
+
+> `desc`: string
+
+Windows 系统中的网络接口名称描述，默认为 `Wintun`。该字符串会与 "Tunnel" 拼接成 "xxx Tunnel"
+
+在 Windows 中使用 `route print` 可查看具体信息
 
 > `mtu`: number
 
-接口的 MTU。默认值为 `1500`。
+接口的 mtu。默认值为 `1500`。
 
 > `gateway`: [string]
 
 为 TUN 接口配置的地址前缀列表，通常分别填写 IPv4 / IPv6，例如 `"10.0.0.1/16"`、`"fc00::1/64"`。
 
+macOS 系统中，仅 IPv4 会生效，如未设置，则使用 `169.254.10.1/30`。
+
 > `dns`: [string]
 
-为 TUN 接口配置的 DNS 服务器列表，例如 `"1.1.1.1"`、`"8.8.8.8"`。
+该项配置只在 Windows 系统上有效，可为 TUN 接口配置的 DNS 服务器列表，例如 `"1.1.1.1"`、`"8.8.8.8"`。
 
 > `userLevel`: number
 
@@ -57,7 +68,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 自动写入系统路由表要导入该 TUN 接口的目标网段列表。每一项均为 CIDR，例如 `"0.0.0.0/0"` 表示所有 IPv4 流量，`"::/0"` 表示所有 IPv6 流量。
 
-当前仅支持 Windows。其他系统需要手动配置路由表。
+当前支持 Windows, macOS, Linux。FreeBSD 系统需要手动配置路由表。
 
 > `autoOutboundsInterface`: string
 

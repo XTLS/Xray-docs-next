@@ -16,9 +16,10 @@ On Linux, this environment variable can optionally be used to pass in the TUN FD
     {
       // ...
       "protocol": "tun",
-      // [!code focus:9]
+      // [!code focus:10]
       "settings": {
-        "name": "xray0",
+        "name": "utun10",
+        "desc": "Wintun",
         "mtu": 1500,
         "gateway": ["10.0.0.1/16", "fc00::1/64"],
         "dns": ["1.1.1.1", "8.8.8.8"],
@@ -33,7 +34,15 @@ On Linux, this environment variable can optionally be used to pass in the TUN FD
 
 > `name`: string
 
-The name of the created TUN interface. Default is `"xray0"`.
+The name of the created TUN interface. Default is `"utunN"`.
+
+Where N is a random number between 10 and 1024.
+
+> `desc`: string
+
+The description of the network interface name on Windows. Default is `Wintun`. This string is concatenated with "Tunnel" to form "xxx Tunnel".
+
+On Windows, you can use `route print` to view the details.
 
 > `mtu`: number
 
@@ -43,9 +52,11 @@ The MTU of the interface. The default is `1500`.
 
 The list of address prefixes assigned to the TUN interface, usually one for IPv4 and one for IPv6, such as `"10.0.0.1/16"` and `"fc00::1/64"`.
 
+On macOS, only IPv4 takes effect; if not set, `169.254.10.1/30` is used.
+
 > `dns`: [string]
 
-The list of DNS servers assigned to the TUN interface, such as `"1.1.1.1"` and `"8.8.8.8"`.
+This option only takes effect on Windows. The list of DNS servers assigned to the TUN interface, such as `"1.1.1.1"` and `"8.8.8.8"`.
 
 > `userLevel`: number
 
@@ -57,7 +68,7 @@ The value of `userLevel` corresponds to the `level` value in [policy](../policy.
 
 The list of destination prefixes that Xray should add to the system routing table automatically so that the traffic is directed into this TUN interface. Each item is a CIDR. For example, `"0.0.0.0/0"` means all IPv4 traffic, and `"::/0"` means all IPv6 traffic.
 
-Currently only supported on Windows. On other systems, the routing table must be configured manually.
+Currently supported on Windows, macOS, and Linux. On FreeBSD, the routing table must be configured manually.
 
 > `autoOutboundsInterface`: string
 
