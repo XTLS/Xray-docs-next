@@ -14,7 +14,7 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
     {
       // ...
       "protocol": "vless",
-      // [!code focus:17]
+      // [!code focus:18]
       "settings": {
         "users": [
           {
@@ -26,6 +26,7 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
           }
         ],
         "decryption": "none",
+        "flow": "xtls-rprx-vision",
         "fallbacks": [
           {
             "dest": 80
@@ -47,7 +48,7 @@ An array representing a group of users approved by the server.
 
 Each item is a user [UserObject](#userobject).
 
-> `decryption`: "none"
+> `decryption`: string
 
 [VLESS Encryption](https://github.com/XTLS/Xray-core/pull/5067) settings. Cannot be left empty; to disable, explicitly set it to `"none"`.
 
@@ -68,6 +69,16 @@ Following this is padding. After the connection is established, the server sends
 The first padding block has special requirements: it requires 100% probability and a minimum length greater than 0. If no padding exists, the core automatically uses `100-111-1111.75-0-111.50-0-3333` as the padding setting.
 
 The last block is identified by the core as the parameter used to authenticate the client. It can be generated using `./xray x25519` (using the PrivateKey part) or `./xray mlkem768` (using the Seed part). It must correspond to the client. `mlkem768` is a post-quantum algorithm that prevents the private key from being cracked by quantum computers (in the future) to impersonate the server if client parameters are leaked. This parameter is only used for verification; the handshake process is post-quantum secure regardless, and existing encrypted data cannot be cracked by future quantum computers.
+:::
+
+> `flow`: string
+
+Sets the default flow control mode for all users of this inbound. The available values are the same as `flow` in [UserObject](#userobject).
+
+When a user does not specify `flow` (or specifies an empty string), that user falls back to the value set here. A `flow` specified by the user takes precedence.
+
+::: warning
+If `xtls-rprx-vision` is set here, flow control can no longer be turned off for an individual user.
 :::
 
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
@@ -117,7 +128,7 @@ Flow control mode, used to select the XTLS algorithm.
 
 Currently, the following flow control modes are available in the inbound protocol:
 
-- No `flow` or empty string: Use standard TLS proxy.
+- No `flow` or empty string: Fall back to the inbound's `settings.flow`; if `settings.flow` is not set either, use standard TLS proxy.
 - `xtls-rprx-vision`: Use the new XTLS mode, including inner handshake random padding.
 
 XTLS is only available under the following combinations:

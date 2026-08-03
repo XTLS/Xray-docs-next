@@ -14,7 +14,7 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
     {
       // ...
       "protocol": "vless",
-      // [!code focus:17]
+      // [!code focus:18]
       "settings": {
         "users": [
           {
@@ -26,6 +26,7 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
           }
         ],
         "decryption": "none",
+        "flow": "xtls-rprx-vision",
         "fallbacks": [
           {
             "dest": 80
@@ -47,7 +48,7 @@ VLESS 必须配合传输安全层使用；只有当对端是 private 地址（�
 
 其中每一项是一个用户 [UserObject](#userobject)。
 
-> `decryption`: "none"
+> `decryption`: string
 
 [VLESS 加密](https://github.com/XTLS/Xray-core/pull/5067)设置。不能留空，禁用需显式设置为 `"none"`.
 
@@ -68,6 +69,16 @@ VLESS 必须配合传输安全层使用；只有当对端是 private 地址（�
 第一个 padding 块存在特殊要求，要求概率为 100% 且最小长度大于 0. 若不存在任何 padding, 核心自动使用 `100-111-1111.75-0-111.50-0-3333` 作为 padding 设置。
 
 最后一个块会被核心识别为认证客户端使用的参数，可用 `./xray x25519`（使用 PrivateKey 部分） 或 `./xray mlkem768`（使用 Seed 部分） 生成，要求与客户端对应。`mlkem768` 属于后量子算法，可以防止（未来）客户端参数泄露后被量子计算机破解出私钥并冒充服务端。该参数仅用于验证，握手过程无论如何都是后量子安全的，现有的加密数据无法被未来出现的量子计算机破解。
+:::
+
+> `flow`: string
+
+为该入站的所有用户设置默认流控模式，可选值同 [UserObject](#userobject) 中的 `flow`。
+
+当某个用户未填写 `flow`（或填写空字符串）时，该用户将套用此处设置的值；用户自己填写的 `flow` 优先级更高。
+
+::: warning
+若此处填写了 `xtls-rprx-vision`，则无法再为单个用户单独关闭流控。
 :::
 
 > `fallbacks`: \[ [FallbackObject](../features/fallback.md) \]
@@ -117,7 +128,7 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 目前入站协议中有以下流控模式可选：
 
-- 无 `flow` 或者 空字符： 使用普通 TLS 代理
+- 无 `flow` 或者 空字符： 套用入站 `settings.flow` 的值；若 `settings.flow` 也未设置，则使用普通 TLS 代理
 - `xtls-rprx-vision`：使用新 XTLS 模式 包含内层握手随机填充
 
 XTLS 仅在以下搭配下可用
