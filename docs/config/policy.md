@@ -11,10 +11,10 @@
   "policy": {
     "levels": {
       "0": {
-        "handshake": 4,
+        "handshake": 60,
         "connIdle": 300,
-        "uplinkOnly": 2,
-        "downlinkOnly": 5,
+        "uplinkOnly": 1,
+        "downlinkOnly": 1,
         "statsUserUplink": false,
         "statsUserDownlink": false,
         "statsUserOnline": false,
@@ -47,10 +47,10 @@ Xray 系统级别的策略
 
 ```json
 {
-  "handshake": 4,
+  "handshake": 60,
   "connIdle": 300,
-  "uplinkOnly": 2,
-  "downlinkOnly": 5,
+  "uplinkOnly": 1,
+  "downlinkOnly": 1,
   "statsUserUplink": false,
   "statsUserDownlink": false,
   "bufferSize": 10240
@@ -59,7 +59,7 @@ Xray 系统级别的策略
 
 > `handshake`: number
 
-连接建立时的握手时间限制。单位为秒。默认值为 `4`。在入站代理处理一个新连接时，在握手阶段如果使用的时间超过这个时间，则中断该连接。
+连接建立时的握手时间限制。单位为秒。默认值为 `60`。在入站代理处理一个新连接时，在握手阶段如果使用的时间超过这个时间，则中断该连接。
 
 > `connIdle`: number
 
@@ -67,11 +67,11 @@ Xray 系统级别的策略
 
 > `uplinkOnly`: number
 
-当连接下行线路关闭后的时间限制。单位为秒。默认值为 `2`。当服务器（如远端网站）关闭下行连接时，出站代理会在等待 `uplinkOnly` 时间后中断连接。
+当连接下行线路关闭后的时间限制。单位为秒。默认值为 `1`。当服务器（如远端网站）关闭下行连接时，出站代理会在等待 `uplinkOnly` 时间后中断连接。
 
 > `downlinkOnly`: number
 
-当连接上行线路关闭后的时间限制。单位为秒。默认值为 `5`。当客户端（如浏览器）关闭上行连接时，入站代理会在等待 `downlinkOnly` 时间后中断连接。
+当连接上行线路关闭后的时间限制。单位为秒。默认值为 `1`。当客户端（如浏览器）关闭上行连接时，入站代理会在等待 `downlinkOnly` 时间后中断连接。
 
 ::: tip
 在 HTTP 浏览的场景中，可以将 `uplinkOnly` 和 `downlinkOnly` 设为 `0`，以提高连接关闭的效率。
@@ -100,7 +100,7 @@ Xray 系统级别的策略
 默认值:
 
 - 在 ARM、MIPS、MIPSLE 平台上，默认值为 `0`。
-- 在 ARM64、MIPS64、MIPS64LE 平台上，默认值为 `4`。
+- 在 ARM64、MIPS64、MIPS64LE 平台上，默认值为 `60`。
 - 在其它平台上，默认值为 `512`。
 
 默认值可以通过环境变量 XRAY_RAY_BUFFER_SIZE 设置，注意在环境变量中单位为 MB(环境变量设置为 1 等于 config 设置为 1024)
