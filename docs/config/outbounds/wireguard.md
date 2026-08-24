@@ -42,8 +42,74 @@
 ```
 
 ::: tip
-目前 Wireguard 协议 outbound 中不支持设置 `streamSettings`
+Wireguard 出站支持 `streamSettings.sockopt` 中的套接字选项。特别是，
+[`dialerProxy`](../transports/sockopt.md#sockoptobject) 可以通过另一个出站连接
+Wireguard peer。
 :::
+
+### Wireguard 出站链式嵌套
+
+若要将一个 Wireguard 隧道嵌套在另一个隧道中，请在内层出站上设置
+`dialerProxy`，并将其指向外层出站的 tag：
+
+```json
+{
+  "outbounds": [
+    {
+      "tag": "exit-wg",
+      "protocol": "wireguard",
+      "settings": {
+        "secretKey": "EXIT_PRIVATE_KEY",
+        "address": ["10.0.0.2/32"],
+        "peers": [
+          {
+            "endpoint": "EXIT_ENDPOINT:51820",
+            "publicKey": "EXIT_PUBLIC_KEY",
+            "allowedIPs": ["0.0.0.0/0", "::/0"]
+          }
+        ],
+        "noKernelTun": true,
+        "mtu": 1280
+      },
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "entry-wg"
+        }
+      }
+    },
+    {
+      "tag": "entry-wg",
+      "protocol": "wireguard",
+      "settings": {
+        "secretKey": "ENTRY_PRIVATE_KEY",
+        "address": ["10.1.0.2/32"],
+        "peers": [
+          {
+            "endpoint": "ENTRY_ENDPOINT:51820",
+            "publicKey": "ENTRY_PUBLIC_KEY",
+            "allowedIPs": ["0.0.0.0/0", "::/0"]
+          }
+        ],
+        "noKernelTun": true,
+        "mtu": 1360
+      }
+    }
+  ]
+}
+```
+
+路由到 `exit-wg` 的流量会先进入出口隧道，而到出口 peer 的 UDP 连接会通过
+`entry-wg` 传输。因此，`entry-wg` 是物理网络上可见的最外层加密。更长的链可以
+重复使用相同的关系。
+
+链接多个 Wireguard 出站时，设置 `noKernelTun: true` 可以避免为每个出站创建
+和协调系统路由表。每进入一层内部隧道，都应降低 MTU，为额外封装预留空间。
+此示例仅定义出站；请使用路由规则和 [`tun`](../inbounds/tun.md) 等入站来选择
+哪些主机流量进入 `exit-wg`。
+
+请勿使用 `dialerProxy` 创建自引用或循环引用。在 Linux 和 macOS 上，TUN 入站
+不会根据其 `dns` 字段配置系统 DNS，因此全设备 VPN 配置还需要特定于系统的
+DNS 方案。
 
 > `secretKey`: string
 

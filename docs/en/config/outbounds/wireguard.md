@@ -42,8 +42,76 @@ Standard Wireguard protocol implementation.
 ```
 
 ::: tip
-Currently, configuring `streamSettings` is not supported in the Wireguard protocol outbound.
+Wireguard outbound supports socket options in `streamSettings.sockopt`. In
+particular, [`dialerProxy`](../transports/sockopt.md#sockoptobject) can send the
+connection to the Wireguard peer through another outbound.
 :::
+
+### Chaining Wireguard outbounds
+
+To nest one Wireguard tunnel inside another, set `dialerProxy` on the inner
+outbound to the tag of the outer outbound:
+
+```json
+{
+  "outbounds": [
+    {
+      "tag": "exit-wg",
+      "protocol": "wireguard",
+      "settings": {
+        "secretKey": "EXIT_PRIVATE_KEY",
+        "address": ["10.0.0.2/32"],
+        "peers": [
+          {
+            "endpoint": "EXIT_ENDPOINT:51820",
+            "publicKey": "EXIT_PUBLIC_KEY",
+            "allowedIPs": ["0.0.0.0/0", "::/0"]
+          }
+        ],
+        "noKernelTun": true,
+        "mtu": 1280
+      },
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "entry-wg"
+        }
+      }
+    },
+    {
+      "tag": "entry-wg",
+      "protocol": "wireguard",
+      "settings": {
+        "secretKey": "ENTRY_PRIVATE_KEY",
+        "address": ["10.1.0.2/32"],
+        "peers": [
+          {
+            "endpoint": "ENTRY_ENDPOINT:51820",
+            "publicKey": "ENTRY_PUBLIC_KEY",
+            "allowedIPs": ["0.0.0.0/0", "::/0"]
+          }
+        ],
+        "noKernelTun": true,
+        "mtu": 1360
+      }
+    }
+  ]
+}
+```
+
+Traffic routed to `exit-wg` first enters the exit tunnel. The UDP connection
+to the exit peer is then carried through `entry-wg`, so `entry-wg` is the
+outermost encryption layer visible on the physical network. Longer chains can
+repeat the same relationship.
+
+For multiple chained Wireguard outbounds, `noKernelTun: true` avoids creating
+and coordinating a system routing table for every outbound. Reduce the MTU at
+each inner layer to leave room for the additional encapsulation. This example
+only defines the outbounds; use a routing rule and an inbound such as
+[`tun`](../inbounds/tun.md) to select which host traffic enters `exit-wg`.
+
+Do not create self-references or cycles with `dialerProxy`. On Linux and macOS,
+the TUN inbound does not configure system DNS from its `dns` field, so a
+system-specific DNS plan is also required for a full-device VPN configuration.
 
 > `secretKey`: string
 
