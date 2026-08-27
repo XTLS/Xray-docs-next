@@ -36,13 +36,13 @@ function parseGithubUsernameFromNoreply(email = "") {
   return null
 }
 
-function avatarUrlFor(email = "") {
+function avatarUrlFor(email = "", name = "") {
   const gh = parseGithubUsernameFromNoreply(email)
   if (gh) {
     return `https://unavatar.io/github/${encodeURIComponent(gh)}`
   }
-  if (email) {
-    return `https://www.gravatar.com/avatar/${md5(email)}?d=identicon&s=64`
+  if (name) {
+    return `https://www.gravatar.com/avatar/${md5(name)}?d=identicon&s=64`
   }
   return `https://www.gravatar.com/avatar/?d=identicon&s=64`
 }
@@ -72,9 +72,8 @@ function gitContributors(fileAbsPath) {
         const github = parseGithubUsernameFromNoreply(email)
         map.set(key, {
           name,
-          email,
           github,
-          avatarUrl: avatarUrlFor(email),
+          avatarUrl: avatarUrlFor(email, name),
           commits: 0
         })
       }
