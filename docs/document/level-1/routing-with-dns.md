@@ -34,16 +34,16 @@
 合理利用 Xray ~~如轮椅般~~强大的内置 DNS 自带的回落、ECS、IP 过滤、打 Tag 等功能，精心调整它们的顺序。如此你便得到了比 geosite cn/!cn 更为精确且实时的 IP 作为分流条件，因为 IP 归属地，特别是 cn 归属地变更频率较低。
 
 在继续阅读本文之前，你需要充分阅读并理解“入门技巧：路由 (routing) 功能简析[上篇](./routing-lv1-part1.md)、[下篇](./routing-lv1-part2.md)”。
-与此同时你已经快要把官方配置指南给翻烂了，因此你完全理解了路由和出站中的 domainStrategy、入站中 sniffing 各选项的作用、以及其不同值的组合下产生的行为。
+与此同时你已经快要把官方配置指南给翻烂了，因此你完全理解了路由和 sockopt 中的 domainStrategy、出站中的 targetStrategy、入站中 sniffing 各选项的作用、以及其不同值的组合下产生的行为。
 
 一切就绪？请试着理解下面这段内容：
 
-socks、http 入站时，请求的就是域名，到了路由后，路由中非 AsIs 的 domainStrategy 可以利用内置 DNS 解析出 IP 临时用于路由匹配。到了本地 direct 出站时，出站中非 AsIs 的 domainStrategy 可以利用内置 DNS 再次解析出 IP 用于出站。发往 Xray 服务器的请求只有域名，具体访问哪个 IP 取决于服务器的 direct 出站。
+socks、http 入站时，原始请求的就是域名，到了路由模块后，路由中非 AsIs 的 domainStrategy 可以利用内置 DNS 解析出 IP 临时用于路由匹配。若分流到了本地 direct 出站，sockopt 中非 AsIs 的 domainStrategy 可以利用内置 DNS 再次解析出 IP 用于出站。若分流到了远端 Xray 服务器，并且本地此出站的 targetStrategy 为 AsIs，则请求目标仍以域名形式发送，具体访问哪个 IP 取决于服务器的 direct 出站。
 
 透明代理时情况变得更加复杂，入站 sniffing 开启，且 destOverride 有 [http, tls]：
 
 - 若 routeOnly = false 则请求的 IP 将被抹掉，后面的流程跟 socks 入站一样。
-- 若 routeOnly = true 则同时有域名和 IP，到了路由后，可以直接匹配域名和 IP 规则，本地 direct 出站也会用此 IP。发往 Xray 服务器的请求只有 IP，服务器如何处理？再把刚才的流程走一遍。
+- 若 routeOnly = true 则同时有域名和 IP，到了路由模块后，可以直接匹配域名和 IP 规则，本地 direct 出站也会用此 IP。发往 Xray 服务器的请求只有 IP，服务器如何处理？再把刚才的流程走一遍。
 
 遇到困难？你需要继续反复阅读官方指南并尝试理解。否则你很难利用到下面示例中 DNS 模块的解析结果来正确分流。
 
@@ -261,7 +261,7 @@ realIp 透明代理环境，你甚至可以在保证完全劫持各种渠道的 
 
 此场景下由于发给 Xray 服务器的请求全部都是域名，因此没有必要利用 DNS 反复试探最优结果，只需要快速识别域是否被污染，尽可能解析出中国的 CDN 友好的 IP 即可。
 
-此示例中 DNS 模块解析出的中国 IP 已经是 99% 中国 CDN 友好的，因此你可以在 direct 出站中 `domainStrategy` 设为**非** AsIs 以利用缓存，如果你需要的话；<br>
+此示例中 DNS 模块解析出的中国 IP 已经是 99% 中国 CDN 友好的，因此你可以将 direct 出站的 `sockopt.domainStrategy` 设为**非** AsIs 以利用缓存，如果你需要的话；<br>
 如果你追求 100% 的中国 CDN 友好，可设为 AsIs 利用操作系统设置的 DNS 再解析一次，额外耗时约 1 ~ 数百毫秒，建议开启乐观缓存以进一步降低延迟。
 
 ## 写在后面
