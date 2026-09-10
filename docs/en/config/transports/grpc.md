@@ -23,7 +23,7 @@ If you use reverse proxies like Caddy or Nginx, please note the following:
 - Ensure the reverse proxy server has enabled HTTP/2.
 - Use HTTP/2 or h2c (Caddy), grpc_pass (Nginx) to connect to Xray.
 - The Path for normal mode is `/${serviceName}/Tun`, and for Multi mode is `/${serviceName}/TunMulti`.
-- If you need to receive the client IP, you can pass the client IP by having Caddy / Nginx send the `X-Real-IP` header.
+- If you need to receive the client IP, you can pass the client IP by having Caddy / Nginx send the `X-Forwarded-For` header.
 
 :::
 
