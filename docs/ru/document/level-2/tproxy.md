@@ -53,12 +53,10 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
     {
       "tag": "direct",
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
-      },
       "streamSettings": {
         "sockopt": {
-          "mark": 2
+          "mark": 2,
+          "domainStrategy": "UseIPv4"
         }
       }
     },
@@ -95,12 +93,10 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
       "settings": {
         "rewriteAddress": "8.8.8.8"
       },
-      "proxySettings": {
-        "tag": "proxy"
-      },
       "streamSettings": {
         "sockopt": {
-          "mark": 2
+          "mark": 2,
+          "dialerProxy": "proxy"
         }
       }
     }

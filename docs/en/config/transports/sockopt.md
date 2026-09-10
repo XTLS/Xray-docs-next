@@ -93,29 +93,36 @@ When [tunnel](../inbounds/tunnel.md) has `followRedirect` set to `true`, and `tp
 
 The default value is `"AsIs"`.
 
-When the target address is a domain name, this field controls how outbound connections resolve and use that target:
+When the address an outbound needs to connect to is a domain name, this option controls how it is resolved:
 
-- With `"AsIs"`, Xray does not specially handle the domain name. In the end it uses Go's built-in dialer directly. The priority is fixed to the RFC 6724 default and does not follow configurations such as `gai.conf`, so in practice IPv6 is usually preferred.
-- With any other value, Xray uses the Xray-core [built-in DNS server](../dns.md) for resolution. If there is no `DNSObject`, system DNS is used. If multiple IP addresses match, the core randomly picks one target IP.
+- With `"AsIs"`, Xray passes the domain name to Go, which resolves it using the operating system's DNS settings and connects. TCP usually tries IPv6 first and tries IPv4 if the connection does not proceed smoothly; UDP prefers IPv4.
+
+  ::: details Address selection and fallback with AsIs
+  TCP uses Go's built-in Happy Eyeballs. The address family of the first resolved address is preferred. If the connection has not succeeded after 300 ms, attempts with the other address family begin. If all attempts with the preferred family fail sooner, the other family is tried immediately. This is not controlled by Xray's `sockopt.happyEyeballs`. See [Go's dialing implementation](https://go.dev/src/net/dial.go).
+
+  With a pure Go build of Xray, addresses are sorted using a simplified version of RFC 6724, which usually prefers IPv6 when other conditions are equal and does not read `/etc/gai.conf`. Most official Xray release builds use this approach; behavior may differ slightly on some operating systems or in downstream builds. See [Go's address sorting implementation](https://go.dev/src/net/addrselect.go).
+
+  UDP prefers an IPv4 address from the resolved results and uses IPv6 only if no IPv4 address is available. A send failure does not automatically switch to the other address family. This also applies when a `Use` strategy falls back to `AsIs`. See [Go's UDP address selection implementation](https://go.dev/src/net/ipsock.go).
+  :::
+
+- With any other value, Xray uses its [built-in DNS module](../dns.md) for resolution. If no `DNSObject` is configured, system DNS is used. If multiple IP addresses match, one is selected randomly by default; when `sockopt.happyEyeballs` is enabled for TCP, the addresses are raced instead.
 - `"IPv4"` means resolve IPv4 only. `"IPv4v6"` means resolve IPv4 first and resolve IPv6 only if that lookup returns an error or no IP addresses. If IPv4 addresses are resolved but subsequent connection attempts fail, it does not fall back to IPv6. `"IPv6"` and `"IPv6v4"` work analogously, with the address-family order reversed.
-- When built-in DNS also sets `"queryStrategy"`, the actual behavior is the intersection of the two settings. Only IP types included in both are resolved. For example, `"queryStrategy": "UseIPv4"` together with `"domainStrategy": "UseIP"` behaves the same as `"domainStrategy": "UseIPv4"`.
-- When using a `"Use"` option, Xray falls back to `"AsIs"` if the resolution result does not match the requested family, such as a domain that only has IPv4 while using `UseIPv6`.
-- When using a `"Force"` option, the connection fails outright if the resolution result does not match the requested family.
+- When the built-in DNS module also sets `"queryStrategy"`, the resolved IP types are the intersection of the two settings: only IP types allowed by both are resolved. For example, `"queryStrategy": "UseIPv4"` together with `"domainStrategy": "UseIP"` behaves the same as `"domainStrategy": "UseIPv4"`.
+- With a `"Use"` option, Xray falls back to `AsIs` if resolution fails or the results do not meet the requirements, such as a domain that only resolves to IPv4 while `UseIPv6` is selected.
+- With a `"Force"` option, the connection cannot be established if resolution fails or the results do not meet the requirements.
 
-::: tip TIP
+::: tip
 When using `"UseIP"` or `"ForceIP"`, and [OutboundObject](../outbound.md#outboundobject) specifies `sendThrough`, the core automatically infers whether IPv4 or IPv6 is needed from the local address. If you manually force a single IP family, such as `UseIPv4`, but it conflicts with `sendThrough`, the connection fails.
 :::
 
-::: danger
-Improper use of this feature can create an infinite loop.
+:::: danger Improper configuration of this feature can create an infinite loop!
+Connecting to the server needs a DNS result, but completing the DNS query also needs to connect to the server.
 
-Short version: connecting to the server needs a DNS result, but completing the DNS query also needs to connect to the server.
+This feature is **not recommended** for inexperienced users unless they understand the routing implications.
 
-> Tony: which came first, the chicken or the egg?
+::: details Detailed explanation
 
-Detailed explanation:
-
-1. Trigger condition: the proxy server is `proxy.com`, and the built-in DNS server is enabled in non-Local mode.
+1. Trigger condition: the proxy server address is a domain name (`proxy.com`), and the built-in DNS server is in non-Local mode.
 2. Before Xray establishes a TCP connection to `proxy.com`, it queries `proxy.com` through the built-in DNS server.
 3. The built-in DNS server connects to `dns.com` and sends a query to obtain the IP of `proxy.com`.
 4. Bad routing rules cause the request sent in step 3 to be proxied through `proxy.com`.
@@ -131,16 +138,12 @@ Possible solutions:
 - Use hosts.
 - ~~If you still do not know how to solve it, do not use this feature.~~
 
-So this feature is **not recommended** for inexperienced users unless they understand the routing implications.
 :::
+::::
 
 > `dialerProxy`: ""
 
-An outbound identifier. When non-empty, the specified outbound is used to establish the connection. It can be used for chained forwarding that still respects transport configuration.
-
-::: danger
-This option is incompatible with `ProxySettingsObject.Tag`.
-:::
+An outbound identifier. When non-empty, the specified outbound is used to establish the connection. This is commonly used to configure chained proxies.
 
 > `acceptProxyProtocol`: true | false
 
@@ -207,10 +210,6 @@ Bind the advertised TCP window size to this value. The kernel chooses the larger
 
 The default value is `false`. When set to `true`, [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP) is enabled. This is client-only, because starting with Go 1.24 MPTCP is enabled by default when listening. It currently requires Linux kernel 5.6 or later.
 
-> `tcpNoDelay`: true | false
-
-This field has been removed because Go enables TCP no delay by default. If you want to disable it, do so through `customSockopt`.
-
 > `addressPortStrategy`: "none" | "SrvPortOnly" | "SrvAddressOnly" | "SrvPortAndAddress" | "TxtPortOnly" | "TxtAddressOnly" | "TxtPortAndAddress"
 
 Use SRV records or TXT records to specify the target address and or port used by outbound. The default value is `none`, which disables the feature.
@@ -221,9 +220,9 @@ These lookups go through system DNS rather than Xray's built-in DNS. The queried
 
 `PortOnly` resets only the port. `AddressOnly` resets only the address. `PortAndAddress` resets both.
 
-This option takes effect before `domainStrategy` inside `sockopt`. After the address is rewritten, it is still resolved according to `domainStrategy`, if any. However, it takes effect after `Freedom`'s own `domainStrategy`, so if that one already resolved the domain to an IP, this option no longer works.
+This option takes effect before `sockopt.domainStrategy` resolves the address. After the address is rewritten, it is still resolved according to `domainStrategy`.
 
-As a practical consequence, if ordinary domain traffic is sent into a `Freedom` outbound with `AsIs`, enabling this field makes the core try to resolve and rewrite the address and port, for example by querying `google.com` for SRV records.
+Freedom outbounds do not support this option.
 
 > `customSockopt`: []
 
@@ -274,13 +273,12 @@ When `type` is `int`, the value must be a decimal number.
 
 > `happyEyeballs`: [HappyEyeballsObject](#happyeyeballsobject)
 
-An RFC 8305 Happy Eyeballs implementation, TCP only. When the target is a domain name, it races the resolved addresses and chooses the first successful one. It only works when `Sockopt.domainStrategy` is not `AsIs`.
+An RFC 8305 Happy Eyeballs implementation, TCP only. When the target is a domain name, it races the resolved addresses and chooses the first successful one. It only works when `sockopt.domainStrategy` is not `AsIs`.
 
-Note that `UseIPv4v6` and `ForceIPv4v6` effectively reduce the usable IP list to IPv4 and switch to resolving IPv6 only if IPv4 resolution returns an error or no IP addresses. Failure to connect over IPv4 does not trigger this fallback. This usage is not recommended. Prefer `UseIP` or `ForceIP` together with `HappyEyeballs.interleave`.
+Note that `UseIPv4v6` and `ForceIPv4v6` effectively reduce the usable IP list to IPv4 and switch to resolving IPv6 only if IPv4 resolution returns an error or no IP addresses. Failure to connect over IPv4 does not trigger this fallback. This usage is not recommended. Prefer `UseIP` or `ForceIP` together with `happyEyeballs.interleave`.
 
 ::: warning
-Do not use this feature together with this outbound's `targetStrategy`, because then `Sockopt` only sees the final IP after replacement.<br>
-Do not use it together with `dialerProxy` either, because that prevents `happyEyeballs` from taking effect.
+Do not use this feature together with `dialerProxy`, because that prevents `happyEyeballs` from taking effect.
 :::
 
 ### HappyEyeballsObject

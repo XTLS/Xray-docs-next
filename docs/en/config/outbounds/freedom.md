@@ -1,6 +1,6 @@
 # Freedom (fragment, noises)
 
-Freedom is an outbound protocol used to send (normal) TCP or UDP data to any network.
+Freedom is a direct outbound protocol and usually the final endpoint for traffic: it receives TCP or UDP traffic from upstream, connects directly to the final destination, and sends and receives data.
 
 ::: warning
 This outbound has a default safety policy in server-side and reverse-proxy scenarios, which may block some targets. See `finalRules` below for how to allow them.
@@ -16,9 +16,8 @@ This outbound has a default safety policy in server-side and reverse-proxy scena
     {
       // ...
       "protocol": "freedom",
-      // [!code focus:29]
+      // [!code focus:28]
       "settings": {
-        "domainStrategy": "AsIs",
         "redirect": "127.0.0.1:3366",
         "userLevel": 0,
         "fragment": {
@@ -51,21 +50,13 @@ This outbound has a default safety policy in server-side and reverse-proxy scena
 }
 ```
 
-> `domainStrategy`: "AsIs"<br>
-> "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4"<br>
-> "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
-
-Default value `"AsIs"`.
-
-The meanings of all parameters are roughly equivalent to `domainStrategy` in [Sockopt](../transports/sockopt.md#sockoptobject).
-
-Only using `"AsIs"` here allows passing the domain name to the subsequent `sockopt` module. If set to non-`"AsIs"` here, causing the domain to be resolved to a specific IP, it will invalidate the subsequent `sockopt.domainStrategy` and its related `happyEyeballs`. (There is no negative impact if these two settings are not adjusted).
-
-When sending UDP, Freedom ignores `domainStrategy` in `sockopt` for some reasons and forcibly prefers IPv4 by default.
+::: tip
+Freedom's target domain resolution strategy is controlled by [sockopt.domainStrategy](../transports/sockopt.md#sockoptobject).
+:::
 
 > `redirect`: address_port
 
-Freedom will forcibly send all data to the specified address (instead of the address specified by the inbound).
+Freedom rewrites the connection's current destination address and port to those specified in `redirect`.
 
 The value is a string, e.g., `"127.0.0.1:80"`, `":1234"`.
 
@@ -78,36 +69,15 @@ User level. Connections will use the [Local Policy](../policy.md#levelpolicyobje
 
 The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, it defaults to 0.
 
-> `fragment`: map
+> `fragment`: [FragmentObject](#fragmentobject)
 
 A set of key-value configuration items used to control outgoing TCP fragmentation. In some cases, it can deceive censorship systems, such as bypassing SNI blacklists.
 
-`"length"` and `"interval"` are both [Int32Range](../../development/intro/guide.md#int32range) types.
-
-`"packets"`: Supports two fragmentation modes. `"1-3"` is TCP stream slicing, applied to the 1st through 3rd data writes by the client. `"tlshello"` is TLS handshake packet slicing.
-
-`"length"`: Fragment packet length (byte).
-
-`"interval"`: Fragment interval (ms).
-
-When `interval` is 0 and `"packets": "tlshello"` is set, the fragmented Client Hello will be sent in one TCP packet (provided its original size does not exceed MSS or MTU causing automatic system fragmentation).
-
-> `noises`: array
+> `noises`: \[ [NoiseObject](#noiseobject) \]
 
 UDP noise, used to send some random data as "noise" before sending a UDP connection. Presence of this structure implies enablement. It might deceive sniffers, or it might disrupt normal connections. _Use at your own risk._ For this reason, it bypasses port 53 because that breaks DNS.
 
-It is an array where multiple noise packets to be sent can be defined. A single element in the array is defined as follows:
-
-`"type"`: Noise packet type. Currently supports `"rand"` (random data), `"str"` (user-defined string), `"base64"` (base64 encoded custom binary data).
-
-`"packet"`: The content of the packet to be sent based on the preceding `type`.
-
-- When `type` is `rand`, this specifies the length of the random data. It can be a fixed value `"100"` or a floating range `"50-150"`.
-- When `type` is `str`, this specifies the string to be sent.
-- When `type` is `hex`, this specifies binary data in hex format.
-- When `type` is `base64`, this specifies base64 encoded binary data.
-
-`"delay"`: Delay in milliseconds. After sending this noise packet, the core will wait for this time before sending the next noise packet or real data. Defaults to no wait. It is an [Int32Range](../../development/intro/guide.md#int32range) type.
+An array that can define multiple noise packets to send. Each element is a [NoiseObject](#noiseobject).
 
 > `proxyProtocol`: number
 
@@ -115,13 +85,23 @@ PROXY protocol is usually used with `redirect` to redirect traffic to Nginx or o
 
 The value of `proxyProtocol` is the PROXY protocol version number. Options are `1` or `2`. If not specified, it defaults to `0` (disabled).
 
-> `finalRules`: \[[FinalRuleObject](#finalruleobject)\]
+> `finalRules`: \[ [FinalRuleObject](#finalruleobject) \]
 
 Matches Freedom final outbound rules in order, and allows or blocks connection targets.
 
-Compared with blocking in `routing`, `finalRules` applies at Freedom's final outbound stage: matching happens after the final IP is resolved and before dialing; in addition, UDP is also matched packet by packet during send and receive, making it stricter and more thorough. Each rule match takes about 50-150 ns.
+Compared with blocking in `routing`, `finalRules` applies at Freedom's final outbound stage, both before and after dialing. UDP is also checked packet by packet during send and receive, making enforcement stricter and more thorough. Each rule match takes about 50-150 ns, so performance is not a concern.
 
-Note: whenever Freedom needs to apply `finalRules`, if `domainStrategy` is `AsIs` and the target is a domain, Freedom still resolves the target to an IP through the operating system DNS before matching rules. At that point the target is no longer a domain, so the later `sockopt.domainStrategy` and its `happyEyeballs` no longer take effect.
+::: details When the target is a domain name
+When the target is a domain name and rules need to be applied, Freedom resolves it according to `sockopt.domainStrategy` before dialing, then checks every returned IP against the rules in order. If any IP is blocked, the entire request is blocked.
+
+After dialing succeeds, Freedom checks the actual remote IP of the connection against the rules again. Therefore, if resolution before dialing fails or the two resolutions return different results, TCP handshake packets may still be sent before the connection enters the blackhole state.
+
+Each UDP packet addressed to a domain name also triggers domain resolution when sent. However, the per-packet check only matches the destination IP selected for that packet against the rules in order to decide whether to block it; it does not check every IP returned by resolution.
+:::
+
+::: tip
+If `sockopt.dialerProxy` is configured for this outbound, Freedom is no longer the final outbound, so it does not apply `finalRules` or the default safety policy described below.
+:::
 
 ::: warning
 There is a default fallback safety policy for server-side and reverse-proxy scenarios:
@@ -129,9 +109,58 @@ There is a default fallback safety policy for server-side and reverse-proxy scen
 If no explicit rule matches, the built-in fallback rule is used: traffic from the VLESS reverse proxy blocks all targets by default; traffic from `VLESS`, `VMess`, `Trojan`, `Shadowsocks`, `Hysteria`, or `WireGuard` inbounds blocks private and reserved IP ranges by default; other traffic is fully allowed by default.
 
 If the server needs to allow clients to access some internal services, explicitly configure `allow` rules and limit them to the necessary `network`, `ip`, and `port` whenever possible.
-
-If the server also needs features that rely on passing the domain to `sockopt` (such as `sockopt.domainStrategy` or `happyEyeballs`), it cannot continue relying on this default safety policy. You can configure the first rule as an `allow` rule without any matching conditions to restore the previous behavior; this is also equivalent to disabling this default safety policy, so evaluate the security impact yourself.
 :::
+
+### FragmentObject
+
+```json
+{
+  "packets": "tlshello",
+  "length": "100-200",
+  "interval": "10-20"
+}
+```
+
+> `packets`: string
+
+Supports two fragmentation modes. `"1-3"` is TCP stream slicing, applied to the 1st through 3rd data writes by the client. `"tlshello"` is TLS handshake packet slicing.
+
+> `length`: [Int32Range](../../development/intro/guide.md#int32range)
+
+Fragment packet length (bytes).
+
+> `interval`: [Int32Range](../../development/intro/guide.md#int32range)
+
+Fragment interval (ms).
+
+When `interval` is 0 and `"packets": "tlshello"` is set, the fragmented Client Hello will be sent in one TCP packet (provided its original size does not exceed MSS or MTU causing automatic system fragmentation).
+
+### NoiseObject
+
+```json
+{
+  "type": "base64",
+  "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
+  "delay": "10-16"
+}
+```
+
+> `type`: string
+
+Noise packet type. Currently supports `"rand"` (random data), `"str"` (user-defined string), and `"base64"` (base64-encoded custom binary data).
+
+> `packet`: string
+
+The content of the packet to be sent based on the preceding `type`.
+
+- When `type` is `rand`, this specifies the length of the random data. It can be a fixed value `"100"` or a range `"50-150"`.
+- When `type` is `str`, this specifies the string to be sent.
+- When `type` is `hex`, this specifies binary data in hex format.
+- When `type` is `base64`, this specifies base64-encoded binary data.
+
+> `delay`: [Int32Range](../../development/intro/guide.md#int32range)
+
+Delay in milliseconds. After sending this noise packet, the core waits for this duration before sending the next noise packet or real data. Defaults to no wait.
 
 ### FinalRuleObject
 

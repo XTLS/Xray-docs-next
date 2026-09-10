@@ -19,10 +19,6 @@ The first element in the list serves as the primary outbound. When a routing mat
       "settings": {},
       "tag": "identifier",
       "streamSettings": {},
-      "proxySettings": {
-        "tag": "another-outbound-tag",
-        "transportLayer": false
-      },
       "mux": {},
       "targetStrategy": "AsIs"
     }
@@ -67,47 +63,21 @@ When not empty, its value must be **unique** among all `tag`s.
 
 Transport configuration for this outbound.
 
-> `proxySettings`: [ProxySettingsObject](#proxysettingsobject)
-
-Outbound proxy configuration.
-
 > `mux`: [MuxObject](#muxobject)
 
 Specific configuration related to Mux.
 
 > `targetStrategy`: "AsIs" | "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4" | "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
-If this outbound attempts to send a domain request, this controls whether it is resolved/how it is resolved to an IP before sending.
+Applies to outbounds other than Freedom. Controls whether the target domain name in a proxied request is resolved locally to an IP and which resolution strategy is used.
 
-The default value is `AsIs`, meaning it is sent to the remote server as is. All parameter meanings are roughly equivalent to `domainStrategy` in [Sockopt](./transports/sockopt.md#sockoptobject).
+The default value is `AsIs`, which sends the target domain name unchanged to the remote server. The strategies have essentially the same meanings as `domainStrategy` in [Sockopt](./transports/sockopt.md#sockoptobject).
 
 ::: tip
 This controls **proxied requests**. If the address of the outbound proxy server is a domain name, and you need to select a resolution strategy for the domain name itself, you should configure `domainStrategy` in [Sockopt](./transports/sockopt.md#sockoptobject).
+
+Freedom's domain resolution strategy should also be configured through `sockopt.domainStrategy`.
 :::
-
-### ProxySettingsObject
-
-```json
-{
-  "tag": "another-outbound-tag",
-  "transportLayer": false
-}
-```
-
-> `tag`: string
-
-When the identifier of another outbound is specified, data sent by this outbound will be forwarded to the specified outbound for transmission.
-
-::: danger
-This option conflicts with [Sockopt.dialerProxy](./transports/sockopt.md#sockoptobject). Choose one as needed.
-
-By default, this forwarding method **ignores** this outbound's own transport configuration (such as XHTTP, REALITY, or Sockopt), meaning the `streamSettings` of this outbound will not take effect.<br>
-If you need forwarding that works together with `streamSettings`, please use `Sockopt.dialerProxy` instead or set `transportLayer` to `true` here.
-:::
-
-> `transportLayer`: true | false
-
-`true` converts this setting to `Sockopt.dialerProxy` so the forwarding can use this outbound's `streamSettings`. The default is `false`.
 
 ### MuxObject
 

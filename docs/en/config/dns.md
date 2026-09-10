@@ -4,23 +4,19 @@
 
 The built-in DNS module in Xray has three main purposes:
 
-- **Routing Phase:** Resolves domain names to IPs and matches rules based on the resolved IPs for traffic splitting. Whether to resolve the domain and split traffic depends on the `domainStrategy` setting in the routing configuration module. The built-in DNS server is used for DNS queries only when the following two values are set:
-  - `"IPIfNonMatch"`: When a domain is requested, Xray attempts to match it against the `domain` rules in the routing configuration. If no match is found, the built-in DNS server is used to resolve the domain, and the returned IP address is used to match against IP routing rules.
-  - `"IPOnDemand"`: When any IP-based rule is encountered during matching, the domain is immediately resolved to an IP for matching.
+- **Routing Phase:** Resolves domain names to IPs and matches rules based on the resolved IPs for traffic splitting.<br>
+  Whether a domain is resolved for routing depends on `routing.domainStrategy`. The built-in DNS server is used for DNS queries only with the following values:
+  - `"IPIfNonMatch"`: When the request target is a domain name without an accompanying IP, Xray first performs a round of matching using the other conditions. If no routing rule matches in that round, it resolves the domain through the built-in DNS server and performs another round of routing rule matching using the returned IP addresses.
+  - `"IPOnDemand"`: When the request target is a domain name without an accompanying IP, the domain is immediately resolved to IPs for matching as soon as routing encounters an IP-based rule.
 
-- **Resolving Target Addresses for Connections:**
-  - For example, in a `freedom` outbound, if `domainStrategy` is set to `UseIP`, requests sent from this outbound will first resolve the domain to an IP using the built-in server before connecting.
-  - For example, in `sockopt`, if `domainStrategy` is set to `UseIP`, system connections initiated by this outbound will first resolve to an IP using the built-in server before connecting.
+- **Outbound Phase:** Resolves target domain names for connections or for sending to a remote proxy server:
+  - For example, setting `targetStrategy` to `UseIP` in a VLESS outbound resolves the target domain of the proxied request through the local built-in DNS module, then sends the resolved IP to the remote proxy server.
+  - Setting `sockopt.domainStrategy` to `UseIP` in a VLESS outbound resolves the VLESS server's domain through the built-in DNS module, then connects to the resolved IP.
+  - Setting `sockopt.domainStrategy` to `UseIP` in a Freedom outbound resolves the request's target domain through the built-in DNS module, then connects to the resolved IP.
+  - WireGuard does not allow domain names as destinations, so its outbound can use the built-in DNS module to resolve them to IPs.
 
-- **TUN/Transparent Proxy DNS Traffic Hijacking:** Combines routing with the DNS outbound to hijack DNS traffic into this module; or directly exposes port 53 to act as a recursive DNS server.
-
-::: tip TIP 1
-The DNS server enters the routing system for matching by default unless it contains `+local`. When using domain names within it, be aware of potential routing loops; `hosts` may help.
-:::
-
-::: tip TIP 2
-Only basic IP queries (A and AAAA records) are supported. CNAME records will be queried repeatedly until an A/AAAA record is returned. Other queries will not enter the built-in DNS server; instead, they may be discarded or transparently forwarded to other servers depending on your outbound configuration.
-:::
+- **TUN/Transparent Proxy DNS Traffic Hijacking:** Combines routing with the DNS outbound to hijack DNS traffic into this module; or uses [Tunnel](./inbounds/tunnel.md) to expose port 53 and act as a recursive DNS server.
+  - Only basic IP queries (A and AAAA records) are supported. CNAME records will be queried repeatedly until an A/AAAA record is returned. Other queries will not enter the built-in DNS server; instead, they may be discarded or transparently forwarded to other servers depending on your outbound configuration.
 
 ## DNS Processing Flow
 
@@ -134,6 +130,10 @@ The DNS clients initialized by different rules will be shown in the Xray startup
 
 ::: tip TIP 3
 (v1.4.0+) You can enable DNS query logging in [Log](./log.md).
+:::
+
+::: tip TIP 4
+The DNS server enters the routing system for matching by default unless it contains `+local`. When using domain names within it, be aware of potential routing loops; `hosts` may help.
 :::
 
 > `clientIp`: string
@@ -297,7 +297,7 @@ There are two scenarios for DNS requests sent by the DNS module:
 
 **Local Mode** connections are made directly outwards by the core. In this case, if the address is a domain name, it will be resolved by the system itself. The logic is relatively simple.
 
-**Non-Local** modes will essentially be treated as requests coming from an inbound with the tag `dns.tag` (Don't know where it is? Ctrl+F in your browser to search for `inboundTag`). They will go through the normal core processing flow and may be assigned by the routing module to a local freedom or other remote outbounds. They will be resolved by the freedom's `domainStrategy` (beware of potential loops) or sent directly as domains to the remote end to be resolved according to the server's own resolution method.
+**Non-Local Mode:** DNS queries enter the routing system as internal requests, with their `inboundTag` specified by `tag` in the DNS configuration. If a request is routed to a local Freedom outbound, the DNS server's own domain name is resolved according to that outbound's `sockopt.domainStrategy` (beware of potential loops). If it is routed to a remote proxy outbound, the domain name can be passed to the remote end for resolution.
 
 Since it might be difficult for average users to clarify the logic involved, it is recommended (especially in a transparent proxy environment) to **directly set the corresponding IPs for servers with domain names in the host option of the DNS module** to prevent loops.
 
