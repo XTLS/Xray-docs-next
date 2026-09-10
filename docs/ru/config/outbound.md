@@ -20,10 +20,6 @@
       "settings": {},
       "tag": "тег",
       "streamSettings": {},
-      "proxySettings": {
-        "tag": "another-outbound-tag",
-        "transportLayer": false
-      },
       "mux": {},
       "targetStrategy": "AsIs"
     }
@@ -70,47 +66,21 @@ Xray будет использовать случайный IP-адрес из �
 
 Конфигурация транспорта для этого исходящего подключения.
 
-> `proxySettings`: [ProxySettingsObject](#proxysettingsobject)
-
-Конфигурация Outbound-прокси.
-
 > `mux`: [MuxObject](#muxobject)
 
 Настройки Mux. Mux позволяет мультиплексировать несколько TCP-соединений через одно TCP-соединение. У Mux есть дополнительная функция: передача UDP-соединений как XUDP.
 
 > `targetStrategy`: "AsIs" | "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4" | "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
-Если при исходящем подключении отправляется запрос к доменному имени, эта опция управляет тем, будет ли оно разрешено (и каким образом) в IP-адрес для отправки.
+Применяется к исходящим подключениям, кроме Freedom. Определяет, нужно ли локально разрешать целевое доменное имя проксируемого запроса в IP и какую стратегию разрешения использовать.
 
-Значение по умолчанию — `AsIs`, то есть отправка на удаленный сервер «как есть». Значения всех параметров примерно соответствуют `domainStrategy` в [Sockopt](./transports/sockopt.md#sockoptobject).
+Значение по умолчанию — `AsIs`: целевое доменное имя передается на удаленный сервер без изменений. Смысл стратегий в основном совпадает с `domainStrategy` в [Sockopt](./transports/sockopt.md#sockoptobject).
 
 ::: tip
 Здесь контролируются **проксируемые запросы**. Если адресом исходящего прокси-сервера является доменное имя, и для этого домена необходимо выбрать стратегию разрешения, следует настроить `domainStrategy` в [Sockopt](./transports/sockopt.md#sockoptobject).
+
+Стратегию разрешения доменных имен для Freedom также следует задавать через `sockopt.domainStrategy`.
 :::
-
-### ProxySettingsObject
-
-```json
-{
-  "tag": "another-outbound-tag",
-  "transportLayer": false
-}
-```
-
-> `tag`: string
-
-Если указан тег другого Outbound, данные, исходящие из этого Outbound, будут перенаправлены через указанный Outbound.
-
-::: danger
-Эта опция конфликтует с [Sockopt.dialerProxy](./transports/sockopt.md#sockoptobject), используйте только один из этих вариантов по необходимости.
-
-По умолчанию этот способ пересылки **игнорирует** собственную конфигурацию транспорта этого outbound (например XHTTP, REALITY или Sockopt), поэтому `streamSettings` у данного outbound не будут работать.<br>
-Если вам нужна пересылка с поддержкой `streamSettings`, используйте `Sockopt.dialerProxy` или установите здесь `transportLayer` в `true`.
-:::
-
-> `transportLayer`: true | false
-
-`true` преобразует эту настройку в `Sockopt.dialerProxy`, чтобы пересылка использовала `streamSettings` этого outbound. По умолчанию `false`.
 
 ### MuxObject
 

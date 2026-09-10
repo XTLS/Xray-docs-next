@@ -34,11 +34,11 @@ The answer is: **Absolutely.**
 By making reasonable use of Xray's ~~wheelchair-like~~ powerful built-in DNS features—such as Fallbacks, ECS (EDNS Client Subnet), IP filtering, and Tagging—and carefully adjusting their order, you can obtain a much more accurate and real-time routing condition than `geosite cn/!cn`: the IP address. This works because IP geolocation, especially CN geolocation, changes much less frequently than domain lists.
 
 Before reading further, you need to fully read and understand the "Beginner Skills: Analysis of the Routing Feature [Part 1](./routing-lv1-part1.md) & [Part 2](./routing-lv1-part2.md)".
-At the same time, you should have practically memorized the official configuration guide. You must fully understand the functions of `domainStrategy` in routing/outbounds, `sniffing` options in inbounds, and the behaviors produced by their different combinations.
+At the same time, you should have practically memorized the official configuration guide. You must fully understand the functions of `domainStrategy` in routing and `sockopt`, `targetStrategy` in outbounds, `sniffing` options in inbounds, and the behaviors produced by their different combinations.
 
 Ready? Please try to understand the following paragraph:
 
-When using **socks/http inbounds**, the request is a domain name. When it reaches the **Routing** module, a `domainStrategy` other than `AsIs` can use the built-in DNS to resolve an IP specifically for routing matching. When the traffic reaches a local **direct outbound**, a `domainStrategy` other than `AsIs` in the outbound can use the built-in DNS to resolve the IP again for the actual connection. The request sent to the Xray Server (remote) contains only the domain name; which IP is actually accessed depends on the server's direct outbound.
+When using **socks/http inbounds**, the original request targets a domain name. When it reaches the **Routing** module, a `domainStrategy` other than `AsIs` can use the built-in DNS to resolve IPs temporarily for routing rule matching. If the traffic is routed to a local **direct outbound**, a `domainStrategy` other than `AsIs` in `sockopt` can use the built-in DNS to resolve IPs again for the outbound connection. If the traffic is routed to a remote Xray server and `targetStrategy` on the local outbound is `AsIs`, the request target is still sent as a domain name; which IP is actually accessed depends on the server's direct outbound.
 
 The situation becomes more complex with **Transparent Proxy**. If inbound `sniffing` is enabled and `destOverride` includes `[http, tls]`:
 
@@ -262,7 +262,7 @@ In a realIp transparent proxy environment, you can even ensure that after hijack
 
 In this scenario, since all requests sent to the Xray Server are domain names, there is no need to use DNS to repeatedly probe for the optimal result. We only need to quickly identify if the domain is polluted and resolve a Chinese CDN-friendly IP as much as possible.
 
-The China IP resolved by the DNS module in this example is already 99% China CDN friendly. Therefore, you can set `domainStrategy` in the direct outbound to **non-AsIs** to utilize the cache if you wish.
+The China IP resolved by the DNS module in this example is already 99% China CDN friendly. Therefore, you can set `sockopt.domainStrategy` in the direct outbound to **non-AsIs** to utilize the cache if you wish.
 <br>
 If you pursue 100% China CDN friendliness, you can set it to `AsIs` to use the OS configured DNS to resolve it again. This adds about 1ms to hundreds of ms of latency; it is recommended to enable optimistic caching to further reduce latency.
 

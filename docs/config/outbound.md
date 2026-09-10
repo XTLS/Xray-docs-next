@@ -19,10 +19,6 @@
       "settings": {},
       "tag": "标识",
       "streamSettings": {},
-      "proxySettings": {
-        "tag": "another-outbound-tag",
-        "transportLayer": false
-      },
       "mux": {},
       "targetStrategy": "AsIs"
     }
@@ -67,47 +63,21 @@
 
 此出站的传输配置。
 
-> `proxySettings`: [ProxySettingsObject](#proxysettingsobject)
-
-出站代理配置。
-
 > `mux`: [MuxObject](#muxobject)
 
 Mux 相关的具体配置。
 
 > `targetStrategy`: "AsIs" | "UseIP" | "UseIPv6v4" | "UseIPv6" | "UseIPv4v6" | "UseIPv4" | "ForceIP" | "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4"
 
-如果此出站尝试发送一个域名请求，控制其是否被解析/如何解析为 IP 并发送。
+适用于 Freedom 以外的出站，控制被代理请求中的目标域名是否在本地解析为 IP，以及使用何种解析策略。
 
-默认值为 `AsIs` 即保持原样发送到远端服务器。所有参数含义均约等于 [sockopt](./transports/sockopt.md#sockoptobject) 中的 `domainStrategy`。
+默认值为 `AsIs`，即保持目标域名原样发送到远端服务器。各策略的含义与 [sockopt](./transports/sockopt.md#sockoptobject) 中的 `domainStrategy` 基本相同。
 
 ::: tip
 这里控制的是**被代理的请求**，如果出站代理服务器的地址是域名，并需要为这个域名本身选择解析策略，则应配置 [sockopt](./transports/sockopt.md#sockoptobject) 中的 `domainStrategy`。
+
+Freedom 出站的域名解析策略也应配置 `sockopt.domainStrategy`。
 :::
-
-### ProxySettingsObject
-
-```json
-{
-  "tag": "another-outbound-tag",
-  "transportLayer": false
-}
-```
-
-> `tag`: string
-
-当指定另一个 outbound 的标识时，此 outbound 发出的数据，将被转发至所指定的 outbound 发出。
-
-::: danger
-此选项与 [Sockopt.dialerProxy](./transports/sockopt.md#sockoptobject) 冲突，根据需要任选其一即可。
-
-默认情况下，这种转发方式**会忽略**此出站自己的 `传输配置` (如有 XHTTP/REALITY/Sockopt...)，也就是此 outbound 的 `streamSettings` 将不起作用。<br>
-如果需要使用支持 `streamSettings` 方式的转发，请改用 `Sockopt.dialerProxy` 或者将这里的 `transportLayer` 设为 `true`。
-:::
-
-> `transportLayer`: true | false
-
-`true` 将此设置转化为 `Sockopt.dialerProxy` 来支持此出站的 `streamSettings`，默认为 `false` 即不转化。
 
 ### MuxObject
 

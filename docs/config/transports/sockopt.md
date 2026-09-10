@@ -97,30 +97,36 @@ Sockopt 用于配置底层网络行为。
 
 默认值 `"AsIs"`。
 
-当目标地址为域名时，配置相应的值，Outbound 连接远端服务器的行为模式如下：
+当出站需要连接的地址为域名时，此选项控制域名的解析方式：
 
-- 当使用 `"AsIs"` 时, Xray 不对域名进行特殊处理，到最后 Xray 将直接使用 go 自带的 Dial 发起连接，优先级固定为 RFC6724 的默认值(不会遵守 gai.conf 等配置) 通常来说为 IPv6 优先。
-- 当填写其他值时，将使用 Xray-core [内置 DNS 服务器](../dns.md) 服务器进行解析。若不存在DNSObject，则使用系统DNS。若有多个符合条件的IP地址时，核心会随机选择一个IP作为目标IP。
+- 当使用 `"AsIs"` 时，Xray 将域名交给 Go 按操作系统 DNS 设置解析并连接。通常 TCP 优先尝试 IPv6，并在连接不顺利时尝试 IPv4；UDP 则优先使用 IPv4。
+
+  ::: details AsIs 的地址选择与回退细节
+  TCP 使用 Go 内置的 Happy Eyeballs。解析结果中第一个地址所属的地址族为首选地址族：若在 300 ms 后仍未连接成功，则开始尝试另一地址族；若首选地址族的全部连接尝试提前失败，则立即尝试另一地址族。这不受 Xray `sockopt.happyEyeballs` 配置控制。参见 [Go 拨号实现](https://go.dev/src/net/dial.go)。
+
+  使用纯 Go 编译的 Xray 时，地址按照 RFC 6724 的精简规则排序，条件相当时通常优先 IPv6，不读取 `/etc/gai.conf`。Xray 官方 release 版大多采用这种方式；部分操作系统或下游项目编译的版本行为可能略有不同不再赘述。参见 [Go 地址排序实现](https://go.dev/src/net/addrselect.go)。
+
+  UDP 优先选择解析结果中的 IPv4 地址，没有 IPv4 时才选择 IPv6；发送失败不会自动切换到另一地址族。`Use` 策略回退到 `AsIs` 时也遵循此行为。参见 [Go UDP 地址选择实现](https://go.dev/src/net/ipsock.go)。
+  :::
+
+- 当填写其他值时，将使用 Xray [内置 DNS 模块](../dns.md) 进行解析。若未配置 `DNSObject`，则使用系统 DNS。若有多个符合条件的 IP 地址，默认随机选择一个；TCP 启用 `sockopt.happyEyeballs` 后则通过竞速选择。
 - `"IPv4"` 代表只解析 IPv4。`"IPv4v6"` 代表先解析 IPv4，仅当解析报错或没有返回 IP 时再解析 IPv6；如果已经解析出 IPv4，之后连接失败不会回退到 IPv6。`"IPv6"`、`"IPv6v4"` 同理，地址族顺序相反。
-- 当在内置DNS设置了 `"queryStrategy"` 后，实际行为将会与这个选项取并，只有都被包含的IP类型才会被解析，如 `"queryStrategy": "UseIPv4"` `"domainStrategy": "UseIP"`，实际上等同于 `"domainStrategy": "UseIPv4"`。
-- 当使用 `"Use"` 开头的选项时，若解析结果不符合要求（如，域名只有IPv4解析结果但使用了UseIPv6），则会回落回AsIs。
-- 当使用 `"Force"` 开头的选项时，若解析结果不符合要求，则该连接会无法建立。
+- 当在内置 DNS 模块中设置了 `"queryStrategy"` 后，实际解析的 IP 类型取两个选项的交集，只有两者都允许的 IP 类型才会被解析。例如，`"queryStrategy": "UseIPv4"` 配合 `"domainStrategy": "UseIP"`，实际上等同于 `"domainStrategy": "UseIPv4"`。
+- 当使用 `"Use"` 开头的选项时，若解析失败或结果不符合要求（如域名只有 IPv4 解析结果，但使用了 `UseIPv6`），则会回退到 `AsIs`。
+- 当使用 `"Force"` 开头的选项时，若解析失败或结果不符合要求，则无法建立连接。
 
-::: tip TIP
-当使用 `"UseIP"`、`"ForceIP"` 模式时，并且 [出站连接配置](../outbound.md#outboundobject) 中指定了 `sendThrough` 时，核心会根据 `sendThrough` 的值自动判断所需的 IP 类型，IPv4 或 IPv6。若手动指定了单种IP类型（如UseIPv4），但与 `sendThrough` 指定的本地地址不匹配，将会导致连接失败。
+::: tip
+当使用 `"UseIP"`、`"ForceIP"` 模式时，并且 [出站连接配置](../outbound.md#outboundobject) 中指定了 `sendThrough` 时，核心会根据 `sendThrough` 的值自动判断所需的 IP 类型，IPv4 或 IPv6。若手动指定了单种 IP 类型（如 UseIPv4），但与 `sendThrough` 指定的本地地址不匹配，将会导致连接失败。
 :::
 
-::: danger
+:::: danger 启用了此功能后，不当的配置可能会导致死循环！
+连接到服务器，需要等待 DNS 查询结果；完成 DNS 查询，需要连接到服务器。
 
-启用了此功能后，不当的配置可能会导致死循环。
+**不建议** 经验不足的用户擅自使用此功能。
 
-一句话版本：连接到服务器，需要等待 DNS 查询结果；完成 DNS 查询，需要连接到服务器。
+::: details 详细解释
 
-> Tony: 先有鸡还是先有蛋?
-
-详细解释：
-
-1. 触发条件：代理服务器（proxy.com）。内置 DNS 服务器，非 Local 模式。
+1. 触发条件：代理服务器地址是域名（proxy.com）。内置 DNS 服务器是非 Local 模式。
 2. Xray 尝试向 proxy.com 建立 TCP 连接 **前** ，通过内置 DNS 服务器查询 proxy.com。
 3. 内置 DNS 服务器向 dns.com 建立连接，并发送查询，以获取 proxy.com 的 IP。
 4. **不当的** 的路由规则，导致 proxy.com 代理了步骤 3 中发出的查询。
@@ -136,16 +142,12 @@ Sockopt 用于配置底层网络行为。
 - 用 Hosts。
 - ~~如果你还是不知道解决方案，就别用这个功能了。~~
 
-因此，**不建议** 经验不足的用户擅自使用此功能。
 :::
+::::
 
 > `dialerProxy`: ""
 
-一个出站代理的标识。当值不为空时，将使用指定的 outbound 发出连接。可用于支持传输配置的链式转发。
-
-::: danger
-此选项与 ProxySettingsObject.Tag 不兼容
-:::
+一个出站代理的标识。当值不为空时，将使用指定的 outbound 发出连接。通常用于配置链式代理。
 
 > `acceptProxyProtocol`: true | false
 
@@ -213,23 +215,19 @@ TCP 拥塞控制算法。仅支持 Linux。
 默认值 `false`，填写 `true` 时，启用 [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP)，仅客户端参数，因为 golang 在 1.24+ 版本已默认在监听时启用 MPTCP.
 当前仅支持Linux，需要Linux Kernel 5.6及以上。
 
-> `tcpNoDelay`: true | false
-
-该选项已被删除，因为 golang 默认启用 TCP no delay。 相反地，如果想要禁用，请通过使用 customSockopt 禁用。
-
 > `addressPortStrategy`: "none" | "SrvPortOnly" | "SrvAddressOnly" | "SrvPortAndAddress" | "TxtPortOnly" | "TxtAddressOnly" | "TxtPortAndAddress"
 
-使用 SRV 记录或 TXT 记录指定出站使用的目标地址/端口，默认 `none` 即关闭
+使用 SRV 记录或 TXT 记录指定出站使用的目标地址/端口，默认 `none` 即关闭。
 
-查询直接通过系统DNS而不是Xray的内置DNS, 尝试去查询的域名将会是出站中的域名。如果查询失败请求会按原地址和端口发出
+查询直接通过系统 DNS 而不是 Xray 的内置 DNS, 尝试去查询的域名将会是出站中的域名。如果查询失败请求会按原地址和端口发出。
 
-`Srv` 开头代表查询 SRV 记录(标准格式), `Txt` 开头代表查询 TXT 记录(格式形如 `127.0.0.1:80`)
+`Srv` 开头代表查询 SRV 记录(标准格式), `Txt` 开头代表查询 TXT 记录 (格式形如 `127.0.0.1:80`)。
 
-`PortOnly` 仅重置端口 `AddressOnly` 仅重置地址 `PortAndAddress` 则重置地址和端口
+`PortOnly` 仅重置端口 `AddressOnly` 仅重置地址 `PortAndAddress` 则重置地址和端口。
 
-该选项生效在 sockopt 里的 domainStrategy 解析之前，地址重置后仍会按 domainStrategy 的规则进行解析(如果有), 但是在 Freedom 的 domainStrategy 之后，如果在其中设置了解析为 IP 则本选项无法生效。
+该选项在 `sockopt.domainStrategy` 解析之前生效，地址重置后仍会按 `domainStrategy` 的规则进行解析。
 
-PS: 如果有正常上网的域名流量被 AsIs 的 freedom 出站送过来，那么在此设置后会尝试解析并重置地址和端口，比如核心会尝试查询 google.com 的 SRV 记录并按记录重置目标。
+Freedom 出站不支持此选项。
 
 > `customSockopt`: []
 
@@ -280,13 +278,12 @@ PS: 如果有正常上网的域名流量被 AsIs 的 freedom 出站送过来，�
 
 > `happyEyeballs`: [HappyEyeballsObject](#happyeyeballsobject)
 
-RFC-8305 实现的 happyEyeballs，仅适用于 TCP。当目标为域名时对它们竞速并选择第一个成功的返回，仅当 `Sockopt.domainStrategy` 被设置为非 `AsIs` 时生效。
+RFC-8305 实现的 happyEyeballs，仅适用于 TCP。当目标为域名时对它们竞速并选择第一个成功的返回，仅当 `sockopt.domainStrategy` 被设置为非 `AsIs` 时生效。
 
-注意：`UseIPv4v6` / `ForceIPv4v6` 会使可用的 IP 列表被缩减到仅剩 IPv4，仅当 IPv4 解析报错或没有返回 IP 时才会改为解析 IPv6；IPv4 连接失败不会触发该回退。不推荐这么用。建议使用 UseIP / ForceIP 配合 `HappyEyeballs.interleave`。
+注意：`UseIPv4v6` / `ForceIPv4v6` 会使可用的 IP 列表被缩减到仅剩 IPv4，仅当 IPv4 解析报错或没有返回 IP 时才会改为解析 IPv6；IPv4 连接失败不会触发该回退。不推荐这么用。建议使用 UseIP / ForceIP 配合 `happyEyeballs.interleave`。
 
 ::: warning
-使用这个功能时不要使用此出站的 `targetStrategy`，这会导致 `Sockopt` 只能看到被替换完毕的 IP。<br>
-此外也不能与 `dialerProxy` 一起使用，这会导致 `happyEyeballs` 无法生效。
+不能与 `dialerProxy` 一起使用，否则 `happyEyeballs` 无法生效。
 :::
 
 ### HappyEyeballsObject

@@ -114,8 +114,10 @@ lsmod | grep wireguard
   "outbounds": [
     {
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
+      "streamSettings": {
+        "sockopt": {
+          "domainStrategy": "UseIPv4"
+        }
       }
       //修改此处，可v4或者v6
     },
@@ -125,11 +127,9 @@ lsmod | grep wireguard
       "tag": "wg0",
       "streamSettings": {
         "sockopt": {
-          "mark": 255 // <mark>
+          "mark": 255, // <mark>
+          "domainStrategy": "UseIPv6"
         }
-      },
-      "settings": {
-        "domainStrategy": "UseIPv6"
       }
     }, //设置fwmark为<mark>的用户走指定方式”UseIPv6””UseIPv4”
     //            <--请在不同的方案中选择-->   方案2：sendThrough
@@ -138,8 +138,10 @@ lsmod | grep wireguard
       "protocol": "freedom",
       "sendThrough": "your wg0 v4 address",
       //修改此处，可v4或者v6
-      "settings": {
-        "domainStrategy": "UseIPv4"
+      "streamSettings": {
+        "sockopt": {
+          "domainStrategy": "UseIPv4"
+        }
       }
       //修改此处，可v4或者v6
     },
@@ -147,12 +149,10 @@ lsmod | grep wireguard
     {
       "tag": "wg0",
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
-      },
       "streamSettings": {
         "sockopt": {
-          "interface": "wg0"
+          "interface": "wg0",
+          "domainStrategy": "UseIPv4"
         }
       }
     },
@@ -193,7 +193,7 @@ lsmod | grep wireguard
 ```
 
 ::: tip
-可以通过修改 "domainStrategy": "UseIPv6"来控制对应用户的访问方式 实测优先级要高于系统本身的 gai.config
+可以通过修改 `sockopt.domainStrategy` 为 `UseIPv6` 来控制对应用户的访问方式。
 :::
 
 ## 5、系统设置配置

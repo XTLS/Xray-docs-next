@@ -93,12 +93,10 @@ If the Xray program is not installed on the side router, you can manually downlo
     {
       "tag": "direct",
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIP"
-      },
       "streamSettings": {
         "sockopt": {
-          "mark": 255
+          "mark": 255,
+          "domainStrategy": "UseIP"
         }
       }
     },

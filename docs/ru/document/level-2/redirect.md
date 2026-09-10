@@ -113,8 +113,10 @@ lsmod | grep wireguard
   "outbounds": [
     {
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
+      "streamSettings": {
+        "sockopt": {
+          "domainStrategy": "UseIPv4"
+        }
       }
       // Измените на UseIPv4 или UseIPv6 по вашему выбору
     },
@@ -124,11 +126,9 @@ lsmod | grep wireguard
       "tag": "wg0",
       "streamSettings": {
         "sockopt": {
-          "mark": 255 // <mark>
+          "mark": 255, // <mark>
+          "domainStrategy": "UseIPv6"
         }
-      },
-      "settings": {
-        "domainStrategy": "UseIPv6"
       }
     }, // Трафик с меткой fwmark, равной <mark>, будет направлен через UseIPv6/UseIPv4.
     //            <--Выберите один из вариантов-->   Вариант 2: sendThrough
@@ -137,8 +137,10 @@ lsmod | grep wireguard
       "protocol": "freedom",
       "sendThrough": "your wg0 v4 address",
       // Измените на UseIPv4 или UseIPv6 по вашему выбору
-      "settings": {
-        "domainStrategy": "UseIPv4"
+      "streamSettings": {
+        "sockopt": {
+          "domainStrategy": "UseIPv4"
+        }
       }
       // Измените на UseIPv4 или UseIPv6 по вашему выбору
     },
@@ -146,12 +148,10 @@ lsmod | grep wireguard
     {
       "tag": "wg0",
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
-      },
       "streamSettings": {
         "sockopt": {
-          "interface": "wg0"
+          "interface": "wg0",
+          "domainStrategy": "UseIPv4"
         }
       }
     },
@@ -193,8 +193,7 @@ lsmod | grep wireguard
 ```
 
 ::: tip
-Вы можете изменить "domainStrategy": "UseIPv6", чтобы управлять способом доступа для определенных пользователей.
-По моим тестам, этот параметр имеет более высокий приоритет, чем gai.config в системе.
+Вы можете управлять способом доступа для соответствующих пользователей, задав `sockopt.domainStrategy` равным `UseIPv6`.
 :::
 
 ## 5. Настройка системы

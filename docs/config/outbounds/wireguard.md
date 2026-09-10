@@ -98,9 +98,9 @@ Wireguard 服务器列表，其中每一项是一个服务器配置。
 
 当 Wireguard 服务器地址为域名、被代理流量目标地址是域名时，控制它们的域名解析策略。
 
-不像绝大多数代理协议，Wireguard 不允许传递域名作为目标，所以如果传入目标为一域名需要解析为 IP 地址后传送，这会经由 Xray 内置DNS处理，此处字段含义见 `Freedom` 出站的 `domainStrategy`，默认值为 `ForceIP`。
+不像绝大多数代理协议，Wireguard 不允许传递域名作为目标，所以如果传入目标为域名，需要先解析为 IP 再传送。此处字段含义与 [sockopt.domainStrategy](../transports/sockopt.md#sockoptobject) 中对应的 `Force` 策略相同，默认值为 `ForceIP`。
 
-`Freedom` 出站的 `domainStrategy` 包含诸如 `UseIP` 的选项，在这里不提供，因为 Wiregiard 必须获取一个可用的 IP，不能执行 `UseIP` 解析失败后回落为域名的行为。<br>
+`sockopt.domainStrategy` 包含诸如 `UseIP` 的选项，在这里不提供，因为 Wireguard 必须获取一个可用的 IP，不能执行 `UseIP` 解析失败后回落为域名的行为。<br>
 注意：作用于被代理流量时，此选项还受 `address` 选项的约束，比如你设置了 ForceIPv6v4 但是 address 中没有设置 IPv6 地址，尽管目标域名有 AAAA 记录也不会解析。
 
 ### Peers
