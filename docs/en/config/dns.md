@@ -4,19 +4,28 @@
 
 The built-in DNS module in Xray has three main purposes:
 
-- **Routing Phase:** Resolves domain names to IPs and matches rules based on the resolved IPs for traffic splitting.<br>
-  Whether a domain is resolved for routing depends on `routing.domainStrategy`. The built-in DNS server is used for DNS queries only with the following values:
-  - `"IPIfNonMatch"`: When the request target is a domain name without an accompanying IP, Xray first performs a round of matching using the other conditions. If no routing rule matches in that round, it resolves the domain through the built-in DNS server and performs another round of routing rule matching using the returned IP addresses.
-  - `"IPOnDemand"`: When the request target is a domain name without an accompanying IP, the domain is immediately resolved to IPs for matching as soon as routing encounters an IP-based rule.
+- **Routing Phase:** Resolves domain names to IPs and matches rules based on the resolved IPs for traffic splitting.
+  ::: details Detailed explanation
+  Whether a domain name is resolved for IP-based routing depends on `routing.domainStrategy`. The built-in DNS server may be used for DNS queries only with the following values:
+  - `"IPIfNonMatch"`: If no rule matches during the first routing pass, resolution occurs whenever the target includes a domain name and at least one rule contains an `ip` condition.
+  - `"IPOnDemand"`: Resolution occurs when the target includes a domain name and a rule containing an `ip` condition is encountered.
 
-- **Outbound Phase:** Resolves target domain names for connections or for sending to a remote proxy server:
+  :::
+
+- **Outbound Phase:** Resolves target domain names for connections or for sending to a remote proxy server.
+  ::: details Detailed explanation
   - For example, setting `targetStrategy` to `UseIP` in a VLESS outbound resolves the target domain of the proxied request through the local built-in DNS module, then sends the resolved IP to the remote proxy server.
   - Setting `sockopt.domainStrategy` to `UseIP` in a VLESS outbound resolves the VLESS server's domain through the built-in DNS module, then connects to the resolved IP.
   - Setting `sockopt.domainStrategy` to `UseIP` in a Freedom outbound resolves the request's target domain through the built-in DNS module, then connects to the resolved IP.
   - WireGuard does not allow domain names as destinations, so its outbound can use the built-in DNS module to resolve them to IPs.
 
+  :::
+
 - **TUN/Transparent Proxy DNS Traffic Hijacking:** Combines routing with the DNS outbound to hijack DNS traffic into this module; or uses [Tunnel](./inbounds/tunnel.md) to expose port 53 and act as a recursive DNS server.
+  ::: details Detailed explanation
   - Only basic IP queries (A and AAAA records) are supported. CNAME records will be queried repeatedly until an A/AAAA record is returned. Other queries will not enter the built-in DNS server; instead, they may be discarded or transparently forwarded to other servers depending on your outbound configuration.
+
+  :::
 
 ## DNS Processing Flow
 
