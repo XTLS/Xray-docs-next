@@ -80,7 +80,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/ru/config/inbounds/vless.md"
         },
         { text: "VMess", link: "/ru/config/inbounds/vmess.md" },
-        { text: "Wireguard", link: "/ru/config/inbounds/wireguard.md" },
+        { text: "WireGuard", link: "/ru/config/inbounds/wireguard.md" },
         { text: "Hysteria", link: "/ru/config/inbounds/hysteria.md" },
         { text: "TUN", link: "/ru/config/inbounds/tun.md" }
       ]
@@ -113,7 +113,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         },
         { text: "VMess", link: "/ru/config/outbounds/vmess.md" },
         {
-          text: "Wireguard",
+          text: "WireGuard",
           link: "/ru/config/outbounds/wireguard.md"
         },
         {

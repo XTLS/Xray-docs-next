@@ -14,7 +14,7 @@
 
 具体设置如下（以 Debian10 为例）：
 
-## 1、安装代理或者 VPN 软件（例如 Wireguard、IPsec 等）
+## 1、安装代理或者 VPN 软件（例如 WireGuard、IPsec 等）
 
 根据不同系统和不同软件，请参考官方安装方法
 

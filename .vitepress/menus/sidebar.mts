@@ -59,7 +59,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/config/inbounds/vless.md"
         },
         { text: "VMess", link: "/config/inbounds/vmess.md" },
-        { text: "Wireguard", link: "/config/inbounds/wireguard.md" },
+        { text: "WireGuard", link: "/config/inbounds/wireguard.md" },
         { text: "Hysteria", link: "/config/inbounds/hysteria.md" },
         { text: "TUN", link: "/config/inbounds/tun.md" }
       ]
@@ -85,7 +85,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/config/outbounds/vless.md"
         },
         { text: "VMess", link: "/config/outbounds/vmess.md" },
-        { text: "Wireguard", link: "/config/outbounds/wireguard.md" },
+        { text: "WireGuard", link: "/config/outbounds/wireguard.md" },
         { text: "Hysteria", link: "/config/outbounds/hysteria.md" }
       ]
     },

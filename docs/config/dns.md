@@ -17,7 +17,7 @@ Xray 内置的 DNS 模块，主要有三大用途：
   - 如在 VLESS 出站中，将 `targetStrategy` 设置为 `UseIP`，会先通过本地的内置 DNS 模块解析被代理请求的目标域名，再将解析得到的 IP 发给远端代理服务器。
   - 如在 VLESS 出站中，将 `sockopt.domainStrategy` 设置为 `UseIP`，会通过内置 DNS 模块解析 VLESS 服务器的域名，再连接解析得到的 IP。
   - 如在 Freedom 出站中，将 `sockopt.domainStrategy` 设置为 `UseIP`，会通过内置 DNS 模块解析请求的目标域名，再连接解析得到的 IP。
-  - 如在 Wireguard 出站中，协议不允许传递域名作为目标，可选用内置 DNS 模块解析为 IP。
+  - 如在 WireGuard 出站中，协议不允许传递域名作为目标，可选用内置 DNS 模块解析为 IP。
 
   :::
 

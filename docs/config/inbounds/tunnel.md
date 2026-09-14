@@ -62,7 +62,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 任意门主要有两个用处 一个是用作透明代理(见下)，另一个是映射一个端口。
 
-有时一些服务并不支持使用 Socks5 这样的正向代理，使用 Tun 或者 Tproxy 又有些小题大做了，而这些服务又只和一个 IP 一个端口通信 (比如: iperf, Minecraft server, Wireguard endpoint), 就可以用到任意门。
+有时一些服务并不支持使用 Socks5 这样的正向代理，使用 Tun 或者 Tproxy 又有些小题大做了，而这些服务又只和一个 IP 一个端口通信 (比如: iperf, Minecraft server, WireGuard endpoint), 就可以用到任意门。
 
 如以下 Config (假设默认出站为一有效代理)
 

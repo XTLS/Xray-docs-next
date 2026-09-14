@@ -1,9 +1,9 @@
-# Wireguard
+# WireGuard
 
-标准 Wireguard 协议实现。
+用户态 WireGuard 协议实现，用于与对端建立 WireGuard 隧道，并通过该隧道发送出站流量。
 
 ::: danger
-**Wireguard 协议并非专门为翻墙而设计，若在最外层过墙，存在特征可能导致服务器被封锁**
+**WireGuard 协议并非专门为翻墙而设计，若在最外层过墙，存在特征可能导致服务器被封锁**
 :::
 
 ## OutboundConfigurationObject
@@ -16,24 +16,23 @@
     {
       // ...
       "protocol": "wireguard",
-      // [!code focus:19]
+      // [!code focus:18]
       "settings": {
-        "secretKey": "PRIVATE_KEY",
+        "secretKey": "CLIENT_PRIVATE_KEY",
         "address": [
-          // optional, default ["10.0.0.1", "fd59:7153:2388:b5fd:0000:0000:0000:0001"]
-          "IPv4_CIDR",
-          "IPv6_CIDR",
+          "10.0.0.1",
+          "fd59:7153:2388:b5fd:0000:0000:0000:0001",
           "and more..."
         ],
         "peers": [
           {
-            "endpoint": "ENDPOINT_ADDR",
-            "publicKey": "PUBLIC_KEY"
+            "endpoint": "SERVER_ADDR",
+            "publicKey": "SERVER_PUBLIC_KEY"
           }
         ],
         "noKernelTun": false,
-        "mtu": 1420, // optional, default 1420
-        "reserved": [1, 2, 3],
+        "mtu": 1420,
+        "reserved": [0, 0, 0],
         "domainStrategy": "ForceIP"
       }
     }
@@ -41,36 +40,43 @@
 }
 ```
 
-::: tip
-目前 Wireguard 协议 outbound 中不支持设置 `streamSettings`
-:::
-
 > `secretKey`: string
 
-用户私钥。必填。
+客户端私钥。必填。
 
-> `address`: string array
+可以使用命令 `xray wg` 生成客户端密钥对。将输出的 `PrivateKey` 填入此项；与其成对出现的 `Password (PublicKey)` 是客户端公钥。以 Xray 作为 WireGuard 服务器时，应将客户端公钥填入 `inbounds[].settings.peers[].publicKey`。
 
-Wireguard 会在本地开启虚拟网卡 tun。使用一个或多个 IP 地址，支持 IPv6。
+> `address`: \[ string \]
+
+指定 WireGuard 出站生成的内层 IP 包所使用的本地源地址，即客户端的隧道内 IP。可以配置一个或多个 IPv4 或 IPv6 地址。
+
+默认值为 `["10.0.0.1", "fd59:7153:2388:b5fd:0000:0000:0000:0001"]`。
+
+Xray 会根据目标地址的地址族自动选择相应的 IP 作为源地址；如果同一地址族配置了多个 IP，则会按照内部规则选择合适的地址。<br>
+WireGuard 服务器的入站配置必须允许这些 IP，并且这些 IP 在服务器的 WireGuard 入站配置中必须唯一。
 
 > `noKernelTun`: true | false
 
-默认情况下核心会检测是否处于 Linux 并且当前用户具有 CAP_NET_ADMIN 权限决定是否启用系统虚拟网卡，否则使用 gvisor, 使用系统虚拟网卡相对性能更高。注意这只是用来处理 IP 包的，和 wireguard kernel module 没有任何关系。
+是否禁用 TUN，默认值为 `false`；在 LXC 或 Docker 环境中可能需要设为 `true`。
 
-这个判断不一定准确，比如一些 lxc 虚拟化可能本来就没有 TUN 权限，这会导致出站无法工作，所以可以在这里设置是否手动禁用。
+::: details 我需要启用 `noKernelTun` 吗？
+设为 `false` 时，Xray 会自动选择内层 IP 包的处理方式：在 Linux 上且 Xray 进程具有 `CAP_NET_ADMIN` 权限时，创建 TUN 并由内核网络栈处理；在其他平台或权限不足时，使用进程内的 gVisor 网络栈。设为 `true` 时，仅使用 gVisor 网络栈，不会创建 TUN。使用 TUN 通常性能更高。
 
-使用系统虚拟网卡时会占用 IPv6 的 10230 号路由表，每一个其他 wireguard 出站会依次往后使用路由表，比如第二个会使用 10231 号路由表，以此类推。
+此选项只选择内层 IP 包的处理方式。WireGuard 协议本身仍由 Xray 的用户态实现处理，与内核 WireGuard 模块无关。
 
-注意如果在同一个机器上启动第二个 Xray 实例不会接着分配路由表号，会继续尝试使用 10230 号路由表，因为已经被第一个 Xray 实例占用所以会失败无法连接，如果实在需要也需要设置这个选项禁用系统虚拟网卡。
+上述自动判断不一定准确，例如某些 LXC 环境即使具有 `CAP_NET_ADMIN` 权限，也可能无法使用 TUN，导致出站无法工作；此时应将本项设为 `true`。
+
+使用 TUN 时会占用 IPv6 的 10230 号路由表，每一个其他 WireGuard 出站会依次往后使用路由表，比如第二个会使用 10231 号路由表，以此类推。
+
+注意如果在同一个机器上启动第二个 Xray 实例不会接着分配路由表号，会继续尝试使用 10230 号路由表，因为已经被第一个 Xray 实例占用所以会失败无法连接，如果实在需要也需要设置这个选项禁用 TUN。
+:::
 
 > `mtu`: int
 
-Wireguard 底层 tun 的MTU大小。
+WireGuard 隧道内层 IP 包的 MTU。默认 1420。
 
-<details>
-<summary>MTU 的计算方法</summary>
-
-一个 Wireguard 数据包的结构如下
+::: details MTU 的计算方法
+一个 WireGuard 数据包的结构如下
 
 ```
 - 20-byte IPv4 header or 40 byte IPv6 header
@@ -83,35 +89,46 @@ Wireguard 底层 tun 的MTU大小。
 ```
 
 `N-byte encrypted data` 即为我们需要的 MTU 的值，根据 endpoint 是 IPv4 还是 IPv6，具体的值可以是 1440(IPv4) 或者 1420(IPv6)，如果处于特殊环境下再额外减掉即可 (如家宽 PPPoE 额外 -8)。
+:::
 
-</details>
+> `reserved` \[ byte \]
 
-> `reserved` \[ number \]
+WireGuard 协议保留字节，长度为 3，默认全 0，按需填写。
 
-Wireguard 保留字节，按需填写。
+> `peers`: \[ [PeersObject](#peersobject) \]
 
-> `peers`: \[ [Peers](#peers) \]
+WireGuard 服务器列表，其中每一项是一个服务器配置。配置多个服务器时，Xray 会根据目标 IP 地址对各服务器的 `allowedIPs` 进行前缀匹配，将流量路由至匹配的服务器，从而使不同目标网段可以通过不同的 WireGuard 服务器转发。
 
-Wireguard 服务器列表，其中每一项是一个服务器配置。
+::: details Xray WireGuard 出站的数据包模型
+进入 WireGuard 出站的 TCP 和 UDP 连接会由网络栈转换为内层 IP 包。内层源地址从 `address` 中选择，内层目标地址则是被代理流量的目标 IP。
+
+Xray 会使用内层目标地址对各 peer 的 `allowedIPs` 进行前缀匹配，由匹配到的 peer 加密封装，并将外层 UDP 数据包发送到该 peer 的 `endpoint`。因此，`address` 表示客户端使用的内层源地址，`allowedIPs` 相当于选择 peer 的目标路由表，而 `endpoint` 才是外层连接的服务器地址。
+:::
+
+::: tip
+每个 WireGuard 服务器都应根据其 `allowedIPs`，放行 `address` 中相同 IP 族的所有地址：`allowedIPs` 仅包含 IPv4 网段时，应放行 `address` 中列出的所有 IPv4 地址；仅包含 IPv6 网段时同理；同时包含 IPv4 和 IPv6 网段时，应放行其中所有地址。
+
+以 Xray 作为 WireGuard 服务器为例，应在 `inbounds[].settings.peers[].allowedIPs` 中列出这些地址。
+:::
 
 > `domainStrategy`: "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4" | "ForceIP"
 
-当 Wireguard 服务器地址为域名、被代理流量目标地址是域名时，控制它们的域名解析策略。
+当 WireGuard 服务器地址为域名、被代理流量目标地址是域名时，控制它们的域名解析策略。
 
-不像绝大多数代理协议，Wireguard 不允许传递域名作为目标，所以如果传入目标为域名，需要先解析为 IP 再传送。此处字段含义与 [sockopt.domainStrategy](../transports/sockopt.md#sockoptobject) 中对应的 `Force` 策略相同，默认值为 `ForceIP`。
+不像绝大多数代理协议，WireGuard 不允许传递域名作为目标，所以如果传入目标为域名，需要先解析为 IP 再传送。此处字段含义与 [sockopt.domainStrategy](../transports/sockopt.md#sockoptobject) 中对应的 `Force` 策略相同，默认值为 `ForceIP`。
 
-`sockopt.domainStrategy` 包含诸如 `UseIP` 的选项，在这里不提供，因为 Wireguard 必须获取一个可用的 IP，不能执行 `UseIP` 解析失败后回落为域名的行为。<br>
+`sockopt.domainStrategy` 包含诸如 `UseIP` 的选项，在这里不提供，因为 WireGuard 必须获取一个可用的 IP，不能执行 `UseIP` 解析失败后回落为域名的行为。<br>
 注意：作用于被代理流量时，此选项还受 `address` 选项的约束，比如你设置了 ForceIPv6v4 但是 address 中没有设置 IPv6 地址，尽管目标域名有 AAAA 记录也不会解析。
 
-### Peers
+### PeersObject
 
 ```json
 {
-  "endpoint": "ENDPOINT_ADDR",
-  "publicKey": "PUBLIC_KEY",
-  "preSharedKey": "PRE_SHARED_KEY", // optional, default "0000000000000000000000000000000000000000000000000000000000000000"
-  "keepAlive": 0, // optional, default 0
-  "allowedIPs": ["0.0.0.0/0"] // optional, default ["0.0.0.0/0", "::/0"]
+  "endpoint": "SERVER_ADDR",
+  "publicKey": "SERVER_PUBLIC_KEY",
+  "preSharedKey": "PRE_SHARED_KEY",
+  "keepAlive": 0,
+  "allowedIPs": ["0.0.0.0/0", "::/0"]
 }
 ```
 
@@ -124,16 +141,18 @@ IP: 端口 格式，例如 `162.159.192.1:2408` 或 `[2606:4700:d0::a29f:c001]:2
 
 > `publicKey`: string
 
-服务器公钥，用于验证, 必填。
+服务器公钥，用于验证。必填。
+
+以 Xray 作为 WireGuard 服务器时，此处应填写与服务器 `inbounds[].settings.secretKey` 成对的 `Password (PublicKey)`。
 
 > `preSharedKey`: string
 
-额外的对称加密密钥。
+额外的对称加密密钥，可选。需与服务端配置一致。
 
 > `keepAlive`: int
 
-心跳包时间间隔，单位为秒，默认为 0 表示无心跳。
+客户端向该服务器发送持久保活包的间隔，单位为秒，用于在空闲时维持可能存在的 NAT 映射或防火墙状态。仅特殊场景需要开启，且仅客户端开启即可；默认值为 `0`，表示不发送。
 
 > `allowedIPs`: string array
 
-Wireguard 仅允许特定源 IP 的流量。
+指定由该服务器转发的目标 IP 网段，每项使用 CIDR 表示。仅配置一个服务器时可以省略，因为默认值为 `["0.0.0.0/0", "::/0"]`，即所有 IPv4 和 IPv6 目标流量均由该服务器转发。配置多个服务器时，需为每个服务器显式设置 `allowedIPs`，将不同的目标网段分配给相应服务器；Xray 会根据目标 IP 的前缀匹配结果选择服务器。

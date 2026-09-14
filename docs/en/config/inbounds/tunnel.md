@@ -62,7 +62,7 @@ The value of `userLevel` corresponds to the value of `level` in [policy](../poli
 
 The "Arbitrary Door" has two main uses: one is for transparent proxy (see below), and the other is for mapping a port.
 
-Sometimes some services do not support forward proxies like Socks5, and using Tun or Tproxy is overkill. If these services only communicate with a single IP and port (e.g., iperf, Minecraft server, Wireguard endpoint), you can use `tunnel`.
+Sometimes some services do not support forward proxies like Socks5, and using Tun or Tproxy is overkill. If these services only communicate with a single IP and port (e.g., iperf, Minecraft server, WireGuard endpoint), you can use `tunnel`.
 
 For example, the following Config (assuming the default outbound is a valid proxy):
 
