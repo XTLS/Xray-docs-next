@@ -16,7 +16,7 @@ User-space WireGuard protocol implementation for establishing a WireGuard tunnel
     {
       // ...
       "protocol": "wireguard",
-      // [!code focus:18]
+      // [!code focus:25]
       "settings": {
         "secretKey": "CLIENT_PRIVATE_KEY",
         "address": [
@@ -27,13 +27,20 @@ User-space WireGuard protocol implementation for establishing a WireGuard tunnel
         "peers": [
           {
             "endpoint": "SERVER_ADDR",
-            "publicKey": "SERVER_PUBLIC_KEY"
+            "publicKey": "SERVER_PUBLIC_KEY",
+            "allowedIPs": ["0.0.0.0/0", "::/0"]
+            // ...
           }
         ],
         "noKernelTun": false,
         "mtu": 1420,
         "reserved": [0, 0, 0],
-        "domainStrategy": "ForceIP"
+        "remoteDNS": [
+          "1.1.1.1",
+          "1.0.0.1",
+          "2606:4700:4700::1111",
+          "2606:4700:4700::1001"
+        ]
       }
     }
   ]
@@ -111,14 +118,23 @@ Each WireGuard server must allow all addresses in `address` that belong to the s
 When using Xray as the WireGuard server, list these addresses in `inbounds[].settings.peers[].allowedIPs`.
 :::
 
-> `domainStrategy`: "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4" | "ForceIP"
+> `remoteDNS`: \[ string \]
 
-Controls the domain resolution strategy when the WireGuard server address or the target address of the proxied traffic is a domain name.
+Used to resolve proxied target domain names. Each item must be an IP address. The default is `["1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001"]`.
 
-Unlike most proxy protocols, WireGuard does not allow domain names to be passed as targets. If the incoming target is a domain name, it must therefore be resolved to an IP address before transmission. The meanings of this field match the corresponding `Force` strategies in [sockopt.domainStrategy](../transports/sockopt.md#sockoptobject). The default is `ForceIP`.
+DNS queries are sent through the WireGuard tunnel; every server IP must be included in a peer's `allowedIPs` and reachable through the tunnel.
 
-`sockopt.domainStrategy` includes options such as `UseIP`, which are not available here because WireGuard must obtain a usable IP address and cannot fall back to a domain name when `UseIP` resolution fails.<br>
-Note: When applied to proxied traffic, this option is also constrained by `address`. For example, if you set `ForceIPv6v4` but do not configure an IPv6 address in `address`, AAAA records will not be resolved even if the target domain has them.
+::: details `remoteDNS` and `targetStrategy`
+Unlike other outbounds, targets inside a WireGuard tunnel must be IP addresses. When the proxied target is a domain name, the outbound's [`targetStrategy`](../outbound.md#outboundobject) determines which DNS is used to resolve it:
+
+- `AsIs`: uses `remoteDNS`.
+- `UseIP*`: tries Xray's built-in DNS first and falls back to `remoteDNS` if resolution fails.
+- `ForceIP*`: uses Xray's built-in DNS and fails immediately if resolution fails.
+
+The results returned by `UseIP*` or `ForceIP*` must contain at least one IP whose address family matches an address in `address`; otherwise, the connection fails. An address-family mismatch is not treated as a resolution failure and does not trigger any fallback.
+
+Which should you choose? `remoteDNS` works out of the box and sends queries through the WireGuard tunnel, usually producing CDN resolution results suited to the tunnel's exit location. Achieving the same result with [Xray's built-in DNS](../dns.md) usually requires additional DNS server and routing rules. However, if the built-in DNS resolved the target domain earlier—for example, when using a RealIP setup with TUN/TProxy, or when sniffing is enabled and `routing.domainStrategy` is not `AsIs`—using Xray's built-in DNS is recommended to avoid the additional RTT of a second resolution.
+:::
 
 ### PeersObject
 
@@ -153,6 +169,6 @@ Optional additional symmetric encryption key. It must match the server configura
 
 Interval, in seconds, at which the client sends persistent keepalive packets to this server. This maintains any NAT mappings or firewall state during idle periods. Enable it only in special situations and only on the client. The default is `0`, which disables keepalive packets.
 
-> `allowedIPs`: string array
+> `allowedIPs`: \[ string \]
 
 Specifies the destination IP networks forwarded by this server, with each item expressed in CIDR notation. This field can be omitted when only one server is configured because the default is `["0.0.0.0/0", "::/0"]`, meaning that the server forwards all IPv4 and IPv6 destination traffic. When multiple servers are configured, explicitly set `allowedIPs` for each server to assign different destination networks to the appropriate server; Xray selects the server by prefix-matching the destination IP address.
