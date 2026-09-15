@@ -33,7 +33,12 @@
         "noKernelTun": false,
         "mtu": 1420,
         "reserved": [0, 0, 0],
-        "domainStrategy": "ForceIP"
+        "remoteDNS": [
+          "1.1.1.1",
+          "1.0.0.1",
+          "2606:4700:4700::1111",
+          "2606:4700:4700::1001"
+        ]
       }
     }
   ]
@@ -111,14 +116,23 @@ Xray 会使用内层目标地址对各 peer 的 `allowedIPs` 进行前缀匹配�
 以 Xray 作为 WireGuard 服务器为例，应在 `inbounds[].settings.peers[].allowedIPs` 中列出这些地址。
 :::
 
-> `domainStrategy`: "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4" | "ForceIP"
+> `remoteDNS`: \[ string \]
 
-当 WireGuard 服务器地址为域名、被代理流量目标地址是域名时，控制它们的域名解析策略。
+解析被代理目标域名的 DNS 服务器。列表项必须为 IP。默认值为 `["1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001"]`。
 
-不像绝大多数代理协议，WireGuard 不允许传递域名作为目标，所以如果传入目标为域名，需要先解析为 IP 再传送。此处字段含义与 [sockopt.domainStrategy](../transports/sockopt.md#sockoptobject) 中对应的 `Force` 策略相同，默认值为 `ForceIP`。
+::: details `remoteDNS` 与 `targetStrategy`
+使用 `remoteDNS` 时，DNS 查询经 WireGuard 隧道发送；所有服务器 IP 均须包含在某个 peer 的 `allowedIPs` 中并能通过隧道访问。
 
-`sockopt.domainStrategy` 包含诸如 `UseIP` 的选项，在这里不提供，因为 WireGuard 必须获取一个可用的 IP，不能执行 `UseIP` 解析失败后回落为域名的行为。<br>
-注意：作用于被代理流量时，此选项还受 `address` 选项的约束，比如你设置了 ForceIPv6v4 但是 address 中没有设置 IPv6 地址，尽管目标域名有 AAAA 记录也不会解析。
+出站的 [`targetStrategy`](../outbound.md#outboundobject) 决定使用哪套 DNS：
+
+- `AsIs`：使用 `remoteDNS`。
+- `UseIP*`：优先使用 Xray 内置 DNS，解析失败时回退到 `remoteDNS`。
+- `ForceIP*`：使用 Xray 内置 DNS，解析失败时直接失败。
+
+`UseIP*` 或 `ForceIP*` 返回的 IP 地址族必须已配置在 `address` 中，否则无法连接；解析成功后不会因地址族冲突而回退到 `remoteDNS`。
+
+如何取舍？`remoteDNS` 配置更简单；但若 Xray 内置 DNS 已有符合预期的解析结果，使用内置 DNS 通常可复用缓存，省去一次经 WireGuard 隧道的 DNS 查询。
+:::
 
 ### PeersObject
 
@@ -153,6 +167,6 @@ IP: 端口 格式，例如 `162.159.192.1:2408` 或 `[2606:4700:d0::a29f:c001]:2
 
 客户端向该服务器发送持久保活包的间隔，单位为秒，用于在空闲时维持可能存在的 NAT 映射或防火墙状态。仅特殊场景需要开启，且仅客户端开启即可；默认值为 `0`，表示不发送。
 
-> `allowedIPs`: string array
+> `allowedIPs`: \[ string \]
 
 指定由该服务器转发的目标 IP 网段，每项使用 CIDR 表示。仅配置一个服务器时可以省略，因为默认值为 `["0.0.0.0/0", "::/0"]`，即所有 IPv4 和 IPv6 目标流量均由该服务器转发。配置多个服务器时，需为每个服务器显式设置 `allowedIPs`，将不同的目标网段分配给相应服务器；Xray 会根据目标 IP 的前缀匹配结果选择服务器。

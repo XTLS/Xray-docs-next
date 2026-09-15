@@ -33,7 +33,12 @@ User-space WireGuard protocol implementation for establishing a WireGuard tunnel
         "noKernelTun": false,
         "mtu": 1420,
         "reserved": [0, 0, 0],
-        "domainStrategy": "ForceIP"
+        "remoteDNS": [
+          "1.1.1.1",
+          "1.0.0.1",
+          "2606:4700:4700::1111",
+          "2606:4700:4700::1001"
+        ]
       }
     }
   ]
@@ -111,14 +116,23 @@ Each WireGuard server must allow all addresses in `address` that belong to the s
 When using Xray as the WireGuard server, list these addresses in `inbounds[].settings.peers[].allowedIPs`.
 :::
 
-> `domainStrategy`: "ForceIPv6v4" | "ForceIPv6" | "ForceIPv4v6" | "ForceIPv4" | "ForceIP"
+> `remoteDNS`: \[ string \]
 
-Controls the domain resolution strategy when the WireGuard server address or the target address of the proxied traffic is a domain name.
+DNS servers for resolving proxied target domain names. Each item must be an IP address. The default is `["1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001"]`.
 
-Unlike most proxy protocols, WireGuard does not allow domain names to be passed as targets. If the incoming target is a domain name, it must therefore be resolved to an IP address before transmission. The meanings of this field match the corresponding `Force` strategies in [sockopt.domainStrategy](../transports/sockopt.md#sockoptobject). The default is `ForceIP`.
+::: details `remoteDNS` and `targetStrategy`
+When `remoteDNS` is used, queries are sent through the WireGuard tunnel; every server IP must be included in a peer's `allowedIPs` and reachable through the tunnel.
 
-`sockopt.domainStrategy` includes options such as `UseIP`, which are not available here because WireGuard must obtain a usable IP address and cannot fall back to a domain name when `UseIP` resolution fails.<br>
-Note: When applied to proxied traffic, this option is also constrained by `address`. For example, if you set `ForceIPv6v4` but do not configure an IPv6 address in `address`, AAAA records will not be resolved even if the target domain has them.
+The outbound's [`targetStrategy`](../outbound.md#outboundobject) determines which DNS is used:
+
+- `AsIs`: uses `remoteDNS`.
+- `UseIP*`: tries Xray's built-in DNS first and falls back to `remoteDNS` if resolution fails.
+- `ForceIP*`: uses Xray's built-in DNS and fails immediately if resolution fails.
+
+An IP returned by `UseIP*` or `ForceIP*` must belong to an address family configured in `address`; otherwise, the connection fails. Successful resolution does not fall back to `remoteDNS` because of an address-family mismatch.
+
+Which should you choose? `remoteDNS` is simpler to configure; however, if Xray's built-in DNS already has the expected result, using it can usually reuse the cache and avoid another query through the WireGuard tunnel.
+:::
 
 ### PeersObject
 
@@ -153,6 +167,6 @@ Optional additional symmetric encryption key. It must match the server configura
 
 Interval, in seconds, at which the client sends persistent keepalive packets to this server. This maintains any NAT mappings or firewall state during idle periods. Enable it only in special situations and only on the client. The default is `0`, which disables keepalive packets.
 
-> `allowedIPs`: string array
+> `allowedIPs`: \[ string \]
 
 Specifies the destination IP networks forwarded by this server, with each item expressed in CIDR notation. This field can be omitted when only one server is configured because the default is `["0.0.0.0/0", "::/0"]`, meaning that the server forwards all IPv4 and IPv6 destination traffic. When multiple servers are configured, explicitly set `allowedIPs` for each server to assign different destination networks to the appropriate server; Xray selects the server by prefix-matching the destination IP address.
