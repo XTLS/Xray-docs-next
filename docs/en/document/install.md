@@ -123,8 +123,7 @@ Two different styles of Docker images are currently provided:
 | Windows                  | [Furious](https://github.com/LorenEteval/Furious)                                                                                                 |
 | Windows                  | [Invisible Man - Xray](https://github.com/InvisibleManVPN/InvisibleMan-XRayClient)                                                                |
 | Windows                  | [AnyPortal](https://github.com/AnyPortal/AnyPortal)                                                                                               |
-| Android                  | [v2rayNG](https://github.com/2dust/v2rayNG)                                                                                                       |
-| Android                  | [X-flutter](https://github.com/XTLS/X-flutter)                                                                                                    |
+| Android                  | [v2rayNG](https://github.com/2dust/v2rayNG)                                                                                                       |                                                                                                  |
 | Android                  | [SaeedDev94/Xray](https://github.com/SaeedDev94/Xray)                                                                                             |
 | Android                  | [SimpleXray](https://github.com/lhear/SimpleXray)                                                                                                 |
 | Android                  | [AnyPortal](https://github.com/AnyPortal/AnyPortal)                                                                                               |
