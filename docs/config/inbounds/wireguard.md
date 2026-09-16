@@ -1,6 +1,6 @@
 # WireGuard
 
-用户态 WireGuard 协议实现，用于与对端建立 WireGuard 隧道，并接收通过该隧道进入的流量。
+用户态 WireGuard 协议实现，用于与对端建立 WireGuard 隧道，将收到的 TCP 和 UDP 数据包转换为 Xray 内部的代理请求进行处理和响应。
 
 ::: danger
 **WireGuard 协议并非专门为翻墙而设计，若在最外层过墙，存在特征可能导致服务器被封锁**
@@ -40,21 +40,11 @@
 
 服务器私钥。必填。
 
-可以使用命令 `xray wg` 生成服务器密钥对。将输出的 `PrivateKey` 填入此项；与其成对出现的 `Password (PublicKey)` 是服务器公钥。以 Xray 作为 WireGuard 客户端时，应将服务器公钥填入 `outbounds[].settings.peers[].publicKey`。
+使用命令 `xray wg` 生成服务器密钥对时。此处对应将输出的 `PrivateKey`。
 
 > `peers`: \[ [PeersObject](#peersobject) \]
 
-WireGuard 客户端列表，其中每一项是一个客户端配置。配置多个客户端时，Xray 会将解密后内层 IP 包的源地址与各客户端的 `allowedIPs` 进行匹配，以识别流量所属的客户端。
-
-::: details Xray WireGuard 入站的网络模型
-常规 WireGuard 组网（包括点到点、点到站和站到站）需要通信两端各自通过三层网络接口参与 IP 路由。
-
-与之不同，Xray 的 WireGuard 入站无需在系统中创建 TUN，也无需为服务端配置用于组网的隧道内 IP。WireGuard 解密得到的内层 IP 包由内置网络栈处理，其中的 TCP 和 UDP 流量会转换为代理连接并交给 Xray 路由系统，而不是继续转发原始 IP 包。
-
-客户端既可以发送自身流量，也可以作为网关转发其后方网段的流量。Xray 服务端不作为隧道内供客户端访问的三层网络节点，也不会将原始 IP 包交给系统内核继续转发或 NAT。
-
-`allowedIPs` 同时参与两个方向的数据包处理：接收时，WireGuard 会校验解密后内层 IP 包的源地址，Xray 也会根据该地址识别客户端；回包时，WireGuard 会根据内层目标地址选择对应客户端。
-:::
+WireGuard 客户端 peers 列表。
 
 > `mtu`: int
 
@@ -93,7 +83,7 @@ WireGuard 隧道内层 IP 包的 MTU。默认 1420。
 
 客户端公钥，用于验证。必填。
 
-以 Xray 作为 WireGuard 客户端时，此处应填写与客户端 `outbounds[].settings.secretKey` 成对的 `Password (PublicKey)`。
+使用 `xray wg` 生成密钥对时。此处对应将输出的 `Password (PublicKey)`。
 
 > `preSharedKey`: string
 
@@ -105,13 +95,9 @@ WireGuard 隧道内层 IP 包的 MTU。默认 1420。
 
 > `allowedIPs`: \[ string \]
 
-指定允许由该客户端发送的源 IP 地址或网段，每项使用 CIDR 表示。
+指定允许由该客户端发送的源 IP 地址或网段，使用 CIDR 表示。默认值为 `["0.0.0.0/0", "::/0"]`，即允许所有 IPv4 和 IPv6 源地址。
 
-客户端出站的 `address` 必须包含在对应服务端 peer 的 `allowedIPs` 中。例如，客户端 `outbounds[].settings.address` 为 `["10.0.0.2"]`，则此处可配置为 `["10.0.0.2/32"]`。
-
-`allowedIPs` 不只可以填写客户端的隧道内 IP，也可以包含由该 peer 负责转发的网段。例如，第三方 WireGuard 客户端作为 `192.168.10.0/24` 的网关时，可以将该网段填入此处；客户端还需自行配置路由并开启 IP 转发。
-
-仅有一个客户端时可省略，默认值为 `["0.0.0.0/0", "::/0"]`。配置多个客户端时，应显式配置互不冲突的 `allowedIPs`，否则无法可靠地区分客户端。
+仅有一个客户端时可省略，默认值为 `["0.0.0.0/0", "::/0"]`。配置多个客户端时，与客户端的 `allowedIPs` 不同，这里的 `allowedIPs`，不应重叠，轻则无法正确匹配客户端 peer，重则可能导致无法正确路由回包。
 
 > `email`: string
 

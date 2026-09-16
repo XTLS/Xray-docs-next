@@ -1,6 +1,6 @@
 # WireGuard
 
-用户态 WireGuard 协议实现，用于与对端建立 WireGuard 隧道，并通过该隧道发送出站流量。
+用户态 WireGuard 协议实现，用于与对端建立 WireGuard 隧道，将被路由到此出站的 TCP/UDP 请求封装为 IP 包后通过 WireGuard 隧道发送。
 
 ::: danger
 **WireGuard 协议并非专门为翻墙而设计，若在最外层过墙，存在特征可能导致服务器被封锁**
@@ -16,20 +16,15 @@
     {
       // ...
       "protocol": "wireguard",
-      // [!code focus:25]
+      // [!code focus:23]
       "settings": {
         "secretKey": "CLIENT_PRIVATE_KEY",
-        "address": [
-          "10.0.0.1",
-          "fd59:7153:2388:b5fd:0000:0000:0000:0001",
-          "and more..."
-        ],
+        "address": ["10.0.0.1", "fd59:7153:2388:b5fd:0000:0000:0000:0001"],
         "peers": [
           {
-            "endpoint": "SERVER_ADDR",
+            "endpoint": "example.com:2408",
             "publicKey": "SERVER_PUBLIC_KEY",
             "allowedIPs": ["0.0.0.0/0", "::/0"]
-            // ...
           }
         ],
         "noKernelTun": false,
@@ -49,29 +44,27 @@
 
 > `secretKey`: string
 
-客户端私钥。必填。
+客户端的私钥。必填。
 
-可以使用命令 `xray wg` 生成客户端密钥对。将输出的 `PrivateKey` 填入此项；与其成对出现的 `Password (PublicKey)` 是客户端公钥。以 Xray 作为 WireGuard 服务器时，应将客户端公钥填入 `inbounds[].settings.peers[].publicKey`。
+使用命令 `xray wg` 生成客户端密钥对时。此处对应将输出的 `PrivateKey`。
 
 > `address`: \[ string \]
 
-指定 WireGuard 出站生成的内层 IP 包所使用的本地源地址，即客户端的隧道内 IP。可以配置一个或多个 IPv4 或 IPv6 地址。
+Wireguard 接口的本地 IP 地址列表。存在多个时根据 peer 自动选择。
 
 默认值为 `["10.0.0.1", "fd59:7153:2388:b5fd:0000:0000:0000:0001"]`。
 
-Xray 会根据目标地址的地址族自动选择相应的 IP 作为源地址；如果同一地址族配置了多个 IP，则会按照内部规则选择合适的地址。<br>
-WireGuard 服务器的入站配置必须允许这些 IP，并且这些 IP 在服务器的 WireGuard 入站配置中必须唯一。
-
 > `noKernelTun`: true | false
 
-是否禁用 TUN，默认值为 `false`；在 LXC 或 Docker 环境中可能需要设为 `true`。
+是否无视自动检测强制不使用系统 TUN，默认值为 `false`；在 LXC 或 Docker 环境中可能需要设为 `true`。
 
-::: details 我需要启用 `noKernelTun` 吗？
-设为 `false` 时，Xray 会自动选择内层 IP 包的处理方式：在 Linux 上且 Xray 进程具有 `CAP_NET_ADMIN` 权限时，创建 TUN 并由内核网络栈处理；在其他平台或权限不足时，使用进程内的 gVisor 网络栈。设为 `true` 时，仅使用 gVisor 网络栈，不会创建 TUN。使用 TUN 通常性能更高。
+::: details 关于 kernel TUN
+Xray 将 wiregurad 的 IP 包重新还原为 TCP/UDP 载荷的方式。
+默认情况下 Xray 会自动检测：在 Linux 上且 Xray 进程具有 `CAP_NET_ADMIN` 权限时，创建 TUN 并由内核网络栈处理；在其他平台或权限不足时，使用进程内的 gVisor 网络栈。设为 `true` 时，仅使用 gVisor 网络栈，不会创建 TUN。使用 TUN 通常性能更高。
+
+上述自动判断不一定准确，例如某些 LXC 环境即使具有 `CAP_NET_ADMIN` 权限，也可能无法使用 TUN，导致出站无法工作，此时将 `noKernelTun` 设为 `true` 即可解决问题。
 
 此选项只选择内层 IP 包的处理方式。WireGuard 协议本身仍由 Xray 的用户态实现处理，与内核 WireGuard 模块无关。
-
-上述自动判断不一定准确，例如某些 LXC 环境即使具有 `CAP_NET_ADMIN` 权限，也可能无法使用 TUN，导致出站无法工作；此时应将本项设为 `true`。
 
 使用 TUN 时会占用 IPv6 的 10230 号路由表，每一个其他 WireGuard 出站会依次往后使用路由表，比如第二个会使用 10231 号路由表，以此类推。
 
@@ -104,43 +97,19 @@ WireGuard 协议保留字节，长度为 3，默认全 0，按需填写。
 
 > `peers`: \[ [PeersObject](#peersobject) \]
 
-WireGuard 服务器列表，其中每一项是一个服务器配置。配置多个服务器时，Xray 会根据目标 IP 地址对各服务器的 `allowedIPs` 进行前缀匹配，将流量路由至匹配的服务器，从而使不同目标网段可以通过不同的 WireGuard 服务器转发。
-
-::: details Xray WireGuard 出站的数据包模型
-进入 WireGuard 出站的 TCP 和 UDP 连接会由网络栈转换为内层 IP 包。内层源地址从 `address` 中选择，内层目标地址则是被代理流量的目标 IP。
-
-Xray 会使用内层目标地址对各 peer 的 `allowedIPs` 进行前缀匹配，由匹配到的 peer 加密封装，并将外层 UDP 数据包发送到该 peer 的 `endpoint`。因此，`address` 表示客户端使用的内层源地址，`allowedIPs` 相当于选择 peer 的目标路由表，而 `endpoint` 才是外层连接的服务器地址。
-:::
-
-::: tip
-每个 WireGuard 服务器都应根据其 `allowedIPs`，放行 `address` 中相同 IP 族的所有地址：`allowedIPs` 仅包含 IPv4 网段时，应放行 `address` 中列出的所有 IPv4 地址；仅包含 IPv6 网段时同理；同时包含 IPv4 和 IPv6 网段时，应放行其中所有地址。
-
-以 Xray 作为 WireGuard 服务器为例，应在 `inbounds[].settings.peers[].allowedIPs` 中列出这些地址。
-:::
+连接 WireGuard 远端 peers 列表。
 
 > `remoteDNS`: \[ string \]
 
 用于解析被代理目标的域名。列表项必须为 IP。默认值为 `["1.1.1.1", "1.0.0.1", "2606:4700:4700::1111", "2606:4700:4700::1001"]`。
 
-DNS 查询经 WireGuard 隧道发送；所有服务器 IP 均须包含在某个 peer 的 `allowedIPs` 中并能通过隧道访问。
-
-::: details `remoteDNS` 与 `targetStrategy`
-不同于其他出站，WireGuard 隧道内的目标地址必须为 IP。当被代理目标为域名时，出站的 [`targetStrategy`](../outbound.md#outboundobject) 决定使用哪套 DNS 进行解析：
-
-- `AsIs`：使用 `remoteDNS`。
-- `UseIP*`：优先使用 Xray 内置 DNS，解析失败时回退到 `remoteDNS`。
-- `ForceIP*`：使用 Xray 内置 DNS，解析失败时直接失败。
-
-`UseIP*` 或 `ForceIP*` 的解析结果中，至少要有一个 IP 与 `address` 中的地址属于同一地址族，否则无法连接。地址族不匹配不视为解析失败，也不会触发任何回退。
-
-如何取舍？`remoteDNS` 开箱即用，查询经 WireGuard 隧道发出，通常可获得与隧道出口匹配的 CDN 解析结果；若要让 [Xray 内置 DNS](../dns.md) 达到同样效果，通常还需配置相应的 DNS 服务器和路由规则。但若内置 DNS 事先解析过目标域名（例如使用 TUN/TProxy 的 RealIP 方案，或开启嗅探且 `routing.domainStrategy` 非 `AsIs`），建议使用 Xray 内置 DNS，以避免二次解析增加 RTT。
-:::
+不同于其他出站，WireGuard 隧道内的目标地址必须为 IP。当被代理目标为域名时，需要一个 DNS 服务器将域名转化为 IP 地址。这部分 DNS 服务器在这里配置，并且**直接通过这个 WireGuard 隧道发送 DNS 请求**。想将其接入 Xray 内置 DNS 系统请考虑在出站的 [`targetStrategy`](../outbound.md#outboundobject) 提前解析。
 
 ### PeersObject
 
 ```json
 {
-  "endpoint": "SERVER_ADDR",
+  "endpoint": "example.com:2408",
   "publicKey": "SERVER_PUBLIC_KEY",
   "preSharedKey": "PRE_SHARED_KEY",
   "keepAlive": 0,
@@ -150,16 +119,13 @@ DNS 查询经 WireGuard 隧道发送；所有服务器 IP 均须包含在某个 
 
 > `endpoint`: address
 
-服务器地址, 必填。
-
-URL: 端口 格式，例如 `engage.cloudflareclient.com:2408`<br>
-IP: 端口 格式，例如 `162.159.192.1:2408` 或 `[2606:4700:d0::a29f:c001]:2408`
+服务器地址和端口，可以是 IP 或域名，必填。
 
 > `publicKey`: string
 
-服务器公钥，用于验证。必填。
+peer 的公钥，用于验证。必填。
 
-以 Xray 作为 WireGuard 服务器时，此处应填写与服务器 `inbounds[].settings.secretKey` 成对的 `Password (PublicKey)`。
+使用 `xray wg` 生成密钥对时。此处对应将输出的 `Password (PublicKey)`
 
 > `preSharedKey`: string
 
@@ -171,4 +137,4 @@ IP: 端口 格式，例如 `162.159.192.1:2408` 或 `[2606:4700:d0::a29f:c001]:2
 
 > `allowedIPs`: \[ string \]
 
-指定由该服务器转发的目标 IP 网段，每项使用 CIDR 表示。仅配置一个服务器时可以省略，因为默认值为 `["0.0.0.0/0", "::/0"]`，即所有 IPv4 和 IPv6 目标流量均由该服务器转发。配置多个服务器时，需为每个服务器显式设置 `allowedIPs`，将不同的目标网段分配给相应服务器；Xray 会根据目标 IP 的前缀匹配结果选择服务器。
+应该使用该 peer 转发的请求，使用 CIDR 表示。默认值为 `["0.0.0.0/0", "::/0"]`，即所有 IPv4 和 IPv6 目标流量均由该服务器转发。多个命中时按最长前缀匹配原则选择。
