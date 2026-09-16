@@ -20,7 +20,7 @@
       // ...
       "streamSettings": {
         "method": "httpupgrade",
-        // [!code focus:8]
+        // [!field focus]
         "httpupgradeSettings": {
           "acceptProxyProtocol": false,
           "path": "/",

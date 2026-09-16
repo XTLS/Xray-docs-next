@@ -16,7 +16,7 @@ On Linux, this environment variable can optionally be used to pass in the TUN FD
     {
       // ...
       "protocol": "tun",
-      // [!code focus:10]
+      // [!field focus]
       "settings": {
         "name": "utun10",
         "desc": "Wintun",

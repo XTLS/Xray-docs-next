@@ -48,7 +48,7 @@ gRPC (HTTP/2) имеет встроенное мультиплексирован
       // ...
       "streamSettings": {
         "method": "grpc",
-        // [!code focus:10]
+        // [!field focus]
         "grpcSettings": {
           "authority": "grpc.example.com",
           "serviceName": "name",

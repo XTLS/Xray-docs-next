@@ -133,7 +133,7 @@ Additionally, you need to enable `Sniffing` on the inbound of the **client** tha
   "inbounds": [
     {
       // ...
-      // [!code focus:5]
+      // [!field focus]
       "sniffing": {
         "enabled": true,
         "destOverride": ["fakedns"], // Use "fakedns", or combine with other sniffers

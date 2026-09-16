@@ -16,7 +16,7 @@
     {
       // ...
       "protocol": "socks",
-      // [!code focus:8]
+      // [!field focus]
       "settings": {
         "address": "127.0.0.1",
         "port": 1234,

@@ -24,7 +24,7 @@ WebSocket will recognize the `X-Forwarded-For` header in HTTP requests to overwr
       // ...
       "streamSettings": {
         "method": "websocket",
-        // [!code focus:9]
+        // [!field focus]
         "wsSettings": {
           "acceptProxyProtocol": false,
           "path": "/",

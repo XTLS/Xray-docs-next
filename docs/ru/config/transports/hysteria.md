@@ -14,7 +14,7 @@
       // ...
       "streamSettings": {
         "method": "hysteria",
-        // [!code focus:17]
+        // [!field focus]
         "hysteriaSettings": {
           "version": 2,
           "auth": "password",

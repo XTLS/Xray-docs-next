@@ -136,7 +136,7 @@ FakeDNS будет использовать этот блок IP-адресов 
   "inbounds": [
     {
       // ...
-      // [!code focus:5]
+      // [!field focus]
       "sniffing": {
         "enabled": true,
         "destOverride": ["fakedns"], // Используйте "fakedns" или в сочетании с другими снифферами.

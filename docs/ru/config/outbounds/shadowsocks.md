@@ -32,7 +32,7 @@
     {
       // ...
       "protocol": "shadowsocks",
-      // [!code focus:8]
+      // [!field focus]
       "settings": {
         "email": "love@xray.com",
         "address": "127.0.0.1",

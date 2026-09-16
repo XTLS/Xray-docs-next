@@ -16,7 +16,7 @@ VMess полагается на системное время. Убедитес�
     {
       // ...
       "protocol": "vmess",
-      // [!code focus:12]
+      // [!field focus]
       "settings": {
         "users": [
           {

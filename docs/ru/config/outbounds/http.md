@@ -20,7 +20,7 @@
     {
       // ...
       "protocol": "http",
-      // [!code focus:12]
+      // [!field focus]
       "settings": {
         "address": "192.168.108.1",
         "port": 3128,

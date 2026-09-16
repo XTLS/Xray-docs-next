@@ -16,7 +16,7 @@ Freedom — это протокол прямого исходящего подк
     {
       // ...
       "protocol": "freedom",
-      // [!code focus:28]
+      // [!field focus]
       "settings": {
         "redirect": "127.0.0.1:3366",
         "userLevel": 0,

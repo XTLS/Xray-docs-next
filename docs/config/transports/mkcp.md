@@ -20,7 +20,7 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
       // ...
       "streamSettings": {
         "method": "mkcp",
-        // [!code focus:9]
+        // [!field focus]
         "kcpSettings": {
           "mtu": 1350,
           "tti": 20,

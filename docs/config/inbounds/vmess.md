@@ -16,7 +16,7 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
     {
       // ...
       "protocol": "vmess",
-      // [!code focus:12]
+      // [!field focus]
       "settings": {
         "users": [
           {

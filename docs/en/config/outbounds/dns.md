@@ -16,7 +16,7 @@ It can allow queries to the target DNS server, `hijack` them to the built-in [DN
     {
       // ...
       "protocol": "dns",
-      // [!code focus:18]
+      // [!field focus]
       "settings": {
         "rewriteNetwork": "udp",
         "rewriteAddress": "1.1.1.1",

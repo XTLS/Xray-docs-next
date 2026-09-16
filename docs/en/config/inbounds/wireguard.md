@@ -16,7 +16,7 @@ User-space WireGuard protocol implementation for establishing a WireGuard tunnel
     {
       // ...
       "protocol": "wireguard",
-      // [!code focus:14]
+      // [!field focus]
       "settings": {
         "secretKey": "SERVER_PRIVATE_KEY",
         "peers": [

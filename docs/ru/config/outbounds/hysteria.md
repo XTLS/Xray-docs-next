@@ -18,7 +18,7 @@
     {
       // ...
       "protocol": "hysteria",
-      // [!code focus:5]
+      // [!field focus]
       "settings": {
         "version": 2,
         "address": "192.168.108.1",

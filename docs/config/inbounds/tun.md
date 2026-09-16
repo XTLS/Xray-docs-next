@@ -16,7 +16,7 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
     {
       // ...
       "protocol": "tun",
-      // [!code focus:10]
+      // [!field focus]
       "settings": {
         "name": "utun10",
         "desc": "Wintun",

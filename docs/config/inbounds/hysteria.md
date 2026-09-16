@@ -14,7 +14,7 @@
     {
       // ...
       "protocol": "hysteria",
-      // [!code focus:10]
+      // [!field focus]
       "settings": {
         "version": 2,
         "users": [

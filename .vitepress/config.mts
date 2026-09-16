@@ -1,6 +1,7 @@
 import { defineConfig } from "vitepress"
 import llmstxt from "vitepress-plugin-llms"
 import { MermaidMarkdown, MermaidPlugin } from "vitepress-plugin-mermaid"
+import { fieldFocusPlugin } from "./plugins/field-focus.mts"
 
 import { nav as nav } from "./menus/nav.mts"
 import { nav as nav_en } from "./menus/nav.en.mts"
@@ -52,8 +53,9 @@ export default defineConfig({
 
     attrs: { left: "{:" },
 
-    config(md) {
+    config(md: { use: Function }) {
       md.use(MermaidMarkdown)
+      md.use(fieldFocusPlugin)
     }
   },
   vite: {
@@ -80,7 +82,7 @@ export default defineConfig({
         detailedView: true,
         miniSearch: {
           options: {
-            tokenize: (str) => str.split(/[\s,，。、]+/)
+            tokenize: (str: string) => str.split(/[\s,，。、]+/)
           }
         },
         translations: {
@@ -163,7 +165,7 @@ export default defineConfig({
           options: {
             miniSearch: {
               options: {
-                tokenize: (str) =>
+                tokenize: (str: string) =>
                   str
                     .split(/[\s.,;!?'"(){}[\]\-_+=&%$#@~`^<>|\\]+/)
                     .filter(Boolean)
@@ -235,7 +237,8 @@ export default defineConfig({
           options: {
             miniSearch: {
               options: {
-                tokenize: (str) => str.match(/[\p{L}\p{N}]+/gu) ?? []
+                tokenize: (str: string) =>
+                  str.match(/[\p{L}\p{N}]+/gu) ?? []
               }
             },
             translations: {

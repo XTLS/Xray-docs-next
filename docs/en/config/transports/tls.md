@@ -18,7 +18,7 @@ It supports use with the `RAW`, `XHTTP`, `mKCP`, `gRPC`, `WebSocket`, `HTTPUpgra
       // ...
       "streamSettings": {
         "security": "tls",
-        // [!code focus:20]
+        // [!field focus]
         "tlsSettings": {
           "serverName": "xray.com",
           "verifyPeerCertByName": "",

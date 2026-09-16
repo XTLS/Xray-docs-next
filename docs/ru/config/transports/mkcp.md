@@ -20,7 +20,7 @@ mKCP жертвует пропускной способностью ради у�
       // ...
       "streamSettings": {
         "method": "mkcp",
-        // [!code focus:9]
+        // [!field focus]
         "kcpSettings": {
           "mtu": 1350,
           "tti": 20,

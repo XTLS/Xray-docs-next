@@ -15,7 +15,7 @@ It can be used for multiple kinds of TCP and UDP camouflage, as well as QUIC-rel
     {
       // ...
       "streamSettings": {
-        // [!code focus:33]
+        // [!field focus]
         "finalmask": {
           "tcp": [
             {
@@ -62,7 +62,7 @@ An array used to camouflage TCP traffic emitted by the core. The first item in t
 ```json
 {
   "finalmask": {
-    // [!code focus:6]
+    // [!field focus]
     "tcp": [
       {
         "type": "",
@@ -88,7 +88,7 @@ See the fields for each type below.
 ```json
 {
   "type": "header-custom",
-  // [!code focus:35]
+  // [!field focus]
   "settings": {
     "clients": [
       [
@@ -142,7 +142,7 @@ See the fields for each type below.
 ```json
 {
   "type": "fragment",
-  // [!code focus:6]
+  // [!field focus]
   "settings": {
     "packets": "tlshello",
     "lengths": ["3-5", "6-8", "10-20"],
@@ -175,7 +175,7 @@ When it is `0` and `"packets": "tlshello"` is set, the fragmented Client Hello w
 ```json
 {
   "type": "sudoku",
-  // [!code focus:10]
+  // [!field focus]
   "settings": {
     "password": "",
     "ascii": "",
@@ -198,7 +198,7 @@ An array used to camouflage UDP traffic emitted by the core. The first item in t
 ```json
 {
   "finalmask": {
-    // [!code focus:6]
+    // [!field focus]
     "udp": [
       {
         "type": "",
@@ -226,7 +226,7 @@ Always merged into the packet header.
 ```json
 {
   "type": "header-custom",
-  // [!code focus:18]
+  // [!field focus]
   "settings": {
     "client": [
       {
@@ -261,7 +261,7 @@ Always merged into the packet header.
 ```json
 {
   "type": "mkcp-legacy",
-  // [!code focus:4]
+  // [!field focus]
   "settings": {
     "header": "", // dns dtls srtp utp wechat wireguard
     "value": "" // password domain
@@ -292,7 +292,7 @@ Noise sent before the actual data.
 ```json
 {
   "type": "noise",
-  // [!code focus:12]
+  // [!field focus]
   "settings": {
     "reset": "30-60",
     "noise": [
@@ -327,7 +327,7 @@ Salamander obfuscation. From Hysteria2.
 ```json
 {
   "type": "salamander",
-  // [!code focus:4]
+  // [!field focus]
   "settings": {
     "password": "your-password",
     "packetSize": "512-1200"
@@ -348,7 +348,7 @@ When non-empty, enables Gecko obfuscation, which applies additional fragmentatio
 ```json
 {
   "type": "sudoku",
-  // [!code focus:10]
+  // [!field focus]
   "settings": {
     "password": "",
     "ascii": "",
@@ -379,7 +379,7 @@ For example, if you own `example.com`, set an A record like `a.example.com` to t
 ```json
 {
   "type": "xdns",
-  // [!code focus:4]
+  // [!field focus]
   "settings": {
     "domains": ["t.example.com"],
     "resolvers": ["t.example.com+udp://8.8.8.8:53"]
@@ -398,7 +398,7 @@ At least one of `domains` and `resolvers` must be set.
 ```json
 {
   "type": "xicmp",
-  // [!code focus:4]
+  // [!field focus]
   "settings": {
     "dgram": false, // optional
     "ips": [] // optional
@@ -417,7 +417,7 @@ Self-built https://github.com/apernet/hysteria-realm-server
 ```json
 {
   "type": "realm",
-  // [!code focus:8]
+  // [!field focus]
   "settings": {
     "url": "realm://public@xxx/your-realm-name",
     "stunServers": [
@@ -442,7 +442,7 @@ Connection failures require debug-level logging. Possible contributing factors i
 ```json
 {
   "finalmask": {
-    // [!code focus:19]
+    // [!field focus]
     "quicParams": {
       "congestion": "force-brutal",
       "bbrProfile": "standard",

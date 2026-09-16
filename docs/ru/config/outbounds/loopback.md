@@ -27,7 +27,7 @@ Loopback — это outbound с возвратом трафика, которы�
     {
       // ...
       "protocol": "loopback",
-      // [!code focus:4]
+      // [!field focus]
       "settings": {
         "inboundTag": "TagUseAsInbound",
         "sniffing": {}

@@ -30,7 +30,7 @@ HTTP 协议。
     {
       // ...
       "protocol": "http",
-      // [!code focus:10]
+      // [!field focus]
       "settings": {
         "users": [
           {

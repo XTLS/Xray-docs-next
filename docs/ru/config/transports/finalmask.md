@@ -15,7 +15,7 @@ FinalMask добавляет последний слой маскировки п
     {
       // ...
       "streamSettings": {
-        // [!code focus:33]
+        // [!field focus]
         "finalmask": {
           "tcp": [
             {
@@ -62,7 +62,7 @@ FinalMask добавляет последний слой маскировки п
 ```json
 {
   "finalmask": {
-    // [!code focus:6]
+    // [!field focus]
     "tcp": [
       {
         "type": "",
@@ -88,7 +88,7 @@ FinalMask добавляет последний слой маскировки п
 ```json
 {
   "type": "header-custom",
-  // [!code focus:35]
+  // [!field focus]
   "settings": {
     "clients": [
       [
@@ -142,7 +142,7 @@ FinalMask добавляет последний слой маскировки п
 ```json
 {
   "type": "fragment",
-  // [!code focus:6]
+  // [!field focus]
   "settings": {
     "packets": "tlshello",
     "lengths": ["3-5", "6-8", "10-20"],
@@ -175,7 +175,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "sudoku",
-  // [!code focus:10]
+  // [!field focus]
   "settings": {
     "password": "",
     "ascii": "",
@@ -198,7 +198,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "finalmask": {
-    // [!code focus:6]
+    // [!field focus]
     "udp": [
       {
         "type": "",
@@ -226,7 +226,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "header-custom",
-  // [!code focus:18]
+  // [!field focus]
   "settings": {
     "client": [
       {
@@ -261,7 +261,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "mkcp-legacy",
-  // [!code focus:4]
+  // [!field focus]
   "settings": {
     "header": "", // dns dtls srtp utp wechat wireguard
     "value": "" // password domain
@@ -292,7 +292,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "noise",
-  // [!code focus:12]
+  // [!field focus]
   "settings": {
     "reset": "30-60",
     "noise": [
@@ -327,7 +327,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "salamander",
-  // [!code focus:4]
+  // [!field focus]
   "settings": {
     "password": "your-password",
     "packetSize": "512-1200"
@@ -348,7 +348,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "sudoku",
-  // [!code focus:10]
+  // [!field focus]
   "settings": {
     "password": "",
     "ascii": "",
@@ -379,7 +379,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "xdns",
-  // [!code focus:4]
+  // [!field focus]
   "settings": {
     "domains": ["t.example.com"],
     "resolvers": ["t.example.com+udp://8.8.8.8:53"]
@@ -398,7 +398,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "xicmp",
-  // [!code focus:4]
+  // [!field focus]
   "settings": {
     "dgram": false, // optional
     "ips": [] // optional
@@ -417,7 +417,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "type": "realm",
-  // [!code focus:8]
+  // [!field focus]
   "settings": {
     "url": "realm://public@xxx/your-realm-name",
     "stunServers": [
@@ -442,7 +442,7 @@ n-й элемент массива задаёт, сколько ждать по�
 ```json
 {
   "finalmask": {
-    // [!code focus:19]
+    // [!field focus]
     "quicParams": {
       "congestion": "force-brutal",
       "bbrProfile": "standard",

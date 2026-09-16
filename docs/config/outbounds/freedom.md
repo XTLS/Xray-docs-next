@@ -16,7 +16,7 @@ Freedom 是一个直连出站协议，通常也是流量的终结点：它接收
     {
       // ...
       "protocol": "freedom",
-      // [!code focus:28]
+      // [!field focus]
       "settings": {
         "redirect": "127.0.0.1:3366",
         "userLevel": 0,

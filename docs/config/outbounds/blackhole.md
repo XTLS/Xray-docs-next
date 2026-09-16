@@ -12,7 +12,7 @@ Blackhole（黑洞）是一个出站数据协议，它会阻碍所有数据的�
     {
       // ...
       "protocol": "blackhole",
-      // [!code focus:5]
+      // [!field focus]
       "settings": {
         "response": {
           "type": "none"

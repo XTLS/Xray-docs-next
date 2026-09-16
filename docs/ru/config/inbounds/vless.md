@@ -14,7 +14,7 @@ VLESS - это легкий транспортный протокол без с�
     {
       // ...
       "protocol": "vless",
-      // [!code focus:18]
+      // [!field focus]
       "settings": {
         "users": [
           {

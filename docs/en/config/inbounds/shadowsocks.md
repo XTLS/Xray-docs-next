@@ -32,7 +32,7 @@ The Shadowsocks 2022 new protocol format improves performance and includes compl
     {
       // ...
       "protocol": "shadowsocks",
-      // [!code focus:13]
+      // [!field focus]
       "settings": {
         "network": "tcp,udp",
         "method": "aes-256-gcm",

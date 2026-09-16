@@ -133,7 +133,7 @@ FakeDNS 本质上是一个 [DNS 服务器](./dns.md#serverobject)，能够与任
   "inbounds": [
     {
       // ...
-      // [!code focus:5]
+      // [!field focus]
       "sniffing": {
         "enabled": true,
         "destOverride": ["fakedns"], // 使用 "fakedns"，或与其它 sniffer 搭配使用

@@ -16,7 +16,7 @@ DNS — это исходящий протокол, который приним�
     {
       // ...
       "protocol": "dns",
-      // [!code focus:18]
+      // [!field focus]
       "settings": {
         "rewriteNetwork": "udp",
         "rewriteAddress": "1.1.1.1",

@@ -19,7 +19,7 @@ Its design is not recommended for standalone use; instead, it is intended to wor
       // ...
       "streamSettings": {
         "method": "httpupgrade",
-        // [!code focus:8]
+        // [!field focus]
         "httpupgradeSettings": {
           "acceptProxyProtocol": false,
           "path": "/",

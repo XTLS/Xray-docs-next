@@ -12,7 +12,7 @@ Blackhole - это протокол исходящих данных, котор�
     {
       // ...
       "protocol": "blackhole",
-      // [!code focus:5]
+      // [!field focus]
       "settings": {
         "response": {
           "type": "none"

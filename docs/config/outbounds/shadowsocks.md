@@ -32,7 +32,7 @@ Shadowsocks 2022 新协议格式提升了性能并带有完整的重放保护，
     {
       // ...
       "protocol": "shadowsocks",
-      // [!code focus:8]
+      // [!field focus]
       "settings": {
         "email": "love@xray.com",
         "address": "127.0.0.1",

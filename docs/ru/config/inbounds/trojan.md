@@ -12,7 +12,7 @@
     {
       // ...
       "protocol": "trojan",
-      // [!code focus:14]
+      // [!field focus]
       "settings": {
         "users": [
           {

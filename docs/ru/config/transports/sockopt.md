@@ -15,7 +15,7 @@ Sockopt используется для настройки низкоуровн�
     {
       // ...
       "streamSettings": {
-        // [!code focus:21]
+        // [!field focus]
         "sockopt": {
           "mark": 0,
           "tcpMaxSeg": 1440,

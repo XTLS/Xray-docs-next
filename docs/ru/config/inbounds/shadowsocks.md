@@ -32,7 +32,7 @@
     {
       // ...
       "protocol": "shadowsocks",
-      // [!code focus:13]
+      // [!field focus]
       "settings": {
         "network": "tcp,udp",
         "method": "aes-256-gcm",

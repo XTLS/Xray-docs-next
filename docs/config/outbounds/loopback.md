@@ -27,7 +27,7 @@ Loopback 是一个环回出站，用于将流量重新送回 routing 处理，�
     {
       // ...
       "protocol": "loopback",
-      // [!code focus:4]
+      // [!field focus]
       "settings": {
         "inboundTag": "TagUseAsInbound",
         "sniffing": {}

@@ -24,7 +24,7 @@
   "outbounds": [
     {
       // ...
-      // [!code focus:18]
+      // [!field focus]
       "streamSettings": {
         // Способы передачи
         "method": "raw",

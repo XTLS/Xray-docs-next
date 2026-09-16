@@ -26,7 +26,7 @@ REALITY модифицирует только TLS. На стороне клие�
       // ...
       "streamSettings": {
         "security": "reality",
-        // [!code focus:30]
+        // [!field focus]
         "realitySettings": {
           // Входящие настройки (сервер)
           "show": false,

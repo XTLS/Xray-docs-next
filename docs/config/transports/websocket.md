@@ -24,7 +24,7 @@ Websocket 会识别 HTTP 请求的 X-Forwarded-For 头来覆写流量的源地�
       // ...
       "streamSettings": {
         "method": "websocket",
-        // [!code focus:9]
+        // [!field focus]
         "wsSettings": {
           "acceptProxyProtocol": false,
           "path": "/",

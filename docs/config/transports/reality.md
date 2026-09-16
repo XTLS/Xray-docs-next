@@ -26,7 +26,7 @@ REALITY 只是修改了 TLS，客户端的实现只需要轻度修改完全随�
       // ...
       "streamSettings": {
         "security": "reality",
-        // [!code focus:30]
+        // [!field focus]
         "realitySettings": {
           // 入站（服务端）配置
           "show": false,

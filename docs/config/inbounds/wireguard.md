@@ -16,7 +16,7 @@
     {
       // ...
       "protocol": "wireguard",
-      // [!code focus:14]
+      // [!field focus]
       "settings": {
         "secretKey": "SERVER_PRIVATE_KEY",
         "peers": [

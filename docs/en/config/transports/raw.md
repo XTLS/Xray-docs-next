@@ -16,7 +16,7 @@ It can be combined with various protocols in multiple modes.
       // ...
       "streamSettings": {
         "method": "raw",
-        // [!code focus:6]
+        // [!field focus]
         "rawSettings": {
           "acceptProxyProtocol": false,
           "header": {

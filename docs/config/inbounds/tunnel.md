@@ -12,7 +12,7 @@ Tunnel（隧道），旧称 dokodemo-door（任意门），可以监听数个本
     {
       // ...
       "protocol": "tunnel",
-      // [!code focus:12]
+      // [!field focus]
       "settings": {
         "allowedNetwork": "tcp",
         "rewriteAddress": "8.8.8.8",

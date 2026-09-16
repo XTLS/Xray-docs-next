@@ -16,7 +16,7 @@ DNS 是一个出站协议，用于接收由 routing 送入的 DNS 查询，并�
     {
       // ...
       "protocol": "dns",
-      // [!code focus:18]
+      // [!field focus]
       "settings": {
         "rewriteNetwork": "udp",
         "rewriteAddress": "1.1.1.1",

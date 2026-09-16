@@ -12,7 +12,7 @@
     {
       // ...
       "protocol": "tunnel",
-      // [!code focus:12]
+      // [!field focus]
       "settings": {
         "allowedNetwork": "tcp",
         "rewriteAddress": "8.8.8.8",

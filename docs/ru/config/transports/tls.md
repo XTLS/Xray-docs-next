@@ -18,7 +18,7 @@ TLS — это обычный механизм защиты транспорта
       // ...
       "streamSettings": {
         "security": "tls",
-        // [!code focus:20]
+        // [!field focus]
         "tlsSettings": {
           "serverName": "xray.com",
           "verifyPeerCertByName": "",

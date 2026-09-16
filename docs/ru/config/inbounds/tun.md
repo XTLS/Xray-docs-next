@@ -16,7 +16,7 @@
     {
       // ...
       "protocol": "tun",
-      // [!code focus:10]
+      // [!field focus]
       "settings": {
         "name": "utun10",
         "desc": "Wintun",

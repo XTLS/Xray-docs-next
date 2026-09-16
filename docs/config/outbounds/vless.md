@@ -14,7 +14,7 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
     {
       // ...
       "protocol": "vless",
-      // [!code focus:9]
+      // [!field focus]
       "settings": {
         "address": "example.com",
         "port": 443,

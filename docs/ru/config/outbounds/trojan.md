@@ -12,7 +12,7 @@
     {
       // ...
       "protocol": "trojan",
-      // [!code focus:7]
+      // [!field focus]
       "settings": {
         "address": "127.0.0.1",
         "port": 1234,

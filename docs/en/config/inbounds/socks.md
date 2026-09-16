@@ -18,7 +18,7 @@ A more meaningful usage of `Socks` inbound is to listen within a LAN or on the l
     {
       // ...
       "protocol": "socks",
-      // [!code focus:12]
+      // [!field focus]
       "settings": {
         "auth": "noauth",
         "users": [

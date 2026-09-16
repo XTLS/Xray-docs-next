@@ -27,7 +27,7 @@ Avoid letting rules or balancers after the loopback select the original outbound
     {
       // ...
       "protocol": "loopback",
-      // [!code focus:4]
+      // [!field focus]
       "settings": {
         "inboundTag": "TagUseAsInbound",
         "sniffing": {}

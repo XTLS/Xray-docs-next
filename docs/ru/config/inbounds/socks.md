@@ -18,7 +18,7 @@
     {
       // ...
       "protocol": "socks",
-      // [!code focus:12]
+      // [!field focus]
       "settings": {
         "auth": "noauth",
         "users": [

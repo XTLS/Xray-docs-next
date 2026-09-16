@@ -32,7 +32,7 @@ The Shadowsocks 2022 new protocol format improves performance and includes compl
     {
       // ...
       "protocol": "shadowsocks",
-      // [!code focus:8]
+      // [!field focus]
       "settings": {
         "email": "love@xray.com",
         "address": "127.0.0.1",

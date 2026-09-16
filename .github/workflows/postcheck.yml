@@ -3,12 +3,6 @@ name: Post Check
 on: [push, pull_request]
 
 jobs:
-  check-focus:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - run: python .github/check-scripts/check_code_focus.py
-
   check-json:
     runs-on: ubuntu-latest
     steps:
