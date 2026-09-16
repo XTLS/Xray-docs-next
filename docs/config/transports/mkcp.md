@@ -26,9 +26,8 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
           "tti": 20,
           "uplinkCapacity": 5,
           "downlinkCapacity": 20,
-          "congestion": false,
-          "readBufferSize": 1,
-          "writeBufferSize": 1
+          "cwndMultiplier": 1,
+          "maxSendingWindow": 2097152
         }
       }
     }
@@ -39,7 +38,7 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
 ::: tip
 `header` 和 `seed` 字段已被移除，请使用 [FinalMask](../transports/finalmask.md#finalmaskobject) 进行配置。
 
-并且曾经默认的 mKCP 混淆也被移除，要连接旧版服务端，需要在 FinalMask 中配置 `mkcp-original`。
+并且曾经默认的 mKCP 混淆也被移除，要连接旧版服务端，需要在 FinalMask 中配置 `mkcp-legacy`（`settings.header` 与 `settings.value` 均留空即为旧版默认的 XOR 混淆）。
 :::
 
 > `mtu`: number
@@ -77,32 +76,17 @@ mKCP 牺牲带宽来降低延迟。传输同样的内容，mKCP 一般比 TCP �
 推荐把 `downlinkCapacity` 设置为一个较大的值，比如 100，而 `uplinkCapacity` 设为实际的网络速度。当速度不够时，可以逐渐增加 `uplinkCapacity` 的值，直到带宽的两倍左右。
 :::
 
-> `congestion`: true | false
+> `cwndMultiplier`: number
 
-是否启用拥塞控制。
+拥塞窗口倍数，用于乘在由 `uplinkCapacity`、`mtu`、`tti` 推导出的发送在途包数上。最小值为 `1`。
 
-开启拥塞控制之后，Xray 会自动监测网络质量，当丢包严重时，会自动降低吞吐量；当网络畅通时，也会适当增加吞吐量。
+默认值为 `1`。
 
-默认值为 `false`
+> `maxSendingWindow`: number
 
-> `readBufferSize`: number
+最大发送窗口，单位是字节。实际按 `maxSendingWindow / mtu` 折算为在途包数，因此不得小于 `mtu`。
 
-单个连接的读取缓冲区大小，单位是 MB。
-
-默认值为 `2`。
-
-> `writeBufferSize`: number
-
-单个连接的写入缓冲区大小，单位是 MB。
-
-默认值为 `2`。
-
-::: tip
-`readBufferSize` 和 `writeBufferSize` 指定了单个连接所使用的内存大小。
-在需要高速传输时，指定较大的 `readBufferSize` 和 `writeBufferSize` 会在一定程度上提高速度，但也会使用更多的内存。
-
-在网速不超过 20MB/s 时，默认值 1MB 可以满足需求；超过之后，可以适当增加 `readBufferSize` 和 `writeBufferSize` 的值，然后手动平衡速度和内存的关系。
-:::
+默认值为 `2097152`。
 
 ## 鸣谢
 

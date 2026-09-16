@@ -26,9 +26,8 @@ Please ensure that the firewall configuration on the host is correct.
           "tti": 20,
           "uplinkCapacity": 5,
           "downlinkCapacity": 20,
-          "congestion": false,
-          "readBufferSize": 1,
-          "writeBufferSize": 1
+          "cwndMultiplier": 1,
+          "maxSendingWindow": 2097152
         }
       }
     }
@@ -39,7 +38,7 @@ Please ensure that the firewall configuration on the host is correct.
 ::: tip
 The `header` and `seed` fields have been removed. Please use [FinalMask](./finalmask.md#finalmaskobject) for configuration.
 
-Additionally, the previously default mKCP obfuscation has also been removed. To connect to a legacy server, you need to configure `mkcp-original` in FinalMask.
+Additionally, the previously default mKCP obfuscation has also been removed. To connect to a legacy server, you need to configure `mkcp-legacy` in FinalMask (leaving both `settings.header` and `settings.value` empty selects the legacy default XOR obfuscation).
 :::
 
 > `mtu`: number
@@ -77,32 +76,17 @@ Taking a client sending data as an example, the client's `uplinkCapacity` specif
 It is recommended to set `downlinkCapacity` to a larger value, such as 100, and set `uplinkCapacity` to the actual network speed. When the speed is insufficient, you can gradually increase the value of `uplinkCapacity` until it is about twice the bandwidth.
 :::
 
-> `congestion`: true | false
+> `cwndMultiplier`: number
 
-Whether to enable congestion control.
+The congestion window multiplier, multiplied by the number of sending in-flight packets derived from `uplinkCapacity`, `mtu` and `tti`. The minimum value is `1`.
 
-When congestion control is enabled, Xray automatically monitors network quality. When packet loss is severe, it automatically reduces throughput; when the network is smooth, it appropriately increases throughput.
+The default value is `1`.
 
-The default value is `false`.
+> `maxSendingWindow`: number
 
-> `readBufferSize`: number
+The maximum sending window, in bytes. It is converted into a number of in-flight packets as `maxSendingWindow / mtu`, and therefore must not be smaller than `mtu`.
 
-The read buffer size for a single connection, in MB.
-
-The default value is `2`.
-
-> `writeBufferSize`: number
-
-The write buffer size for a single connection, in MB.
-
-The default value is `2`.
-
-::: tip
-`readBufferSize` and `writeBufferSize` specify the memory size used by a single connection.
-When high-speed transmission is required, specifying larger `readBufferSize` and `writeBufferSize` will improve speed to a certain extent, but it will also use more memory.
-
-When the network speed does not exceed 20MB/s, the default value of 1MB can meet the demand; beyond that, you can appropriately increase the values of `readBufferSize` and `writeBufferSize`, and then manually balance the relationship between speed and memory.
-:::
+The default value is `2097152`.
 
 ## Credits
 
