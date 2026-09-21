@@ -191,6 +191,54 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 含义见其 [官方文档](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.zh_CN.md) 文档字段
 
+### xmc
+
+将 TCP 流量伪装为 Minecraft 的登录和加密通信。客户端和服务端都需要配置 XMC。
+
+```json
+{
+  "type": "xmc",
+  // [!field focus]
+  "settings": {
+    "password": "replace-with-shared-password",
+    "hostname": "example.com",
+    "profiles": [
+      {
+        "username": "PlayerName",
+        "uuid": "00112233-4455-6677-8899-aabbccddeeff",
+        "texturesValue": "...",
+        "texturesSignature": "..."
+      }
+    ],
+    "padding": []
+  }
+}
+```
+
+`password`：必填的非空密码，两端必须相同。
+
+`hostname`：客户端发送的 Minecraft 握手主机名，留空时使用连接的目标地址；服务端无需填写。
+
+`profiles`：必填的玩家资料数组，至少一项。客户端随机选用一项，服务端必须配置相同的玩家资料。示例中的资料是占位值，请按以下步骤替换：
+
+1. 请求 `https://api.mojang.com/users/profiles/minecraft/{username}`，将返回的 `name` 和 `id` 分别填入 `username` 和 `uuid`。UUID 可带或不带连字符。
+2. 使用不带连字符的 UUID 请求 `https://sessionserver.mojang.com/session/minecraft/profile/{uuid}?unsigned=false`。从 `properties` 中找到 `name` 为 `textures` 的项，将其 `value` 和 `signature` 原样填入 `texturesValue` 和 `texturesSignature`，无需 Base64 解码。
+
+`padding`：可选的启动填充序列。省略或设为 `[]` 时使用内置的 Minecraft 26.1.2 预设，包括其写入边界和时序。自定义示例：
+
+```json
+{
+  "padding": ["44", "64-128", "25", "32768-49152"]
+}
+```
+
+- 每项为固定长度或 `"最小值-最大值"` 字符串，单位为字节，范围内均匀随机取值。
+- 从客户端开始，按客户端、服务端方向交替发送。收完对端当前一轮后才发送下一轮，整个序列仅在启动时执行一次。
+- 长度包含填充记录的 VarInt 长度头。第一项还包含 2 字节的 Login Acknowledged 包，因此最小为 3；其余项最小为 1。每项最大为 8388608，最小值不得大于最大值。
+- 自定义序列不添加主动延迟。长度指一轮的总字节数，不是 TCP 分段大小；后续代理数据的封装和 15 秒保活间隔不变。
+
+两端必须配置相同的 `padding`。XMC 不协商填充配置，不一致可能导致长度检查失败、握手超时或数据流错位。
+
 ## UDPMask
 
 一个数组，用以伪装核心发出的 UDP 流量，数组第一个为最内层伪装。

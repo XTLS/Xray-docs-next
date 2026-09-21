@@ -191,6 +191,54 @@ When it is `0` and `"packets": "tlshello"` is set, the fragmented Client Hello w
 
 For the meaning of these fields, see the [upstream documentation](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.md).
 
+### xmc
+
+Camouflages TCP traffic as Minecraft login and encrypted communication. Configure XMC on both the client and server.
+
+```json
+{
+  "type": "xmc",
+  // [!field focus]
+  "settings": {
+    "password": "replace-with-shared-password",
+    "hostname": "example.com",
+    "profiles": [
+      {
+        "username": "PlayerName",
+        "uuid": "00112233-4455-6677-8899-aabbccddeeff",
+        "texturesValue": "...",
+        "texturesSignature": "..."
+      }
+    ],
+    "padding": []
+  }
+}
+```
+
+`password`: Required, non-empty password. Must match on both endpoints.
+
+`hostname`: Minecraft handshake hostname sent by the client. If empty, the connection's destination address is used. Not needed on the server.
+
+`profiles`: Required array of player profiles with at least one entry. The client selects one at random, and the server must have the same profile configured. Replace the placeholder profile above as follows:
+
+1. Request `https://api.mojang.com/users/profiles/minecraft/{username}` and use the returned `name` and `id` as `username` and `uuid`. UUIDs with or without hyphens are accepted.
+2. Request `https://sessionserver.mojang.com/session/minecraft/profile/{uuid}?unsigned=false` using the UUID without hyphens. In `properties`, find the entry named `textures` and copy its `value` and `signature` into `texturesValue` and `texturesSignature` without Base64 decoding.
+
+`padding`: Optional startup padding sequence. Omit it or use `[]` to keep the built-in Minecraft 26.1.2 preset, including its write boundaries and timing. For a custom sequence:
+
+```json
+{
+  "padding": ["44", "64-128", "25", "32768-49152"]
+}
+```
+
+- Each entry is a fixed length or a `"min-max"` string in bytes. Lengths are sampled uniformly within the inclusive range.
+- Turns alternate between client and server, starting with the client. Each side reads the peer's entire turn before sending its own. The sequence runs once at startup.
+- Lengths include the padding record's VarInt length header. The first entry also includes the two-byte Login Acknowledged packet, so its minimum is 3. Later entries may be as short as 1. Each entry is limited to 8388608 bytes, with the minimum no greater than the maximum.
+- Custom sequences add no intentional delays. Lengths describe turn totals, not TCP segment sizes. Subsequent proxy data framing and the 15-second keep-alive interval are unchanged.
+
+Both endpoints must use the same `padding`. XMC does not negotiate padding settings; mismatches may cause length-check failures, handshake timeouts, or stream desynchronization.
+
 ## UDPMask
 
 An array used to camouflage UDP traffic emitted by the core. The first item in the array is the innermost camouflage layer.
