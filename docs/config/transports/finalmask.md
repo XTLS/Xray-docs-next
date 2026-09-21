@@ -408,7 +408,7 @@ Salamander 混淆。（来自 Hysteria2）
 
 `dgram`: 更低的权限，仅客户端 (Linux, Mac, iOS)
 
-`ips`: ips
+`ips`: 暂不支持 cidr
 
 ### realm
 
@@ -424,7 +424,13 @@ Salamander 混淆。（来自 Hysteria2）
       "stun.nextcloud.com:3478",
       "global.stun.twilio.com:3478"
     ],
-    "tlsConfig": {} // optional
+    "tlsConfig": {}, // optional
+    "ipMode": "dual",
+    "portMapping": {
+      "enabled": false,
+      "timeout": 10,
+      "lifetime": 600
+    }
   }
 }
 ```
@@ -435,7 +441,44 @@ Salamander 混淆。（来自 Hysteria2）
 
 `tlsConfig`: 同 tlsSettings
 
-连接不通需要 debug 级别日志，可能的影响因素有 stun提供商 realm提供商 punch包影响了quic握手（极小概率）
+`ipMode`: 控制 stun 的域名地址解析以及 realm peer 的过滤
+
+`portMapping.enabled`: 启用固定端口映射，更强的入站可达性
+
+`portMapping.timeout`: 单位秒
+
+`portMapping.lifetime`: 单位秒
+
+连接不通需要 debug 级别日志，可能的影响因素有 stun提供商 realm提供商
+
+### udphop
+
+```json
+{
+  "type": "udphop",
+  // [!field focus]
+  "settings": {
+    "mode": "intervallocal,intervalremote", // intervallocal intervalremote perconnremote
+    "interval": "5-10",
+    "remoteIPs": [""],
+    "remotePorts": "20000-50000,443"
+  }
+}
+```
+
+`intervallocal`: 仅支持 wireguard hysteria xhttph3
+
+`intervalremote`: 需要搭配 iptables 或 nftables
+
+`perconnremote`: 需要搭配 iptables 或 nftables
+
+`mode`: 逗号分割，一般为 `intervallocal,intervalremote` 或 `perconnremote`
+
+`interval`: 单位秒
+
+`remoteIPs`: 仅 mode 含 intervalremote 或 perconnremote 时需要，未填继承上层地址，支持 cidr
+
+`remotePorts`: 仅 mode 含 intervalremote 或 perconnremote 时需要，未填继承上层地址
 
 ## quicParams
 

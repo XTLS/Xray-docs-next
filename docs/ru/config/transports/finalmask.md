@@ -408,7 +408,7 @@ n-й элемент массива задаёт, сколько ждать по�
 
 `dgram`: Более низкие права доступа, только на стороне клиента (Linux, Mac, iOS)
 
-`ips`: ips
+`ips`: В настоящее время CIDR не поддерживается
 
 ### realm
 
@@ -424,7 +424,13 @@ n-й элемент массива задаёт, сколько ждать по�
       "stun.nextcloud.com:3478",
       "global.stun.twilio.com:3478"
     ],
-    "tlsConfig": {} // optional
+    "tlsConfig": {}, // optional
+    "ipMode": "dual",
+    "portMapping": {
+      "enabled": false,
+      "timeout": 10,
+      "lifetime": 600
+    }
   }
 }
 ```
@@ -435,7 +441,44 @@ n-й элемент массива задаёт, сколько ждать по�
 
 `tlsConfig`: То же, что tlsSettings
 
-Для регистрации сбоев соединения требуется уровень отладки. К возможным факторам, способствующим возникновению проблем, относятся поставщик STUN, поставщик Realm и пакеты данных, влияющие на рукопожатие QUIC (вероятность крайне низка)
+`ipMode`: Управляйте разрешением доменных имен STUN и фильтрацией одноранговых узлов (peer) в пределах области (realm)
+
+`portMapping.enabled`: Включите фиксированное сопоставление портов для улучшения доступности входящих соединений
+
+`portMapping.timeout`: секунды
+
+`portMapping.lifetime`: секунды
+
+Для регистрации сбоев соединения требуется уровень отладки. К возможным факторам, способствующим возникновению проблем, относятся поставщик STUN, поставщик Realm
+
+### udphop
+
+```json
+{
+  "type": "udphop",
+  // [!field focus]
+  "settings": {
+    "mode": "intervallocal,intervalremote", // intervallocal intervalremote perconnremote
+    "interval": "5-10",
+    "remoteIPs": [""],
+    "remotePorts": "20000-50000,443"
+  }
+}
+```
+
+`intervallocal`: Поддерживает только WireGuard, Hysteria и xhttp-h3
+
+`intervalremote`: Требует использования в связке с iptables или nftables
+
+`perconnremote`: Требует использования в связке с iptables или nftables
+
+`mode`: Значения, разделенные запятыми; как правило, `intervallocal,intervalremote` или `perconnremote`
+
+`interval`: секунды
+
+`remoteIPs`: Обязателен только в том случае, если `mode` включает `intervalremote` или `perconnremote`; если поле не заполнено, адрес наследуется с вышестоящего уровня. Поддерживается нотация CIDR.
+
+`remotePorts`: Обязателен только в том случае, если `mode` включает `intervalremote` или `perconnremote`; если поле не заполнено, адрес наследуется с вышестоящего уровня
 
 ## quicParams
 

@@ -408,7 +408,7 @@ At least one of `domains` and `resolvers` must be set.
 
 `dgram`: Lower permissions, client-side only (Linux, Mac, iOS)
 
-`ips`: ips
+`ips`: CIDR is not currently supported
 
 ### realm
 
@@ -424,7 +424,13 @@ Self-built https://github.com/apernet/hysteria-realm-server
       "stun.nextcloud.com:3478",
       "global.stun.twilio.com:3478"
     ],
-    "tlsConfig": {} // optional
+    "tlsConfig": {}, // optional
+    "ipMode": "dual",
+    "portMapping": {
+      "enabled": false,
+      "timeout": 10,
+      "lifetime": 600
+    }
   }
 }
 ```
@@ -435,7 +441,44 @@ Self-built https://github.com/apernet/hysteria-realm-server
 
 `tlsConfig`: Same as tlsSettings
 
-Connection failures require debug-level logging. Possible contributing factors include the STUN provider, the Realm provider, and punch packets affecting the QUIC handshake (extremely low probability)
+`ipMode`: Control STUN domain name resolution and realm peer filtering
+
+`portMapping.enabled`: Enable fixed port mapping for enhanced inbound accessibility
+
+`portMapping.timeout`: seconds
+
+`portMapping.lifetime`: seconds
+
+Connection failures require debug-level logging. Possible contributing factors include the STUN provider, the Realm provider
+
+### udphop
+
+```json
+{
+  "type": "udphop",
+  // [!field focus]
+  "settings": {
+    "mode": "intervallocal,intervalremote", // intervallocal intervalremote perconnremote
+    "interval": "5-10",
+    "remoteIPs": [""],
+    "remotePorts": "20000-50000,443"
+  }
+}
+```
+
+`intervallocal`: Supports only WireGuard, Hysteria, and xhttp-h3
+
+`intervalremote`: Requires pairing with iptables or nftables
+
+`perconnremote`: Requires pairing with iptables or nftables
+
+`mode`: Comma-separated; typically `intervallocal,intervalremote` or `perconnremote`
+
+`interval`: seconds
+
+`remoteIPs`: Required only when `mode` includes `intervalremote` or `perconnremote`; if left blank, it inherits the address from the parent level. CIDR notation is supported
+
+`remotePorts`: Required only when `mode` includes `intervalremote` or `perconnremote`; if left blank, it inherits the address from the parent level
 
 ## quicParams
 
