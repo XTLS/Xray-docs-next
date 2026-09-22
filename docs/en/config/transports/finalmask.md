@@ -472,7 +472,7 @@ Connection failures require debug-level logging. Possible contributing factors i
 
 `perconnremote`: Requires pairing with iptables or nftables
 
-`mode`: Comma-separated; typically `intervallocal,intervalremote` or `perconnremote`
+`mode`: Comma-separated; typically `intervallocal,intervalremote`, or just `intervallocal`, or just `perconnremote`
 
 `interval`: seconds
 

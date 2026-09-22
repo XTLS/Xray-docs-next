@@ -472,7 +472,7 @@ n-й элемент массива задаёт, сколько ждать по�
 
 `perconnremote`: Требует использования в связке с iptables или nftables
 
-`mode`: Значения, разделенные запятыми; как правило, `intervallocal,intervalremote` или `perconnremote`
+`mode`: Список, разделенный запятыми; обычно `intervallocal,intervalremote`, либо только `intervallocal`, либо только `perconnremote`
 
 `interval`: секунды
 

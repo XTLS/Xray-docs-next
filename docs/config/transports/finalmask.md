@@ -472,7 +472,7 @@ Salamander 混淆。（来自 Hysteria2）
 
 `perconnremote`: 需要搭配 iptables 或 nftables
 
-`mode`: 逗号分割，一般为 `intervallocal,intervalremote` 或 `perconnremote`
+`mode`: 逗号分割，一般为 `intervallocal,intervalremote` 或仅 `intervallocal` 或仅 `perconnremote`
 
 `interval`: 单位秒
 
