@@ -35,6 +35,7 @@ For direct outbounds such as [Freedom](./outbounds/freedom.md), the peer is usua
         "wsSettings": {},
         "httpupgradeSettings": {},
         "hysteriaSettings": {},
+        "masqueSettings": {},
         // Transport security
         "security": "none",
         "realitySettings": {},
@@ -50,7 +51,7 @@ For direct outbounds such as [Freedom](./outbounds/freedom.md), the peer is usua
 
 ### Transport Methods
 
-> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria"
+> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
 
 Transport method used by the data stream. The default value is `raw`.
 
@@ -82,6 +83,10 @@ HTTPUpgrade configuration for the data stream. Only valid when `method` is `http
 
 Hysteria configuration for the data stream. Only valid when `method` is `hysteria`.
 
+> `masqueSettings`: [MasqueObject](./transports/masque.md)
+
+MASQUE configuration for the data stream. Only valid when `method` is `masque`.
+
 ### Transport Security
 
 > `security`: "none" | "reality" | "tls"
@@ -108,7 +113,7 @@ REALITY is currently one of the most secure transport-security schemes, and from
 TLS configuration. TLS is provided by Go. In normal cases the negotiation result is TLS 1.3. DTLS is not supported.
 
 Only valid when `security` is `tls`.
-It supports use with the `RAW`, `XHTTP`, `mKCP`, `gRPC`, `WebSocket`, `HTTPUpgrade`, and `Hysteria` transport methods.
+It supports use with the `RAW`, `XHTTP`, `mKCP`, `gRPC`, `WebSocket`, `HTTPUpgrade`, `Hysteria`, and `MASQUE` transport methods.
 
 ### Additional Configuration
 
@@ -128,16 +133,17 @@ Both inbounds and outbounds can configure transport methods and transport securi
 
 This table corresponds to `protocol + streamSettings.method`.
 
-|                                                                       | `raw`     | `xhttp`   | `grpc`    | `websocket` | `httpupgrade` | `mkcp`    | `hysteria` |
-| --------------------------------------------------------------------- | --------- | --------- | --------- | ----------- | ------------- | --------- | ---------- |
-| `http`                                                                | Supported | Supported | Supported | Supported   | Supported     | Supported | Supported  |
-| `socks` <sup><a href="#protocol-transport-note-1">[1]</a></sup>       | Limited   | Limited   | Limited   | Limited     | Limited       | Limited   | Limited    |
-| `shadowsocks` <sup><a href="#protocol-transport-note-1">[1]</a></sup> | Limited   | Limited   | Limited   | Limited     | Limited       | Limited   | Limited    |
-| `vmess`                                                               | Supported | Supported | Supported | Supported   | Supported     | Supported | Supported  |
-| `vless`                                                               | Supported | Supported | Supported | Supported   | Supported     | Supported | Supported  |
-| `trojan`                                                              | Supported | Supported | Supported | Supported   | Supported     | Supported | Supported  |
-| `hysteria`                                                            | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | Supported  |
-| `wireguard`                                                           | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        |
+|                                                                       | `raw`     | `xhttp`   | `grpc`    | `websocket` | `httpupgrade` | `mkcp`    | `hysteria` | `masque`  |
+| --------------------------------------------------------------------- | --------- | --------- | --------- | ----------- | ------------- | --------- | ---------- | --------- |
+| `http`                                                                | Supported | Supported | Supported | Supported   | Supported     | Supported | Supported  | N/A       |
+| `socks` <sup><a href="#protocol-transport-note-1">[1]</a></sup>       | Limited   | Limited   | Limited   | Limited     | Limited       | Limited   | Limited    | N/A       |
+| `shadowsocks` <sup><a href="#protocol-transport-note-1">[1]</a></sup> | Limited   | Limited   | Limited   | Limited     | Limited       | Limited   | Limited    | N/A       |
+| `vmess`                                                               | Supported | Supported | Supported | Supported   | Supported     | Supported | Supported  | N/A       |
+| `vless`                                                               | Supported | Supported | Supported | Supported   | Supported     | Supported | Supported  | N/A       |
+| `trojan`                                                              | Supported | Supported | Supported | Supported   | Supported     | Supported | Supported  | N/A       |
+| `hysteria`                                                            | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | Supported  | N/A       |
+| `wireguard`                                                           | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        | N/A       |
+| `masque`                                                              | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        | Supported |
 
 <small id="protocol-transport-note-1">[1] When XUDP is not enabled for Socks or Shadowsocks, UDP traffic uses the protocol's native UDP path and bypasses the configured transport method; TCP traffic is not subject to this limitation. See [XUDP](./outbound.md#muxobject).</small><br>
 
@@ -154,6 +160,7 @@ This table corresponds to `streamSettings.method + streamSettings.security`.
 | `httpupgrade` | Supported     | Supported | Not supported |
 | `mkcp`        | Supported     | Supported | Not supported |
 | `hysteria`    | Not supported | Required  | Not supported |
+| `masque`      | Not supported | Required  | Not supported |
 
 ### Inbound/Outbound Protocols and Transport Security
 
@@ -168,6 +175,7 @@ This table corresponds to `protocol + streamSettings.security`.
 | `vless`       | Limited <sup><a href="#protocol-security-note-3">[3]</a></sup> | Supported                                                      | Supported                                                      | Optional Encryption <sup><a href="#protocol-security-note-4">[4]</a></sup>                             |
 | `trojan`      | Limited <sup><a href="#protocol-security-note-3">[3]</a></sup> | Supported                                                      | Supported                                                      | Authentication only                                                                                    |
 | `hysteria`    | Not supported                                                  | Required                                                       | Not supported                                                  | None (relies on TLS)                                                                                   |
+| `masque`      | Not supported                                                  | Required                                                       | Not supported                                                  | None (relies on TLS)                                                                                   |
 | `wireguard`   | N/A                                                            | N/A                                                            | N/A                                                            | Encrypted tunnel <sup><a href="#protocol-security-note-2">[2]</a></sup>                                |
 
 <small id="protocol-security-note-1">[1] When XUDP is not enabled for Socks or Shadowsocks, UDP traffic uses the protocol's native UDP path and bypasses the configured TLS or REALITY; TCP traffic is not subject to this limitation. See [XUDP](./outbound.md#muxobject).</small><br>

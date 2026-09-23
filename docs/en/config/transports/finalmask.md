@@ -466,11 +466,11 @@ Connection failures require debug-level logging. Possible contributing factors i
 }
 ```
 
-Used for QUIC parameter tuning in XHTTP H3 and Hysteria.
+Used for QUIC parameter tuning in XHTTP H3, Hysteria and MASQUE.
 
 > `congestion`: reno | bbr | brutal | force-brutal
 
-Congestion-control algorithm. Hysteria defaults to `brutal`, while XHTTP H3 defaults to `bbr`.
+Congestion-control algorithm. Hysteria defaults to `brutal`, while XHTTP H3 and MASQUE default to `bbr`.
 
 `reno` and `bbr` are well-known algorithms.
 
@@ -478,7 +478,7 @@ Congestion-control algorithm. Hysteria defaults to `brutal`, while XHTTP H3 defa
 
 `force-brutal`: same as `brutal`, but it forces upstream traffic to use the fixed packet-sending rate from `brutalUp`, ignoring peer negotiation.
 
-Note that XHTTP H3 cannot use `brutal` because it has no negotiation mechanism, but it does support `force-brutal`, which does not require negotiation.
+Note that XHTTP H3 and MASQUE cannot use `brutal` because they have no negotiation mechanism (MASQUE runs `bbr` instead), but they do support `force-brutal`, which does not require negotiation.
 
 > `bbrProfile`: conservative | standard | aggressive
 
