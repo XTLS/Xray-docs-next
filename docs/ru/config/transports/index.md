@@ -11,6 +11,7 @@ Xray поддерживает следующие категории конфиг
 - [WebSocket](websocket.md)
 - [HTTPUpgrade](httpupgrade.md)
 - [Hysteria](hysteria.md)
+- [MASQUE](masque.md)
 
 ## Безопасность транспорта
 

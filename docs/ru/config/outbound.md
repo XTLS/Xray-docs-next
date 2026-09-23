@@ -45,7 +45,7 @@ Xray будет использовать случайный IP-адрес из �
 
 Как и в описании для `inbound`, из-за особенностей `UDP` как протокола без установления соединения, `Xray` не может определить исходный целевой `IP`-адрес запроса, поступающего в ядро (например, в рамках одного и того же `QUIC`-соединения он может даже меняться), поэтому эта функция не может работать.
 
-> `protocol`: "blackhole" | "dns" | "freedom" | "http" | "loopback" | "shadowsocks" | "socks" | "trojan" | "vless" | "vmess" | "hysteria" | "wireguard"
+> `protocol`: "blackhole" | "dns" | "freedom" | "http" | "loopback" | "shadowsocks" | "socks" | "trojan" | "vless" | "vmess" | "hysteria" | "masque" | "wireguard"
 
 Название протокола соединения. Список доступных протоколов см. в разделе [Исходящие протоколы](./outbounds/) в меню слева.
 

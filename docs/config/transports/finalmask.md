@@ -466,11 +466,11 @@ Salamander 混淆。（来自 Hysteria2）
 }
 ```
 
-用于 XHTTP H3 以及 hysteria 的 QUIC 配置调整。
+用于 XHTTP H3、hysteria 以及 MASQUE 的 QUIC 配置调整。
 
 > `congestion`: reno | bbr | brutal | force-brutal
 
-拥塞控制算法，Hysteria 默认为 `brutal`，XHTTP H3 默认使用 `bbr`。
+拥塞控制算法，Hysteria 默认为 `brutal`，XHTTP H3 与 MASQUE 默认使用 `bbr`。
 
 `reno`/`bbr`: 知名算法。
 
@@ -478,7 +478,7 @@ Salamander 混淆。（来自 Hysteria2）
 
 `force-brutal`: 同 `brutal`，但强制使上行使用 `brutalUp` 固定发包速率，无视对端协商。
 
-注意 XHTTP H3 因为无协商机制所以无法使用 `brutal` 模式，但是支持无协商过程的 `force-brutal`。
+注意 XHTTP H3 与 MASQUE 因为无协商机制所以无法使用 `brutal` 模式（MASQUE 会按 `bbr` 运行），但是支持无协商过程的 `force-brutal`。
 
 > `bbrProfile`: conservative | standard | aggressive
 

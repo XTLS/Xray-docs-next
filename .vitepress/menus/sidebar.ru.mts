@@ -119,7 +119,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         {
           text: "Hysteria",
           link: "/ru/config/outbounds/hysteria.md"
-        }
+        },
+        { text: "MASQUE", link: "/ru/config/outbounds/masque.md" }
       ]
     },
     {
@@ -148,7 +149,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
             {
               text: "Hysteria",
               link: "/ru/config/transports/hysteria.md"
-            }
+            },
+            { text: "MASQUE", link: "/ru/config/transports/masque.md" }
           ]
         },
         {

@@ -98,7 +98,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         },
         { text: "VMess", link: "/en/config/outbounds/vmess.md" },
         { text: "WireGuard", link: "/en/config/outbounds/wireguard.md" },
-        { text: "Hysteria", link: "/en/config/outbounds/hysteria.md" }
+        { text: "Hysteria", link: "/en/config/outbounds/hysteria.md" },
+        { text: "MASQUE", link: "/en/config/outbounds/masque.md" }
       ]
     },
     {
@@ -124,7 +125,11 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
               text: "HTTPUpgrade",
               link: "/en/config/transports/httpupgrade.md"
             },
-            { text: "Hysteria", link: "/en/config/transports/hysteria.md" }
+            {
+              text: "Hysteria",
+              link: "/en/config/transports/hysteria.md"
+            },
+            { text: "MASQUE", link: "/en/config/transports/masque.md" }
           ]
         },
         {

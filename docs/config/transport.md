@@ -35,6 +35,7 @@
         "wsSettings": {},
         "httpupgradeSettings": {},
         "hysteriaSettings": {},
+        "masqueSettings": {},
         // 传输安全
         "security": "none",
         "realitySettings": {},
@@ -50,7 +51,7 @@
 
 ### 传输方式
 
-> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria"
+> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
 
 数据流所使用的传输方式类型，默认值为 `raw`。
 
@@ -82,6 +83,10 @@
 
 数据流的 Hysteria 配置，仅当 `method` 为 `hysteria` 时有效。
 
+> `masqueSettings`: [MasqueObject](./transports/masque.md)
+
+数据流的 MASQUE 配置，仅当 `method` 为 `masque` 时有效。
+
 ### 传输安全
 
 > `security`: "none" | "reality" | "tls"
@@ -109,7 +114,7 @@ REALITY 是目前最安全的传输安全方案之一, 且外部看来流量类�
 TLS 配置。TLS 由 Golang 提供，通常情况下 TLS 协商的结果为使用 TLS 1.3，不支持 DTLS。
 
 仅当 `security` 为 `tls` 时有效。
-支持与 `RAW`、`XHTTP`、`mKCP`、`gRPC`、`WebSocket`、`HTTPUpgrade`、`Hysteria` 传输方式组合使用。
+支持与 `RAW`、`XHTTP`、`mKCP`、`gRPC`、`WebSocket`、`HTTPUpgrade`、`Hysteria`、`MASQUE` 传输方式组合使用。
 
 ### 附加配置
 
@@ -129,16 +134,17 @@ FinalMask 配置，用于对流量进行最终的伪装。
 
 此表对应 `protocol + streamSettings.method`。
 
-|                                                                       | `raw`  | `xhttp` | `grpc` | `websocket` | `httpupgrade` | `mkcp` | `hysteria` |
-| --------------------------------------------------------------------- | ------ | ------- | ------ | ----------- | ------------- | ------ | ---------- |
-| `http`                                                                | 支持   | 支持    | 支持   | 支持        | 支持          | 支持   | 支持       |
-| `socks` <sup><a href="#protocol-transport-note-1">[1]</a></sup>       | 受限   | 受限    | 受限   | 受限        | 受限          | 受限   | 受限       |
-| `shadowsocks` <sup><a href="#protocol-transport-note-1">[1]</a></sup> | 受限   | 受限    | 受限   | 受限        | 受限          | 受限   | 受限       |
-| `vmess`                                                               | 支持   | 支持    | 支持   | 支持        | 支持          | 支持   | 支持       |
-| `vless`                                                               | 支持   | 支持    | 支持   | 支持        | 支持          | 支持   | 支持       |
-| `trojan`                                                              | 支持   | 支持    | 支持   | 支持        | 支持          | 支持   | 支持       |
-| `hysteria`                                                            | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 支持       |
-| `wireguard`                                                           | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     |
+|                                                                       | `raw`  | `xhttp` | `grpc` | `websocket` | `httpupgrade` | `mkcp` | `hysteria` | `masque` |
+| --------------------------------------------------------------------- | ------ | ------- | ------ | ----------- | ------------- | ------ | ---------- | -------- |
+| `http`                                                                | 支持   | 支持    | 支持   | 支持        | 支持          | 支持   | 支持       | 不适用   |
+| `socks` <sup><a href="#protocol-transport-note-1">[1]</a></sup>       | 受限   | 受限    | 受限   | 受限        | 受限          | 受限   | 受限       | 不适用   |
+| `shadowsocks` <sup><a href="#protocol-transport-note-1">[1]</a></sup> | 受限   | 受限    | 受限   | 受限        | 受限          | 受限   | 受限       | 不适用   |
+| `vmess`                                                               | 支持   | 支持    | 支持   | 支持        | 支持          | 支持   | 支持       | 不适用   |
+| `vless`                                                               | 支持   | 支持    | 支持   | 支持        | 支持          | 支持   | 支持       | 不适用   |
+| `trojan`                                                              | 支持   | 支持    | 支持   | 支持        | 支持          | 支持   | 支持       | 不适用   |
+| `hysteria`                                                            | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 支持       | 不适用   |
+| `wireguard`                                                           | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     | 不适用   |
+| `masque`                                                              | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     | 支持     |
 
 <small id="protocol-transport-note-1">[1] Socks 和 Shadowsocks 未启用 [XUDP](./outbound.md#muxobject) 时，UDP 流量会改走协议原生的 UDP 路径，从而绕过已配置的传输方式；TCP 流量不受此限制。</small><br>
 
@@ -155,6 +161,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 | `httpupgrade` | 支持   | 支持  | 不支持    |
 | `mkcp`        | 支持   | 支持  | 不支持    |
 | `hysteria`    | 不支持 | 必须  | 不支持    |
+| `masque`      | 不支持 | 必须  | 不支持    |
 
 ### 出入站协议与传输安全
 
@@ -169,6 +176,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 | `vless`       | 受限 <sup><a href="#protocol-security-note-3">[3]</a></sup> | 支持                                                        | 支持                                                        | 可选的 Encryption <sup><a href="#protocol-security-note-4">[4]</a></sup>  |
 | `trojan`      | 受限 <sup><a href="#protocol-security-note-3">[3]</a></sup> | 支持                                                        | 支持                                                        | 仅有身份认证                                                              |
 | `hysteria`    | 不支持                                                      | 必须                                                        | 不支持                                                      | 无（依赖 TLS）                                                            |
+| `masque`      | 不支持                                                      | 必须                                                        | 不支持                                                      | 无（依赖 TLS）                                                            |
 | `wireguard`   | 不适用                                                      | 不适用                                                      | 不适用                                                      | 加密隧道 <sup><a href="#protocol-security-note-2">[2]</a></sup>           |
 
 <small id="protocol-security-note-1">[1] Socks 和 Shadowsocks 未启用 [XUDP](./outbound.md#muxobject) 时，UDP 流量会改走协议原生的 UDP 路径，从而绕过已配置的 TLS 或 REALITY；TCP 流量不受此限制。</small><br>

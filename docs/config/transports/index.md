@@ -11,6 +11,7 @@ Xray 支持以下传输配置
 - [WebSocket](websocket.md)
 - [HTTPUpgrade](httpupgrade.md)
 - [Hysteria](hysteria.md)
+- [MASQUE](masque.md)
 
 ## 传输安全
 
