@@ -384,10 +384,10 @@ Salamander 混淆。（来自 Hysteria2）
     "domains": [
       {
         "name": "t.example.com",
-        "lenLimit": 255,
-        "labelLimit": 63,
+        "lenLimit": 255, // 0-255
+        "labelLimit": 63, // 0-63
         "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA
-        "edns0": 1232
+        "edns0": 1232 // 0,512-4096
       }
     ],
     "resolvers": [
@@ -402,15 +402,10 @@ Salamander 混淆。（来自 Hysteria2）
 }
 ```
 
-`domains[n].lenLimit`: 0-255
-
-`domains[n].labelLimit`: 0-63
-
-`domains[n].edns0`: 0-4096
-
 仅可搭配 kcp，推荐设置 tti 200，仅服务端需要配置 mtu，参考 mtu，CNAME 计算比较复杂，一般在 AAAA 与 TXT 之间
-  - edns0 为 512 时，A 39 TXT 215 AAAA 117
-  - edns0 为 1232 时，A 174 TXT 932 AAAA 492
+
+- edns0 为 512 时，A 39 TXT 215 AAAA 117
+- edns0 为 1232 时，A 174 TXT 932 AAAA 492
 
 ### xicmp
 

@@ -384,10 +384,10 @@ For example, if you own `example.com`, set an A record like `a.example.com` to t
     "domains": [
       {
         "name": "t.example.com",
-        "lenLimit": 255,
-        "labelLimit": 63,
+        "lenLimit": 255, // 0-255
+        "labelLimit": 63, // 0-63
         "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA
-        "edns0": 1232
+        "edns0": 1232 // 0,512-4096
       }
     ],
     "resolvers": [
@@ -402,15 +402,10 @@ For example, if you own `example.com`, set an A record like `a.example.com` to t
 }
 ```
 
-`domains[n].lenLimit`: 0-255
-
-`domains[n].labelLimit`: 0-63
-
-`domains[n].edns0`: 0-4096
-
 Compatible only with kcp; a TTI of 200 is recommended. MTU configuration is required only on the server side (refer to MTU settings). CNAME calculation is relatively complex; values ​​generally fall between those for AAAA and TXT records:
-  - When edns0 is 512: A 39, TXT 215, AAAA 117
-  - When edns0 is 1232: A 174, TXT 932, AAAA 492
+
+- When edns0 is 512: A 39, TXT 215, AAAA 117
+- When edns0 is 1232: A 174, TXT 932, AAAA 492
 
 ### xicmp
 
