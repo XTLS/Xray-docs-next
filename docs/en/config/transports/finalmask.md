@@ -410,7 +410,7 @@ For example, if you own `example.com`, set an A record like `a.example.com` to t
 
 Compatible only with kcp; a TTI of 200 is recommended. MTU configuration is required only on the server side (refer to MTU settings). CNAME calculation is relatively complex; values ​​generally fall between those for AAAA and TXT records:
   - When edns0 is 512: A 39, TXT 215, AAAA 117
-  - When edns0 is 1232: A 174, TXT 763, AAAA 492
+  - When edns0 is 1232: A 174, TXT 932, AAAA 492
 
 ### xicmp
 
