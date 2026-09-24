@@ -381,17 +381,31 @@ Salamander 混淆。（来自 Hysteria2）
   "type": "xdns",
   // [!field focus]
   "settings": {
-    "domains": ["t.example.com"],
-    "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+    "domains": [
+      {
+        "name": "t.example.com",
+        "lenLimit": 255, // 0-255
+        "labelLimit": 63, // 0-63
+        "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA
+        "edns0": 1232 // 0,512-4096
+      }
+    ],
+    "resolvers": [
+      {
+        "type": "udp",
+        "settings": {
+          "addr": "127.0.0.1:53"
+        }
+      }
+    ]
   }
 }
 ```
 
-`domains`: 服务端使用，域名列表。支持指定查询类型 `domain:method`，method 可为 `txt`、`a`、`aaaa`，不指定则不限制查询类型。
+仅可搭配 kcp，推荐设置 tti 200，仅服务端需要配置 mtu，参考 mtu，CNAME 计算比较复杂，一般在 AAAA 与 TXT 之间
 
-`resolvers`: 客户端使用，DNS 解析器列表。格式为 `domain[:method]+udp://server:port`，method 可为 `txt`（默认）、`a`、`aaaa`。
-
-`domains` 与 `resolvers` 至少填写一个。
+- edns0 为 512 时，A 39 TXT 215 AAAA 117
+- edns0 为 1232 时，A 174 TXT 932 AAAA 492
 
 ### xicmp
 
@@ -408,7 +422,7 @@ Salamander 混淆。（来自 Hysteria2）
 
 `dgram`: 更低的权限，仅客户端 (Linux, Mac, iOS)
 
-`ips`: ips
+`ips`: 暂不支持 cidr
 
 ### realm
 
@@ -424,7 +438,13 @@ Salamander 混淆。（来自 Hysteria2）
       "stun.nextcloud.com:3478",
       "global.stun.twilio.com:3478"
     ],
-    "tlsConfig": {} // optional
+    "tlsConfig": {}, // optional
+    "ipMode": "dual",
+    "portMapping": {
+      "enabled": false,
+      "timeout": 10,
+      "lifetime": 600
+    }
   }
 }
 ```
@@ -435,7 +455,44 @@ Salamander 混淆。（来自 Hysteria2）
 
 `tlsConfig`: 同 tlsSettings
 
-连接不通需要 debug 级别日志，可能的影响因素有 stun提供商 realm提供商 punch包影响了quic握手（极小概率）
+`ipMode`: 控制 stun 的域名地址解析以及 realm peer 的过滤
+
+`portMapping.enabled`: 启用固定端口映射，更强的入站可达性
+
+`portMapping.timeout`: 单位秒
+
+`portMapping.lifetime`: 单位秒
+
+连接不通需要 debug 级别日志，可能的影响因素有 stun提供商 realm提供商
+
+### udphop
+
+```json
+{
+  "type": "udphop",
+  // [!field focus]
+  "settings": {
+    "mode": "intervallocal,intervalremote", // intervallocal intervalremote perconnremote
+    "interval": "5-10",
+    "remoteIPs": [""],
+    "remotePorts": "20000-50000,443"
+  }
+}
+```
+
+`intervallocal`: 仅支持 wireguard hysteria xhttph3
+
+`intervalremote`: 需要搭配 iptables 或 nftables
+
+`perconnremote`: 需要搭配 iptables 或 nftables
+
+`mode`: 逗号分割，一般为 `intervallocal,intervalremote` 或仅 `intervallocal` 或仅 `perconnremote`
+
+`interval`: 单位秒
+
+`remoteIPs`: 仅 mode 含 intervalremote 或 perconnremote 时需要，未填继承上层地址，支持 cidr
+
+`remotePorts`: 仅 mode 含 intervalremote 或 perconnremote 时需要，未填继承上层地址
 
 ## quicParams
 

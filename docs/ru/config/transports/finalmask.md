@@ -381,17 +381,31 @@ n-й элемент массива задаёт, сколько ждать по�
   "type": "xdns",
   // [!field focus]
   "settings": {
-    "domains": ["t.example.com"],
-    "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+    "domains": [
+      {
+        "name": "t.example.com",
+        "lenLimit": 255, // 0-255
+        "labelLimit": 63, // 0-63
+        "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA
+        "edns0": 1232 // 0,512-4096
+      }
+    ],
+    "resolvers": [
+      {
+        "type": "udp",
+        "settings": {
+          "addr": "127.0.0.1:53"
+        }
+      }
+    ]
   }
 }
 ```
 
-`domains`: используется на стороне сервера. Список доменов. Поддерживает указание типа запроса в формате `domain:method`, где `method` может быть `txt`, `a` или `aaaa`. Если `method` не указан, тип запроса не ограничивается.
+Совместимо только с kcp; рекомендуется значение TTI, равное 200. Настройка MTU требуется только на стороне сервера (см. раздел настроек MTU). Расчет CNAME относительно сложен; как правило, полученные значения находятся в диапазоне между значениями для записей AAAA и TXT:
 
-`resolvers`: используется на стороне клиента. Список DNS-резолверов. Формат: `domain[:method]+udp://server:port`, где `method` может быть `txt` по умолчанию, `a` или `aaaa`.
-
-Хотя бы одно из `domains` и `resolvers` должно быть заполнено.
+- При edns0 = 512: A 39, TXT 215, AAAA 117
+- При edns0 = 1232: A 174, TXT 932, AAAA 492
 
 ### xicmp
 
@@ -408,7 +422,7 @@ n-й элемент массива задаёт, сколько ждать по�
 
 `dgram`: Более низкие права доступа, только на стороне клиента (Linux, Mac, iOS)
 
-`ips`: ips
+`ips`: В настоящее время CIDR не поддерживается
 
 ### realm
 
@@ -424,7 +438,13 @@ n-й элемент массива задаёт, сколько ждать по�
       "stun.nextcloud.com:3478",
       "global.stun.twilio.com:3478"
     ],
-    "tlsConfig": {} // optional
+    "tlsConfig": {}, // optional
+    "ipMode": "dual",
+    "portMapping": {
+      "enabled": false,
+      "timeout": 10,
+      "lifetime": 600
+    }
   }
 }
 ```
@@ -435,7 +455,44 @@ n-й элемент массива задаёт, сколько ждать по�
 
 `tlsConfig`: То же, что tlsSettings
 
-Для регистрации сбоев соединения требуется уровень отладки. К возможным факторам, способствующим возникновению проблем, относятся поставщик STUN, поставщик Realm и пакеты данных, влияющие на рукопожатие QUIC (вероятность крайне низка)
+`ipMode`: Управляйте разрешением доменных имен STUN и фильтрацией одноранговых узлов (peer) в пределах области (realm)
+
+`portMapping.enabled`: Включите фиксированное сопоставление портов для улучшения доступности входящих соединений
+
+`portMapping.timeout`: секунды
+
+`portMapping.lifetime`: секунды
+
+Для регистрации сбоев соединения требуется уровень отладки. К возможным факторам, способствующим возникновению проблем, относятся поставщик STUN, поставщик Realm
+
+### udphop
+
+```json
+{
+  "type": "udphop",
+  // [!field focus]
+  "settings": {
+    "mode": "intervallocal,intervalremote", // intervallocal intervalremote perconnremote
+    "interval": "5-10",
+    "remoteIPs": [""],
+    "remotePorts": "20000-50000,443"
+  }
+}
+```
+
+`intervallocal`: Поддерживает только WireGuard, Hysteria и xhttp-h3
+
+`intervalremote`: Требует использования в связке с iptables или nftables
+
+`perconnremote`: Требует использования в связке с iptables или nftables
+
+`mode`: Список, разделенный запятыми; обычно `intervallocal,intervalremote`, либо только `intervallocal`, либо только `perconnremote`
+
+`interval`: секунды
+
+`remoteIPs`: Обязателен только в том случае, если `mode` включает `intervalremote` или `perconnremote`; если поле не заполнено, адрес наследуется с вышестоящего уровня. Поддерживается нотация CIDR.
+
+`remotePorts`: Обязателен только в том случае, если `mode` включает `intervalremote` или `perconnremote`; если поле не заполнено, адрес наследуется с вышестоящего уровня
 
 ## quicParams
 
