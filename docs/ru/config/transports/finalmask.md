@@ -381,17 +381,36 @@ n-й элемент массива задаёт, сколько ждать по�
   "type": "xdns",
   // [!field focus]
   "settings": {
-    "domains": ["t.example.com"],
-    "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+    "domains": [
+      {
+        "name": "t.example.com",
+        "lenLimit": 255,
+        "labelLimit": 63,
+        "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA
+        "edns0": 1232
+      }
+    ],
+    "resolvers": [
+      {
+        "type": "udp",
+        "settings": {
+          "addr": "127.0.0.1:53"
+        }
+      }
+    ]
   }
 }
 ```
 
-`domains`: используется на стороне сервера. Список доменов. Поддерживает указание типа запроса в формате `domain:method`, где `method` может быть `txt`, `a` или `aaaa`. Если `method` не указан, тип запроса не ограничивается.
+`domains[n].lenLimit`: 0-255
 
-`resolvers`: используется на стороне клиента. Список DNS-резолверов. Формат: `domain[:method]+udp://server:port`, где `method` может быть `txt` по умолчанию, `a` или `aaaa`.
+`domains[n].labelLimit`: 0-63
 
-Хотя бы одно из `domains` и `resolvers` должно быть заполнено.
+`domains[n].edns0`: 0-4096
+
+Совместимо только с kcp; рекомендуется значение TTI, равное 200. Настройка MTU требуется только на стороне сервера (см. раздел настроек MTU). Расчет CNAME относительно сложен; как правило, полученные значения находятся в диапазоне между значениями для записей AAAA и TXT:
+  - При edns0 = 512: A 39, TXT 215, AAAA 117
+  - При edns0 = 1232: A 174, TXT 763, AAAA 492
 
 ### xicmp
 

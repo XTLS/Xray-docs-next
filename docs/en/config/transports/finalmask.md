@@ -381,17 +381,36 @@ For example, if you own `example.com`, set an A record like `a.example.com` to t
   "type": "xdns",
   // [!field focus]
   "settings": {
-    "domains": ["t.example.com"],
-    "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+    "domains": [
+      {
+        "name": "t.example.com",
+        "lenLimit": 255,
+        "labelLimit": 63,
+        "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA
+        "edns0": 1232
+      }
+    ],
+    "resolvers": [
+      {
+        "type": "udp",
+        "settings": {
+          "addr": "127.0.0.1:53"
+        }
+      }
+    ]
   }
 }
 ```
 
-`domains`: used on the server side. A list of domains. It supports specifying a query type as `domain:method`, where `method` can be `txt`, `a`, or `aaaa`. If omitted, the query type is unrestricted.
+`domains[n].lenLimit`: 0-255
 
-`resolvers`: used on the client side. A list of DNS resolvers. The format is `domain[:method]+udp://server:port`, where `method` can be `txt` (default), `a`, or `aaaa`.
+`domains[n].labelLimit`: 0-63
 
-At least one of `domains` and `resolvers` must be set.
+`domains[n].edns0`: 0-4096
+
+Compatible only with kcp; a TTI of 200 is recommended. MTU configuration is required only on the server side (refer to MTU settings). CNAME calculation is relatively complex; values ​​generally fall between those for AAAA and TXT records:
+  - When edns0 is 512: A 39, TXT 215, AAAA 117
+  - When edns0 is 1232: A 174, TXT 763, AAAA 492
 
 ### xicmp
 
