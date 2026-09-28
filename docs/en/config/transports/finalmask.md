@@ -301,6 +301,7 @@ Noise sent before the actual data.
         "randRange": "0-255",
         "type": "",
         "packet": [],
+        "tag": "",
         "delay": "10-20"
       }
     ]
@@ -310,13 +311,25 @@ Noise sent before the actual data.
 
 `reset`: an [Int32Range](../../development/intro/guide.md#int32range) value in seconds. After noise is sent, it resets after this duration so noise can be sent again to the same address. `0` means no reset, so it is sent only once.
 
-`rand`: adds random bytes, or random bytes of a specified length. Conflicts with `packet`.
+`rand`: adds random bytes, or random bytes of a specified length. Conflicts with `packet` and `tag`.
 
 `randRange`: range of random-byte values. The default is `0-255`.
 
 `type`: the type of `packet`. Supported values are `array`, `str`, `hex`, and `base64`. The default is `array`.
 
-`packet`: adds fixed data. Conflicts with `rand`.
+`packet`: adds fixed data. Conflicts with `rand` and `tag`.
+
+`tag`: builds one noise packet from a string of tags, generated again on every send, so it can carry changing content such as a timestamp. Conflicts with `rand` and `packet`. The tags are joined in order into a single packet:
+
+- `<b hex>`: fixed bytes written as hex, an optional `0x` prefix is ignored
+- `<r N>` or `<r A-B>`: `N` random bytes, or a random count between `A` and `B`
+- `<rc N>` or `<rc A-B>`: the same with random letters (`a-zA-Z`)
+- `<rd N>` or `<rd A-B>`: the same with random digits (`0-9`)
+- `<t>`: the current Unix time in seconds, 4 bytes big endian
+- `<c>`: a counter, 4 bytes big endian, increased by one each time
+- `<n>`: 8 random bytes
+
+For example `"<b 0d0a0d0a><t><r 24>"` sends `\r\n\r\n`, the timestamp and 24 random bytes as one packet.
 
 `delay`: delay in milliseconds. After one noise item is sent, wait for the specified time before sending the next one.
 
