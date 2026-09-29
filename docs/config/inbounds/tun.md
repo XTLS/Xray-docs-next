@@ -26,7 +26,7 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
         "userLevel": 0,
         "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
         "autoOutboundsInterface": "auto",
-        "strictRoute": true
+        "autoSystemWFP": true
       }
     }
   ]
@@ -79,7 +79,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 默认值为 `null`，即未配置。可填写具体接口名，也可填写 `"auto"` 让 Xray 自动选择。如果配置了 `autoSystemRoutingTable` 但未显式指定此项，Xray 会自动按 `"auto"` 处理。
 
-> `strictRoute`: true | false
+> `autoSystemWFP`: true | false
 
 该项配置只在 Windows 系统上有效，默认值为 `false`。
 

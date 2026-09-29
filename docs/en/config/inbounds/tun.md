@@ -26,7 +26,7 @@ On Linux, this environment variable can optionally be used to pass in the TUN FD
         "userLevel": 0,
         "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
         "autoOutboundsInterface": "auto",
-        "strictRoute": true
+        "autoSystemWFP": true
       }
     }
   ]
@@ -79,7 +79,7 @@ Equivalent to automatically setting [sockopt](../transports/sockopt.md).interfac
 
 The default value is `null`, which means not configured. You can specify an interface name explicitly, or use `"auto"` to let Xray choose one automatically. If `autoSystemRoutingTable` is configured but this field is omitted, Xray treats it as `"auto"`.
 
-> `strictRoute`: true | false
+> `autoSystemWFP`: true | false
 
 This option only takes effect on Windows. The default is `false`.
 

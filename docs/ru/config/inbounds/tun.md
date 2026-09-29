@@ -26,7 +26,7 @@
         "userLevel": 0,
         "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
         "autoOutboundsInterface": "auto",
-        "strictRoute": true
+        "autoSystemWFP": true
       }
     }
   ]
@@ -79,7 +79,7 @@
 
 Значение по умолчанию — `null`, то есть параметр не задан. Можно указать конкретное имя интерфейса или `"auto"`, чтобы Xray выбрал его автоматически. Если задан `autoSystemRoutingTable`, но это поле явно не указано, Xray будет обрабатывать его как `"auto"`.
 
-> `strictRoute`: true | false
+> `autoSystemWFP`: true | false
 
 Этот параметр действует только в Windows. По умолчанию `false`.
 
