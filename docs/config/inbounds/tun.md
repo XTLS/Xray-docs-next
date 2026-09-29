@@ -81,9 +81,9 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 > `strictRoute`: true | false
 
-该项配置只在 Windows 系统上有效，默认值为 `true`。
+该项配置只在 Windows 系统上有效，默认值为 `false`。
 
-配置了 `autoSystemRoutingTable` 时，Xray 会添加 Windows 筛选平台（WFP）过滤器，防止其他程序的流量从 TUN 接口之外泄漏：
+启用该项并配置了 `autoSystemRoutingTable` 时，Xray 会添加 Windows 筛选平台（WFP）过滤器，防止其他程序的流量从 TUN 接口之外泄漏：
 
 - 如果配置了 `dns`，DNS（53 端口）只能经由 TUN 接口或由 Xray 自身发出。Windows 会向所有网络接口的 DNS 服务器发送查询，否则本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`）仍会在 TUN 之外被查询。因此 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
 - 如果 TUN 接口无法承载 IPv6（`gateway` 中没有 IPv6 地址，或 `autoSystemRoutingTable` 中没有 IPv6 路由），则双向阻止 IPv6，但 Xray 自身、环回以及 Windows 在本地链路上所需的流量（邻居发现、DHCPv6）除外。
@@ -92,7 +92,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 过滤器会在 Xray 退出时自动移除，即使 Xray 崩溃也是如此。如果无法添加过滤器，TUN 接口将不会启动（Windows 10 及更高版本；更早的版本只记录警告）。
 
-设为 `false` 可不使用这些过滤器，适用于它们会造成问题的情况：其他程序使用的本地 DNS 解析器（例如 `127.0.0.1:53`）、其他 VPN 的 DNS、TUN 接口没有 IPv6 时本地网络中的 IPv6、在主机上解析域名的虚拟机 NAT，或登录强制门户（captive portal）。此时 DNS 可能会如上所述泄漏。
+该项默认关闭，因为这些过滤器会在某些情况下造成问题：其他程序使用的本地 DNS 解析器（例如 `127.0.0.1:53`）、其他 VPN 的 DNS、TUN 接口没有 IPv6 时本地网络中的 IPv6、在主机上解析域名的虚拟机 NAT，或登录强制门户（captive portal）。不使用这些过滤器时，DNS 可能会如上所述泄漏。
 
 ## 使用提示
 
