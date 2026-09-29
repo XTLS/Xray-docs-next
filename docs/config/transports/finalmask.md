@@ -301,7 +301,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
         "randRange": "0-255",
         "type": "",
         "packet": [],
-        "tag": "",
+        "exp": "",
         "delay": "10-20"
       }
     ]
@@ -311,15 +311,15 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `reset`: [Int32Range](../../development/intro/guide.md#int32range) 类型，单位秒。噪声发送后经过该时间后重置，允许对同一地址再次发送噪声。为 0 表示不重置（仅发送一次）。
 
-`rand`: 添加随机或指定长度随机字节，与 `packet`、`tag` 冲突。
+`rand`: 添加随机或指定长度随机字节，与 `packet`、`exp` 冲突。
 
 `randRange`: 随机字节范围，默认 0-255。
 
 `type`: `packet` 类型，`array | str | hex | base64`，默认为 array。
 
-`packet`: 添加固定数据，与 `rand`、`tag` 冲突
+`packet`: 添加固定数据，与 `rand`、`exp` 冲突
 
-`tag`: 由一串标签拼成一个噪声包，每次发送时重新生成，因此可以携带时间戳等变化的内容，与 `rand`、`packet` 冲突。标签按顺序拼接成一个包：
+`exp`: 由一个表达式拼成一个噪声包，每次发送时重新生成，因此可以携带时间戳等变化的内容，与 `rand`、`packet` 冲突。表达式的各部分按顺序拼接成一个包：
 
 - `<b hex>`：固定字节，以十六进制书写，可省略的 `0x` 前缀会被忽略
 - `<r N>` 或 `<r A-B>`：`N` 个随机字节，或 `A` 到 `B` 之间随机个数

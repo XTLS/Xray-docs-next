@@ -301,7 +301,7 @@ Noise sent before the actual data.
         "randRange": "0-255",
         "type": "",
         "packet": [],
-        "tag": "",
+        "exp": "",
         "delay": "10-20"
       }
     ]
@@ -311,15 +311,15 @@ Noise sent before the actual data.
 
 `reset`: an [Int32Range](../../development/intro/guide.md#int32range) value in seconds. After noise is sent, it resets after this duration so noise can be sent again to the same address. `0` means no reset, so it is sent only once.
 
-`rand`: adds random bytes, or random bytes of a specified length. Conflicts with `packet` and `tag`.
+`rand`: adds random bytes, or random bytes of a specified length. Conflicts with `packet` and `exp`.
 
 `randRange`: range of random-byte values. The default is `0-255`.
 
 `type`: the type of `packet`. Supported values are `array`, `str`, `hex`, and `base64`. The default is `array`.
 
-`packet`: adds fixed data. Conflicts with `rand` and `tag`.
+`packet`: adds fixed data. Conflicts with `rand` and `exp`.
 
-`tag`: builds one noise packet from a string of tags, generated again on every send, so it can carry changing content such as a timestamp. Conflicts with `rand` and `packet`. The tags are joined in order into a single packet:
+`exp`: builds one noise packet from an expression, generated again on every send, so it can carry changing content such as a timestamp. Conflicts with `rand` and `packet`. The parts of the expression are joined in order into a single packet:
 
 - `<b hex>`: fixed bytes written as hex, an optional `0x` prefix is ignored
 - `<r N>` or `<r A-B>`: `N` random bytes, or a random count between `A` and `B`
