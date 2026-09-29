@@ -25,7 +25,8 @@ On Linux, this environment variable can optionally be used to pass in the TUN FD
         "dns": ["1.1.1.1", "8.8.8.8"],
         "userLevel": 0,
         "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
-        "autoOutboundsInterface": "auto"
+        "autoOutboundsInterface": "auto",
+        "strictRoute": true
       }
     }
   ]
@@ -77,6 +78,21 @@ Automatically binds Xray outbounds to a physical network interface, so that traf
 Equivalent to automatically setting [sockopt](../transports/sockopt.md).interface for all outbounds (it also additionally covers some requests that cannot have outbound settings configured, such as the various local modes of the built-in DNS), which can be overridden by manually set sockopt.
 
 The default value is `null`, which means not configured. You can specify an interface name explicitly, or use `"auto"` to let Xray choose one automatically. If `autoSystemRoutingTable` is configured but this field is omitted, Xray treats it as `"auto"`.
+
+> `strictRoute`: true | false
+
+This option only takes effect on Windows. The default is `true`.
+
+When `autoSystemRoutingTable` is configured, Xray adds Windows Filtering Platform (WFP) filters that keep the traffic of other programs from leaking outside the TUN interface:
+
+- If `dns` is configured, DNS (port 53) can only go through the TUN interface or come from Xray itself. Windows sends name queries to the DNS servers of all interfaces, and without this, a DNS server on the local network (e.g. `192.168.1.1` handed out by DHCP) would still be queried outside the TUN. The servers in `dns` therefore have to be covered by `gateway` or `autoSystemRoutingTable`, and DNS servers that should be reached directly belong in Xray's own [DNS](../dns.md) settings.
+- If the TUN interface cannot carry IPv6 (no IPv6 address in `gateway`, or no IPv6 route in `autoSystemRoutingTable`), IPv6 is blocked in both directions, except for Xray itself, loopback, and what Windows needs on the local link (neighbor discovery, DHCPv6).
+
+While the filters are in place, Xray's own outgoing connections also get past the block rules of Windows Firewall.
+
+The filters are removed when Xray exits, even if it crashes. If they cannot be added, the TUN interface does not start (on Windows 10 and later; older versions only log a warning).
+
+Set it to `false` to go without the filters, for setups they break: a local DNS resolver used by other programs (e.g. on `127.0.0.1:53`), the DNS of another VPN, IPv6 on the local network while the TUN interface has no IPv6, virtual machines whose NAT resolves names on the host, or signing in to a captive portal. DNS may then leak as described above.
 
 ## Usage Tips
 
