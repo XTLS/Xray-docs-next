@@ -1,10 +1,10 @@
 # MASQUE
 
-Client implementation of IETF MASQUE CONNECT-IP ([RFC 9484](https://www.rfc-editor.org/rfc/rfc9484)): it sets up an IP tunnel through a proxy server over HTTP/3, and works with any server that follows the standard.
+Client implementation of IETF MASQUE CONNECT-IP ([RFC 9484](https://www.rfc-editor.org/rfc/rfc9484)): it sets up an IP tunnel through a proxy server over HTTP/3 or HTTP/2, and works with the masque [inbound](../inbounds/masque.md) and any server that follows the standard.
 
 Like the WireGuard outbound, Xray runs a userspace network stack locally, which turns TCP and UDP traffic into IP packets from the address assigned by the server and sends them into the tunnel. All connections of one outbound share a single tunnel. The tunnel is set up by the first connection, and set up again by the next connection after it breaks.
 
-The HTTP/3 request and authentication are configured in the transport item [masqueSettings](../transports/masque.md), and QUIC parameters in [FinalMask.quicParams](../transports/finalmask.md#quicparams).
+The HTTP request, authentication and the choice of HTTP version are configured in the transport item [masqueSettings](../transports/masque.md), and QUIC parameters in [FinalMask.quicParams](../transports/finalmask.md#quicparams).
 
 ::: tip
 The MASQUE outbound only works with the `masque` transport, and requires `tls`.

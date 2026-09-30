@@ -82,6 +82,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "VMess", link: "/ru/config/inbounds/vmess.md" },
         { text: "WireGuard", link: "/ru/config/inbounds/wireguard.md" },
         { text: "Hysteria", link: "/ru/config/inbounds/hysteria.md" },
+        { text: "MASQUE", link: "/ru/config/inbounds/masque.md" },
         { text: "TUN", link: "/ru/config/inbounds/tun.md" }
       ]
     },

@@ -1,10 +1,10 @@
 # MASQUE
 
-Реализация клиента IETF MASQUE CONNECT-IP ([RFC 9484](https://www.rfc-editor.org/rfc/rfc9484)): создаёт IP-туннель через прокси-сервер поверх HTTP/3 и работает с любым сервером, следующим стандарту.
+Реализация клиента IETF MASQUE CONNECT-IP ([RFC 9484](https://www.rfc-editor.org/rfc/rfc9484)): создаёт IP-туннель через прокси-сервер поверх HTTP/3 или HTTP/2 и работает с входящим подключением masque ([inbound](../inbounds/masque.md)) и любым сервером, следующим стандарту.
 
 Как и исходящее подключение WireGuard, Xray запускает локально сетевой стек в пространстве пользователя, который превращает трафик TCP и UDP в IP-пакеты с адреса, выданного сервером, и отправляет их в туннель. Все соединения одного исходящего подключения используют один туннель. Туннель создаётся первым соединением и создаётся заново следующим соединением после разрыва.
 
-HTTP/3-запрос и аутентификация настраиваются в параметре транспорта [masqueSettings](../transports/masque.md), параметры QUIC — в [FinalMask.quicParams](../transports/finalmask.md#quicparams).
+HTTP-запрос, аутентификация и выбор версии HTTP настраиваются в параметре транспорта [masqueSettings](../transports/masque.md), параметры QUIC — в [FinalMask.quicParams](../transports/finalmask.md#quicparams).
 
 ::: tip
 Исходящее подключение MASQUE работает только с транспортом `masque` и требует `tls`.
