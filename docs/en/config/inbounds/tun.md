@@ -26,7 +26,8 @@ On Linux, this environment variable can optionally be used to pass in the TUN FD
         "userLevel": 0,
         "autoSystemRoutingTable": ["0.0.0.0/0", "::/0"],
         "autoOutboundsInterface": "auto",
-        "autoSystemWfpBlockLeak": true
+        "autoSystemDnsToGateway": false,
+        "autoSystemWfpBlockLeak": ["dns", "misconfig"]
       }
     }
   ]
@@ -55,11 +56,15 @@ The list of address prefixes assigned to the TUN interface, usually one for IPv4
 
 If it is not set, the result depends on the system: on Linux, Xray assigns no address; on Windows, the system gives the TUN interface link-local addresses itself (IPv6 at once, IPv4 from `169.254.0.0/16` after a few seconds); on macOS and FreeBSD, `169.254.10.1/30` is used. macOS and FreeBSD only use the first IPv4 prefix.
 
-On macOS, only IPv4 takes effect; if not set, `169.254.10.1/30` is used.
-
 > `dns`: [string]
 
-This option only takes effect on Windows. The list of DNS servers assigned to the TUN interface, such as `"1.1.1.1"` and `"8.8.8.8"`.
+The list of DNS servers assigned to the TUN interface, such as `"1.1.1.1"` and `"8.8.8.8"`.
+
+This option only takes effect on Windows, where the servers are set on the TUN interface. Windows sends name queries to them as well as to the DNS servers of the other interfaces; `"dns"` in `autoSystemWfpBlockLeak` blocks the latter. Queries to these servers only go through the TUN interface when the servers are covered by `gateway` or `autoSystemRoutingTable`. In Xray they are ordinary traffic to port 53: a routing rule can hand them to a [DNS outbound](../outbounds/dns.md), otherwise they are forwarded to the servers like other traffic. The addresses of the TUN interface are not registered in DNS, and the DNS cache is flushed when the TUN interface starts and stops.
+
+When `autoOutboundsInterface` is in use, the `localhost` DNS server of Xray skips these servers (unless another interface uses them too), as its queries to them would lead back into the TUN interface.
+
+On Linux, the system DNS is not taken from this option; see `autoSystemDnsToGateway`. On macOS, the system DNS is not configured.
 
 > `userLevel`: number
 
@@ -81,20 +86,30 @@ Equivalent to automatically setting [sockopt](../transports/sockopt.md).interfac
 
 The default value is `null`, which means not configured. You can specify an interface name explicitly, or use `"auto"` to let Xray choose one automatically. If `autoSystemRoutingTable` is configured but this field is omitted, Xray treats it as `"auto"`.
 
-> `autoSystemWfpBlockLeak`: true | false
+> `autoSystemDnsToGateway`: true | false
 
-This option only takes effect on Windows. The default is `false`.
+This option only takes effect on Linux. The default is `false`.
 
-When it is enabled and `autoSystemRoutingTable` is configured, Xray adds Windows Filtering Platform (WFP) filters that keep the traffic of other programs from leaking outside the TUN interface:
+When it is enabled, Xray points the system resolver, systemd-resolved (through `resolvectl`), at the TUN interface, so that the name lookups of the system go through Xray. The address handed over is the first IPv4 address in `gateway` plus one (e.g. `10.0.0.1/16` → `10.0.0.2`), or without an IPv4 one, the first IPv6 address plus one (e.g. `fc00::1/64` → `fc00::2`); without `gateway`, nothing is changed. It is not taken from `dns`, as systemd-resolved would then query those servers directly, outside the TUN interface.
 
-- If `dns` is configured, DNS (port 53) can only go through the TUN interface or come from Xray itself. Windows sends name queries to the DNS servers of all interfaces, each through its own interface whatever the routes say, and other programs reach a DNS server on the local network (e.g. `192.168.1.1` handed out by DHCP) through its more specific LAN route, so without this, such servers would still be queried outside the TUN. On Windows 11, Windows Server 2022 and later, where these queries can also use DNS over HTTPS or TLS, the Windows DNS Client service cannot connect outside the TUN interface at all, except for name resolution on the local network (LLMNR, mDNS). The servers in `dns` therefore have to be covered by `gateway` or `autoSystemRoutingTable`, and DNS servers that should be reached directly belong in Xray's own [DNS](../dns.md) settings.
-- An IP version without routes in `autoSystemRoutingTable` (IPv4 or IPv6) is blocked in both directions, except for Xray itself, loopback, and what Windows needs on the local link (DHCP, IPv6 neighbor discovery). An address of that version in `gateway` is not needed for the TUN interface to carry it: without one, Windows assigns it a link-local address itself (IPv6 at once, IPv4 from `169.254.0.0/16` after a few seconds).
+Queries to that address have to be answered by Xray, so a routing rule has to send port 53 of this inbound to a [DNS outbound](../outbounds/dns.md). Xray checks this before changing the system DNS, and leaves it alone if such a query would not reach a DNS outbound, or if Xray's own [DNS](../dns.md) could resolve through the system resolver (no name servers, or a `localhost` one), which would loop.
+
+It needs systemd-resolved 240 or later to be running; otherwise the system DNS is left alone. The setting is reverted when Xray exits normally; if Xray is killed (e.g. with `SIGKILL`), run `resolvectl revert <interface>` to clean up.
+
+> `autoSystemWfpBlockLeak`: [string]
+
+This option only takes effect on Windows. The default is empty, i.e. no filters.
+
+When `autoSystemRoutingTable` is configured, Xray adds Windows Filtering Platform (WFP) filters that keep the traffic of other programs from leaking outside the TUN interface, each chosen by a value in the list:
+
+- `"dns"`: if `dns` is configured, DNS (port 53) can only go through the TUN interface or come from Xray itself. Windows sends name queries to the DNS servers of all interfaces, each through its own interface whatever the routes say, and other programs reach a DNS server on the local network (e.g. `192.168.1.1` handed out by DHCP) through its more specific LAN route, so without this, such servers would still be queried outside the TUN. On Windows 11, Windows Server 2022 and later, where these queries can also use DNS over HTTPS or TLS, the Windows DNS Client service cannot connect outside the TUN interface at all, except for name resolution on the local network (LLMNR, mDNS). The servers in `dns` therefore have to be covered by `gateway` or `autoSystemRoutingTable`, and DNS servers that should be reached directly belong in Xray's own [DNS](../dns.md) settings.
+- `"misconfig"`: an IP version without routes in `autoSystemRoutingTable` (IPv4 or IPv6) is blocked in both directions, except for Xray itself, loopback, and what Windows needs on the local link (DHCP, IPv6 neighbor discovery). An address of that version in `gateway` is not needed for the TUN interface to carry it: without one, Windows assigns it a link-local address itself (IPv6 at once, IPv4 from `169.254.0.0/16` after a few seconds).
 
 While the filters are in place, Xray's own outgoing connections also get past the block rules of Windows Firewall.
 
 The filters are removed when Xray exits, even if it crashes. If they cannot be added, the TUN interface does not start (on Windows 10 and later; older versions only log a warning).
 
-It is off by default, as the filters break some setups: a local DNS resolver used by other programs (e.g. on `127.0.0.1:53`), the DNS of another VPN, IPv4 or IPv6 on the local network while no route of that version leads to the TUN interface, virtual machines whose NAT resolves names on the host, or signing in to a captive portal. Without the filters, DNS may leak as described above.
+It is empty by default, as the filters break some setups: with `"dns"`, a local DNS resolver used by other programs (e.g. on `127.0.0.1:53`), the DNS of another VPN, virtual machines whose NAT resolves names on the host, or signing in to a captive portal; with `"misconfig"`, IPv4 or IPv6 on the local network while no route of that version leads to the TUN interface. Without the filters, DNS may leak as described above. To keep an IP version out of the TUN interface on purpose while still blocking DNS leaks, use only `["dns"]`.
 
 ## Usage Tips
 
