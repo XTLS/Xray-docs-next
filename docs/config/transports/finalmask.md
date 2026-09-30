@@ -301,7 +301,6 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
         "randRange": "0-255",
         "type": "",
         "packet": [],
-        "exp": "",
         "delay": "10-20"
       }
     ]
@@ -311,15 +310,15 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 `reset`: [Int32Range](../../development/intro/guide.md#int32range) 类型，单位秒。噪声发送后经过该时间后重置，允许对同一地址再次发送噪声。为 0 表示不重置（仅发送一次）。
 
-`rand`: 添加随机或指定长度随机字节，与 `packet`、`exp` 冲突。
+`rand`: 添加随机或指定长度随机字节，与 `packet` 冲突。
 
 `randRange`: 随机字节范围，默认 0-255。
 
-`type`: `packet` 类型，`array | str | hex | base64`，默认为 array。
+`type`: `packet` 类型，`array | str | hex | base64 | exp`，默认为 array。
 
-`packet`: 添加固定数据，与 `rand`、`exp` 冲突
+`packet`: 添加固定数据，与 `rand` 冲突
 
-`exp`: 由一个表达式拼成一个噪声包，每次发送时重新生成，因此可以携带时间戳等变化的内容，与 `rand`、`packet` 冲突。表达式的各部分按顺序拼接成一个包：
+`type` 为 `exp` 时，`packet` 是一个表达式字符串，由它拼成一个噪声包，每次发送时重新生成，因此可以携带时间戳等变化的内容。表达式的各部分按顺序拼接成一个包：
 
 - `<b hex>`：固定字节，以十六进制书写，可省略的 `0x` 前缀会被忽略
 - `<r N>` 或 `<r A-B>`：`N` 个随机字节，或 `A` 到 `B` 之间随机个数
@@ -329,7 +328,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 - `<c>`：计数器，4 字节大端，每次加一
 - `<n>`：8 个随机字节
 
-例如 `"<b 0d0a0d0a><t><r 24>"` 会把 `\r\n\r\n`、时间戳和 24 个随机字节作为一个包发送。
+例如 `{"type": "exp", "packet": "<b 0d0a0d0a><t><r 24>"}` 会把 `\r\n\r\n`、时间戳和 24 个随机字节作为一个包发送。
 
 `delay`: 单位毫秒，发送噪声后延迟指定时间后再发下一个。
 
