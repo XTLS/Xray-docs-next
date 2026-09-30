@@ -90,24 +90,24 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 该项配置只在 Linux 系统上有效，默认值为 `false`。
 
-启用后，Xray 会（通过 `resolvectl`）把系统解析器 systemd-resolved 指向 TUN 接口，使系统的域名查询经过 Xray。使用的地址是 `gateway` 中第一个 IPv4 地址加一（例如 `10.0.0.1/16` → `10.0.0.2`），没有 IPv4 地址时使用第一个 IPv6 地址加一（例如 `fc00::1/64` → `fc00::2`）；未配置 `gateway` 时不做任何更改。该地址不取自 `dns`，否则 systemd-resolved 会在 TUN 接口之外直接查询那些服务器。
+启用后，Xray 会（通过 `resolvectl`）把系统解析器 systemd-resolved 指向 TUN 接口，使系统的域名查询经过 Xray。使用的地址是 `gateway` 中第一个 IPv4 地址加一（例如 `10.0.0.1/16` → `10.0.0.2`），没有 IPv4 地址时使用第一个 IPv6 地址加一（例如 `fc00::1/64` → `fc00::2`）；未配置 `gateway` 时 Xray 会报错退出。该地址不取自 `dns`，否则 systemd-resolved 会在 TUN 接口之外直接查询那些服务器。
 
-发往该地址的查询必须由 Xray 应答，因此需要一条路由规则，把该入站的 53 端口交给 [DNS 出站](../outbounds/dns.md)。Xray 会在更改系统 DNS 之前进行检查：如果这样的查询不会到达 DNS 出站，或者 Xray 自身的 [DNS](../dns.md) 可能通过系统解析器解析（没有配置 DNS 服务器，或配置了 `localhost`），会造成循环，则不会更改系统 DNS。
+发往该地址的查询必须由 Xray 应答，因此需要一条路由规则，把该入站的 53 端口交给 [DNS 出站](../outbounds/dns.md)。Xray 会在更改系统 DNS 之前进行检查：如果这样的查询不会到达 DNS 出站，或者 Xray 自身的 [DNS](../dns.md) 可能通过系统解析器解析（没有配置 DNS 服务器，或配置了 `localhost`），会造成循环，则不会更改系统 DNS，Xray 也不会启动。
 
-需要 systemd-resolved 240 或更高版本正在运行，否则不会更改系统 DNS。Xray 正常退出时会恢复该设置；如果 Xray 被强制结束（例如 `SIGKILL`），可以运行 `resolvectl revert <接口名>` 手动恢复。
+需要 systemd-resolved 240 或更高版本正在运行。只要无法更改系统 DNS，Xray 就不会启动。Xray 正常退出时会恢复该设置；如果 Xray 被强制结束（例如 `SIGKILL`），可以运行 `resolvectl revert <接口名>` 手动恢复。
 
 > `autoSystemWfpBlockLeak`: [string]
 
 该项配置只在 Windows 系统上有效，默认为空，即不添加过滤器。
 
-配置了 `autoSystemRoutingTable` 时，Xray 会按列表中的值添加 Windows 筛选平台（WFP）过滤器，防止其他程序的流量从 TUN 接口之外泄漏：
+该项需要配置 `autoSystemRoutingTable`，否则 Xray 会报错退出。Xray 会按列表中的值添加 Windows 筛选平台（WFP）过滤器，防止其他程序的流量从 TUN 接口之外泄漏：
 
-- `"dns"`：如果配置了 `dns`，DNS（53 端口）只能经由 TUN 接口或由 Xray 自身发出。Windows 会向所有网络接口的 DNS 服务器发送查询，并且无论路由如何都经由各自的接口发出，其他程序也会经由更具体的局域网路由访问本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`），否则这些服务器仍会在 TUN 之外被查询。在 Windows 11、Windows Server 2022 及更高版本上，这些查询还可能使用 DNS over HTTPS 或 DNS over TLS，所以 Windows 的 DNS Client 服务（Dnscache）完全不能在 TUN 接口之外建立连接，本地网络中的名称解析（LLMNR、mDNS）除外。因此 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
+- `"dns"`（需要配置 `dns`，否则 Xray 会报错退出）：DNS（53 端口）只能经由 TUN 接口或由 Xray 自身发出。Windows 会向所有网络接口的 DNS 服务器发送查询，并且无论路由如何都经由各自的接口发出，其他程序也会经由更具体的局域网路由访问本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`），否则这些服务器仍会在 TUN 之外被查询。在 Windows 11、Windows Server 2022 及更高版本上，这些查询还可能使用 DNS over HTTPS 或 DNS over TLS，所以 Windows 的 DNS Client 服务（Dnscache）完全不能在 TUN 接口之外建立连接，本地网络中的名称解析（LLMNR、mDNS）除外。因此 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
 - `"misconfigtun"`：如果 `autoSystemRoutingTable` 中没有某个 IP 版本（IPv4 或 IPv6）的路由，则双向阻止该版本，但 Xray 自身、环回以及 Windows 在本地链路上所需的流量（DHCP、IPv6 邻居发现）除外。TUN 接口承载某个 IP 版本不需要在 `gateway` 中配置该版本的地址：未配置时，Windows 会自动为其分配链路本地地址（IPv6 立即分配，IPv4 在几秒后从 `169.254.0.0/16` 中分配）。
 
 过滤器生效期间，Xray 自身的出站连接也不受 Windows 防火墙阻止规则的限制。
 
-过滤器会在 Xray 退出时自动移除，即使 Xray 崩溃也是如此。如果无法添加过滤器，TUN 接口将不会启动（Windows 10 及更高版本；更早的版本只记录警告）。
+过滤器会在 Xray 退出时自动移除，即使 Xray 崩溃也是如此。如果无法添加过滤器，Xray 不会启动。
 
 该项默认为空，因为这些过滤器会在某些情况下造成问题：`"dns"` 会影响其他程序使用的本地 DNS 解析器（例如 `127.0.0.1:53`）、其他 VPN 的 DNS、在主机上解析域名的虚拟机 NAT，以及登录强制门户（captive portal）；`"misconfigtun"` 会影响没有路由通往 TUN 接口的 IP 版本（IPv4 或 IPv6）在本地网络中的通信。不使用这些过滤器时，DNS 可能会如上所述泄漏。如果有意让某个 IP 版本不经过 TUN 接口，同时仍要阻止 DNS 泄漏，只使用 `["dns"]` 即可。
 
