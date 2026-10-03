@@ -381,17 +381,31 @@ For example, if you own `example.com`, set an A record like `a.example.com` to t
   "type": "xdns",
   // [!field focus]
   "settings": {
-    "domains": ["t.example.com"],
-    "resolvers": ["t.example.com+udp://8.8.8.8:53"]
+    "domains": [
+      {
+        "name": "t.example.com",
+        "lenLimit": 255, // 0-255
+        "labelLimit": 63, // 0-63
+        "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA
+        "edns0": 1232 // 0,512-4096
+      }
+    ],
+    "resolvers": [
+      {
+        "type": "udp",
+        "settings": {
+          "addr": "127.0.0.1:53"
+        }
+      }
+    ]
   }
 }
 ```
 
-`domains`: used on the server side. A list of domains. It supports specifying a query type as `domain:method`, where `method` can be `txt`, `a`, or `aaaa`. If omitted, the query type is unrestricted.
+Compatible only with kcp; a TTI of 200 is recommended. MTU configuration is required only on the server side (refer to MTU settings). CNAME calculation is relatively complex; values ​​generally fall between those for AAAA and TXT records:
 
-`resolvers`: used on the client side. A list of DNS resolvers. The format is `domain[:method]+udp://server:port`, where `method` can be `txt` (default), `a`, or `aaaa`.
-
-At least one of `domains` and `resolvers` must be set.
+- When edns0 is 512: A 39, TXT 215, AAAA 117
+- When edns0 is 1232: A 174, TXT 932, AAAA 492
 
 ### xicmp
 
@@ -408,7 +422,7 @@ At least one of `domains` and `resolvers` must be set.
 
 `dgram`: Lower permissions, client-side only (Linux, Mac, iOS)
 
-`ips`: ips
+`ips`: CIDR is not currently supported
 
 ### realm
 
@@ -424,7 +438,13 @@ Self-built https://github.com/apernet/hysteria-realm-server
       "stun.nextcloud.com:3478",
       "global.stun.twilio.com:3478"
     ],
-    "tlsConfig": {} // optional
+    "tlsConfig": {}, // optional
+    "ipMode": "dual",
+    "portMapping": {
+      "enabled": false,
+      "timeout": 10,
+      "lifetime": 600
+    }
   }
 }
 ```
@@ -435,7 +455,44 @@ Self-built https://github.com/apernet/hysteria-realm-server
 
 `tlsConfig`: Same as tlsSettings
 
-Connection failures require debug-level logging. Possible contributing factors include the STUN provider, the Realm provider, and punch packets affecting the QUIC handshake (extremely low probability)
+`ipMode`: Control STUN domain name resolution and realm peer filtering
+
+`portMapping.enabled`: Enable fixed port mapping for enhanced inbound accessibility
+
+`portMapping.timeout`: seconds
+
+`portMapping.lifetime`: seconds
+
+Connection failures require debug-level logging. Possible contributing factors include the STUN provider, the Realm provider
+
+### udphop
+
+```json
+{
+  "type": "udphop",
+  // [!field focus]
+  "settings": {
+    "mode": "intervallocal,intervalremote", // intervallocal intervalremote perconnremote
+    "interval": "5-10",
+    "remoteIPs": [""],
+    "remotePorts": "20000-50000,443"
+  }
+}
+```
+
+`intervallocal`: Supports only WireGuard, Hysteria, and xhttp-h3
+
+`intervalremote`: Requires pairing with iptables or nftables
+
+`perconnremote`: Requires pairing with iptables or nftables
+
+`mode`: Comma-separated; typically `intervallocal,intervalremote`, or just `intervallocal`, or just `perconnremote`
+
+`interval`: seconds
+
+`remoteIPs`: Required only when `mode` includes `intervalremote` or `perconnremote`; if left blank, it inherits the address from the parent level. CIDR notation is supported
+
+`remotePorts`: Required only when `mode` includes `intervalremote` or `perconnremote`; if left blank, it inherits the address from the parent level
 
 ## quicParams
 
