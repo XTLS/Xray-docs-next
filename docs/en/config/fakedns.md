@@ -29,7 +29,7 @@ FakeDNS may pollute the local DNS cache, causing "no network access" after Xray 
       "poolSize": 65535
     },
     {
-      "ipPool": "fc00::/18",
+      "ipPool": "2001:2::/48",
       "poolSize": 65535
     }
   ]
@@ -39,6 +39,14 @@ FakeDNS may pollute the local DNS cache, causing "no network access" after Xray 
 > `ipPool`: CIDR
 
 FakeDNS will allocate addresses using the IP block specified in this option.
+
+::: warning
+**Do not** use private address ranges for `ipPool`, such as `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `fc00::/7` (ULA), or `fe80::/10` (link-local).
+
+Chromium-based browsers (Chrome v141+) fully enforce Private Network Access (PNA) protections. When a public website connects to an IP address classified as "Private", the browser shows a "Local network access" permission prompt. If your FakeIPs fall within a private range, virtually every proxied connection going through FakeDNS will trigger this prompt, which severely degrades the browsing experience.
+
+Use non-private ranges instead, such as `198.18.0.0/15` (RFC 2544) for IPv4 and `2001:2::/48` (RFC 5180, reserved for benchmarking) for IPv6.
+:::
 
 > `poolSize`: int
 
@@ -61,7 +69,7 @@ When `queryStrategy` is `UseIP`, the initialized FakeIP Pool is equivalent to:
       "poolSize": 32768
     },
     {
-      "ipPool": "fc00::/18",
+      "ipPool": "2001:2::/48",
       "poolSize": 32768
     }
   ]
@@ -84,12 +92,18 @@ When `queryStrategy` is `UseIPv6`, the initialized FakeIP Pool is equivalent to:
 ```json
 {
   "fakedns": {
-    "ipPool": "fc00::/18",
+    "ipPool": "2001:2::/48",
     "poolSize": 65535
   }
 }
 ```
 
+:::
+
+::: tip Version change
+Since v26.9.30, the default IPv6 FakeIP Pool has changed from `fc00::/18` to `2001:2::/48` to avoid Chrome's Private Network Access (PNA) permission prompts.
+
+To keep the old default, you can explicitly set `ipPool` to `fc00::/18`, but this is not recommended.
 :::
 
 ### How to use?
