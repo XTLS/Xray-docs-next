@@ -110,7 +110,7 @@ socks、http 入站时，原始请求的就是域名，到了路由模块后，�
       {
         "address": "8.8.8.8",
         "clientIp": "222.85.85.85", // 提供你当地ISP的IP地址以获取直连优化的A/AAAA记录
-        // 比如你是河南电信，就可以使用荷兰电信DNS
+        // 比如你是河南电信，就可以使用河南电信DNS
         // 不能保证100%中国CDN友好，因为不是所有权威都支持ECS
         "skipFallback": true,
         "domains": ["geosite:geolocation-!cn"]
@@ -231,7 +231,7 @@ realIp 透明代理环境，你甚至可以在保证完全劫持各种渠道的 
         // 这里利用ECS尝试获取中国的A/AAAA记录
         "address": "8.8.8.8",
         "clientIp": "222.85.85.85", // 提供当地ISP的IP地址以获取直连优化的A/AAAA记录
-        // 比如你是河南电信，就可以使用荷兰电信DNS
+        // 比如你是河南电信，就可以使用河南电信DNS
         // 不能保证100%中国CDN友好，因为不是所有权威都支持ECS
         "skipFallback": false
       }
