@@ -224,16 +224,23 @@ Camouflages TCP traffic as Minecraft login and encrypted communication. Configur
 1. Request `https://api.mojang.com/users/profiles/minecraft/{username}` and use the returned `name` and `id` as `username` and `uuid`. UUIDs with or without hyphens are accepted.
 2. Request `https://sessionserver.mojang.com/session/minecraft/profile/{uuid}?unsigned=false` using the UUID without hyphens. In `properties`, find the entry named `textures` and copy its `value` and `signature` into `texturesValue` and `texturesSignature` without Base64 decoding.
 
-`padding`: Optional startup padding sequence. Omit it or use `[]` to keep the built-in Minecraft 26.1.2 preset, including its write boundaries and timing. For a custom sequence:
+`padding`: Optional startup padding sequence. Omit the field entirely to keep the built-in Minecraft 26.1.2 preset, including its write boundaries and timing. For a custom sequence:
 
 ```json
 {
-  "padding": ["44", "64-128", "25", "32768-49152"]
+  "padding": [
+    {"length": "44", "direction": "c2s"},
+    {"length": "64-128", "direction": "s2c"},
+    {"length": "25", "direction": "c2s"},
+    {"length": "32768-49152", "direction": "s2c"}
+  ]
 }
 ```
 
-- Each entry is a fixed length or a `"min-max"` string in bytes. Lengths are sampled uniformly within the inclusive range.
-- Turns alternate between client and server, starting with the client. Each side reads the peer's entire turn before sending its own. The sequence runs once at startup.
+- Each entry includes both `length` and `direction` fields.
+- `length`: A fixed length or a `"min-max"` string in bytes. Lengths are sampled uniformly within the inclusive range.
+- `direction`: Either `"c2s"` (client-to-server) or `"s2c"` (server-to-client). Full names `"client-to-server"` and `"server-to-client"` are also accepted.
+- Turns can be in any order and direction, including consecutive same-direction turns. Each side reads the peer's entire turn before sending its own. The sequence runs once at startup.
 - Lengths include the padding record's VarInt length header. The first entry also includes the two-byte Login Acknowledged packet, so its minimum is 3. Later entries may be as short as 1. Each entry is limited to 8388608 bytes, with the minimum no greater than the maximum.
 - Custom sequences add no intentional delays. Lengths describe turn totals, not TCP segment sizes. Subsequent proxy data framing and the 15-second keep-alive interval are unchanged.
 
