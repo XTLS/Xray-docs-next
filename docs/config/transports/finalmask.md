@@ -191,6 +191,30 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 
 含义见其 [官方文档](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.zh_CN.md) 文档字段
 
+
+### xmc
+
+```json
+{
+  "type": "xmc",
+  // [!code focus:5]
+  "settings": {
+    "usernames": ["User1", "User2", "User3"],
+    "password": "nGlo8TiTUNen",
+    "hostname": "example.com"
+  }
+}
+```
+
+伪装成 Minecraft 26.1.2。
+
+`usernames`: 客户端使用。默认为 `Dream`。每次连接会随机选择一个用户名。
+
+`password`：服务端和客户端需保持一致。
+
+`hostname`: 客户端使用。默认使用服务端的 IP 地址。可以填域名。
+
+
 ## UDPMask
 
 一个数组，用以伪装核心发出的 UDP 流量，数组第一个为最内层伪装。
