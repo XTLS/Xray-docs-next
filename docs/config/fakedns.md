@@ -29,7 +29,7 @@ FakeDNS 有可能会污染本地 DNS，导致 Xray 关闭后“无法访问网�
       "poolSize": 65535
     },
     {
-      "ipPool": "fc00::/18",
+      "ipPool": "2001:2::/48",
       "poolSize": 65535
     }
   ]
@@ -61,7 +61,7 @@ FakeDNS 将使用此选项指定的 IP 块分配地址。
       "poolSize": 32768
     },
     {
-      "ipPool": "fc00::/18",
+      "ipPool": "2001:2::/48",
       "poolSize": 32768
     }
   ]
@@ -84,7 +84,7 @@ FakeDNS 将使用此选项指定的 IP 块分配地址。
 ```json
 {
   "fakedns": {
-    "ipPool": "fc00::/18",
+    "ipPool": "2001:2::/48",
     "poolSize": 65535
   }
 }

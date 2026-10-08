@@ -29,7 +29,7 @@ FakeDNS may pollute the local DNS cache, causing "no network access" after Xray 
       "poolSize": 65535
     },
     {
-      "ipPool": "fc00::/18",
+      "ipPool": "2001:2::/48",
       "poolSize": 65535
     }
   ]
@@ -61,7 +61,7 @@ When `queryStrategy` is `UseIP`, the initialized FakeIP Pool is equivalent to:
       "poolSize": 32768
     },
     {
-      "ipPool": "fc00::/18",
+      "ipPool": "2001:2::/48",
       "poolSize": 32768
     }
   ]
@@ -84,7 +84,7 @@ When `queryStrategy` is `UseIPv6`, the initialized FakeIP Pool is equivalent to:
 ```json
 {
   "fakedns": {
-    "ipPool": "fc00::/18",
+    "ipPool": "2001:2::/48",
     "poolSize": 65535
   }
 }
