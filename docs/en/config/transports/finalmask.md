@@ -395,19 +395,16 @@ For example, if you own `example.com`, set an A record like `a.example.com` to t
   "settings": {
     "domains": [
       {
-        "name": "t.example.com",
-        "lenLimit": 255, // 0-255
-        "labelLimit": 63, // 0-63
-        "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA
-        "edns0": 1232 // 0,512-4096
+        "names": ["t.example.com"],
+        "lenLimit": 255, // 0-255; default: 255
+        "labelLimit": 63, // 0-63; default: 63
+        "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA; client default: 16, server default: all
+        "edns0": 1232 // 0,512-4096; default: 0
       }
     ],
     "resolvers": [
       {
-        "type": "udp",
-        "settings": {
-          "addr": "127.0.0.1:53"
-        }
+        "addrs": ["udp://127.0.0.1:53"] // [protocol://]host[:port], no defaults
       }
     ]
   }
