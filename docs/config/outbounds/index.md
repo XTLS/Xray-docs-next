@@ -14,3 +14,4 @@ Xray 支持以下出站协议：
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
 - [Hysteria](hysteria.md)
+- [MASQUE](masque.md)
