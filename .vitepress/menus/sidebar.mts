@@ -109,7 +109,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
               text: "HTTPUpgrade",
               link: "/config/transports/httpupgrade.md"
             },
-            { text: "Hysteria", link: "/config/transports/hysteria.md" }
+            { text: "Hysteria", link: "/config/transports/hysteria.md" },
+            { text: "MASQUE", link: "/config/transports/masque.md" }
           ]
         },
         {
