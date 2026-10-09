@@ -532,11 +532,11 @@ n-й элемент массива задаёт, сколько ждать по�
 }
 ```
 
-Используется для настройки параметров QUIC в XHTTP H3 и Hysteria.
+Используется для настройки параметров QUIC в XHTTP H3, Hysteria и MASQUE H3.
 
 > `congestion`: reno | bbr | brutal | force-brutal
 
-Алгоритм управления перегрузкой. В Hysteria по умолчанию используется `brutal`, а в XHTTP H3 - `bbr`.
+Алгоритм управления перегрузкой. В Hysteria по умолчанию используется `brutal`, а в XHTTP H3 и MASQUE - `bbr`; в MASQUE `brutal` тоже работает как `bbr`.
 
 `reno` и `bbr` - известные алгоритмы.
 

@@ -14,3 +14,4 @@ Xray поддерживает следующие исходящие проток
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
 - [Hysteria](hysteria.md)
+- [MASQUE](masque.md)
