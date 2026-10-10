@@ -11,6 +11,7 @@ Xray supports the following transport configuration categories
 - [WebSocket](websocket.md)
 - [HTTPUpgrade](httpupgrade.md)
 - [Hysteria](hysteria.md)
+- [MASQUE](masque.md)
 
 ## Transport Security
 

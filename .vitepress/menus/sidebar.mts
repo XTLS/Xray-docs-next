@@ -61,6 +61,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "VMess", link: "/config/inbounds/vmess.md" },
         { text: "WireGuard", link: "/config/inbounds/wireguard.md" },
         { text: "Hysteria", link: "/config/inbounds/hysteria.md" },
+        { text: "MASQUE", link: "/config/inbounds/masque.md" },
         { text: "TUN", link: "/config/inbounds/tun.md" }
       ]
     },
@@ -86,7 +87,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         },
         { text: "VMess", link: "/config/outbounds/vmess.md" },
         { text: "WireGuard", link: "/config/outbounds/wireguard.md" },
-        { text: "Hysteria", link: "/config/outbounds/hysteria.md" }
+        { text: "Hysteria", link: "/config/outbounds/hysteria.md" },
+        { text: "MASQUE", link: "/config/outbounds/masque.md" }
       ]
     },
     {
@@ -109,7 +111,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
               text: "HTTPUpgrade",
               link: "/config/transports/httpupgrade.md"
             },
-            { text: "Hysteria", link: "/config/transports/hysteria.md" }
+            { text: "Hysteria", link: "/config/transports/hysteria.md" },
+            { text: "MASQUE", link: "/config/transports/masque.md" }
           ]
         },
         {
