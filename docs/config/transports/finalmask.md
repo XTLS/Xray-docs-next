@@ -210,7 +210,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
         "texturesSignature": "..."
       }
     ],
-    "padding": []
+    "paddings": []
   }
 }
 ```
@@ -224,27 +224,28 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 1. 请求 `https://api.mojang.com/users/profiles/minecraft/{username}`，将返回的 `name` 和 `id` 分别填入 `username` 和 `uuid`。UUID 可带或不带连字符。
 2. 使用不带连字符的 UUID 请求 `https://sessionserver.mojang.com/session/minecraft/profile/{uuid}?unsigned=false`。从 `properties` 中找到 `name` 为 `textures` 的项，将其 `value` 和 `signature` 原样填入 `texturesValue` 和 `texturesSignature`，无需 Base64 解码。
 
-`padding`：可选的启动填充序列。省略该字段时使用内置的 Minecraft 26.1.2 预设，包括其写入边界和时序。自定义示例：
+`paddings`：可选的启动填充序列。省略该字段时使用内置的 Minecraft 26.1.2 预设，包括其写入边界和时序。自定义示例：
 
 ```json
 {
-  "padding": [
-    {"length": "44", "direction": "c2s"},
-    {"length": "64-128", "direction": "s2c"},
-    {"length": "25", "direction": "c2s"},
-    {"length": "32768-49152", "direction": "s2c"}
+  "paddings": [
+    {"length": "44", "direction": "c2s", "delay": 0},
+    {"length": "64-128", "direction": "s2c", "delay": 100},
+    {"length": "25", "direction": "c2s", "delay": 50},
+    {"length": "32768-49152", "direction": "s2c", "delay": 0}
   ]
 }
 ```
 
-- 每项包含 `length` 和 `direction` 两个字段。
+- 每项包含 `length`、`direction` 和可选的 `delay` 字段。
 - `length`：固定长度或 `"最小值-最大值"` 字符串，单位为字节，范围内均匀随机取值。
 - `direction`：`"c2s"`（客户端到服务端）或 `"s2c"`（服务端到客户端），也可使用 `"client-to-server"` 和 `"server-to-client"` 完整写法。
+- `delay`：可选，发送此轮后的延迟时间，单位为毫秒。默认为 0。
 - 可按任意顺序和方向配置，支持连续的相同方向。收完对端当前一轮后才发送下一轮，整个序列仅在启动时执行一次。
 - 长度包含填充记录的 VarInt 长度头。第一项还包含 2 字节的 Login Acknowledged 包，因此最小为 3；其余项最小为 1。每项最大为 8388608，最小值不得大于最大值。
-- 自定义序列不添加主动延迟。长度指一轮的总字节数，不是 TCP 分段大小；后续代理数据的封装和 15 秒保活间隔不变。
+- 延迟在发送端完成自己的一轮后应用。长度指一轮的总字节数，不是 TCP 分段大小；后续代理数据的封装和 15 秒保活间隔不变。
 
-两端必须配置相同的 `padding`。XMC 不协商填充配置，不一致可能导致长度检查失败、握手超时或数据流错位。
+两端必须配置相同的 `paddings`。XMC 不协商填充配置，不一致可能导致长度检查失败、握手超时或数据流错位。
 
 ## UDPMask
 
