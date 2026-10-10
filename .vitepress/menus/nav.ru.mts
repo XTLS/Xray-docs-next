@@ -61,8 +61,19 @@ export const nav: DefaultTheme.Config["nav"] = [
   },
   {
     text: "Руководство разработчика",
-    link: "/ru/development/",
-    activeMatch: "^/ru/development/"
+    activeMatch: "^/ru/development/",
+    items: [
+      {
+        text: "Основы разработки",
+        link: "/ru/development/intro/",
+        activeMatch: "^/ru/development/intro/"
+      },
+      {
+        text: "Детали протоколов",
+        link: "/ru/development/protocols/",
+        activeMatch: "^/ru/development/protocols/"
+      }
+    ]
   },
   { text: "Sponsor & Donation & NFTs", link: "/ru/about/sponsor.md" }
 ]

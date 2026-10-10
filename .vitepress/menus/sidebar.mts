@@ -249,8 +249,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
   ],
   "/development/": [
     {
-      text: "开发指南",
-      link: "/development/",
+      text: "开发入门",
+      link: "/development/intro/",
       collapsed: true,
       items: [
         { text: "编译", link: "/development/intro/compile.md" },
@@ -260,7 +260,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
     },
     {
       text: "协议详解",
-      collapsed: false,
+      link: "/development/protocols/",
+      collapsed: true,
       items: [
         { text: "VLESS 协议", link: "/development/protocols/vless.md" },
         { text: "VMess 协议", link: "/development/protocols/vmess.md" },

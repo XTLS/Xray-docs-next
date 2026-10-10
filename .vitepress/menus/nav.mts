@@ -61,8 +61,19 @@ export const nav: DefaultTheme.Config["nav"] = [
   },
   {
     text: "开发指南",
-    link: "/development/",
-    activeMatch: "^/development/"
+    activeMatch: "^/development/",
+    items: [
+      {
+        text: "开发入门",
+        link: "/development/intro/",
+        activeMatch: "^/development/intro/"
+      },
+      {
+        text: "协议详解",
+        link: "/development/protocols/",
+        activeMatch: "^/development/protocols/"
+      }
+    ]
   },
   { text: "赞助 & 捐款 & NFTs", link: "/about/sponsor.md" }
 ]

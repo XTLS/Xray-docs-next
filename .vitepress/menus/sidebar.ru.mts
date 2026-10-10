@@ -309,8 +309,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
   ],
   "/ru/development/": [
     {
-      text: "Руководство разработчика",
-      link: "/ru/development/",
+      text: "Основы разработки",
+      link: "/ru/development/intro/",
       collapsed: true,
       items: [
         {
@@ -329,7 +329,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
     },
     {
       text: "Детали протоколов",
-      collapsed: false,
+      link: "/ru/development/protocols/",
+      collapsed: true,
       items: [
         {
           text: "Протокол VLESS",

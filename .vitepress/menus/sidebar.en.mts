@@ -282,8 +282,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
   ],
   "/en/development/": [
     {
-      text: "Development Guide",
-      link: "/en/development/",
+      text: "Development Basics",
+      link: "/en/development/intro/",
       collapsed: true,
       items: [
         { text: "Compilation", link: "/en/development/intro/compile.md" },
@@ -296,7 +296,8 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
     },
     {
       text: "Protocol Details",
-      collapsed: false,
+      link: "/en/development/protocols/",
+      collapsed: true,
       items: [
         {
           text: "VLESS Protocol",

@@ -61,8 +61,19 @@ export const nav: DefaultTheme.Config["nav"] = [
   },
   {
     text: "Developer Guide",
-    link: "/en/development/",
-    activeMatch: "^/en/development/"
+    activeMatch: "^/en/development/",
+    items: [
+      {
+        text: "Development Basics",
+        link: "/en/development/intro/",
+        activeMatch: "^/en/development/intro/"
+      },
+      {
+        text: "Protocol Details",
+        link: "/en/development/protocols/",
+        activeMatch: "^/en/development/protocols/"
+      }
+    ]
   },
   { text: "Sponsor & Donation & NFTs", link: "/en/about/sponsor.md" }
 ]
