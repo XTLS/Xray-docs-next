@@ -227,7 +227,7 @@ Use the [MASQUE outbound](../../config/outbounds/masque.md); the configuration g
 ```
 
 - `privateKey`: the device's P-256 (secp256r1) private key, in either PEM or base64; both PKCS#8 and SEC 1 formats are supported. From it, the core generates a self-signed client certificate on the fly for mTLS. Cloudflare only checks whether its public key is the one registered for this device at registration time, and no password of any kind is transmitted.
-- `publicKey`: the P-256 public key (SubjectPublicKeyInfo) of the MASQUE endpoint certificate, in either PEM or base64. The server certificate is pinned to this public key, so `serverName` can be set to anything. The current masque edge (e.g. `162.159.198.2`) uses a fixed self-signed certificate, and you can read its public key yourself:
+- `publicKey`: the P-256 public key (SubjectPublicKeyInfo) of the MASQUE endpoint certificate, in either PEM or base64. The server certificate is pinned to this public key, so `serverName` can be set to anything; if `pinnedPeerCertSha256` or `verifyPeerCertByName` is set in `tlsSettings`, `publicKey` is ignored and only those are used (see the SNI part below). The current masque edge (e.g. `162.159.198.2`) uses a fixed self-signed certificate, and you can read its public key yourself:
 
   ```bash
   openssl s_client -connect 162.159.198.2:443 \
@@ -263,7 +263,7 @@ When a particular IP or port is targeted, just change `address` / `port` in the 
 The pin only checks the public key, not the domain name, and the masque edge also selects the backend by IP rather than by SNI (in testing, `162.159.198.2` returned the same certificate for different SNIs), so there are two ways to set `serverName`:
 
 - `consumer-masque.cloudflareclient.com`: the name sent by the official Warp client, which is what the example below uses. The name itself reveals masque; if you run into SNI-based blocking, combine it with `fragment` / `noise`.
-- An ordinary domain such as `www.cloudflare.com`: the masque name does not appear in the handshake, and the rest of the configuration stays the same.
+- An ordinary domain such as `www.cloudflare.com`: the masque name does not appear in the handshake. For the SNI of a site on Cloudflare (such as `www.cloudflare.com`), some edges return that site's CDN certificate, and then the `publicKey` pin fails; verify with `pinnedPeerCertSha256` (`xray tls ping` prints the certificate's SHA256) or `verifyPeerCertByName` in `tlsSettings` instead, which makes `publicKey` ignored. This is domain fronting for WARP.
 
 Neither of them can change the IP: masque uses its own separate IP range, and that is its real signature.
 

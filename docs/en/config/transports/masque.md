@@ -80,4 +80,4 @@ They cannot contain `Host` or `Capsule-Protocol`, and when `user` or `pass` is s
 
 > `warp`: [WarpObject](../../document/level-2/warp.md#warpobject)
 
-Device information for connecting to Cloudflare WARP. When it is set, `host` defaults to `cloudflareaccess.com` and `path` defaults to `/`, `user` / `pass` can no longer be set, and the tunnel addresses come from its `address` instead of being assigned by the server.
+Device information for connecting to Cloudflare WARP. When it is set, `host` defaults to `cloudflareaccess.com` and `path` defaults to `/`, `user` / `pass` can no longer be set, and the tunnel addresses come from its `address` instead of being assigned by the server. If `pinnedPeerCertSha256` or `verifyPeerCertByName` is set in `tlsSettings`, its `publicKey` is ignored and the server certificate is verified by those instead.

@@ -227,7 +227,7 @@ WireGuard 走 UDP，用的是 WARP 一整组端口（远不止 `2408`）、横�
 ```
 
 - `privateKey`：设备的 P-256（secp256r1）私钥，PEM 或 base64 均可，支持 PKCS#8 与 SEC 1 格式。核心据此即时生成一张自签名客户端证书做 mTLS，Cloudflare 只校验其公钥是否为该设备注册时登记的那一个，不传输任何口令。
-- `publicKey`：MASQUE 端点证书的 P-256 公钥（SubjectPublicKeyInfo），PEM 或 base64 均可。服务端证书会被 pin 到该公钥，所以 `serverName` 可任意填。当前 masque 边缘（如 `162.159.198.2`）使用固定的自签名证书，其公钥可自行读取：
+- `publicKey`：MASQUE 端点证书的 P-256 公钥（SubjectPublicKeyInfo），PEM 或 base64 均可。服务端证书会被 pin 到该公钥，所以 `serverName` 可任意填；`tlsSettings` 中设置了 `pinnedPeerCertSha256` 或 `verifyPeerCertByName` 时则忽略 `publicKey`，只按它们验证（见下文 SNI 部分）。当前 masque 边缘（如 `162.159.198.2`）使用固定的自签名证书，其公钥可自行读取：
 
   ```bash
   openssl s_client -connect 162.159.198.2:443 \
@@ -263,7 +263,7 @@ Warp 是一大片 anycast，不要绑死在单个 IP 或单个端口上：
 pin 只校验公钥，不校验域名，masque 边缘也是按 IP 而不是 SNI 选择后端（实测 `162.159.198.2` 对不同的 SNI 都返回同一张证书），所以 `serverName` 有两种填法：
 
 - `consumer-masque.cloudflareclient.com`：官方 Warp 客户端发送的名字，下面的示例用的就是它。名字本身会暴露 masque，遇到按 SNI 封锁时配合 `fragment` / `noise`。
-- `www.cloudflare.com` 这类普通域名：握手里不出现 masque 的名字，其余配置不变。
+- `www.cloudflare.com` 这类普通域名：握手里不出现 masque 的名字。有的边缘对 Cloudflare 上站点的 SNI 会返回该站点的 CDN 证书，这时按 `publicKey` 的 pin 会失败，可在 `tlsSettings` 中改用 `pinnedPeerCertSha256`（`xray tls ping` 会输出证书的 SHA256）或 `verifyPeerCertByName` 验证，设置后忽略 `publicKey`，即 WARP 的 domain fronting。
 
 两种都改变不了 IP，masque 用的是独立的 IP 段，这才是它真正的特征。
 

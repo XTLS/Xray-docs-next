@@ -80,4 +80,4 @@ UDP-маски [FinalMask](./finalmask.md) применяются к HTTP/3, а 
 
 > `warp`: [WarpObject](../../document/level-2/warp.md#warpobject)
 
-Данные устройства для подключения к Cloudflare WARP. Если параметр задан, `host` по умолчанию равен `cloudflareaccess.com`, `path` по умолчанию равен `/`, задавать `user` / `pass` больше нельзя, а адрес туннеля берётся из указанного в нём `address` и больше не назначается сервером.
+Данные устройства для подключения к Cloudflare WARP. Если параметр задан, `host` по умолчанию равен `cloudflareaccess.com`, `path` по умолчанию равен `/`, задавать `user` / `pass` больше нельзя, а адрес туннеля берётся из указанного в нём `address` и больше не назначается сервером. Если в `tlsSettings` задан `pinnedPeerCertSha256` или `verifyPeerCertByName`, указанный в нём `publicKey` игнорируется, и сертификат сервера проверяется только по ним.

@@ -80,4 +80,4 @@ HTTP Basic 认证的用户名与密码，对应 MASQUE 入站 [UserObject](../in
 
 > `warp`: [WarpObject](../../document/level-2/warp.md#warpobject)
 
-接入 Cloudflare WARP 时的设备信息。设置后 `host` 默认为 `cloudflareaccess.com`，`path` 默认为 `/`，且不能再设置 `user` / `pass`，隧道地址使用其中的 `address`，不再由服务端分配。
+接入 Cloudflare WARP 时的设备信息。设置后 `host` 默认为 `cloudflareaccess.com`，`path` 默认为 `/`，且不能再设置 `user` / `pass`，隧道地址使用其中的 `address`，不再由服务端分配。`tlsSettings` 中设置了 `pinnedPeerCertSha256` 或 `verifyPeerCertByName` 时，忽略其中的 `publicKey`，只按它们验证服务端证书。
