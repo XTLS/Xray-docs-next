@@ -31,6 +31,8 @@ Xray 内置的 DNS 模块，主要有三大用途：
 
 域名将先执行 Hosts 映射检查（详见 `hosts` 字段），若没有查出需要的 IP，则继续使用 DNS 服务器进行查询。
 
+如果配置了 `script`，后续 DNS 查询交给 [Lua 脚本](../development/lua/guide/dns.md)，不再执行下面的内置处理流程。
+
 而后核心将开始构建一个列表，核心会根据请求的域名，将服务器进行排序，遵循以下规则。
 
 - 构建列表 1：包含 `domains` 字段成功命中了请求域名的服务器，顺序与配置文件中相同。
@@ -54,6 +56,7 @@ Xray 内置的 DNS 模块，主要有三大用途：
       "baidu.com": "127.0.0.1",
       "dns.google": ["8.8.8.8", "8.8.4.4"]
     },
+    "script": "",
     "servers": [
       "8.8.8.8",
       "8.8.4.4",
@@ -106,6 +109,10 @@ Xray 内置的 DNS 模块，主要有三大用途：
 - 特别地，如果“域名”是井号后加数字的形式（如 `#3`），任何被该条目匹配到的请求，请求会立即失败。如果请求来自 DNS 出站，核心会返回空的响应以及该数字编号对应的 rcode 以拒绝请求。
 
 其匹配格式（`domain:` `full:` 等等）同常用的 [路由系统](./routing.md#ruleobject) 中的 domain. 不同的是无前缀时此处默认使用 `full:` 前缀（类似常见的 hosts 文件写法）
+
+> `script`: string
+
+Lua 脚本文件路径，默认为空字符串。设置后，内置 DNS 处理流程由 Lua 脚本接管；用法见[DNS 脚本指南](../development/lua/guide/dns.md)。
 
 > `servers`: \[string | [DnsServerObject](#dnsserverobject) \]
 
@@ -267,6 +274,7 @@ DNS 回退（failover）默认是串行的，即默认仅在选中的 DNS 服务
 
 ```json
 {
+  "id": "primary",
   "address": "1.2.3.4",
   "port": 5353,
   "domains": ["domain:xray.com"],
@@ -280,6 +288,10 @@ DNS 回退（failover）默认是串行的，即默认仅在选中的 DNS 服务
   "disableCache": false
 }
 ```
+
+> `id`: string
+
+服务器标识，未配置时为空字符串，供 Lua 脚本通过 [`serverObj.ID`](../development/lua/reference/module-dns.md#id) 识别上游。
 
 > `address`: address
 

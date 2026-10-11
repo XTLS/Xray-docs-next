@@ -271,6 +271,76 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         },
         { text: "mKCP 协议", link: "/development/protocols/mkcp.md" }
       ]
+    },
+    {
+      text: "Lua 脚本",
+      link: "/development/lua/",
+      collapsed: true,
+      items: [
+        {
+          text: "入门",
+          collapsed: true,
+          items: [
+            { text: "概览", link: "/development/lua/" },
+            {
+              text: "运行环境与脚本加载",
+              link: "/development/lua/environment.md"
+            }
+          ]
+        },
+        {
+          text: "编写指南",
+          collapsed: true,
+          items: [
+            {
+              text: "路由脚本",
+              link: "/development/lua/guide/routing.md"
+            },
+            {
+              text: "DNS 脚本",
+              link: "/development/lua/guide/dns.md"
+            },
+            {
+              text: "实例与生命周期",
+              link: "/development/lua/guide/lifecycle.md"
+            }
+          ]
+        },
+        {
+          text: "参考",
+          collapsed: true,
+          items: [
+            {
+              text: "路由 Hook",
+              link: "/development/lua/reference/hook-routing.md"
+            },
+            {
+              text: "DNS Hook",
+              link: "/development/lua/reference/hook-dns.md"
+            },
+            {
+              text: "数据类型",
+              link: "/development/lua/reference/data-types.md"
+            },
+            {
+              text: "xray.router",
+              link: "/development/lua/reference/module-router.md"
+            },
+            {
+              text: "xray.dns",
+              link: "/development/lua/reference/module-dns.md"
+            },
+            {
+              text: "xray.geodata",
+              link: "/development/lua/reference/module-geodata.md"
+            },
+            {
+              text: "xray.log",
+              link: "/development/lua/reference/module-log.md"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

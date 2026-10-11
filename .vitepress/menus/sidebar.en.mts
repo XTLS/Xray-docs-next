@@ -316,6 +316,76 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/en/development/protocols/mkcp.md"
         }
       ]
+    },
+    {
+      text: "Lua Scripts",
+      link: "/en/development/lua/",
+      collapsed: true,
+      items: [
+        {
+          text: "Getting Started",
+          collapsed: true,
+          items: [
+            { text: "Overview", link: "/en/development/lua/" },
+            {
+              text: "Runtime Environment and Script Loading",
+              link: "/en/development/lua/environment.md"
+            }
+          ]
+        },
+        {
+          text: "Writing Guides",
+          collapsed: true,
+          items: [
+            {
+              text: "Routing Scripts",
+              link: "/en/development/lua/guide/routing.md"
+            },
+            {
+              text: "DNS Scripts",
+              link: "/en/development/lua/guide/dns.md"
+            },
+            {
+              text: "Instances and Lifecycle",
+              link: "/en/development/lua/guide/lifecycle.md"
+            }
+          ]
+        },
+        {
+          text: "Reference",
+          collapsed: true,
+          items: [
+            {
+              text: "Routing Hook",
+              link: "/en/development/lua/reference/hook-routing.md"
+            },
+            {
+              text: "DNS Hook",
+              link: "/en/development/lua/reference/hook-dns.md"
+            },
+            {
+              text: "Data Types",
+              link: "/en/development/lua/reference/data-types.md"
+            },
+            {
+              text: "xray.router",
+              link: "/en/development/lua/reference/module-router.md"
+            },
+            {
+              text: "xray.dns",
+              link: "/en/development/lua/reference/module-dns.md"
+            },
+            {
+              text: "xray.geodata",
+              link: "/en/development/lua/reference/module-geodata.md"
+            },
+            {
+              text: "xray.log",
+              link: "/en/development/lua/reference/module-log.md"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

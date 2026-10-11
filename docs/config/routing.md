@@ -15,6 +15,7 @@
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [],
+    "script": "",
     "balancers": []
   }
 }
@@ -43,6 +44,10 @@
 ::: tip
 当没有匹配到任何规则时，流量默认由第一个 outbound 发出。
 :::
+
+> `script`: string
+
+Lua 脚本文件路径，默认为空字符串。设置后，路由选择由 Lua 脚本接管；用法见[路由脚本指南](../development/lua/guide/routing.md)。
 
 > `balancers`: \[ [BalancerObject](#balancerobject) \]
 

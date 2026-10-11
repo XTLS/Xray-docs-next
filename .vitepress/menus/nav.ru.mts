@@ -72,6 +72,11 @@ export const nav: DefaultTheme.Config["nav"] = [
         text: "Детали протоколов",
         link: "/ru/development/protocols/",
         activeMatch: "^/ru/development/protocols/"
+      },
+      {
+        text: "Скрипты Lua",
+        link: "/ru/development/lua/",
+        activeMatch: "^/ru/development/lua/"
       }
     ]
   },

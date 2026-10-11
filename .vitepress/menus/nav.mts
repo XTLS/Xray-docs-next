@@ -72,6 +72,11 @@ export const nav: DefaultTheme.Config["nav"] = [
         text: "协议详解",
         link: "/development/protocols/",
         activeMatch: "^/development/protocols/"
+      },
+      {
+        text: "Lua 脚本",
+        link: "/development/lua/",
+        activeMatch: "^/development/lua/"
       }
     ]
   },

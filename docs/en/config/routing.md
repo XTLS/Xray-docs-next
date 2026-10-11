@@ -15,6 +15,7 @@ For a more detailed analysis of the routing function: [Analysis of Routing (Part
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [],
+    "script": "",
     "balancers": []
   }
 }
@@ -43,6 +44,10 @@ For each connection, routing will judge these rules from top to bottom. When the
 ::: tip
 When no rule is matched, traffic is sent via the first outbound by default.
 :::
+
+> `script`: string
+
+Path to a Lua script file; defaults to an empty string. When set, the Lua script takes over outbound selection. See the [Routing Scripts guide](../development/lua/guide/routing.md) for usage.
 
 > `balancers`: \[ [BalancerObject](#balancerobject) \]
 
