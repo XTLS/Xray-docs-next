@@ -11,4 +11,5 @@ Xray supports the following inbound protocols:
 - [VMess](vmess.md)
 - [WireGuard](wireguard.md)
 - [Hysteria](hysteria.md)
+- [MASQUE](masque.md)
 - [TUN](tun.md)
