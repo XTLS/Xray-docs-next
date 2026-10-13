@@ -74,6 +74,8 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 自动为 Xray 的出站绑定物理网络接口，用于避免把 Xray 自己发出的流量再次送回 TUN 造成回环。
 
+在 Windows 上，只有当该接口对路由到 TUN 接口的 IP 版本关闭了弱主机发送（weak host send）和转发（forwarding）时，这种绑定才会生效，否则 Windows 会把 Xray 自身的连接送入 TUN 接口，导致连接卡住。因此 TUN 接口运行期间，Xray 会关闭该接口的弱主机发送，并在停止时恢复。转发是移动热点和 Internet 连接共享所需要的，Xray 不会更改它，而是输出一条警告：请让热点共享 TUN 接口（设置 → 网络和 Internet → 移动热点，在共享来源中选择 TUN 接口），这样热点上的设备也会经过 Xray。只有 Xray 运行时，TUN 接口才会出现在该列表中。
+
 相当于为所有出站自动设置 [sockopt](../transports/sockopt.md).interface（同时还会额外包括一些无法配置出站设置的请求，比如 内置 DNS 的各种 local 模式）可以被手动设置 sockopt 覆盖。
 
 默认值为 `null`，即未配置。可填写具体接口名，也可填写 `"auto"` 让 Xray 自动选择。如果配置了 `autoSystemRoutingTable` 但未显式指定此项，Xray 会自动按 `"auto"` 处理。
