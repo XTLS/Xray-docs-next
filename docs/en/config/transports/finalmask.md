@@ -295,6 +295,7 @@ Noise sent before the actual data.
   // [!field focus]
   "settings": {
     "reset": "30-60",
+    "script": "",
     "noise": [
       {
         "rand": "1-8192",
@@ -331,6 +332,10 @@ With `"type": "exp"`, `packet` is an expression string that builds one noise pac
 For example `{"type": "exp", "packet": "<b 0d0a0d0a><t><r 24>"}` sends `\r\n\r\n`, the timestamp and 24 random bytes as one packet.
 
 `delay`: delay in milliseconds. After one noise item is sent, wait for the specified time before sending the next one.
+
+`script`: the Lua script that generates the noise packets. Conflicts with `noise`. The script must define a `HandleNoise` function; see [Noise Scripts](../../development/lua/guide/noise.md). Compared with `exp`, a script can use conditional branches and loops, and retain state within an instance.
+
+The script is the path to a local file; see [Script File Paths](../../development/lua/environment.md#script-file-paths) for the lookup rules. An inline script written into the configuration (`base64:`) is disabled in the core for now.
 
 ### salamander
 
