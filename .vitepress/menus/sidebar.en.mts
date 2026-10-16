@@ -346,6 +346,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
               link: "/en/development/lua/guide/dns.md"
             },
             {
+              text: "Noise Scripts",
+              link: "/en/development/lua/guide/noise.md"
+            },
+            {
               text: "Instances and Lifecycle",
               link: "/en/development/lua/guide/lifecycle.md"
             }
@@ -364,6 +368,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
               link: "/en/development/lua/reference/hook-dns.md"
             },
             {
+              text: "Noise Hook",
+              link: "/en/development/lua/reference/hook-noise.md"
+            },
+            {
               text: "Data Types",
               link: "/en/development/lua/reference/data-types.md"
             },
@@ -378,6 +386,10 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
             {
               text: "xray.geodata",
               link: "/en/development/lua/reference/module-geodata.md"
+            },
+            {
+              text: "xray.finalmask.noise",
+              link: "/en/development/lua/reference/module-noise.md"
             },
             {
               text: "xray.log",
