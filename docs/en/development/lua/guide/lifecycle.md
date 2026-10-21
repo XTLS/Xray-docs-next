@@ -4,17 +4,19 @@ The instance management strategy used by a script entry point determines how Lua
 
 ## Pooled Lifecycle
 
-Currently, [HandleRoute](../reference/hook-routing.md) in [routing scripts](./routing.md) and [HandleDNSQuery](../reference/hook-dns.md) in [DNS scripts](./dns.md) use pooled instances. The following rules apply to both Hooks.
+Currently, [HandleRoute](../reference/hook-routing.md) in [routing scripts](./routing.md), [HandleDNSQuery](../reference/hook-dns.md) in [DNS scripts](./dns.md), and [HandleNoise](../reference/hook-noise.md) in [noise scripts](./noise.md) use pooled instances. The following rules apply to all three Hooks.
 
 ### Instance Pools and Initialization
 
-Routing and DNS scripts are bound through the `script` field in their respective configurations and manage separate Lua instance pools. Even when configured to use the same file, they do not share state within Lua instances.
+Routing scripts, DNS scripts, and each noise camouflage layer are bound through the `script` field in their respective configurations and manage separate Lua instance pools. Even when configured to use the same file, they do not share state within Lua instances.
 
 At startup, Xray reads and compiles the script once, creates the first instance, executes its top-level code, and checks that the required handler exists. Failure to read the file, parse it, execute top-level code, or validate the handler prevents Xray from starting.
 
+A noise camouflage layer is the exception: its script is only read and compiled at startup, and the instance is created the first time that layer needs to send noise. Xray therefore still starts when the top-level code or the `HandleNoise` check fails, but that connection fails to be established.
+
 ### Hook Calls and Instance Recycling
 
-Each routing decision or DNS query exclusively uses one instance. An idle instance is reused when available; when concurrent calls require more instances, new ones are created from the compiled script and the top-level code runs again.
+Each routing decision, DNS query, or noise generation exclusively uses one instance. An idle instance is reused when available; when concurrent calls require more instances, new ones are created from the compiled script and the top-level code runs again.
 
 After a handler completes normally, the instance can return to the pool for reuse. An uncaught Lua exception or execution timeout destroys the instance. Reporting a business error through return values, or failing return-value validation, is not a Lua execution exception: the instance can still be reused. Excess idle instances are destroyed automatically.
 
@@ -26,11 +28,11 @@ flowchart TD
     INIT --> POOL[("Idle instance pool")]
 
     subgraph CALL["Pooled Hook call: lightweight reuse path"]
-        TAKE["Take exclusive use of an idle instance"] --> RUN["Execute HandleRoute / HandleDNSQuery"]
+        TAKE["Take exclusive use of an idle instance"] --> RUN["Execute HandleRoute / HandleDNSQuery / HandleNoise"]
         RUN -->|Normal completion| PUT["Return the instance, retaining state"]
     end
 
-    REQUEST["Routing decision / DNS query"] --> AVAILABLE{"Idle instance available?"}
+    REQUEST["Routing decision / DNS query / Noise generation"] --> AVAILABLE{"Idle instance available?"}
     POOL -.-> AVAILABLE
     AVAILABLE -->|Yes| TAKE
     PUT --> POOL
@@ -62,6 +64,6 @@ Place initialization code, such as loading Lua modules, creating matchers, and s
 
 ### Timeouts and Script Updates
 
-Currently, each routing and DNS instance has an initialization timeout of **120 seconds**, and each handler call has an execution timeout of **6 seconds**. The call timeout starts after an instance is acquired; these values currently have no separate configuration fields. When calling Xray APIs, cancellation also depends on whether the API responds to cancellation signals; each DNS server is additionally limited by its `timeoutMs` setting.
+Each instance has an initialization timeout of **120 seconds**. The execution timeout for each handler call is **6 seconds** for routing and DNS, and **1 second** for noise, because the noise Hook runs synchronously before the real data packets are sent. The call timeout starts after an instance is acquired; these values currently have no separate configuration fields. When calling Xray APIs, cancellation also depends on whether the API responds to cancellation signals; each DNS server is additionally limited by its `timeoutMs` setting.
 
 Xray does not automatically watch or recompile the main script. Restart Xray after changing it for the changes to take effect. Instances created later also use the main script compiled during the current startup.

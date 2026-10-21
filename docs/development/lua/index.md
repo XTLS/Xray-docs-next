@@ -14,8 +14,9 @@ Lua 脚本为 Xray 提供灵活的扩展方式，可用于实现自定义功能�
 | ------------------------------ | ------------------- | ---------------------------------------- |
 | [路由脚本](./guide/routing.md) | 自定义路由规则      | 出站选择、负载均衡、主动解析后按 IP 分流 |
 | [DNS 脚本](./guide/dns.md)     | 自定义 DNS 查询规则 | 上游选择、查询回退、结果过滤             |
+| [噪声脚本](./guide/noise.md)   | 自定义噪声包        | 按地址区分、随机长度、分多个包发送       |
 
-当前的路由和 DNS 脚本都使用池化实例。编写脚本时，请结合[池化生命周期](./guide/lifecycle.md#池化生命周期)理解顶层初始化和状态保留。
+当前的路由、DNS 和噪声脚本都使用池化实例。编写脚本时，请结合[池化生命周期](./guide/lifecycle.md#池化生命周期)理解顶层初始化和状态保留。
 
 ## 参考
 
@@ -25,10 +26,11 @@ Hook 是脚本中供核心在特定时机调用的 Lua 函数。脚本入口决�
 
 目前支持的入口和 Hook 如下，参数、返回值和失败行为见各 Hook 的参考页：
 
-| 脚本入口         | Hook                                       |
-| ---------------- | ------------------------------------------ |
-| `routing.script` | [HandleRoute](./reference/hook-routing.md) |
-| `dns.script`     | [HandleDNSQuery](./reference/hook-dns.md)  |
+| 脚本入口                                                                      | Hook                                       |
+| ----------------------------------------------------------------------------- | ------------------------------------------ |
+| `routing.script`                                                              | [HandleRoute](./reference/hook-routing.md) |
+| `dns.script`                                                                  | [HandleDNSQuery](./reference/hook-dns.md)  |
+| finalmask [noise 伪装](../../config/transports/finalmask.md#noise)的 `script` | [HandleNoise](./reference/hook-noise.md)   |
 
 ### 数据类型
 
@@ -38,9 +40,10 @@ Hook 是脚本中供核心在特定时机调用的 Lua 函数。脚本入口决�
 
 按功能查阅模块 API：
 
-| 模块                                          | 用途                 |
-| --------------------------------------------- | -------------------- |
-| [xray.router](./reference/module-router.md)   | 策略路由             |
-| [xray.dns](./reference/module-dns.md)         | 域名解析             |
-| [xray.geodata](./reference/module-geodata.md) | 域名和 IP 匹配、过滤 |
-| [xray.log](./reference/module-log.md)         | 输出日志             |
+| 模块                                                | 用途                   |
+| --------------------------------------------------- | ---------------------- |
+| [xray.router](./reference/module-router.md)         | 策略路由               |
+| [xray.dns](./reference/module-dns.md)               | 域名解析               |
+| [xray.geodata](./reference/module-geodata.md)       | 域名和 IP 匹配、过滤   |
+| [xray.finalmask.noise](./reference/module-noise.md) | 生成噪声所需的随机数据 |
+| [xray.log](./reference/module-log.md)               | 输出日志               |
