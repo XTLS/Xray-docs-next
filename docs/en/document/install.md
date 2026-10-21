@@ -74,7 +74,7 @@ Two different styles of Docker images are currently provided:
   No root privileges, no shell environment, and support for more architectures. It is compiled and built from the official repository with traceability support. It sacrifices convenience in pursuit of more extreme security.
   ::: details File Structure
   - `/usr/local/bin/xray`: Xray main program (owner: `root:root`, file permissions: `755`)
-  - `/usr/local/etc/xray/`: Configuration file directory (mount point) (owner: `root:root`, directory permissions: `755`, file permissions: `644`)
+  - `/usr/local/etc/xray/`: Configuration file directory (volume mount point declared by `VOLUME`) (owner: `root:65532`, directory permissions: `750`, file permissions: `640`)
     - 00_log.json
     - 01_api.json
     - 02_dns.json
@@ -92,9 +92,7 @@ Two different styles of Docker images are currently provided:
   - `/usr/local/share/xray/`: Resource file directory containing Loyalsoldier geolocation data files (owner: `65532:65532`, directory permissions: `755`, file permissions: `644`)
     - geoip.dat
     - geosite.dat
-  - `/var/log/xray/`: Log file directory (mount point) (directory owner: `root:root`, permissions: `755`; file owner: `65532:65532`, permissions: `600`)
-    - access.log
-    - error.log
+  - `/var/log/xray/`: Log file directory (volume mount point declared by `VOLUME`) (owner: `65532:65532`, directory permissions: `700`)
 
   :::
 
