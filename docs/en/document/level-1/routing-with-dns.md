@@ -59,12 +59,12 @@ Having trouble? You need to re-read the official guide and try to understand it.
       {
         "address": "1.1.1.1",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"]
+        "domains": ["geosite:google"]
       },
       {
         "address": "8.8.8.8",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"],
+        "domains": ["geosite:google"],
         "finalQuery": true // Terminate the query chain
       },
       // Resolve domains considered by the community to be in China via Direct connection.
@@ -213,7 +213,7 @@ In a realIp transparent proxy environment, you can even ensure that after hijack
       {
         "address": "1.1.1.1",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"],
+        "domains": ["geosite:google"],
         "finalQuery": true // Terminate query chain
       },
       {

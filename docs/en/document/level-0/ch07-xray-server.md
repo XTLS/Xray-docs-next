@@ -177,7 +177,7 @@ First, various configurations can refer to the [official VLESS configuration exa
           // 3.3 Block Ads
           {
             "domain": [
-              "geosite:category-ads-all" // Routing condition: rules named "category-ads-all" in the geosite file (various ad domains)
+              "geosite:category-ads" // Routing condition: rules named "category-ads" in the geosite file (various ad domains)
             ],
             "outboundTag": "block" // Routing strategy: hand over to outbound "block" processing (blackhole blocking)
           }

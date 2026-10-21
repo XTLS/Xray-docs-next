@@ -14,13 +14,6 @@
 
 ## Xray 配置
 
-为了更好的分流体验，请替换默认路由规则文件为 [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat)，否则 Xray-core 将无法加载本配置。
-
-```bash
-sudo curl -oL /usr/local/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
-```
-
 ```json
 {
   "log": {
@@ -135,7 +128,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
         "outboundTag": "proxy"
       },
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       {

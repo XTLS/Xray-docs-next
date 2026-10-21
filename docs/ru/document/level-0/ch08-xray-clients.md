@@ -150,7 +150,7 @@
         "rules": [
           // 3.1 Блокировка рекламных доменов
           {
-            "domain": ["geosite:category-ads-all"],
+            "domain": ["geosite:category-ads"],
             "outboundTag": "block"
           },
           // 3.2 Прямое подключение к китайским доменам

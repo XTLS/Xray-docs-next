@@ -89,7 +89,7 @@ Xray предоставляет два способа проверки:
     - 11_geodata.json
     - 12_env.json
     - 99_version.json
-  - `/usr/local/share/xray/`: каталог файлов ресурсов с геоданными Loyalsoldier (владелец: `65532:65532`, права на каталог: `755`, права на файлы: `644`)
+  - `/usr/local/share/xray/`: каталог файлов ресурсов, содержащий полную версию GeoIP и расширенную версию GeoSite из [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_ru-RU.md) (владелец: `65532:65532`, права на каталог: `755`, права на файлы: `644`)
     - geoip.dat
     - geosite.dat
   - `/var/log/xray/`: каталог логов (точка монтирования тома, объявленная через `VOLUME`) (владелец: `65532:65532`, права на каталог: `700`)

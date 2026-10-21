@@ -142,7 +142,7 @@ If the Xray program is not installed on the side router, you can manually downlo
     "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       {

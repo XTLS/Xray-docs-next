@@ -149,7 +149,7 @@ Its disadvantage is probably that [hand-writing configuration files] is a bit tr
        "rules": [
          // 3.1 Ad domain blocking
          {
-           "domain": ["geosite:category-ads-all"],
+           "domain": ["geosite:category-ads"],
            "outboundTag": "block"
          },
          // 3.2 Domestic domains direct connection

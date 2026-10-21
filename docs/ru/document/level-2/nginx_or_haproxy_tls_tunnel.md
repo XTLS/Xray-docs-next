@@ -227,7 +227,7 @@ WantedBy=multi-user.target
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       {

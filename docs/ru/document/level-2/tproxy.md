@@ -15,13 +15,6 @@
 
 ## Настройка Xray
 
-Для лучшего разделения трафика замените файл правил маршрутизации по умолчанию на [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat), иначе Xray-core не сможет загрузить эту конфигурацию.
-
-```bash
-sudo curl -oL /usr/local/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
-```
-
 ```json
 {
   "log": {
@@ -136,7 +129,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
         "outboundTag": "proxy"
       },
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       {

@@ -108,10 +108,11 @@ Lua 脚本文件路径，默认为空字符串。设置后，路由选择由 Lua
 
 - IP：形如 `"127.0.0.1"`。
 - [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)：形如 `"10.0.0.0/8"`，也可以用 `"0.0.0.0/0"` `"::/0"` 来指定所有 IPv4 或者 IPv6。
-- 预定义 IP 列表：此列表预置于每一个 Xray 的安装包中，文件名为 `geoip.dat`。使用方式形如 `"geoip:cn"`，必须以 `geoip:`（小写）开头，后面跟双字符国家代码，支持几乎所有可以上网的国家。
+- 预定义 IP 列表：此列表预置于每一个 Xray 的安装包中，文件名为 `geoip.dat`，由 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md) 提供。使用方式形如 `"geoip:cn"`，必须以 `geoip:`（小写）开头，后面跟双字符国家代码或其他分类名。
+  - 默认提供的精简版仅包含 `cn`、`ir`、`ru` 三个国家分类。如需其他国家或地区的分类，请使用完整版。
   - 特殊值：`"geoip:private"`，包含所有私有地址，如 `127.0.0.1`。
 - 从文件中加载 IP：形如 `"ext:file:tag"`，必须以 `ext:`（小写）开头，后面跟文件名和标签，文件存放在 [资源目录](./env.md#资源文件路径) 中，文件格式与 `geoip.dat` 相同标签必须在文件中存在。
-- 反选 `!` 功能：`"!10.0.0.0/8"` 表示非 `10.0.0.0/8`，`"!geoip:cn"` 表示非 `geoip:cn` 中的结果。多个反选项之间是 `AND` 关系，而正选项、正选项和所有的反选项之间是 `OR` 关系，例如 `ip: ["!geoip:cn", "!geoip:us", "geoip:telegram"]` 匹配非美国并且非中国的 IP，或者是 telegram 的 IP。
+- 反选 `!` 功能：`"!10.0.0.0/8"` 表示非 `10.0.0.0/8`，`"!geoip:cn"` 表示非 `geoip:cn` 中的结果。多个反选项之间是 `AND` 关系，而正选项、正选项和所有的反选项之间是 `OR` 关系，例如 `ip: ["!geoip:cn", "!geoip:ru", "geoip:telegram"]` 匹配非俄罗斯并且非中国的 IP，或者是 telegram 的 IP。
 
 > `port`：number | string
 
@@ -449,15 +450,18 @@ HTTP 请求头。
 
 ### 预定义域名列表
 
-此列表预置于每一个 Xray 的安装包中，文件名为 `geosite.dat`。这个文件包含了一些常见的域名，使用方式：`geosite:xxx`，如 `geosite:google` 表示对文件内符合 `google` 内包含的域名，进行路由筛选或 DNS 筛选。
+此列表预置于每一个 Xray 的安装包中，文件名为 `geosite.dat`。这个文件包含了一些常见的域名，使用方式为 `geosite:分类名`，如 `geosite:google` 匹配 `google` 分类中的域名，可用于路由或 DNS 筛选。
 
-常见的域名有：
+常用分类包括：
 
 - `category-ads`：包含了常见的广告域名。
 - `category-ads-all`：包含了常见的广告域名，以及广告提供商的域名。
+- `category-ai-!cn`：包含了非中国 AI 服务的域名。
+- `category-ai-cn`：包含了中国 AI 服务的域名。
 - `cn`：相当于 `geolocation-cn` 和 `tld-cn` 的合集。
 - `apple`：包含了 Apple 旗下绝大部分域名。
 - `google`：包含了 Google 旗下绝大部分域名。
+- `google@cn`：包含了 `google` 分类中带有 `cn` 标记的域名。
 - `microsoft`：包含了 Microsoft 旗下绝大部分域名。
 - `facebook`：包含了 Facebook 旗下绝大部分域名。
 - `twitter`：包含了 Twitter 旗下绝大部分域名。
@@ -467,4 +471,4 @@ HTTP 请求头。
 - `tld-cn`：包含了 CNNIC 管理的用于中国大陆的顶级域名，如以 `.cn`、`.中国` 结尾的域名。
 - `tld-!cn`：包含了非中国大陆使用的顶级域名，如以 `.tw`（台湾）、`.jp`（日本）、`.sg`（新加坡）、`.us`（美国）`.ca`（加拿大）等结尾的域名。
 
-你也可以在这里查看完整的域名列表 [Domain list community](https://github.com/v2fly/domain-list-community)。
+Xray 提供不同版本的 GeoSite 数据，各版本可用的分类有所不同，详见 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md)。

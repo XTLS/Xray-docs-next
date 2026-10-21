@@ -198,7 +198,7 @@
       // [1-block 广告流量屏蔽]
       // 1.1  广告域名集屏蔽
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       // [2-direct 国内流量直连]
@@ -247,7 +247,7 @@
     S(APP数据) .-> I[入站]
 
     subgraph Xray
-    I --> R[路由] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[路由] -- "geosite:category-ads" --> O1[block]
 
     R[路由] -- "geosite:cn" --> O2[direct]
     R[路由] -- "direct.yourdomain.com" --> O2[direct]

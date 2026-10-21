@@ -14,8 +14,14 @@ Use with caution on low-memory devices.
     "cron": "0 4 * * *",
     "outbound": "proxy",
     "assets": [
-      { "url": "https://example.com/geoip.dat", "file": "geoip.dat" },
-      { "url": "https://example.com/geosite.dat", "file": "geosite.dat" }
+      {
+        "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geoip-lite.dat",
+        "file": "geoip.dat"
+      },
+      {
+        "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geosite.dat",
+        "file": "geosite.dat"
+      }
     ]
   }
 }
@@ -48,7 +54,7 @@ If `assets` is not configured, the scheduled task only reloads the existing file
 
 ```json
 {
-  "url": "https://example.com/geoip.dat",
+  "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geoip-lite.dat",
   "file": "geoip.dat"
 }
 ```
@@ -56,6 +62,8 @@ If `assets` is not configured, the scheduled task only reloads the existing file
 > `url`: string
 
 The resource download URL. It must be an HTTPS URL.
+
+Xray provides multiple versions of geodata files. See [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat) for download URLs for the available versions.
 
 > `file`: string
 

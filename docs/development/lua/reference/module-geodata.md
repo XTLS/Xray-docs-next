@@ -258,7 +258,7 @@ local matched = ipMatcherObj:Matches(ips)
 
 组合规则可能包含多个内部匹配器，必须有一个内部匹配器命中整个列表。
 
-例如，用 `geodata.BuildIPMatcher("192.168.1.0/24", "geoip:us")` 构建匹配器，输入列表同时包含 `192.168.1.1` 和 `8.8.8.8` 时，`Matches` 返回 `false`：前者命中 custom CIDR，后者命中 `geoip:us`，但两类规则属于不同的内部匹配器，没有一个能命中整个列表。
+例如，用 `geodata.BuildIPMatcher("192.168.1.0/24", "geoip:cn")` 构建匹配器，输入列表同时包含 `192.168.1.1` 和 `223.5.5.5` 时，`Matches` 返回 `false`：前者命中 custom CIDR，后者命中 `geoip:cn`，但两类规则属于不同的内部匹配器，没有一个能命中整个列表。
 
 只需判断是否有地址命中时，使用 [`AnyMatch`](#anymatch)。
 

@@ -184,7 +184,7 @@
           // 3.3 屏蔽广告
           {
             "domain": [
-              "geosite:category-ads-all" // 分流条件：geosite 文件内，名为"category-ads-all"的规则（各种广告域名）
+              "geosite:category-ads" // 分流条件：geosite 文件内，名为"category-ads"的规则（各种广告域名）
             ],
             "outboundTag": "block" // 分流策略：交给出站"block"处理（黑洞屏蔽）
           }

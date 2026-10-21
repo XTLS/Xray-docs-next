@@ -196,7 +196,7 @@
       // [1-block Блокировка рекламы]
       // 1.1 Блокировка рекламных доменов
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       // [2-direct Прямое подключение к внутренним ресурсам]
@@ -245,7 +245,7 @@
     S(Данные приложения) .-> I[Входящий трафик]
 
     subgraph Xray
-    I --> R[Маршрутизация] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[Маршрутизация] -- "geosite:category-ads" --> O1[block]
 
     R[Маршрутизация] -- "geosite:cn" --> O2[direct]
     R[Маршрутизация] -- "direct.yourdomain.com" --> O2[direct]

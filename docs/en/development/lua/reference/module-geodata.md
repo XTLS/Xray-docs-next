@@ -258,7 +258,7 @@ Checks whether the entire IP list matches the rules.
 
 Combined rules may contain multiple internal matchers. A single internal matcher must match the entire list.
 
-For example, with `geodata.BuildIPMatcher("192.168.1.0/24", "geoip:us")`, a list containing both `192.168.1.1` and `8.8.8.8` makes `Matches` return `false`: the first IP matches the custom CIDR, and the second matches `geoip:us`, but these belong to different internal matchers, and neither matches the entire list.
+For example, with `geodata.BuildIPMatcher("192.168.1.0/24", "geoip:cn")`, a list containing both `192.168.1.1` and `223.5.5.5` makes `Matches` return `false`: the first IP matches the custom CIDR, and the second matches `geoip:cn`, but these belong to different internal matchers, and neither matches the entire list.
 
 If you only need to check whether any address matches, use [`AnyMatch`](#anymatch).
 

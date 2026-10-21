@@ -59,12 +59,12 @@ socks、http 入站时，原始请求的就是域名，到了路由模块后，�
       {
         "address": "1.1.1.1",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"]
+        "domains": ["geosite:google"]
       },
       {
         "address": "8.8.8.8",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"],
+        "domains": ["geosite:google"],
         "finalQuery": true // 终结查询链
       },
       // 通过直连解析社区认为在中国有节点的域，若非预期结果可能是被墙或退出中国
@@ -212,7 +212,7 @@ realIp 透明代理环境，你甚至可以在保证完全劫持各种渠道的 
       {
         "address": "1.1.1.1",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"],
+        "domains": ["geosite:google"],
         "finalQuery": true // 终结查询链
       },
       {

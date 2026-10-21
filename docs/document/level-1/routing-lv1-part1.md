@@ -158,7 +158,7 @@
     S(APP数据) .-> I[入站]
 
     subgraph Xray
-    I --> R[路由] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[路由] -- "geosite:category-ads" --> O1[block]
     R[路由] -- "geosite:cn" --> O2[direct]
     R[路由] -- "geosite:geolocation-!cn" --> O3[proxy]
 
@@ -231,7 +231,7 @@
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       {
@@ -249,7 +249,7 @@
 
 为了理解这个配置文件，我们要稍微解释一下这里出现的几个新配置项：
 
-- `"domain": ["geosite:category-ads-all"]`
+- `"domain": ["geosite:category-ads"]`
 - `"domain": ["geosite:cn"]`
 - `"domain": ["geosite:geolocation-!cn"]`
 
@@ -259,14 +259,14 @@
 
 - `"domain"`：就是这次筛选流量的 **【依据】** 是 **【域名】** （而不再是入站 tag）
 - `"geosite"`：就是 `Xray` 会去 `geosite.dat` 文件中寻找 **【符合条件的域名】**
-- `"category-ads-all"`：就是该文件中的 **【所有广告类域名】**
+- `"category-ads"`：就是该文件中的 **【所有广告类域名】**
 - `"cn"`：就是该文件中的 **【中国域名】**
 - `"geolocation-!cn"`：就是该文件中的 **【非中国域名】**
 
 结合这些说明，3.3 中的配置用大白话翻译就是：
 
 1. APP 试图访问国外域名 `"domain": "geolocation-!cn"` 的流量，通过 `[proxy-out-vless]` 出站，转发至 VPS
-2. APP 试图访问国外域名广告域名 `"domain": "geosite:category-ads-all"` 的流量，通过 `[block]` 出站，转发至黑洞进行屏蔽
+2. APP 试图访问国外域名广告域名 `"domain": "geosite:category-ads"` 的流量，通过 `[block]` 出站，转发至黑洞进行屏蔽
 3. APP 试图访问国内域名 `"domain": "geosite:cn"` 的流量，通过 `[direct-out]` 出站，自由离开完成直连
 
 这时，才让【路由功能】的好处稍微得到了一些展现。
@@ -290,7 +290,7 @@
 
 同时，Loyalsoldier 维护了其个人修改增强的路由规则文件 [v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat)，提供了诸多不同的选择和分类逻辑；
 
-另外，`Project X` 也计划于未来定制维护更适合 `Xray` 使用的路由规则文件 [Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat)。~~(你们看，文件夹都建好了，所以快了快了)~~
+另外，`Project X` 也维护了更适合 `Xray` 使用的路由规则文件 [Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md)，提供多个版本的 GeoIP 和 GeoSite 数据，基础版已随 Xray 安装包附带。
 
 甚至，你还可以定制自己的 `geosite` 文件，外挂给 `Xray` 使用，但是这个就跑题了，本文不展开。
 
@@ -320,7 +320,7 @@
     S(APP数据) .-> I[入站]
 
     subgraph Xray
-    I --> R[路由] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[路由] -- "geosite:category-ads" --> O1[block]
     R[路由] -- "geosite:cn" --> O2[direct]
     R[路由] -- "geosite:geolocation-!cn" --> O3[proxy]
     R[路由] -. "没有命中规则的流量" .-> O4[第一条出站]
@@ -379,7 +379,7 @@
     S(APP数据) .-> I[入站]
 
     subgraph Xray
-    I --> R[路由] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[路由] -- "geosite:category-ads" --> O1[block]
     R[路由] -- "geosite:geolocation-!cn" --> O3[proxy]
     R[路由] -- "geosite:cn" --> O2[direct]
     R[路由] -. "没有命中规则的流量" .-> O4[第一条出站]

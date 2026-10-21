@@ -108,10 +108,11 @@ An array, where each item represents an IP range. The rule takes effect when an 
 
 - **IP**: Like `"127.0.0.1"`.
 - **[CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)**: Like `"10.0.0.0/8"`. You can also use `"0.0.0.0/0"` or `"::/0"` to specify all IPv4 or IPv6.
-- **Predefined IP list**: This list is pre-installed in every Xray installation package, named `geoip.dat`. Usage is like `"geoip:cn"`. Must start with `geoip:` (lowercase), followed by a two-character country code. Supports almost all countries with internet access.
+- **Predefined IP list**: This list is pre-installed in every Xray installation package, named `geoip.dat`, and is provided by [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat). Usage is like `"geoip:cn"`. Must start with `geoip:` (lowercase), followed by a two-letter country code or another category name.
+  - The lite version included by default contains only three country categories: `cn`, `ir`, and `ru`. Use the full version for categories for other countries or regions.
   - **Special value**: `"geoip:private"`, includes all private addresses, such as `127.0.0.1`.
 - **Load IPs from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by filename and tag. The file is stored in the [Resource Directory](./env.md#resource-file-path). The file format is the same as `geoip.dat`, and the tag must exist in the file.
-- **Inverse selection `!`**: `"!10.0.0.0/8"` means anything not in `10.0.0.0/8`, and `"!geoip:cn"` means results not in `geoip:cn`. Multiple inverse options have an `AND` relationship, while positive options, or positive options together with all inverse options, have an `OR` relationship. For example, `ip: ["!geoip:cn", "!geoip:us", "geoip:telegram"]` matches IPs that are not from the US AND not from China, OR are Telegram IPs.
+- **Inverse selection `!`**: `"!10.0.0.0/8"` means anything not in `10.0.0.0/8`, and `"!geoip:cn"` means results not in `geoip:cn`. Multiple inverse options have an `AND` relationship, while positive options, or positive options together with all inverse options, have an `OR` relationship. For example, `ip: ["!geoip:cn", "!geoip:ru", "geoip:telegram"]` matches IPs that are not from Russia AND not from China, OR are Telegram IPs.
 
 > `port`: number | string
 
@@ -449,15 +450,18 @@ Weight value. The larger the value, the less likely the corresponding node is to
 
 ### Predefined Domain List
 
-This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Usage: `geosite:xxx`, e.g., `geosite:google` represents routing filtering or DNS filtering for domains included within `google` in the file.
+This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Use `geosite:category`, e.g., `geosite:google` matches domains in the `google` category and can be used for routing or DNS filtering.
 
-Common domains include:
+Common categories include:
 
 - `category-ads`: Contains common advertising domains.
 - `category-ads-all`: Contains common advertising domains, as well as domains of advertising providers.
+- `category-ai-!cn`: Contains domains of non-Chinese AI services.
+- `category-ai-cn`: Contains domains of Chinese AI services.
 - `cn`: Equivalent to the collection of `geolocation-cn` and `tld-cn`.
 - `apple`: Contains the vast majority of Apple domains.
 - `google`: Contains the vast majority of Google domains.
+- `google@cn`: Contains domains in the `google` category with the `cn` attribute.
 - `microsoft`: Contains the vast majority of Microsoft domains.
 - `facebook`: Contains the vast majority of Facebook domains.
 - `twitter`: Contains the vast majority of Twitter domains.
@@ -467,4 +471,4 @@ Common domains include:
 - `tld-cn`: Contains top-level domains managed by CNNIC for mainland China, such as domains ending in `.cn`, `.中国`.
 - `tld-!cn`: Contains top-level domains not used in mainland China, such as domains ending in `.tw` (Taiwan), `.jp` (Japan), `.sg` (Singapore), `.us` (USA), `.ca` (Canada), etc.
 
-You can also view the complete domain list here: [Domain list community](https://github.com/v2fly/domain-list-community).
+Xray provides different versions of GeoSite data, and the available categories vary by version. See [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat) for details.

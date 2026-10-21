@@ -60,12 +60,12 @@
       {
         "address": "1.1.1.1",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"]
+        "domains": ["geosite:google"]
       },
       {
         "address": "8.8.8.8",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"],
+        "domains": ["geosite:google"],
         "finalQuery": true // Завершить цепочку запросов
       },
       // Резолвим через Direct домены, которые сообщество считает имеющими узлы в Китае.
@@ -216,7 +216,7 @@ graph TD
       {
         "address": "1.1.1.1",
         "skipFallback": true,
-        "domains": ["geosite:google", "geosite:google-cn"],
+        "domains": ["geosite:google"],
         "finalQuery": true // Завершить цепочку запросов
       },
       {

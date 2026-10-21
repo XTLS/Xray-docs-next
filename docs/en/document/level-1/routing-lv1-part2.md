@@ -198,7 +198,7 @@ The order in which routing takes effect is: **[Top to bottom, judged sequentiall
       // [1-block Ad traffic blocking]
       // 1.1 Ad domain set blocking
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       // [2-direct Domestic traffic direct connection]
@@ -247,7 +247,7 @@ At this point, the routing rules have effectively become:
     S(App Data) .-> I[Inbound]
 
     subgraph Xray
-    I --> R[Routing] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[Routing] -- "geosite:category-ads" --> O1[block]
 
     R[Routing] -- "geosite:cn" --> O2[direct]
     R[Routing] -- "direct.yourdomain.com" --> O2[direct]

@@ -151,7 +151,7 @@
        "rules": [
          // 3.1 广告域名屏蔽
          {
-           "domain": ["geosite:category-ads-all"],
+           "domain": ["geosite:category-ads"],
            "outboundTag": "block"
          },
          // 3.2 国内域名直连

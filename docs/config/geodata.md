@@ -14,8 +14,14 @@
     "cron": "0 4 * * *",
     "outbound": "proxy",
     "assets": [
-      { "url": "https://example.com/geoip.dat", "file": "geoip.dat" },
-      { "url": "https://example.com/geosite.dat", "file": "geosite.dat" }
+      {
+        "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geoip-lite.dat",
+        "file": "geoip.dat"
+      },
+      {
+        "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geosite.dat",
+        "file": "geosite.dat"
+      }
     ]
   }
 }
@@ -48,7 +54,7 @@
 
 ```json
 {
-  "url": "https://example.com/geoip.dat",
+  "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geoip-lite.dat",
   "file": "geoip.dat"
 }
 ```
@@ -56,6 +62,8 @@
 > `url`: string
 
 资源文件的下载地址，必须是 HTTPS URL。
+
+Xray 提供多个版本的地理数据文件，可根据需求从 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md) 获取不同版本的下载地址。
 
 > `file`: string
 

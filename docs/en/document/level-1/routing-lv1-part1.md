@@ -158,7 +158,7 @@ Thus, the trio of **Inbound**, **Routing**, and **Outbound** can now work hand i
     S(APP Data) .-> I[Inbound]
 
     subgraph Xray
-    I --> R[Routing] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[Routing] -- "geosite:category-ads" --> O1[block]
     R[Routing] -- "geosite:cn" --> O2[direct]
     R[Routing] -- "geosite:geolocation-!cn" --> O3[proxy]
 
@@ -231,7 +231,7 @@ Now is the moment to witness the miracle; we can use the [Routing] configuration
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       {
@@ -249,7 +249,7 @@ Now is the moment to witness the miracle; we can use the [Routing] configuration
 
 To understand this configuration file, we need to slightly explain the new configuration items appearing here:
 
-- `"domain": ["geosite:category-ads-all"]`
+- `"domain": ["geosite:category-ads"]`
 - `"domain": ["geosite:cn"]`
 - `"domain": ["geosite:geolocation-!cn"]`
 
@@ -259,14 +259,14 @@ Actually, the clever you can probably guess the gist from the names of these con
 
 - `"domain"`: This means the **[Basis]** for filtering traffic this time is **[Domain Name]** (no longer inbound tag).
 - `"geosite"`: This means `Xray` will look for **[Domains matching the condition]** in the `geosite.dat` file.
-- `"category-ads-all"`: This means **[All advertising domains]** in that file.
+- `"category-ads"`: This means **[All advertising domains]** in that file.
 - `"cn"`: This means **[Chinese domains]** in that file.
 - `"geolocation-!cn"`: This means **[Non-Chinese domains]** in that file.
 
 Combining these explanations, the configuration in 3.3 translates to plain English as:
 
 1. Traffic where the APP attempts to access foreign domains `"domain": "geolocation-!cn"` goes through `[proxy-out-vless]` outbound and is forwarded to the VPS.
-2. Traffic where the APP attempts to access foreign advertising domains `"domain": "geosite:category-ads-all"` goes through `[block]` outbound and is forwarded to the black hole for blocking.
+2. Traffic where the APP attempts to access foreign advertising domains `"domain": "geosite:category-ads"` goes through `[block]` outbound and is forwarded to the black hole for blocking.
 3. Traffic where the APP attempts to access domestic domains `"domain": "geosite:cn"` goes through `[direct-out]` outbound and leaves freely to complete a direct connection.
 
 At this point, the benefits of the [Routing Function] are finally somewhat revealed.
@@ -290,7 +290,7 @@ Later, as V disappeared and the development of the original `Project V` stalled,
 
 Meanwhile, Loyalsoldier maintains his personally modified and enhanced routing rule file [v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat), offering many different choices and classification logic;
 
-In addition, `Project X` also plans to customize and maintain a routing rule file better suited for `Xray` in the future: [Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat). ~~(Look, the folder is already created, so it's coming soon, coming soon)~~
+In addition, `Project X` also maintains routing rule files better suited for `Xray`: [Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat), offering multiple versions of GeoIP and GeoSite data, with the basic versions already bundled with Xray installation packages.
 
 You can even customize your own `geosite` file and load it externally for `Xray` to use, but that's off-topic and won't be expanded upon in this article.
 
@@ -319,7 +319,7 @@ Because we placed `[proxy-out-vless]` in the first position of the outbounds in 
     S(APP Data) .-> I[Inbound]
 
     subgraph Xray
-    I --> R[Routing] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[Routing] -- "geosite:category-ads" --> O1[block]
     R[Routing] -- "geosite:cn" --> O2[direct]
     R[Routing] -- "geosite:geolocation-!cn" --> O3[proxy]
     R[Routing] -. "Traffic hitting no rules" .-> O4[First Outbound]
@@ -378,7 +378,7 @@ At this time, the routing rules actually become:
     S(APP Data) .-> I[Inbound]
 
     subgraph Xray
-    I --> R[Routing] -- "geosite:category-ads-all" --> O1[block]
+    I --> R[Routing] -- "geosite:category-ads" --> O1[block]
     R[Routing] -- "geosite:geolocation-!cn" --> O3[proxy]
     R[Routing] -- "geosite:cn" --> O2[direct]
     R[Routing] -. "Traffic hitting no rules" .-> O4[First Outbound]

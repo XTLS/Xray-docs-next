@@ -90,7 +90,7 @@ Xray 提供两种验证方式：
     - 11_geodata.json
     - 12_env.json
     - 99_version.json
-  - `/usr/local/share/xray/`：资源文件目录，存放了 Loyalsoldier 版本地理位置数据文件（拥有者是 `65532:65532`、目录权限 `755`、文件权限 `644`）
+  - `/usr/local/share/xray/`：资源文件目录，存放来自 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md) 的 GeoIP 完整版和 GeoSite 扩展版（拥有者是 `65532:65532`、目录权限 `755`、文件权限 `644`）
     - geoip.dat
     - geosite.dat
   - `/var/log/xray/`：日志文件目录（卷挂载点，`VOLUME`）（拥有者是 `65532:65532`、目录权限 `700`）

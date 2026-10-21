@@ -226,7 +226,7 @@ Enable auto-start on boot:
     "domainStrategy": "AsIs",
     "rules": [
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       {

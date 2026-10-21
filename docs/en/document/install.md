@@ -89,7 +89,7 @@ Two different styles of Docker images are currently provided:
     - 11_geodata.json
     - 12_env.json
     - 99_version.json
-  - `/usr/local/share/xray/`: Resource file directory containing Loyalsoldier geolocation data files (owner: `65532:65532`, directory permissions: `755`, file permissions: `644`)
+  - `/usr/local/share/xray/`: Resource file directory containing the full version of GeoIP and the extended version of GeoSite from [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat) (owner: `65532:65532`, directory permissions: `755`, file permissions: `644`)
     - geoip.dat
     - geosite.dat
   - `/var/log/xray/`: Log file directory (volume mount point declared by `VOLUME`) (owner: `65532:65532`, directory permissions: `700`)

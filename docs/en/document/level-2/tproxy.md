@@ -14,13 +14,6 @@ I would like to add that many transparent proxy tutorials use Netfilter for traf
 
 ## Xray Configuration
 
-For a better routing experience, please replace the default routing rule files with [Loyalsoldier/v2ray-rules-dat](https://github.com/Loyalsoldier/v2ray-rules-dat); otherwise, Xray-core will not be able to load this configuration.
-
-```bash
-sudo curl -oL /usr/local/share/xray/geoip.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
-sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
-```
-
 ```json
 {
   "log": {
@@ -135,7 +128,7 @@ sudo curl -oL /usr/local/share/xray/geosite.dat https://github.com/Loyalsoldier/
         "outboundTag": "proxy"
       },
       {
-        "domain": ["geosite:category-ads-all"],
+        "domain": ["geosite:category-ads"],
         "outboundTag": "block"
       },
       {
