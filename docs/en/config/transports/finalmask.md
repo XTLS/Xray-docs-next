@@ -29,25 +29,7 @@ It can be used for multiple kinds of TCP and UDP camouflage, as well as QUIC-rel
               "settings": {}
             }
           ],
-          "quicParams": {
-            "congestion": "force-brutal",
-            "bbrProfile": "standard",
-            "debug": false,
-            "brutalUp": "60 mbps",
-            "brutalDown": 0,
-            "udpHop": {
-              "ports": "20000-50000",
-              "interval": "5-10"
-            },
-            "initStreamReceiveWindow": 8388608,
-            "maxStreamReceiveWindow": 8388608,
-            "initConnectionReceiveWindow": 20971520,
-            "maxConnectionReceiveWindow": 20971520,
-            "maxIdleTimeout": 30,
-            "keepAlivePeriod": 0,
-            "disablePathMTUDiscovery": false,
-            "maxIncomingStreams": 1024
-          }
+          "quicParams": {}
         }
       }
     }
@@ -190,6 +172,31 @@ When it is `0` and `"packets": "tlshello"` is set, the fragmented Client Hello w
 ```
 
 For the meaning of these fields, see the [upstream documentation](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.md).
+
+### filter
+
+```json
+{
+  "type": "filter",
+  // [!field focus]
+  "settings": {
+    "allowedSourceIPs": ["geoip:cn", "10.0.0.0/8", "fd00::/8"],
+    "blockedSourceIPs": ["10.20.0.0/16", "fd00:20::/48"]
+  }
+}
+```
+
+A traffic filter for access control. Currently, only filtering [inbound](../inbound.md) traffic by source IP is supported (no effect on outbounds). Filtering takes place after the TCP three-way handshake completes successfully.
+
+Unless there is a specific reason otherwise, place `filter` at the outermost layer, as the last item in the array.
+
+`allowedSourceIPs`: source IP allowlist. When non-empty, the source IP must be available and match at least one entry to be allowed.
+
+`blockedSourceIPs`: source IP blocklist. Source IPs matching any entry are rejected.
+
+Both fields support GeoIP entries (such as `geoip:cn`) and IPv4 and IPv6 CIDR ranges, with usage similar to [IP matching in routing rules](../routing.md#ruleobject).
+
+When both lists are configured, the source IP is allowed only if it matches the allowlist and does not match the blocklist.
 
 ## UDPMask
 
@@ -502,6 +509,12 @@ Connection failures require debug-level logging. Possible contributing factors i
 `remoteIPs`: Required only when `mode` includes `intervalremote` or `perconnremote`; if left blank, it inherits the address from the parent level. CIDR notation is supported
 
 `remotePorts`: Required only when `mode` includes `intervalremote` or `perconnremote`; if left blank, it inherits the address from the parent level
+
+### filter
+
+A traffic filter for access control. Currently, only filtering [inbound](../inbound.md) traffic by source IP is supported (no effect on outbounds). UDP traffic is filtered packet by packet. All other configuration and behavior are the same as the [TCP version](#filter).
+
+Unless there is a specific reason otherwise, place `filter` at the outermost layer, as the last item in the array.
 
 ## quicParams
 

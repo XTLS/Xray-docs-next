@@ -29,25 +29,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
               "settings": {}
             }
           ],
-          "quicParams": {
-            "congestion": "force-brutal",
-            "bbrProfile": "standard",
-            "debug": false,
-            "brutalUp": "60 mbps",
-            "brutalDown": 0,
-            "udpHop": {
-              "ports": "20000-50000",
-              "interval": "5-10"
-            },
-            "initStreamReceiveWindow": 8388608,
-            "maxStreamReceiveWindow": 8388608,
-            "initConnectionReceiveWindow": 20971520,
-            "maxConnectionReceiveWindow": 20971520,
-            "maxIdleTimeout": 30,
-            "keepAlivePeriod": 0,
-            "disablePathMTUDiscovery": false,
-            "maxIncomingStreams": 1024
-          }
+          "quicParams": {}
         }
       }
     }
@@ -190,6 +172,31 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 ```
 
 含义见其 [官方文档](https://github.com/SUDOKU-ASCII/sudoku/blob/main/configs/README.zh_CN.md) 文档字段
+
+### filter
+
+```json
+{
+  "type": "filter",
+  // [!field focus]
+  "settings": {
+    "allowedSourceIPs": ["geoip:cn", "10.0.0.0/8", "fd00::/8"],
+    "blockedSourceIPs": ["10.20.0.0/16", "fd00:20::/48"]
+  }
+}
+```
+
+流量过滤器，用于访问控制。目前仅支持[入站](../inbound.md)来源 IP 筛选（出站不生效）。在 TCP 三次握手成功后进行过滤。
+
+如无特殊原因，应将 `filter` 放在最外层，即数组的最后一项。
+
+`allowedSourceIPs`: 来源 IP 白名单。非空时，来源 IP 必须存在且匹配其中任一项才会放行。
+
+`blockedSourceIPs`: 来源 IP 黑名单。来源 IP 匹配其中任一项时会被拒绝。
+
+两个字段均支持 GeoIP（如 `geoip:cn`）以及 IPv4、IPv6 的 CIDR 范围，用法与[路由规则中的 IP 匹配](../routing.md#ruleobject)类似。
+
+黑白名单同时存在时，来源 IP 必须命中白名单且不命中黑名单才会放行。
 
 ## UDPMask
 
@@ -502,6 +509,12 @@ Salamander 混淆。（来自 Hysteria2）
 `remoteIPs`: 仅 mode 含 intervalremote 或 perconnremote 时需要，未填继承上层地址，支持 cidr
 
 `remotePorts`: 仅 mode 含 intervalremote 或 perconnremote 时需要，未填继承上层地址
+
+### filter
+
+流量过滤器，用于访问控制。目前仅支持[入站](../inbound.md)来源 IP 筛选（出站不生效）。UDP 逐包过滤，其余配置和行为同 [TCP 版本](#filter)。
+
+如无特殊原因，应将 `filter` 放在最外层，即数组的最后一项。
 
 ## quicParams
 
