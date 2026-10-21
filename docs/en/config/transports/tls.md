@@ -29,6 +29,7 @@ It supports use with the `RAW`, `XHTTP`, `mKCP`, `gRPC`, `WebSocket`, `HTTPUpgra
           "maxVersion": "1.3",
           "cipherSuites": "Enter the cipher suite names you need here, separated by :",
           "certificates": [],
+          "useSystemCA": false,
           "disableSystemRoot": false,
           "enableSessionResumption": false,
           "fingerprint": "",
@@ -99,11 +100,15 @@ When set to `true`, Xray does not verify the validity of the TLS certificate pro
 This option is deprecated. Use `pinnedPeerCertSha256` to specify the certificate manually instead.
 :::
 
+> `useSystemCA`: true | false
+
+The default is `false`, which uses Xray's built-in CA list. Set to `true` to use the operating system's CA list.
+
 > `disableSystemRoot`: true | false
 
-Whether to disable the operating system's built-in CA certificates. The default value is `false`.
+Whether to disable the default CA certificates. The default value is `false`.
 
-When set to `true`, Xray uses only the certificates specified in `certificates` during TLS handshake. When set to `false`, Xray uses only the operating system's built-in CA certificates during TLS handshake.
+When set to `true`, Xray uses only the certificates specified in `certificates` during TLS handshake. When set to `false`, the default CA list is determined by `useSystemCA`.
 
 > `enableSessionResumption`: true | false
 

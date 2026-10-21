@@ -29,6 +29,7 @@ TLS 是常见的传输层加密方式。
           "maxVersion": "1.3",
           "cipherSuites": "此处填写你需要的加密套件名称,每个套件名称之间用:进行分隔",
           "certificates": [],
+          "useSystemCA": false,
           "disableSystemRoot": false,
           "enableSessionResumption": false,
           "fingerprint": "",
@@ -100,11 +101,15 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 该选项已被弃用，使用 `pinnedPeerCertSha256` 手动指定需要的证书。
 :::
 
+> `useSystemCA`: true | false
+
+默认值为 `false`，使用 Xray 内置的 CA 列表；设为 `true` 时使用操作系统的 CA 列表。
+
 > `disableSystemRoot`: true | false
 
-是否禁用操作系统自带的 CA 证书。默认值为 `false`。
+是否禁用默认的 CA 证书。默认值为 `false`。
 
-当值为 `true` 时，Xray 只会使用 `certificates` 中指定的证书进行 TLS 握手。当值为 `false` 时，Xray 只会使用操作系统自带的 CA 证书进行 TLS 握手。
+当值为 `true` 时，Xray 只会使用 `certificates` 中指定的证书进行 TLS 握手。当值为 `false` 时，默认 CA 列表由 `useSystemCA` 决定。
 
 > `enableSessionResumption`: true | false
 
