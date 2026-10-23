@@ -1,4 +1,4 @@
-# Tunnel（dokodemo-door）
+# Tunnel
 
 Tunnel（隧道），旧称 dokodemo-door（任意门），可以监听数个本地端口，并把所有收到的数据通过 outbound 发送至指定服务器的某个端口，从而达到端口映射的效果。
 

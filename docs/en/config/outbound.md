@@ -1,4 +1,4 @@
-# Outbound Proxy (Mux, XUDP)
+# Outbound Proxy
 
 Outbound connections are used to send data. For available protocols, please see [Outbound Protocols](./outbounds/).
 

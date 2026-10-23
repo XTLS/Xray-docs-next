@@ -1,4 +1,4 @@
-# Freedom (fragment, noises)
+# Freedom
 
 Freedom is a direct outbound protocol and usually the final endpoint for traffic: it receives TCP or UDP traffic from upstream, connects directly to the final destination, and sends and receives data.
 
@@ -20,18 +20,6 @@ This outbound has a default safety policy in server-side and reverse-proxy scena
       "settings": {
         "redirect": "127.0.0.1:3366",
         "userLevel": 0,
-        "fragment": {
-          "packets": "tlshello",
-          "length": "100-200",
-          "interval": "10-20" // Unit: ms
-        },
-        "noises": [
-          {
-            "type": "base64",
-            "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
-            "delay": "10-16"
-          }
-        ],
         "proxyProtocol": 0,
         "finalRules": [
           {
@@ -69,16 +57,6 @@ User level. Connections will use the [Local Policy](../policy.md#levelpolicyobje
 
 The value of `userLevel` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, it defaults to 0.
 
-> `fragment`: [FragmentObject](#fragmentobject)
-
-A set of key-value configuration items used to control outgoing TCP fragmentation. In some cases, it can deceive censorship systems, such as bypassing SNI blacklists.
-
-> `noises`: \[ [NoiseObject](#noiseobject) \]
-
-UDP noise, used to send some random data as "noise" before sending a UDP connection. Presence of this structure implies enablement. It might deceive sniffers, or it might disrupt normal connections. _Use at your own risk._ For this reason, it bypasses port 53 because that breaks DNS.
-
-An array that can define multiple noise packets to send. Each element is a [NoiseObject](#noiseobject).
-
 > `proxyProtocol`: number
 
 PROXY protocol is usually used with `redirect` to redirect traffic to Nginx or other backend services that have the PROXY protocol enabled. If the backend service does not support PROXY protocol, the connection will be disconnected.
@@ -110,57 +88,6 @@ If no explicit rule matches, the built-in fallback rule is used: traffic from th
 
 If the server needs to allow clients to access some internal services, explicitly configure `allow` rules and limit them to the necessary `network`, `ip`, and `port` whenever possible.
 :::
-
-### FragmentObject
-
-```json
-{
-  "packets": "tlshello",
-  "length": "100-200",
-  "interval": "10-20"
-}
-```
-
-> `packets`: string
-
-Supports two fragmentation modes. `"1-3"` is TCP stream slicing, applied to the 1st through 3rd data writes by the client. `"tlshello"` is TLS handshake packet slicing.
-
-> `length`: [Int32Range](../../development/intro/guide.md#int32range)
-
-Fragment packet length (bytes).
-
-> `interval`: [Int32Range](../../development/intro/guide.md#int32range)
-
-Fragment interval (ms).
-
-When `interval` is 0 and `"packets": "tlshello"` is set, the fragmented Client Hello will be sent in one TCP packet (provided its original size does not exceed MSS or MTU causing automatic system fragmentation).
-
-### NoiseObject
-
-```json
-{
-  "type": "base64",
-  "packet": "7nQBAAABAAAAAAAABnQtcmluZwZtc2VkZ2UDbmV0AAABAAE=",
-  "delay": "10-16"
-}
-```
-
-> `type`: string
-
-Noise packet type. Currently supports `"rand"` (random data), `"str"` (user-defined string), and `"base64"` (base64-encoded custom binary data).
-
-> `packet`: string
-
-The content of the packet to be sent based on the preceding `type`.
-
-- When `type` is `rand`, this specifies the length of the random data. It can be a fixed value `"100"` or a range `"50-150"`.
-- When `type` is `str`, this specifies the string to be sent.
-- When `type` is `hex`, this specifies binary data in hex format.
-- When `type` is `base64`, this specifies base64-encoded binary data.
-
-> `delay`: [Int32Range](../../development/intro/guide.md#int32range)
-
-Delay in milliseconds. After sending this noise packet, the core waits for this duration before sending the next noise packet or real data. Defaults to no wait.
 
 ### FinalRuleObject
 

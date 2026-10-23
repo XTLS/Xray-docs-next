@@ -1,4 +1,4 @@
-# VLESS (XTLS Vision Seed)
+# VLESS
 
 VLESS is a stateless, lightweight transport protocol. It is divided into inbound and outbound parts and can serve as a bridge between Xray clients and servers.
 

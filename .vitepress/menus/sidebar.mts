@@ -31,7 +31,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "内置 DNS 服务器", link: "/config/dns.md" },
         { text: "FakeDNS", link: "/config/fakedns.md" },
         { text: "入站代理", link: "/config/inbound.md" },
-        { text: "出站代理（Mux、XUDP）", link: "/config/outbound.md" },
+        { text: "出站代理", link: "/config/outbound.md" },
         { text: "传输配置", link: "/config/transport.md" },
         { text: "本地策略", link: "/config/policy.md" },
         { text: "路由", link: "/config/routing.md" },
@@ -46,18 +46,12 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       link: "/config/inbounds/",
       collapsed: true,
       items: [
-        {
-          text: "Tunnel（dokodemo-door）",
-          link: "/config/inbounds/tunnel.md"
-        },
+        { text: "Tunnel", link: "/config/inbounds/tunnel.md" },
         { text: "HTTP", link: "/config/inbounds/http.md" },
         { text: "Shadowsocks", link: "/config/inbounds/shadowsocks.md" },
         { text: "Socks", link: "/config/inbounds/socks.md" },
         { text: "Trojan", link: "/config/inbounds/trojan.md" },
-        {
-          text: "VLESS（XTLS Vision Seed）",
-          link: "/config/inbounds/vless.md"
-        },
+        { text: "VLESS", link: "/config/inbounds/vless.md" },
         { text: "VMess", link: "/config/inbounds/vmess.md" },
         { text: "WireGuard", link: "/config/inbounds/wireguard.md" },
         { text: "Hysteria", link: "/config/inbounds/hysteria.md" },
@@ -72,19 +66,13 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       items: [
         { text: "Blackhole", link: "/config/outbounds/blackhole.md" },
         { text: "DNS", link: "/config/outbounds/dns.md" },
-        {
-          text: "Freedom（fragment、noises）",
-          link: "/config/outbounds/freedom.md"
-        },
+        { text: "Freedom", link: "/config/outbounds/freedom.md" },
         { text: "HTTP", link: "/config/outbounds/http.md" },
         { text: "Loopback", link: "/config/outbounds/loopback.md" },
         { text: "Shadowsocks", link: "/config/outbounds/shadowsocks.md" },
         { text: "Socks", link: "/config/outbounds/socks.md" },
         { text: "Trojan", link: "/config/outbounds/trojan.md" },
-        {
-          text: "VLESS（XTLS Vision Seed）",
-          link: "/config/outbounds/vless.md"
-        },
+        { text: "VLESS", link: "/config/outbounds/vless.md" },
         { text: "VMess", link: "/config/outbounds/vmess.md" },
         { text: "WireGuard", link: "/config/outbounds/wireguard.md" },
         { text: "Hysteria", link: "/config/outbounds/hysteria.md" },

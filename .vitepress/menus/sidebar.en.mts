@@ -34,7 +34,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "Built-in DNS Server", link: "/en/config/dns.md" },
         { text: "FakeDNS", link: "/en/config/fakedns.md" },
         { text: "Inbounds", link: "/en/config/inbound.md" },
-        { text: "Outbounds (Mux, XUDP)", link: "/en/config/outbound.md" },
+        { text: "Outbounds", link: "/en/config/outbound.md" },
         {
           text: "Transport Configuration",
           link: "/en/config/transport.md"
@@ -52,10 +52,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       link: "/en/config/inbounds/",
       collapsed: true,
       items: [
-        {
-          text: "Tunnel (dokodemo-door)",
-          link: "/en/config/inbounds/tunnel.md"
-        },
+        { text: "Tunnel", link: "/en/config/inbounds/tunnel.md" },
         { text: "HTTP", link: "/en/config/inbounds/http.md" },
         {
           text: "Shadowsocks",
@@ -63,10 +60,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         },
         { text: "Socks", link: "/en/config/inbounds/socks.md" },
         { text: "Trojan", link: "/en/config/inbounds/trojan.md" },
-        {
-          text: "VLESS (XTLS Vision Seed)",
-          link: "/en/config/inbounds/vless.md"
-        },
+        { text: "VLESS", link: "/en/config/inbounds/vless.md" },
         { text: "VMess", link: "/en/config/inbounds/vmess.md" },
         { text: "WireGuard", link: "/en/config/inbounds/wireguard.md" },
         { text: "Hysteria", link: "/en/config/inbounds/hysteria.md" },
@@ -81,10 +75,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       items: [
         { text: "Blackhole", link: "/en/config/outbounds/blackhole.md" },
         { text: "DNS", link: "/en/config/outbounds/dns.md" },
-        {
-          text: "Freedom (fragment, noises)",
-          link: "/en/config/outbounds/freedom.md"
-        },
+        { text: "Freedom", link: "/en/config/outbounds/freedom.md" },
         { text: "HTTP", link: "/en/config/outbounds/http.md" },
         { text: "Loopback", link: "/en/config/outbounds/loopback.md" },
         {
@@ -93,10 +84,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         },
         { text: "Socks", link: "/en/config/outbounds/socks.md" },
         { text: "Trojan", link: "/en/config/outbounds/trojan.md" },
-        {
-          text: "VLESS (XTLS Vision Seed)",
-          link: "/en/config/outbounds/vless.md"
-        },
+        { text: "VLESS", link: "/en/config/outbounds/vless.md" },
         { text: "VMess", link: "/en/config/outbounds/vmess.md" },
         { text: "WireGuard", link: "/en/config/outbounds/wireguard.md" },
         { text: "Hysteria", link: "/en/config/outbounds/hysteria.md" },

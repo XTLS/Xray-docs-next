@@ -1,4 +1,4 @@
-# VLESS（XTLS Vision Seed）
+# VLESS
 
 VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部分，可以作为 Xray 客户端和服务器之间的桥梁。
 

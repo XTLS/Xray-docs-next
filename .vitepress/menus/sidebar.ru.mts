@@ -64,10 +64,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
       link: "/ru/config/inbounds/",
       collapsed: true,
       items: [
-        {
-          text: "Tunnel (dokodemo-door)",
-          link: "/ru/config/inbounds/tunnel.md"
-        },
+        { text: "Tunnel", link: "/ru/config/inbounds/tunnel.md" },
         { text: "HTTP", link: "/ru/config/inbounds/http.md" },
         {
           text: "Shadowsocks",
@@ -75,10 +72,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         },
         { text: "Socks", link: "/ru/config/inbounds/socks.md" },
         { text: "Trojan", link: "/ru/config/inbounds/trojan.md" },
-        {
-          text: "VLESS (XTLS Vision Seed)",
-          link: "/ru/config/inbounds/vless.md"
-        },
+        { text: "VLESS", link: "/ru/config/inbounds/vless.md" },
         { text: "VMess", link: "/ru/config/inbounds/vmess.md" },
         { text: "WireGuard", link: "/ru/config/inbounds/wireguard.md" },
         { text: "Hysteria", link: "/ru/config/inbounds/hysteria.md" },
@@ -96,10 +90,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
           link: "/ru/config/outbounds/blackhole.md"
         },
         { text: "DNS", link: "/ru/config/outbounds/dns.md" },
-        {
-          text: "Freedom (fragment, noises)",
-          link: "/ru/config/outbounds/freedom.md"
-        },
+        { text: "Freedom", link: "/ru/config/outbounds/freedom.md" },
         { text: "HTTP", link: "/ru/config/outbounds/http.md" },
         { text: "Loopback", link: "/ru/config/outbounds/loopback.md" },
         {
@@ -108,10 +99,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         },
         { text: "Socks", link: "/ru/config/outbounds/socks.md" },
         { text: "Trojan", link: "/ru/config/outbounds/trojan.md" },
-        {
-          text: "VLESS (XTLS Vision Seed)",
-          link: "/ru/config/outbounds/vless.md"
-        },
+        { text: "VLESS", link: "/ru/config/outbounds/vless.md" },
         { text: "VMess", link: "/ru/config/outbounds/vmess.md" },
         {
           text: "WireGuard",
