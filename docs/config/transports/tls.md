@@ -320,7 +320,7 @@ OCSP 装订更新间隔，单位为秒，默认值为 0. 任意非 0 值将启�
 :::
 
 ::: tip TIP 5
-使用 `xray tls cert` 可以生成自签名的 CA 证书。
+使用 `xray tls cert -ca` 可以生成自签名的 CA 证书。
 :::
 
 ::: tip TIP 6

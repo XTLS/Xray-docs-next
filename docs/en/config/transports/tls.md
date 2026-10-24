@@ -318,7 +318,7 @@ When `usage` is `"verify"`, both `keyFile` and `key` may be empty.
 :::
 
 ::: tip TIP 5
-You can generate a self-signed CA certificate with `xray tls cert`.
+You can generate a self-signed CA certificate with `xray tls cert -ca`.
 :::
 
 ::: tip TIP 6
