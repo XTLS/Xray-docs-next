@@ -171,6 +171,8 @@ xxxxxxxx-xxxx-0000-xxxx-xxxxxxxxxxxx
 
 The configuration uses data after Big-Endian encoding to uint16 (if you don't understand, treat these four digits as a hexadecimal number and convert to decimal). E.g., `0001→1`, `000e→14`, `38b2→14514`. The reason for this is that the syntax here is the same as `port`; you can freely specify many segments for routing just like specifying ports.
 
+Non-VLESS protocols will be treated as `0` here (equivalent to VLESS using `0000`).
+
 > `inboundTag`: \[string\]
 
 An array, where each item is an identifier. The rule takes effect when an item matches the identifier of the inbound protocol.
