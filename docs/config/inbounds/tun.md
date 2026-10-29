@@ -102,8 +102,12 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 该项需要配置 `autoSystemRoutingTable`，否则 Xray 会报错退出。Xray 会按列表中的值添加 Windows 筛选平台（WFP）过滤器，防止其他程序的流量从 TUN 接口之外泄漏：
 
-- `"dns"`（需要配置 `dns`，否则 Xray 会报错退出）：DNS（53 端口）只能经由 TUN 接口或由 Xray 自身发出。Windows 会向所有网络接口的 DNS 服务器发送查询，并且无论路由如何都经由各自的接口发出，其他程序也会经由更具体的局域网路由访问本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`），否则这些服务器仍会在 TUN 之外被查询。在 Windows 11、Windows Server 2022 及更高版本上，这些查询还可能使用 DNS over HTTPS 或 DNS over TLS，所以 Windows 的 DNS Client 服务（Dnscache）完全不能在 TUN 接口之外建立连接，本地网络中的名称解析（LLMNR、mDNS）除外。因此 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
+- `"tcp/<端口>"`、`"udp/<端口>"`：发往该 TCP 或 UDP 端口的连接只能经由 TUN 接口或由 Xray 自身发出，例如 `"tcp/853"`。
+- `"windnsclient"`：Windows 的 DNS Client 服务（Dnscache）完全不能在 TUN 接口之外建立连接，本地网络中的名称解析（LLMNR、mDNS）除外。在 Windows 11、Windows Server 2022 及更高版本上，它可以通过 DNS over HTTPS 或 DNS over TLS 向任意端口发送查询；更早的版本只查询 53 端口，因此该项在这些版本上不起作用。
+- `"dns"`：等同于 `"udp/53"`、`"tcp/53"`、`"windnsclient"`、`"tcp/853"`（DNS over TLS）和 `"udp/853"`（DNS over QUIC）。Windows 会向所有网络接口的 DNS 服务器发送查询，并且无论路由如何都经由各自的接口发出，其他程序也会经由更具体的局域网路由访问本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`），否则这些服务器仍会在 TUN 之外被查询。
 - `"misconfigtun"`：如果 `autoSystemRoutingTable` 中没有某个 IP 版本（IPv4 或 IPv6）的路由，则双向阻止该版本，但 Xray 自身、环回以及 Windows 在本地链路上所需的流量（DHCP、IPv6 邻居发现）除外。TUN 接口承载某个 IP 版本不需要在 `gateway` 中配置该版本的地址：未配置时，Windows 会自动为其分配链路本地地址（IPv6 立即分配，IPv4 在几秒后从 `169.254.0.0/16` 中分配）。
+
+使用 `"dns"`、`"udp/53"`、`"tcp/53"` 或 `"windnsclient"` 将系统的 DNS 限制在 TUN 接口内时需要配置 `dns`，否则 Xray 会报错退出。此时 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
 
 过滤器生效期间，Xray 自身的出站连接也不受 Windows 防火墙阻止规则的限制。
 
