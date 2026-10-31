@@ -4,7 +4,9 @@ import { useData } from "vitepress"
 import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
 import { highlightParts } from "./presentation.mts"
+import { usePermalink } from "./usePermalink.mts"
 
+const viewer = useViewer()
 const {
   source,
   sourceOpen,
@@ -32,13 +34,15 @@ const {
   entries,
   entryTotal,
   mobileDetail,
+  categoryMissing,
   categoryPages,
   entryPages,
   visibleCategories,
   load,
   stop,
   select
-} = useViewer()
+} = viewer
+const { permalink, invalidLink, copyStatus, copy } = usePermalink(viewer)
 const fileInput = ref<HTMLInputElement>()
 const dragging = ref(false)
 const { lang } = useData()
@@ -182,16 +186,22 @@ function drop(event: DragEvent) {
           <button
             class="geo-button primary"
             :disabled="!canLoad || loading"
-            @click="load"
+            @click="load()"
           >
             {{ t.load }}
           </button>
         </div>
       </template>
     </section>
+    <div v-if="invalidLink" class="geo-notice error" role="alert">
+      {{ t.invalidPreset }}
+    </div>
+    <div v-if="categoryMissing" class="geo-notice" role="status">
+      {{ t.missingCategory }}: {{ categoryMissing }}
+    </div>
     <div v-if="error" class="geo-notice error" role="alert">
       {{ t.errors[error] }}
-      <button class="geo-button" :disabled="!canLoad" @click="load">
+      <button class="geo-button" :disabled="!canLoad" @click="load()">
         {{ t.retry }}
       </button>
     </div>
@@ -290,7 +300,23 @@ function drop(event: DragEvent) {
                 >
               </p>
             </div>
+            <button v-if="permalink" class="geo-text-button" @click="copy">
+              {{ copyStatus === "copied" ? t.copied : t.copyLink }}
+            </button>
           </header>
+          <div
+            v-if="copyStatus === 'copyFailed'"
+            class="geo-field geo-copy-fallback"
+            role="status"
+          >
+            <label for="geo-copy">{{ t.copyFailed }}</label
+            ><input
+              id="geo-copy"
+              readonly
+              :value="permalink"
+              @focus="($event.target as HTMLInputElement).select()"
+            />
+          </div>
           <p
             v-if="searching || entriesLoading"
             class="geo-no-results"

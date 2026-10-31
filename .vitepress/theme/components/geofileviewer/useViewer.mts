@@ -48,6 +48,8 @@ export function useViewer() {
   const entries = shallowRef<GeoEntry[]>([])
   const entryTotal = ref(0)
   const mobileDetail = ref(false)
+  const categoryMissing = ref("")
+  let pendingTag: string | undefined
   let worker: Worker | undefined
   let generation = 0
   let searchId = 0
@@ -110,13 +112,14 @@ export function useViewer() {
   }
 
   function select(id: number) {
+    categoryMissing.value = ""
     selectedId.value = id
     entryPage.value = 1
     mobileDetail.value = true
     requestEntries()
   }
 
-  async function load() {
+  async function load(tag?: string) {
     if (!canLoad.value) return
     stop()
     const currentGeneration = generation
@@ -154,6 +157,8 @@ export function useViewer() {
     phase.value = input.mode === "remote" ? "download" : "read"
     downloadedBytes.value = 0
     mobileDetail.value = false
+    categoryMissing.value = ""
+    pendingTag = tag
     try {
       worker = new Worker(
         new URL("./viewer.worker.mts", import.meta.url),
@@ -181,8 +186,26 @@ export function useViewer() {
           categories.value = message.categories
           searching.value = false
           categoryPage.value = 1
-          if (!message.categories.some((c) => c.id === selectedId.value))
-            selectedId.value = message.categories[0]?.id
+          if (pendingTag !== undefined) {
+            const index = message.categories.findIndex(
+              (c) => c.code.toLowerCase() === pendingTag!.toLowerCase()
+            )
+            if (pendingTag && index < 0) categoryMissing.value = pendingTag
+            selectedId.value = message.categories[Math.max(0, index)]?.id
+            categoryPage.value =
+              Math.floor(Math.max(0, index) / CATEGORY_PAGE_SIZE) + 1
+            mobileDetail.value = !!pendingTag && index >= 0
+            pendingTag = undefined
+          } else {
+            const index = Math.max(
+              0,
+              message.categories.findIndex(
+                (c) => c.id === selectedId.value
+              )
+            )
+            selectedId.value = message.categories[index]?.id
+            categoryPage.value = Math.floor(index / CATEGORY_PAGE_SIZE) + 1
+          }
           entryPage.value = 1
           requestEntries()
         } else if (
@@ -215,6 +238,13 @@ export function useViewer() {
     loaded.value = undefined
   }
 
+  function focusTag(tag: string) {
+    pendingTag = tag
+    categoryMissing.value = ""
+    if (query.value) query.value = ""
+    else search()
+  }
+
   watch(
     query,
     () => {
@@ -235,6 +265,8 @@ export function useViewer() {
       stop()
       loaded.value = undefined
       error.value = undefined
+      categoryMissing.value = ""
+      pendingTag = undefined
     },
     { flush: "sync" }
   )
@@ -267,6 +299,8 @@ export function useViewer() {
     entries,
     entryTotal,
     mobileDetail,
+    categoryMissing,
+    focusTag,
     categoryPages,
     entryPages,
     visibleCategories,

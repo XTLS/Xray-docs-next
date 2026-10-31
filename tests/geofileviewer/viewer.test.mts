@@ -53,7 +53,7 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
     await viewer.load()
     const old = instances[0]
     viewer.presetIndex.value = 0
-    await viewer.load()
+    await viewer.load("uS")
     const current = instances[1]
     assert.equal(old.terminated, true)
     old.reply({ type: "ready", categoryCount: 999, entryCount: 999 })
@@ -63,6 +63,31 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
     current.reply({ type: "ready", categoryCount: 19, entryCount: 1000 })
     assert.equal(viewer.loaded.value?.name, "geoip-lite.dat")
     assert.equal(viewer.categoryCount.value, 19)
+    const initialSearch = current.requests.findLast(
+      (request) => request.type === "search"
+    )!
+    if (initialSearch.type !== "search") throw Error()
+    current.reply({
+      type: "search",
+      id: initialSearch.id,
+      categories: Array.from({ length: 50 }, (_, id) => ({
+        id,
+        code: id === 40 ? "US" : `category-${id}`,
+        count: 1,
+        matches: 1,
+        reverseMatch: false
+      }))
+    })
+    assert.equal(viewer.selected.value?.code, "US")
+    assert.equal(viewer.categoryPage.value, 2)
+    assert.equal(viewer.mobileDetail.value, true)
+    viewer.focusTag("missing")
+    const missingSearch = current.requests.findLast(
+      (request) => request.type === "search"
+    )!
+    if (missingSearch.type !== "search") throw Error()
+    current.reply({ type: "search", id: missingSearch.id, categories: [] })
+    assert.equal(viewer.categoryMissing.value, "missing")
     viewer.query.value = "new query"
     const staleSearch = current.requests.find(
       (request) => request.type === "search"

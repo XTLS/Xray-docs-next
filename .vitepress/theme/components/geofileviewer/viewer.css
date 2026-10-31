@@ -418,6 +418,9 @@
   font-size: 13px;
   line-height: 1.8;
 }
+.geo-copy-fallback {
+  margin: 12px 20px;
+}
 .geo-sr-only {
   position: absolute;
   width: 1px;

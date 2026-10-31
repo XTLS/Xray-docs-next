@@ -47,6 +47,11 @@ export const zh = {
   page: "页",
   back: "← 返回分类列表",
   reverseMatch: "反向匹配",
+  invalidPreset: "链接中的预设文件无效，请选择下方的官方预设。",
+  missingCategory: "文件中没有找到该分类，可继续浏览其他分类",
+  copyLink: "复制分类链接",
+  copied: "已复制",
+  copyFailed: "无法写入剪贴板，请手动复制此链接。",
   errors: {
     emptyFile: "文件为空，请选择包含 Geo 数据的文件。",
     invalidFile:
@@ -116,6 +121,13 @@ const en: Messages = {
   page: "Page",
   back: "← Back to categories",
   reverseMatch: "Reverse match",
+  invalidPreset:
+    "This link specifies an invalid preset. Choose an official preset below.",
+  missingCategory:
+    "Category not found in this file. You can browse other categories",
+  copyLink: "Copy category link",
+  copied: "Copied",
+  copyFailed: "Unable to access the clipboard. Copy this link manually.",
   errors: {
     emptyFile: "This file is empty. Choose a file containing Geo data.",
     invalidFile:
@@ -185,6 +197,13 @@ const ru: Messages = {
   page: "Страница",
   back: "← К списку категорий",
   reverseMatch: "Обратное сопоставление",
+  invalidPreset:
+    "В ссылке указан недопустимый набор. Выберите один из готовых наборов ниже.",
+  missingCategory:
+    "Категория не найдена в файле. Можно просмотреть другие категории",
+  copyLink: "Копировать ссылку",
+  copied: "Скопировано",
+  copyFailed: "Нет доступа к буферу обмена. Скопируйте ссылку вручную.",
   errors: {
     emptyFile: "Файл пуст. Выберите файл с геоданными.",
     invalidFile:
