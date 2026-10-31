@@ -8,6 +8,7 @@ import {
   type WorkerRequest,
   type WorkerResponse
 } from "./types.mts"
+import { readSource } from "./sources.mts"
 
 const send = (message: WorkerResponse) => self.postMessage(message)
 let dataset: Dataset | undefined
@@ -18,10 +19,15 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
   const request = event.data
   try {
     if (request.type === "load") {
+      const bytes = await readSource(
+        request.source,
+        new AbortController().signal,
+        (progress) => send({ type: "progress", ...progress })
+      )
       dataset = await indexDataset(
-        new Uint8Array(request.buffer),
-        request.kind,
-        (progress) => send({ type: "progress", progress })
+        bytes,
+        request.source.kind,
+        (progress) => send({ type: "progress", phase: "index", progress })
       )
       send({
         type: "ready",

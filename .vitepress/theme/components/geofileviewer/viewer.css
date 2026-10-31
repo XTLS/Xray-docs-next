@@ -254,9 +254,11 @@
 .geo-browser {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
-  min-height: 480px;
+  height: min(720px, 75dvh);
+  min-height: 420px;
 }
 .geo-categories {
+  min-height: 0;
   border-right: 1px solid var(--geo-border);
   display: flex;
   flex-direction: column;
@@ -268,6 +270,8 @@
   border-bottom: 1px solid var(--geo-border);
 }
 .geo-category-list {
+  min-height: 0;
+  overflow-y: auto;
   list-style: none;
   padding: 8px;
   margin: 0;
@@ -300,6 +304,7 @@
   background: var(--vp-c-brand-soft);
 }
 .geo-content {
+  min-height: 0;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -325,6 +330,8 @@
   font-size: 13px;
 }
 .geo-entries {
+  min-height: 0;
+  overflow-y: auto;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -440,6 +447,7 @@
   .geo-browser {
     grid-template-columns: minmax(0, 1fr);
     min-height: 360px;
+    height: min(640px, 72dvh);
   }
   .geo-categories {
     border-right: 0;

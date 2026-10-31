@@ -6,7 +6,8 @@
     "svg-pan-zoom": "^3.6.2",
     "vitepress": "2.0.0-alpha.20",
     "vitepress-plugin-llms": "^1.14.0",
-    "vitepress-plugin-mermaid": "^2.0.17"
+    "vitepress-plugin-mermaid": "^2.0.17",
+    "vue": "3.5.42"
   },
   "scripts": {
     "test:geofileviewer": "node --test tests/geofileviewer/*.test.mts",

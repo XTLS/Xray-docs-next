@@ -9,15 +9,31 @@ import {
   type WorkerRequest,
   type WorkerResponse
 } from "./types.mts"
+import { ViewerError } from "./types.mts"
+import {
+  presetSource,
+  validateUrl,
+  type InputSource,
+  type PresetFile,
+  type LoadProgress
+} from "./sources.mts"
 
 export function useViewer() {
   const source = ref("preset")
   const sourceOpen = ref(true)
   const kind = ref<GeoKind>("geosite")
   const file = shallowRef<File>()
-  const loaded = shallowRef<{ name: string; kind: GeoKind }>()
+  const presetIndex = ref(2)
+  const url = ref("")
+  const loaded = shallowRef<{
+    name: string
+    kind: GeoKind
+    preset?: PresetFile
+  }>()
   const loading = ref(false)
-  const progress = ref(0)
+  const progress = ref<number>()
+  const phase = ref<LoadProgress["phase"]>("read")
+  const downloadedBytes = ref(0)
   const error = ref<ErrorCode>()
   const query = ref("")
   const activeQuery = ref("")
@@ -54,6 +70,11 @@ export function useViewer() {
     )
   )
   const send = (message: WorkerRequest) => worker?.postMessage(message)
+  const canLoad = computed(
+    () =>
+      source.value === "preset" ||
+      (source.value === "url" ? !!url.value.trim() : !!file.value)
+  )
 
   function stop() {
     generation++
@@ -96,11 +117,31 @@ export function useViewer() {
   }
 
   async function load() {
-    if (!file.value) return
+    if (!canLoad.value) return
     stop()
     const currentGeneration = generation
-    const input = file.value
-    const inputKind = kind.value
+    let input: InputSource
+    try {
+      input =
+        source.value === "preset"
+          ? presetSource(presetIndex.value)
+          : source.value === "url"
+            ? {
+                mode: "remote",
+                name: url.value.trim(),
+                url: validateUrl(url.value),
+                kind: kind.value
+              }
+            : {
+                mode: "local",
+                name: file.value!.name,
+                file: file.value!,
+                kind: kind.value
+              }
+    } catch (error) {
+      fail(error instanceof ViewerError ? error.code : "invalidUrl")
+      return
+    }
     loaded.value = undefined
     categories.value = []
     entries.value = []
@@ -109,11 +150,11 @@ export function useViewer() {
     activeQuery.value = ""
     error.value = undefined
     loading.value = true
-    progress.value = 0
+    progress.value = undefined
+    phase.value = input.mode === "remote" ? "download" : "read"
+    downloadedBytes.value = 0
     mobileDetail.value = false
     try {
-      const buffer = await input.arrayBuffer()
-      if (currentGeneration !== generation) return
       worker = new Worker(
         new URL("./viewer.worker.mts", import.meta.url),
         { type: "module" }
@@ -121,10 +162,17 @@ export function useViewer() {
       worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
         if (currentGeneration !== generation) return
         const message = event.data
-        if (message.type === "progress") progress.value = message.progress
-        else if (message.type === "ready") {
+        if (message.type === "progress") {
+          progress.value = message.progress
+          phase.value = message.phase
+          downloadedBytes.value = message.bytes ?? 0
+        } else if (message.type === "ready") {
           loading.value = false
-          loaded.value = { name: input.name, kind: inputKind }
+          loaded.value = {
+            name: input.name,
+            kind: input.kind,
+            preset: input.mode === "remote" ? input.preset : undefined
+          }
           categoryCount.value = message.categoryCount
           entryCount.value = message.entryCount
           sourceOpen.value = false
@@ -148,11 +196,13 @@ export function useViewer() {
           entriesLoading.value = false
         } else if (message.type === "error") fail(message.code)
       }
-      worker.onerror = () => fail("workerFailed")
-      worker.postMessage(
-        { type: "load", buffer, kind: inputKind } satisfies WorkerRequest,
-        [buffer]
-      )
+      worker.onerror = () => {
+        if (currentGeneration === generation) fail("workerFailed")
+      }
+      worker.postMessage({
+        type: "load",
+        source: input
+      } satisfies WorkerRequest)
     } catch {
       if (currentGeneration === generation) fail("readFailed")
     }
@@ -165,20 +215,29 @@ export function useViewer() {
     loaded.value = undefined
   }
 
-  watch(query, () => {
-    clearTimeout(searchTimer)
-    // Invalidate in-flight results as soon as input changes, before debouncing.
-    searchId++
-    entriesId++
-    searching.value = true
-    searchTimer = setTimeout(search, 250)
-  })
+  watch(
+    query,
+    () => {
+      clearTimeout(searchTimer)
+      if (!loaded.value) return
+      // Invalidate in-flight results as soon as input changes, before debouncing.
+      searchId++
+      entriesId++
+      searching.value = true
+      searchTimer = setTimeout(search, 250)
+    },
+    { flush: "sync" }
+  )
   watch(entryPage, requestEntries)
-  watch([source, kind, file], () => {
-    stop()
-    loaded.value = undefined
-    error.value = undefined
-  })
+  watch(
+    [source, kind, file, presetIndex, url],
+    () => {
+      stop()
+      loaded.value = undefined
+      error.value = undefined
+    },
+    { flush: "sync" }
+  )
   onUnmounted(stop)
 
   return {
@@ -186,9 +245,14 @@ export function useViewer() {
     sourceOpen,
     kind,
     file,
+    presetIndex,
+    url,
+    canLoad,
     loaded,
     loading,
     progress,
+    phase,
+    downloadedBytes,
     error,
     query,
     activeQuery,

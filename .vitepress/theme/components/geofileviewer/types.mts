@@ -5,6 +5,10 @@ export type ErrorCode =
   | "invalidFile"
   | "readFailed"
   | "workerFailed"
+  | "invalidUrl"
+  | "downloadFailed"
+  | "networkFailed"
+  | "gzipUnsupported"
 
 export class ViewerError extends Error {
   code: ErrorCode
@@ -30,7 +34,7 @@ export type CategorySummary = {
 }
 
 export type WorkerRequest =
-  | { type: "load"; buffer: ArrayBuffer; kind: GeoKind }
+  | { type: "load"; source: import("./sources.mts").InputSource }
   | { type: "search"; id: number; query: string }
   | {
       type: "entries"
@@ -41,7 +45,7 @@ export type WorkerRequest =
     }
 
 export type WorkerResponse =
-  | { type: "progress"; progress: number }
+  | ({ type: "progress" } & import("./sources.mts").LoadProgress)
   | { type: "ready"; categoryCount: number; entryCount: number }
   | { type: "search"; id: number; categories: CategorySummary[] }
   | {

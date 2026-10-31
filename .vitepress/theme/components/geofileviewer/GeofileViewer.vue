@@ -10,9 +10,14 @@ const {
   sourceOpen,
   kind,
   file,
+  presetIndex,
+  url,
+  canLoad,
   loaded,
   loading,
   progress,
+  phase,
+  downloadedBytes,
   error,
   query,
   activeQuery,
@@ -36,10 +41,17 @@ const {
 } = useViewer()
 const fileInput = ref<HTMLInputElement>()
 const dragging = ref(false)
-const presetIndex = ref(2)
-const url = ref("")
 const { lang } = useData()
 const t = computed(() => getMessages(lang.value))
+const progressLabel = computed(
+  () =>
+    ({
+      read: t.value.readingFile,
+      download: t.value.downloading,
+      decompress: t.value.decompressing,
+      index: t.value.processing
+    })[phase.value]
+)
 const number = (value: number) => value.toLocaleString(lang.value)
 
 function pick(event: Event) {
@@ -155,7 +167,7 @@ function drop(event: DragEvent) {
             ref="fileInput"
             class="geo-sr-only"
             type="file"
-            accept=".dat"
+            accept=".dat,.gz"
             :aria-label="t.browse"
             @change="pick"
           />
@@ -169,26 +181,36 @@ function drop(event: DragEvent) {
         <div class="geo-source-actions">
           <button
             class="geo-button primary"
-            :disabled="source !== 'local' || !file || loading"
+            :disabled="!canLoad || loading"
             @click="load"
           >
             {{ t.load }}
           </button>
-          <span v-if="source !== 'local'" class="geo-muted">{{
-            t.comingSoon
-          }}</span>
         </div>
       </template>
     </section>
     <div v-if="error" class="geo-notice error" role="alert">
       {{ t.errors[error] }}
-      <button class="geo-button" :disabled="!file" @click="load">
+      <button class="geo-button" :disabled="!canLoad" @click="load">
         {{ t.retry }}
       </button>
     </div>
     <div v-if="loading" class="geo-notice geo-progress" role="status">
-      <span>{{ t.processing }} · {{ Math.round(progress * 100) }}%</span>
-      <progress :value="progress" max="1" :aria-label="t.processing" />
+      <span
+        >{{ progressLabel
+        }}<template v-if="progress !== undefined">
+          · {{ Math.round(progress * 100) }}%</template
+        ><template v-if="downloadedBytes">
+          ·
+          {{
+            (downloadedBytes / 1048576).toLocaleString(lang, {
+              maximumFractionDigits: 1
+            })
+          }}
+          MiB</template
+        ></span
+      >
+      <progress :value="progress" max="1" :aria-label="progressLabel" />
       <button class="geo-button" @click="stop">{{ t.cancel }}</button>
     </div>
     <template v-if="loaded">

@@ -31,6 +31,9 @@ export const zh = {
   emptyTitle: "从一个数据文件开始",
   emptyBody: "加载文件后，在左侧选择分类，在右侧查看条目。",
   processing: "正在解析文件",
+  downloading: "正在下载文件",
+  readingFile: "正在读取文件",
+  decompressing: "正在解压文件",
   searching: "正在搜索",
   reading: "正在读取条目",
   search: "搜索分类、内容或属性…",
@@ -49,7 +52,13 @@ export const zh = {
     invalidFile:
       "无法解析文件，请确认文件完整，并选择正确的 GeoIP 或 GeoSite 类型。",
     readFailed: "无法读取文件，请重新选择后重试。",
-    workerFailed: "无法启动或运行解析器，请重新加载页面后重试。"
+    workerFailed: "无法启动或运行解析器，请重新加载页面后重试。",
+    invalidUrl: "请输入有效的 HTTP 或 HTTPS 文件直链。",
+    downloadFailed:
+      "下载失败，请检查文件地址或稍后重试。也可下载后选择本地文件。",
+    networkFailed:
+      "无法访问该 URL，可能是网络或跨域限制。请下载文件后通过本地文件入口打开。",
+    gzipUnsupported: "浏览器不支持 gzip 解压，请改用未压缩的 DAT 文件。"
   }
 }
 
@@ -91,6 +100,9 @@ const en: Messages = {
   emptyBody:
     "Load a file, choose a category on the left and explore its entries on the right.",
   processing: "Processing file",
+  downloading: "Downloading file",
+  readingFile: "Reading file",
+  decompressing: "Decompressing file",
   searching: "Searching",
   reading: "Reading entries",
   search: "Search categories, contents or attributes…",
@@ -110,7 +122,14 @@ const en: Messages = {
       "Unable to parse this file. Check that it is complete and that the selected GeoIP or GeoSite type is correct.",
     readFailed: "Unable to read this file. Select it again and retry.",
     workerFailed:
-      "Unable to start or run the parser. Reload the page and retry."
+      "Unable to start or run the parser. Reload the page and retry.",
+    invalidUrl: "Enter a valid HTTP or HTTPS direct file URL.",
+    downloadFailed:
+      "Download failed. Check the URL or retry later. You can also download the file and open it locally.",
+    networkFailed:
+      "Unable to access this URL. The network or cross-origin restrictions may be blocking it. Download the file and open it using Local file.",
+    gzipUnsupported:
+      "Your browser does not support gzip decompression. Use an uncompressed DAT file."
   }
 }
 
@@ -150,6 +169,9 @@ const ru: Messages = {
   emptyBody:
     "Загрузите файл, выберите категорию слева и просмотрите записи справа.",
   processing: "Обработка файла",
+  downloading: "Загрузка файла",
+  readingFile: "Чтение файла",
+  decompressing: "Распаковка файла",
   searching: "Поиск",
   reading: "Чтение записей",
   search: "Поиск категорий, содержимого или атрибутов…",
@@ -170,7 +192,14 @@ const ru: Messages = {
     readFailed:
       "Не удалось прочитать файл. Выберите его заново и повторите попытку.",
     workerFailed:
-      "Не удалось запустить обработку. Обновите страницу и повторите попытку."
+      "Не удалось запустить обработку. Обновите страницу и повторите попытку.",
+    invalidUrl: "Введите прямую ссылку на файл по HTTP или HTTPS.",
+    downloadFailed:
+      "Не удалось загрузить файл. Проверьте ссылку или повторите попытку позже. Также можно скачать файл и открыть его локально.",
+    networkFailed:
+      "Не удалось открыть URL. Возможна ошибка сети или запрет междоменных запросов. Скачайте файл и откройте его как локальный.",
+    gzipUnsupported:
+      "Браузер не поддерживает распаковку gzip. Используйте несжатый DAT-файл."
   }
 }
 
