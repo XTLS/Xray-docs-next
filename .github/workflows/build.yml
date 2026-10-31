@@ -33,6 +33,9 @@ jobs:
       - name: Build documentation site
         run: pnpm run docs:build
 
+      - name: Test Geo data viewer
+        run: pnpm run test:geofileviewer
+
       - name: Deploy to GitHub Pages
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4

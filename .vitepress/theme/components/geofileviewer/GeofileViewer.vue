@@ -1,32 +1,85 @@
 <script setup lang="ts">
 import { ref } from "vue"
+import { useViewer } from "./useViewer.mts"
+import { messages as t } from "./messages.mts"
+import { highlightParts } from "./presentation.mts"
 
-const source = ref("preset")
-const sourceOpen = ref(true)
+const {
+  source,
+  sourceOpen,
+  kind,
+  file,
+  loaded,
+  loading,
+  progress,
+  error,
+  query,
+  activeQuery,
+  searching,
+  entriesLoading,
+  categories,
+  categoryCount,
+  entryCount,
+  categoryPage,
+  entryPage,
+  selected,
+  entries,
+  entryTotal,
+  mobileDetail,
+  categoryPages,
+  entryPages,
+  visibleCategories,
+  load,
+  stop,
+  select
+} = useViewer()
+const fileInput = ref<HTMLInputElement>()
+const dragging = ref(false)
+const presetIndex = ref(2)
+const url = ref("")
+const number = (value: number) => value.toLocaleString()
+
+function pick(event: Event) {
+  file.value = (event.target as HTMLInputElement).files?.[0]
+}
+function drop(event: DragEvent) {
+  dragging.value = false
+  file.value = event.dataTransfer?.files[0]
+}
 </script>
 
 <template>
   <main class="geo-viewer">
     <header class="geo-heading">
       <p class="geo-eyebrow">PROJECT X / TOOLS</p>
-      <h1>Geo 数据查看器</h1>
-      <p>浏览 GeoIP 和 GeoSite 文件，查看分类、IP 网段与域名规则。</p>
+      <h1>{{ t.title }}</h1>
+      <p>{{ t.description }}</p>
     </header>
-
-    <section class="geo-source geo-panel" aria-label="数据来源">
+    <section class="geo-source geo-panel" :aria-label="t.source">
       <div class="geo-panel-heading">
-        <h2>数据来源</h2>
-        <button class="geo-text-button" @click="sourceOpen = !sourceOpen">
-          {{ sourceOpen ? "收起" : "切换来源" }}
+        <h2>{{ t.source }}</h2>
+        <button
+          v-if="loaded"
+          class="geo-text-button"
+          :aria-expanded="sourceOpen"
+          @click="sourceOpen = !sourceOpen"
+        >
+          {{ sourceOpen ? t.collapse : t.changeSource }}
         </button>
       </div>
+      <p v-if="loaded" class="geo-summary">
+        {{ loaded.name }} ·
+        {{ loaded.kind === "geoip" ? "GeoIP" : "GeoSite" }} ·
+        {{ number(categoryCount) }} {{ t.categories }} ·
+        {{ number(entryCount) }} {{ t.entries }}
+      </p>
       <template v-if="sourceOpen">
-        <div class="geo-tabs" aria-label="选择数据来源">
+        <div class="geo-tabs" :aria-label="t.source">
           <button
             v-for="tab in [
-              { id: 'preset', label: '官方预设' },
-              { id: 'url', label: 'URL' },
-              { id: 'local', label: '本地文件' }
+              { id: 'preset', label: t.preset },
+              { id: 'url', label: t.url },
+              { id: 'local', label: t.local }
             ]"
             :key="tab.id"
             :aria-pressed="source === tab.id"
@@ -37,45 +90,250 @@ const sourceOpen = ref(true)
         </div>
         <div v-if="source === 'preset'" class="geo-presets">
           <label
-            v-for="(preset, index) in [
-              ['GeoIP 精简版', '地区分流、私有网络和常用服务'],
-              ['GeoIP 完整版', '包含全球国家和地区的 IP 数据'],
-              ['GeoSite 标准版', '常用域名分类与地区黑白名单'],
-              ['GeoSite 扩展版', '覆盖范围更广的地区域名数据']
-            ]"
+            v-for="(name, index) in t.presetNames"
             :key="index"
             class="geo-preset"
           >
-            <input type="radio" name="preset" :checked="index === 2" />
+            <input
+              v-model="presetIndex"
+              type="radio"
+              name="geo-preset"
+              :value="index"
+            />
             <span
-              ><strong>{{ preset[0] }}</strong
-              ><small>{{ preset[1] }}</small></span
+              ><strong>{{ name }}</strong
+              ><small>{{ t.presetDescriptions[index] }}</small></span
             >
           </label>
         </div>
         <div v-else-if="source === 'url'" class="geo-field">
-          <label for="geo-url">文件 URL</label>
+          <label for="geo-url">{{ t.fileUrl }}</label>
           <input
             id="geo-url"
+            v-model="url"
             type="url"
             placeholder="https://example.com/geosite.dat"
           />
         </div>
-        <div v-else class="geo-dropzone">
-          <strong>选择或拖放本地 DAT 文件</strong>
-          <p>文件在浏览器内处理。</p>
+        <div
+          v-if="source !== 'preset'"
+          class="geo-type"
+          role="group"
+          :aria-label="t.fileType"
+        >
+          <label
+            ><input
+              v-model="kind"
+              type="radio"
+              value="geosite"
+              name="geo-kind"
+            />GeoSite</label
+          >
+          <label
+            ><input
+              v-model="kind"
+              type="radio"
+              value="geoip"
+              name="geo-kind"
+            />GeoIP</label
+          >
+        </div>
+        <div
+          v-if="source === 'local'"
+          class="geo-dropzone"
+          :class="{ dragging }"
+          @dragover.prevent="dragging = true"
+          @dragleave.prevent="dragging = false"
+          @drop.prevent="drop"
+        >
+          <strong>{{ t.drop }}</strong>
+          <p>{{ t.privacy }}</p>
+          <input
+            ref="fileInput"
+            class="geo-sr-only"
+            type="file"
+            accept=".dat"
+            :aria-label="t.browse"
+            @change="pick"
+          />
+          <button class="geo-button" @click="fileInput?.click()">
+            {{ t.browse }}
+          </button>
+          <span v-if="file" class="geo-file-name"
+            >{{ file.name }} · {{ number(file.size) }} B</span
+          >
         </div>
         <div class="geo-source-actions">
-          <button class="geo-button primary" disabled>加载文件</button>
-          <span class="geo-muted">数据加载功能正在接入。</span>
+          <button
+            class="geo-button primary"
+            :disabled="source !== 'local' || !file || loading"
+            @click="load"
+          >
+            {{ t.load }}
+          </button>
+          <span v-if="source !== 'local'" class="geo-muted">{{
+            t.comingSoon
+          }}</span>
         </div>
       </template>
     </section>
-
-    <section class="geo-empty geo-panel">
+    <div v-if="error" class="geo-notice error" role="alert">
+      {{ t.errors[error] }}
+      <button class="geo-button" :disabled="!file" @click="load">
+        {{ t.retry }}
+      </button>
+    </div>
+    <div v-if="loading" class="geo-notice geo-progress" role="status">
+      <span>{{ t.processing }} · {{ Math.round(progress * 100) }}%</span>
+      <progress :value="progress" max="1" :aria-label="t.processing" />
+      <button class="geo-button" @click="stop">{{ t.cancel }}</button>
+    </div>
+    <template v-if="loaded">
+      <div class="geo-toolbar">
+        <label class="geo-sr-only" for="geo-search">{{ t.search }}</label>
+        <input
+          id="geo-search"
+          v-model="query"
+          type="search"
+          class="geo-search"
+          :placeholder="t.search"
+        />
+        <span class="geo-stats" role="status">{{
+          searching
+            ? t.searching
+            : `${number(categories.length)} ${t.categories}`
+        }}</span>
+      </div>
+      <section
+        class="geo-browser geo-panel"
+        :class="{ 'show-detail': mobileDetail }"
+        :aria-busy="searching"
+      >
+        <aside class="geo-categories" :aria-label="t.categories">
+          <h2 class="geo-list-title">{{ t.categories }}</h2>
+          <ul class="geo-category-list">
+            <li v-for="category in visibleCategories" :key="category.id">
+              <button
+                class="geo-category"
+                :aria-current="
+                  selected?.id === category.id ? 'true' : undefined
+                "
+                @click="select(category.id)"
+              >
+                <span>{{ category.code }}</span
+                ><small>{{ number(category.matches) }}</small>
+              </button>
+            </li>
+          </ul>
+          <p
+            v-if="!categories.length && !searching"
+            class="geo-no-results"
+          >
+            {{ t.noResults }}
+          </p>
+          <nav class="geo-pagination" :aria-label="t.categories">
+            <button
+              :disabled="categoryPage <= 1 || searching"
+              @click="categoryPage--"
+            >
+              {{ t.previous }}</button
+            ><span>{{ categoryPage }} / {{ categoryPages }}</span
+            ><button
+              :disabled="categoryPage >= categoryPages || searching"
+              @click="categoryPage++"
+            >
+              {{ t.next }}
+            </button>
+          </nav>
+        </aside>
+        <section
+          class="geo-content"
+          :aria-label="t.entries"
+          :aria-busy="entriesLoading"
+        >
+          <header class="geo-content-header">
+            <button class="geo-back" @click="mobileDetail = false">
+              {{ t.back }}
+            </button>
+            <div>
+              <h2>{{ selected?.code ?? t.chooseCategory }}</h2>
+              <p v-if="selected">
+                {{ number(entryTotal) }} {{ t.matches }} /
+                {{ number(selected.count) }} {{ t.entries
+                }}<span v-if="selected.reverseMatch">
+                  · {{ t.reverseMatch }}</span
+                >
+              </p>
+            </div>
+          </header>
+          <p
+            v-if="searching || entriesLoading"
+            class="geo-no-results"
+            role="status"
+          >
+            {{ searching ? t.searching : t.reading }}
+          </p>
+          <ul v-else class="geo-entries">
+            <li
+              v-for="(entry, index) in entries"
+              :key="index"
+              class="geo-entry"
+            >
+              <span class="geo-badge">{{ entry.type }}</span>
+              <div class="geo-entry-data">
+                <code
+                  ><template
+                    v-for="(part, partIndex) in highlightParts(
+                      entry.value,
+                      activeQuery
+                    )"
+                    :key="partIndex"
+                    ><mark v-if="part.match">{{ part.text }}</mark
+                    ><span v-else>{{ part.text }}</span></template
+                  ></code
+                >
+                <div v-if="entry.attributes.length" class="geo-attributes">
+                  <span
+                    v-for="(attribute, attrIndex) in entry.attributes"
+                    :key="attrIndex"
+                    >@{{ attribute.key
+                    }}<template v-if="attribute.value !== undefined"
+                      >={{ attribute.value }}</template
+                    ></span
+                  >
+                </div>
+              </div>
+            </li>
+          </ul>
+          <p
+            v-if="!entries.length && !entriesLoading && !searching"
+            class="geo-no-results"
+          >
+            {{ t.noResults }}
+          </p>
+          <nav class="geo-pagination" :aria-label="t.entries">
+            <button
+              :disabled="entryPage <= 1 || searching || entriesLoading"
+              @click="entryPage--"
+            >
+              {{ t.previous }}</button
+            ><span>{{ entryPage }} / {{ entryPages }}</span
+            ><button
+              :disabled="
+                entryPage >= entryPages || searching || entriesLoading
+              "
+              @click="entryPage++"
+            >
+              {{ t.next }}
+            </button>
+          </nav>
+        </section>
+      </section>
+    </template>
+    <section v-else-if="!loading" class="geo-empty geo-panel">
       <span class="geo-empty-icon" aria-hidden="true">{ }</span>
-      <h2>从一个数据文件开始</h2>
-      <p>加载文件后，在左侧选择分类，在右侧查看条目。</p>
+      <h2>{{ t.emptyTitle }}</h2>
+      <p>{{ t.emptyBody }}</p>
     </section>
   </main>
 </template>

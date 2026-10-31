@@ -2,12 +2,14 @@
   "devDependencies": {
     "medium-zoom": "^1.1.0",
     "mermaid": "^11.17.2",
+    "protobufjs": "8.8.1",
     "svg-pan-zoom": "^3.6.2",
     "vitepress": "2.0.0-alpha.20",
     "vitepress-plugin-llms": "^1.14.0",
     "vitepress-plugin-mermaid": "^2.0.17"
   },
   "scripts": {
+    "test:geofileviewer": "node --test tests/geofileviewer/*.test.mts",
     "docs:dev": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress dev",
     "docs:build": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress build",
     "docs:preview": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress preview"
