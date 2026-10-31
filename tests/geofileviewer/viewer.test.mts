@@ -80,7 +80,11 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
       }))
     })
     assert.equal(viewer.selected.value?.code, "US")
-    assert.equal(viewer.categoryPage.value, 2)
+    assert.equal(
+      viewer.visibleCategories.value.some((c) => c.code === "US"),
+      true
+    )
+    assert.equal(viewer.visibleCategories.value[0].id, 0)
     assert.equal(viewer.mobileDetail.value, true)
     viewer.presetIndex.value = 2
     assert.equal(viewer.loaded.value?.name, "geoip-lite.dat")

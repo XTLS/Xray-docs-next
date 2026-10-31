@@ -1,7 +1,6 @@
 import { computed, onUnmounted, ref, shallowRef, watch } from "vue"
 import {
   CATEGORY_PAGE_SIZE,
-  ENTRY_PAGE_SIZE,
   type CategorySummary,
   type ErrorCode,
   type GeoEntry,
@@ -42,8 +41,7 @@ export function useViewer() {
   const categories = shallowRef<CategorySummary[]>([])
   const categoryCount = ref(0)
   const entryCount = ref(0)
-  const categoryPage = ref(1)
-  const entryPage = ref(1)
+  const categoryLimit = ref(CATEGORY_PAGE_SIZE)
   const selectedId = ref<number>()
   const entries = shallowRef<GeoEntry[]>([])
   const entryTotal = ref(0)
@@ -54,22 +52,21 @@ export function useViewer() {
   let generation = 0
   let searchId = 0
   let entriesId = 0
+  let entryPage = 0
+  let pendingEntries: { id: number; page: number } | undefined
   let searchTimer: ReturnType<typeof setTimeout> | undefined
 
   const selected = computed(() =>
     categories.value.find((c) => c.id === selectedId.value)
   )
-  const categoryPages = computed(() =>
-    Math.max(1, Math.ceil(categories.value.length / CATEGORY_PAGE_SIZE))
-  )
-  const entryPages = computed(() =>
-    Math.max(1, Math.ceil(entryTotal.value / ENTRY_PAGE_SIZE))
-  )
   const visibleCategories = computed(() =>
-    categories.value.slice(
-      (categoryPage.value - 1) * CATEGORY_PAGE_SIZE,
-      categoryPage.value * CATEGORY_PAGE_SIZE
-    )
+    categories.value.slice(0, categoryLimit.value)
+  )
+  const hasMoreCategories = computed(
+    () => categoryLimit.value < categories.value.length
+  )
+  const hasMoreEntries = computed(
+    () => entries.value.length < entryTotal.value
   )
   const send = (message: WorkerRequest) => worker?.postMessage(message)
   const canLoad = computed(
@@ -86,19 +83,42 @@ export function useViewer() {
     loading.value = false
     searching.value = false
     entriesLoading.value = false
+    pendingEntries = undefined
   }
 
-  function requestEntries() {
+  function resetEntries() {
+    entriesId++
+    pendingEntries = undefined
+    entryPage = 0
+    entriesLoading.value = false
     entries.value = []
-    entryTotal.value = selected.value?.matches ?? 0
-    if (selectedId.value === undefined) return
+    entryTotal.value = 0
+  }
+
+  function loadMoreCategories() {
+    if (!loaded.value || searching.value || !hasMoreCategories.value)
+      return
+    categoryLimit.value += CATEGORY_PAGE_SIZE
+  }
+
+  function loadMoreEntries() {
+    if (
+      !worker ||
+      !loaded.value ||
+      searching.value ||
+      entriesLoading.value ||
+      !hasMoreEntries.value ||
+      selectedId.value === undefined
+    )
+      return
     entriesLoading.value = true
+    pendingEntries = { id: ++entriesId, page: entryPage + 1 }
     send({
       type: "entries",
-      id: ++entriesId,
+      id: pendingEntries.id,
       searchId,
       categoryId: selectedId.value,
-      page: entryPage.value
+      page: pendingEntries.page
     })
   }
 
@@ -106,17 +126,19 @@ export function useViewer() {
     if (!loaded.value || !worker) return
     activeQuery.value = query.value
     searching.value = true
-    entriesLoading.value = false
-    entries.value = []
+    resetEntries()
     send({ type: "search", id: ++searchId, query: query.value })
   }
 
   function select(id: number) {
+    if (searching.value) return
     categoryMissing.value = ""
-    selectedId.value = id
-    entryPage.value = 1
     mobileDetail.value = true
-    requestEntries()
+    if (selectedId.value === id) return
+    selectedId.value = id
+    resetEntries()
+    entryTotal.value = selected.value?.matches ?? 0
+    loadMoreEntries()
   }
 
   async function load(tag?: string) {
@@ -147,7 +169,8 @@ export function useViewer() {
     }
     loaded.value = undefined
     categories.value = []
-    entries.value = []
+    categoryLimit.value = CATEGORY_PAGE_SIZE
+    resetEntries()
     selectedId.value = undefined
     query.value = ""
     activeQuery.value = ""
@@ -185,15 +208,16 @@ export function useViewer() {
         } else if (message.type === "search" && message.id === searchId) {
           categories.value = message.categories
           searching.value = false
-          categoryPage.value = 1
+          categoryLimit.value = CATEGORY_PAGE_SIZE
           if (pendingTag !== undefined) {
             const index = message.categories.findIndex(
               (c) => c.code.toLowerCase() === pendingTag!.toLowerCase()
             )
             if (pendingTag && index < 0) categoryMissing.value = pendingTag
             selectedId.value = message.categories[Math.max(0, index)]?.id
-            categoryPage.value =
-              Math.floor(Math.max(0, index) / CATEGORY_PAGE_SIZE) + 1
+            categoryLimit.value =
+              (Math.floor(Math.max(0, index) / CATEGORY_PAGE_SIZE) + 1) *
+              CATEGORY_PAGE_SIZE
             mobileDetail.value = !!pendingTag && index >= 0
             pendingTag = undefined
           } else {
@@ -204,18 +228,23 @@ export function useViewer() {
               )
             )
             selectedId.value = message.categories[index]?.id
-            categoryPage.value = Math.floor(index / CATEGORY_PAGE_SIZE) + 1
+            categoryLimit.value =
+              (Math.floor(index / CATEGORY_PAGE_SIZE) + 1) *
+              CATEGORY_PAGE_SIZE
           }
-          entryPage.value = 1
-          requestEntries()
+          resetEntries()
+          entryTotal.value = selected.value?.matches ?? 0
+          loadMoreEntries()
         } else if (
           message.type === "entries" &&
-          message.id === entriesId &&
+          message.id === pendingEntries?.id &&
+          message.page === pendingEntries.page &&
           !searching.value
         ) {
-          entries.value = message.entries
+          entries.value = [...entries.value, ...message.entries]
           entryTotal.value = message.total
-          entryPage.value = message.page
+          entryPage = message.page
+          pendingEntries = undefined
           entriesLoading.value = false
         } else if (message.type === "error") fail(message.code)
       }
@@ -252,13 +281,12 @@ export function useViewer() {
       if (!loaded.value) return
       // Invalidate in-flight results as soon as input changes, before debouncing.
       searchId++
-      entriesId++
+      resetEntries()
       searching.value = true
       searchTimer = setTimeout(search, 250)
     },
     { flush: "sync" }
   )
-  watch(entryPage, requestEntries)
   watch(
     [source, kind, file, presetIndex, url],
     () => {
@@ -297,17 +325,17 @@ export function useViewer() {
     categories,
     categoryCount,
     entryCount,
-    categoryPage,
-    entryPage,
     selected,
     entries,
     entryTotal,
     mobileDetail,
     categoryMissing,
     focusTag,
-    categoryPages,
-    entryPages,
     visibleCategories,
+    hasMoreCategories,
+    hasMoreEntries,
+    loadMoreCategories,
+    loadMoreEntries,
     load,
     stop,
     select

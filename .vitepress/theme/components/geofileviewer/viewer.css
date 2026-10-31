@@ -273,6 +273,7 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+  overflow-anchor: none;
   scrollbar-gutter: stable;
   list-style: none;
   padding: 8px;
@@ -335,6 +336,7 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+  overflow-anchor: none;
   scrollbar-gutter: stable;
   list-style: none;
   padding: 0;
@@ -384,22 +386,12 @@
   background: var(--vp-c-yellow-soft);
   border-radius: 2px;
 }
-.geo-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 12px;
-  border-top: 1px solid var(--geo-border);
-  font-size: 12px;
-}
-.geo-pagination button {
-  padding: 4px 6px;
-  color: var(--vp-c-brand-1);
-}
-.geo-pagination span {
+.geo-list-status {
+  padding: 16px 12px;
   text-align: center;
   color: var(--vp-c-text-2);
+  font-size: 12px;
+  line-height: 20px;
 }
 .geo-no-results {
   padding: 32px 20px;
@@ -581,7 +573,6 @@
   overflow: auto;
 }
 .geo-content-header,
-.geo-pagination,
 .geo-list-title {
   flex-shrink: 0;
 }

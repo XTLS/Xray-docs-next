@@ -5,6 +5,7 @@ import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
 import { highlightParts } from "./presentation.mts"
 import { usePermalink } from "./usePermalink.mts"
+import { useInfiniteScroll } from "./useInfiniteScroll.mts"
 
 const viewer = useViewer()
 const {
@@ -28,16 +29,16 @@ const {
   categories,
   categoryCount,
   entryCount,
-  categoryPage,
-  entryPage,
   selected,
   entries,
   entryTotal,
   mobileDetail,
   categoryMissing,
-  categoryPages,
-  entryPages,
   visibleCategories,
+  hasMoreCategories,
+  hasMoreEntries,
+  loadMoreCategories,
+  loadMoreEntries,
   load,
   stop,
   select
@@ -45,6 +46,54 @@ const {
 const { permalink, invalidLink, copyStatus, copy } = usePermalink(viewer)
 const fileInput = ref<HTMLInputElement>()
 const dragging = ref(false)
+const categoryList = ref<HTMLElement>()
+const entryList = ref<HTMLElement>()
+const checkCategories = useInfiniteScroll(
+  categoryList,
+  loadMoreCategories,
+  [() => visibleCategories.value.length, searching, mobileDetail]
+)
+const checkEntries = useInfiniteScroll(entryList, loadMoreEntries, [
+  () => entries.value.length,
+  entriesLoading,
+  searching,
+  mobileDetail
+])
+
+function revealCategory() {
+  const list = categoryList.value
+  const active = list?.querySelector<HTMLElement>('[aria-current="true"]')
+  if (!list?.clientHeight || !active) return
+  const listRect = list.getBoundingClientRect()
+  const itemRect = active.getBoundingClientRect()
+  if (itemRect.top < listRect.top || itemRect.bottom > listRect.bottom)
+    list.scrollTop +=
+      itemRect.top -
+      listRect.top -
+      (list.clientHeight - itemRect.height) / 2
+}
+watch(
+  categories,
+  async () => {
+    await nextTick()
+    if (categoryList.value) categoryList.value.scrollTop = 0
+    revealCategory()
+  },
+  { flush: "post" }
+)
+watch(
+  [selected, activeQuery],
+  () => {
+    if (entryList.value) entryList.value.scrollTop = 0
+  },
+  { flush: "post" }
+)
+watch(mobileDetail, async (detail) => {
+  if (!detail) {
+    await nextTick()
+    revealCategory()
+  }
+})
 const { lang } = useData()
 const t = computed(() => getMessages(lang.value))
 const localePrefix = computed(() =>
@@ -374,10 +423,17 @@ function drop(event: DragEvent) {
       >
         <aside class="geo-categories" :aria-label="t.categories">
           <h2 class="geo-list-title">{{ t.categories }}</h2>
-          <ul class="geo-category-list">
+          <ul
+            ref="categoryList"
+            class="geo-category-list"
+            tabindex="0"
+            :aria-label="t.categories"
+            @scroll.passive="checkCategories"
+          >
             <li v-for="category in visibleCategories" :key="category.id">
               <button
                 class="geo-category"
+                :disabled="searching"
                 :aria-current="
                   selected?.id === category.id ? 'true' : undefined
                 "
@@ -387,27 +443,18 @@ function drop(event: DragEvent) {
                 ><small>{{ number(category.matches) }}</small>
               </button>
             </li>
+            <li class="geo-list-status" role="status">
+              <template v-if="searching">{{ t.searching }}</template>
+              <template v-else-if="!categories.length">{{
+                t.noResults
+              }}</template>
+              <template v-else
+                >{{ hasMoreCategories ? t.scrollForMore : t.allLoaded }} ·
+                {{ number(visibleCategories.length) }} /
+                {{ number(categories.length) }}</template
+              >
+            </li>
           </ul>
-          <p
-            v-if="!categories.length && !searching"
-            class="geo-no-results"
-          >
-            {{ t.noResults }}
-          </p>
-          <nav class="geo-pagination" :aria-label="t.categories">
-            <button
-              :disabled="categoryPage <= 1 || searching"
-              @click="categoryPage--"
-            >
-              {{ t.previous }}</button
-            ><span>{{ categoryPage }} / {{ categoryPages }}</span
-            ><button
-              :disabled="categoryPage >= categoryPages || searching"
-              @click="categoryPage++"
-            >
-              {{ t.next }}
-            </button>
-          </nav>
         </aside>
         <section
           class="geo-content"
@@ -445,14 +492,13 @@ function drop(event: DragEvent) {
               @focus="($event.target as HTMLInputElement).select()"
             />
           </div>
-          <p
-            v-if="searching || entriesLoading"
-            class="geo-no-results"
-            role="status"
+          <ul
+            ref="entryList"
+            class="geo-entries"
+            tabindex="0"
+            :aria-label="t.entries"
+            @scroll.passive="checkEntries"
           >
-            {{ searching ? t.searching : t.reading }}
-          </p>
-          <ul v-else class="geo-entries">
             <li
               v-for="(entry, index) in entries"
               :key="index"
@@ -483,29 +529,21 @@ function drop(event: DragEvent) {
                 </div>
               </div>
             </li>
+            <li class="geo-list-status" role="status">
+              <template v-if="searching">{{ t.searching }}</template>
+              <template v-else-if="entriesLoading">{{
+                t.reading
+              }}</template>
+              <template v-else-if="!entries.length">{{
+                t.noResults
+              }}</template>
+              <template v-else
+                >{{ hasMoreEntries ? t.scrollForMore : t.allLoaded }} ·
+                {{ number(entries.length) }} /
+                {{ number(entryTotal) }}</template
+              >
+            </li>
           </ul>
-          <p
-            v-if="!entries.length && !entriesLoading && !searching"
-            class="geo-no-results"
-          >
-            {{ t.noResults }}
-          </p>
-          <nav class="geo-pagination" :aria-label="t.entries">
-            <button
-              :disabled="entryPage <= 1 || searching || entriesLoading"
-              @click="entryPage--"
-            >
-              {{ t.previous }}</button
-            ><span>{{ entryPage }} / {{ entryPages }}</span
-            ><button
-              :disabled="
-                entryPage >= entryPages || searching || entriesLoading
-              "
-              @click="entryPage++"
-            >
-              {{ t.next }}
-            </button>
-          </nav>
         </section>
       </section>
     </template>
