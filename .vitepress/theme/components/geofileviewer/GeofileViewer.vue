@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import { useData } from "vitepress"
+import { useData, withBase } from "vitepress"
 import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
 import { highlightParts } from "./presentation.mts"
@@ -47,6 +47,18 @@ const fileInput = ref<HTMLInputElement>()
 const dragging = ref(false)
 const { lang } = useData()
 const t = computed(() => getMessages(lang.value))
+const localePrefix = computed(() =>
+  /^(en|ru)(-|$)/i.test(lang.value)
+    ? `/${lang.value.split("-")[0].toLowerCase()}`
+    : ""
+)
+const sourceDocs = computed(() =>
+  lang.value.startsWith("zh")
+    ? "https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md"
+    : lang.value.startsWith("ru")
+      ? "https://github.com/XTLS/Xray-rules-dat/blob/main/README_ru-RU.md"
+      : "https://github.com/XTLS/Xray-rules-dat"
+)
 const progressLabel = computed(
   () =>
     ({
@@ -386,6 +398,18 @@ function drop(event: DragEvent) {
       <h2>{{ t.emptyTitle }}</h2>
       <p>{{ t.emptyBody }}</p>
     </section>
+    <p class="geo-help">{{ t.help }}</p>
+    <nav class="geo-links" :aria-label="t.relatedDocs">
+      <a :href="withBase(`${localePrefix}/config/routing.html`)">{{
+        t.routingDocs
+      }}</a>
+      <a :href="withBase(`${localePrefix}/config/geodata.html`)">{{
+        t.geodataDocs
+      }}</a>
+      <a :href="sourceDocs" target="_blank" rel="noreferrer noopener">{{
+        t.dataSourceDocs
+      }}</a>
+    </nav>
   </main>
 </template>
 

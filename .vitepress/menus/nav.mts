@@ -35,13 +35,14 @@ export const nav: DefaultTheme.Config["nav"] = [
   },
   {
     text: "使用指南",
-    activeMatch: "^/document/",
+    activeMatch: "^/(?:document/|tools/geofileviewer)",
     items: [
       {
         text: "快速入门",
         link: "/document/",
         activeMatch: "^/document/[^/]*$"
       },
+      { text: "Geo 数据查看器", link: "/tools/geofileviewer.md" },
       {
         text: "小小白白话文",
         link: "/document/level-0/",

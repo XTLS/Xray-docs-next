@@ -116,6 +116,8 @@ Setting it in the configuration file's `env` item has no effect because Xray mus
 - Default value: Specific [FHS](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) directories or the directory containing the Xray executable.
 
 This variable specifies the directory containing the `geoip.dat` and `geosite.dat` files.
+
+Use the [Geo Data Viewer](../tools/geofileviewer.md) to open DAT files from the resource directory and inspect their categories and entries.
 If it is not specified, the program looks for resource files in the following order:
 
 ```text

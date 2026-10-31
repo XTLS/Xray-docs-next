@@ -67,6 +67,8 @@
 
 Xray 提供多个版本的地理数据文件，可根据需求从 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md) 获取不同版本的下载地址。
 
+可使用 [Geo 数据查看器](../tools/geofileviewer.md) 浏览四个官方版本的分类和条目，也可以通过 URL 或本地文件打开其他 DAT 数据。
+
 > `file`: string
 
 写入的资源文件名，例如 `geoip.dat`、`geosite.dat`。

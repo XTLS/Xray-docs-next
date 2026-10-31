@@ -107,6 +107,8 @@ Two different styles of Docker images are currently provided:
 
   :::
 
+Use the [Geo Data Viewer](../tools/geofileviewer.md) to open DAT files from the resource directory and inspect their categories and entries.
+
 ## Third-Party Graphical Clients
 
 | Platform                 | Project                                                                                                                                           |

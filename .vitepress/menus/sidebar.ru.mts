@@ -163,6 +163,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
     }
   ],
   "/ru/document/": [
+    { text: "Просмотр геоданных", link: "/ru/tools/geofileviewer.md" },
     {
       text: "Руководство по быстрому старту",
       link: "/ru/document/",

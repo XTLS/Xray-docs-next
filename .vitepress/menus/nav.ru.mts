@@ -35,13 +35,14 @@ export const nav: DefaultTheme.Config["nav"] = [
   },
   {
     text: "Руководство по использованию",
-    activeMatch: "^/ru/document/",
+    activeMatch: "^/ru/(?:document/|tools/geofileviewer)",
     items: [
       {
         text: "Быстрый старт",
         link: "/ru/document/",
         activeMatch: "^/ru/document/[^/]*$"
       },
+      { text: "Просмотр геоданных", link: "/ru/tools/geofileviewer.md" },
       {
         text: "Простыми словами",
         link: "/ru/document/level-0/",

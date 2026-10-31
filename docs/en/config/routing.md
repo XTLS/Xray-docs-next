@@ -111,6 +111,7 @@ An array, where each item represents an IP range. The rule takes effect when an 
 - **Predefined IP list**: This list is pre-installed in every Xray installation package, named `geoip.dat`, and is provided by [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat). Usage is like `"geoip:cn"`. Must start with `geoip:` (lowercase), followed by a two-letter country code or another category name.
   - The lite version included by default contains only three country categories: `cn`, `ir`, and `ru`. Use the full version for categories for other countries or regions.
   - **Special value**: `"geoip:private"`, includes all private addresses, such as `127.0.0.1`.
+  - Use the Geo Data Viewer to browse [Lite categories](../tools/geofileviewer.md?file=geoip-lite.dat), or inspect the [`us` category in the Full edition](../tools/geofileviewer.md?file=geoip-full.dat&tag=us).
 - **Load IPs from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by filename and tag. The file is stored in the [Resource Directory](./env.md#resource-file-path). The file format is the same as `geoip.dat`, and the tag must exist in the file.
 - **Inverse selection `!`**: `"!10.0.0.0/8"` means anything not in `10.0.0.0/8`, and `"!geoip:cn"` means results not in `geoip:cn`. Multiple inverse options have an `AND` relationship, while positive options, or positive options together with all inverse options, have an `OR` relationship. For example, `ip: ["!geoip:cn", "!geoip:ru", "geoip:telegram"]` matches IPs that are not from Russia AND not from China, OR are Telegram IPs.
 
@@ -451,6 +452,8 @@ Weight value. The larger the value, the less likely the corresponding node is to
 ```
 
 ### Predefined Domain List
+
+Inspect the [`google` category in the Geo Data Viewer](../tools/geofileviewer.md?file=geosite.dat&tag=google), or search for other categories and domain rules.
 
 This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Use `geosite:category`, e.g., `geosite:google` matches domains in the `google` category and can be used for routing or DNS filtering.
 

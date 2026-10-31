@@ -333,9 +333,13 @@ DNS 服务器端口，如 `53`。此项缺省时默认为 `53`。当使用 DOH�
 
 一个域名列表，此列表包含的域名，将优先使用此服务器进行查询。域名格式和 [路由配置](./routing.md#ruleobject) 中相同。
 
+可用 Geo 数据查看器浏览 [GeoSite 分类及域名规则](../tools/geofileviewer.md?file=geosite.dat)。
+
 > `expectedIPs`:\[string\]
 
 一个 IP 范围列表，格式和 [路由配置](./routing.md#ruleobject) 中相同。
+
+可用 Geo 数据查看器浏览 [GeoIP 分类及 IP 网段](../tools/geofileviewer.md?file=geoip-lite.dat)。
 
 当配置此项时，Xray DNS 会对返回的 IP 的进行校验，只返回包含 expectedIPs 列表中的地址。
 

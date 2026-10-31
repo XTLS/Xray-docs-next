@@ -27,7 +27,6 @@ export const zh = {
   load: "加载文件",
   cancel: "取消",
   retry: "重试",
-  comingSoon: "远程数据来源正在接入，请先选择本地文件。",
   emptyTitle: "从一个数据文件开始",
   emptyBody: "加载文件后，在左侧选择分类，在右侧查看条目。",
   processing: "正在解析文件",
@@ -52,6 +51,11 @@ export const zh = {
   copyLink: "复制分类链接",
   copied: "已复制",
   copyFailed: "无法写入剪贴板，请手动复制此链接。",
+  help: "选择官方预设、输入文件直链，或打开本地 DAT/gzip 文件。搜索按字面文本筛选文件内容；规则匹配方式请参阅路由文档。",
+  relatedDocs: "相关文档",
+  routingDocs: "路由与规则格式",
+  geodataDocs: "地理数据文件",
+  dataSourceDocs: "官方数据源与版本说明",
   errors: {
     emptyFile: "文件为空，请选择包含 Geo 数据的文件。",
     invalidFile:
@@ -99,8 +103,6 @@ const en: Messages = {
   load: "Load file",
   cancel: "Cancel",
   retry: "Retry",
-  comingSoon:
-    "Remote sources are coming soon. Choose a local file to get started.",
   emptyTitle: "Start with a data file",
   emptyBody:
     "Load a file, choose a category on the left and explore its entries on the right.",
@@ -128,6 +130,11 @@ const en: Messages = {
   copyLink: "Copy category link",
   copied: "Copied",
   copyFailed: "Unable to access the clipboard. Copy this link manually.",
+  help: "Choose an official preset, enter a direct file URL, or open a local DAT/gzip file. Search filters the file's literal text; see the routing documentation for rule matching behavior.",
+  relatedDocs: "Related documentation",
+  routingDocs: "Routing and rule formats",
+  geodataDocs: "Geodata files",
+  dataSourceDocs: "Official data and edition details",
   errors: {
     emptyFile: "This file is empty. Choose a file containing Geo data.",
     invalidFile:
@@ -175,8 +182,6 @@ const ru: Messages = {
   load: "Загрузить файл",
   cancel: "Отмена",
   retry: "Повторить",
-  comingSoon:
-    "Загрузка по сети появится позже. Пока выберите локальный файл.",
   emptyTitle: "Начните с файла данных",
   emptyBody:
     "Загрузите файл, выберите категорию слева и просмотрите записи справа.",
@@ -204,6 +209,11 @@ const ru: Messages = {
   copyLink: "Копировать ссылку",
   copied: "Скопировано",
   copyFailed: "Нет доступа к буферу обмена. Скопируйте ссылку вручную.",
+  help: "Выберите готовый набор, введите прямую ссылку или откройте локальный DAT/gzip-файл. Поиск фильтрует текст файла; правила сопоставления описаны в документации по маршрутизации.",
+  relatedDocs: "Связанная документация",
+  routingDocs: "Маршрутизация и формат правил",
+  geodataDocs: "Файлы геоданных",
+  dataSourceDocs: "Официальные данные и версии",
   errors: {
     emptyFile: "Файл пуст. Выберите файл с геоданными.",
     invalidFile:
