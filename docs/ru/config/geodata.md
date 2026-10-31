@@ -15,11 +15,11 @@
     "outbound": "proxy",
     "assets": [
       {
-        "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geoip-lite.dat",
+        "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geoip-lite.dat.gz",
         "file": "geoip.dat"
       },
       {
-        "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geosite.dat",
+        "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geosite.dat.gz",
         "file": "geosite.dat"
       }
     ]
@@ -54,7 +54,7 @@
 
 ```json
 {
-  "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geoip-lite.dat",
+  "url": "https://github.com/XTLS/Xray-rules-dat/releases/latest/download/geoip-lite.dat.gz",
   "file": "geoip.dat"
 }
 ```
@@ -62,6 +62,8 @@
 > `url`: string
 
 URL для загрузки ресурса. Должен быть HTTPS URL.
+
+Поддерживается скачивание файлов `.dat`, в том числе в сжатом формате `.gz`. Рекомендуется использовать сжатый формат: ядро автоматически распаковывает данные при скачивании, что сокращает трафик на 80%.
 
 Xray предоставляет несколько версий файлов геоданных. Ссылки для загрузки нужной версии доступны в [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_ru-RU.md).
 
