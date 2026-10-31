@@ -398,7 +398,6 @@ function drop(event: DragEvent) {
       <h2>{{ t.emptyTitle }}</h2>
       <p>{{ t.emptyBody }}</p>
     </section>
-    <p class="geo-help">{{ t.help }}</p>
     <nav class="geo-links" :aria-label="t.relatedDocs">
       <a :href="withBase(`${localePrefix}/config/routing.html`)">{{
         t.routingDocs

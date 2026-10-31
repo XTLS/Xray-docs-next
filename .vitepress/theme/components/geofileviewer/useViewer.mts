@@ -23,7 +23,7 @@ export function useViewer() {
   const sourceOpen = ref(true)
   const kind = ref<GeoKind>("geosite")
   const file = shallowRef<File>()
-  const presetIndex = ref(2)
+  const presetIndex = ref(0)
   const url = ref("")
   const loaded = shallowRef<{
     name: string

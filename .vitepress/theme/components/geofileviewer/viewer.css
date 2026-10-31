@@ -412,12 +412,6 @@
   gap: 10px 24px;
   margin-top: 24px;
 }
-.geo-help {
-  margin-top: 24px;
-  color: var(--vp-c-text-2);
-  font-size: 13px;
-  line-height: 1.8;
-}
 .geo-copy-fallback {
   margin: 12px 20px;
 }

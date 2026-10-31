@@ -50,6 +50,7 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
   })
   try {
     app.mount({})
+    viewer.presetIndex.value = 1
     await viewer.load()
     const old = instances[0]
     viewer.presetIndex.value = 0

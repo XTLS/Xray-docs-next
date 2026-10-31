@@ -35,14 +35,13 @@ export const nav: DefaultTheme.Config["nav"] = [
   },
   {
     text: "使用指南",
-    activeMatch: "^/(?:document/|tools/geofileviewer)",
+    activeMatch: "^/document/",
     items: [
       {
         text: "快速入门",
         link: "/document/",
         activeMatch: "^/document/[^/]*$"
       },
-      { text: "Geo 数据查看器", link: "/tools/geofileviewer.md" },
       {
         text: "小小白白话文",
         link: "/document/level-0/",
@@ -80,6 +79,11 @@ export const nav: DefaultTheme.Config["nav"] = [
         activeMatch: "^/development/lua/"
       }
     ]
+  },
+  {
+    text: "工具",
+    activeMatch: "^/tools/",
+    items: [{ text: "Geo 数据查看器", link: "/tools/geofileviewer.md" }]
   },
   { text: "赞助 & 捐款 & NFTs", link: "/about/sponsor.md" }
 ]

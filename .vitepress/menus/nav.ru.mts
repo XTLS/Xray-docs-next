@@ -35,14 +35,13 @@ export const nav: DefaultTheme.Config["nav"] = [
   },
   {
     text: "Руководство по использованию",
-    activeMatch: "^/ru/(?:document/|tools/geofileviewer)",
+    activeMatch: "^/ru/document/",
     items: [
       {
         text: "Быстрый старт",
         link: "/ru/document/",
         activeMatch: "^/ru/document/[^/]*$"
       },
-      { text: "Просмотр геоданных", link: "/ru/tools/geofileviewer.md" },
       {
         text: "Простыми словами",
         link: "/ru/document/level-0/",
@@ -79,6 +78,13 @@ export const nav: DefaultTheme.Config["nav"] = [
         link: "/ru/development/lua/",
         activeMatch: "^/ru/development/lua/"
       }
+    ]
+  },
+  {
+    text: "Инструменты",
+    activeMatch: "^/ru/tools/",
+    items: [
+      { text: "Просмотр геоданных", link: "/ru/tools/geofileviewer.md" }
     ]
   },
   { text: "Sponsor & Donation & NFTs", link: "/ru/about/sponsor.md" }

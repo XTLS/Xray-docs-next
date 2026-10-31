@@ -142,7 +142,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
     }
   ],
   "/en/document/": [
-    { text: "Geo Data Viewer", link: "/en/tools/geofileviewer.md" },
     {
       text: "Quick Start",
       link: "/en/document/",

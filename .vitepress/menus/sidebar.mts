@@ -121,7 +121,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
     }
   ],
   "/document/": [
-    { text: "Geo 数据查看器", link: "/tools/geofileviewer.md" },
     {
       text: "快速入门文档",
       link: "/document/",
