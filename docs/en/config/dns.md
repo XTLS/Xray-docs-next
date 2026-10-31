@@ -333,13 +333,9 @@ DNS server port, e.g., `53`. Defaults to `53` if omitted. This item is invalid w
 
 A list of domains. Domains included in this list will prioritize using this server for queries. The domain format is the same as in [Routing Configuration](./routing.md#ruleobject).
 
-Browse [GeoSite categories and domain rules](../tools/geofileviewer.md?file=geosite.dat) in the Geo Data Viewer.
-
 > `expectedIPs`:\[string\]
 
 A list of IP ranges. The format is the same as in [Routing Configuration](./routing.md#ruleobject).
-
-Browse [GeoIP categories and IP networks](../tools/geofileviewer.md?file=geoip-lite.dat) in the Geo Data Viewer.
 
 When configured, Xray DNS will verify the returned IP and only return addresses included in the `expectedIPs` list.
 

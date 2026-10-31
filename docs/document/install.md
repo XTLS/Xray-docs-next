@@ -90,7 +90,7 @@ Xray 提供两种验证方式：
     - 11_geodata.json
     - 12_env.json
     - 99_version.json
-  - `/usr/local/share/xray/`：资源文件目录，存放来自 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md) 的 GeoIP 完整版和 GeoSite 扩展版（拥有者是 `65532:65532`、目录权限 `755`、文件权限 `644`）
+  - `/usr/local/share/xray/`：资源文件目录，存放 [GeoIP 完整版和 GeoSite 扩展版](../tools/geofileviewer.md)（拥有者是 `65532:65532`、目录权限 `755`、文件权限 `644`）
     - geoip.dat
     - geosite.dat
   - `/var/log/xray/`：日志文件目录（卷挂载点，`VOLUME`）（拥有者是 `65532:65532`、目录权限 `700`）
@@ -107,8 +107,6 @@ Xray 提供两种验证方式：
     - geosite.dat
 
   :::
-
-可使用 [Geo 数据查看器](../tools/geofileviewer.md) 打开资源目录中的 DAT 文件，检查其中的分类与条目。
 
 ## 第三方图形化客户端
 

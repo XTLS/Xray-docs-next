@@ -116,8 +116,6 @@ Environment="XRAY_JSON_STRICT=true"
 - 默认值：特定 [FHS](https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard) 目录或 Xray 可执行文件所在目录。
 
 这个变量指定包含 `geoip.dat` 和 `geosite.dat` 文件的目录。
-
-可使用 [Geo 数据查看器](../tools/geofileviewer.md) 打开资源目录中的 DAT 文件，检查其中的分类与条目。
 若未指定，程序将按以下顺序寻找资源文件：
 
 ```text

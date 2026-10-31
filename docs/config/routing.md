@@ -95,7 +95,9 @@ Lua 脚本文件路径，默认为空字符串。设置后，路由选择由 Lua
 - 子串：由 `"keyword:"` 开始，余下部分是一个字符串。当此字符串匹配目标域名中任意部分，该规则生效。例如 "keyword:sina.com" 可以匹配 "sina.com"、"sina.com.cn" 和 "www.sina.com"，但不匹配 "sina.cn"。
 - 完整匹配：由 `"full:"` 开始，余下部分是一个域名。当此域名完整匹配目标域名时，该规则生效。例如 "full:xray.com" 匹配 "xray.com" 但不匹配 "www.xray.com"。
 - 无点域名：由 `"dotless:"` 开头，余下部分是一个不能含有 `.` 的字符串。当域名不含 `.` 且此字符串匹配目标域名中任意部分，该规则生效。例如 "dotless:pc-" 可以匹配 "pc-alice"、"mypc-alice"，适用于内网 NetBIOS 域等。大小写敏感。
-- 预定义域名列表：由 `"geosite:"` 开头，余下部分是一个名称，如 `geosite:google` 或者 `geosite:cn`。名称及域名列表参考 [预定义域名列表](#预定义域名列表)。
+- 预定义域名列表：此列表预置于每一个 Xray 的安装包中，文件名为 `geosite.dat`。使用方式形如 `"geosite:google"` 或 `"geosite:cn"`，必须以 `geosite:`（小写）开头，后面跟分类名。
+  - 默认提供[标准版](../tools/geofileviewer.md?file=geosite.dat)。如需覆盖范围更广的域名数据，可使用[扩展版](../tools/geofileviewer.md?file=geosite-expand.dat)。
+  - 可通过 `@属性` 筛选分类中的域名，例如 `geosite:google@cn` 表示 `google` 分类中带有 `cn` 属性的域名。
 - 从文件中加载域名：形如 `"ext:file:tag"`，必须以 `ext:`（小写）开头，后面跟文件名和标签，文件存放在 [资源目录](./env.md#资源文件路径) 中，文件格式与 `geosite.dat` 相同，标签必须在文件中存在。
 
 ::: tip
@@ -108,10 +110,9 @@ Lua 脚本文件路径，默认为空字符串。设置后，路由选择由 Lua
 
 - IP：形如 `"127.0.0.1"`。
 - [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)：形如 `"10.0.0.0/8"`，也可以用 `"0.0.0.0/0"` `"::/0"` 来指定所有 IPv4 或者 IPv6。
-- 预定义 IP 列表：此列表预置于每一个 Xray 的安装包中，文件名为 `geoip.dat`，由 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md) 提供。使用方式形如 `"geoip:cn"`，必须以 `geoip:`（小写）开头，后面跟双字符国家代码或其他分类名。
-  - 默认提供的精简版仅包含 `cn`、`ir`、`ru` 三个国家分类。如需其他国家或地区的分类，请使用完整版。
+- 预定义 IP 列表：此列表预置于每一个 Xray 的安装包中，文件名为 `geoip.dat`。使用方式形如 `"geoip:cn"`，必须以 `geoip:`（小写）开头，后面跟双字符国家代码或其他分类名。
+  - 默认提供的[精简版](../tools/geofileviewer.md?file=geoip-lite.dat)仅包含 `cn`、`ir`、`ru` 三个国家分类。如需其他国家或地区的分类，请使用[完整版](../tools/geofileviewer.md?file=geoip-full.dat)。
   - 特殊值：`"geoip:private"`，包含所有私有地址，如 `127.0.0.1`。
-  - 可用 Geo 数据查看器浏览 [精简版分类](../tools/geofileviewer.md?file=geoip-lite.dat)，或查看 [完整版的 `us` 分类](../tools/geofileviewer.md?file=geoip-full.dat&tag=us)。
 - 从文件中加载 IP：形如 `"ext:file:tag"`，必须以 `ext:`（小写）开头，后面跟文件名和标签，文件存放在 [资源目录](./env.md#资源文件路径) 中，文件格式与 `geoip.dat` 相同标签必须在文件中存在。
 - 反选 `!` 功能：`"!10.0.0.0/8"` 表示非 `10.0.0.0/8`，`"!geoip:cn"` 表示非 `geoip:cn` 中的结果。多个反选项之间是 `AND` 关系，而正选项、正选项和所有的反选项之间是 `OR` 关系，例如 `ip: ["!geoip:cn", "!geoip:ru", "geoip:telegram"]` 匹配非俄罗斯并且非中国的 IP，或者是 telegram 的 IP。
 
@@ -450,30 +451,3 @@ HTTP 请求头。
   ]
 }
 ```
-
-### 预定义域名列表
-
-可在 [Geo 数据查看器中查看 `google` 分类](../tools/geofileviewer.md?file=geosite.dat&tag=google)，也可以搜索其他分类和域名规则。
-
-此列表预置于每一个 Xray 的安装包中，文件名为 `geosite.dat`。这个文件包含了一些常见的域名，使用方式为 `geosite:分类名`，如 `geosite:google` 匹配 `google` 分类中的域名，可用于路由或 DNS 筛选。
-
-常用分类包括：
-
-- `category-ads`：包含了常见的广告域名。
-- `category-ads-all`：包含了常见的广告域名，以及广告提供商的域名。
-- `category-ai-!cn`：包含了非中国 AI 服务的域名。
-- `category-ai-cn`：包含了中国 AI 服务的域名。
-- `cn`：相当于 `geolocation-cn` 和 `tld-cn` 的合集。
-- `apple`：包含了 Apple 旗下绝大部分域名。
-- `google`：包含了 Google 旗下绝大部分域名。
-- `google@cn`：包含了 `google` 分类中带有 `cn` 标记的域名。
-- `microsoft`：包含了 Microsoft 旗下绝大部分域名。
-- `facebook`：包含了 Facebook 旗下绝大部分域名。
-- `twitter`：包含了 Twitter 旗下绝大部分域名。
-- `telegram`：包含了 Telegram 旗下绝大部分域名。
-- `geolocation-cn`：包含了常见的大陆站点域名。
-- `geolocation-!cn`：包含了常见的非大陆站点域名。
-- `tld-cn`：包含了 CNNIC 管理的用于中国大陆的顶级域名，如以 `.cn`、`.中国` 结尾的域名。
-- `tld-!cn`：包含了非中国大陆使用的顶级域名，如以 `.tw`（台湾）、`.jp`（日本）、`.sg`（新加坡）、`.us`（美国）`.ca`（加拿大）等结尾的域名。
-
-Xray 提供不同版本的 GeoSite 数据，各版本可用的分类有所不同，详见 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md)。
