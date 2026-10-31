@@ -26,6 +26,13 @@ export function usePermalink(viewer: ReturnType<typeof useViewer>) {
     void router.go(url.href, { replace: true })
   }
 
+  function clearPresetQuery() {
+    const url = new URL(location.href)
+    url.searchParams.delete("file")
+    url.searchParams.delete("tag")
+    replace(url)
+  }
+
   function apply(search: string) {
     const parsed = parsePermalink(search)
     invalidLink.value = parsed.invalid
@@ -68,10 +75,16 @@ export function usePermalink(viewer: ReturnType<typeof useViewer>) {
     () => {
       if (!mounted.value || applying) return
       invalidLink.value = false
-      const url = new URL(location.href)
-      url.searchParams.delete("file")
-      url.searchParams.delete("tag")
-      replace(url)
+      if (!viewer.loaded.value) clearPresetQuery()
+    },
+    { flush: "sync" }
+  )
+
+  watch(
+    viewer.loaded,
+    (value) => {
+      if (value) invalidLink.value = false
+      if (mounted.value && !applying && !value?.preset) clearPresetQuery()
     },
     { flush: "sync" }
   )

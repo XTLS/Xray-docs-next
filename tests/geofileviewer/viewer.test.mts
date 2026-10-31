@@ -82,6 +82,9 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
     assert.equal(viewer.selected.value?.code, "US")
     assert.equal(viewer.categoryPage.value, 2)
     assert.equal(viewer.mobileDetail.value, true)
+    viewer.presetIndex.value = 2
+    assert.equal(viewer.loaded.value?.name, "geoip-lite.dat")
+    assert.equal(current.terminated, false)
     viewer.focusTag("missing")
     const missingSearch = current.requests.findLast(
       (request) => request.type === "search"

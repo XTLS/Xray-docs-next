@@ -1,5 +1,6 @@
 ---
 layout: page
+pageClass: geofileviewer-page
 title: Geo Data Viewer
 description: Explore GeoIP and GeoSite data files in your browser.
 ---

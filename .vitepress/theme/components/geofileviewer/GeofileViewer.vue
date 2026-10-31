@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, nextTick, ref, watch } from "vue"
 import { useData, withBase } from "vitepress"
 import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
@@ -69,6 +69,51 @@ const progressLabel = computed(
     })[phase.value]
 )
 const number = (value: number) => value.toLocaleString(lang.value)
+const workspace = ref(false)
+const sourcePanel = ref<HTMLElement>()
+const workspaceTitle = ref<HTMLElement>()
+const sourceSummary = computed(() =>
+  loaded.value
+    ? `${loaded.value.name} · ${loaded.value.kind === "geoip" ? "GeoIP" : "GeoSite"} · ${number(categoryCount.value)} ${t.value.categories} · ${number(entryCount.value)} ${t.value.entries}`
+    : loading.value
+      ? progressLabel.value
+      : t.value.emptyTitle
+)
+
+watch(
+  loaded,
+  (value) => {
+    if (value) workspace.value = true
+  },
+  { flush: "sync" }
+)
+watch(workspace, async (active) => {
+  if (active) {
+    await nextTick()
+    workspaceTitle.value?.focus({ preventScroll: true })
+  }
+})
+watch(
+  [workspace, sourceOpen],
+  async () => {
+    await nextTick()
+    const panel = sourcePanel.value
+    if (!(panel instanceof HTMLDialogElement)) return
+    if (sourceOpen.value && !panel.open) panel.showModal()
+    else if (!sourceOpen.value && panel.open) panel.close()
+  },
+  { flush: "post" }
+)
+
+function closeSource() {
+  if (loading.value) stop()
+  sourceOpen.value = false
+}
+function closeDocsOnBlur(event: FocusEvent) {
+  const details = event.currentTarget as HTMLDetailsElement
+  if (!details.contains(event.relatedTarget as Node | null))
+    details.open = false
+}
 
 function pick(event: Event) {
   file.value = (event.target as HTMLInputElement).files?.[0]
@@ -80,22 +125,93 @@ function drop(event: DragEvent) {
 </script>
 
 <template>
-  <main class="geo-viewer">
-    <header class="geo-heading">
+  <main class="geo-viewer" :class="{ 'is-workspace': workspace }">
+    <header v-if="!workspace" class="geo-heading">
       <p class="geo-eyebrow">PROJECT X / TOOLS</p>
       <h1>{{ t.title }}</h1>
       <p>{{ t.description }}</p>
     </header>
-    <section class="geo-source geo-panel" :aria-label="t.source">
-      <div class="geo-panel-heading">
-        <h2>{{ t.source }}</h2>
-        <button
-          v-if="loaded"
-          class="geo-text-button"
-          :aria-expanded="sourceOpen"
-          @click="sourceOpen = !sourceOpen"
+    <header v-else class="geo-workspace-bar geo-source geo-panel">
+      <div class="geo-workspace-title">
+        <h1 ref="workspaceTitle" tabindex="-1">{{ t.title }}</h1>
+        <p class="geo-summary" :title="sourceSummary">
+          {{ sourceSummary
+          }}<template v-if="loading && progress !== undefined">
+            · {{ Math.round(progress * 100) }}%</template
+          >
+        </p>
+      </div>
+      <div class="geo-workspace-actions">
+        <details
+          class="geo-docs"
+          @focusout="closeDocsOnBlur"
+          @keydown.esc.stop.prevent="
+            ($event.currentTarget as HTMLDetailsElement).open = false
+          "
         >
-          {{ sourceOpen ? t.collapse : t.changeSource }}
+          <summary :aria-label="t.relatedDocs" :title="t.relatedDocs">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 5v15M3 4h4a5 5 0 0 1 5 2 5 5 0 0 1 5-2h4v15h-4a5 5 0 0 0-5 2 5 5 0 0 0-5-2H3Z"
+              /></svg
+            ><span class="geo-docs-label">{{ t.relatedDocs }}</span>
+          </summary>
+          <nav class="geo-links" :aria-label="t.relatedDocs">
+            <a :href="withBase(`${localePrefix}/config/routing.html`)">{{
+              t.routingDocs
+            }}</a>
+            <a :href="withBase(`${localePrefix}/config/geodata.html`)">{{
+              t.geodataDocs
+            }}</a>
+            <a
+              :href="sourceDocs"
+              target="_blank"
+              rel="noreferrer noopener"
+              >{{ t.dataSourceDocs }}</a
+            >
+          </nav>
+        </details>
+        <button
+          v-if="loading && !sourceOpen"
+          class="geo-button"
+          @click="stop"
+        >
+          {{ t.cancel }}
+        </button>
+        <button
+          class="geo-button"
+          aria-haspopup="dialog"
+          @click="sourceOpen = true"
+        >
+          {{ t.changeSource }}
+        </button>
+      </div>
+    </header>
+    <component
+      :is="workspace ? 'dialog' : 'section'"
+      ref="sourcePanel"
+      class="geo-source geo-panel"
+      :class="{ 'geo-source-dialog': workspace }"
+      aria-labelledby="geo-source-title"
+      @cancel="closeSource"
+      @close="sourceOpen = false"
+    >
+      <div class="geo-panel-heading">
+        <h2 id="geo-source-title">{{ t.source }}</h2>
+        <button
+          v-if="workspace"
+          class="geo-text-button"
+          @click="closeSource"
+        >
+          {{ t.cancel }}
         </button>
       </div>
       <p v-if="loaded" class="geo-summary">
@@ -204,36 +320,36 @@ function drop(event: DragEvent) {
           </button>
         </div>
       </template>
-    </section>
+      <div v-if="error" class="geo-notice error" role="alert">
+        {{ t.errors[error] }}
+        <button class="geo-button" :disabled="!canLoad" @click="load()">
+          {{ t.retry }}
+        </button>
+      </div>
+      <div v-if="loading" class="geo-notice geo-progress" role="status">
+        <span
+          >{{ progressLabel
+          }}<template v-if="progress !== undefined">
+            · {{ Math.round(progress * 100) }}%</template
+          ><template v-if="downloadedBytes">
+            ·
+            {{
+              (downloadedBytes / 1048576).toLocaleString(lang, {
+                maximumFractionDigits: 1
+              })
+            }}
+            MiB</template
+          ></span
+        >
+        <progress :value="progress" max="1" :aria-label="progressLabel" />
+        <button class="geo-button" @click="stop">{{ t.cancel }}</button>
+      </div>
+    </component>
     <div v-if="invalidLink" class="geo-notice error" role="alert">
       {{ t.invalidPreset }}
     </div>
     <div v-if="categoryMissing" class="geo-notice" role="status">
       {{ t.missingCategory }}: {{ categoryMissing }}
-    </div>
-    <div v-if="error" class="geo-notice error" role="alert">
-      {{ t.errors[error] }}
-      <button class="geo-button" :disabled="!canLoad" @click="load()">
-        {{ t.retry }}
-      </button>
-    </div>
-    <div v-if="loading" class="geo-notice geo-progress" role="status">
-      <span
-        >{{ progressLabel
-        }}<template v-if="progress !== undefined">
-          · {{ Math.round(progress * 100) }}%</template
-        ><template v-if="downloadedBytes">
-          ·
-          {{
-            (downloadedBytes / 1048576).toLocaleString(lang, {
-              maximumFractionDigits: 1
-            })
-          }}
-          MiB</template
-        ></span
-      >
-      <progress :value="progress" max="1" :aria-label="progressLabel" />
-      <button class="geo-button" @click="stop">{{ t.cancel }}</button>
     </div>
     <template v-if="loaded">
       <div class="geo-toolbar">
@@ -398,7 +514,7 @@ function drop(event: DragEvent) {
       <h2>{{ t.emptyTitle }}</h2>
       <p>{{ t.emptyBody }}</p>
     </section>
-    <nav class="geo-links" :aria-label="t.relatedDocs">
+    <nav v-if="!workspace" class="geo-links" :aria-label="t.relatedDocs">
       <a :href="withBase(`${localePrefix}/config/routing.html`)">{{
         t.routingDocs
       }}</a>

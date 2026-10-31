@@ -1,5 +1,6 @@
 ---
 layout: page
+pageClass: geofileviewer-page
 title: Просмотр геоданных
 description: Просматривайте файлы геоданных GeoIP и GeoSite в браузере.
 ---

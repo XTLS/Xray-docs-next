@@ -262,8 +262,12 @@ export function useViewer() {
   watch(
     [source, kind, file, presetIndex, url],
     () => {
-      stop()
-      loaded.value = undefined
+      // Editing the source picker should not discard the current dataset.
+      // An active load is cancelled immediately when its input changes.
+      if (loading.value) {
+        stop()
+        loaded.value = undefined
+      }
       error.value = undefined
       categoryMissing.value = ""
       pendingTag = undefined
