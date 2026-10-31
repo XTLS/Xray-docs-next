@@ -395,7 +395,7 @@ function drop(event: DragEvent) {
       </div>
     </component>
     <div v-if="invalidLink" class="geo-notice error" role="alert">
-      {{ t.invalidPreset }}
+      {{ t.invalidLink }}
     </div>
     <div v-if="categoryMissing" class="geo-notice" role="status">
       {{ t.missingCategory }}: {{ categoryMissing }}

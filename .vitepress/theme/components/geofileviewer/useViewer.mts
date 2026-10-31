@@ -28,6 +28,7 @@ export function useViewer() {
     name: string
     kind: GeoKind
     preset?: PresetFile
+    url?: string
   }>()
   const loading = ref(false)
   const progress = ref<number>()
@@ -199,7 +200,8 @@ export function useViewer() {
           loaded.value = {
             name: input.name,
             kind: input.kind,
-            preset: input.mode === "remote" ? input.preset : undefined
+            preset: input.mode === "remote" ? input.preset : undefined,
+            url: input.mode === "remote" ? input.url : undefined
           }
           categoryCount.value = message.categoryCount
           entryCount.value = message.entryCount

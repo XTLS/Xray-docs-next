@@ -2,10 +2,11 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import {
   categoryLink,
+  remoteCategoryLink,
   parsePermalink
 } from "../../.vitepress/theme/components/geofileviewer/links.mts"
 
-test("links allow only the four official presets and never arbitrary URLs", () => {
+test("file parameters select official presets; custom sources use the URL parameter", () => {
   assert.equal(parsePermalink("").invalid, false)
   assert.equal(parsePermalink("?tag=us").file, undefined)
   for (const file of [
@@ -29,6 +30,73 @@ test("links allow only the four official presets and never arbitrary URLs", () =
     parsePermalink("?file=geosite.dat&tag=GoOgLe").tag,
     "GoOgLe"
   )
+})
+
+test("URL links preserve query strings, explicit type and category", () => {
+  const source = "https://example.com/us.dat?version=2&token=a%2Bb"
+  const params = new URLSearchParams({
+    url: source,
+    type: "GeoIP",
+    tag: "uS"
+  })
+  const parsed = parsePermalink("?" + params)
+  assert.equal(parsed.invalid, false)
+  assert.equal(parsed.url, source)
+  assert.equal(parsed.kind, "geoip")
+  assert.equal(parsed.tag, "uS")
+  assert.equal(parsed.file, undefined)
+  assert.equal(
+    parsePermalink(
+      "?url=" + encodeURIComponent("https://example.com/geoip.dat.gz")
+    ).kind,
+    "geoip"
+  )
+  assert.equal(
+    parsePermalink(
+      "?url=" + encodeURIComponent("https://example.com/regions.dat")
+    ).kind,
+    "geosite"
+  )
+  assert.equal(parsePermalink("?file=geosite.dat&" + params).url, source)
+})
+
+test("malformed URL sources and unsupported types do not produce loadable links", () => {
+  for (const source of [
+    "",
+    "not-a-url",
+    "javascript:alert(1)",
+    "file:///test.dat",
+    "https://user:pass@example.com/file.dat"
+  ])
+    assert.equal(
+      parsePermalink("?url=" + encodeURIComponent(source)).invalid,
+      true
+    )
+  for (const type of ["", "other", "mmdb"])
+    assert.equal(
+      parsePermalink(
+        "?url=https%3A%2F%2Fexample.com%2Ffile.dat&type=" + type
+      ).invalid,
+      true
+    )
+})
+
+test("URL category links retain locale paths and round trip nested URL parameters", () => {
+  const source = "https://example.com/a.dat?version=2&token=a%2Bb#data"
+  const link = remoteCategoryLink(
+    "https://example.org/base/ru/tools/geofileviewer.html?file=geosite.dat#old",
+    source,
+    "geoip",
+    "US"
+  )
+  const url = new URL(link)
+  assert.equal(url.pathname, "/base/ru/tools/geofileviewer.html")
+  assert.equal(url.hash, "")
+  assert.equal(url.searchParams.has("file"), false)
+  assert.equal(url.searchParams.get("url"), source)
+  assert.equal(url.searchParams.get("type"), "geoip")
+  assert.equal(url.searchParams.get("tag"), "us")
+  assert.equal(parsePermalink(url.search).url, source)
 })
 test("category links retain locale/base paths and encode literal category names", () => {
   const link = categoryLink(

@@ -45,7 +45,8 @@ export const zh = {
   allLoaded: "已全部加载",
   back: "← 返回分类列表",
   reverseMatch: "反向匹配",
-  invalidPreset: "链接中的预设文件无效，请选择下方的官方预设。",
+  invalidLink:
+    "链接中的数据来源或类型无效，请检查预设文件名、URL 和 GeoIP／GeoSite 类型。",
   missingCategory: "文件中没有找到该分类，可继续浏览其他分类",
   copyLink: "复制分类链接",
   copied: "已复制",
@@ -120,8 +121,8 @@ const en: Messages = {
   allLoaded: "All loaded",
   back: "← Back to categories",
   reverseMatch: "Reverse match",
-  invalidPreset:
-    "This link specifies an invalid preset. Choose an official preset below.",
+  invalidLink:
+    "This link specifies an invalid data source or type. Check the preset filename, URL and GeoIP/GeoSite type.",
   missingCategory:
     "Category not found in this file. You can browse other categories",
   copyLink: "Copy category link",
@@ -197,8 +198,8 @@ const ru: Messages = {
   allLoaded: "Все записи загружены",
   back: "← К списку категорий",
   reverseMatch: "Обратное сопоставление",
-  invalidPreset:
-    "В ссылке указан недопустимый набор. Выберите один из готовых наборов ниже.",
+  invalidLink:
+    "В ссылке указан недопустимый источник или тип данных. Проверьте имя готового набора, URL и тип GeoIP/GeoSite.",
   missingCategory:
     "Категория не найдена в файле. Можно просмотреть другие категории",
   copyLink: "Копировать ссылку",
