@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { computed, ref } from "vue"
+import { useData } from "vitepress"
 import { useViewer } from "./useViewer.mts"
-import { messages as t } from "./messages.mts"
+import { getMessages } from "./messages.mts"
 import { highlightParts } from "./presentation.mts"
 
 const {
@@ -37,7 +38,9 @@ const fileInput = ref<HTMLInputElement>()
 const dragging = ref(false)
 const presetIndex = ref(2)
 const url = ref("")
-const number = (value: number) => value.toLocaleString()
+const { lang } = useData()
+const t = computed(() => getMessages(lang.value))
+const number = (value: number) => value.toLocaleString(lang.value)
 
 function pick(event: Event) {
   file.value = (event.target as HTMLInputElement).files?.[0]
