@@ -220,14 +220,14 @@ function closeDocsOnBlur(event: FocusEvent) {
                 :aria-pressed="query.ipMode === 'ip'"
                 @click="actions.setIpSearchMode('ip')"
               >
-                IP
+                {{ t.matchMode }}
               </button>
               <button
                 type="button"
                 :aria-pressed="query.ipMode === 'cidr'"
                 @click="actions.setIpSearchMode('cidr')"
               >
-                CIDR
+                {{ t.rulesMode }}
               </button>
             </div>
           </template>
