@@ -27,8 +27,7 @@ export type ViewerTarget =
   | { type: "preset"; index: number; tag: string }
   | { type: "url"; url: string; kind: GeoKind; tag: string }
 export type ViewerHost =
-  | { mode: "page" }
-  | { mode: "embedded"; url: string }
+  { mode: "page" } | { mode: "embedded"; url: string }
 export const initialDraft = (): SourceDraft => ({
   mode: "preset",
   kind: "geosite",

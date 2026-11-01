@@ -18,7 +18,7 @@ function* cidrParts(
   } else {
     let bestStart = -1
     let bestLength = 1
-    for (let i = 0; i < 8; ) {
+    for (let i = 0; i < 8;) {
       if (bytes[offset + i * 2] || bytes[offset + i * 2 + 1]) {
         i++
         continue
@@ -31,7 +31,7 @@ function* cidrParts(
         bestLength = i - start
       }
     }
-    for (let i = 0; i < 8; ) {
+    for (let i = 0; i < 8;) {
       if (i === bestStart) {
         yield "::"
         i += bestLength
