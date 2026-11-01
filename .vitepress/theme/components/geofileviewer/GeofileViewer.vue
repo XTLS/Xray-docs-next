@@ -124,7 +124,6 @@ const progressLabel = computed(
 const number = (value: number) => value.toLocaleString(lang.value)
 const workspace = ref(false)
 const sourcePanel = ref<HTMLElement>()
-const workspaceTitle = ref<HTMLElement>()
 const sourceSummary = computed(() =>
   loaded.value
     ? `${loaded.value.name} · ${loaded.value.kind === "geoip" ? "GeoIP" : "GeoSite"} · ${number(categoryCount.value)} ${t.value.categories} · ${number(entryCount.value)} ${t.value.entries}`
@@ -140,12 +139,6 @@ watch(
   },
   { flush: "sync" }
 )
-watch(workspace, async (active) => {
-  if (active) {
-    await nextTick()
-    workspaceTitle.value?.focus({ preventScroll: true })
-  }
-})
 watch(
   [workspace, sourceOpen],
   async () => {
@@ -186,7 +179,7 @@ function drop(event: DragEvent) {
     </header>
     <header v-else class="geo-workspace-bar geo-source geo-panel">
       <div class="geo-workspace-title">
-        <h1 ref="workspaceTitle" tabindex="-1">{{ t.title }}</h1>
+        <h1>{{ t.title }}</h1>
         <p class="geo-summary" :title="sourceSummary">
           {{ sourceSummary
           }}<template v-if="loading && progress !== undefined">
