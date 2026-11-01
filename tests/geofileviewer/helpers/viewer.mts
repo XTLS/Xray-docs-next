@@ -2,6 +2,7 @@ import { createRenderer } from "vue"
 import { useViewer } from "../../../.vitepress/theme/components/geofileviewer/useViewer.mts"
 import type {
   CategorySummary,
+  GeoKind,
   WorkerRequest,
   WorkerResponse
 } from "../../../.vitepress/theme/components/geofileviewer/types.mts"
@@ -14,7 +15,8 @@ export async function withViewer(
     viewer: ReturnType<typeof useViewer>,
     worker: TestWorker
   ) => Promise<void>,
-  autoLoad = true
+  autoLoad = true,
+  kind: GeoKind = "geosite"
 ) {
   TestWorker.instances = []
   let viewer!: ReturnType<typeof useViewer>
@@ -40,7 +42,12 @@ export async function withViewer(
   })
   try {
     app.mount({})
-    if (autoLoad) await viewer.actions.loadSource()
+    if (autoLoad) {
+      viewer.actions.updateSource({
+        presetIndex: kind === "geoip" ? 0 : 2
+      })
+      await viewer.actions.loadSource()
+    }
     await run(viewer, TestWorker.instances[0])
   } finally {
     app.unmount()

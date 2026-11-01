@@ -19,6 +19,7 @@ import {
   validateUrl,
   type InputSource
 } from "./sources.mts"
+import { parseIpQuery } from "./ipSearch.mts"
 import {
   createWorkerClient,
   type ViewerEvent,
@@ -161,36 +162,51 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
       (Math.floor(index / CATEGORY_PAGE_SIZE) + 1) * CATEGORY_PAGE_SIZE
   }
 
+  function validateSearch() {
+    query.invalidIp =
+      session.loaded?.kind === "geoip" &&
+      query.ipMode === "ip" &&
+      !!query.content.trim() &&
+      !parseIpQuery(query.content)
+    if (query.invalidIp) {
+      query.searching = false
+      rows.categories = []
+      rows.missingTag = ""
+    }
+    return !query.invalidIp
+  }
+
   function searchNow() {
     if (!session.loaded || !client.active) return
+    resetEntries()
+    if (!validateSearch()) return
     query.activeContent = query.content
     query.searching = true
-    resetEntries()
     client.search(query.content, query.ipMode)
   }
 
-  function restartSearch(delay: number) {
+  function restartSearch() {
     clearTimeout(searchTimer)
     if (!session.loaded) return
     client.invalidateSearch()
     query.attribute = ""
     query.category = ""
-    query.searching = true
+    query.invalidIp = false
     resetEntries()
-    if (delay) searchTimer = setTimeout(searchNow, delay)
-    else searchNow()
+    query.searching = true
+    searchTimer = setTimeout(searchNow, 250)
   }
 
   function setContentQuery(value: string) {
     if (query.content === value) return
     query.content = value
-    restartSearch(250)
+    restartSearch()
   }
 
   function setIpSearchMode(mode: IpSearchMode) {
     if (session.loaded?.kind !== "geoip" || query.ipMode === mode) return
     query.ipMode = mode
-    restartSearch(0)
+    restartSearch()
   }
 
   function setCategoryFilter(value: string) {

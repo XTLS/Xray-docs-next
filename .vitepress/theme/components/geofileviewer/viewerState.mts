@@ -49,6 +49,7 @@ export const initialQuery = () => ({
   content: "",
   activeContent: "",
   ipMode: "ip" as IpSearchMode,
+  invalidIp: false,
   category: "",
   attribute: "",
   searching: false

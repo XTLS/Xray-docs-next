@@ -8,74 +8,188 @@ import {
 } from "./helpers/viewer.mts"
 import type { CategorySummary } from "../../.vitepress/theme/components/geofileviewer/types.mts"
 
-test("GeoIP search mode is explicit, preserves input and invalidates pending work", () =>
-  withViewer(async (viewer, worker) => {
-    worker.reply({ type: "ready", categoryCount: 1, entryCount: 205 })
-    const categories: CategorySummary[] = [
-      {
-        id: 0,
-        code: "A",
-        count: 205,
-        matches: 205,
-        reverseMatch: false,
-        attributes: []
+test("IP validation waits for the debounce and invalid input never starts a search or restores stale results", (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] })
+  return withViewer(
+    async (viewer, worker) => {
+      worker.reply({ type: "ready", categoryCount: 1, entryCount: 2 })
+      const categories: CategorySummary[] = [
+        {
+          id: 0,
+          code: "A",
+          count: 2,
+          matches: 2,
+          reverseMatch: false,
+          attributes: []
+        }
+      ]
+      finishSearch(worker, categories)
+      batch(worker, worker.last("entries"), 0, 2, 2)
+      const loaded = viewer.session.loaded
+      viewer.actions.setContentQuery("192.0.2.1")
+      context.mock.timers.tick(250)
+      const pending = worker.last("search")
+      const requests = worker.requests.filter(
+        (r) => r.type === "search"
+      ).length
+      for (const input of [
+        "192.0.",
+        "256.1.2.3",
+        "1.2.3.4/24",
+        "2001:db8:",
+        "fe80::1%eth0"
+      ]) {
+        viewer.actions.setContentQuery(input)
+        assert.equal(viewer.query.invalidIp, false, input)
+        assert.equal(viewer.query.searching, true)
+        context.mock.timers.tick(249)
+        assert.equal(viewer.query.invalidIp, false, input)
+        assert.equal(
+          worker.requests.filter((r) => r.type === "search").length,
+          requests
+        )
+        context.mock.timers.tick(1)
+        assert.equal(viewer.query.invalidIp, true, input)
+        assert.equal(viewer.query.searching, false)
+        assert.equal(viewer.results.value.selected, undefined)
+        assert.deepEqual(viewer.results.value.categories, [])
+        assert.deepEqual(viewer.results.value.entries, [])
       }
-    ]
-    finishSearch(worker, categories)
-    batch(worker, worker.last("entries"), 0, 100, 205)
-    viewer.actions.loadMoreEntries()
-    const oldEntries = worker.last("entries")
-    const oldSearch = worker.last("search")
-    assert.equal(viewer.query.ipMode, "ip")
-    assert.equal(oldSearch.ipMode, "ip")
-    viewer.actions.setCategoryFilter("a")
-    viewer.actions.setContentQuery("10.")
-    viewer.actions.setIpSearchMode("cidr")
-    const cidrSearch = worker.last("search")
-    assert.equal(cidrSearch.contentQuery, "10.")
-    assert.equal(cidrSearch.ipMode, "cidr")
-    assert.equal(viewer.query.content, "10.")
-    assert.equal(viewer.query.category, "")
-    assert.equal(viewer.query.attribute, "")
-    assert.equal(viewer.results.value.selected, undefined)
-    batch(worker, oldEntries, 100, 100, 205)
-    worker.reply({ type: "search", id: oldSearch.id, categories })
-    assert.equal(viewer.results.value.entries.length, 0)
-    assert.equal(viewer.query.searching, true)
-    const searches = worker.requests.filter(
-      (r) => r.type === "search"
-    ).length
-    await new Promise((resolve) => setTimeout(resolve, 270))
-    assert.equal(
-      worker.requests.filter((r) => r.type === "search").length,
-      searches
-    )
-    viewer.actions.setIpSearchMode("ip")
-    worker.reply({ type: "search", id: cidrSearch.id, categories })
-    assert.equal(viewer.query.searching, true)
-    finishSearch(worker, categories)
-    assert.equal(viewer.results.value.selected?.code, "A")
-    assert.equal(worker.last("search").ipMode, "ip")
-    viewer.actions.setIpSearchMode("cidr")
-    viewer.actions.focusCategory("A")
-    assert.equal(viewer.query.ipMode, "ip")
-    assert.equal(viewer.query.content, "")
-    assert.equal(worker.last("search").ipMode, "ip")
-    viewer.actions.setIpSearchMode("cidr")
-    await viewer.actions.loadSource()
-    assert.equal(viewer.query.ipMode, "ip")
-    const next = TestWorker.instances[1]
-    next.reply({ type: "ready", categoryCount: 1, entryCount: 205 })
-    assert.equal(next.last("search").ipMode, "ip")
-    viewer.actions.updateSource({ presetIndex: 2 })
-    await viewer.actions.loadSource()
-    const geosite = TestWorker.instances[2]
-    geosite.reply({ type: "ready", categoryCount: 1, entryCount: 1 })
-    const requests = geosite.requests.length
-    viewer.actions.setIpSearchMode("cidr")
-    assert.equal(viewer.query.ipMode, "ip")
-    assert.equal(geosite.requests.length, requests)
-  }))
+      worker.reply({ type: "search", id: pending.id, categories })
+      context.mock.timers.tick(1000)
+      assert.equal(
+        worker.requests.filter((r) => r.type === "search").length,
+        requests
+      )
+      assert.deepEqual(viewer.results.value.categories, [])
+      assert.equal(viewer.session.loaded, loaded)
+      assert.equal(viewer.session.error, undefined)
+      viewer.actions.setContentQuery("10.")
+      viewer.actions.setIpSearchMode("cidr")
+      assert.equal(viewer.query.invalidIp, false)
+      context.mock.timers.tick(250)
+      assert.equal(worker.last("search").contentQuery, "10.")
+      assert.equal(worker.last("search").ipMode, "cidr")
+      finishSearch(worker, categories)
+      viewer.actions.setIpSearchMode("ip")
+      assert.equal(viewer.query.invalidIp, false)
+      context.mock.timers.tick(250)
+      assert.equal(viewer.query.invalidIp, true)
+      viewer.actions.setContentQuery("2001:db8::1")
+      assert.equal(viewer.query.invalidIp, false)
+      context.mock.timers.tick(250)
+      assert.equal(worker.last("search").contentQuery, "2001:db8::1")
+      assert.equal(worker.last("search").ipMode, "ip")
+      finishSearch(worker, categories)
+      viewer.actions.setContentQuery("192.0.2.1")
+      viewer.actions.setContentQuery("192.0.")
+      const before = worker.requests.filter(
+        (r) => r.type === "search"
+      ).length
+      context.mock.timers.tick(250)
+      assert.equal(
+        worker.requests.filter((r) => r.type === "search").length,
+        before
+      )
+      viewer.actions.setContentQuery("")
+      assert.equal(viewer.query.invalidIp, false)
+      context.mock.timers.tick(250)
+      assert.equal(worker.last("search").contentQuery, "")
+      finishSearch(worker, categories)
+      assert.equal(viewer.results.value.selected?.code, "A")
+      viewer.actions.setContentQuery("bad")
+      viewer.actions.focusCategory("A")
+      assert.equal(viewer.query.invalidIp, false)
+      assert.equal(viewer.query.content, "")
+      assert.equal(worker.last("search").contentQuery, "")
+    },
+    true,
+    "geoip"
+  )
+})
+
+test("GeoIP search mode is explicit, preserves input and invalidates pending work", (context) => {
+  context.mock.timers.enable({ apis: ["setTimeout"] })
+  return withViewer(
+    async (viewer, worker) => {
+      worker.reply({ type: "ready", categoryCount: 1, entryCount: 205 })
+      const categories: CategorySummary[] = [
+        {
+          id: 0,
+          code: "A",
+          count: 205,
+          matches: 205,
+          reverseMatch: false,
+          attributes: []
+        }
+      ]
+      finishSearch(worker, categories)
+      batch(worker, worker.last("entries"), 0, 100, 205)
+      viewer.actions.loadMoreEntries()
+      const oldEntries = worker.last("entries")
+      const oldSearch = worker.last("search")
+      assert.equal(viewer.query.ipMode, "ip")
+      assert.equal(oldSearch.ipMode, "ip")
+      viewer.actions.setCategoryFilter("a")
+      viewer.actions.setContentQuery("10.")
+      viewer.actions.setIpSearchMode("cidr")
+      context.mock.timers.tick(250)
+      const cidrSearch = worker.last("search")
+      assert.equal(cidrSearch.contentQuery, "10.")
+      assert.equal(cidrSearch.ipMode, "cidr")
+      assert.equal(viewer.query.content, "10.")
+      assert.equal(viewer.query.category, "")
+      assert.equal(viewer.query.attribute, "")
+      assert.equal(viewer.results.value.selected, undefined)
+      batch(worker, oldEntries, 100, 100, 205)
+      worker.reply({ type: "search", id: oldSearch.id, categories })
+      assert.equal(viewer.results.value.entries.length, 0)
+      assert.equal(viewer.query.searching, true)
+      const searches = worker.requests.filter(
+        (r) => r.type === "search"
+      ).length
+      context.mock.timers.tick(1000)
+      assert.equal(
+        worker.requests.filter((r) => r.type === "search").length,
+        searches
+      )
+      viewer.actions.setIpSearchMode("ip")
+      worker.reply({ type: "search", id: cidrSearch.id, categories })
+      assert.equal(viewer.query.searching, true)
+      assert.equal(viewer.query.invalidIp, false)
+      context.mock.timers.tick(250)
+      assert.equal(viewer.query.searching, false)
+      assert.equal(viewer.query.invalidIp, true)
+      assert.equal(worker.last("search"), cidrSearch)
+      viewer.actions.setContentQuery("10.0.0.7")
+      context.mock.timers.tick(250)
+      finishSearch(worker, categories)
+      assert.equal(viewer.results.value.selected?.code, "A")
+      assert.equal(worker.last("search").ipMode, "ip")
+      viewer.actions.setIpSearchMode("cidr")
+      viewer.actions.focusCategory("A")
+      assert.equal(viewer.query.ipMode, "ip")
+      assert.equal(viewer.query.content, "")
+      assert.equal(worker.last("search").ipMode, "ip")
+      viewer.actions.setIpSearchMode("cidr")
+      await viewer.actions.loadSource()
+      assert.equal(viewer.query.ipMode, "ip")
+      const next = TestWorker.instances[1]
+      next.reply({ type: "ready", categoryCount: 1, entryCount: 205 })
+      assert.equal(next.last("search").ipMode, "ip")
+      viewer.actions.updateSource({ presetIndex: 2 })
+      await viewer.actions.loadSource()
+      const geosite = TestWorker.instances[2]
+      geosite.reply({ type: "ready", categoryCount: 1, entryCount: 1 })
+      const requests = geosite.requests.length
+      viewer.actions.setIpSearchMode("cidr")
+      assert.equal(viewer.query.ipMode, "ip")
+      assert.equal(geosite.requests.length, requests)
+    },
+    true,
+    "geoip"
+  )
+})
 
 test("entry streaming appends once, stops at the end and discards a previous category's pending batch", () =>
   withViewer(async (viewer, worker) => {

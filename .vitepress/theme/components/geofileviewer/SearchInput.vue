@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-defineProps<{ id: string; placeholder: string; clearLabel: string }>()
+defineProps<{
+  id: string
+  placeholder: string
+  clearLabel: string
+  error?: string
+}>()
 const model = defineModel<string>({ required: true })
 const input = ref<HTMLInputElement>()
 
@@ -12,44 +17,58 @@ function clear() {
 </script>
 
 <template>
-  <div class="geo-search-field">
-    <slot name="prefix" />
-    <input
-      :id="id"
-      ref="input"
-      v-model="model"
-      type="search"
-      class="geo-search"
-      :placeholder="placeholder"
-    />
-    <button
-      v-if="model"
-      type="button"
-      class="geo-search-clear"
-      :aria-label="clearLabel"
-      :title="clearLabel"
-      @click="clear"
+  <div class="geo-search-control">
+    <div class="geo-search-field" :class="{ 'is-invalid': error }">
+      <slot name="prefix" />
+      <input
+        :id="id"
+        ref="input"
+        v-model="model"
+        type="search"
+        class="geo-search"
+        :placeholder="placeholder"
+        :aria-invalid="error ? 'true' : undefined"
+        :aria-describedby="error ? `${id}-error` : undefined"
+      />
+      <button
+        v-if="model"
+        type="button"
+        class="geo-search-clear"
+        :aria-label="clearLabel"
+        :title="clearLabel"
+        @click="clear"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59Z"
+          />
+        </svg>
+      </button>
+    </div>
+    <p
+      v-if="error"
+      :id="`${id}-error`"
+      class="geo-search-error"
+      role="status"
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          fill="currentColor"
-          fill-rule="evenodd"
-          d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59Z"
-        />
-      </svg>
-    </button>
+      {{ error }}
+    </p>
   </div>
 </template>
 
 <style scoped>
-.geo-search-field {
-  position: relative;
-  display: flex;
-  align-items: center;
+.geo-search-control {
   flex: 1;
   width: 100%;
   min-width: 0;
   font-size: 14px;
+}
+.geo-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
   border: 1px solid var(--geo-border);
   border-radius: 6px;
   background: var(--vp-c-bg);
@@ -91,5 +110,17 @@ function clear() {
 .geo-search-clear:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 3px;
+}
+.geo-search-field.is-invalid {
+  border-color: var(--vp-c-danger-1);
+}
+.geo-search-field.is-invalid:focus-within {
+  outline-color: var(--vp-c-danger-1);
+}
+.geo-search-error {
+  margin: 6px 0 0;
+  color: var(--vp-c-danger-1);
+  font-size: 13px;
+  line-height: 1.5;
 }
 </style>

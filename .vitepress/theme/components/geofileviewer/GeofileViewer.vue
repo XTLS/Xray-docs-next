@@ -199,6 +199,7 @@ function closeDocsOnBlur(event: FocusEvent) {
           v-model="contentQuery"
           :placeholder="searchLabel"
           :clear-label="t.clearContentSearch"
+          :error="query.invalidIp ? t.invalidIp : undefined"
         >
           <template v-if="session.loaded.kind === 'geoip'" #prefix>
             <div
@@ -223,7 +224,7 @@ function closeDocsOnBlur(event: FocusEvent) {
             </div>
           </template>
         </SearchInput>
-        <span class="geo-stats" role="status">{{
+        <span v-if="!query.invalidIp" class="geo-stats" role="status">{{
           query.searching
             ? t.searching
             : `${number(results.categories.length)} ${t.categories}`
