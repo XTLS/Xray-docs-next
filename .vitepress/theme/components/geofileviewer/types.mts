@@ -19,6 +19,7 @@ export class ViewerError extends Error {
 }
 
 export type Attribute = { key: string; value?: string }
+export type AttributeSummary = { key: string; count: number }
 export type GeoEntry = {
   type: "keyword" | "regexp" | "domain" | "full" | "IPv4" | "IPv6"
   value: string
@@ -31,17 +32,20 @@ export type CategorySummary = {
   count: number
   matches: number
   reverseMatch: boolean
+  attributes: AttributeSummary[]
 }
 
 export type WorkerRequest =
   | { type: "load"; source: import("./sources.mts").InputSource }
-  | { type: "search"; id: number; query: string }
+  | { type: "cancelEntries" }
+  | { type: "search"; id: number; contentQuery: string }
   | {
       type: "entries"
       id: number
       searchId: number
       categoryId: number
       page: number
+      attributeKey?: string
     }
 
 export type WorkerResponse =

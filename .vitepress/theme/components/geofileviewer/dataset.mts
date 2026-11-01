@@ -3,6 +3,7 @@ import {
   ENTRY_PAGE_SIZE,
   ViewerError,
   type Attribute,
+  type AttributeSummary,
   type CategorySummary,
   type GeoEntry,
   type GeoKind
@@ -13,10 +14,32 @@ type Category = {
   code: string
   reverseMatch: boolean
   offsets: Uint32Array
+  attributes: AttributeSummary[]
 }
 export type SearchResult = {
   categories: CategorySummary[]
   indexes: Map<number, Uint32Array | null>
+  attributeFilter?: {
+    categoryId: number
+    key: string
+    indexes: Uint32Array
+  }
+}
+
+function countAttributes(counts: Map<string, number>, entry: GeoEntry) {
+  if (!entry.attributes.length) return
+  for (const key of new Set(
+    entry.attributes.map((attribute) => attribute.key)
+  ))
+    counts.set(key, (counts.get(key) ?? 0) + 1)
+}
+
+function attributeSummaries(
+  counts: Map<string, number>
+): AttributeSummary[] {
+  return [...counts]
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .map(([key, count]) => ({ key, count }))
 }
 
 // Keep the protobuf bytes and offsets, rather than millions of decoded objects.
@@ -178,27 +201,26 @@ export class Dataset {
   }
 
   async search(
-    query: string,
+    contentQuery: string,
     cancelled: () => boolean = () => false
   ): Promise<SearchResult | null> {
-    const needle = query.trim().toLowerCase()
+    const needle = contentQuery.trim().toLowerCase()
     const result: SearchResult = { categories: [], indexes: new Map() }
     let lastYield = Date.now()
     for (let id = 0; id < this.categories.length; id++) {
       const category = this.categories[id]
       const count = category.offsets.length / 2
       let indexes: Uint32Array | null = null
-      if (needle && !category.code.toLowerCase().includes(needle)) {
+      let attributes = category.attributes
+      if (needle) {
         const matching: number[] = []
+        const counts = new Map<string, number>()
         for (let i = 0; i < count; i++) {
           const entry = this.entry(id, i)
-          if (
-            entry.value.toLowerCase().includes(needle) ||
-            entry.attributes.some((a) =>
-              `${a.key}=${a.value ?? ""}`.toLowerCase().includes(needle)
-            )
-          )
+          if (entry.value.toLowerCase().includes(needle)) {
             matching.push(i)
+            countAttributes(counts, entry)
+          }
           if (i % 2048 === 0 && Date.now() - lastYield > 16) {
             await new Promise((resolve) => setTimeout(resolve, 0))
             if (cancelled()) return null
@@ -207,6 +229,7 @@ export class Dataset {
         }
         if (!matching.length) continue
         indexes = Uint32Array.from(matching)
+        attributes = attributeSummaries(counts)
       }
       result.indexes.set(id, indexes)
       result.categories.push({
@@ -214,7 +237,8 @@ export class Dataset {
         code: category.code,
         count,
         matches: indexes?.length ?? count,
-        reverseMatch: category.reverseMatch
+        reverseMatch: category.reverseMatch,
+        attributes
       })
       if (Date.now() - lastYield > 16) {
         await new Promise((resolve) => setTimeout(resolve, 0))
@@ -235,17 +259,55 @@ export class Dataset {
     )
   }
 
-  entries(result: SearchResult, id: number, page: number) {
+  async entries(
+    result: SearchResult,
+    id: number,
+    page: number,
+    attributeKey?: string,
+    cancelled: () => boolean = () => false
+  ) {
+    if (cancelled()) return null
     const summary = result.categories.find(
       (category) => category.id === id
     )
     if (!summary) return { entries: [], total: 0, page: 1 }
-    const bounds = pageBounds(summary.matches, page, ENTRY_PAGE_SIZE)
-    const indexes = result.indexes.get(id)
+    let indexes = result.indexes.get(id)
+    let total = summary.matches
+    if (attributeKey) {
+      let filter = result.attributeFilter
+      if (filter?.categoryId !== id || filter.key !== attributeKey) {
+        const count =
+          summary.attributes.find((a) => a.key === attributeKey)?.count ??
+          0
+        const matching = new Uint32Array(count)
+        let found = 0
+        let lastYield = Date.now()
+        for (let i = 0; count && i < summary.matches; i++) {
+          const index = indexes ? indexes[i] : i
+          if (
+            this.entry(id, index).attributes.some(
+              (a) => a.key === attributeKey
+            )
+          )
+            matching[found++] = index
+          if (i % 2048 === 0 && Date.now() - lastYield > 16) {
+            await new Promise((resolve) => setTimeout(resolve, 0))
+            if (cancelled()) return null
+            lastYield = Date.now()
+          }
+        }
+        if (cancelled()) return null
+        filter = { categoryId: id, key: attributeKey, indexes: matching }
+        result.attributeFilter = filter
+      }
+      indexes = filter.indexes
+      total = indexes.length
+    } else result.attributeFilter = undefined
+    const bounds = pageBounds(total, page, ENTRY_PAGE_SIZE)
     const entries: GeoEntry[] = []
     for (let i = bounds.start; i < bounds.end; i++)
       entries.push(this.entry(id, indexes ? indexes[i] : i))
-    return { entries, total: summary.matches, page: bounds.page }
+    return { entries, total, page: bounds.page }
   }
 }
 
@@ -290,13 +352,17 @@ export async function indexDataset(
       })
       if (!code.trim()) throw new ViewerError("invalidFile")
       const offsets = new Uint32Array(count * 2)
+      const counts = new Map<string, number>()
       reader.pos = start
       let index = 0
       while (reader.pos < end) {
         const entryTag = reader.uint32()
         if (entryTag === 18) {
           const [entryStart, entryEnd] = messageRange(reader, end)
-          decodeEntry(bytes, entryStart, entryEnd, kind)
+          countAttributes(
+            counts,
+            decodeEntry(bytes, entryStart, entryEnd, kind)
+          )
           offsets[index++] = entryStart
           offsets[index++] = entryEnd
           reader.pos = entryEnd
@@ -308,7 +374,12 @@ export async function indexDataset(
         } else reader.skipType(entryTag & 7)
         if (reader.pos > end) throw new ViewerError("invalidFile")
       }
-      categories.push({ code, reverseMatch, offsets })
+      categories.push({
+        code,
+        reverseMatch,
+        offsets,
+        attributes: attributeSummaries(counts)
+      })
       entryCount += count
     }
     if (!categories.length) throw new ViewerError("invalidFile")

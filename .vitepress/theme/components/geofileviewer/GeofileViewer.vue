@@ -22,8 +22,11 @@ const {
   phase,
   downloadedBytes,
   error,
-  query,
-  activeQuery,
+  contentQuery,
+  activeContentQuery,
+  categoryQuery,
+  attributeKey,
+  setAttribute,
   searching,
   entriesLoading,
   categories,
@@ -82,7 +85,7 @@ watch(
   { flush: "post" }
 )
 watch(
-  [selected, activeQuery],
+  [selected, activeContentQuery, attributeKey],
   () => {
     if (entryList.value) entryList.value.scrollTop = 0
   },
@@ -402,13 +405,15 @@ function drop(event: DragEvent) {
     </div>
     <template v-if="loaded">
       <div class="geo-toolbar">
-        <label class="geo-sr-only" for="geo-search">{{ t.search }}</label>
+        <label class="geo-sr-only" for="geo-search">{{
+          t.contentSearch
+        }}</label>
         <input
           id="geo-search"
-          v-model="query"
+          v-model="contentQuery"
           type="search"
           class="geo-search"
-          :placeholder="t.search"
+          :placeholder="t.contentSearch"
         />
         <span class="geo-stats" role="status">{{
           searching
@@ -422,7 +427,19 @@ function drop(event: DragEvent) {
         :aria-busy="searching"
       >
         <aside class="geo-categories" :aria-label="t.categories">
-          <h2 class="geo-list-title">{{ t.categories }}</h2>
+          <div class="geo-category-header">
+            <h2 class="geo-list-title">{{ t.categories }}</h2>
+            <label class="geo-sr-only" for="geo-category-search">{{
+              t.categorySearch
+            }}</label>
+            <input
+              id="geo-category-search"
+              v-model="categoryQuery"
+              type="search"
+              class="geo-search"
+              :placeholder="t.categorySearch"
+            />
+          </div>
           <ul
             ref="categoryList"
             class="geo-category-list"
@@ -439,7 +456,16 @@ function drop(event: DragEvent) {
                 "
                 @click="select(category.id)"
               >
-                <span>{{ category.code }}</span
+                <span
+                  ><template
+                    v-for="(part, partIndex) in highlightParts(
+                      category.code,
+                      categoryQuery
+                    )"
+                    :key="partIndex"
+                    ><mark v-if="part.match">{{ part.text }}</mark
+                    ><span v-else>{{ part.text }}</span></template
+                  ></span
                 ><small>{{ number(category.matches) }}</small>
               </button>
             </li>
@@ -480,6 +506,32 @@ function drop(event: DragEvent) {
             </button>
           </header>
           <div
+            v-if="
+              loaded.kind === 'geosite' &&
+              selected?.attributes.length &&
+              !searching
+            "
+            class="geo-attribute-filter"
+          >
+            <label for="geo-attribute">{{ t.attributeFilter }}</label>
+            <select
+              id="geo-attribute"
+              :value="attributeKey"
+              @change="
+                setAttribute(($event.target as HTMLSelectElement).value)
+              "
+            >
+              <option value="">{{ t.allAttributes }}</option>
+              <option
+                v-for="attribute in selected.attributes"
+                :key="attribute.key"
+                :value="attribute.key"
+              >
+                @{{ attribute.key }} ({{ number(attribute.count) }})
+              </option>
+            </select>
+          </div>
+          <div
             v-if="copyStatus === 'copyFailed'"
             class="geo-field geo-copy-fallback"
             role="status"
@@ -510,7 +562,7 @@ function drop(event: DragEvent) {
                   ><template
                     v-for="(part, partIndex) in highlightParts(
                       entry.value,
-                      activeQuery
+                      activeContentQuery
                     )"
                     :key="partIndex"
                     ><mark v-if="part.match">{{ part.text }}</mark

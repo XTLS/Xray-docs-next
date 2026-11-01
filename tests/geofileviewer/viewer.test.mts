@@ -76,7 +76,8 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
         code: id === 40 ? "US" : `category-${id}`,
         count: 1,
         matches: 1,
-        reverseMatch: false
+        reverseMatch: false,
+        attributes: []
       }))
     })
     assert.equal(viewer.selected.value?.code, "US")
@@ -96,7 +97,7 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
     if (missingSearch.type !== "search") throw Error()
     current.reply({ type: "search", id: missingSearch.id, categories: [] })
     assert.equal(viewer.categoryMissing.value, "missing")
-    viewer.query.value = "new query"
+    viewer.contentQuery.value = "new query"
     const staleSearch = current.requests.find(
       (request) => request.type === "search"
     )!
@@ -105,7 +106,14 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
       type: "search",
       id: staleSearch.id,
       categories: [
-        { id: 0, code: "STALE", count: 1, matches: 1, reverseMatch: false }
+        {
+          id: 0,
+          code: "STALE",
+          count: 1,
+          matches: 1,
+          reverseMatch: false,
+          attributes: []
+        }
       ]
     })
     assert.equal(viewer.categories.value.length, 0)

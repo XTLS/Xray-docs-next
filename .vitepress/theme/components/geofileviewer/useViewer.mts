@@ -35,11 +35,21 @@ export function useViewer() {
   const phase = ref<LoadProgress["phase"]>("read")
   const downloadedBytes = ref(0)
   const error = ref<ErrorCode>()
-  const query = ref("")
-  const activeQuery = ref("")
+  const contentQuery = ref("")
+  const activeContentQuery = ref("")
+  const categoryQuery = ref("")
+  const attributeKey = ref("")
   const searching = ref(false)
   const entriesLoading = ref(false)
-  const categories = shallowRef<CategorySummary[]>([])
+  const allCategories = shallowRef<CategorySummary[]>([])
+  const categories = computed(() => {
+    const needle = categoryQuery.value.trim().toLowerCase()
+    return needle
+      ? allCategories.value.filter((category) =>
+          category.code.toLowerCase().includes(needle)
+        )
+      : allCategories.value
+  })
   const categoryCount = ref(0)
   const entryCount = ref(0)
   const categoryLimit = ref(CATEGORY_PAGE_SIZE)
@@ -89,6 +99,7 @@ export function useViewer() {
 
   function resetEntries() {
     entriesId++
+    send({ type: "cancelEntries" })
     pendingEntries = undefined
     entryPage = 0
     entriesLoading.value = false
@@ -119,16 +130,46 @@ export function useViewer() {
       id: pendingEntries.id,
       searchId,
       categoryId: selectedId.value,
-      page: pendingEntries.page
+      page: pendingEntries.page,
+      attributeKey: attributeKey.value || undefined
     })
   }
 
   function search() {
     if (!loaded.value || !worker) return
-    activeQuery.value = query.value
+    activeContentQuery.value = contentQuery.value
     searching.value = true
     resetEntries()
-    send({ type: "search", id: ++searchId, query: query.value })
+    send({
+      type: "search",
+      id: ++searchId,
+      contentQuery: contentQuery.value
+    })
+  }
+
+  function refreshEntries() {
+    resetEntries()
+    entryTotal.value = attributeKey.value
+      ? (selected.value?.attributes.find(
+          (a) => a.key === attributeKey.value
+        )?.count ?? 0)
+      : (selected.value?.matches ?? 0)
+    loadMoreEntries()
+  }
+
+  function setAttribute(key: string) {
+    if (searching.value || attributeKey.value === key) return
+    attributeKey.value = key
+    refreshEntries()
+  }
+
+  function revealSelection() {
+    const index = Math.max(
+      0,
+      categories.value.findIndex((c) => c.id === selectedId.value)
+    )
+    categoryLimit.value =
+      (Math.floor(index / CATEGORY_PAGE_SIZE) + 1) * CATEGORY_PAGE_SIZE
   }
 
   function select(id: number) {
@@ -137,9 +178,8 @@ export function useViewer() {
     mobileDetail.value = true
     if (selectedId.value === id) return
     selectedId.value = id
-    resetEntries()
-    entryTotal.value = selected.value?.matches ?? 0
-    loadMoreEntries()
+    attributeKey.value = ""
+    refreshEntries()
   }
 
   async function load(tag?: string) {
@@ -169,12 +209,14 @@ export function useViewer() {
       return
     }
     loaded.value = undefined
-    categories.value = []
+    allCategories.value = []
     categoryLimit.value = CATEGORY_PAGE_SIZE
     resetEntries()
     selectedId.value = undefined
-    query.value = ""
-    activeQuery.value = ""
+    contentQuery.value = ""
+    activeContentQuery.value = ""
+    categoryQuery.value = ""
+    attributeKey.value = ""
     error.value = undefined
     loading.value = true
     progress.value = undefined
@@ -208,35 +250,27 @@ export function useViewer() {
           sourceOpen.value = false
           search()
         } else if (message.type === "search" && message.id === searchId) {
-          categories.value = message.categories
+          allCategories.value = message.categories
           searching.value = false
           categoryLimit.value = CATEGORY_PAGE_SIZE
           if (pendingTag !== undefined) {
-            const index = message.categories.findIndex(
+            const index = categories.value.findIndex(
               (c) => c.code.toLowerCase() === pendingTag!.toLowerCase()
             )
             if (pendingTag && index < 0) categoryMissing.value = pendingTag
-            selectedId.value = message.categories[Math.max(0, index)]?.id
-            categoryLimit.value =
-              (Math.floor(Math.max(0, index) / CATEGORY_PAGE_SIZE) + 1) *
-              CATEGORY_PAGE_SIZE
+            selectedId.value = categories.value[Math.max(0, index)]?.id
             mobileDetail.value = !!pendingTag && index >= 0
             pendingTag = undefined
           } else {
             const index = Math.max(
               0,
-              message.categories.findIndex(
-                (c) => c.id === selectedId.value
-              )
+              categories.value.findIndex((c) => c.id === selectedId.value)
             )
-            selectedId.value = message.categories[index]?.id
-            categoryLimit.value =
-              (Math.floor(index / CATEGORY_PAGE_SIZE) + 1) *
-              CATEGORY_PAGE_SIZE
+            selectedId.value = categories.value[index]?.id
           }
-          resetEntries()
-          entryTotal.value = selected.value?.matches ?? 0
-          loadMoreEntries()
+          attributeKey.value = ""
+          revealSelection()
+          refreshEntries()
         } else if (
           message.type === "entries" &&
           message.id === pendingEntries?.id &&
@@ -270,22 +304,45 @@ export function useViewer() {
   }
 
   function focusTag(tag: string) {
+    clearTimeout(searchTimer)
+    searching.value = true
     pendingTag = tag
     categoryMissing.value = ""
-    if (query.value) query.value = ""
-    else search()
+    contentQuery.value = ""
+    categoryQuery.value = ""
+    attributeKey.value = ""
+    clearTimeout(searchTimer)
+    search()
   }
 
   watch(
-    query,
+    contentQuery,
     () => {
       clearTimeout(searchTimer)
       if (!loaded.value) return
       // Invalidate in-flight results as soon as input changes, before debouncing.
       searchId++
+      attributeKey.value = ""
       resetEntries()
       searching.value = true
       searchTimer = setTimeout(search, 250)
+    },
+    { flush: "sync" }
+  )
+  watch(
+    categoryQuery,
+    () => {
+      if (!loaded.value || searching.value) return
+      categoryMissing.value = ""
+      const next =
+        categories.value.find((c) => c.id === selectedId.value) ??
+        categories.value[0]
+      if (selectedId.value !== next?.id) {
+        selectedId.value = next?.id
+        attributeKey.value = ""
+        refreshEntries()
+      }
+      revealSelection()
     },
     { flush: "sync" }
   )
@@ -320,8 +377,11 @@ export function useViewer() {
     phase,
     downloadedBytes,
     error,
-    query,
-    activeQuery,
+    contentQuery,
+    activeContentQuery,
+    categoryQuery,
+    attributeKey,
+    setAttribute,
     searching,
     entriesLoading,
     categories,

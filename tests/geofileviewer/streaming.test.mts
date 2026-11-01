@@ -99,8 +99,22 @@ test("entry streaming appends once, stops at the end and discards a previous cat
   withViewer(async (viewer, worker) => {
     worker.reply({ type: "ready", categoryCount: 2, entryCount: 207 })
     finishSearch(worker, [
-      { id: 0, code: "A", count: 205, matches: 205, reverseMatch: false },
-      { id: 1, code: "B", count: 2, matches: 2, reverseMatch: false }
+      {
+        id: 0,
+        code: "A",
+        count: 205,
+        matches: 205,
+        reverseMatch: false,
+        attributes: []
+      },
+      {
+        id: 1,
+        code: "B",
+        count: 2,
+        matches: 2,
+        reverseMatch: false,
+        attributes: []
+      }
     ])
     batch(worker, worker.last("entries"), 0, 100, 205)
     viewer.loadMoreEntries()
@@ -151,7 +165,8 @@ test("category streaming grows a prefix and a new search resets entries without 
         code: `category-${id}`,
         count: 150,
         matches: 150,
-        reverseMatch: false
+        reverseMatch: false,
+        attributes: []
       }))
     )
     assert.equal(viewer.visibleCategories.value.length, 25)
@@ -164,7 +179,7 @@ test("category streaming grows a prefix and a new search resets entries without 
     batch(worker, worker.last("entries"), 0, 100, 150)
     viewer.loadMoreEntries()
     const stale = worker.last("entries")
-    viewer.query.value = "fresh"
+    viewer.contentQuery.value = "fresh"
     assert.equal(viewer.entries.value.length, 0)
     batch(worker, stale, 100, 50, 150)
     assert.equal(viewer.entries.value.length, 0)
@@ -174,7 +189,14 @@ test("category streaming grows a prefix and a new search resets entries without 
     assert.equal(worker.requests.length, pending)
     await new Promise((resolve) => setTimeout(resolve, 270))
     finishSearch(worker, [
-      { id: 900, code: "FRESH", count: 3, matches: 3, reverseMatch: false }
+      {
+        id: 900,
+        code: "FRESH",
+        count: 3,
+        matches: 3,
+        reverseMatch: false,
+        attributes: []
+      }
     ])
     batch(worker, worker.last("entries"), 0, 3, 3, "fresh")
     assert.equal(viewer.visibleCategories.value.length, 1)
@@ -182,4 +204,137 @@ test("category streaming grows a prefix and a new search resets entries without 
     assert.equal(viewer.entries.value.length, 3)
     assert.equal(viewer.entries.value[0].value, "fresh0.example")
     assert.equal(viewer.hasMoreEntries.value, false)
+  }))
+
+test("category names filter locally while attributes only filter the selected category's entries", () =>
+  withViewer(async (viewer, worker) => {
+    worker.reply({ type: "ready", categoryCount: 3, entryCount: 215 })
+    const summaries: CategorySummary[] = [
+      {
+        id: 0,
+        code: "A[",
+        count: 205,
+        matches: 205,
+        reverseMatch: false,
+        attributes: [{ key: "cn", count: 2 }]
+      },
+      {
+        id: 1,
+        code: "B",
+        count: 5,
+        matches: 5,
+        reverseMatch: false,
+        attributes: [{ key: "weight", count: 1 }]
+      },
+      {
+        id: 2,
+        code: "ABC",
+        count: 5,
+        matches: 5,
+        reverseMatch: false,
+        attributes: []
+      }
+    ]
+    finishSearch(worker, summaries)
+    const initial = worker.last("entries")
+    viewer.setAttribute("cn")
+    const filtered = worker.last("entries")
+    assert.equal(filtered.attributeKey, "cn")
+    assert.equal(filtered.page, 1)
+    assert.equal(viewer.entryTotal.value, 2)
+    batch(worker, initial, 0, 100, 205)
+    assert.equal(viewer.entries.value.length, 0)
+    batch(worker, filtered, 110, 2, 2)
+    assert.deepEqual(viewer.categories.value, summaries)
+    const requests = worker.requests.length
+    viewer.categoryQuery.value = "["
+    assert.deepEqual(
+      viewer.categories.value.map((c) => c.code),
+      ["A["]
+    )
+    assert.equal(viewer.attributeKey.value, "cn")
+    assert.equal(viewer.entries.value.length, 2)
+    assert.equal(worker.requests.length, requests)
+
+    viewer.categoryQuery.value = "b"
+    assert.deepEqual(
+      viewer.categories.value.map((c) => c.code),
+      ["B", "ABC"]
+    )
+    assert.equal(viewer.selected.value?.code, "B")
+    assert.equal(viewer.attributeKey.value, "")
+    assert.equal(worker.last("entries").attributeKey, undefined)
+    assert.equal(
+      worker.requests.filter((r) => r.type === "search").length,
+      1
+    )
+    viewer.setAttribute("weight")
+    const stale = worker.last("entries")
+    viewer.categoryQuery.value = "no-category"
+    assert.equal(worker.requests.at(-1)?.type, "cancelEntries")
+    batch(worker, stale, 0, 1, 1)
+    assert.equal(viewer.selected.value, undefined)
+    assert.equal(viewer.attributeKey.value, "")
+    assert.equal(viewer.entries.value.length, 0)
+    assert.equal(viewer.entryTotal.value, 0)
+    viewer.categoryQuery.value = ""
+    assert.equal(viewer.categories.value.length, 3)
+    assert.equal(viewer.selected.value?.code, "A[")
+    assert.equal(
+      worker.requests.filter((r) => r.type === "search").length,
+      1
+    )
+  }))
+
+test("content search intersects the category filter, resets attributes and explicit links clear every filter", () =>
+  withViewer(async (viewer, worker) => {
+    worker.reply({ type: "ready", categoryCount: 2, entryCount: 10 })
+    const summaries: CategorySummary[] = ["A", "B"].map((code, id) => ({
+      id,
+      code,
+      count: 5,
+      matches: 5,
+      reverseMatch: false,
+      attributes: [{ key: "cn", count: 1 }]
+    }))
+    finishSearch(worker, summaries)
+    viewer.categoryQuery.value = "b"
+    viewer.setAttribute("cn")
+    const stale = worker.last("entries")
+    viewer.contentQuery.value = "fresh"
+    assert.equal(viewer.attributeKey.value, "")
+    assert.equal(viewer.searching.value, true)
+    batch(worker, stale, 0, 1, 1)
+    assert.equal(viewer.entries.value.length, 0)
+    await new Promise((resolve) => setTimeout(resolve, 270))
+    assert.equal(worker.last("search").contentQuery, "fresh")
+    finishSearch(
+      worker,
+      summaries.map((c) => ({ ...c, matches: 2 }))
+    )
+    assert.deepEqual(
+      viewer.categories.value.map((c) => c.code),
+      ["B"]
+    )
+    assert.equal(viewer.entryTotal.value, 2)
+    viewer.categoryQuery.value = ""
+    assert.equal(viewer.selected.value?.code, "B")
+    viewer.setAttribute("cn")
+    viewer.select(0)
+    assert.equal(viewer.attributeKey.value, "")
+    viewer.setAttribute("cn")
+    viewer.categoryQuery.value = "a"
+    viewer.focusTag("b")
+    assert.equal(viewer.contentQuery.value, "")
+    assert.equal(viewer.categoryQuery.value, "")
+    assert.equal(viewer.attributeKey.value, "")
+    finishSearch(worker, summaries)
+    assert.equal(viewer.selected.value?.code, "B")
+    assert.equal(viewer.mobileDetail.value, true)
+    viewer.categoryQuery.value = "b"
+    viewer.contentQuery.value = "other"
+    await viewer.load()
+    assert.equal(viewer.contentQuery.value, "")
+    assert.equal(viewer.categoryQuery.value, "")
+    assert.equal(viewer.attributeKey.value, "")
   }))

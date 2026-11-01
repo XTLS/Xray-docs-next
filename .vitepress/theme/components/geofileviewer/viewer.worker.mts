@@ -14,6 +14,7 @@ const send = (message: WorkerResponse) => self.postMessage(message)
 let dataset: Dataset | undefined
 let result: SearchResult | undefined
 let searchId = 0
+let entriesId = 0
 
 self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
   const request = event.data
@@ -34,11 +35,15 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
         categoryCount: dataset.categoryCount,
         entryCount: dataset.entryCount
       })
+    } else if (request.type === "cancelEntries") {
+      entriesId++
+      if (result) result.attributeFilter = undefined
     } else if (request.type === "search" && dataset) {
       searchId = request.id
+      entriesId++
       result = undefined
       const found = await dataset.search(
-        request.query,
+        request.contentQuery,
         () => searchId !== request.id
       )
       if (!found) return
@@ -54,10 +59,20 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
       result &&
       searchId === request.searchId
     ) {
+      const currentEntriesId = ++entriesId
+      const page = await dataset.entries(
+        result,
+        request.categoryId,
+        request.page,
+        request.attributeKey,
+        () =>
+          entriesId !== currentEntriesId || searchId !== request.searchId
+      )
+      if (!page) return
       send({
         type: "entries",
         id: request.id,
-        ...dataset.entries(result, request.categoryId, request.page)
+        ...page
       })
     }
   } catch (error) {
