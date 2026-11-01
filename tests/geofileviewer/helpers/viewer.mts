@@ -61,7 +61,7 @@ export async function withViewer(
   })
   try {
     app.mount({})
-    if (autoLoad) await viewer.load()
+    if (autoLoad) await viewer.actions.loadSource()
     await run(viewer, TestWorker.instances[0])
   } finally {
     app.unmount()

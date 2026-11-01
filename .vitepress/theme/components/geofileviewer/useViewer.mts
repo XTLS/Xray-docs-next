@@ -1,407 +1,390 @@
-import { computed, onUnmounted, ref, shallowRef, watch } from "vue"
+import {
+  computed,
+  onUnmounted,
+  reactive,
+  shallowReactive,
+  shallowReadonly
+} from "vue"
 import {
   CATEGORY_PAGE_SIZE,
+  ViewerError,
   type CategorySummary,
-  type ErrorCode,
-  type GeoEntry,
-  type GeoKind
+  type ErrorCode
 } from "./types.mts"
-import { ViewerError } from "./types.mts"
 import {
   presetSource,
+  presets,
   validateUrl,
-  type InputSource,
-  type PresetFile,
-  type LoadProgress
+  type InputSource
 } from "./sources.mts"
-import { createWorkerClient, type WorkerFactory } from "./workerClient.mts"
+import {
+  createWorkerClient,
+  type ViewerEvent,
+  type WorkerFactory
+} from "./workerClient.mts"
+import {
+  initialDraft,
+  initialSession,
+  initialQuery,
+  initialResults,
+  initialView,
+  type SourceDraft,
+  type ViewerTarget,
+  type ViewerResults
+} from "./viewerState.mts"
 
 export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   const client = createWorkerClient(options.createWorker)
-  const source = ref("preset")
-  const sourceOpen = ref(true)
-  const workspace = ref(false)
-  const kind = ref<GeoKind>("geosite")
-  const file = shallowRef<File>()
-  const presetIndex = ref(0)
-  const url = ref("")
-  const loaded = shallowRef<{
-    name: string
-    kind: GeoKind
-    preset?: PresetFile
-    url?: string
-  }>()
-  const loading = ref(false)
-  const progress = ref<number>()
-  const phase = ref<LoadProgress["phase"]>("read")
-  const downloadedBytes = ref(0)
-  const error = ref<ErrorCode>()
-  const contentQuery = ref("")
-  const activeContentQuery = ref("")
-  const categoryQuery = ref("")
-  const attributeKey = ref("")
-  const searching = ref(false)
-  const entriesLoading = ref(false)
-  const allCategories = shallowRef<CategorySummary[]>([])
-  const categories = computed(() => {
-    const needle = categoryQuery.value.trim().toLowerCase()
-    return needle
-      ? allCategories.value.filter((category) =>
-          category.code.toLowerCase().includes(needle)
-        )
-      : allCategories.value
-  })
-  const categoryCount = ref(0)
-  const entryCount = ref(0)
-  const categoryLimit = ref(CATEGORY_PAGE_SIZE)
-  const selectedId = ref<number>()
-  const entries = shallowRef<GeoEntry[]>([])
-  const entryTotal = ref(0)
-  const mobileDetail = ref(false)
-  const categoryMissing = ref("")
+  const draft = shallowReactive(initialDraft())
+  const session = shallowReactive(initialSession())
+  const query = reactive(initialQuery())
+  const view = reactive(initialView())
+  const rows = shallowReactive(initialResults())
   let pendingTag: string | undefined
-  let entryPage = 0
   let searchTimer: ReturnType<typeof setTimeout> | undefined
 
+  const categories = computed(() => {
+    const needle = query.category.trim().toLowerCase()
+    return needle
+      ? rows.categories.filter((c) =>
+          c.code.toLowerCase().includes(needle)
+        )
+      : rows.categories
+  })
   const selected = computed(() =>
-    categories.value.find((c) => c.id === selectedId.value)
-  )
-  const visibleCategories = computed(() =>
-    categories.value.slice(0, categoryLimit.value)
-  )
-  const hasMoreCategories = computed(
-    () => categoryLimit.value < categories.value.length
-  )
-  const hasMoreEntries = computed(
-    () => entries.value.length < entryTotal.value
+    categories.value.find((c) => c.id === rows.selectedId)
   )
   const canLoad = computed(
     () =>
-      source.value === "preset" ||
-      (source.value === "url" ? !!url.value.trim() : !!file.value)
+      draft.mode === "preset" ||
+      (draft.mode === "url" ? !!draft.url.trim() : !!draft.file)
+  )
+  const results = computed<ViewerResults>(
+    () =>
+      ({
+        categories: categories.value as readonly CategorySummary[],
+        visibleCategories: categories.value.slice(0, rows.limit),
+        selected: selected.value,
+        entries: rows.entries,
+        entryTotal: rows.total,
+        entriesLoading: rows.loading,
+        hasMoreCategories: rows.limit < categories.value.length,
+        hasMoreEntries: rows.entries.length < rows.total,
+        categoryMissing: rows.missingTag
+      }) as const
   )
 
-  watch(
-    loaded,
-    (value) => {
-      if (value) workspace.value = true
-    },
-    { flush: "sync" }
-  )
-
-  function stop() {
+  function dispose() {
     clearTimeout(searchTimer)
     client.dispose()
-    loading.value = false
-    searching.value = false
-    entriesLoading.value = false
+    session.status = session.loaded ? "ready" : "idle"
+    query.searching = false
+    rows.loading = false
   }
 
   function resetEntries() {
     client.cancelEntries()
-    entryPage = 0
-    entriesLoading.value = false
-    entries.value = []
-    entryTotal.value = 0
+    rows.entries = []
+    rows.total = 0
+    rows.page = 0
+    rows.loading = false
   }
 
-  function reset() {
-    stop()
-    loaded.value = undefined
-    workspace.value = false
-    allCategories.value = []
-    categoryLimit.value = CATEGORY_PAGE_SIZE
-    resetEntries()
-    selectedId.value = undefined
-    categoryCount.value = 0
-    entryCount.value = 0
-    contentQuery.value = ""
-    activeContentQuery.value = ""
-    categoryQuery.value = ""
-    attributeKey.value = ""
-    mobileDetail.value = false
-    categoryMissing.value = ""
+  function clearData() {
+    session.loaded = undefined
+    Object.assign(query, initialQuery())
+    Object.assign(rows, initialResults())
     pendingTag = undefined
-    progress.value = undefined
-    phase.value = "read"
-    downloadedBytes.value = 0
-    error.value = undefined
-    source.value = "preset"
-    kind.value = "geosite"
-    file.value = undefined
-    presetIndex.value = 0
-    url.value = ""
-    sourceOpen.value = true
   }
 
-  function loadMoreCategories() {
-    if (!loaded.value || searching.value || !hasMoreCategories.value)
+  function resetToHome() {
+    dispose()
+    clearData()
+    Object.assign(draft, initialDraft())
+    Object.assign(session, initialSession())
+    Object.assign(view, initialView())
+  }
+
+  function updateSource(patch: Partial<SourceDraft>) {
+    if (
+      !Object.entries(patch).some(
+        ([key, value]) => draft[key as keyof SourceDraft] !== value
+      )
+    )
       return
-    categoryLimit.value += CATEGORY_PAGE_SIZE
+    if (session.status === "loading") {
+      dispose()
+      session.loaded = undefined
+    }
+    Object.assign(draft, patch)
+    session.error = undefined
+    if (session.status === "error") session.status = "idle"
+    rows.missingTag = ""
+    pendingTag = undefined
   }
 
   function loadMoreEntries() {
     if (
       !client.active ||
-      !loaded.value ||
-      searching.value ||
-      entriesLoading.value ||
-      !hasMoreEntries.value ||
-      selectedId.value === undefined
+      !session.loaded ||
+      query.searching ||
+      rows.loading ||
+      !results.value.hasMoreEntries ||
+      rows.selectedId === undefined
     )
       return
-    entriesLoading.value = true
+    rows.loading = true
     client.entries(
-      selectedId.value,
-      entryPage + 1,
-      attributeKey.value || undefined
+      rows.selectedId,
+      rows.page + 1,
+      query.attribute || undefined
     )
-  }
-
-  function search() {
-    if (!loaded.value || !client.active) return
-    activeContentQuery.value = contentQuery.value
-    searching.value = true
-    resetEntries()
-    client.search(contentQuery.value)
   }
 
   function refreshEntries() {
     resetEntries()
-    entryTotal.value = attributeKey.value
-      ? (selected.value?.attributes.find(
-          (a) => a.key === attributeKey.value
-        )?.count ?? 0)
+    rows.total = query.attribute
+      ? (selected.value?.attributes.find((a) => a.key === query.attribute)
+          ?.count ?? 0)
       : (selected.value?.matches ?? 0)
     loadMoreEntries()
-  }
-
-  function setAttribute(key: string) {
-    if (searching.value || attributeKey.value === key) return
-    attributeKey.value = key
-    refreshEntries()
   }
 
   function revealSelection() {
     const index = Math.max(
       0,
-      categories.value.findIndex((c) => c.id === selectedId.value)
+      categories.value.findIndex((c) => c.id === rows.selectedId)
     )
-    categoryLimit.value =
+    rows.limit =
       (Math.floor(index / CATEGORY_PAGE_SIZE) + 1) * CATEGORY_PAGE_SIZE
   }
 
-  function select(id: number) {
-    if (searching.value) return
-    categoryMissing.value = ""
-    mobileDetail.value = true
-    if (selectedId.value === id) return
-    selectedId.value = id
-    attributeKey.value = ""
+  function searchNow() {
+    if (!session.loaded || !client.active) return
+    query.activeContent = query.content
+    query.searching = true
+    resetEntries()
+    client.search(query.content)
+  }
+
+  function setContentQuery(value: string) {
+    if (query.content === value) return
+    query.content = value
+    clearTimeout(searchTimer)
+    if (!session.loaded) return
+    client.invalidateSearch()
+    query.attribute = ""
+    query.category = ""
+    query.searching = true
+    resetEntries()
+    searchTimer = setTimeout(searchNow, 250)
+  }
+
+  function setCategoryFilter(value: string) {
+    if (query.category === value) return
+    query.category = value
+    if (!session.loaded || query.searching) return
+    rows.missingTag = ""
+    const next = selected.value ?? categories.value[0]
+    if (rows.selectedId !== next?.id) {
+      rows.selectedId = next?.id
+      query.attribute = ""
+      refreshEntries()
+    }
+    revealSelection()
+  }
+
+  function setAttribute(key: string) {
+    if (query.searching || query.attribute === key) return
+    query.attribute = key
     refreshEntries()
   }
 
-  async function load(tag?: string) {
+  function selectCategory(id: number) {
+    if (query.searching) return
+    rows.missingTag = ""
+    view.mobileDetail = true
+    if (rows.selectedId === id) return
+    rows.selectedId = id
+    query.attribute = ""
+    refreshEntries()
+  }
+
+  function acceptSearch(found: CategorySummary[]) {
+    rows.categories = found
+    query.searching = false
+    const index =
+      pendingTag !== undefined
+        ? categories.value.findIndex(
+            (c) => c.code.toLowerCase() === pendingTag!.toLowerCase()
+          )
+        : categories.value.findIndex((c) => c.id === rows.selectedId)
+    if (pendingTag !== undefined) {
+      if (pendingTag && index < 0) rows.missingTag = pendingTag
+      view.mobileDetail = !!pendingTag && index >= 0
+    }
+    pendingTag = undefined
+    rows.selectedId = categories.value[Math.max(0, index)]?.id
+    query.attribute = ""
+    revealSelection()
+    refreshEntries()
+  }
+
+  function fail(code: ErrorCode) {
+    dispose()
+    session.status = "error"
+    session.error = code
+    session.loaded = undefined
+    view.sourceOpen = true
+  }
+
+  function receive(input: InputSource, event: ViewerEvent) {
+    switch (event.type) {
+      case "progress":
+        session.progress = event.progress
+        session.phase = event.phase
+        session.downloadedBytes = event.bytes ?? 0
+        break
+      case "ready":
+        session.status = "ready"
+        session.loaded = {
+          name: input.name,
+          kind: input.kind,
+          preset: input.mode === "remote" ? input.preset : undefined,
+          url: input.mode === "remote" ? input.url : undefined
+        }
+        session.categoryCount = event.categoryCount
+        session.entryCount = event.entryCount
+        view.workspace = true
+        view.sourceOpen = false
+        searchNow()
+        break
+      case "search":
+        acceptSearch(event.categories)
+        break
+      case "entries":
+        if (query.searching) return
+        rows.entries = [...rows.entries, ...event.entries]
+        rows.total = event.total
+        rows.page = event.page
+        rows.loading = false
+        break
+      case "error":
+        fail(event.code)
+    }
+  }
+
+  async function loadSource(tag?: string) {
     if (!canLoad.value) return
-    stop()
+    dispose()
     let input: InputSource
     try {
       input =
-        source.value === "preset"
-          ? presetSource(presetIndex.value)
-          : source.value === "url"
+        draft.mode === "preset"
+          ? presetSource(draft.presetIndex)
+          : draft.mode === "url"
             ? {
                 mode: "remote",
-                name: url.value.trim(),
-                url: validateUrl(url.value),
-                kind: kind.value
+                name: draft.url.trim(),
+                url: validateUrl(draft.url),
+                kind: draft.kind
               }
             : {
                 mode: "local",
-                name: file.value!.name,
-                file: file.value!,
-                kind: kind.value
+                name: draft.file!.name,
+                file: draft.file!,
+                kind: draft.kind
               }
     } catch (error) {
       fail(error instanceof ViewerError ? error.code : "invalidUrl")
       return
     }
-    loaded.value = undefined
-    allCategories.value = []
-    categoryLimit.value = CATEGORY_PAGE_SIZE
-    resetEntries()
-    selectedId.value = undefined
-    contentQuery.value = ""
-    activeContentQuery.value = ""
-    categoryQuery.value = ""
-    attributeKey.value = ""
-    error.value = undefined
-    loading.value = true
-    progress.value = undefined
-    phase.value = input.mode === "remote" ? "download" : "read"
-    downloadedBytes.value = 0
-    mobileDetail.value = false
-    categoryMissing.value = ""
+    clearData()
+    session.error = undefined
+    session.status = "loading"
+    session.progress = undefined
+    session.phase = input.mode === "remote" ? "download" : "read"
+    session.downloadedBytes = 0
+    view.mobileDetail = false
     pendingTag = tag
     try {
-      client.load(input, (message) => {
-        if (message.type === "progress") {
-          progress.value = message.progress
-          phase.value = message.phase
-          downloadedBytes.value = message.bytes ?? 0
-        } else if (message.type === "ready") {
-          loading.value = false
-          loaded.value = {
-            name: input.name,
-            kind: input.kind,
-            preset: input.mode === "remote" ? input.preset : undefined,
-            url: input.mode === "remote" ? input.url : undefined
-          }
-          categoryCount.value = message.categoryCount
-          entryCount.value = message.entryCount
-          sourceOpen.value = false
-          search()
-        } else if (message.type === "search") {
-          allCategories.value = message.categories
-          searching.value = false
-          categoryLimit.value = CATEGORY_PAGE_SIZE
-          if (pendingTag !== undefined) {
-            const index = categories.value.findIndex(
-              (c) => c.code.toLowerCase() === pendingTag!.toLowerCase()
-            )
-            if (pendingTag && index < 0) categoryMissing.value = pendingTag
-            selectedId.value = categories.value[Math.max(0, index)]?.id
-            mobileDetail.value = !!pendingTag && index >= 0
-            pendingTag = undefined
-          } else {
-            const index = Math.max(
-              0,
-              categories.value.findIndex((c) => c.id === selectedId.value)
-            )
-            selectedId.value = categories.value[index]?.id
-          }
-          attributeKey.value = ""
-          revealSelection()
-          refreshEntries()
-        } else if (message.type === "entries" && !searching.value) {
-          entries.value = [...entries.value, ...message.entries]
-          entryTotal.value = message.total
-          entryPage = message.page
-          entriesLoading.value = false
-        } else if (message.type === "error") fail(message.code)
-      })
+      client.load(input, (event) => receive(input, event))
     } catch {
       fail("readFailed")
     }
   }
 
-  function fail(code: ErrorCode) {
-    stop()
-    error.value = code
-    sourceOpen.value = true
-    loaded.value = undefined
-  }
-
-  function focusTag(tag: string) {
+  function focusCategory(tag: string) {
     clearTimeout(searchTimer)
-    searching.value = true
+    Object.assign(query, initialQuery())
     pendingTag = tag
-    categoryMissing.value = ""
-    contentQuery.value = ""
-    categoryQuery.value = ""
-    attributeKey.value = ""
-    clearTimeout(searchTimer)
-    search()
+    rows.missingTag = ""
+    searchNow()
   }
 
-  watch(
-    contentQuery,
-    () => {
-      clearTimeout(searchTimer)
-      if (!loaded.value) return
-      // Invalidate in-flight results as soon as input changes, before debouncing.
-      client.invalidateSearch()
-      attributeKey.value = ""
-      resetEntries()
-      searching.value = true
-      categoryQuery.value = ""
-      searchTimer = setTimeout(search, 250)
-    },
-    { flush: "sync" }
-  )
-  watch(
-    categoryQuery,
-    () => {
-      if (!loaded.value || searching.value) return
-      categoryMissing.value = ""
-      const next =
-        categories.value.find((c) => c.id === selectedId.value) ??
-        categories.value[0]
-      if (selectedId.value !== next?.id) {
-        selectedId.value = next?.id
-        attributeKey.value = ""
-        refreshEntries()
+  function openTarget(target: ViewerTarget) {
+    const current = session.loaded
+    if (target.type === "home") resetToHome()
+    else if (target.type === "preset") {
+      if (current?.preset === presets[target.index]?.file)
+        focusCategory(target.tag)
+      else {
+        updateSource({ mode: "preset", presetIndex: target.index })
+        void loadSource(target.tag)
       }
-      revealSelection()
-    },
-    { flush: "sync" }
-  )
-  watch(
-    [source, kind, file, presetIndex, url],
-    () => {
-      // Editing the source picker should not discard the current dataset.
-      // An active load is cancelled immediately when its input changes.
-      if (loading.value) {
-        stop()
-        loaded.value = undefined
-      }
-      error.value = undefined
-      categoryMissing.value = ""
-      pendingTag = undefined
-    },
-    { flush: "sync" }
-  )
-  onUnmounted(stop)
+    } else if (
+      current?.url === target.url &&
+      current.kind === target.kind &&
+      !current.preset
+    )
+      focusCategory(target.tag)
+    else {
+      updateSource({ mode: "url", url: target.url, kind: target.kind })
+      void loadSource(target.tag)
+    }
+  }
 
+  onUnmounted(dispose)
   return {
-    source,
-    sourceOpen,
-    workspace,
-    kind,
-    file,
-    presetIndex,
-    url,
+    draft: shallowReadonly(draft),
+    session: shallowReadonly(session),
+    query: shallowReadonly(query),
+    view: shallowReadonly(view),
+    results,
     canLoad,
-    loaded,
-    loading,
-    progress,
-    phase,
-    downloadedBytes,
-    error,
-    contentQuery,
-    activeContentQuery,
-    categoryQuery,
-    attributeKey,
-    setAttribute,
-    searching,
-    entriesLoading,
-    categories,
-    categoryCount,
-    entryCount,
-    selected,
-    entries,
-    entryTotal,
-    mobileDetail,
-    categoryMissing,
-    focusTag,
-    visibleCategories,
-    hasMoreCategories,
-    hasMoreEntries,
-    loadMoreCategories,
-    loadMoreEntries,
-    load,
-    stop,
-    reset,
-    select
+    actions: {
+      updateSource,
+      loadSource,
+      cancelLoad: dispose,
+      dispose,
+      resetToHome,
+      openTarget,
+      setContentQuery,
+      setCategoryFilter,
+      setAttribute,
+      selectCategory,
+      focusCategory,
+      openSource() {
+        view.sourceOpen = true
+      },
+      closeSource() {
+        if (session.status === "loading") dispose()
+        view.sourceOpen = false
+      },
+      showCategories() {
+        view.mobileDetail = false
+      },
+      loadMoreEntries,
+      loadMoreCategories() {
+        if (
+          session.loaded &&
+          !query.searching &&
+          results.value.hasMoreCategories
+        )
+          rows.limit += CATEGORY_PAGE_SIZE
+      }
+    }
   }
 }
+
+export type ViewerController = ReturnType<typeof useViewer>

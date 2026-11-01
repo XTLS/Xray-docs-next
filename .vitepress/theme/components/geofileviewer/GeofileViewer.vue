@@ -11,45 +11,73 @@ import SearchInput from "./SearchInput.vue"
 const props = defineProps<{ popupUrl?: string }>()
 const embedded = computed(() => props.popupUrl !== undefined)
 const viewer = useViewer()
-const {
-  source,
-  sourceOpen,
-  workspace,
-  kind,
-  file,
-  presetIndex,
-  url,
-  canLoad,
-  loaded,
-  loading,
-  progress,
-  phase,
-  downloadedBytes,
-  error,
-  contentQuery,
-  activeContentQuery,
-  categoryQuery,
-  attributeKey,
-  setAttribute,
-  searching,
-  entriesLoading,
-  categories,
-  categoryCount,
-  entryCount,
-  selected,
-  entries,
-  entryTotal,
-  mobileDetail,
-  categoryMissing,
-  visibleCategories,
-  hasMoreCategories,
-  hasMoreEntries,
-  loadMoreCategories,
-  loadMoreEntries,
-  load,
-  stop,
-  select
-} = viewer
+const { actions, canLoad } = viewer
+const source = computed({
+  get: () => viewer.draft.mode,
+  set: (value) => actions.updateSource({ mode: value })
+})
+const kind = computed({
+  get: () => viewer.draft.kind,
+  set: (value) => actions.updateSource({ kind: value })
+})
+const file = computed({
+  get: () => viewer.draft.file,
+  set: (value) => actions.updateSource({ file: value })
+})
+const presetIndex = computed({
+  get: () => viewer.draft.presetIndex,
+  set: (value) => actions.updateSource({ presetIndex: value })
+})
+const url = computed({
+  get: () => viewer.draft.url,
+  set: (value) => actions.updateSource({ url: value })
+})
+const loaded = computed(() => viewer.session.loaded)
+const phase = computed(() => viewer.session.phase)
+const progress = computed(() => viewer.session.progress)
+const downloadedBytes = computed(() => viewer.session.downloadedBytes)
+const error = computed(() => viewer.session.error)
+const categoryCount = computed(() => viewer.session.categoryCount)
+const entryCount = computed(() => viewer.session.entryCount)
+const workspace = computed(() => viewer.view.workspace)
+const sourceOpen = computed({
+  get: () => viewer.view.sourceOpen,
+  set: (value) => (value ? actions.openSource() : actions.closeSource())
+})
+const mobileDetail = computed(() => viewer.view.mobileDetail)
+const contentQuery = computed({
+  get: () => viewer.query.content,
+  set: actions.setContentQuery
+})
+const activeContentQuery = computed(() => viewer.query.activeContent)
+const categoryQuery = computed({
+  get: () => viewer.query.category,
+  set: actions.setCategoryFilter
+})
+const attributeKey = computed(() => viewer.query.attribute)
+const searching = computed(() => viewer.query.searching)
+const loading = computed(() => viewer.session.status === "loading")
+const categories = computed(() => viewer.results.value.categories)
+const visibleCategories = computed(
+  () => viewer.results.value.visibleCategories
+)
+const selected = computed(() => viewer.results.value.selected)
+const entries = computed(() => viewer.results.value.entries)
+const entryTotal = computed(() => viewer.results.value.entryTotal)
+const entriesLoading = computed(() => viewer.results.value.entriesLoading)
+const hasMoreCategories = computed(
+  () => viewer.results.value.hasMoreCategories
+)
+const hasMoreEntries = computed(() => viewer.results.value.hasMoreEntries)
+const categoryMissing = computed(
+  () => viewer.results.value.categoryMissing
+)
+const load = actions.loadSource
+const stop = actions.dispose
+const select = actions.selectCategory
+const setAttribute = actions.setAttribute
+const loadMoreCategories = actions.loadMoreCategories
+const loadMoreEntries = actions.loadMoreEntries
 const { permalink, invalidLink, copyStatus, copy } = usePermalink(
   viewer,
   props.popupUrl
@@ -491,7 +519,7 @@ function drop(event: DragEvent) {
           :aria-busy="entriesLoading"
         >
           <header class="geo-content-header">
-            <button class="geo-back" @click="mobileDetail = false">
+            <button class="geo-back" @click="actions.showCategories()">
               {{ t.back }}
             </button>
             <div>

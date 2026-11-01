@@ -6,20 +6,20 @@ import { withViewer, TestWorker } from "./helpers/viewer.mts"
 test("cancelled or replaced workers cannot update the current dataset", () =>
   withViewer(async (viewer) => {
     const instances = TestWorker.instances
-    viewer.presetIndex.value = 1
-    await viewer.load()
+    viewer.actions.updateSource({ presetIndex: 1 })
+    await viewer.actions.loadSource()
     const old = instances[0]
-    viewer.presetIndex.value = 0
-    await viewer.load("uS")
+    viewer.actions.updateSource({ presetIndex: 0 })
+    await viewer.actions.loadSource("uS")
     const current = instances[1]
     assert.equal(old.terminated, true)
     old.reply({ type: "ready", categoryCount: 999, entryCount: 999 })
     old.onerror?.()
-    assert.equal(viewer.loaded.value, undefined)
-    assert.equal(viewer.error.value, undefined)
+    assert.equal(viewer.session.loaded, undefined)
+    assert.equal(viewer.session.error, undefined)
     current.reply({ type: "ready", categoryCount: 19, entryCount: 1000 })
-    assert.equal(viewer.loaded.value?.name, "geoip-lite.dat")
-    assert.equal(viewer.categoryCount.value, 19)
+    assert.equal(viewer.session.loaded?.name, "geoip-lite.dat")
+    assert.equal(viewer.session.categoryCount, 19)
     const initialSearch = current.requests.findLast(
       (request) => request.type === "search"
     )!
@@ -36,24 +36,24 @@ test("cancelled or replaced workers cannot update the current dataset", () =>
         attributes: []
       }))
     })
-    assert.equal(viewer.selected.value?.code, "US")
+    assert.equal(viewer.results.value.selected?.code, "US")
     assert.equal(
-      viewer.visibleCategories.value.some((c) => c.code === "US"),
+      viewer.results.value.visibleCategories.some((c) => c.code === "US"),
       true
     )
-    assert.equal(viewer.visibleCategories.value[0].id, 0)
-    assert.equal(viewer.mobileDetail.value, true)
-    viewer.presetIndex.value = 2
-    assert.equal(viewer.loaded.value?.name, "geoip-lite.dat")
+    assert.equal(viewer.results.value.visibleCategories[0].id, 0)
+    assert.equal(viewer.view.mobileDetail, true)
+    viewer.actions.updateSource({ presetIndex: 2 })
+    assert.equal(viewer.session.loaded?.name, "geoip-lite.dat")
     assert.equal(current.terminated, false)
-    viewer.focusTag("missing")
+    viewer.actions.focusCategory("missing")
     const missingSearch = current.requests.findLast(
       (request) => request.type === "search"
     )!
     if (missingSearch.type !== "search") throw Error()
     current.reply({ type: "search", id: missingSearch.id, categories: [] })
-    assert.equal(viewer.categoryMissing.value, "missing")
-    viewer.contentQuery.value = "new query"
+    assert.equal(viewer.results.value.categoryMissing, "missing")
+    viewer.actions.setContentQuery("new query")
     const staleSearch = current.requests.find(
       (request) => request.type === "search"
     )!
@@ -72,10 +72,10 @@ test("cancelled or replaced workers cannot update the current dataset", () =>
         }
       ]
     })
-    assert.equal(viewer.categories.value.length, 0)
-    viewer.stop()
+    assert.equal(viewer.results.value.categories.length, 0)
+    viewer.actions.dispose()
     current.reply({ type: "ready", categoryCount: 999, entryCount: 999 })
-    assert.equal(viewer.categoryCount.value, 19)
-    assert.equal(viewer.loading.value, false)
+    assert.equal(viewer.session.categoryCount, 19)
+    assert.equal(viewer.session.status === "loading", false)
     await nextTick()
   }, false))

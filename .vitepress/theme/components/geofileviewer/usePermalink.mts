@@ -18,8 +18,8 @@ export function usePermalink(
   const ownQueries = new Set<string>()
   let applying = false
   const permalink = computed(() => {
-    const source = viewer.loaded.value
-    const category = viewer.selected.value
+    const source = viewer.session.loaded
+    const category = viewer.results.value.selected
     if (!mounted.value || !source || !category) return ""
     if (source.preset)
       return categoryLink(
@@ -58,29 +58,18 @@ export function usePermalink(
     const parsed = parsePermalink(search)
     invalidLink.value = parsed.invalid
     applying = true
-    if (parsed.invalid || (!parsed.file && !parsed.url)) {
-      viewer.reset()
-    } else if (parsed.url) {
-      const current = viewer.loaded.value
-      if (
-        current?.url === parsed.url &&
-        current.kind === parsed.kind &&
-        !current.preset
-      )
-        viewer.focusTag(parsed.tag)
-      else {
-        viewer.source.value = "url"
-        viewer.url.value = parsed.url
-        viewer.kind.value = parsed.kind
-        void viewer.load(parsed.tag)
-      }
-    } else if (viewer.loaded.value?.preset === parsed.file)
-      viewer.focusTag(parsed.tag)
-    else {
-      viewer.source.value = "preset"
-      viewer.presetIndex.value = parsed.index
-      void viewer.load(parsed.tag)
-    }
+    viewer.actions.openTarget(
+      parsed.invalid || (!parsed.file && !parsed.url)
+        ? { type: "home" }
+        : parsed.url
+          ? {
+              type: "url",
+              url: parsed.url,
+              kind: parsed.kind,
+              tag: parsed.tag
+            }
+          : { type: "preset", index: parsed.index, tag: parsed.tag }
+    )
     applying = false
   }
 
@@ -108,22 +97,22 @@ export function usePermalink(
 
   watch(
     [
-      viewer.source,
-      viewer.kind,
-      viewer.file,
-      viewer.url,
-      viewer.presetIndex
+      () => viewer.draft.mode,
+      () => viewer.draft.kind,
+      () => viewer.draft.file,
+      () => viewer.draft.url,
+      () => viewer.draft.presetIndex
     ],
     () => {
       if (!mounted.value || applying) return
       invalidLink.value = false
-      if (!viewer.loaded.value) clearSourceQuery()
+      if (!viewer.session.loaded) clearSourceQuery()
     },
     { flush: "sync" }
   )
 
   watch(
-    viewer.loaded,
+    () => viewer.session.loaded,
     (value) => {
       if (value) invalidLink.value = false
       if (mounted.value && !applying && !value?.preset && !value?.url)
@@ -132,16 +121,23 @@ export function usePermalink(
     { flush: "sync" }
   )
 
-  watch([viewer.loaded, viewer.selected, viewer.searching], () => {
-    copyStatus.value = ""
-    if (
-      permalink.value &&
-      !applying &&
-      !viewer.searching.value &&
-      !viewer.categoryMissing.value
-    )
-      replace(new URL(permalink.value))
-  })
+  watch(
+    [
+      () => viewer.session.loaded,
+      () => viewer.results.value.selected,
+      () => viewer.query.searching
+    ],
+    () => {
+      copyStatus.value = ""
+      if (
+        permalink.value &&
+        !applying &&
+        !viewer.query.searching &&
+        !viewer.results.value.categoryMissing
+      )
+        replace(new URL(permalink.value))
+    }
+  )
 
   async function copy() {
     if (!permalink.value) return
