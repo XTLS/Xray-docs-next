@@ -9,4 +9,4 @@ description: Просматривайте файлы геоданных GeoIP и
 import GeofileViewer from '../../../.vitepress/theme/components/geofileviewer/GeofileViewer.vue'
 </script>
 
-<GeofileViewer />
+<ClientOnly><GeofileViewer /></ClientOnly>

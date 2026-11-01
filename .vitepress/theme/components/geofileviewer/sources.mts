@@ -56,7 +56,7 @@ export function validateUrl(value: string): string {
   }
 }
 
-export function canAutoLoadUrl(value: string): boolean {
+export function isAllowedShareUrl(value: string): boolean {
   try {
     const url = new URL(validateUrl(value))
     return (

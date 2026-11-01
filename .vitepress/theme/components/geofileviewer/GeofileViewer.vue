@@ -3,6 +3,7 @@ import { computed, onMounted } from "vue"
 import { useData, withBase } from "vitepress"
 import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
+import { presets } from "./sources.mts"
 import { useViewerSharing } from "./useViewerSharing.mts"
 import { useViewerPageRoute } from "./useViewerPageRoute.mts"
 import { useViewerTarget } from "./useViewerTarget.mts"
@@ -11,9 +12,10 @@ import ViewerSource from "./ViewerSource.vue"
 import ViewerCategoryList from "./ViewerCategoryList.vue"
 import ViewerEntryList from "./ViewerEntryList.vue"
 import SearchInput from "./SearchInput.vue"
-const props = defineProps<{ host?: ViewerHost }>()
-const host: ViewerHost = props.host ?? { mode: "page" }
-const embedded = host.mode === "embedded"
+import MarqueeText from "./MarqueeText.vue"
+const props = defineProps<{ host?: ViewerHost; active?: boolean }>()
+const emit = defineEmits<{ ready: [] }>()
+const embedded = props.host?.mode === "embedded"
 const viewer = useViewer()
 const {
   draft,
@@ -70,29 +72,42 @@ const progressLabel = computed(
       index: t.value.processing
     })[session.phase]
 )
-const sourceSummary = computed(() =>
-  session.loaded
+const loadedSourceName = computed(() => {
+  const loaded = session.loaded
+  if (!loaded) return ""
+  const index = presets.findIndex(
+    (preset) => preset.file === loaded.preset
+  )
+  return index < 0
+    ? loaded.name
+    : `${t.value.preset} · ${t.value.presetNames[index]}`
+})
+const sourceSummary = computed(() => {
+  const summary = session.loaded
     ? [
-        session.loaded.name,
-        session.loaded.kind === "geoip" ? "GeoIP" : "GeoSite",
+        loadedSourceName.value,
+        ...(session.loaded.preset
+          ? []
+          : [session.loaded.kind === "geoip" ? "GeoIP" : "GeoSite"]),
         number(session.categoryCount) + " " + t.value.categories,
         number(session.entryCount) + " " + t.value.entries
       ].join(" · ")
     : loading.value
       ? progressLabel.value
       : t.value.emptyTitle
-)
+  return loading.value && session.progress !== undefined
+    ? `${summary} · ${Math.round(session.progress * 100)}%`
+    : summary
+})
 const { permalink, copyStatus, copy } = useViewerSharing(viewer, () =>
-  host.mode === "page" ? location.href : host.url
+  props.host?.mode === "embedded" ? props.host.url : location.href
 )
-function setupLocation() {
-  if (host.mode === "page")
-    return useViewerPageRoute(viewer, permalink).invalidLink
-  const target = useViewerTarget(viewer)
-  onMounted(() => target.apply(new URL(host.url).search))
-  return target.invalidLink
-}
-const invalidLink = setupLocation()
+const linkTarget = embedded ? useViewerTarget(viewer) : undefined
+const invalidLink = linkTarget
+  ? linkTarget.invalidLink
+  : useViewerPageRoute(viewer, permalink).invalidLink
+defineExpose({ openLink: (search: string) => linkTarget?.apply(search) })
+onMounted(() => emit("ready"))
 function closeDocsOnBlur(event: FocusEvent) {
   const details = event.currentTarget as HTMLDetailsElement
   if (!details.contains(event.relatedTarget as Node | null))
@@ -120,12 +135,7 @@ function closeDocsOnBlur(event: FocusEvent) {
     >
       <div class="geo-workspace-title">
         <h1 v-if="!embedded">{{ t.title }}</h1>
-        <p class="geo-summary" :title="sourceSummary">
-          {{ sourceSummary
-          }}<template v-if="loading && session.progress !== undefined">
-            · {{ Math.round(session.progress * 100) }}%</template
-          >
-        </p>
+        <MarqueeText :text="sourceSummary" />
       </div>
       <div class="geo-workspace-actions">
         <details
@@ -192,11 +202,13 @@ function closeDocsOnBlur(event: FocusEvent) {
       :session="session"
       :view="view"
       :embedded="embedded"
+      :active="props.active !== false"
       :can-load="canLoad"
       :remote-allowed="remoteAllowed"
       :t="t"
       :locale="lang"
       :progress-label="progressLabel"
+      :loaded-source-name="loadedSourceName"
       @source-change="actions.updateSource"
       @load="actions.loadSource()"
       @cancel="actions.cancelLoad"
@@ -281,11 +293,13 @@ function closeDocsOnBlur(event: FocusEvent) {
         />
       </section>
     </template>
-    <section v-else class="geo-empty geo-panel" :aria-busy="loading">
-      <span class="geo-empty-icon" aria-hidden="true">{ }</span>
-      <h2>{{ loading ? progressLabel : t.emptyTitle }}</h2>
-      <p v-if="!loading">{{ t.emptyBody }}</p>
-    </section>
+    <p
+      v-else-if="view.workspace && !view.sourceOpen"
+      class="geo-workspace-status"
+      role="status"
+    >
+      {{ loading ? progressLabel : t.emptyBody }}
+    </p>
     <nav
       v-if="!view.workspace"
       class="geo-links"
@@ -297,9 +311,7 @@ function closeDocsOnBlur(event: FocusEvent) {
       <a :href="withBase(`${localePrefix}/config/geodata.html`)">{{
         t.geodataDocs
       }}</a>
-      <a :href="sourceDocs" target="_blank" rel="noreferrer noopener">{{
-        t.dataSourceDocs
-      }}</a>
+      <a :href="sourceDocs">{{ t.dataSourceDocs }}</a>
     </nav>
   </component>
 </template>

@@ -81,7 +81,7 @@ test("external links, other pages and navigation within the standalone viewer st
   )
 })
 
-test("file parameters select official presets; custom sources use the URL parameter", () => {
+test("file parameters select Xray datasets; custom sources use the URL parameter", () => {
   assert.equal(parsePermalink("").invalid, false)
   assert.equal(parsePermalink("?tag=us").file, undefined)
   for (const file of [

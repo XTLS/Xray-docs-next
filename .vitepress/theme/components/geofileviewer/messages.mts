@@ -4,11 +4,12 @@ export const zh = {
   source: "数据来源",
   changeSource: "切换来源",
   collapse: "收起",
-  preset: "官方预设",
+  preset: "Xray 数据",
   url: "URL",
   local: "本地文件",
-  presetSource: "来源",
-  presetDelivery: "从远程 GitHub 仓库实时加载",
+  loadedSource: "已加载：",
+  noLoadedSource: "尚未加载文件",
+  presetDelivery: "从远程仓库实时拉取",
   presetNames: [
     "GeoIP 精简版",
     "GeoIP 完整版",
@@ -28,7 +29,9 @@ export const zh = {
   browse: "选择文件",
   load: "加载文件",
   cancel: "取消",
-  close: "关闭查看器",
+  cancelLoad: "取消加载",
+  minimize: "收起并保留状态",
+  close: "关闭并清空数据",
   retry: "重试",
   emptyTitle: "从一个数据文件开始",
   emptyBody: "加载文件后，在左侧选择分类，在右侧查看条目。",
@@ -69,7 +72,7 @@ export const zh = {
   relatedDocs: "相关文档",
   routingDocs: "路由与规则格式",
   geodataDocs: "地理数据文件",
-  dataSourceDocs: "官方数据源与版本说明",
+  dataSourceDocs: "Xray 数据源与版本说明",
   errors: {
     emptyFile: "文件为空，请选择包含 Geo 数据的文件。",
     invalidFile:
@@ -94,11 +97,12 @@ const en: Messages = {
   source: "Data source",
   changeSource: "Change source",
   collapse: "Collapse",
-  preset: "Official presets",
+  preset: "Xray data",
   url: "URL",
   local: "Local file",
-  presetSource: "Source",
-  presetDelivery: "Fetched on demand from the remote GitHub repository",
+  loadedSource: "Loaded: ",
+  noLoadedSource: "No file loaded",
+  presetDelivery: "Fetched from the remote repo",
   presetNames: [
     "GeoIP Lite",
     "GeoIP Full",
@@ -118,7 +122,9 @@ const en: Messages = {
   browse: "Choose file",
   load: "Load file",
   cancel: "Cancel",
-  close: "Close viewer",
+  cancelLoad: "Cancel loading",
+  minimize: "Minimize and keep state",
+  close: "Close and clear data",
   retry: "Retry",
   emptyTitle: "Start with a data file",
   emptyBody:
@@ -161,7 +167,7 @@ const en: Messages = {
   relatedDocs: "Related documentation",
   routingDocs: "Routing and rule formats",
   geodataDocs: "Geodata files",
-  dataSourceDocs: "Official data and edition details",
+  dataSourceDocs: "Xray data sources and editions",
   errors: {
     emptyFile: "This file is empty. Choose a file containing Geo data.",
     invalidFile:
@@ -186,12 +192,12 @@ const ru: Messages = {
   source: "Источник данных",
   changeSource: "Сменить источник",
   collapse: "Свернуть",
-  preset: "Готовые наборы",
+  preset: "Данные Xray",
   url: "URL",
   local: "Локальный файл",
-  presetSource: "Источник",
-  presetDelivery:
-    "Загружается по запросу из удалённого репозитория GitHub",
+  loadedSource: "Загружено: ",
+  noLoadedSource: "Файл не загружен",
+  presetDelivery: "Из удалённого репозитория",
   presetNames: [
     "GeoIP Lite",
     "GeoIP Full",
@@ -211,7 +217,9 @@ const ru: Messages = {
   browse: "Выбрать файл",
   load: "Загрузить файл",
   cancel: "Отмена",
-  close: "Закрыть просмотр",
+  cancelLoad: "Отменить загрузку",
+  minimize: "Свернуть и сохранить состояние",
+  close: "Закрыть и очистить данные",
   retry: "Повторить",
   emptyTitle: "Начните с файла данных",
   emptyBody:
@@ -254,7 +262,7 @@ const ru: Messages = {
   relatedDocs: "Связанная документация",
   routingDocs: "Маршрутизация и формат правил",
   geodataDocs: "Файлы геоданных",
-  dataSourceDocs: "Официальные данные и версии",
+  dataSourceDocs: "Источники и версии данных Xray",
   errors: {
     emptyFile: "Файл пуст. Выберите файл с геоданными.",
     invalidFile:

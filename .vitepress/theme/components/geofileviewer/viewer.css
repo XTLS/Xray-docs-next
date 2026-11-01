@@ -5,6 +5,18 @@
   padding: 48px 32px 64px;
   color: var(--vp-c-text-1);
 }
+.geo-viewer--page:not(.is-workspace) {
+  max-width: 964px;
+  padding-top: clamp(24px, 5dvh, 64px);
+  padding-bottom: 40px;
+}
+.geo-viewer:not(.is-workspace) > .geo-source {
+  margin-bottom: 0;
+}
+.geo-viewer:not(.is-workspace) > .geo-links {
+  margin-top: 16px;
+  font-size: 13px;
+}
 .geo-heading {
   margin-bottom: 28px;
 }
@@ -22,28 +34,13 @@
   font-weight: 700;
   letter-spacing: -0.025em;
 }
-.geo-heading > p:last-child,
-.geo-empty p {
+.geo-heading > p:last-child {
   color: var(--vp-c-text-2);
 }
-.geo-empty {
-  padding: 56px 24px;
-  text-align: center;
-}
-.geo-empty-icon {
-  display: block;
-  margin-bottom: 16px;
-  color: var(--vp-c-text-3);
-  font-family: var(--vp-font-family-mono);
-  font-size: 32px;
-}
-.geo-empty h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 10px;
-}
-.geo-empty p {
+.geo-workspace-status {
+  padding: 16px;
   font-size: 14px;
+  color: var(--vp-c-text-2);
 }
 .geo-toolbar {
   display: flex;
@@ -161,9 +158,6 @@
 }
 .geo-workspace-title .geo-summary {
   margin-top: 3px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .geo-workspace-actions {
   display: flex;
@@ -236,16 +230,6 @@
   height: auto;
   min-height: 0;
 }
-.is-workspace > .geo-empty {
-  flex: 1;
-  min-height: 0;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: auto;
-}
 .geo-viewer.geo-viewer--embedded {
   display: flex;
   flex-direction: column;
@@ -257,15 +241,14 @@
   overflow: auto;
   overscroll-behavior: contain;
 }
+.geo-viewer.geo-viewer--embedded:not(.is-workspace) {
+  display: block;
+  height: auto;
+  overflow: visible;
+}
 .geo-viewer--embedded:not(.is-workspace) > .geo-source,
 .geo-viewer--embedded > .geo-links {
   flex-shrink: 0;
-}
-.geo-viewer--embedded:not(.is-workspace) > .geo-empty {
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 .geo-viewer.geo-viewer--embedded.is-workspace {
   margin: 0;

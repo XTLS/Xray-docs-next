@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue"
 import type { Messages } from "./messages.mts"
-import { presets, presetSource } from "./sources.mts"
+import { presets } from "./sources.mts"
+import MarqueeText from "./MarqueeText.vue"
 import type {
   SourceDraft,
   ViewerSession,
@@ -12,11 +13,13 @@ const props = defineProps<{
   session: ViewerSession
   view: ViewerView
   embedded: boolean
+  active: boolean
   canLoad: boolean
   remoteAllowed: boolean
   t: Messages
   locale: string
   progressLabel: string
+  loadedSourceName: string
 }>()
 const emit = defineEmits<{
   sourceChange: [patch: Partial<SourceDraft>]
@@ -41,7 +44,13 @@ const url = computed({
   set: (value) => emit("sourceChange", { url: value })
 })
 const file = computed(() => props.draft.file)
-const presetUrls = presets.map((_, index) => presetSource(index).url)
+const currentName = computed(() =>
+  props.session.loaded
+    ? props.t.loadedSource + props.loadedSourceName
+    : loading.value
+      ? props.progressLabel
+      : props.t.noLoadedSource
+)
 const tabs = computed(() => [
   ...(props.remoteAllowed
     ? [
@@ -55,10 +64,20 @@ const loading = computed(() => props.session.status === "loading")
 const fileInput = ref<HTMLInputElement>()
 const sourcePanel = ref<HTMLElement>()
 const dragging = ref(false)
+let sourceScrollTop = 0
 const number = (value: number) => value.toLocaleString(props.locale)
 const load = () => emit("load")
 const stop = () => emit("cancel")
 const closeSource = () => emit("close")
+function rememberScroll(event: Event) {
+  const panel = event.currentTarget
+  if (
+    props.active &&
+    panel instanceof HTMLDialogElement &&
+    panel.clientHeight
+  )
+    sourceScrollTop = panel.scrollTop
+}
 function pick(event: Event) {
   const selected = (event.target as HTMLInputElement).files?.[0]
   if (selected) emit("sourceChange", { file: selected })
@@ -68,13 +87,17 @@ function drop(event: DragEvent) {
   emit("sourceChange", { file: event.dataTransfer?.files[0] })
 }
 watch(
-  () => [props.view.workspace, props.view.sourceOpen],
+  () => [props.active, props.view.workspace, props.view.sourceOpen],
   async () => {
     await nextTick()
     const panel = sourcePanel.value
     if (!(panel instanceof HTMLDialogElement)) return
-    if (props.view.sourceOpen && !panel.open) panel.showModal()
-    else if (!props.view.sourceOpen && panel.open) panel.close()
+    if (props.active && props.view.sourceOpen && !panel.open) {
+      panel.showModal()
+      panel.scrollTop = sourceScrollTop
+    } else if ((!props.active || !props.view.sourceOpen) && panel.open) {
+      panel.close()
+    }
   },
   { flush: "post" }
 )
@@ -90,7 +113,7 @@ watch(
     }"
     aria-labelledby="geo-source-title"
     @cancel.stop.prevent="closeSource"
-    @close="emit('close')"
+    @scroll.passive="rememberScroll"
   >
     <div class="geo-panel-heading">
       <h2 id="geo-source-title">{{ t.source }}</h2>
@@ -102,12 +125,11 @@ watch(
         {{ t.cancel }}
       </button>
     </div>
-    <p v-if="session.loaded" class="geo-summary">
-      {{ session.loaded.name }} ·
-      {{ session.loaded.kind === "geoip" ? "GeoIP" : "GeoSite" }} ·
-      {{ number(session.categoryCount) }} {{ t.categories }} ·
-      {{ number(session.entryCount) }} {{ t.entries }}
-    </p>
+    <MarqueeText
+      v-if="view.workspace"
+      class="geo-source-current"
+      :text="currentName"
+    />
     <template v-if="view.sourceOpen">
       <div class="geo-tabs" :aria-label="t.source">
         <button
@@ -133,17 +155,21 @@ watch(
           />
           <span class="geo-preset-content"
             ><strong>{{ name }}</strong
-            ><small>{{ t.presetDescriptions[index] }}</small
-            ><small class="geo-preset-source"
-              ><span>{{ t.presetSource }}: XTLS/Xray-rules-dat</span
-              ><a
-                :href="presetUrls[index]"
-                :title="presetUrls[index]"
-                target="_blank"
-                rel="noopener noreferrer"
-                @click.stop
-                >{{ presets[index].path }}.gz</a
-              ><span>{{ t.presetDelivery }}</span></small
+            ><small
+              class="geo-preset-description"
+              :title="t.presetDescriptions[index]"
+              >{{ t.presetDescriptions[index] }}</small
+            ><small
+              class="geo-preset-source"
+              :title="`${t.presetDelivery} ${presets[index].file}`"
+              ><span
+                class="vpi-simple-icons-github"
+                role="img"
+                aria-label="GitHub"
+              />
+              <span class="geo-preset-source-text">{{
+                `${t.presetDelivery} ${presets[index].file}`
+              }}</span></small
             ></span
           >
         </label>
@@ -208,42 +234,52 @@ watch(
       </div>
       <div class="geo-source-actions">
         <button
-          class="geo-button primary"
-          :disabled="!canLoad || loading"
-          @click="load()"
+          class="geo-button primary geo-load-button"
+          :disabled="!loading && !canLoad"
+          @click="loading ? stop() : load()"
         >
-          {{ t.load }}
+          <span>{{
+            loading ? t.cancelLoad : session.error ? t.retry : t.load
+          }}</span>
+          <span class="geo-load-measure" aria-hidden="true">{{
+            t.cancelLoad
+          }}</span>
         </button>
+        <div
+          class="geo-source-status"
+          :class="{ 'is-error': session.error }"
+          :role="session.error ? 'alert' : 'status'"
+          aria-atomic="true"
+        >
+          <span v-if="loading">
+            {{ progressLabel }}
+            <template v-if="session.progress !== undefined">
+              · {{ Math.round(session.progress * 100) }}%</template
+            >
+            <template v-if="session.downloadedBytes">
+              ·
+              {{
+                (session.downloadedBytes / 1048576).toLocaleString(
+                  locale,
+                  { maximumFractionDigits: 1 }
+                )
+              }}
+              MiB</template
+            >
+          </span>
+          <span v-else-if="session.error">{{
+            t.errors[session.error]
+          }}</span>
+        </div>
+        <progress
+          v-if="loading"
+          class="geo-source-progress"
+          :value="session.progress"
+          max="1"
+          :aria-label="progressLabel"
+        />
       </div>
     </template>
-    <div v-if="session.error" class="geo-notice error" role="alert">
-      {{ t.errors[session.error] }}
-      <button class="geo-button" :disabled="!canLoad" @click="load()">
-        {{ t.retry }}
-      </button>
-    </div>
-    <div v-if="loading" class="geo-notice geo-progress" role="status">
-      <span
-        >{{ progressLabel
-        }}<template v-if="session.progress !== undefined">
-          · {{ Math.round(session.progress * 100) }}%</template
-        ><template v-if="session.downloadedBytes">
-          ·
-          {{
-            (session.downloadedBytes / 1048576).toLocaleString(locale, {
-              maximumFractionDigits: 1
-            })
-          }}
-          MiB</template
-        ></span
-      >
-      <progress
-        :value="session.progress"
-        max="1"
-        :aria-label="progressLabel"
-      />
-      <button class="geo-button" @click="stop">{{ t.cancel }}</button>
-    </div>
   </component>
 </template>
 <style scoped src="./source.css"></style>
