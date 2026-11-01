@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue"
 import type { Messages } from "./messages.mts"
+import { presets, presetSource } from "./sources.mts"
 import type {
   SourceDraft,
   ViewerSession,
@@ -12,6 +13,7 @@ const props = defineProps<{
   view: ViewerView
   embedded: boolean
   canLoad: boolean
+  remoteAllowed: boolean
   t: Messages
   locale: string
   progressLabel: string
@@ -39,9 +41,14 @@ const url = computed({
   set: (value) => emit("sourceChange", { url: value })
 })
 const file = computed(() => props.draft.file)
+const presetUrls = presets.map((_, index) => presetSource(index).url)
 const tabs = computed(() => [
-  { id: "preset" as const, label: props.t.preset },
-  { id: "url" as const, label: props.t.url },
+  ...(props.remoteAllowed
+    ? [
+        { id: "preset" as const, label: props.t.preset },
+        { id: "url" as const, label: props.t.url }
+      ]
+    : []),
   { id: "local" as const, label: props.t.local }
 ])
 const loading = computed(() => props.session.status === "loading")
@@ -53,9 +60,8 @@ const load = () => emit("load")
 const stop = () => emit("cancel")
 const closeSource = () => emit("close")
 function pick(event: Event) {
-  emit("sourceChange", {
-    file: (event.target as HTMLInputElement).files?.[0]
-  })
+  const selected = (event.target as HTMLInputElement).files?.[0]
+  if (selected) emit("sourceChange", { file: selected })
 }
 function drop(event: DragEvent) {
   dragging.value = false
@@ -83,7 +89,7 @@ watch(
       'is-embedded-source': embedded
     }"
     aria-labelledby="geo-source-title"
-    @cancel="closeSource"
+    @cancel.stop.prevent="closeSource"
     @close="emit('close')"
   >
     <div class="geo-panel-heading">
@@ -125,9 +131,20 @@ watch(
             name="geo-preset"
             :value="index"
           />
-          <span
+          <span class="geo-preset-content"
             ><strong>{{ name }}</strong
-            ><small>{{ t.presetDescriptions[index] }}</small></span
+            ><small>{{ t.presetDescriptions[index] }}</small
+            ><small class="geo-preset-source"
+              ><span>{{ t.presetSource }}: XTLS/Xray-rules-dat</span
+              ><a
+                :href="presetUrls[index]"
+                :title="presetUrls[index]"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click.stop
+                >{{ presets[index].path }}.gz</a
+              ><span>{{ t.presetDelivery }}</span></small
+            ></span
           >
         </label>
       </div>
@@ -180,6 +197,7 @@ watch(
           accept=".dat,.gz"
           :aria-label="t.browse"
           @change="pick"
+          @cancel.stop
         />
         <button class="geo-button" @click="fileInput?.click()">
           {{ t.browse }}

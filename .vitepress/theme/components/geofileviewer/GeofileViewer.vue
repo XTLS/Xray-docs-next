@@ -15,15 +15,40 @@ const props = defineProps<{ host?: ViewerHost }>()
 const host: ViewerHost = props.host ?? { mode: "page" }
 const embedded = host.mode === "embedded"
 const viewer = useViewer()
-const { draft, session, query, view, results, canLoad, actions } = viewer
+const {
+  draft,
+  session,
+  query,
+  view,
+  results,
+  canLoad,
+  remoteAllowed,
+  actions
+} = viewer
 const { lang } = useData()
 const t = computed(() => getMessages(lang.value))
 const contentQuery = computed({
   get: () => query.content,
   set: actions.setContentQuery
 })
+const searchLabel = computed(() =>
+  session.loaded?.kind === "geoip"
+    ? query.mode === "match"
+      ? t.value.ipSearch
+      : t.value.cidrSearch
+    : query.mode === "match"
+      ? t.value.domainSearch
+      : t.value.contentSearch
+)
 const loading = computed(() => session.status === "loading")
 const number = (value: number) => value.toLocaleString(lang.value)
+const searchStatus = computed(() =>
+  query.error
+    ? t.value[query.error]
+    : query.searching
+      ? t.value.searching
+      : `${number(results.value.categories.length)} ${t.value.categories}`
+)
 const localePrefix = computed(() =>
   /^(en|ru)(-|$)/i.test(lang.value)
     ? "/" + lang.value.split("-")[0].toLowerCase()
@@ -168,6 +193,7 @@ function closeDocsOnBlur(event: FocusEvent) {
       :view="view"
       :embedded="embedded"
       :can-load="canLoad"
+      :remote-allowed="remoteAllowed"
       :t="t"
       :locale="lang"
       :progress-label="progressLabel"
@@ -185,19 +211,46 @@ function closeDocsOnBlur(event: FocusEvent) {
     <template v-if="session.loaded">
       <div class="geo-toolbar">
         <label class="geo-sr-only" for="geo-search">{{
-          t.contentSearch
+          searchLabel
         }}</label>
         <SearchInput
           id="geo-search"
           v-model="contentQuery"
-          :placeholder="t.contentSearch"
+          :placeholder="searchLabel"
           :clear-label="t.clearContentSearch"
-        />
-        <span class="geo-stats" role="status">{{
-          query.searching
-            ? t.searching
-            : `${number(results.categories.length)} ${t.categories}`
-        }}</span>
+          :invalid="!!query.error"
+          :described-by="query.error ? 'geo-search-status' : undefined"
+        >
+          <template #prefix>
+            <div
+              class="geo-search-modes"
+              role="group"
+              :aria-label="t.searchMode"
+            >
+              <button
+                type="button"
+                :aria-pressed="query.mode === 'match'"
+                @click="actions.setSearchMode('match')"
+              >
+                {{ t.matchMode }}
+              </button>
+              <button
+                type="button"
+                :aria-pressed="query.mode === 'rules'"
+                @click="actions.setSearchMode('rules')"
+              >
+                {{ t.rulesMode }}
+              </button>
+            </div>
+          </template>
+        </SearchInput>
+        <span
+          id="geo-search-status"
+          class="geo-stats"
+          :class="{ 'is-error': query.error }"
+          role="status"
+          >{{ searchStatus }}</span
+        >
       </div>
       <section
         class="geo-browser geo-panel"
@@ -228,10 +281,10 @@ function closeDocsOnBlur(event: FocusEvent) {
         />
       </section>
     </template>
-    <section v-else-if="!loading" class="geo-empty geo-panel">
+    <section v-else class="geo-empty geo-panel" :aria-busy="loading">
       <span class="geo-empty-icon" aria-hidden="true">{ }</span>
-      <h2>{{ t.emptyTitle }}</h2>
-      <p>{{ t.emptyBody }}</p>
+      <h2>{{ loading ? progressLabel : t.emptyTitle }}</h2>
+      <p v-if="!loading">{{ t.emptyBody }}</p>
     </section>
     <nav
       v-if="!view.workspace"

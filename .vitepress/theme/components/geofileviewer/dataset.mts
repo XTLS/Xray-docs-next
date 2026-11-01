@@ -1,4 +1,7 @@
 import protobuf from "protobufjs/minimal.js"
+import { formatCIDR, IpIndex, parseIpQuery } from "./ipSearch.mts"
+import { DomainMatcher } from "./domainSearch.mts"
+import { parseDomainQuery } from "./domainQuery.mts"
 import {
   ENTRY_PAGE_SIZE,
   ViewerError,
@@ -6,8 +9,11 @@ import {
   type AttributeSummary,
   type CategorySummary,
   type GeoEntry,
-  type GeoKind
+  type GeoKind,
+  type SearchMode
 } from "./types.mts"
+
+export { formatCIDR } from "./ipSearch.mts"
 
 type Reader = InstanceType<typeof protobuf.Reader>
 type Category = {
@@ -15,6 +21,7 @@ type Category = {
   reverseMatch: boolean
   offsets: Uint32Array
   attributes: AttributeSummary[]
+  ipIndex?: IpIndex
 }
 export type SearchResult = {
   categories: CategorySummary[]
@@ -64,36 +71,6 @@ function messageRange(reader: Reader, end: number): [number, number] {
   return [start, start + size]
 }
 
-export function formatCIDR(ip: Uint8Array, prefix: number): string {
-  if (ip.length === 4 && prefix <= 32) return `${ip.join(".")}/${prefix}`
-  if (ip.length !== 16 || prefix > 128)
-    throw new ViewerError("invalidFile")
-  const parts = Array.from(
-    { length: 8 },
-    (_, i) => (ip[i * 2] << 8) | ip[i * 2 + 1]
-  )
-  let bestStart = -1
-  let bestLength = 1
-  for (let i = 0; i < 8;) {
-    if (parts[i] !== 0) {
-      i++
-      continue
-    }
-    const start = i
-    while (i < 8 && parts[i] === 0) i++
-    if (i - start > bestLength) {
-      bestStart = start
-      bestLength = i - start
-    }
-  }
-  const hex = parts.map((p) => p.toString(16))
-  const value =
-    bestStart < 0
-      ? hex.join(":")
-      : `${hex.slice(0, bestStart).join(":")}::${hex.slice(bestStart + bestLength).join(":")}`
-  return `${value}/${prefix}`
-}
-
 function attribute(reader: Reader, end: number): Attribute {
   let key = ""
   let value: string | undefined
@@ -116,54 +93,62 @@ function attribute(reader: Reader, end: number): Attribute {
   return { key, value }
 }
 
+function decodeCIDR(bytes: Uint8Array, start: number, end: number) {
+  const reader = protobuf.Reader.create(bytes)
+  reader.pos = start
+  let ip: Uint8Array | undefined
+  let prefix = 0
+  fields(reader, end, (field, wire, r) => {
+    if (field === 1 && wire === 2) {
+      ip = r.bytes()
+      return true
+    }
+    if (field === 2 && wire === 0) {
+      prefix = r.uint32()
+      return true
+    }
+    return false
+  })
+  if (!ip || ![4, 16].includes(ip.length) || prefix > ip.length * 8)
+    throw new ViewerError("invalidFile")
+  return { ip, prefix }
+}
+
 function decodeEntry(
   bytes: Uint8Array,
   start: number,
   end: number,
   kind: GeoKind
 ): GeoEntry {
+  if (kind === "geoip") {
+    const { ip, prefix } = decodeCIDR(bytes, start, end)
+    return {
+      type: ip.length === 16 ? "IPv6" : "IPv4",
+      value: formatCIDR(ip, prefix),
+      attributes: []
+    }
+  }
   const reader = protobuf.Reader.create(bytes)
   reader.pos = start
   let domainType = 0
   let value = ""
-  let ip: Uint8Array | undefined
-  let prefix = 0
   const attributes: Attribute[] = []
   fields(reader, end, (field, wire, r) => {
-    if (kind === "geosite") {
-      if (field === 1 && wire === 0) {
-        domainType = r.uint32()
-        return true
-      }
-      if (field === 2 && wire === 2) {
-        value = r.string()
-        return true
-      }
-      if (field === 3 && wire === 2) {
-        const [, attrEnd] = messageRange(r, end)
-        attributes.push(attribute(r, attrEnd))
-        return true
-      }
-    } else {
-      if (field === 1 && wire === 2) {
-        ip = r.bytes()
-        return true
-      }
-      if (field === 2 && wire === 0) {
-        prefix = r.uint32()
-        return true
-      }
+    if (field === 1 && wire === 0) {
+      domainType = r.uint32()
+      return true
+    }
+    if (field === 2 && wire === 2) {
+      value = r.string()
+      return true
+    }
+    if (field === 3 && wire === 2) {
+      const [, attrEnd] = messageRange(r, end)
+      attributes.push(attribute(r, attrEnd))
+      return true
     }
     return false
   })
-  if (kind === "geoip") {
-    if (!ip) throw new ViewerError("invalidFile")
-    return {
-      type: ip.length === 16 ? "IPv6" : "IPv4",
-      value: formatCIDR(ip, prefix),
-      attributes
-    }
-  }
   const types = ["keyword", "regexp", "domain", "full"] as const
   if (!value || !types[domainType]) throw new ViewerError("invalidFile")
   return { type: types[domainType], value, attributes }
@@ -183,6 +168,7 @@ export class Dataset {
   private bytes: Uint8Array
   kind: GeoKind
   private categories: Category[]
+  private domainMatcher = new DomainMatcher()
   entryCount: number
   constructor(
     bytes: Uint8Array,
@@ -202,44 +188,69 @@ export class Dataset {
 
   async search(
     contentQuery: string,
-    cancelled: () => boolean = () => false
+    options: { mode?: SearchMode; cancelled?: () => boolean } = {}
   ): Promise<SearchResult | null> {
-    const needle = contentQuery.trim().toLowerCase()
+    const { mode = "match", cancelled = () => false } = options
+    let needle = contentQuery.trim().toLowerCase()
     const result: SearchResult = { categories: [], indexes: new Map() }
+    if (this.kind === "geosite" && mode === "match" && needle) {
+      const domain = parseDomainQuery(needle)
+      if (!domain) return cancelled() ? null : result
+      needle = domain
+    }
+    const ipQuery =
+      this.kind === "geoip" && mode === "match" && needle
+        ? parseIpQuery(needle)
+        : undefined
+    if (this.kind === "geoip" && mode === "match" && needle && !ipQuery)
+      return cancelled() ? null : result
     let lastYield = Date.now()
     for (let id = 0; id < this.categories.length; id++) {
       const category = this.categories[id]
       const count = category.offsets.length / 2
       let indexes: Uint32Array | null = null
       let attributes = category.attributes
-      if (needle) {
+      if (ipQuery) indexes = category.ipIndex!.search(ipQuery)
+      else if (this.kind === "geoip" && needle) {
+        const found = await category.ipIndex!.searchPrefix(
+          needle,
+          cancelled
+        )
+        if (found === undefined) return null
+        indexes = found
+      } else if (needle) {
         const matching: number[] = []
         const counts = new Map<string, number>()
         for (let i = 0; i < count; i++) {
           const entry = this.entry(id, i)
-          if (entry.value.toLowerCase().includes(needle)) {
+          if (
+            mode === "match"
+              ? this.domainMatcher.matches(entry, needle)
+              : entry.value.toLowerCase().includes(needle)
+          ) {
             matching.push(i)
             countAttributes(counts, entry)
           }
-          if (i % 2048 === 0 && Date.now() - lastYield > 16) {
+          if (i % 128 === 0 && Date.now() - lastYield > 16) {
             await new Promise((resolve) => setTimeout(resolve, 0))
             if (cancelled()) return null
             lastYield = Date.now()
           }
         }
-        if (!matching.length) continue
         indexes = Uint32Array.from(matching)
         attributes = attributeSummaries(counts)
       }
-      result.indexes.set(id, indexes)
-      result.categories.push({
-        id,
-        code: category.code,
-        count,
-        matches: indexes?.length ?? count,
-        reverseMatch: category.reverseMatch,
-        attributes
-      })
+      if (indexes?.length !== 0) {
+        result.indexes.set(id, indexes)
+        result.categories.push({
+          id,
+          code: category.code,
+          count,
+          matches: indexes?.length ?? count,
+          reverseMatch: category.reverseMatch,
+          attributes
+        })
+      }
       if (Date.now() - lastYield > 16) {
         await new Promise((resolve) => setTimeout(resolve, 0))
         if (cancelled()) return null
@@ -352,6 +363,8 @@ export async function indexDataset(
       })
       if (!code.trim()) throw new ViewerError("invalidFile")
       const offsets = new Uint32Array(count * 2)
+      const ipIndex =
+        kind === "geoip" ? new IpIndex(bytes, count) : undefined
       const counts = new Map<string, number>()
       reader.pos = start
       let index = 0
@@ -359,10 +372,14 @@ export async function indexDataset(
         const entryTag = reader.uint32()
         if (entryTag === 18) {
           const [entryStart, entryEnd] = messageRange(reader, end)
-          countAttributes(
-            counts,
-            decodeEntry(bytes, entryStart, entryEnd, kind)
-          )
+          if (ipIndex) {
+            const { ip, prefix } = decodeCIDR(bytes, entryStart, entryEnd)
+            ipIndex.add(index / 2, ip, prefix)
+          } else
+            countAttributes(
+              counts,
+              decodeEntry(bytes, entryStart, entryEnd, kind)
+            )
           offsets[index++] = entryStart
           offsets[index++] = entryEnd
           reader.pos = entryEnd
@@ -374,13 +391,20 @@ export async function indexDataset(
         } else reader.skipType(entryTag & 7)
         if (reader.pos > end) throw new ViewerError("invalidFile")
       }
+      ipIndex?.finish()
       categories.push({
         code,
         reverseMatch,
         offsets,
-        attributes: attributeSummaries(counts)
+        attributes: attributeSummaries(counts),
+        ipIndex
       })
       entryCount += count
+      if (Date.now() - lastYield > 16) {
+        progress(reader.pos / bytes.length)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+        lastYield = Date.now()
+      }
     }
     if (!categories.length) throw new ViewerError("invalidFile")
     progress(1)

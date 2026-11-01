@@ -111,7 +111,7 @@ Lua 脚本文件路径，默认为空字符串。设置后，路由选择由 Lua
 - IP：形如 `"127.0.0.1"`。
 - [CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)：形如 `"10.0.0.0/8"`，也可以用 `"0.0.0.0/0"` `"::/0"` 来指定所有 IPv4 或者 IPv6。
 - 预定义 IP 列表：此列表预置于每一个 Xray 的发布包中，文件名为 `geoip.dat`。使用方式形如 `"geoip:cn"`，必须以 `geoip:`（小写）开头，后面跟双字符国家代码或其他分类名。
-  - 默认随附[精简版](../tools/geofileviewer.md?file=geoip-lite.dat)，仅包含 `cn`、`ir`、`ru` 三个国家分类。如需其他国家或地区的分类，可改用[完整版](../tools/geofileviewer.md?file=geoip-full.dat)。
+  - 默认随附[精简版](../tools/geofileviewer.md?file=geoip-lite.dat)，仅包含 `cn`、`ir`、`ru` 三个国家分类。如需更多，可改用[完整版](../tools/geofileviewer.md?file=geoip-full.dat)。
   - 特殊值：`"geoip:private"`，包含所有私有地址，如 `127.0.0.1`。
 - 从文件中加载 IP：形如 `"ext:file:tag"`，必须以 `ext:`（小写）开头，后面跟文件名和标签，文件存放在 [资源目录](./env.md#资源文件路径) 中，文件格式与 `geoip.dat` 相同标签必须在文件中存在。
 - 反选 `!` 功能：`"!10.0.0.0/8"` 表示非 `10.0.0.0/8`，`"!geoip:cn"` 表示非 `geoip:cn` 中的结果。多个反选项之间是 `AND` 关系，而正选项、正选项和所有的反选项之间是 `OR` 关系，例如 `ip: ["!geoip:cn", "!geoip:ru", "geoip:telegram"]` 匹配非俄罗斯并且非中国的 IP，或者是 telegram 的 IP。

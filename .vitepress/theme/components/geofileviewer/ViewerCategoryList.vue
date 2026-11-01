@@ -111,7 +111,7 @@ watch(
           ><small>{{ number(category.matches) }}</small>
         </button>
       </li>
-      <li class="geo-list-status" role="status">
+      <li v-if="!query.error" class="geo-list-status" role="status">
         <template v-if="query.searching">{{ t.searching }}</template>
         <template v-else-if="!results.categories.length">{{
           t.noResults

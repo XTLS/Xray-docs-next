@@ -1,5 +1,9 @@
 import type { InputSource } from "./sources.mts"
-import type { WorkerRequest, WorkerResponse } from "./types.mts"
+import type {
+  SearchMode,
+  WorkerRequest,
+  WorkerResponse
+} from "./types.mts"
 
 export interface ViewerWorker {
   onmessage: ((event: MessageEvent<WorkerResponse>) => void) | null
@@ -85,8 +89,8 @@ export function createWorkerClient(
     invalidateSearch() {
       searchId++
     },
-    search(contentQuery: string) {
-      send({ type: "search", id: ++searchId, contentQuery })
+    search(contentQuery: string, mode: SearchMode = "match") {
+      send({ type: "search", id: ++searchId, contentQuery, mode })
     },
     entries(categoryId: number, page: number, attributeKey?: string) {
       if (!worker || pendingEntries) return

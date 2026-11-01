@@ -1,7 +1,9 @@
 import {
   computed,
+  onMounted,
   onUnmounted,
   reactive,
+  ref,
   shallowReactive,
   shallowReadonly
 } from "vue"
@@ -9,14 +11,18 @@ import {
   CATEGORY_PAGE_SIZE,
   ViewerError,
   type CategorySummary,
-  type ErrorCode
+  type ErrorCode,
+  type SearchMode
 } from "./types.mts"
 import {
+  canAutoLoadUrl,
   presetSource,
   presets,
   validateUrl,
   type InputSource
 } from "./sources.mts"
+import { parseIpQuery } from "./ipSearch.mts"
+import { parseDomainQuery } from "./domainQuery.mts"
 import {
   createWorkerClient,
   type ViewerEvent,
@@ -33,15 +39,27 @@ import {
   type ViewerResults
 } from "./viewerState.mts"
 
-export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
+export function useViewer(
+  options: {
+    createWorker?: WorkerFactory
+    protocol?: string
+  } = {}
+) {
   const client = createWorkerClient(options.createWorker)
-  const draft = shallowReactive(initialDraft())
+  const remoteAllowed = ref(false)
+  const draft = shallowReactive(initialDraft(false))
   const session = shallowReactive(initialSession())
   const query = reactive(initialQuery())
   const view = reactive(initialView())
   const rows = shallowReactive(initialResults())
   let pendingTag: string | undefined
   let searchTimer: ReturnType<typeof setTimeout> | undefined
+
+  onMounted(() => {
+    remoteAllowed.value =
+      (options.protocol ?? location.protocol) === "https:"
+    Object.assign(draft, initialDraft(remoteAllowed.value))
+  })
 
   const categories = computed(() => {
     const needle = query.category.trim().toLowerCase()
@@ -54,17 +72,18 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   const selected = computed(() =>
     categories.value.find((c) => c.id === rows.selectedId)
   )
-  const canLoad = computed(
-    () =>
-      draft.mode === "preset" ||
-      (draft.mode === "url" ? !!draft.url.trim() : !!draft.file)
+  const canLoad = computed(() =>
+    draft.mode === "local"
+      ? !!draft.file
+      : remoteAllowed.value &&
+        (draft.mode === "preset" || !!draft.url.trim())
   )
   const results = computed<ViewerResults>(
     () =>
       ({
         categories: categories.value as readonly CategorySummary[],
         visibleCategories: categories.value.slice(0, rows.limit),
-        selected: selected.value,
+        selected: query.searching ? undefined : selected.value,
         entries: rows.entries,
         entryTotal: rows.total,
         entriesLoading: rows.loading,
@@ -100,12 +119,17 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   function resetToHome() {
     dispose()
     clearData()
-    Object.assign(draft, initialDraft())
+    Object.assign(draft, initialDraft(remoteAllowed.value))
     Object.assign(session, initialSession())
     Object.assign(view, initialView())
   }
 
   function updateSource(patch: Partial<SourceDraft>) {
+    if (
+      !remoteAllowed.value &&
+      ((patch.mode && patch.mode !== "local") || patch.url !== undefined)
+    )
+      return
     if (
       !Object.entries(patch).some(
         ([key, value]) => draft[key as keyof SourceDraft] !== value
@@ -159,25 +183,54 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
       (Math.floor(index / CATEGORY_PAGE_SIZE) + 1) * CATEGORY_PAGE_SIZE
   }
 
-  function searchNow() {
-    if (!session.loaded || !client.active) return
-    query.activeContent = query.content
-    query.searching = true
-    resetEntries()
-    client.search(query.content)
+  function validateSearch() {
+    query.error = undefined
+    if (query.mode === "match" && query.content.trim()) {
+      const isIp = session.loaded?.kind === "geoip"
+      const valid = isIp
+        ? parseIpQuery(query.content)
+        : parseDomainQuery(query.content)
+      if (!valid) query.error = isIp ? "invalidIp" : "invalidDomain"
+    }
+    if (query.error) {
+      query.searching = false
+      rows.categories = []
+      rows.missingTag = ""
+    }
+    return !query.error
   }
 
-  function setContentQuery(value: string) {
-    if (query.content === value) return
-    query.content = value
+  function searchNow() {
+    if (!session.loaded || !client.active) return
+    resetEntries()
+    if (!validateSearch()) return
+    query.activeContent = query.content
+    query.searching = true
+    client.search(query.content, query.mode)
+  }
+
+  function restartSearch() {
     clearTimeout(searchTimer)
     if (!session.loaded) return
     client.invalidateSearch()
     query.attribute = ""
     query.category = ""
-    query.searching = true
+    query.error = undefined
     resetEntries()
+    query.searching = true
     searchTimer = setTimeout(searchNow, 250)
+  }
+
+  function setContentQuery(value: string) {
+    if (query.content === value) return
+    query.content = value
+    restartSearch()
+  }
+
+  function setSearchMode(mode: SearchMode) {
+    if (!session.loaded || query.mode === mode) return
+    query.mode = mode
+    restartSearch()
   }
 
   function setCategoryFilter(value: string) {
@@ -274,7 +327,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     }
   }
 
-  async function loadSource(tag?: string) {
+  async function loadSource(tag = pendingTag) {
     if (!canLoad.value) return
     dispose()
     let input: InputSource
@@ -323,6 +376,14 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   }
 
   function openTarget(target: ViewerTarget) {
+    if (
+      target.type !== "home" &&
+      (!remoteAllowed.value ||
+        (target.type === "url" && !canAutoLoadUrl(target.url)))
+    ) {
+      resetToHome()
+      return
+    }
     const current = session.loaded
     if (target.type === "home") resetToHome()
     else if (target.type === "preset") {
@@ -340,7 +401,8 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
       focusCategory(target.tag)
     else {
       updateSource({ mode: "url", url: target.url, kind: target.kind })
-      void loadSource(target.tag)
+      pendingTag = target.tag
+      void loadSource()
     }
   }
 
@@ -352,6 +414,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     view: shallowReadonly(view),
     results,
     canLoad,
+    remoteAllowed: computed(() => remoteAllowed.value),
     actions: {
       updateSource,
       loadSource,
@@ -360,6 +423,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
       resetToHome,
       openTarget,
       setContentQuery,
+      setSearchMode,
       setCategoryFilter,
       setAttribute,
       selectCategory,

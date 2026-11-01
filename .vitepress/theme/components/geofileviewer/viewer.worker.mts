@@ -42,10 +42,10 @@ self.onmessage = async (event: MessageEvent<WorkerRequest>) => {
       searchId = request.id
       entriesId++
       result = undefined
-      const found = await dataset.search(
-        request.contentQuery,
-        () => searchId !== request.id
-      )
+      const found = await dataset.search(request.contentQuery, {
+        mode: request.mode,
+        cancelled: () => searchId !== request.id
+      })
       if (!found) return
       result = found
       send({

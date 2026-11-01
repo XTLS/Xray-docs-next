@@ -48,15 +48,15 @@ watch(
   <section
     class="geo-content"
     :aria-label="t.entries"
-    :aria-busy="results.entriesLoading"
+    :aria-busy="query.searching || results.entriesLoading"
   >
     <header class="geo-content-header">
       <button class="geo-back" @click="emit('categories')">
         {{ t.back }}
       </button>
-      <div>
-        <h2>{{ results.selected?.code ?? t.chooseCategory }}</h2>
-        <p v-if="results.selected">
+      <div v-if="results.selected">
+        <h2>{{ results.selected.code }}</h2>
+        <p>
           {{ number(results.entryTotal) }} {{ t.matches }} /
           {{ number(results.selected.count) }} {{ t.entries
           }}<span v-if="results.selected.reverseMatch">
@@ -93,7 +93,7 @@ watch(
       </select>
     </div>
     <div
-      v-if="sharing.copyStatus === 'copyFailed'"
+      v-if="sharing.permalink && sharing.copyStatus === 'copyFailed'"
       class="geo-field geo-copy-fallback"
       role="status"
     >
@@ -123,7 +123,12 @@ watch(
             ><template
               v-for="(part, partIndex) in highlightParts(
                 entry.value,
-                query.activeContent
+                query.activeContent,
+                query.mode === 'match'
+                  ? 'whole'
+                  : entry.type === 'IPv4' || entry.type === 'IPv6'
+                    ? 'prefix'
+                    : 'contains'
               )"
               :key="partIndex"
               ><mark v-if="part.match">{{ part.text }}</mark
@@ -142,7 +147,7 @@ watch(
           </div>
         </div>
       </li>
-      <li class="geo-list-status" role="status">
+      <li v-if="!query.error" class="geo-list-status" role="status">
         <template v-if="query.searching">{{ t.searching }}</template>
         <template v-else-if="results.entriesLoading">{{
           t.reading

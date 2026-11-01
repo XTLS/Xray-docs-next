@@ -53,8 +53,42 @@
 }
 .geo-stats {
   flex-shrink: 0;
+  max-width: 50%;
   font-size: 13px;
   color: var(--vp-c-text-2);
+  overflow-wrap: anywhere;
+}
+.geo-stats.is-error {
+  color: var(--vp-c-danger-1);
+}
+.geo-search-modes {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: stretch;
+  gap: 2px;
+  padding: 4px;
+  border-right: 1px solid var(--geo-border);
+}
+.geo-search-modes button {
+  min-width: 40px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.geo-search-modes button:hover {
+  background: var(--vp-c-default-soft);
+}
+.geo-search-modes button[aria-pressed="true"] {
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+.geo-search-modes button:focus-visible {
+  outline-offset: 0;
 }
 .geo-browser {
   display: grid;
@@ -67,6 +101,11 @@
   flex-wrap: wrap;
   gap: 10px 24px;
   margin-top: 24px;
+}
+
+/* The standalone tool has no sidebar column beside the site search. */
+:global(.geofileviewer-page .VPNavBar:not(.home) .container > .title) {
+  min-width: 0;
 }
 
 /* After loading, the tool occupies the viewport below the site navigation.
@@ -270,6 +309,9 @@
     align-items: stretch;
     flex-direction: column;
     gap: 8px;
+  }
+  .geo-stats {
+    max-width: none;
   }
   .geo-browser {
     grid-template-columns: minmax(0, 1fr);

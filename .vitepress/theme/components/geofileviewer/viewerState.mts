@@ -2,7 +2,8 @@ import type {
   CategorySummary,
   ErrorCode,
   GeoEntry,
-  GeoKind
+  GeoKind,
+  SearchMode
 } from "./types.mts"
 import type { LoadProgress, PresetFile } from "./sources.mts"
 import { CATEGORY_PAGE_SIZE } from "./types.mts"
@@ -14,6 +15,7 @@ export type SourceDraft = {
   url: string
   file?: File
 }
+export type SearchErrorKey = "invalidIp" | "invalidDomain"
 export type LoadedSource = Readonly<{
   name: string
   kind: GeoKind
@@ -26,8 +28,8 @@ export type ViewerTarget =
   | { type: "url"; url: string; kind: GeoKind; tag: string }
 export type ViewerHost =
   { mode: "page" } | { mode: "embedded"; url: string }
-export const initialDraft = (): SourceDraft => ({
-  mode: "preset",
+export const initialDraft = (remoteAllowed: boolean): SourceDraft => ({
+  mode: remoteAllowed ? "preset" : "local",
   kind: "geosite",
   presetIndex: 0,
   url: "",
@@ -46,6 +48,8 @@ export const initialSession = () => ({
 export const initialQuery = () => ({
   content: "",
   activeContent: "",
+  mode: "match" as SearchMode,
+  error: undefined as SearchErrorKey | undefined,
   category: "",
   attribute: "",
   searching: false

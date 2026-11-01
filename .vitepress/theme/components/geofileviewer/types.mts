@@ -1,4 +1,5 @@
 export type GeoKind = "geoip" | "geosite"
+export type SearchMode = "match" | "rules"
 
 export type ErrorCode =
   | "emptyFile"
@@ -38,7 +39,12 @@ export type CategorySummary = {
 export type WorkerRequest =
   | { type: "load"; source: import("./sources.mts").InputSource }
   | { type: "cancelEntries" }
-  | { type: "search"; id: number; contentQuery: string }
+  | {
+      type: "search"
+      id: number
+      contentQuery: string
+      mode: SearchMode
+    }
   | {
       type: "entries"
       id: number

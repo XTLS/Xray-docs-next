@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue"
 
-defineProps<{ id: string; placeholder: string; clearLabel: string }>()
+defineProps<{
+  id: string
+  placeholder: string
+  clearLabel: string
+  invalid?: boolean
+  describedBy?: string
+}>()
 const model = defineModel<string>({ required: true })
 const input = ref<HTMLInputElement>()
 
@@ -12,7 +18,8 @@ function clear() {
 </script>
 
 <template>
-  <div class="geo-search-field">
+  <div class="geo-search-field" :class="{ 'is-invalid': invalid }">
+    <slot name="prefix" />
     <input
       :id="id"
       ref="input"
@@ -20,6 +27,8 @@ function clear() {
       type="search"
       class="geo-search"
       :placeholder="placeholder"
+      :aria-invalid="invalid ? 'true' : undefined"
+      :aria-describedby="describedBy"
     />
     <button
       v-if="model"
@@ -43,19 +52,27 @@ function clear() {
 <style scoped>
 .geo-search-field {
   position: relative;
+  display: flex;
+  align-items: center;
   flex: 1;
   width: 100%;
   min-width: 0;
   font-size: 14px;
-}
-.geo-search {
-  width: 100%;
-  min-width: 0;
-  padding: 9px 40px 9px 12px;
   border: 1px solid var(--geo-border);
   border-radius: 6px;
   background: var(--vp-c-bg);
+}
+.geo-search {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 9px 40px 9px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
   color: var(--vp-c-text-1);
+  /* Keep punctuation aligned while IP/CIDR text is typed incrementally. */
+  font-feature-settings: "calt" 0;
 }
 .geo-search::-webkit-search-cancel-button,
 .geo-search::-webkit-search-decoration {
@@ -77,9 +94,18 @@ function clear() {
 .geo-search-clear:hover {
   color: var(--vp-c-text-1);
 }
-.geo-search:focus-visible,
+.geo-search:focus-visible {
+  outline: none;
+}
+.geo-search-field:focus-within,
 .geo-search-clear:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 3px;
+}
+.geo-search-field.is-invalid {
+  border-color: var(--vp-c-danger-1);
+}
+.geo-search-field.is-invalid:focus-within {
+  outline-color: var(--vp-c-danger-1);
 }
 </style>

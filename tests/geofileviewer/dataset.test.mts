@@ -21,7 +21,7 @@ test("domain types and attributes retain false and int64 precision", async () =>
     ),
     "geosite"
   )
-  const result = (await data.search("google"))!
+  const result = (await data.search("google", { mode: "rules" }))!
   assert.equal(data.entryCount, 4)
   const rows = (await data.entries(result, 0, 1))!.entries
   assert.deepEqual(
@@ -42,22 +42,38 @@ test("content search is literal, case-insensitive and excludes category names an
     ...site("b", [{ type: 1, value: "second.com" }])
   ])
   const data = await indexDataset(bytes, "geosite")
-  assert.equal((await data.search("a"))!.categories.length, 0)
-  assert.equal((await data.search("FIRST"))!.categories[0].matches, 1)
-  const result = (await data.search("["))!
+  assert.equal(
+    (await data.search("a", { mode: "rules" }))!.categories.length,
+    0
+  )
+  assert.equal(
+    (await data.search("FIRST", { mode: "rules" }))!.categories[0].matches,
+    1
+  )
+  const result = (await data.search("[", { mode: "rules" }))!
   assert.equal(result.categories.length, 1)
   assert.equal(
     (await data.entries(result, 0, 1))!.entries[0].value,
     "first[.com"
   )
-  assert.equal((await data.search("weight"))!.categories.length, 0)
-  assert.equal((await data.search("false"))!.categories.length, 0)
   assert.equal(
-    (await data.search("9007199254740993"))!.categories.length,
+    (await data.search("weight", { mode: "rules" }))!.categories.length,
     0
   )
-  assert.equal((await data.search("missing"))!.categories.length, 0)
-  assert.equal(await data.search("", () => true), null)
+  assert.equal(
+    (await data.search("false", { mode: "rules" }))!.categories.length,
+    0
+  )
+  assert.equal(
+    (await data.search("9007199254740993", { mode: "rules" }))!.categories
+      .length,
+    0
+  )
+  assert.equal(
+    (await data.search("missing", { mode: "rules" }))!.categories.length,
+    0
+  )
+  assert.equal(await data.search("", { cancelled: () => true }), null)
 })
 test("empty content search includes all entries and pages are bounded", async () => {
   const data = await indexDataset(
@@ -71,7 +87,10 @@ test("empty content search includes all entries and pages are bounded", async ()
     "geosite"
   )
   const result = (await data.search(""))!
-  assert.equal((await data.search("large"))!.categories.length, 0)
+  assert.equal(
+    (await data.search("large", { mode: "rules" }))!.categories.length,
+    0
+  )
   assert.equal((await data.entries(result, 0, 1))!.entries.length, 100)
   assert.equal((await data.entries(result, 0, 3))!.entries.length, 5)
   assert.equal((await data.entries(result, 0, 99))!.page, 3)
@@ -88,13 +107,14 @@ test("IPv4, compressed IPv6 and reverse match metadata", async () => {
     "2001:db8::/32"
   )
   const data = await indexDataset(ip(), "geoip")
-  const result = (await data.search("127.0"))!
+  const result = (await data.search("127.0.0.1"))!
   assert.equal(result.categories[0].reverseMatch, true)
   assert.equal(
     (await data.entries(result, 0, 1))!.entries[0].value,
     "127.0.0.0/8"
   )
   assert.deepEqual(result.categories[0].attributes, [])
+  assert.equal((await data.search("127.0"))!.categories.length, 0)
   assert.equal((await data.search("private"))!.categories.length, 0)
 })
 test("attribute options and filtering cover the complete content result, beyond the first batch", async () => {
@@ -141,7 +161,7 @@ test("attribute options and filtering cover the complete content result, beyond 
   assert.equal((await data.entries(result, 1, 1, "cn"))!.total, 1)
   assert.equal((await data.entries(result, 0, 1))!.total, 330)
 
-  const tail = (await data.search("TAIL"))!
+  const tail = (await data.search("TAIL", { mode: "rules" }))!
   assert.equal(tail.categories.length, 1)
   assert.equal(tail.categories[0].matches, 130)
   assert.deepEqual(tail.categories[0].attributes, [
@@ -203,5 +223,12 @@ test("highlighting treats markup and regular expression characters as text", () 
   assert.deepEqual(highlightParts("TestTEST", "test"), [
     { text: "Test", match: true },
     { text: "TEST", match: true }
+  ])
+  assert.deepEqual(highlightParts("1.1.1.0/24", "1.", "prefix"), [
+    { text: "1.", match: true },
+    { text: "1.1.0/24", match: false }
+  ])
+  assert.deepEqual(highlightParts("1.1.1.0/24", "1.1.1.1", "whole"), [
+    { text: "1.1.1.0/24", match: true }
   ])
 })
