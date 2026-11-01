@@ -67,7 +67,7 @@ Both `.dat` and gzip-compressed `.dat.gz` downloads are supported. Use the compr
 
 Xray provides multiple versions of geodata files. See [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat) for download URLs for the available versions. You can also use geodata files provided by third parties.
 
-Use the [Geo Data Viewer](../tools/geofileviewer.md) to browse categories and entries in the four official editions, or open third-party DAT files by URL or from your device.
+Use the [Geo Data Viewer](../tools/geofileviewer.md) to browse and search file contents.
 
 > `file`: string
 
