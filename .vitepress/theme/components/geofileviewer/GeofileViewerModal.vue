@@ -8,17 +8,42 @@ const Viewer = defineAsyncComponent(() => import("./GeofileViewer.vue"))
 const { lang } = useData()
 const t = computed(() => getMessages(lang.value))
 const target = ref<string>()
+const revision = ref(0)
+const viewer = ref<{ openLink(search: string): void }>()
+const visible = ref(false)
 const dialog = ref<HTMLDialogElement>()
 const modal = useViewerDialog(dialog, () => {
-  target.value = undefined
+  visible.value = false
 })
 useViewerNavigation(async (url) => {
   modal.captureFocus()
+  const retained = !!target.value
+  const generation = revision.value
   target.value = url.href
   await nextTick()
+  if (generation === revision.value && retained && viewer.value) {
+    if (url.search) viewer.value.openLink(url.search)
+    showViewer()
+  }
 }, modal.close)
 function showViewer() {
-  void nextTick(modal.show)
+  if (!viewer.value) return
+  modal.show()
+  visible.value = dialog.value?.open ?? false
+}
+function viewerReady() {
+  const generation = revision.value
+  void nextTick(() => {
+    if (generation !== revision.value || !target.value || !viewer.value)
+      return
+    viewer.value.openLink(new URL(target.value).search)
+    showViewer()
+  })
+}
+function closeViewer() {
+  modal.close()
+  target.value = undefined
+  revision.value++
 }
 </script>
 
@@ -30,7 +55,6 @@ function showViewer() {
       class="geo-modal"
       :aria-label="t.title"
       @cancel.self.prevent="modal.close"
-      @close="modal.close"
       @pointerdown="modal.pointerDown"
       @pointerup="modal.pointerUp"
       @pointercancel="modal.cancelPointer"
@@ -38,34 +62,58 @@ function showViewer() {
       <div class="geo-modal-shell">
         <header class="geo-modal-header">
           <h2>{{ t.title }}</h2>
-          <button
-            type="button"
-            class="geo-modal-close"
-            :aria-label="t.close"
-            :title="t.close"
-            autofocus
-            @click="modal.close"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              aria-hidden="true"
+          <div class="geo-modal-controls">
+            <button
+              type="button"
+              class="geo-modal-control geo-modal-minimize"
+              :aria-label="t.minimize"
+              :title="t.minimize"
+              autofocus
+              @click="modal.close"
             >
-              <path d="m6 6 12 12M18 6 6 18" />
-            </svg>
-          </button>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <path d="M6 12h12" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="geo-modal-control geo-modal-close"
+              :aria-label="t.close"
+              :title="t.close"
+              @click="closeViewer"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                aria-hidden="true"
+              >
+                <path d="m6 6 12 12M18 6 6 18" />
+              </svg>
+            </button>
+          </div>
         </header>
         <div class="geo-modal-body">
           <Suspense>
             <Viewer
-              :key="target"
+              ref="viewer"
+              :key="revision"
+              :active="visible"
               :host="{ mode: 'embedded', url: target }"
-              @ready="showViewer"
+              @ready="viewerReady"
             />
             <template #fallback
               ><p class="geo-modal-loading" role="status">
@@ -132,7 +180,13 @@ function showViewer() {
   font-size: 16px;
   font-weight: 650;
 }
-.geo-modal-close {
+.geo-modal-controls {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 4px;
+}
+.geo-modal-control {
   display: grid;
   place-items: center;
   flex-shrink: 0;
@@ -142,11 +196,11 @@ function showViewer() {
   color: var(--vp-c-text-2);
   cursor: pointer;
 }
-.geo-modal-close:hover {
+.geo-modal-control:hover {
   background: var(--vp-c-bg-soft);
   color: var(--vp-c-text-1);
 }
-.geo-modal-close:focus-visible {
+.geo-modal-control:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 2px;
 }

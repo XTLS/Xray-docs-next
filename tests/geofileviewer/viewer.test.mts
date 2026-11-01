@@ -54,7 +54,7 @@ test("whitelisted URL targets wait for loading before selecting the shared categ
     }, false)
 })
 
-test("opening a URL target stops previous work and requires another click even for the same source", () =>
+test("URL targets reuse matching pending and loaded sources and select the latest category", () =>
   withViewer(async (viewer, previous) => {
     const target = {
       type: "url",
@@ -71,14 +71,11 @@ test("opening a URL target stops previous work and requires another click even f
     const pending = TestWorker.instances[1]
     assert.equal(previous.terminated, true)
     viewer.actions.openTarget(target)
-    assert.equal(pending.terminated, true)
+    assert.equal(pending.terminated, false)
     assert.equal(TestWorker.instances.length, 2)
-    assert.equal(viewer.session.status, "idle")
+    assert.equal(viewer.session.status, "loading")
     assert.equal(viewer.draft.kind, "geoip")
-    pending.reply({ type: "ready", categoryCount: 999, entryCount: 999 })
-    assert.equal(viewer.session.loaded, undefined)
-    await viewer.actions.loadSource()
-    const loaded = TestWorker.instances[2]
+    const loaded = pending
     loaded.reply({ type: "ready", categoryCount: 2, entryCount: 2 })
     finishSearch(
       loaded,
@@ -92,15 +89,138 @@ test("opening a URL target stops previous work and requires another click even f
       }))
     )
     assert.equal(viewer.results.value.selected?.code, "US")
-    viewer.actions.openTarget(target)
+    viewer.actions.setSearchMode("rules")
+    viewer.actions.setCategoryFilter("US")
+    viewer.actions.setContentQuery("unmatched")
+    viewer.actions.openTarget({ ...target, tag: "cN" })
     await nextTick()
-    assert.equal(loaded.terminated, true)
-    assert.equal(TestWorker.instances.length, 3)
-    assert.equal(viewer.session.loaded, undefined)
-    assert.equal(viewer.session.status, "idle")
-    assert.equal(viewer.view.sourceOpen, true)
+    assert.equal(loaded.terminated, false)
+    assert.equal(TestWorker.instances.length, 2)
+    assert.equal(viewer.session.loaded?.url, target.url)
+    assert.equal(viewer.session.status, "ready")
+    assert.equal(viewer.view.sourceOpen, false)
+    assert.equal(viewer.query.content, "")
+    assert.equal(viewer.query.category, "")
+    assert.equal(viewer.query.attribute, "")
+    assert.equal(viewer.query.mode, "match")
     assert.equal(viewer.draft.url, target.url)
+    finishSearch(
+      loaded,
+      ["CN", "US"].map((code, id) => ({
+        id,
+        code,
+        count: 1,
+        matches: 1,
+        reverseMatch: false,
+        attributes: []
+      }))
+    )
+    assert.equal(viewer.results.value.selected?.code, "CN")
+    viewer.actions.openTarget({
+      ...target,
+      url: "https://RAW.GITHUBUSERCONTENT.COM:443/other/repo/main/geoip.dat"
+    })
+    assert.equal(
+      TestWorker.instances.length,
+      2,
+      "normalized URLs share the loaded source"
+    )
   }))
+
+test("Xray targets reuse the pending worker and then jump within the loaded file", () =>
+  withViewer(async (viewer) => {
+    viewer.actions.openTarget({ type: "preset", index: 2, tag: "FIRST" })
+    const worker = TestWorker.instances[0]
+    viewer.actions.openTarget({ type: "preset", index: 2, tag: "SECOND" })
+    assert.equal(TestWorker.instances.length, 1)
+    assert.equal(
+      worker.requests.filter((r) => r.type === "load").length,
+      1
+    )
+    assert.equal(worker.terminated, false)
+    worker.reply({ type: "ready", categoryCount: 2, entryCount: 2 })
+    const categories = ["FIRST", "SECOND"].map((code, id) => ({
+      id,
+      code,
+      count: 1,
+      matches: 1,
+      reverseMatch: false,
+      attributes: [{ key: "cn", count: 1 }]
+    }))
+    finishSearch(worker, categories)
+    assert.equal(viewer.results.value.selected?.code, "SECOND")
+    viewer.actions.setAttribute("cn")
+    viewer.actions.openSource()
+    viewer.actions.openTarget({ type: "preset", index: 2, tag: "first" })
+    assert.equal(viewer.query.attribute, "")
+    assert.equal(viewer.view.sourceOpen, false)
+    assert.equal(TestWorker.instances.length, 1)
+    finishSearch(worker, categories)
+    assert.equal(viewer.results.value.selected?.code, "FIRST")
+    viewer.actions.openTarget({ type: "preset", index: 3, tag: "SECOND" })
+    assert.equal(worker.terminated, true)
+    assert.equal(TestWorker.instances.length, 2)
+    assert.equal(
+      TestWorker.instances[1].last("load").source.name,
+      "geosite-expand.dat"
+    )
+  }, false))
+
+test("URL source identity includes the complete URL and data type", async () => {
+  const sourceUrl =
+    "https://raw.githubusercontent.com/owner/repo/main/geosite.dat"
+  for (const target of [
+    { url: sourceUrl, kind: "geoip" },
+    {
+      url: "https://raw.githubusercontent.com/other/repo/main/geosite.dat",
+      kind: "geosite"
+    },
+    { url: sourceUrl + "?version=2", kind: "geosite" }
+  ] as const)
+    await withViewer(async (viewer) => {
+      viewer.actions.updateSource({
+        mode: "url",
+        url: sourceUrl,
+        kind: "geosite"
+      })
+      await viewer.actions.loadSource()
+      const worker = TestWorker.instances[0]
+      worker.reply({ type: "ready", categoryCount: 1, entryCount: 1 })
+      viewer.actions.openTarget({ type: "url", ...target, tag: "A" })
+      assert.equal(worker.terminated, true)
+      assert.equal(viewer.session.loaded, undefined)
+      assert.equal(viewer.session.status, "idle")
+      assert.equal(viewer.draft.url, target.url)
+      assert.equal(viewer.draft.kind, target.kind)
+      assert.equal(
+        TestWorker.instances.length,
+        1,
+        "a different URL source still waits for a click"
+      )
+    }, false)
+})
+
+test("cancelled pending sources cannot be reused", () =>
+  withViewer(async (viewer) => {
+    const preset = { type: "preset", index: 2, tag: "A" } as const
+    viewer.actions.openTarget(preset)
+    viewer.actions.cancelLoad()
+    viewer.actions.openTarget(preset)
+    assert.equal(TestWorker.instances.length, 2)
+    assert.equal(TestWorker.instances[0].terminated, true)
+    const url =
+      "https://raw.githubusercontent.com/owner/repo/main/geosite.dat"
+    const target = { type: "url", url, kind: "geosite", tag: "A" } as const
+    viewer.actions.openTarget(target)
+    await viewer.actions.loadSource()
+    viewer.actions.cancelLoad()
+    viewer.actions.openTarget(target)
+    assert.equal(TestWorker.instances.length, 3)
+    assert.equal(TestWorker.instances[2].terminated, true)
+    assert.equal(viewer.session.status, "idle")
+    await viewer.actions.loadSource()
+    assert.equal(TestWorker.instances.length, 4)
+  }, false))
 
 test("other URL targets are rejected without prefill or a loadable untrusted source", () =>
   withViewer(async (viewer) => {
@@ -173,6 +293,19 @@ test("rejecting a shared target cancels old work while manually entered URLs rem
     ])
     assert.equal(viewer.results.value.categoryMissing, "")
     assert.equal(viewer.results.value.selected?.code, "other")
+    viewer.actions.openTarget({
+      type: "url",
+      url: "https://example.com/second.dat",
+      kind: "geosite",
+      tag: "other"
+    })
+    assert.equal(worker.terminated, true)
+    assert.equal(viewer.session.loaded, undefined)
+    assert.equal(
+      viewer.draft.url,
+      "",
+      "loaded data does not bypass the share whitelist"
+    )
   }))
 
 test("cancelled or replaced workers cannot update the current dataset", () =>

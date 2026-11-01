@@ -13,10 +13,9 @@ import ViewerCategoryList from "./ViewerCategoryList.vue"
 import ViewerEntryList from "./ViewerEntryList.vue"
 import SearchInput from "./SearchInput.vue"
 import MarqueeText from "./MarqueeText.vue"
-const props = defineProps<{ host?: ViewerHost }>()
+const props = defineProps<{ host?: ViewerHost; active?: boolean }>()
 const emit = defineEmits<{ ready: [] }>()
-const host: ViewerHost = props.host ?? { mode: "page" }
-const embedded = host.mode === "embedded"
+const embedded = props.host?.mode === "embedded"
 const viewer = useViewer()
 const {
   draft,
@@ -101,16 +100,13 @@ const sourceSummary = computed(() => {
     : summary
 })
 const { permalink, copyStatus, copy } = useViewerSharing(viewer, () =>
-  host.mode === "page" ? location.href : host.url
+  props.host?.mode === "embedded" ? props.host.url : location.href
 )
-function setupLocation() {
-  if (host.mode === "page")
-    return useViewerPageRoute(viewer, permalink).invalidLink
-  const target = useViewerTarget(viewer)
-  onMounted(() => target.apply(new URL(host.url).search))
-  return target.invalidLink
-}
-const invalidLink = setupLocation()
+const linkTarget = embedded ? useViewerTarget(viewer) : undefined
+const invalidLink = linkTarget
+  ? linkTarget.invalidLink
+  : useViewerPageRoute(viewer, permalink).invalidLink
+defineExpose({ openLink: (search: string) => linkTarget?.apply(search) })
 onMounted(() => emit("ready"))
 function closeDocsOnBlur(event: FocusEvent) {
   const details = event.currentTarget as HTMLDetailsElement
@@ -206,6 +202,7 @@ function closeDocsOnBlur(event: FocusEvent) {
       :session="session"
       :view="view"
       :embedded="embedded"
+      :active="props.active !== false"
       :can-load="canLoad"
       :remote-allowed="remoteAllowed"
       :t="t"

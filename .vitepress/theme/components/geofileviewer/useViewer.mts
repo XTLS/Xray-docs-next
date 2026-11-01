@@ -34,6 +34,7 @@ import {
   initialQuery,
   initialResults,
   initialView,
+  type LoadedSource,
   type SourceDraft,
   type ViewerTarget,
   type ViewerResults
@@ -53,6 +54,7 @@ export function useViewer(
   const view = reactive(initialView())
   const rows = shallowReactive(initialResults())
   let pendingTag: string | undefined
+  let loadingSource: InputSource | undefined
   let searchTimer: ReturnType<typeof setTimeout> | undefined
 
   onMounted(() => {
@@ -96,6 +98,7 @@ export function useViewer(
   function dispose() {
     clearTimeout(searchTimer)
     client.dispose()
+    loadingSource = undefined
     session.status = session.loaded ? "ready" : "idle"
     query.searching = false
     rows.loading = false
@@ -299,6 +302,7 @@ export function useViewer(
         session.downloadedBytes = event.bytes ?? 0
         break
       case "ready":
+        loadingSource = undefined
         session.status = "ready"
         session.loaded = {
           name: input.name,
@@ -360,6 +364,7 @@ export function useViewer(
     session.downloadedBytes = 0
     view.mobileDetail = false
     pendingTag = tag
+    loadingSource = input
     try {
       client.load(input, (event) => receive(input, event))
     } catch {
@@ -375,24 +380,39 @@ export function useViewer(
     searchNow()
   }
 
+  function matchesSource(
+    source: LoadedSource | undefined,
+    target: Exclude<ViewerTarget, { type: "home" }>
+  ) {
+    if (!source) return false
+    if (target.type === "preset") {
+      const preset = presets[target.index]
+      return !!preset && source.preset === preset.file
+    }
+    return (
+      !source.preset &&
+      source.kind === target.kind &&
+      source.url === validateUrl(target.url)
+    )
+  }
+
   function openTarget(target: ViewerTarget) {
     if (
-      target.type !== "home" &&
-      (!remoteAllowed.value ||
-        (target.type === "url" && !isAllowedShareUrl(target.url)))
+      target.type === "home" ||
+      !remoteAllowed.value ||
+      (target.type === "url" && !isAllowedShareUrl(target.url))
     ) {
       resetToHome()
       return
     }
-    const current = session.loaded
-    if (target.type === "home") resetToHome()
-    else if (target.type === "preset") {
-      if (current?.preset === presets[target.index]?.file)
-        focusCategory(target.tag)
-      else {
-        updateSource({ mode: "preset", presetIndex: target.index })
-        void loadSource(target.tag)
-      }
+    if (matchesSource(session.loaded, target)) {
+      view.sourceOpen = false
+      focusCategory(target.tag)
+    } else if (matchesSource(loadingSource, target)) {
+      pendingTag = target.tag
+    } else if (target.type === "preset") {
+      updateSource({ mode: "preset", presetIndex: target.index })
+      void loadSource(target.tag)
     } else {
       resetToHome()
       updateSource({ mode: "url", url: target.url, kind: target.kind })

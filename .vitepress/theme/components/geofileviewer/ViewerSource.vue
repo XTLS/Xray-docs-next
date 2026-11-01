@@ -13,6 +13,7 @@ const props = defineProps<{
   session: ViewerSession
   view: ViewerView
   embedded: boolean
+  active: boolean
   canLoad: boolean
   remoteAllowed: boolean
   t: Messages
@@ -63,10 +64,20 @@ const loading = computed(() => props.session.status === "loading")
 const fileInput = ref<HTMLInputElement>()
 const sourcePanel = ref<HTMLElement>()
 const dragging = ref(false)
+let sourceScrollTop = 0
 const number = (value: number) => value.toLocaleString(props.locale)
 const load = () => emit("load")
 const stop = () => emit("cancel")
 const closeSource = () => emit("close")
+function rememberScroll(event: Event) {
+  const panel = event.currentTarget
+  if (
+    props.active &&
+    panel instanceof HTMLDialogElement &&
+    panel.clientHeight
+  )
+    sourceScrollTop = panel.scrollTop
+}
 function pick(event: Event) {
   const selected = (event.target as HTMLInputElement).files?.[0]
   if (selected) emit("sourceChange", { file: selected })
@@ -76,13 +87,17 @@ function drop(event: DragEvent) {
   emit("sourceChange", { file: event.dataTransfer?.files[0] })
 }
 watch(
-  () => [props.view.workspace, props.view.sourceOpen],
+  () => [props.active, props.view.workspace, props.view.sourceOpen],
   async () => {
     await nextTick()
     const panel = sourcePanel.value
     if (!(panel instanceof HTMLDialogElement)) return
-    if (props.view.sourceOpen && !panel.open) panel.showModal()
-    else if (!props.view.sourceOpen && panel.open) panel.close()
+    if (props.active && props.view.sourceOpen && !panel.open) {
+      panel.showModal()
+      panel.scrollTop = sourceScrollTop
+    } else if ((!props.active || !props.view.sourceOpen) && panel.open) {
+      panel.close()
+    }
   },
   { flush: "post" }
 )
@@ -98,7 +113,7 @@ watch(
     }"
     aria-labelledby="geo-source-title"
     @cancel.stop.prevent="closeSource"
-    @close="emit('close')"
+    @scroll.passive="rememberScroll"
   >
     <div class="geo-panel-heading">
       <h2 id="geo-source-title">{{ t.source }}</h2>
