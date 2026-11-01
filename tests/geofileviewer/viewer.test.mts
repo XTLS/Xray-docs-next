@@ -3,26 +3,31 @@ import assert from "node:assert/strict"
 import { nextTick } from "vue"
 import { withViewer, TestWorker, finishSearch } from "./helpers/viewer.mts"
 
-test("presets and GitHub raw targets still start loading automatically", () =>
+test("presets, GitHub raw and jsDelivr GitHub targets start loading automatically", () =>
   withViewer(async (viewer) => {
     viewer.actions.openTarget({ type: "preset", index: 1, tag: "US" })
     const preset = TestWorker.instances[0]
     assert.equal(viewer.session.status, "loading")
     assert.equal(preset.last("load").source.name, "geoip-full.dat")
 
-    const url =
-      "https://raw.githubusercontent.com/other/repo/main/geosite.dat"
-    viewer.actions.openTarget({
-      type: "url",
-      url,
-      kind: "geosite",
-      tag: "google"
-    })
-    assert.equal(preset.terminated, true)
-    assert.equal(viewer.session.status, "loading")
-    assert.equal(TestWorker.instances.length, 2)
-    const raw = TestWorker.instances[1]
-    assert.equal(raw.last("load").source.name, url)
+    let previous = preset
+    for (const url of [
+      "https://raw.githubusercontent.com/other/repo/main/geosite.dat",
+      "https://cdn.jsdelivr.net/gh/other/repo@main/geosite.dat"
+    ]) {
+      viewer.actions.openTarget({
+        type: "url",
+        url,
+        kind: "geosite",
+        tag: "google"
+      })
+      assert.equal(previous.terminated, true)
+      assert.equal(viewer.session.status, "loading")
+      const current = TestWorker.instances.at(-1)!
+      assert.notEqual(current, previous)
+      assert.equal(current.last("load").source.name, url)
+      previous = current
+    }
   }, false))
 
 test("other URL targets wait for a click and retain their category when loaded", () =>

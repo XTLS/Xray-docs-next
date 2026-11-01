@@ -140,13 +140,16 @@ test("cancellation during either official download never starts another attempt"
     assert.equal(requests, cancelAt)
   }
 })
-test("only credential-free HTTPS GitHub raw URLs can load automatically", () => {
+test("only credential-free HTTPS GitHub raw and jsDelivr GitHub URLs can load automatically", () => {
   for (const url of [
     "https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/geosite/geosite.dat.gz",
     "https://raw.githubusercontent.com/v2fly/geoip/release/geoip.dat",
     "https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geosite.dat",
     "https://raw.githubusercontent.com/other/repo/main/data.dat?version=2",
-    "https://RAW.GITHUBUSERCONTENT.COM:443/other/repo/main/data.dat"
+    "https://RAW.GITHUBUSERCONTENT.COM:443/other/repo/main/data.dat",
+    "https://cdn.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/geosite/geosite.dat.gz",
+    "https://cdn.jsdelivr.net/gh/other/repo@main/data.dat?version=2",
+    "https://CDN.JSDELIVR.NET:443/gh/other/repo/data.dat"
   ])
     assert.equal(canAutoLoadUrl(url), true, url)
   for (const url of [
@@ -158,6 +161,18 @@ test("only credential-free HTTPS GitHub raw URLs can load automatically", () => 
     "https://raw.githubusercontent.com@example.com/test.dat",
     "https://user:pass@raw.githubusercontent.com/other/repo/main/data.dat",
     "https://github.com/v2fly/geoip/releases/latest/download/geoip.dat",
+    "http://cdn.jsdelivr.net/gh/other/repo/data.dat",
+    "https://cdn.jsdelivr.net:8443/gh/other/repo/data.dat",
+    "https://cdn.jsdelivr.net.example.com/gh/other/repo/data.dat",
+    "https://cdn.jsdelivr.net@localhost/gh/other/repo/data.dat",
+    "https://user:pass@cdn.jsdelivr.net/gh/other/repo/data.dat",
+    "https://cdn.jsdelivr.net/",
+    "https://cdn.jsdelivr.net/gh",
+    "https://cdn.jsdelivr.net/gh-other/repo/data.dat",
+    "https://cdn.jsdelivr.net/npm/other/data.dat",
+    "https://cdn.jsdelivr.net/npm/data.dat?path=/gh/other/repo",
+    "https://cdn.jsdelivr.net/gh/../npm/data.dat",
+    "https://example.com/gh/cdn.jsdelivr.net/data.dat",
     "http://localhost/test.dat",
     "javascript:alert(1)",
     "not-a-url"

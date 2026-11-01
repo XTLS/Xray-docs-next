@@ -56,9 +56,11 @@ export function validateUrl(value: string): string {
 
 export function canAutoLoadUrl(value: string): boolean {
   try {
+    const url = new URL(validateUrl(value))
     return (
-      new URL(validateUrl(value)).origin ===
-      "https://raw.githubusercontent.com"
+      url.origin === "https://raw.githubusercontent.com" ||
+      (url.origin === "https://cdn.jsdelivr.net" &&
+        url.pathname.startsWith("/gh/"))
     )
   } catch {
     return false
