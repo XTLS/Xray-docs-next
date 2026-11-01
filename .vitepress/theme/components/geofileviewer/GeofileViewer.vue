@@ -6,6 +6,7 @@ import { getMessages } from "./messages.mts"
 import { highlightParts } from "./presentation.mts"
 import { usePermalink } from "./usePermalink.mts"
 import { useInfiniteScroll } from "./useInfiniteScroll.mts"
+import SearchInput from "./SearchInput.vue"
 
 const viewer = useViewer()
 const {
@@ -408,12 +409,11 @@ function drop(event: DragEvent) {
         <label class="geo-sr-only" for="geo-search">{{
           t.contentSearch
         }}</label>
-        <input
+        <SearchInput
           id="geo-search"
           v-model="contentQuery"
-          type="search"
-          class="geo-search"
           :placeholder="t.contentSearch"
+          :clear-label="t.clearContentSearch"
         />
         <span class="geo-stats" role="status">{{
           searching
@@ -432,12 +432,11 @@ function drop(event: DragEvent) {
             <label class="geo-sr-only" for="geo-category-search">{{
               t.categorySearch
             }}</label>
-            <input
+            <SearchInput
               id="geo-category-search"
               v-model="categoryQuery"
-              type="search"
-              class="geo-search"
               :placeholder="t.categorySearch"
+              :clear-label="t.clearCategorySearch"
             />
           </div>
           <ul

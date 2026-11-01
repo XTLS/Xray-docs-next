@@ -143,7 +143,6 @@
   font-size: 14px;
 }
 .geo-field input,
-.geo-search,
 .geo-viewer select {
   width: 100%;
   min-width: 0;
@@ -241,10 +240,6 @@
   align-items: center;
   gap: 16px;
   margin: 0 0 16px;
-}
-.geo-search {
-  flex: 1;
-  font-size: 14px;
 }
 .geo-stats {
   flex-shrink: 0;
