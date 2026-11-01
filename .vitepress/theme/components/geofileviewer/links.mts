@@ -1,4 +1,9 @@
-import { presets, validateUrl, type PresetFile } from "./sources.mts"
+import {
+  canAutoLoadUrl,
+  presets,
+  validateUrl,
+  type PresetFile
+} from "./sources.mts"
 import type { GeoKind } from "./types.mts"
 
 export function viewerPopupTarget(
@@ -37,6 +42,7 @@ export function parsePermalink(search: string) {
   if (params.has("url")) {
     try {
       const url = validateUrl(params.get("url") ?? "")
+      if (!canAutoLoadUrl(url)) throw new Error("Unsupported share URL")
       const requestedKind = params.get("type")?.trim().toLowerCase()
       if (
         requestedKind !== undefined &&
@@ -72,6 +78,7 @@ export function remoteCategoryLink(
   kind: GeoKind,
   tag?: string
 ) {
+  if (!canAutoLoadUrl(dataUrl)) return ""
   const url = new URL(current)
   url.search = ""
   url.hash = ""

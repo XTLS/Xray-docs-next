@@ -12,6 +12,7 @@ const props = defineProps<{
   view: ViewerView
   embedded: boolean
   canLoad: boolean
+  remoteAllowed: boolean
   t: Messages
   locale: string
   progressLabel: string
@@ -40,8 +41,12 @@ const url = computed({
 })
 const file = computed(() => props.draft.file)
 const tabs = computed(() => [
-  { id: "preset" as const, label: props.t.preset },
-  { id: "url" as const, label: props.t.url },
+  ...(props.remoteAllowed
+    ? [
+        { id: "preset" as const, label: props.t.preset },
+        { id: "url" as const, label: props.t.url }
+      ]
+    : []),
   { id: "local" as const, label: props.t.local }
 ])
 const loading = computed(() => props.session.status === "loading")

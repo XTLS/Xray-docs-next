@@ -59,7 +59,7 @@ export const zh = {
   back: "← 返回分类列表",
   reverseMatch: "反向匹配",
   invalidLink:
-    "链接中的数据来源或类型无效，请检查预设文件名、URL 和 GeoIP／GeoSite 类型。",
+    "链接中的数据来源或类型无效。URL 分享仅支持 HTTPS 的 GitHub Raw 和 jsDelivr GitHub 地址。",
   missingCategory: "文件中没有找到该分类，可继续浏览其他分类",
   copyLink: "复制分类链接",
   copied: "已复制",
@@ -148,7 +148,7 @@ const en: Messages = {
   back: "← Back to categories",
   reverseMatch: "Reverse match",
   invalidLink:
-    "This link specifies an invalid data source or type. Check the preset filename, URL and GeoIP/GeoSite type.",
+    "This link specifies an invalid data source or type. Shared URLs must use HTTPS GitHub Raw or jsDelivr GitHub addresses.",
   missingCategory:
     "Category not found in this file. You can browse other categories",
   copyLink: "Copy category link",
@@ -238,7 +238,7 @@ const ru: Messages = {
   back: "← К списку категорий",
   reverseMatch: "Обратное сопоставление",
   invalidLink:
-    "В ссылке указан недопустимый источник или тип данных. Проверьте имя готового набора, URL и тип GeoIP/GeoSite.",
+    "В ссылке указан недопустимый источник или тип данных. Разрешены только HTTPS-адреса GitHub Raw и jsDelivr GitHub.",
   missingCategory:
     "Категория не найдена в файле. Можно просмотреть другие категории",
   copyLink: "Копировать ссылку",

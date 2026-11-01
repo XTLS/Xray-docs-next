@@ -27,9 +27,10 @@ export type ViewerTarget =
   | { type: "preset"; index: number; tag: string }
   | { type: "url"; url: string; kind: GeoKind; tag: string }
 export type ViewerHost =
-  { mode: "page" } | { mode: "embedded"; url: string }
-export const initialDraft = (): SourceDraft => ({
-  mode: "preset",
+  | { mode: "page" }
+  | { mode: "embedded"; url: string }
+export const initialDraft = (remoteAllowed: boolean): SourceDraft => ({
+  mode: remoteAllowed ? "preset" : "local",
   kind: "geosite",
   presetIndex: 0,
   url: "",

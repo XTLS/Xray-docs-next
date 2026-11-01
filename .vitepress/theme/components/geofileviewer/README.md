@@ -44,6 +44,8 @@ GeoIP、GeoSite 和两种宿主共用搜索 UI。`SearchInput` 只处理输入�
 
 独立宿主使用 `{ mode: "page" }`；弹窗使用 `{ mode: "embedded", url }`。弹窗只应用初始化目标，不安装页面路由同步。两种宿主的分享链接都指向独立工具地址。
 
+远程来源只在 HTTPS 页面启用；客户端挂载前和非 HTTPS 页面均只显示本地上传。分享链接仅接受 HTTPS 的 `raw.githubusercontent.com` 和 `cdn.jsdelivr.net/gh/` 地址，其它地址报错并清空来源。HTTPS 页面仍支持手动输入第三方 URL，但不为白名单之外的来源生成分享链接。
+
 ## 样式边界
 
 `viewer.css` 管理宿主布局，独立页面的固定工作区只应用于 `geo-viewer--page`。嵌入模式填满弹窗父容器。来源、分类、条目样式分别位于对应 CSS 文件，公共视觉规则集中于带 `.geo-viewer` 命名空间的 `viewer-shared.css`。原生弹窗的焦点和文档滚动由宿主负责。

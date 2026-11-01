@@ -15,7 +15,16 @@ const props = defineProps<{ host?: ViewerHost }>()
 const host: ViewerHost = props.host ?? { mode: "page" }
 const embedded = host.mode === "embedded"
 const viewer = useViewer()
-const { draft, session, query, view, results, canLoad, actions } = viewer
+const {
+  draft,
+  session,
+  query,
+  view,
+  results,
+  canLoad,
+  remoteAllowed,
+  actions
+} = viewer
 const { lang } = useData()
 const t = computed(() => getMessages(lang.value))
 const contentQuery = computed({
@@ -184,6 +193,7 @@ function closeDocsOnBlur(event: FocusEvent) {
       :view="view"
       :embedded="embedded"
       :can-load="canLoad"
+      :remote-allowed="remoteAllowed"
       :t="t"
       :locale="lang"
       :progress-label="progressLabel"

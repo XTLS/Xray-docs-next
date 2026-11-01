@@ -108,7 +108,8 @@ test("file parameters select official presets; custom sources use the URL parame
 })
 
 test("URL links preserve query strings, explicit type and category", () => {
-  const source = "https://example.com/us.dat?version=2&token=a%2Bb"
+  const source =
+    "https://raw.githubusercontent.com/owner/repo/main/us.dat?version=2&token=a%2Bb"
   const params = new URLSearchParams({
     url: source,
     type: "GeoIP",
@@ -122,13 +123,19 @@ test("URL links preserve query strings, explicit type and category", () => {
   assert.equal(parsed.file, undefined)
   assert.equal(
     parsePermalink(
-      "?url=" + encodeURIComponent("https://example.com/geoip.dat.gz")
+      "?url=" +
+        encodeURIComponent(
+          "https://raw.githubusercontent.com/owner/repo/main/geoip.dat.gz"
+        )
     ).kind,
     "geoip"
   )
   assert.equal(
     parsePermalink(
-      "?url=" + encodeURIComponent("https://example.com/regions.dat")
+      "?url=" +
+        encodeURIComponent(
+          "https://cdn.jsdelivr.net/gh/owner/repo@main/regions.dat"
+        )
     ).kind,
     "geosite"
   )
@@ -141,23 +148,46 @@ test("malformed URL sources and unsupported types do not produce loadable links"
     "not-a-url",
     "javascript:alert(1)",
     "file:///test.dat",
-    "https://user:pass@example.com/file.dat"
-  ])
-    assert.equal(
-      parsePermalink("?url=" + encodeURIComponent(source)).invalid,
-      true
+    "https://user:pass@example.com/file.dat",
+    "https://example.com/file.dat",
+    "https://localhost/file.dat",
+    "http://raw.githubusercontent.com/owner/repo/main/data.dat",
+    "https://raw.githubusercontent.com.evil.example/data.dat",
+    "https://raw.githubusercontent.com:8443/owner/repo/main/data.dat",
+    "https://user:pass@raw.githubusercontent.com/owner/repo/main/data.dat",
+    "https://cdn.jsdelivr.net/npm/data.dat",
+    "https://cdn.jsdelivr.net/gh/../npm/data.dat",
+    "https://cdn.jsdelivr.net.evil.example/gh/data.dat"
+  ]) {
+    const parsed = parsePermalink(
+      "?file=geosite.dat&url=" + encodeURIComponent(source) + "&tag=secret"
     )
+    assert.equal(parsed.invalid, true, source)
+    assert.equal(parsed.url, undefined)
+    assert.equal(parsed.file, undefined)
+    assert.equal(parsed.tag, "")
+    assert.equal(
+      remoteCategoryLink(
+        "https://example.org/tools/geofileviewer.html",
+        source,
+        "geosite"
+      ),
+      ""
+    )
+  }
   for (const type of ["", "other", "mmdb"])
     assert.equal(
       parsePermalink(
-        "?url=https%3A%2F%2Fexample.com%2Ffile.dat&type=" + type
+        "?url=https%3A%2F%2Fraw.githubusercontent.com%2Fowner%2Frepo%2Fmain%2Ffile.dat&type=" +
+          type
       ).invalid,
       true
     )
 })
 
 test("URL category links retain locale paths and round trip nested URL parameters", () => {
-  const source = "https://example.com/a.dat?version=2&token=a%2Bb#data"
+  const source =
+    "https://cdn.jsdelivr.net/gh/owner/repo@main/a.dat?version=2&token=a%2Bb#data"
   const link = remoteCategoryLink(
     "https://example.org/base/ru/tools/geofileviewer.html?file=geosite.dat#old",
     source,

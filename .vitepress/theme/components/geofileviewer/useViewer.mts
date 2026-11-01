@@ -1,7 +1,9 @@
 import {
   computed,
+  onMounted,
   onUnmounted,
   reactive,
+  ref,
   shallowReactive,
   shallowReadonly
 } from "vue"
@@ -37,15 +39,27 @@ import {
   type ViewerResults
 } from "./viewerState.mts"
 
-export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
+export function useViewer(
+  options: {
+    createWorker?: WorkerFactory
+    protocol?: string
+  } = {}
+) {
   const client = createWorkerClient(options.createWorker)
-  const draft = shallowReactive(initialDraft())
+  const remoteAllowed = ref(false)
+  const draft = shallowReactive(initialDraft(false))
   const session = shallowReactive(initialSession())
   const query = reactive(initialQuery())
   const view = reactive(initialView())
   const rows = shallowReactive(initialResults())
   let pendingTag: string | undefined
   let searchTimer: ReturnType<typeof setTimeout> | undefined
+
+  onMounted(() => {
+    remoteAllowed.value =
+      (options.protocol ?? location.protocol) === "https:"
+    Object.assign(draft, initialDraft(remoteAllowed.value))
+  })
 
   const categories = computed(() => {
     const needle = query.category.trim().toLowerCase()
@@ -58,10 +72,11 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   const selected = computed(() =>
     categories.value.find((c) => c.id === rows.selectedId)
   )
-  const canLoad = computed(
-    () =>
-      draft.mode === "preset" ||
-      (draft.mode === "url" ? !!draft.url.trim() : !!draft.file)
+  const canLoad = computed(() =>
+    draft.mode === "local"
+      ? !!draft.file
+      : remoteAllowed.value &&
+        (draft.mode === "preset" || !!draft.url.trim())
   )
   const results = computed<ViewerResults>(
     () =>
@@ -104,12 +119,17 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   function resetToHome() {
     dispose()
     clearData()
-    Object.assign(draft, initialDraft())
+    Object.assign(draft, initialDraft(remoteAllowed.value))
     Object.assign(session, initialSession())
     Object.assign(view, initialView())
   }
 
   function updateSource(patch: Partial<SourceDraft>) {
+    if (
+      !remoteAllowed.value &&
+      ((patch.mode && patch.mode !== "local") || patch.url !== undefined)
+    )
+      return
     if (
       !Object.entries(patch).some(
         ([key, value]) => draft[key as keyof SourceDraft] !== value
@@ -356,6 +376,14 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   }
 
   function openTarget(target: ViewerTarget) {
+    if (
+      target.type !== "home" &&
+      (!remoteAllowed.value ||
+        (target.type === "url" && !canAutoLoadUrl(target.url)))
+    ) {
+      resetToHome()
+      return
+    }
     const current = session.loaded
     if (target.type === "home") resetToHome()
     else if (target.type === "preset") {
@@ -372,11 +400,9 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     )
       focusCategory(target.tag)
     else {
-      const autoLoad = canAutoLoadUrl(target.url)
-      if (!autoLoad) resetToHome()
       updateSource({ mode: "url", url: target.url, kind: target.kind })
       pendingTag = target.tag
-      if (autoLoad) void loadSource()
+      void loadSource()
     }
   }
 
@@ -388,6 +414,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     view: shallowReadonly(view),
     results,
     canLoad,
+    remoteAllowed: computed(() => remoteAllowed.value),
     actions: {
       updateSource,
       loadSource,

@@ -16,7 +16,8 @@ export async function withViewer(
     worker: TestWorker
   ) => Promise<void>,
   autoLoad = true,
-  kind: GeoKind = "geosite"
+  kind: GeoKind = "geosite",
+  protocol = "https:"
 ) {
   TestWorker.instances = []
   let viewer!: ReturnType<typeof useViewer>
@@ -35,7 +36,8 @@ export async function withViewer(
   const app = renderer.createApp({
     setup() {
       viewer = useViewer({
-        createWorker: () => new TestWorker()
+        createWorker: () => new TestWorker(),
+        protocol
       })
       return () => null
     }
