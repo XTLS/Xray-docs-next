@@ -57,7 +57,7 @@ test("content search is literal, case-insensitive and excludes category names an
     0
   )
   assert.equal((await data.search("missing"))!.categories.length, 0)
-  assert.equal(await data.search("", () => true), null)
+  assert.equal(await data.search("", { cancelled: () => true }), null)
 })
 test("empty content search includes all entries and pages are bounded", async () => {
   const data = await indexDataset(
@@ -204,5 +204,12 @@ test("highlighting treats markup and regular expression characters as text", () 
   assert.deepEqual(highlightParts("TestTEST", "test"), [
     { text: "Test", match: true },
     { text: "TEST", match: true }
+  ])
+  assert.deepEqual(highlightParts("1.1.1.0/24", "1.", "prefix"), [
+    { text: "1.", match: true },
+    { text: "1.1.0/24", match: false }
+  ])
+  assert.deepEqual(highlightParts("1.1.1.0/24", "1.1.1.1", "whole"), [
+    { text: "1.1.1.0/24", match: true }
   ])
 })

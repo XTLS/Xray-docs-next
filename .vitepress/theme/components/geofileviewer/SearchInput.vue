@@ -13,6 +13,7 @@ function clear() {
 
 <template>
   <div class="geo-search-field">
+    <slot name="prefix" />
     <input
       :id="id"
       ref="input"
@@ -43,18 +44,24 @@ function clear() {
 <style scoped>
 .geo-search-field {
   position: relative;
+  display: flex;
+  align-items: center;
   flex: 1;
   width: 100%;
   min-width: 0;
   font-size: 14px;
-}
-.geo-search {
-  width: 100%;
-  min-width: 0;
-  padding: 9px 40px 9px 12px;
   border: 1px solid var(--geo-border);
   border-radius: 6px;
   background: var(--vp-c-bg);
+}
+.geo-search {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  padding: 9px 40px 9px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
   color: var(--vp-c-text-1);
 }
 .geo-search::-webkit-search-cancel-button,
@@ -77,7 +84,10 @@ function clear() {
 .geo-search-clear:hover {
   color: var(--vp-c-text-1);
 }
-.geo-search:focus-visible,
+.geo-search:focus-visible {
+  outline: none;
+}
+.geo-search-field:focus-within,
 .geo-search-clear:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 3px;

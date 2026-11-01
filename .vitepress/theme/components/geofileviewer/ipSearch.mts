@@ -1,6 +1,93 @@
+import { ViewerError } from "./types.mts"
+
+const decimal = Array.from({ length: 256 }, (_, value) => String(value))
+
+// Share the display representation with prefix lookup, but stop generating
+// text as soon as the query is matched or a character differs.
+function* cidrParts(
+  bytes: Uint8Array,
+  offset: number,
+  size: number,
+  prefix: number
+) {
+  if (size === 4) {
+    for (let i = 0; i < 4; i++) {
+      if (i) yield "."
+      yield decimal[bytes[offset + i]]
+    }
+  } else {
+    let bestStart = -1
+    let bestLength = 1
+    for (let i = 0; i < 8; ) {
+      if (bytes[offset + i * 2] || bytes[offset + i * 2 + 1]) {
+        i++
+        continue
+      }
+      const start = i++
+      while (i < 8 && !bytes[offset + i * 2] && !bytes[offset + i * 2 + 1])
+        i++
+      if (i - start > bestLength) {
+        bestStart = start
+        bestLength = i - start
+      }
+    }
+    for (let i = 0; i < 8; ) {
+      if (i === bestStart) {
+        yield "::"
+        i += bestLength
+      } else {
+        if (i > 0 && i !== bestStart + bestLength) yield ":"
+        yield (
+          (bytes[offset + i * 2] << 8) |
+          bytes[offset + i * 2 + 1]
+        ).toString(16)
+        i++
+      }
+    }
+  }
+  yield "/"
+  yield decimal[prefix]
+}
+
+export function formatCIDR(ip: Uint8Array, prefix: number): string {
+  if (
+    ![4, 16].includes(ip.length) ||
+    !Number.isInteger(prefix) ||
+    prefix < 0 ||
+    prefix > ip.length * 8
+  )
+    throw new ViewerError("invalidFile")
+  return [...cidrParts(ip, 0, ip.length, prefix)].join("")
+}
+
+function matchesPrefix(
+  bytes: Uint8Array,
+  offset: number,
+  size: number,
+  prefix: number,
+  needle: string
+) {
+  const firstWord = (bytes[offset] << 8) | bytes[offset + 1]
+  const first =
+    size === 4
+      ? decimal[bytes[offset]]
+      : firstWord
+        ? firstWord.toString(16)
+        : undefined
+  if (first && !first.startsWith(needle) && !needle.startsWith(first))
+    return false
+  let position = 0
+  for (const part of cidrParts(bytes, offset, size, prefix)) {
+    for (let i = 0; i < part.length; i++) {
+      if (part[i] !== needle[position++]) return false
+      if (position === needle.length) return true
+    }
+  }
+  return false
+}
+
 export type IpQuery = {
   address: Uint8Array
-  prefix?: number
 }
 
 function parseIPv4(value: string): number[] | undefined {
@@ -47,15 +134,9 @@ function parseAddress(value: string): Uint8Array | undefined {
 }
 
 export function parseIpQuery(value: string): IpQuery | undefined {
-  const parts = value.trim().split("/")
-  if (parts.length > 2) return
-  const address = parseAddress(parts[0])
-  if (!address) return
-  if (parts.length === 1) return { address }
-  if (!/^\d{1,3}$/.test(parts[1])) return
-  const prefix = Number(parts[1])
-  if (prefix > address.length * 8) return
-  return { address, prefix }
+  if (value.includes("/")) return
+  const address = parseAddress(value.trim())
+  if (address) return { address }
 }
 
 function compareAddress(
@@ -134,13 +215,7 @@ export class IpIndex {
     const slices: Uint32Array[] = []
     let count = 0
     for (const group of this.groups) {
-      if (
-        group.size !== query.address.length ||
-        (query.prefix !== undefined && group.prefix !== query.prefix)
-      )
-        continue
-      const bits =
-        query.prefix === undefined ? group.prefix : group.size * 8
+      if (group.size !== query.address.length) continue
       const bound = (after: boolean) => {
         let low = 0
         let high = group.entries.length
@@ -151,7 +226,7 @@ export class IpIndex {
             this.addresses[group.entries[middle]],
             query.address,
             0,
-            bits
+            group.prefix
           )
           if (difference < 0 || (after && difference === 0))
             low = middle + 1
@@ -174,5 +249,37 @@ export class IpIndex {
       offset += slice.length
     }
     return matches.sort()
+  }
+
+  async searchPrefix(
+    needle: string,
+    cancelled: () => boolean
+  ): Promise<Uint32Array | null | undefined> {
+    const matching: number[] = []
+    let checked = 0
+    let lastYield = Date.now()
+    for (const group of this.groups) {
+      for (const index of group.entries) {
+        if (
+          matchesPrefix(
+            this.bytes,
+            this.addresses[index],
+            group.size,
+            group.prefix,
+            needle
+          )
+        )
+          matching.push(index)
+        if (++checked % 2048 === 0 && Date.now() - lastYield > 16) {
+          await new Promise((resolve) => setTimeout(resolve, 0))
+          if (cancelled()) return
+          lastYield = Date.now()
+        }
+      }
+    }
+    if (cancelled()) return
+    return matching.length === this.addresses.length && matching.length
+      ? null
+      : Uint32Array.from(matching).sort()
   }
 }

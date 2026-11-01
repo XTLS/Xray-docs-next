@@ -56,6 +56,20 @@
   font-size: 13px;
   color: var(--vp-c-text-2);
 }
+.geo-search-mode {
+  flex-shrink: 0;
+  align-self: stretch;
+  width: auto;
+  padding: 0 10px;
+  border: 0;
+  border-right: 1px solid var(--geo-border);
+  border-radius: 6px 0 0 6px;
+  appearance: auto;
+  font-size: 14px;
+}
+.geo-search-mode:focus-visible {
+  outline: none;
+}
 .geo-browser {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);

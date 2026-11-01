@@ -1,7 +1,10 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import { parseIpQuery } from "../../.vitepress/theme/components/geofileviewer/ipSearch.mts"
-import { indexDataset } from "../../.vitepress/theme/components/geofileviewer/dataset.mts"
+import {
+  formatCIDR,
+  indexDataset
+} from "../../.vitepress/theme/components/geofileviewer/dataset.mts"
 import { ipRanges } from "./helpers/dat.mts"
 
 const v6 = (words: number[]) =>
@@ -18,9 +21,11 @@ test("IP queries parse complete IPv4, compressed IPv6 and embedded IPv4 without 
     [...parseIpQuery(" 255.0.128.1 ")!.address],
     [255, 0, 128, 1]
   )
-  assert.equal(parseIpQuery("0.0.0.0")!.prefix, undefined)
-  assert.equal(parseIpQuery("0.0.0.0/0")!.prefix, 0)
-  assert.equal(parseIpQuery("255.255.255.255/32")!.prefix, 32)
+  assert.deepEqual([...parseIpQuery("0.0.0.0")!.address], [0, 0, 0, 0])
+  assert.deepEqual(
+    [...parseIpQuery("255.255.255.255")!.address],
+    [255, 255, 255, 255]
+  )
   const bytes = v6([0x2001, 0xdb8, 0, 0, 0, 0, 0, 1])
   for (const value of ["2001:DB8::1", "2001:0db8:0:0:0:0:0:0001"])
     assert.deepEqual([...parseIpQuery(value)!.address], bytes)
@@ -29,14 +34,13 @@ test("IP queries parse complete IPv4, compressed IPv6 and embedded IPv4 without 
     [...parseIpQuery("::ffff:192.0.2.128")!.address],
     v6([0, 0, 0, 0, 0, 0xffff, 0xc000, 0x280])
   )
-  assert.equal(parseIpQuery("::/0")!.prefix, 0)
-  assert.equal(
-    parseIpQuery("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/128")!.prefix,
-    128
+  assert.deepEqual(
+    [...parseIpQuery("ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff")!.address],
+    Array(16).fill(255)
   )
 })
 
-test("incomplete, malformed and out-of-range IP/CIDR queries are not text searches", async () => {
+test("IP mode accepts only complete IP addresses and never switches to CIDR matching automatically", async () => {
   const data = await indexDataset(
     ipRanges("TEST", [{ bytes: [127, 0, 0, 0], prefix: 8 }]),
     "geoip"
@@ -50,6 +54,9 @@ test("incomplete, malformed and out-of-range IP/CIDR queries are not text search
     "127.0.0.01",
     "0x7f.0.0.1",
     "127.0.0.1/",
+    "127.0.0.0/8",
+    "0.0.0.0/0",
+    "::/0",
     "127.0.0.1/33",
     "127.0.0.1/-1",
     "127.0.0.1/1.5",
@@ -128,7 +135,7 @@ test("IPv4 point lookups include all containing ranges across categories in orig
   }
 })
 
-test("CIDR queries require the complete address and prefix, not overlapping or containing ranges", async () => {
+test("CIDR mode matches only the literal start of the displayed range, including partial addresses and prefixes", async () => {
   const data = await indexDataset(
     ipRanges("A", [
       { bytes: [10, 0, 0, 0], prefix: 8 },
@@ -140,21 +147,46 @@ test("CIDR queries require the complete address and prefix, not overlapping or c
     ]),
     "geoip"
   )
-  const result = (await data.search("10.0.0.0/24"))!
+  const result = (await data.search("10.0.0.0/24", { ipMode: "cidr" }))!
   assert.equal(result.categories[0].matches, 2)
   assert.deepEqual(
     (await data.entries(result, 0, 1))!.entries.map((e) => e.value),
     ["10.0.0.0/24", "10.0.0.0/24"]
   )
-  assert.equal((await data.search("10.0.0.0/16"))!.categories.length, 0)
-  assert.equal((await data.search("10.0.0.1/24"))!.categories.length, 0)
-  const hostBits = (await data.search("10.0.0.7/24"))!
-  assert.equal(hostBits.categories[0].matches, 1)
+  const partial = (await data.search("10.0.0.0/2", { ipMode: "cidr" }))!
+  assert.equal(partial.categories[0].matches, 3)
   assert.equal(
-    (await data.entries(hostBits, 0, 1))!.entries[0].value,
-    "10.0.0.7/24"
+    (await data.search(" 10. ", { ipMode: "cidr" }))!.categories[0]
+      .matches,
+    5
   )
-  assert.equal((await data.search("0.0.0.0/0"))!.categories[0].matches, 1)
+  assert.equal(
+    (await data.search("0.0.0", { ipMode: "cidr" }))!.categories[0]
+      .matches,
+    1
+  )
+  assert.equal(
+    (await data.search(".0.0", { ipMode: "cidr" }))!.categories.length,
+    0
+  )
+  assert.equal(
+    (await data.search("A", { ipMode: "cidr" }))!.categories.length,
+    0
+  )
+  assert.equal(
+    (await data.search("10.0.0.7", { ipMode: "cidr" }))!.categories[0]
+      .matches,
+    1
+  )
+  assert.equal((await data.search("10.0.0.7"))!.categories[0].matches, 6)
+  assert.equal(
+    (await data.search("", { ipMode: "cidr" }))!.categories[0].matches,
+    6
+  )
+  assert.equal(
+    await data.search("10.", { ipMode: "cidr", cancelled: () => true }),
+    null
+  )
 })
 
 test("IPv6 lookup handles partial-byte prefixes, equivalent spellings, endpoints and separate address families", async () => {
@@ -181,8 +213,8 @@ test("IPv6 lookup handles partial-byte prefixes, equivalent spellings, endpoints
     1
   )
   assert.equal(
-    (await data.search("2001:0DB8:ABCD:8000:0:0:0:0/49"))!.categories[0]
-      .matches,
+    (await data.search("2001:DB8:ABCD:8", { ipMode: "cidr" }))!
+      .categories[0].matches,
     1
   )
   assert.equal(
@@ -200,8 +232,62 @@ test("IPv6 lookup handles partial-byte prefixes, equivalent spellings, endpoints
     2
   )
   assert.equal((await data.search("::"))!.categories[0].matches, 2)
-  assert.equal((await data.search("::/0"))!.categories[0].matches, 1)
-  assert.equal(await data.search("::1", () => true), null)
+  assert.equal(
+    (await data.search("::/0", { ipMode: "cidr" }))!.categories[0].matches,
+    1
+  )
+  assert.equal(await data.search("::1", { cancelled: () => true }), null)
+})
+
+test("CIDR prefix lookup follows the displayed IPv6 compression and literal prefix length", async () => {
+  const rows = [
+    {
+      bytes: v6([0, 1, 0, 0, 2, 3, 4, 5]),
+      prefix: 64,
+      value: "0:1::2:3:4:5/64"
+    },
+    {
+      bytes: v6([0, 0, 1, 0, 0, 2, 3, 4]),
+      prefix: 64,
+      value: "::1:0:0:2:3:4/64"
+    },
+    {
+      bytes: v6([0x2001, 0xdb8, 0, 0, 0, 0, 0, 0]),
+      prefix: 32,
+      value: "2001:db8::/32"
+    },
+    {
+      bytes: v6([1, 2, 3, 4, 5, 6, 7, 8]),
+      prefix: 128,
+      value: "1:2:3:4:5:6:7:8/128"
+    },
+    { bytes: Array(16).fill(0), prefix: 0, value: "::/0" },
+    {
+      bytes: v6([0, 1, 2, 3, 4, 5, 6, 7]),
+      prefix: 128,
+      value: "0:1:2:3:4:5:6:7/128"
+    },
+    { bytes: [0, 1, 2, 3], prefix: 24, value: "0.1.2.3/24" }
+  ]
+  const data = await indexDataset(ipRanges("DISPLAY", rows), "geoip")
+  for (const row of rows) {
+    assert.equal(
+      formatCIDR(Uint8Array.from(row.bytes), row.prefix),
+      row.value
+    )
+    for (let size = 1; size <= row.value.length; size++) {
+      const prefix = row.value.slice(0, size).toUpperCase()
+      const result = (await data.search(prefix, { ipMode: "cidr" }))!
+      const expected = rows
+        .filter((r) => r.value.toUpperCase().startsWith(prefix))
+        .map((r) => r.value)
+      assert.deepEqual(
+        (await data.entries(result, 0, 1))!.entries.map((e) => e.value),
+        expected,
+        prefix
+      )
+    }
+  }
 })
 
 test("numeric matches stream beyond the first page and clearing the query restores every entry", async () => {
@@ -211,8 +297,11 @@ test("numeric matches stream beyond the first page and clearing the query restor
   }))
   ranges.splice(100, 0, { bytes: [192, 0, 2, 0], prefix: 24 })
   const data = await indexDataset(ipRanges("MANY", ranges), "geoip")
-  for (const query of ["10.2.3.4", "10.0.0.0/8"]) {
-    const result = (await data.search(query))!
+  for (const ipMode of ["ip", "cidr"] as const) {
+    const result = (await data.search(
+      ipMode === "ip" ? "10.2.3.4" : "10.0.0.0/",
+      { ipMode }
+    ))!
     assert.equal(result.categories[0].matches, 205)
     assert.equal((await data.entries(result, 0, 1))!.entries.length, 100)
     assert.equal((await data.entries(result, 0, 3))!.entries.length, 5)
@@ -248,15 +337,12 @@ test("binary lookup agrees with an independent numeric scan of unsorted mixed an
   )
   for (let i = 0; i < 80; i++) {
     const range = ranges[random() % ranges.length]
-    const exact = i % 2 === 0
-    const query = text(range.bytes) + (exact ? `/${range.prefix}` : "")
+    const query = text(range.bytes)
     const address = numeric(range.bytes)
     const expected = ranges.flatMap((entry, index) => {
       if (entry.bytes.length !== range.bytes.length) return []
       const shift = BigInt(entry.bytes.length * 8 - entry.prefix)
-      const match = exact
-        ? entry.prefix === range.prefix && numeric(entry.bytes) === address
-        : numeric(entry.bytes) >> shift === address >> shift
+      const match = numeric(entry.bytes) >> shift === address >> shift
       return match ? [index] : []
     })
     const result = (await data.search(query))!

@@ -125,6 +125,10 @@ watch(
                 entry.value,
                 query.activeContent,
                 entry.type === 'IPv4' || entry.type === 'IPv6'
+                  ? query.ipMode === 'ip'
+                    ? 'whole'
+                    : 'prefix'
+                  : 'contains'
               )"
               :key="partIndex"
               ><mark v-if="part.match">{{ part.text }}</mark

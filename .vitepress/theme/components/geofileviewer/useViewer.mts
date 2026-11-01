@@ -9,7 +9,8 @@ import {
   CATEGORY_PAGE_SIZE,
   ViewerError,
   type CategorySummary,
-  type ErrorCode
+  type ErrorCode,
+  type IpSearchMode
 } from "./types.mts"
 import {
   canAutoLoadUrl,
@@ -165,12 +166,10 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     query.activeContent = query.content
     query.searching = true
     resetEntries()
-    client.search(query.content)
+    client.search(query.content, query.ipMode)
   }
 
-  function setContentQuery(value: string) {
-    if (query.content === value) return
-    query.content = value
+  function restartSearch(delay: number) {
     clearTimeout(searchTimer)
     if (!session.loaded) return
     client.invalidateSearch()
@@ -178,7 +177,20 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     query.category = ""
     query.searching = true
     resetEntries()
-    searchTimer = setTimeout(searchNow, 250)
+    if (delay) searchTimer = setTimeout(searchNow, delay)
+    else searchNow()
+  }
+
+  function setContentQuery(value: string) {
+    if (query.content === value) return
+    query.content = value
+    restartSearch(250)
+  }
+
+  function setIpSearchMode(mode: IpSearchMode) {
+    if (session.loaded?.kind !== "geoip" || query.ipMode === mode) return
+    query.ipMode = mode
+    restartSearch(0)
   }
 
   function setCategoryFilter(value: string) {
@@ -364,6 +376,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
       resetToHome,
       openTarget,
       setContentQuery,
+      setIpSearchMode,
       setCategoryFilter,
       setAttribute,
       selectCategory,

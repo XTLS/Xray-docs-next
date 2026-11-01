@@ -8,6 +8,75 @@ import {
 } from "./helpers/viewer.mts"
 import type { CategorySummary } from "../../.vitepress/theme/components/geofileviewer/types.mts"
 
+test("GeoIP search mode is explicit, preserves input and invalidates pending work", () =>
+  withViewer(async (viewer, worker) => {
+    worker.reply({ type: "ready", categoryCount: 1, entryCount: 205 })
+    const categories: CategorySummary[] = [
+      {
+        id: 0,
+        code: "A",
+        count: 205,
+        matches: 205,
+        reverseMatch: false,
+        attributes: []
+      }
+    ]
+    finishSearch(worker, categories)
+    batch(worker, worker.last("entries"), 0, 100, 205)
+    viewer.actions.loadMoreEntries()
+    const oldEntries = worker.last("entries")
+    const oldSearch = worker.last("search")
+    assert.equal(viewer.query.ipMode, "ip")
+    assert.equal(oldSearch.ipMode, "ip")
+    viewer.actions.setCategoryFilter("a")
+    viewer.actions.setContentQuery("10.")
+    viewer.actions.setIpSearchMode("cidr")
+    const cidrSearch = worker.last("search")
+    assert.equal(cidrSearch.contentQuery, "10.")
+    assert.equal(cidrSearch.ipMode, "cidr")
+    assert.equal(viewer.query.content, "10.")
+    assert.equal(viewer.query.category, "")
+    assert.equal(viewer.query.attribute, "")
+    assert.equal(viewer.results.value.selected, undefined)
+    batch(worker, oldEntries, 100, 100, 205)
+    worker.reply({ type: "search", id: oldSearch.id, categories })
+    assert.equal(viewer.results.value.entries.length, 0)
+    assert.equal(viewer.query.searching, true)
+    const searches = worker.requests.filter(
+      (r) => r.type === "search"
+    ).length
+    await new Promise((resolve) => setTimeout(resolve, 270))
+    assert.equal(
+      worker.requests.filter((r) => r.type === "search").length,
+      searches
+    )
+    viewer.actions.setIpSearchMode("ip")
+    worker.reply({ type: "search", id: cidrSearch.id, categories })
+    assert.equal(viewer.query.searching, true)
+    finishSearch(worker, categories)
+    assert.equal(viewer.results.value.selected?.code, "A")
+    assert.equal(worker.last("search").ipMode, "ip")
+    viewer.actions.setIpSearchMode("cidr")
+    viewer.actions.focusCategory("A")
+    assert.equal(viewer.query.ipMode, "ip")
+    assert.equal(viewer.query.content, "")
+    assert.equal(worker.last("search").ipMode, "ip")
+    viewer.actions.setIpSearchMode("cidr")
+    await viewer.actions.loadSource()
+    assert.equal(viewer.query.ipMode, "ip")
+    const next = TestWorker.instances[1]
+    next.reply({ type: "ready", categoryCount: 1, entryCount: 205 })
+    assert.equal(next.last("search").ipMode, "ip")
+    viewer.actions.updateSource({ presetIndex: 2 })
+    await viewer.actions.loadSource()
+    const geosite = TestWorker.instances[2]
+    geosite.reply({ type: "ready", categoryCount: 1, entryCount: 1 })
+    const requests = geosite.requests.length
+    viewer.actions.setIpSearchMode("cidr")
+    assert.equal(viewer.query.ipMode, "ip")
+    assert.equal(geosite.requests.length, requests)
+  }))
+
 test("entry streaming appends once, stops at the end and discards a previous category's pending batch", () =>
   withViewer(async (viewer, worker) => {
     worker.reply({ type: "ready", categoryCount: 2, entryCount: 207 })

@@ -22,9 +22,15 @@ const contentQuery = computed({
   get: () => query.content,
   set: actions.setContentQuery
 })
+const ipSearchMode = computed({
+  get: () => query.ipMode,
+  set: actions.setIpSearchMode
+})
 const searchLabel = computed(() =>
   session.loaded?.kind === "geoip"
-    ? t.value.ipSearch
+    ? query.ipMode === "ip"
+      ? t.value.ipSearch
+      : t.value.cidrSearch
     : t.value.contentSearch
 )
 const loading = computed(() => session.status === "loading")
@@ -197,7 +203,18 @@ function closeDocsOnBlur(event: FocusEvent) {
           v-model="contentQuery"
           :placeholder="searchLabel"
           :clear-label="t.clearContentSearch"
-        />
+        >
+          <template v-if="session.loaded.kind === 'geoip'" #prefix>
+            <select
+              v-model="ipSearchMode"
+              class="geo-search-mode"
+              :aria-label="t.searchMode"
+            >
+              <option value="ip">IP</option>
+              <option value="cidr">CIDR</option>
+            </select>
+          </template>
+        </SearchInput>
         <span class="geo-stats" role="status">{{
           query.searching
             ? t.searching

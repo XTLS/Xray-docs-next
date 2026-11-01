@@ -2,7 +2,8 @@ import type {
   CategorySummary,
   ErrorCode,
   GeoEntry,
-  GeoKind
+  GeoKind,
+  IpSearchMode
 } from "./types.mts"
 import type { LoadProgress, PresetFile } from "./sources.mts"
 import { CATEGORY_PAGE_SIZE } from "./types.mts"
@@ -25,7 +26,8 @@ export type ViewerTarget =
   | { type: "preset"; index: number; tag: string }
   | { type: "url"; url: string; kind: GeoKind; tag: string }
 export type ViewerHost =
-  { mode: "page" } | { mode: "embedded"; url: string }
+  | { mode: "page" }
+  | { mode: "embedded"; url: string }
 export const initialDraft = (): SourceDraft => ({
   mode: "preset",
   kind: "geosite",
@@ -46,6 +48,7 @@ export const initialSession = () => ({
 export const initialQuery = () => ({
   content: "",
   activeContent: "",
+  ipMode: "ip" as IpSearchMode,
   category: "",
   attribute: "",
   searching: false

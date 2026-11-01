@@ -1,5 +1,5 @@
 import protobuf from "protobufjs/minimal.js"
-import { IpIndex, parseIpQuery } from "./ipSearch.mts"
+import { formatCIDR, IpIndex, parseIpQuery } from "./ipSearch.mts"
 import {
   ENTRY_PAGE_SIZE,
   ViewerError,
@@ -7,8 +7,11 @@ import {
   type AttributeSummary,
   type CategorySummary,
   type GeoEntry,
-  type GeoKind
+  type GeoKind,
+  type IpSearchMode
 } from "./types.mts"
+
+export { formatCIDR } from "./ipSearch.mts"
 
 type Reader = InstanceType<typeof protobuf.Reader>
 type Category = {
@@ -64,36 +67,6 @@ function messageRange(reader: Reader, end: number): [number, number] {
   const start = reader.pos
   if (size > end - start) throw new ViewerError("invalidFile")
   return [start, start + size]
-}
-
-export function formatCIDR(ip: Uint8Array, prefix: number): string {
-  if (ip.length === 4 && prefix <= 32) return `${ip.join(".")}/${prefix}`
-  if (ip.length !== 16 || prefix > 128)
-    throw new ViewerError("invalidFile")
-  const parts = Array.from(
-    { length: 8 },
-    (_, i) => (ip[i * 2] << 8) | ip[i * 2 + 1]
-  )
-  let bestStart = -1
-  let bestLength = 1
-  for (let i = 0; i < 8; ) {
-    if (parts[i] !== 0) {
-      i++
-      continue
-    }
-    const start = i
-    while (i < 8 && parts[i] === 0) i++
-    if (i - start > bestLength) {
-      bestStart = start
-      bestLength = i - start
-    }
-  }
-  const hex = parts.map((p) => p.toString(16))
-  const value =
-    bestStart < 0
-      ? hex.join(":")
-      : `${hex.slice(0, bestStart).join(":")}::${hex.slice(bestStart + bestLength).join(":")}`
-  return `${value}/${prefix}`
 }
 
 function attribute(reader: Reader, end: number): Attribute {
@@ -212,13 +185,16 @@ export class Dataset {
 
   async search(
     contentQuery: string,
-    cancelled: () => boolean = () => false
+    options: { ipMode?: IpSearchMode; cancelled?: () => boolean } = {}
   ): Promise<SearchResult | null> {
+    const { ipMode = "ip", cancelled = () => false } = options
     const needle = contentQuery.trim().toLowerCase()
     const result: SearchResult = { categories: [], indexes: new Map() }
     const ipQuery =
-      this.kind === "geoip" && needle ? parseIpQuery(needle) : undefined
-    if (this.kind === "geoip" && needle && !ipQuery)
+      this.kind === "geoip" && ipMode === "ip" && needle
+        ? parseIpQuery(needle)
+        : undefined
+    if (this.kind === "geoip" && ipMode === "ip" && needle && !ipQuery)
       return cancelled() ? null : result
     let lastYield = Date.now()
     for (let id = 0; id < this.categories.length; id++) {
@@ -227,12 +203,20 @@ export class Dataset {
       let indexes: Uint32Array | null = null
       let attributes = category.attributes
       if (ipQuery) indexes = category.ipIndex!.search(ipQuery)
-      else if (needle) {
+      else if (this.kind === "geoip" && needle) {
+        const found = await category.ipIndex!.searchPrefix(
+          needle,
+          cancelled
+        )
+        if (found === undefined) return null
+        indexes = found
+      } else if (needle) {
         const matching: number[] = []
         const counts = new Map<string, number>()
         for (let i = 0; i < count; i++) {
           const entry = this.entry(id, i)
-          if (entry.value.toLowerCase().includes(needle)) {
+          const value = entry.value.toLowerCase()
+          if (value.includes(needle)) {
             matching.push(i)
             countAttributes(counts, entry)
           }
