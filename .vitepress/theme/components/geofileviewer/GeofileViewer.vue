@@ -308,21 +308,13 @@ function closeDocsOnBlur(event: FocusEvent) {
       class="geo-links"
       :aria-label="t.relatedDocs"
     >
-      <a
-        :href="withBase(`${localePrefix}/config/routing.html`)"
-        target="_blank"
-        rel="noopener noreferrer"
-        >{{ t.routingDocs }}</a
-      >
-      <a
-        :href="withBase(`${localePrefix}/config/geodata.html`)"
-        target="_blank"
-        rel="noopener noreferrer"
-        >{{ t.geodataDocs }}</a
-      >
-      <a :href="sourceDocs" target="_blank" rel="noreferrer noopener">{{
-        t.dataSourceDocs
+      <a :href="withBase(`${localePrefix}/config/routing.html`)">{{
+        t.routingDocs
       }}</a>
+      <a :href="withBase(`${localePrefix}/config/geodata.html`)">{{
+        t.geodataDocs
+      }}</a>
+      <a :href="sourceDocs">{{ t.dataSourceDocs }}</a>
     </nav>
   </component>
 </template>
