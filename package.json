@@ -1,6 +1,5 @@
 {
   "devDependencies": {
-    "@playwright/test": "1.64.1",
     "medium-zoom": "^1.1.0",
     "mermaid": "^11.17.2",
     "protobufjs": "8.8.1",
@@ -12,7 +11,6 @@
   },
   "scripts": {
     "test:geofileviewer": "node --test tests/geofileviewer/*.test.mts",
-    "test:geofileviewer:e2e": "playwright test",
     "docs:dev": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress dev",
     "docs:build": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress build",
     "docs:preview": "node scripts/gen-i18n-stale.mjs && node scripts/gen-contributors.mjs && vitepress preview"

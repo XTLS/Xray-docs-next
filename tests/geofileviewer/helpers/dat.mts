@@ -1,5 +1,4 @@
 import protobuf from "protobufjs/minimal.js"
-import type { GeoKind } from "../../../.vitepress/theme/components/geofileviewer/types.mts"
 
 const W = protobuf.Writer
 export function site(
@@ -52,34 +51,4 @@ export function ip(code = "private", bytes = [127, 0, 0, 0], prefix = 8) {
     .bool(true)
     .ldelim()
     .finish()
-}
-
-export function browserDataset(kind: GeoKind) {
-  return Buffer.concat(
-    Array.from({ length: 60 }, (_, index) => {
-      const code =
-        index === 0
-          ? "ALPHA"
-          : index === 1
-            ? "BETA"
-            : index === 10
-              ? "GOOGLE"
-              : index === 40
-                ? "US"
-                : `CAT-${index}`
-      return kind === "geoip"
-        ? ip(code)
-        : site(
-            code,
-            Array.from({ length: index === 10 ? 330 : 2 }, (_, i) => ({
-              type: 2,
-              value:
-                index === 1
-                  ? `tail-beta${i}.example`
-                  : `${index === 10 && i >= 200 ? "tail" : code.toLowerCase()}${i}.example`,
-              attrs: index === 10 && i >= 110 && i < 315
-            }))
-          )
-    })
-  )
 }

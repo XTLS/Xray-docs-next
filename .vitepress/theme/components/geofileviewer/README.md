@@ -43,8 +43,6 @@
 ```sh
 pnpm run test:geofileviewer
 pnpm run docs:build
-pnpm exec playwright install chromium
-pnpm run test:geofileviewer:e2e
 ```
 
-浏览器用例在内存生成 DAT 并拦截网络，不依赖官方仓库实时下载。已有外部预览服务时可设置 `PLAYWRIGHT_BASE_URL`；本地使用 Edge 可设置 `PLAYWRIGHT_CHANNEL=msedge`。实际官方 DAT 的最终验收独立执行，数据文件不提交到仓库。
+单元测试使用 Node 内置测试运行器，覆盖解析、查询、来源读取与状态转换。实际官方 DAT 可单独进行人工验收，数据文件不提交到仓库。

@@ -5,7 +5,3 @@ node_modules/
 .vitepress/dist/
 .vitepress/cache/
 .vitepress/.generated/
-
-# Browser test artifacts
-test-results/
-playwright-report/
