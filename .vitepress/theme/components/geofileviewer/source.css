@@ -50,6 +50,9 @@
   margin-top: 5px;
   accent-color: var(--vp-c-brand-1);
 }
+.geo-preset-content {
+  min-width: 0;
+}
 .geo-preset strong,
 .geo-preset small {
   display: block;
@@ -62,6 +65,23 @@
   margin-top: 4px;
   color: var(--vp-c-text-2);
   line-height: 1.6;
+}
+.geo-preset .geo-preset-source {
+  margin-top: 10px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.geo-preset-source span,
+.geo-preset-source a {
+  display: block;
+}
+.geo-preset-source a {
+  text-decoration: underline;
+  text-decoration-color: var(--geo-border);
+  text-underline-offset: 3px;
+}
+.geo-preset-source a:hover {
+  color: var(--vp-c-brand-1);
 }
 .geo-source-actions {
   display: flex;

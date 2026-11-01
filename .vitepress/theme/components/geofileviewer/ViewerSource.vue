@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue"
 import type { Messages } from "./messages.mts"
+import { presets, presetSource } from "./sources.mts"
 import type {
   SourceDraft,
   ViewerSession,
@@ -40,6 +41,7 @@ const url = computed({
   set: (value) => emit("sourceChange", { url: value })
 })
 const file = computed(() => props.draft.file)
+const presetUrls = presets.map((_, index) => presetSource(index).url)
 const tabs = computed(() => [
   ...(props.remoteAllowed
     ? [
@@ -129,9 +131,20 @@ watch(
             name="geo-preset"
             :value="index"
           />
-          <span
+          <span class="geo-preset-content"
             ><strong>{{ name }}</strong
-            ><small>{{ t.presetDescriptions[index] }}</small></span
+            ><small>{{ t.presetDescriptions[index] }}</small
+            ><small class="geo-preset-source"
+              ><span>{{ t.presetSource }}: XTLS/Xray-rules-dat</span
+              ><a
+                :href="presetUrls[index]"
+                :title="presetUrls[index]"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click.stop
+                >{{ presets[index].path }}.gz</a
+              ><span>{{ t.presetDelivery }}</span></small
+            ></span
           >
         </label>
       </div>

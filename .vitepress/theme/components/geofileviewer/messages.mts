@@ -7,6 +7,8 @@ export const zh = {
   preset: "官方预设",
   url: "URL",
   local: "本地文件",
+  presetSource: "来源",
+  presetDelivery: "从远程 GitHub 仓库实时加载",
   presetNames: [
     "GeoIP 精简版",
     "GeoIP 完整版",
@@ -95,6 +97,8 @@ const en: Messages = {
   preset: "Official presets",
   url: "URL",
   local: "Local file",
+  presetSource: "Source",
+  presetDelivery: "Fetched on demand from the remote GitHub repository",
   presetNames: [
     "GeoIP Lite",
     "GeoIP Full",
@@ -185,6 +189,9 @@ const ru: Messages = {
   preset: "Готовые наборы",
   url: "URL",
   local: "Локальный файл",
+  presetSource: "Источник",
+  presetDelivery:
+    "Загружается по запросу из удалённого репозитория GitHub",
   presetNames: [
     "GeoIP Lite",
     "GeoIP Full",

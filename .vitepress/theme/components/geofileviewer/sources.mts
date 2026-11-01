@@ -27,7 +27,9 @@ type ReadOptions = {
 const rawBase =
   "https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/"
 
-export function presetSource(index: number): InputSource {
+export function presetSource(
+  index: number
+): Extract<InputSource, { mode: "remote" }> {
   const preset = presets[index]
   if (!preset) throw new ViewerError("invalidUrl")
   return {
