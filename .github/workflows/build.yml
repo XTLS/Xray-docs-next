@@ -30,11 +30,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Test
+        run: pnpm test
+
       - name: Build documentation site
         run: pnpm run docs:build
-
-      - name: Test Geo data viewer
-        run: pnpm run test:geofileviewer
 
       - name: Deploy to GitHub Pages
         if: github.event_name != 'pull_request'

@@ -89,7 +89,7 @@ Xray предоставляет два способа проверки:
     - 11_geodata.json
     - 12_env.json
     - 99_version.json
-  - `/usr/local/share/xray/`: каталог файлов ресурсов, содержащий [полную версию GeoIP и расширенную версию GeoSite](../tools/geofileviewer.md) (владелец: `65532:65532`, права на каталог: `755`, права на файлы: `644`)
+  - `/usr/local/share/xray/`: каталог файлов ресурсов, содержащий [полную версию GeoIP](../tools/geofileviewer.md?file=geoip-full.dat) и [расширенную версию GeoSite](../tools/geofileviewer.md?file=geosite-expand.dat) (владелец: `65532:65532`, права на каталог: `755`, права на файлы: `644`)
     - geoip.dat
     - geosite.dat
   - `/var/log/xray/`: каталог логов (точка монтирования тома, объявленная через `VOLUME`) (владелец: `65532:65532`, права на каталог: `700`)
@@ -101,7 +101,7 @@ Xray предоставляет два способа проверки:
   ::: details Структура файлов
   - `/usr/bin/xray`: основная программа Xray
   - `/etc/xray/config.json`: единый конфигурационный файл (его родительский каталог является точкой монтирования)
-  - `/usr/share/xray/`: каталог файлов ресурсов с геоданными v2fly
+  - `/usr/share/xray/`: каталог файлов ресурсов с геоданными Loyalsoldier
     - geoip.dat
     - geosite.dat
 

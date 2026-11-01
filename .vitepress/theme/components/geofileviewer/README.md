@@ -41,7 +41,7 @@
 ## 验证
 
 ```sh
-pnpm run test:geofileviewer
+pnpm test
 pnpm run docs:build
 ```
 
