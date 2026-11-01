@@ -5,7 +5,8 @@ import {
   readSource,
   presetSource,
   presets,
-  validateUrl
+  validateUrl,
+  canAutoLoadUrl
 } from "../../.vitepress/theme/components/geofileviewer/sources.mts"
 import type {
   LoadProgress,
@@ -39,6 +40,31 @@ test("four official presets use the correct raw branch paths and types", () => {
     )
   }
 })
+test("only credential-free HTTPS GitHub raw URLs can load automatically", () => {
+  for (const url of [
+    "https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/geosite/geosite.dat.gz",
+    "https://raw.githubusercontent.com/v2fly/geoip/release/geoip.dat",
+    "https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/geosite.dat",
+    "https://raw.githubusercontent.com/other/repo/main/data.dat?version=2",
+    "https://RAW.GITHUBUSERCONTENT.COM:443/other/repo/main/data.dat"
+  ])
+    assert.equal(canAutoLoadUrl(url), true, url)
+  for (const url of [
+    "https://example.com/test.dat",
+    "http://raw.githubusercontent.com/other/repo/main/data.dat",
+    "https://raw.githubusercontent.com:8443/other/repo/main/data.dat",
+    "https://raw.githubusercontent.com.example.com/test.dat",
+    "https://example.com/raw.githubusercontent.com/test.dat",
+    "https://raw.githubusercontent.com@example.com/test.dat",
+    "https://user:pass@raw.githubusercontent.com/other/repo/main/data.dat",
+    "https://github.com/v2fly/geoip/releases/latest/download/geoip.dat",
+    "http://localhost/test.dat",
+    "javascript:alert(1)",
+    "not-a-url"
+  ])
+    assert.equal(canAutoLoadUrl(url), false, url)
+})
+
 test("DAT and gzip local files share the reader without network calls", async () => {
   for (const body of [bytes, gzipSync(bytes)]) {
     assert.deepEqual(

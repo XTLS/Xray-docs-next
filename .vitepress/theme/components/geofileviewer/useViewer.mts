@@ -12,6 +12,7 @@ import {
   type ErrorCode
 } from "./types.mts"
 import {
+  canAutoLoadUrl,
   presetSource,
   presets,
   validateUrl,
@@ -274,7 +275,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     }
   }
 
-  async function loadSource(tag?: string) {
+  async function loadSource(tag = pendingTag) {
     if (!canLoad.value) return
     dispose()
     let input: InputSource
@@ -339,8 +340,11 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     )
       focusCategory(target.tag)
     else {
+      const autoLoad = canAutoLoadUrl(target.url)
+      if (!autoLoad) resetToHome()
       updateSource({ mode: "url", url: target.url, kind: target.kind })
-      void loadSource(target.tag)
+      pendingTag = target.tag
+      if (autoLoad) void loadSource()
     }
   }
 

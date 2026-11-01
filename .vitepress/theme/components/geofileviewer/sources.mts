@@ -48,6 +48,17 @@ export function validateUrl(value: string): string {
   }
 }
 
+export function canAutoLoadUrl(value: string): boolean {
+  try {
+    return (
+      new URL(validateUrl(value)).origin ===
+      "https://raw.githubusercontent.com"
+    )
+  } catch {
+    return false
+  }
+}
+
 export async function readSource(
   source: InputSource,
   signal: AbortSignal,
