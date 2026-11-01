@@ -111,6 +111,7 @@
   display: grid;
   white-space: nowrap;
   justify-self: start;
+  user-select: none;
 }
 .geo-load-button span {
   grid-area: 1 / 1;
@@ -213,7 +214,7 @@
   overflow-wrap: anywhere;
   font-size: 13px;
 }
-.geo-source-dialog {
+.geo-viewer .geo-source-dialog {
   width: min(680px, calc(100vw - 32px));
   max-height: calc(100dvh - 32px);
   margin: auto;
@@ -232,6 +233,17 @@
   left: 50vw;
   margin: 0;
   transform: translate(-50%, -50%);
+}
+@media (min-width: 768px) {
+  /* Keep the source tabs in place as their contents change height. */
+  .geo-viewer .geo-source-dialog {
+    inset: auto;
+    top: max(20px, calc((100dvh - 900px) / 2));
+    left: 50vw;
+    max-height: min(900px, calc(100dvh - 40px));
+    margin: 0;
+    transform: translateX(-50%);
+  }
 }
 @media (max-width: 767px) {
   .geo-source {

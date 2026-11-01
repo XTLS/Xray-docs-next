@@ -160,6 +160,16 @@ function showViewer() {
   color: var(--vp-c-text-2);
   font-size: 14px;
 }
+@media (min-width: 768px) {
+  .geo-modal {
+    top: max(20px, calc((100dvh - 900px) / 2));
+    max-height: min(900px, calc(100dvh - 40px));
+    transform: translateX(-50%);
+  }
+  .geo-modal-shell {
+    max-height: min(898px, calc(100dvh - 42px));
+  }
+}
 @media (max-width: 767px) {
   .geo-modal {
     width: calc(100vw - 16px);
