@@ -9,4 +9,4 @@ description: Explore GeoIP and GeoSite data files in your browser.
 import GeofileViewer from '../../../.vitepress/theme/components/geofileviewer/GeofileViewer.vue'
 </script>
 
-<GeofileViewer />
+<ClientOnly><GeofileViewer /></ClientOnly>
