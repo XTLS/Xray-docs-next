@@ -65,7 +65,9 @@
 
 支持下载 `.dat` 及其 `.gz` 压缩格式。建议使用压缩格式，下载时核心会自动解压，可节省 80% 流量。
 
-Xray 提供多个版本的地理数据文件，可根据需求从 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md) 获取不同版本的下载地址。
+Xray 提供多个版本的地理数据文件，可根据需求从 [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat/blob/main/README_zh-Hans.md) 获取不同版本的下载地址。你也可以使用第三方提供的地理数据文件。
+
+可使用 [Geo 数据查看器](../tools/geofileviewer.md) 查看和搜索文件内容。
 
 > `file`: string
 

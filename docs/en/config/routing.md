@@ -95,7 +95,9 @@ When multiple attributes are specified simultaneously, these attributes must be 
 - **Substring**: Starts with `"keyword:"`, the rest is a string. The rule takes effect when this string matches any part of the target domain. For example, "keyword:sina.com" matches "sina.com", "sina.com.cn", and "www.sina.com", but not "sina.cn".
 - **Full match**: Starts with `"full:"`, the rest is a domain name. The rule takes effect when this domain exactly matches the target domain. For example, "full:xray.com" matches "xray.com" but not "www.xray.com".
 - **Dotless domain**: Starts with `"dotless:"`, the rest is a string that cannot contain `.`. The rule takes effect when the domain contains no `.` and this string matches any part of the target domain. For example, "dotless:pc-" matches "pc-alice", "mypc-alice". Suitable for intranet NetBIOS domains, etc. Case sensitive.
-- **Predefined domain list**: Starts with `"geosite:"`, the rest is a name, such as `geosite:google` or `geosite:cn`. Refer to [Predefined Domain List](#predefined-domain-list) for names and domain lists.
+- **Predefined domain list**: This list is bundled with every Xray release package as `geosite.dat`. Usage is like `"geosite:google"` or `"geosite:cn"`. Must start with `geosite:` (lowercase), followed by a category name.
+  - The [Standard edition](../tools/geofileviewer.md?file=geosite.dat) is bundled by default. Switch to the [Expanded edition](../tools/geofileviewer.md?file=geosite-expand.dat) for broader domain coverage.
+  - Use `@attribute` to filter domains in a category. For example, `geosite:google@cn` matches domains in the `google` category with the `cn` attribute.
 - **Load domains from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by filename and tag. The file is stored in the [Resource Directory](./env.md#resource-file-path). The file format is the same as `geosite.dat`, and the tag must exist in the file.
 
 ::: tip
@@ -108,8 +110,8 @@ An array, where each item represents an IP range. The rule takes effect when an 
 
 - **IP**: Like `"127.0.0.1"`.
 - **[CIDR](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing)**: Like `"10.0.0.0/8"`. You can also use `"0.0.0.0/0"` or `"::/0"` to specify all IPv4 or IPv6.
-- **Predefined IP list**: This list is pre-installed in every Xray installation package, named `geoip.dat`, and is provided by [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat). Usage is like `"geoip:cn"`. Must start with `geoip:` (lowercase), followed by a two-letter country code or another category name.
-  - The lite version included by default contains only three country categories: `cn`, `ir`, and `ru`. Use the full version for categories for other countries or regions.
+- **Predefined IP list**: This list is bundled with every Xray release package as `geoip.dat`. Usage is like `"geoip:cn"`. Must start with `geoip:` (lowercase), followed by a two-letter country code or another category name.
+  - The [lite version](../tools/geofileviewer.md?file=geoip-lite.dat) bundled by default contains only three country categories: `cn`, `ir`, and `ru`. Switch to the [full version](../tools/geofileviewer.md?file=geoip-full.dat) for categories for other countries or regions.
   - **Special value**: `"geoip:private"`, includes all private addresses, such as `127.0.0.1`.
 - **Load IPs from file**: In the form of `"ext:file:tag"`. Must start with `ext:` (lowercase), followed by filename and tag. The file is stored in the [Resource Directory](./env.md#resource-file-path). The file format is the same as `geoip.dat`, and the tag must exist in the file.
 - **Inverse selection `!`**: `"!10.0.0.0/8"` means anything not in `10.0.0.0/8`, and `"!geoip:cn"` means results not in `geoip:cn`. Multiple inverse options have an `AND` relationship, while positive options, or positive options together with all inverse options, have an `OR` relationship. For example, `ip: ["!geoip:cn", "!geoip:ru", "geoip:telegram"]` matches IPs that are not from Russia AND not from China, OR are Telegram IPs.
@@ -449,28 +451,3 @@ Weight value. The larger the value, the less likely the corresponding node is to
   ]
 }
 ```
-
-### Predefined Domain List
-
-This list is pre-installed in every Xray installation package, named `geosite.dat`. This file contains some common domain names. Use `geosite:category`, e.g., `geosite:google` matches domains in the `google` category and can be used for routing or DNS filtering.
-
-Common categories include:
-
-- `category-ads`: Contains common advertising domains.
-- `category-ads-all`: Contains common advertising domains, as well as domains of advertising providers.
-- `category-ai-!cn`: Contains domains of non-Chinese AI services.
-- `category-ai-cn`: Contains domains of Chinese AI services.
-- `cn`: Equivalent to the collection of `geolocation-cn` and `tld-cn`.
-- `apple`: Contains the vast majority of Apple domains.
-- `google`: Contains the vast majority of Google domains.
-- `google@cn`: Contains domains in the `google` category with the `cn` attribute.
-- `microsoft`: Contains the vast majority of Microsoft domains.
-- `facebook`: Contains the vast majority of Facebook domains.
-- `twitter`: Contains the vast majority of Twitter domains.
-- `telegram`: Contains the vast majority of Telegram domains.
-- `geolocation-cn`: Contains common mainland China site domains.
-- `geolocation-!cn`: Contains common non-mainland China site domains.
-- `tld-cn`: Contains top-level domains managed by CNNIC for mainland China, such as domains ending in `.cn`, `.中国`.
-- `tld-!cn`: Contains top-level domains not used in mainland China, such as domains ending in `.tw` (Taiwan), `.jp` (Japan), `.sg` (Singapore), `.us` (USA), `.ca` (Canada), etc.
-
-Xray provides different versions of GeoSite data, and the available categories vary by version. See [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat) for details.

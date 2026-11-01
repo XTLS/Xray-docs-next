@@ -80,5 +80,10 @@ export const nav: DefaultTheme.Config["nav"] = [
       }
     ]
   },
+  {
+    text: "工具",
+    activeMatch: "^/tools/",
+    items: [{ text: "Geo 数据查看器", link: "/tools/geofileviewer.md" }]
+  },
   { text: "赞助 & 捐款 & NFTs", link: "/about/sponsor.md" }
 ]

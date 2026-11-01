@@ -80,5 +80,12 @@ export const nav: DefaultTheme.Config["nav"] = [
       }
     ]
   },
+  {
+    text: "Инструменты",
+    activeMatch: "^/ru/tools/",
+    items: [
+      { text: "Просмотр геоданных", link: "/ru/tools/geofileviewer.md" }
+    ]
+  },
   { text: "Sponsor & Donation & NFTs", link: "/ru/about/sponsor.md" }
 ]

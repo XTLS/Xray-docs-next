@@ -65,7 +65,9 @@ The resource download URL. It must be an HTTPS URL.
 
 Both `.dat` and gzip-compressed `.dat.gz` downloads are supported. Use the compressed format to reduce data usage by 80%; the core decompresses it automatically during download.
 
-Xray provides multiple versions of geodata files. See [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat) for download URLs for the available versions.
+Xray provides multiple versions of geodata files. See [XTLS/Xray-rules-dat](https://github.com/XTLS/Xray-rules-dat) for download URLs for the available versions. You can also use geodata files provided by third parties.
+
+Use the [Geo Data Viewer](../tools/geofileviewer.md) to browse and search file contents.
 
 > `file`: string
 
