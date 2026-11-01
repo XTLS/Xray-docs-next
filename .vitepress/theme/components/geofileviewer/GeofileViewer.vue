@@ -1,15 +1,19 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from "vue"
+import { computed, nextTick, onMounted, ref, watch } from "vue"
 import { useData, withBase } from "vitepress"
 import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
 import { highlightParts } from "./presentation.mts"
-import { usePermalink } from "./usePermalink.mts"
+import { useViewerSharing } from "./useViewerSharing.mts"
+import { useViewerPageRoute } from "./useViewerPageRoute.mts"
+import { useViewerTarget } from "./useViewerTarget.mts"
+import type { ViewerHost } from "./viewerState.mts"
 import { useInfiniteScroll } from "./useInfiniteScroll.mts"
 import SearchInput from "./SearchInput.vue"
 
-const props = defineProps<{ popupUrl?: string }>()
-const embedded = computed(() => props.popupUrl !== undefined)
+const props = defineProps<{ host?: ViewerHost }>()
+const host: ViewerHost = props.host ?? { mode: "page" }
+const embedded = computed(() => host.mode === "embedded")
 const viewer = useViewer()
 const { actions, canLoad } = viewer
 const source = computed({
@@ -78,10 +82,17 @@ const select = actions.selectCategory
 const setAttribute = actions.setAttribute
 const loadMoreCategories = actions.loadMoreCategories
 const loadMoreEntries = actions.loadMoreEntries
-const { permalink, invalidLink, copyStatus, copy } = usePermalink(
-  viewer,
-  props.popupUrl
+const { permalink, copyStatus, copy } = useViewerSharing(viewer, () =>
+  host.mode === "page" ? location.href : host.url
 )
+function setupLocation() {
+  if (host.mode === "page")
+    return useViewerPageRoute(viewer, permalink).invalidLink
+  const target = useViewerTarget(viewer)
+  onMounted(() => target.apply(new URL(host.url).search))
+  return target.invalidLink
+}
+const invalidLink = setupLocation()
 const fileInput = ref<HTMLInputElement>()
 const dragging = ref(false)
 const categoryList = ref<HTMLElement>()

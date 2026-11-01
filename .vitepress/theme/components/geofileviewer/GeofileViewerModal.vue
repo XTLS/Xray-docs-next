@@ -1,89 +1,23 @@
 <script setup lang="ts">
-import {
-  computed,
-  defineAsyncComponent,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch
-} from "vue"
-import { useData, useRouter, withBase } from "vitepress"
+import { computed, defineAsyncComponent, nextTick, ref } from "vue"
+import { useData } from "vitepress"
 import { getMessages } from "./messages.mts"
-import { viewerPopupTarget } from "./links.mts"
-
+import { useViewerDialog } from "./useViewerDialog.mts"
+import { useViewerNavigation } from "./useViewerNavigation.mts"
 const Viewer = defineAsyncComponent(() => import("./GeofileViewer.vue"))
-const router = useRouter()
 const { lang } = useData()
 const t = computed(() => getMessages(lang.value))
 const target = ref<string>()
 const dialog = ref<HTMLDialogElement>()
-let opener: HTMLElement | undefined
-let backdropPointer: number | undefined
-let previous: typeof router.onBeforeRouteChange
-let rootPadding: string | undefined
-
-async function beforeRouteChange(href: string) {
-  if ((await previous?.(href)) === false) return false
-  const url = viewerPopupTarget(href, location.href, withBase("/"))
-  if (!url) return
-  opener =
-    document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : undefined
+const modal = useViewerDialog(dialog, () => {
+  target.value = undefined
+})
+useViewerNavigation(async (url) => {
+  modal.captureFocus()
   target.value = url.href
   await nextTick()
-  if (dialog.value && !dialog.value.open) {
-    const root = document.documentElement
-    const scrollbar = window.innerWidth - root.clientWidth
-    rootPadding = root.style.paddingRight
-    root.style.paddingRight = `${parseFloat(getComputedStyle(root).paddingRight) + scrollbar}px`
-    dialog.value.showModal()
-  }
-  return false
-}
-
-function close() {
-  if (!target.value) return
-  dialog.value?.close()
-  if (rootPadding !== undefined)
-    document.documentElement.style.paddingRight = rootPadding
-  rootPadding = undefined
-  target.value = undefined
-  backdropPointer = undefined
-  const focus = opener
-  opener = undefined
-  void nextTick(() => {
-    if (focus?.isConnected) focus.focus({ preventScroll: true })
-  })
-}
-
-function onPointerDown(event: PointerEvent) {
-  backdropPointer =
-    event.target === event.currentTarget ? event.pointerId : undefined
-}
-function onPointerUp(event: PointerEvent) {
-  if (
-    backdropPointer === event.pointerId &&
-    event.target === event.currentTarget
-  )
-    close()
-  backdropPointer = undefined
-}
-
-onMounted(() => {
-  previous = router.onBeforeRouteChange
-  router.onBeforeRouteChange = beforeRouteChange
-})
-onBeforeUnmount(() => {
-  if (router.onBeforeRouteChange === beforeRouteChange)
-    router.onBeforeRouteChange = previous
-  close()
-})
-watch(
-  () => [router.route.path, router.route.query, router.route.hash],
-  close
-)
+  modal.show()
+}, modal.close)
 </script>
 
 <template>
@@ -93,11 +27,11 @@ watch(
       ref="dialog"
       class="geo-modal"
       :aria-label="t.title"
-      @cancel.prevent="close"
-      @close="close"
-      @pointerdown="onPointerDown"
-      @pointerup="onPointerUp"
-      @pointercancel="backdropPointer = undefined"
+      @cancel.prevent="modal.close"
+      @close="modal.close"
+      @pointerdown="modal.pointerDown"
+      @pointerup="modal.pointerUp"
+      @pointercancel="modal.cancelPointer"
     >
       <div class="geo-modal-shell">
         <header class="geo-modal-header">
@@ -108,7 +42,7 @@ watch(
             :aria-label="t.close"
             :title="t.close"
             autofocus
-            @click="close"
+            @click="modal.close"
           >
             <svg
               width="20"
@@ -126,7 +60,10 @@ watch(
         </header>
         <div class="geo-modal-body">
           <Suspense>
-            <Viewer :key="target" :popup-url="target" />
+            <Viewer
+              :key="target"
+              :host="{ mode: 'embedded', url: target }"
+            />
             <template #fallback
               ><p class="geo-modal-loading" role="status">
                 {{ t.reading }}
