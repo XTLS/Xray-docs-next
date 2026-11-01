@@ -37,9 +37,7 @@ export async function withViewer(
   ) => Promise<void>,
   autoLoad = true
 ) {
-  const original = globalThis.Worker
   TestWorker.instances = []
-  globalThis.Worker = TestWorker as unknown as typeof Worker
   let viewer!: ReturnType<typeof useViewer>
   const renderer = createRenderer({
     createElement: () => ({}),
@@ -55,7 +53,9 @@ export async function withViewer(
   })
   const app = renderer.createApp({
     setup() {
-      viewer = useViewer()
+      viewer = useViewer({
+        createWorker: () => new TestWorker() as unknown as Worker
+      })
       return () => null
     }
   })
@@ -65,7 +65,6 @@ export async function withViewer(
     await run(viewer, TestWorker.instances[0])
   } finally {
     app.unmount()
-    globalThis.Worker = original
   }
 }
 

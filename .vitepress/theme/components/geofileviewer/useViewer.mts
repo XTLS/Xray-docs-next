@@ -4,9 +4,7 @@ import {
   type CategorySummary,
   type ErrorCode,
   type GeoEntry,
-  type GeoKind,
-  type WorkerRequest,
-  type WorkerResponse
+  type GeoKind
 } from "./types.mts"
 import { ViewerError } from "./types.mts"
 import {
@@ -16,8 +14,10 @@ import {
   type PresetFile,
   type LoadProgress
 } from "./sources.mts"
+import { createWorkerClient, type WorkerFactory } from "./workerClient.mts"
 
-export function useViewer() {
+export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
+  const client = createWorkerClient(options.createWorker)
   const source = ref("preset")
   const sourceOpen = ref(true)
   const workspace = ref(false)
@@ -60,12 +60,7 @@ export function useViewer() {
   const mobileDetail = ref(false)
   const categoryMissing = ref("")
   let pendingTag: string | undefined
-  let worker: Worker | undefined
-  let generation = 0
-  let searchId = 0
-  let entriesId = 0
   let entryPage = 0
-  let pendingEntries: { id: number; page: number } | undefined
   let searchTimer: ReturnType<typeof setTimeout> | undefined
 
   const selected = computed(() =>
@@ -80,7 +75,6 @@ export function useViewer() {
   const hasMoreEntries = computed(
     () => entries.value.length < entryTotal.value
   )
-  const send = (message: WorkerRequest) => worker?.postMessage(message)
   const canLoad = computed(
     () =>
       source.value === "preset" ||
@@ -96,20 +90,15 @@ export function useViewer() {
   )
 
   function stop() {
-    generation++
     clearTimeout(searchTimer)
-    worker?.terminate()
-    worker = undefined
+    client.dispose()
     loading.value = false
     searching.value = false
     entriesLoading.value = false
-    pendingEntries = undefined
   }
 
   function resetEntries() {
-    entriesId++
-    send({ type: "cancelEntries" })
-    pendingEntries = undefined
+    client.cancelEntries()
     entryPage = 0
     entriesLoading.value = false
     entries.value = []
@@ -153,7 +142,7 @@ export function useViewer() {
 
   function loadMoreEntries() {
     if (
-      !worker ||
+      !client.active ||
       !loaded.value ||
       searching.value ||
       entriesLoading.value ||
@@ -162,27 +151,19 @@ export function useViewer() {
     )
       return
     entriesLoading.value = true
-    pendingEntries = { id: ++entriesId, page: entryPage + 1 }
-    send({
-      type: "entries",
-      id: pendingEntries.id,
-      searchId,
-      categoryId: selectedId.value,
-      page: pendingEntries.page,
-      attributeKey: attributeKey.value || undefined
-    })
+    client.entries(
+      selectedId.value,
+      entryPage + 1,
+      attributeKey.value || undefined
+    )
   }
 
   function search() {
-    if (!loaded.value || !worker) return
+    if (!loaded.value || !client.active) return
     activeContentQuery.value = contentQuery.value
     searching.value = true
     resetEntries()
-    send({
-      type: "search",
-      id: ++searchId,
-      contentQuery: contentQuery.value
-    })
+    client.search(contentQuery.value)
   }
 
   function refreshEntries() {
@@ -223,7 +204,6 @@ export function useViewer() {
   async function load(tag?: string) {
     if (!canLoad.value) return
     stop()
-    const currentGeneration = generation
     let input: InputSource
     try {
       input =
@@ -264,13 +244,7 @@ export function useViewer() {
     categoryMissing.value = ""
     pendingTag = tag
     try {
-      worker = new Worker(
-        new URL("./viewer.worker.mts", import.meta.url),
-        { type: "module" }
-      )
-      worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
-        if (currentGeneration !== generation) return
-        const message = event.data
+      client.load(input, (message) => {
         if (message.type === "progress") {
           progress.value = message.progress
           phase.value = message.phase
@@ -287,7 +261,7 @@ export function useViewer() {
           entryCount.value = message.entryCount
           sourceOpen.value = false
           search()
-        } else if (message.type === "search" && message.id === searchId) {
+        } else if (message.type === "search") {
           allCategories.value = message.categories
           searching.value = false
           categoryLimit.value = CATEGORY_PAGE_SIZE
@@ -309,28 +283,15 @@ export function useViewer() {
           attributeKey.value = ""
           revealSelection()
           refreshEntries()
-        } else if (
-          message.type === "entries" &&
-          message.id === pendingEntries?.id &&
-          message.page === pendingEntries.page &&
-          !searching.value
-        ) {
+        } else if (message.type === "entries" && !searching.value) {
           entries.value = [...entries.value, ...message.entries]
           entryTotal.value = message.total
           entryPage = message.page
-          pendingEntries = undefined
           entriesLoading.value = false
         } else if (message.type === "error") fail(message.code)
-      }
-      worker.onerror = () => {
-        if (currentGeneration === generation) fail("workerFailed")
-      }
-      worker.postMessage({
-        type: "load",
-        source: input
-      } satisfies WorkerRequest)
+      })
     } catch {
-      if (currentGeneration === generation) fail("readFailed")
+      fail("readFailed")
     }
   }
 
@@ -359,7 +320,7 @@ export function useViewer() {
       clearTimeout(searchTimer)
       if (!loaded.value) return
       // Invalidate in-flight results as soon as input changes, before debouncing.
-      searchId++
+      client.invalidateSearch()
       attributeKey.value = ""
       resetEntries()
       searching.value = true
