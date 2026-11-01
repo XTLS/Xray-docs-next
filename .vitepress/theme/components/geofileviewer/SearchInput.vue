@@ -71,6 +71,8 @@ function clear() {
   border-radius: 6px;
   background: transparent;
   color: var(--vp-c-text-1);
+  /* Keep punctuation aligned while IP/CIDR text is typed incrementally. */
+  font-feature-settings: "calt" 0;
 }
 .geo-search::-webkit-search-cancel-button,
 .geo-search::-webkit-search-decoration {
