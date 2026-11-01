@@ -65,7 +65,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
       ({
         categories: categories.value as readonly CategorySummary[],
         visibleCategories: categories.value.slice(0, rows.limit),
-        selected: selected.value,
+        selected: query.searching ? undefined : selected.value,
         entries: rows.entries,
         entryTotal: rows.total,
         entriesLoading: rows.loading,

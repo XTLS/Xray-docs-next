@@ -96,14 +96,17 @@ test("category streaming grows a prefix and a new search resets entries without 
     viewer.actions.loadMoreEntries()
     const stale = worker.last("entries")
     viewer.actions.setContentQuery("fresh")
+    assert.equal(viewer.results.value.selected, undefined)
     assert.equal(viewer.results.value.entries.length, 0)
     batch(worker, stale, 100, 50, 150)
+    assert.equal(viewer.results.value.selected, undefined)
     assert.equal(viewer.results.value.entries.length, 0)
     const pending = worker.requests.length
     viewer.actions.loadMoreEntries()
     viewer.actions.loadMoreCategories()
     assert.equal(worker.requests.length, pending)
     await new Promise((resolve) => setTimeout(resolve, 270))
+    assert.equal(viewer.results.value.selected, undefined)
     finishSearch(worker, [
       {
         id: 900,
@@ -224,6 +227,7 @@ test("content changes clear category and attribute filters while category change
     assert.equal(viewer.query.category, "")
     assert.equal(viewer.query.attribute, "")
     assert.equal(viewer.query.searching, true)
+    assert.equal(viewer.results.value.selected, undefined)
     assert.equal(
       worker.requests.filter((r) => r.type === "entries").length,
       entriesBeforeSearch
@@ -256,6 +260,7 @@ test("content changes clear category and attribute filters while category change
     viewer.actions.setContentQuery("")
     assert.equal(viewer.query.category, "")
     assert.equal(viewer.query.attribute, "")
+    assert.equal(viewer.results.value.selected, undefined)
     await new Promise((resolve) => setTimeout(resolve, 270))
     assert.equal(worker.last("search").contentQuery, "")
     finishSearch(worker, summaries)
