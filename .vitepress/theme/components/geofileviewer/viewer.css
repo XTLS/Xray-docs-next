@@ -69,6 +69,11 @@
   margin-top: 24px;
 }
 
+/* The standalone tool has no sidebar column beside the site search. */
+:global(.geofileviewer-page .VPNavBar:not(.home) .container > .title) {
+  min-width: 0;
+}
+
 /* After loading, the tool occupies the viewport below the site navigation.
    The page itself has no scroll range; only the two result lists scroll. */
 :global(.geofileviewer-page:has(.geo-viewer--page.is-workspace)) {

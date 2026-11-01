@@ -228,10 +228,10 @@ function closeDocsOnBlur(event: FocusEvent) {
         />
       </section>
     </template>
-    <section v-else-if="!loading" class="geo-empty geo-panel">
+    <section v-else class="geo-empty geo-panel" :aria-busy="loading">
       <span class="geo-empty-icon" aria-hidden="true">{ }</span>
-      <h2>{{ t.emptyTitle }}</h2>
-      <p>{{ t.emptyBody }}</p>
+      <h2>{{ loading ? progressLabel : t.emptyTitle }}</h2>
+      <p v-if="!loading">{{ t.emptyBody }}</p>
     </section>
     <nav
       v-if="!view.workspace"

@@ -53,9 +53,8 @@ const load = () => emit("load")
 const stop = () => emit("cancel")
 const closeSource = () => emit("close")
 function pick(event: Event) {
-  emit("sourceChange", {
-    file: (event.target as HTMLInputElement).files?.[0]
-  })
+  const selected = (event.target as HTMLInputElement).files?.[0]
+  if (selected) emit("sourceChange", { file: selected })
 }
 function drop(event: DragEvent) {
   dragging.value = false
@@ -83,7 +82,7 @@ watch(
       'is-embedded-source': embedded
     }"
     aria-labelledby="geo-source-title"
-    @cancel="closeSource"
+    @cancel.stop.prevent="closeSource"
     @close="emit('close')"
   >
     <div class="geo-panel-heading">
@@ -180,6 +179,7 @@ watch(
           accept=".dat,.gz"
           :aria-label="t.browse"
           @change="pick"
+          @cancel.stop
         />
         <button class="geo-button" @click="fileInput?.click()">
           {{ t.browse }}
