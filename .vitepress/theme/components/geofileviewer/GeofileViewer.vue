@@ -22,10 +22,6 @@ const contentQuery = computed({
   get: () => query.content,
   set: actions.setContentQuery
 })
-const ipSearchMode = computed({
-  get: () => query.ipMode,
-  set: actions.setIpSearchMode
-})
 const searchLabel = computed(() =>
   session.loaded?.kind === "geoip"
     ? query.ipMode === "ip"
@@ -205,14 +201,26 @@ function closeDocsOnBlur(event: FocusEvent) {
           :clear-label="t.clearContentSearch"
         >
           <template v-if="session.loaded.kind === 'geoip'" #prefix>
-            <select
-              v-model="ipSearchMode"
-              class="geo-search-mode"
+            <div
+              class="geo-search-modes"
+              role="group"
               :aria-label="t.searchMode"
             >
-              <option value="ip">IP</option>
-              <option value="cidr">CIDR</option>
-            </select>
+              <button
+                type="button"
+                :aria-pressed="query.ipMode === 'ip'"
+                @click="actions.setIpSearchMode('ip')"
+              >
+                IP
+              </button>
+              <button
+                type="button"
+                :aria-pressed="query.ipMode === 'cidr'"
+                @click="actions.setIpSearchMode('cidr')"
+              >
+                CIDR
+              </button>
+            </div>
           </template>
         </SearchInput>
         <span class="geo-stats" role="status">{{

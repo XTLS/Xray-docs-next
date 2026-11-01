@@ -56,19 +56,34 @@
   font-size: 13px;
   color: var(--vp-c-text-2);
 }
-.geo-search-mode {
+.geo-search-modes {
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
   align-self: stretch;
-  width: auto;
-  padding: 0 10px;
-  border: 0;
+  gap: 2px;
+  padding: 4px;
   border-right: 1px solid var(--geo-border);
-  border-radius: 6px 0 0 6px;
-  appearance: auto;
-  font-size: 14px;
 }
-.geo-search-mode:focus-visible {
-  outline: none;
+.geo-search-modes button {
+  min-width: 40px;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 24px;
+}
+.geo-search-modes button:hover {
+  background: var(--vp-c-default-soft);
+}
+.geo-search-modes button[aria-pressed="true"] {
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+}
+.geo-search-modes button:focus-visible {
+  outline-offset: 0;
 }
 .geo-browser {
   display: grid;
