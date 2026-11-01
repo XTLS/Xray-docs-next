@@ -74,7 +74,7 @@ export function formatCIDR(ip: Uint8Array, prefix: number): string {
   )
   let bestStart = -1
   let bestLength = 1
-  for (let i = 0; i < 8; ) {
+  for (let i = 0; i < 8;) {
     if (parts[i] !== 0) {
       i++
       continue
