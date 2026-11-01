@@ -14,7 +14,7 @@ test("cancelled or replaced workers cannot update the current dataset", () =>
     const current = instances[1]
     assert.equal(old.terminated, true)
     old.reply({ type: "ready", categoryCount: 999, entryCount: 999 })
-    old.onerror?.()
+    old.crash()
     assert.equal(viewer.session.loaded, undefined)
     assert.equal(viewer.session.error, undefined)
     current.reply({ type: "ready", categoryCount: 19, entryCount: 1000 })

@@ -61,7 +61,7 @@ export async function readSource(
     options.decompress === undefined
       ? globalThis.DecompressionStream
       : options.decompress
-  let bytes: Uint8Array
+  let bytes: Uint8Array<ArrayBuffer>
   signal.throwIfAborted()
   if (source.mode === "local") {
     report({ phase: "read" })

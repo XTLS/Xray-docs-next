@@ -1,0 +1,120 @@
+.geo-content {
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.geo-content-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--geo-border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.geo-content-header h2 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+.geo-content-header p {
+  margin: 0;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+.geo-attribute-filter {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 12px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--geo-border);
+  font-size: 13px;
+}
+.geo-attribute-filter label {
+  flex-shrink: 0;
+}
+.geo-attribute-filter select {
+  max-width: 320px;
+  padding: 6px 10px;
+  appearance: auto;
+}
+.geo-entries {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-anchor: none;
+  scrollbar-gutter: stable;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+.geo-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--geo-border);
+  font-size: 13px;
+}
+.geo-entry:last-child {
+  border-bottom: 0;
+}
+.geo-entry-data {
+  min-width: 0;
+}
+.geo-entry code {
+  font-family: var(--vp-font-family-mono);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.geo-badge {
+  flex-shrink: 0;
+  padding: 1px 6px;
+  background: var(--vp-c-default-soft);
+  color: var(--vp-c-text-2);
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 20px;
+}
+.geo-attributes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 5px;
+  color: var(--vp-c-text-2);
+  font-family: var(--vp-font-family-mono);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.geo-back {
+  display: none;
+}
+.geo-copy-fallback {
+  margin: 12px 20px;
+}
+.geo-content-header {
+  flex-shrink: 0;
+}
+@media (max-width: 767px) {
+  .geo-back {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    color: var(--vp-c-brand-1);
+    font-size: 13px;
+  }
+  .geo-entry {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .geo-content-header {
+    padding: 14px;
+  }
+  .geo-attribute-filter {
+    padding: 8px 14px;
+  }
+}

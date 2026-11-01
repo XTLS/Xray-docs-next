@@ -6,29 +6,8 @@ import type {
   WorkerResponse
 } from "../../../.vitepress/theme/components/geofileviewer/types.mts"
 
-export class TestWorker {
-  static instances: TestWorker[] = []
-  onmessage?: (event: { data: WorkerResponse }) => void
-  requests: WorkerRequest[] = []
-  terminated = false
-  constructor() {
-    TestWorker.instances.push(this)
-  }
-  postMessage(message: WorkerRequest) {
-    this.requests.push(message)
-  }
-  terminate() {
-    this.terminated = true
-  }
-  reply(data: WorkerResponse) {
-    this.onmessage?.({ data })
-  }
-  last<T extends WorkerRequest["type"]>(type: T) {
-    return this.requests.findLast(
-      (request) => request.type === type
-    ) as Extract<WorkerRequest, { type: T }>
-  }
-}
+import { TestWorker } from "./worker.mts"
+export { TestWorker } from "./worker.mts"
 
 export async function withViewer(
   run: (
@@ -54,7 +33,7 @@ export async function withViewer(
   const app = renderer.createApp({
     setup() {
       viewer = useViewer({
-        createWorker: () => new TestWorker() as unknown as Worker
+        createWorker: () => new TestWorker()
       })
       return () => null
     }

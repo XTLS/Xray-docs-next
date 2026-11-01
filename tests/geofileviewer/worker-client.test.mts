@@ -2,10 +2,9 @@ import { test } from "node:test"
 import assert from "node:assert/strict"
 import {
   createWorkerClient,
-  type ViewerEvent,
-  type ViewerWorker
+  type ViewerEvent
 } from "../../.vitepress/theme/components/geofileviewer/workerClient.mts"
-import { TestWorker } from "./helpers/viewer.mts"
+import { TestWorker } from "./helpers/worker.mts"
 
 const source = {
   mode: "local",
@@ -20,14 +19,14 @@ test("worker client owns session lifetime and ignores events from a replaced wor
   const client = createWorkerClient(() => {
     const worker = new TestWorker()
     workers.push(worker)
-    return worker as unknown as ViewerWorker
+    return worker
   })
   client.load(source, (event) => events.push(event))
   const old = workers[0]
   client.load(source, (event) => events.push(event))
   assert.equal(old.terminated, true)
   old.reply({ type: "ready", categoryCount: 99, entryCount: 99 })
-  old.onerror?.()
+  old.crash()
   assert.deepEqual(events, [])
   workers[1].reply({ type: "ready", categoryCount: 1, entryCount: 2 })
   assert.equal(events.length, 1)
@@ -41,9 +40,7 @@ test("worker client owns session lifetime and ignores events from a replaced wor
 test("worker client validates search and entry requests and accepts each batch once", () => {
   const events: ViewerEvent[] = []
   const worker = new TestWorker()
-  const client = createWorkerClient(
-    () => worker as unknown as ViewerWorker
-  )
+  const client = createWorkerClient(() => worker)
   client.load(source, (event) => events.push(event))
   client.search("old")
   const old = worker.last("search")

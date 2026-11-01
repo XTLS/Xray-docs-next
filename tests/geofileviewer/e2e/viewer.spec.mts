@@ -119,6 +119,15 @@ test("deep links, local source replacement and home navigation retain their life
   await page.goBack()
   await idle(page)
   await expect(page.locator(".geo-content h2")).toHaveText("US")
+  await page.getByRole("button", { name: "切换来源", exact: true }).click()
+  await expect(picker).toBeVisible()
+  await page.goForward()
+  await expect(page.locator(".geo-heading")).toBeVisible()
+  await expect(page.locator(".geo-source-actions .primary")).toBeVisible()
+  await expect(
+    page.locator('input[name="geo-preset"]').first()
+  ).toBeChecked()
+  await expect(page.locator("dialog[open]")).toHaveCount(0)
 })
 
 test("document popup preserves address, reading position, sharing and nested Escape", async ({
@@ -210,6 +219,16 @@ for (const [prefix, tools, title, close] of [
       .filter({ hasText: "GOOGLE" })
       .click()
     await expect(page.locator(".geo-content")).toBeVisible()
+    await idle(page)
+    await page.locator(".geo-entries").evaluate((el) => {
+      el.scrollTop = el.scrollHeight
+    })
+    await expect(page.locator(".geo-entry")).toHaveCount(200)
+    await page.locator(".geo-back").click()
+    const active = page.locator('.geo-category[aria-current="true"]')
+    await expect(active).toBeInViewport()
+    await active.click()
+    await expect(page.locator(".geo-entry")).toHaveCount(200)
     for (const dark of [false, true]) {
       await page.evaluate(
         (dark) => document.documentElement.classList.toggle("dark", dark),

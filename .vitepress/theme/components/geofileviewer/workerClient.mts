@@ -1,10 +1,12 @@
 import type { InputSource } from "./sources.mts"
 import type { WorkerRequest, WorkerResponse } from "./types.mts"
 
-export type ViewerWorker = Pick<
-  Worker,
-  "onmessage" | "onerror" | "postMessage" | "terminate"
->
+export interface ViewerWorker {
+  onmessage: ((event: MessageEvent<WorkerResponse>) => void) | null
+  onerror: ((event: ErrorEvent) => void) | null
+  postMessage(message: WorkerRequest): void
+  terminate(): void
+}
 export type WorkerFactory = () => ViewerWorker
 export type ViewerEvent =
   | Exclude<WorkerResponse, { type: "search" | "entries" }>

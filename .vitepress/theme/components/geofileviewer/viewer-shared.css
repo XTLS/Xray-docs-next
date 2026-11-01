@@ -1,0 +1,94 @@
+.geo-viewer .geo-panel {
+  border: 1px solid var(--geo-border);
+  border-radius: 12px;
+  background: var(--vp-c-bg);
+  overflow: hidden;
+}
+.geo-viewer .geo-text-button,
+.geo-viewer .geo-links a {
+  color: var(--vp-c-brand-1);
+  font-size: 14px;
+}
+.geo-viewer .geo-button {
+  border: 1px solid var(--geo-border);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--vp-c-bg);
+}
+.geo-viewer .geo-button.primary {
+  color: var(--vp-button-brand-text);
+  background: var(--vp-button-brand-bg);
+  border-color: transparent;
+}
+.geo-viewer button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.geo-viewer button:not(:disabled),
+.geo-viewer select {
+  cursor: pointer;
+}
+.geo-viewer :is(button, input, select, a):focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 3px;
+}
+.geo-viewer .geo-field {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+  font-size: 14px;
+}
+.geo-viewer .geo-field input,
+.geo-viewer select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--geo-border);
+  border-radius: 6px;
+  padding: 9px 12px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+}
+.geo-viewer .geo-summary {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+  overflow-wrap: anywhere;
+}
+.geo-viewer .geo-notice {
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--geo-border);
+  border-radius: 8px;
+  font-size: 14px;
+  background: var(--vp-c-bg-soft);
+  overflow-wrap: anywhere;
+}
+.geo-viewer .geo-notice.error {
+  border-color: var(--vp-c-danger-1);
+  color: var(--vp-c-danger-1);
+}
+.geo-viewer mark {
+  color: inherit;
+  background: var(--vp-c-yellow-soft);
+  border-radius: 2px;
+}
+.geo-viewer .geo-list-status {
+  padding: 16px 12px;
+  text-align: center;
+  color: var(--vp-c-text-2);
+  font-size: 12px;
+  line-height: 20px;
+}
+.geo-viewer .geo-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
