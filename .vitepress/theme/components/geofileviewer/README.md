@@ -44,7 +44,7 @@ GeoIP、GeoSite 和两种宿主共用搜索 UI。`SearchInput` 只处理输入�
 
 独立宿主使用 `{ mode: "page" }`；弹窗使用 `{ mode: "embedded", url }`。弹窗只应用初始化目标，不安装页面路由同步。两种宿主的分享链接都指向独立工具地址。
 
-远程来源只在 HTTPS 页面启用；客户端挂载前和非 HTTPS 页面均只显示本地上传。分享链接仅接受 HTTPS 的 `raw.githubusercontent.com` 和 `cdn.jsdelivr.net/gh/` 地址，其它地址报错并清空来源。HTTPS 页面仍支持手动输入第三方 URL，但不为白名单之外的来源生成分享链接。
+远程来源只在 HTTPS 页面启用；客户端挂载前和非 HTTPS 页面均只显示本地上传。分享链接仅接受 HTTPS 的 `raw.githubusercontent.com` 和 `cdn.jsdelivr.net/gh/` 地址，其它地址报错并清空来源。`url` 链接只填入来源和数据类型，用户点击加载后才下载并定位目标分类；白名单不代表允许自动加载。四种 Xray 数据的 `file` 直达链接仍自动加载。HTTPS 页面仍支持手动输入第三方 URL，但不为白名单之外的来源生成分享链接。
 
 ## 样式边界
 

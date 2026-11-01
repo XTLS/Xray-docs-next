@@ -1,5 +1,5 @@
 import {
-  canAutoLoadUrl,
+  isAllowedShareUrl,
   presets,
   validateUrl,
   type PresetFile
@@ -42,7 +42,7 @@ export function parsePermalink(search: string) {
   if (params.has("url")) {
     try {
       const url = validateUrl(params.get("url") ?? "")
-      if (!canAutoLoadUrl(url)) throw new Error("Unsupported share URL")
+      if (!isAllowedShareUrl(url)) throw new Error("Unsupported share URL")
       const requestedKind = params.get("type")?.trim().toLowerCase()
       if (
         requestedKind !== undefined &&
@@ -78,7 +78,7 @@ export function remoteCategoryLink(
   kind: GeoKind,
   tag?: string
 ) {
-  if (!canAutoLoadUrl(dataUrl)) return ""
+  if (!isAllowedShareUrl(dataUrl)) return ""
   const url = new URL(current)
   url.search = ""
   url.hash = ""

@@ -15,7 +15,7 @@ import {
   type SearchMode
 } from "./types.mts"
 import {
-  canAutoLoadUrl,
+  isAllowedShareUrl,
   presetSource,
   presets,
   validateUrl,
@@ -379,7 +379,7 @@ export function useViewer(
     if (
       target.type !== "home" &&
       (!remoteAllowed.value ||
-        (target.type === "url" && !canAutoLoadUrl(target.url)))
+        (target.type === "url" && !isAllowedShareUrl(target.url)))
     ) {
       resetToHome()
       return
@@ -393,16 +393,10 @@ export function useViewer(
         updateSource({ mode: "preset", presetIndex: target.index })
         void loadSource(target.tag)
       }
-    } else if (
-      current?.url === target.url &&
-      current.kind === target.kind &&
-      !current.preset
-    )
-      focusCategory(target.tag)
-    else {
+    } else {
+      resetToHome()
       updateSource({ mode: "url", url: target.url, kind: target.kind })
       pendingTag = target.tag
-      void loadSource()
     }
   }
 

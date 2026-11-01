@@ -3,32 +3,104 @@ import assert from "node:assert/strict"
 import { nextTick } from "vue"
 import { withViewer, TestWorker, finishSearch } from "./helpers/viewer.mts"
 
-test("presets, GitHub raw and jsDelivr GitHub targets start loading automatically", () =>
+test("Xray dataset targets start loading automatically", () =>
   withViewer(async (viewer) => {
     viewer.actions.openTarget({ type: "preset", index: 1, tag: "US" })
     const preset = TestWorker.instances[0]
     assert.equal(viewer.session.status, "loading")
     assert.equal(preset.last("load").source.name, "geoip-full.dat")
+  }, false))
 
-    let previous = preset
-    for (const url of [
-      "https://raw.githubusercontent.com/other/repo/main/geosite.dat",
-      "https://cdn.jsdelivr.net/gh/other/repo@main/geosite.dat"
-    ]) {
+test("whitelisted URL targets wait for loading before selecting the shared category", async () => {
+  for (const url of [
+    "https://raw.githubusercontent.com/other/repo/main/geosite.dat",
+    "https://cdn.jsdelivr.net/gh/other/repo@main/geosite.dat"
+  ])
+    await withViewer(async (viewer) => {
       viewer.actions.openTarget({
         type: "url",
         url,
         kind: "geosite",
         tag: "google"
       })
-      assert.equal(previous.terminated, true)
+      await nextTick()
+      assert.equal(TestWorker.instances.length, 0)
+      assert.equal(viewer.session.status, "idle")
+      assert.equal(viewer.session.loaded, undefined)
+      assert.equal(viewer.draft.mode, "url")
+      assert.equal(viewer.draft.url, url)
+      assert.equal(viewer.draft.kind, "geosite")
+      assert.equal(viewer.view.sourceOpen, true)
+      assert.equal(viewer.canLoad.value, true)
+
+      await viewer.actions.loadSource()
       assert.equal(viewer.session.status, "loading")
-      const current = TestWorker.instances.at(-1)!
-      assert.notEqual(current, previous)
-      assert.equal(current.last("load").source.name, url)
-      previous = current
-    }
-  }, false))
+      const worker = TestWorker.instances[0]
+      assert.equal(worker.last("load").source.name, url)
+      worker.reply({ type: "ready", categoryCount: 2, entryCount: 2 })
+      finishSearch(
+        worker,
+        ["other", "GOOGLE"].map((code, id) => ({
+          id,
+          code,
+          count: 1,
+          matches: 1,
+          reverseMatch: false,
+          attributes: []
+        }))
+      )
+      assert.equal(viewer.results.value.selected?.code, "GOOGLE")
+      assert.equal(viewer.view.mobileDetail, true)
+    }, false)
+})
+
+test("opening a URL target stops previous work and requires another click even for the same source", () =>
+  withViewer(async (viewer, previous) => {
+    const target = {
+      type: "url",
+      url: "https://raw.githubusercontent.com/other/repo/main/geoip.dat",
+      kind: "geoip",
+      tag: "uS"
+    } as const
+    viewer.actions.updateSource({
+      mode: "url",
+      url: target.url,
+      kind: target.kind
+    })
+    await viewer.actions.loadSource()
+    const pending = TestWorker.instances[1]
+    assert.equal(previous.terminated, true)
+    viewer.actions.openTarget(target)
+    assert.equal(pending.terminated, true)
+    assert.equal(TestWorker.instances.length, 2)
+    assert.equal(viewer.session.status, "idle")
+    assert.equal(viewer.draft.kind, "geoip")
+    pending.reply({ type: "ready", categoryCount: 999, entryCount: 999 })
+    assert.equal(viewer.session.loaded, undefined)
+    await viewer.actions.loadSource()
+    const loaded = TestWorker.instances[2]
+    loaded.reply({ type: "ready", categoryCount: 2, entryCount: 2 })
+    finishSearch(
+      loaded,
+      ["CN", "US"].map((code, id) => ({
+        id,
+        code,
+        count: 1,
+        matches: 1,
+        reverseMatch: false,
+        attributes: []
+      }))
+    )
+    assert.equal(viewer.results.value.selected?.code, "US")
+    viewer.actions.openTarget(target)
+    await nextTick()
+    assert.equal(loaded.terminated, true)
+    assert.equal(TestWorker.instances.length, 3)
+    assert.equal(viewer.session.loaded, undefined)
+    assert.equal(viewer.session.status, "idle")
+    assert.equal(viewer.view.sourceOpen, true)
+    assert.equal(viewer.draft.url, target.url)
+  }))
 
 test("other URL targets are rejected without prefill or a loadable untrusted source", () =>
   withViewer(async (viewer) => {

@@ -6,7 +6,7 @@ import {
   presetSource,
   presets,
   validateUrl,
-  canAutoLoadUrl
+  isAllowedShareUrl
 } from "../../.vitepress/theme/components/geofileviewer/sources.mts"
 import type {
   LoadProgress,
@@ -140,7 +140,7 @@ test("cancellation during either Xray data download never starts another attempt
     assert.equal(requests, cancelAt)
   }
 })
-test("only credential-free HTTPS GitHub raw and jsDelivr GitHub URLs can load automatically", () => {
+test("only credential-free HTTPS GitHub raw and jsDelivr GitHub URLs are allowed in share links", () => {
   for (const url of [
     "https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/geosite/geosite.dat.gz",
     "https://raw.githubusercontent.com/v2fly/geoip/release/geoip.dat",
@@ -151,7 +151,7 @@ test("only credential-free HTTPS GitHub raw and jsDelivr GitHub URLs can load au
     "https://cdn.jsdelivr.net/gh/other/repo@main/data.dat?version=2",
     "https://CDN.JSDELIVR.NET:443/gh/other/repo/data.dat"
   ])
-    assert.equal(canAutoLoadUrl(url), true, url)
+    assert.equal(isAllowedShareUrl(url), true, url)
   for (const url of [
     "https://example.com/test.dat",
     "http://raw.githubusercontent.com/other/repo/main/data.dat",
@@ -177,7 +177,7 @@ test("only credential-free HTTPS GitHub raw and jsDelivr GitHub URLs can load au
     "javascript:alert(1)",
     "not-a-url"
   ])
-    assert.equal(canAutoLoadUrl(url), false, url)
+    assert.equal(isAllowedShareUrl(url), false, url)
 })
 
 test("DAT and gzip local files share the reader without network calls", async () => {
