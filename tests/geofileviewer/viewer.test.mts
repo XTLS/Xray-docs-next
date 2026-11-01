@@ -1,55 +1,11 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
-import { createRenderer, nextTick } from "vue"
-import { useViewer } from "../../.vitepress/theme/components/geofileviewer/useViewer.mts"
-import type {
-  WorkerRequest,
-  WorkerResponse
-} from "../../.vitepress/theme/components/geofileviewer/types.mts"
+import { nextTick } from "vue"
+import { withViewer, TestWorker } from "./helpers/viewer.mts"
 
-test("cancelled or replaced workers cannot update the current dataset", async () => {
-  const original = globalThis.Worker
-  const instances: FakeWorker[] = []
-  class FakeWorker {
-    onmessage?: (event: { data: WorkerResponse }) => void
-    onerror?: () => void
-    terminated = false
-    requests: WorkerRequest[] = []
-    constructor() {
-      instances.push(this)
-    }
-    postMessage(message: WorkerRequest) {
-      this.requests.push(message)
-    }
-    terminate() {
-      this.terminated = true
-    }
-    reply(data: WorkerResponse) {
-      this.onmessage?.({ data })
-    }
-  }
-  globalThis.Worker = FakeWorker as unknown as typeof Worker
-  let viewer!: ReturnType<typeof useViewer>
-  const renderer = createRenderer({
-    createElement: () => ({}),
-    createText: () => ({}),
-    createComment: () => ({}),
-    insert: () => {},
-    remove: () => {},
-    setText: () => {},
-    setElementText: () => {},
-    parentNode: () => null,
-    nextSibling: () => null,
-    patchProp: () => {}
-  })
-  const app = renderer.createApp({
-    setup() {
-      viewer = useViewer()
-      return () => null
-    }
-  })
-  try {
-    app.mount({})
+test("cancelled or replaced workers cannot update the current dataset", () =>
+  withViewer(async (viewer) => {
+    const instances = TestWorker.instances
     viewer.presetIndex.value = 1
     await viewer.load()
     const old = instances[0]
@@ -122,8 +78,4 @@ test("cancelled or replaced workers cannot update the current dataset", async ()
     assert.equal(viewer.categoryCount.value, 19)
     assert.equal(viewer.loading.value, false)
     await nextTick()
-  } finally {
-    app.unmount()
-    globalThis.Worker = original
-  }
-})
+  }, false))

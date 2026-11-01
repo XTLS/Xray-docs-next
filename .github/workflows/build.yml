@@ -36,6 +36,12 @@ jobs:
       - name: Test Geo data viewer
         run: pnpm run test:geofileviewer
 
+      - name: Install browser for Geo viewer tests
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Test Geo viewer in browser
+        run: pnpm run test:geofileviewer:e2e
+
       - name: Deploy to GitHub Pages
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v4
