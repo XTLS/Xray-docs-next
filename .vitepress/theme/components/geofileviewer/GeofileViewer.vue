@@ -12,6 +12,7 @@ import ViewerSource from "./ViewerSource.vue"
 import ViewerCategoryList from "./ViewerCategoryList.vue"
 import ViewerEntryList from "./ViewerEntryList.vue"
 import SearchInput from "./SearchInput.vue"
+import MarqueeText from "./MarqueeText.vue"
 const props = defineProps<{ host?: ViewerHost }>()
 const emit = defineEmits<{ ready: [] }>()
 const host: ViewerHost = props.host ?? { mode: "page" }
@@ -82,8 +83,8 @@ const loadedSourceName = computed(() => {
     ? loaded.name
     : `${t.value.preset} · ${t.value.presetNames[index]}`
 })
-const sourceSummary = computed(() =>
-  session.loaded
+const sourceSummary = computed(() => {
+  const summary = session.loaded
     ? [
         loadedSourceName.value,
         ...(session.loaded.preset
@@ -95,7 +96,10 @@ const sourceSummary = computed(() =>
     : loading.value
       ? progressLabel.value
       : t.value.emptyTitle
-)
+  return loading.value && session.progress !== undefined
+    ? `${summary} · ${Math.round(session.progress * 100)}%`
+    : summary
+})
 const { permalink, copyStatus, copy } = useViewerSharing(viewer, () =>
   host.mode === "page" ? location.href : host.url
 )
@@ -135,12 +139,7 @@ function closeDocsOnBlur(event: FocusEvent) {
     >
       <div class="geo-workspace-title">
         <h1 v-if="!embedded">{{ t.title }}</h1>
-        <p class="geo-summary" :title="sourceSummary">
-          {{ sourceSummary
-          }}<template v-if="loading && session.progress !== undefined">
-            · {{ Math.round(session.progress * 100) }}%</template
-          >
-        </p>
+        <MarqueeText :text="sourceSummary" />
       </div>
       <div class="geo-workspace-actions">
         <details

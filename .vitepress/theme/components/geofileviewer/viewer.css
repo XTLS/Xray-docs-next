@@ -158,9 +158,6 @@
 }
 .geo-workspace-title .geo-summary {
   margin-top: 3px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .geo-workspace-actions {
   display: flex;

@@ -2,6 +2,7 @@
 import { computed, nextTick, ref, watch } from "vue"
 import type { Messages } from "./messages.mts"
 import { presets } from "./sources.mts"
+import MarqueeText from "./MarqueeText.vue"
 import type {
   SourceDraft,
   ViewerSession,
@@ -109,13 +110,11 @@ watch(
         {{ t.cancel }}
       </button>
     </div>
-    <p
+    <MarqueeText
       v-if="view.workspace"
-      class="geo-summary geo-source-current"
-      :title="currentName"
-    >
-      {{ currentName }}
-    </p>
+      class="geo-source-current"
+      :text="currentName"
+    />
     <template v-if="view.sourceOpen">
       <div class="geo-tabs" :aria-label="t.source">
         <button
