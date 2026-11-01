@@ -50,9 +50,7 @@ export function usePermalink(viewer: ReturnType<typeof useViewer>) {
     invalidLink.value = parsed.invalid
     applying = true
     if (parsed.invalid || (!parsed.file && !parsed.url)) {
-      viewer.stop()
-      viewer.loaded.value = undefined
-      viewer.sourceOpen.value = true
+      viewer.reset()
     } else if (parsed.url) {
       const current = viewer.loaded.value
       if (

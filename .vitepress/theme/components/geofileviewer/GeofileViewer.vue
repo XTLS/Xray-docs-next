@@ -12,6 +12,7 @@ const viewer = useViewer()
 const {
   source,
   sourceOpen,
+  workspace,
   kind,
   file,
   presetIndex,
@@ -122,7 +123,6 @@ const progressLabel = computed(
     })[phase.value]
 )
 const number = (value: number) => value.toLocaleString(lang.value)
-const workspace = ref(false)
 const sourcePanel = ref<HTMLElement>()
 const sourceSummary = computed(() =>
   loaded.value
@@ -132,13 +132,6 @@ const sourceSummary = computed(() =>
       : t.value.emptyTitle
 )
 
-watch(
-  loaded,
-  (value) => {
-    if (value) workspace.value = true
-  },
-  { flush: "sync" }
-)
 watch(
   [workspace, sourceOpen],
   async () => {

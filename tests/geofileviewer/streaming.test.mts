@@ -12,13 +12,16 @@ class TestWorker {
   static instances: TestWorker[] = []
   onmessage?: (event: { data: WorkerResponse }) => void
   requests: WorkerRequest[] = []
+  terminated = false
   constructor() {
     TestWorker.instances.push(this)
   }
   postMessage(message: WorkerRequest) {
     this.requests.push(message)
   }
-  terminate() {}
+  terminate() {
+    this.terminated = true
+  }
   reply(data: WorkerResponse) {
     this.onmessage?.({ data })
   }
@@ -360,4 +363,71 @@ test("content changes clear category and attribute filters while category change
     assert.equal(viewer.contentQuery.value, "")
     assert.equal(viewer.categoryQuery.value, "")
     assert.equal(viewer.attributeKey.value, "")
+  }))
+
+test("returning to the tool home resets the workspace, cancels pending work and allows loading again", () =>
+  withViewer(async (viewer, worker) => {
+    worker.reply({ type: "ready", categoryCount: 1, entryCount: 2 })
+    const summaries: CategorySummary[] = [
+      {
+        id: 0,
+        code: "A",
+        count: 2,
+        matches: 2,
+        reverseMatch: false,
+        attributes: [{ key: "cn", count: 1 }]
+      }
+    ]
+    finishSearch(worker, summaries)
+    assert.equal(viewer.workspace.value, true)
+    viewer.select(0)
+    viewer.setAttribute("cn")
+    const stale = worker.last("entries")
+    viewer.categoryQuery.value = "a"
+    viewer.contentQuery.value = "pending"
+    viewer.source.value = "url"
+    viewer.url.value = "https://example.com/geosite.dat"
+    viewer.presetIndex.value = 3
+    viewer.kind.value = "geoip"
+    viewer.reset()
+    const requests = worker.requests.length
+    assert.equal(worker.terminated, true)
+    assert.equal(viewer.workspace.value, false)
+    assert.equal(viewer.sourceOpen.value, true)
+    assert.equal(viewer.source.value, "preset")
+    assert.equal(viewer.presetIndex.value, 0)
+    assert.equal(viewer.kind.value, "geosite")
+    assert.equal(viewer.url.value, "")
+    assert.equal(viewer.file.value, undefined)
+    assert.equal(viewer.loaded.value, undefined)
+    assert.equal(viewer.loading.value, false)
+    assert.equal(viewer.searching.value, false)
+    assert.equal(viewer.entriesLoading.value, false)
+    assert.equal(viewer.contentQuery.value, "")
+    assert.equal(viewer.activeContentQuery.value, "")
+    assert.equal(viewer.categoryQuery.value, "")
+    assert.equal(viewer.attributeKey.value, "")
+    assert.equal(viewer.categoryCount.value, 0)
+    assert.equal(viewer.entryCount.value, 0)
+    assert.equal(viewer.entryTotal.value, 0)
+    assert.equal(viewer.mobileDetail.value, false)
+    assert.equal(viewer.selected.value, undefined)
+    assert.deepEqual(viewer.categories.value, [])
+    assert.deepEqual(viewer.entries.value, [])
+    worker.reply({ type: "ready", categoryCount: 999, entryCount: 999 })
+    batch(worker, stale, 0, 1, 1)
+    worker.reply({ type: "error", code: "invalidFile" })
+    await new Promise((resolve) => setTimeout(resolve, 270))
+    assert.equal(worker.requests.length, requests)
+    assert.equal(viewer.workspace.value, false)
+    assert.equal(viewer.error.value, undefined)
+    assert.equal(viewer.loaded.value, undefined)
+    assert.equal(viewer.entries.value.length, 0)
+    await viewer.load()
+    const next = TestWorker.instances[1]
+    next.reply({ type: "ready", categoryCount: 1, entryCount: 2 })
+    finishSearch(next, summaries)
+    batch(next, next.last("entries"), 0, 2, 2)
+    assert.equal(viewer.workspace.value, true)
+    assert.equal(viewer.entries.value.length, 2)
   }))

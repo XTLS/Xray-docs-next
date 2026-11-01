@@ -20,6 +20,7 @@ import {
 export function useViewer() {
   const source = ref("preset")
   const sourceOpen = ref(true)
+  const workspace = ref(false)
   const kind = ref<GeoKind>("geosite")
   const file = shallowRef<File>()
   const presetIndex = ref(0)
@@ -86,6 +87,14 @@ export function useViewer() {
       (source.value === "url" ? !!url.value.trim() : !!file.value)
   )
 
+  watch(
+    loaded,
+    (value) => {
+      if (value) workspace.value = true
+    },
+    { flush: "sync" }
+  )
+
   function stop() {
     generation++
     clearTimeout(searchTimer)
@@ -105,6 +114,35 @@ export function useViewer() {
     entriesLoading.value = false
     entries.value = []
     entryTotal.value = 0
+  }
+
+  function reset() {
+    stop()
+    loaded.value = undefined
+    workspace.value = false
+    allCategories.value = []
+    categoryLimit.value = CATEGORY_PAGE_SIZE
+    resetEntries()
+    selectedId.value = undefined
+    categoryCount.value = 0
+    entryCount.value = 0
+    contentQuery.value = ""
+    activeContentQuery.value = ""
+    categoryQuery.value = ""
+    attributeKey.value = ""
+    mobileDetail.value = false
+    categoryMissing.value = ""
+    pendingTag = undefined
+    progress.value = undefined
+    phase.value = "read"
+    downloadedBytes.value = 0
+    error.value = undefined
+    source.value = "preset"
+    kind.value = "geosite"
+    file.value = undefined
+    presetIndex.value = 0
+    url.value = ""
+    sourceOpen.value = true
   }
 
   function loadMoreCategories() {
@@ -367,6 +405,7 @@ export function useViewer() {
   return {
     source,
     sourceOpen,
+    workspace,
     kind,
     file,
     presetIndex,
@@ -401,6 +440,7 @@ export function useViewer() {
     loadMoreEntries,
     load,
     stop,
+    reset,
     select
   }
 }
