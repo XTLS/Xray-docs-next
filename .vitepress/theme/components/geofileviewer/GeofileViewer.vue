@@ -24,10 +24,12 @@ const contentQuery = computed({
 })
 const searchLabel = computed(() =>
   session.loaded?.kind === "geoip"
-    ? query.ipMode === "ip"
+    ? query.mode === "match"
       ? t.value.ipSearch
       : t.value.cidrSearch
-    : t.value.contentSearch
+    : query.mode === "match"
+      ? t.value.domainSearch
+      : t.value.contentSearch
 )
 const loading = computed(() => session.status === "loading")
 const number = (value: number) => value.toLocaleString(lang.value)
@@ -209,7 +211,7 @@ function closeDocsOnBlur(event: FocusEvent) {
           :invalid="!!query.error"
           :described-by="query.error ? 'geo-search-status' : undefined"
         >
-          <template v-if="session.loaded.kind === 'geoip'" #prefix>
+          <template #prefix>
             <div
               class="geo-search-modes"
               role="group"
@@ -217,15 +219,15 @@ function closeDocsOnBlur(event: FocusEvent) {
             >
               <button
                 type="button"
-                :aria-pressed="query.ipMode === 'ip'"
-                @click="actions.setIpSearchMode('ip')"
+                :aria-pressed="query.mode === 'match'"
+                @click="actions.setSearchMode('match')"
               >
                 {{ t.matchMode }}
               </button>
               <button
                 type="button"
-                :aria-pressed="query.ipMode === 'cidr'"
-                @click="actions.setIpSearchMode('cidr')"
+                :aria-pressed="query.mode === 'rules'"
+                @click="actions.setSearchMode('rules')"
               >
                 {{ t.rulesMode }}
               </button>

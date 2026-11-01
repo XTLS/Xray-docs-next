@@ -10,7 +10,7 @@ import {
   ViewerError,
   type CategorySummary,
   type ErrorCode,
-  type IpSearchMode
+  type SearchMode
 } from "./types.mts"
 import {
   canAutoLoadUrl,
@@ -20,6 +20,7 @@ import {
   type InputSource
 } from "./sources.mts"
 import { parseIpQuery } from "./ipSearch.mts"
+import { parseDomainQuery } from "./domainQuery.mts"
 import {
   createWorkerClient,
   type ViewerEvent,
@@ -163,13 +164,14 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   }
 
   function validateSearch() {
-    query.error =
-      session.loaded?.kind === "geoip" &&
-      query.ipMode === "ip" &&
-      !!query.content.trim() &&
-      !parseIpQuery(query.content)
-        ? "invalidIp"
-        : undefined
+    query.error = undefined
+    if (query.mode === "match" && query.content.trim()) {
+      const isIp = session.loaded?.kind === "geoip"
+      const valid = isIp
+        ? parseIpQuery(query.content)
+        : parseDomainQuery(query.content)
+      if (!valid) query.error = isIp ? "invalidIp" : "invalidDomain"
+    }
     if (query.error) {
       query.searching = false
       rows.categories = []
@@ -184,7 +186,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     if (!validateSearch()) return
     query.activeContent = query.content
     query.searching = true
-    client.search(query.content, query.ipMode)
+    client.search(query.content, query.mode)
   }
 
   function restartSearch() {
@@ -205,9 +207,9 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     restartSearch()
   }
 
-  function setIpSearchMode(mode: IpSearchMode) {
-    if (session.loaded?.kind !== "geoip" || query.ipMode === mode) return
-    query.ipMode = mode
+  function setSearchMode(mode: SearchMode) {
+    if (!session.loaded || query.mode === mode) return
+    query.mode = mode
     restartSearch()
   }
 
@@ -394,7 +396,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
       resetToHome,
       openTarget,
       setContentQuery,
-      setIpSearchMode,
+      setSearchMode,
       setCategoryFilter,
       setAttribute,
       selectCategory,

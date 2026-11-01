@@ -44,12 +44,12 @@ test("worker client validates search and entry requests and accepts each batch o
   client.load(source, (event) => events.push(event))
   client.search("old")
   const old = worker.last("search")
-  assert.equal(old.ipMode, "ip")
+  assert.equal(old.mode, "match")
   client.invalidateSearch()
   worker.reply({ type: "search", id: old.id, categories: [] })
   assert.equal(events.length, 0)
-  client.search("new", "cidr")
-  assert.equal(worker.last("search").ipMode, "cidr")
+  client.search("new", "rules")
+  assert.equal(worker.last("search").mode, "rules")
   worker.reply({
     type: "search",
     id: worker.last("search").id,

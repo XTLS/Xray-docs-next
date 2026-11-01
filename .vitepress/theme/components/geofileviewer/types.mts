@@ -1,5 +1,5 @@
 export type GeoKind = "geoip" | "geosite"
-export type IpSearchMode = "ip" | "cidr"
+export type SearchMode = "match" | "rules"
 
 export type ErrorCode =
   | "emptyFile"
@@ -43,7 +43,7 @@ export type WorkerRequest =
       type: "search"
       id: number
       contentQuery: string
-      ipMode: IpSearchMode
+      mode: SearchMode
     }
   | {
       type: "entries"

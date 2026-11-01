@@ -147,44 +147,42 @@ test("CIDR mode matches only the literal start of the displayed range, including
     ]),
     "geoip"
   )
-  const result = (await data.search("10.0.0.0/24", { ipMode: "cidr" }))!
+  const result = (await data.search("10.0.0.0/24", { mode: "rules" }))!
   assert.equal(result.categories[0].matches, 2)
   assert.deepEqual(
     (await data.entries(result, 0, 1))!.entries.map((e) => e.value),
     ["10.0.0.0/24", "10.0.0.0/24"]
   )
-  const partial = (await data.search("10.0.0.0/2", { ipMode: "cidr" }))!
+  const partial = (await data.search("10.0.0.0/2", { mode: "rules" }))!
   assert.equal(partial.categories[0].matches, 3)
   assert.equal(
-    (await data.search(" 10. ", { ipMode: "cidr" }))!.categories[0]
-      .matches,
+    (await data.search(" 10. ", { mode: "rules" }))!.categories[0].matches,
     5
   )
   assert.equal(
-    (await data.search("0.0.0", { ipMode: "cidr" }))!.categories[0]
-      .matches,
+    (await data.search("0.0.0", { mode: "rules" }))!.categories[0].matches,
     1
   )
   assert.equal(
-    (await data.search(".0.0", { ipMode: "cidr" }))!.categories.length,
+    (await data.search(".0.0", { mode: "rules" }))!.categories.length,
     0
   )
   assert.equal(
-    (await data.search("A", { ipMode: "cidr" }))!.categories.length,
+    (await data.search("A", { mode: "rules" }))!.categories.length,
     0
   )
   assert.equal(
-    (await data.search("10.0.0.7", { ipMode: "cidr" }))!.categories[0]
+    (await data.search("10.0.0.7", { mode: "rules" }))!.categories[0]
       .matches,
     1
   )
   assert.equal((await data.search("10.0.0.7"))!.categories[0].matches, 6)
   assert.equal(
-    (await data.search("", { ipMode: "cidr" }))!.categories[0].matches,
+    (await data.search("", { mode: "rules" }))!.categories[0].matches,
     6
   )
   assert.equal(
-    await data.search("10.", { ipMode: "cidr", cancelled: () => true }),
+    await data.search("10.", { mode: "rules", cancelled: () => true }),
     null
   )
 })
@@ -213,7 +211,7 @@ test("IPv6 lookup handles partial-byte prefixes, equivalent spellings, endpoints
     1
   )
   assert.equal(
-    (await data.search("2001:DB8:ABCD:8", { ipMode: "cidr" }))!
+    (await data.search("2001:DB8:ABCD:8", { mode: "rules" }))!
       .categories[0].matches,
     1
   )
@@ -233,7 +231,7 @@ test("IPv6 lookup handles partial-byte prefixes, equivalent spellings, endpoints
   )
   assert.equal((await data.search("::"))!.categories[0].matches, 2)
   assert.equal(
-    (await data.search("::/0", { ipMode: "cidr" }))!.categories[0].matches,
+    (await data.search("::/0", { mode: "rules" }))!.categories[0].matches,
     1
   )
   assert.equal(await data.search("::1", { cancelled: () => true }), null)
@@ -277,7 +275,7 @@ test("CIDR prefix lookup follows the displayed IPv6 compression and literal pref
     )
     for (let size = 1; size <= row.value.length; size++) {
       const prefix = row.value.slice(0, size).toUpperCase()
-      const result = (await data.search(prefix, { ipMode: "cidr" }))!
+      const result = (await data.search(prefix, { mode: "rules" }))!
       const expected = rows
         .filter((r) => r.value.toUpperCase().startsWith(prefix))
         .map((r) => r.value)
@@ -297,10 +295,10 @@ test("numeric matches stream beyond the first page and clearing the query restor
   }))
   ranges.splice(100, 0, { bytes: [192, 0, 2, 0], prefix: 24 })
   const data = await indexDataset(ipRanges("MANY", ranges), "geoip")
-  for (const ipMode of ["ip", "cidr"] as const) {
+  for (const mode of ["match", "rules"] as const) {
     const result = (await data.search(
-      ipMode === "ip" ? "10.2.3.4" : "10.0.0.0/",
-      { ipMode }
+      mode === "match" ? "10.2.3.4" : "10.0.0.0/",
+      { mode }
     ))!
     assert.equal(result.categories[0].matches, 205)
     assert.equal((await data.entries(result, 0, 1))!.entries.length, 100)

@@ -1,5 +1,7 @@
 import protobuf from "protobufjs/minimal.js"
 import { formatCIDR, IpIndex, parseIpQuery } from "./ipSearch.mts"
+import { DomainMatcher } from "./domainSearch.mts"
+import { parseDomainQuery } from "./domainQuery.mts"
 import {
   ENTRY_PAGE_SIZE,
   ViewerError,
@@ -8,7 +10,7 @@ import {
   type CategorySummary,
   type GeoEntry,
   type GeoKind,
-  type IpSearchMode
+  type SearchMode
 } from "./types.mts"
 
 export { formatCIDR } from "./ipSearch.mts"
@@ -166,6 +168,7 @@ export class Dataset {
   private bytes: Uint8Array
   kind: GeoKind
   private categories: Category[]
+  private domainMatcher = new DomainMatcher()
   entryCount: number
   constructor(
     bytes: Uint8Array,
@@ -185,16 +188,21 @@ export class Dataset {
 
   async search(
     contentQuery: string,
-    options: { ipMode?: IpSearchMode; cancelled?: () => boolean } = {}
+    options: { mode?: SearchMode; cancelled?: () => boolean } = {}
   ): Promise<SearchResult | null> {
-    const { ipMode = "ip", cancelled = () => false } = options
-    const needle = contentQuery.trim().toLowerCase()
+    const { mode = "match", cancelled = () => false } = options
+    let needle = contentQuery.trim().toLowerCase()
     const result: SearchResult = { categories: [], indexes: new Map() }
+    if (this.kind === "geosite" && mode === "match" && needle) {
+      const domain = parseDomainQuery(needle)
+      if (!domain) return cancelled() ? null : result
+      needle = domain
+    }
     const ipQuery =
-      this.kind === "geoip" && ipMode === "ip" && needle
+      this.kind === "geoip" && mode === "match" && needle
         ? parseIpQuery(needle)
         : undefined
-    if (this.kind === "geoip" && ipMode === "ip" && needle && !ipQuery)
+    if (this.kind === "geoip" && mode === "match" && needle && !ipQuery)
       return cancelled() ? null : result
     let lastYield = Date.now()
     for (let id = 0; id < this.categories.length; id++) {
@@ -215,12 +223,15 @@ export class Dataset {
         const counts = new Map<string, number>()
         for (let i = 0; i < count; i++) {
           const entry = this.entry(id, i)
-          const value = entry.value.toLowerCase()
-          if (value.includes(needle)) {
+          if (
+            mode === "match"
+              ? this.domainMatcher.matches(entry, needle)
+              : entry.value.toLowerCase().includes(needle)
+          ) {
             matching.push(i)
             countAttributes(counts, entry)
           }
-          if (i % 2048 === 0 && Date.now() - lastYield > 16) {
+          if (i % 128 === 0 && Date.now() - lastYield > 16) {
             await new Promise((resolve) => setTimeout(resolve, 0))
             if (cancelled()) return null
             lastYield = Date.now()

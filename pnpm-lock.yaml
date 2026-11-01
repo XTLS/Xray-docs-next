@@ -17,6 +17,9 @@ importers:
       protobufjs:
         specifier: 8.8.1
         version: 8.8.1
+      re2js:
+        specifier: 2.9.1
+        version: 2.9.1
       svg-pan-zoom:
         specifier: ^3.6.2
         version: 3.6.2
@@ -1116,6 +1119,10 @@ packages:
   punycode.js@2.3.1:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
     engines: {node: '>=6'}
+
+  re2js@2.9.1:
+    resolution: {integrity: sha512-JIT3bEEUZTOR2YS1walNEIfH4cF/cQeZcBUFq7ldqO6lR6g0X5CBq/S8rsa9omzZcsNf8qc36jCkWpKKtncrZg==}
+    engines: {node: '>=20.0.0'}
 
   regex-recursion@6.0.2:
     resolution: {integrity: sha512-0YCaSCq2VRIebiaUviZNs0cBz1kg5kVS2UKUfNIx8YVs1cN3AV7NTctO5FOKBA+UT2BPJIWZauYHPqJODG50cg==}
@@ -2500,6 +2507,8 @@ snapshots:
       long: 5.3.2
 
   punycode.js@2.3.1: {}
+
+  re2js@2.9.1: {}
 
   regex-recursion@6.0.2:
     dependencies:

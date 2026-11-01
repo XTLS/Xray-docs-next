@@ -1,6 +1,6 @@
 import type { InputSource } from "./sources.mts"
 import type {
-  IpSearchMode,
+  SearchMode,
   WorkerRequest,
   WorkerResponse
 } from "./types.mts"
@@ -89,8 +89,8 @@ export function createWorkerClient(
     invalidateSearch() {
       searchId++
     },
-    search(contentQuery: string, ipMode: IpSearchMode = "ip") {
-      send({ type: "search", id: ++searchId, contentQuery, ipMode })
+    search(contentQuery: string, mode: SearchMode = "match") {
+      send({ type: "search", id: ++searchId, contentQuery, mode })
     },
     entries(categoryId: number, page: number, attributeKey?: string) {
       if (!worker || pendingEntries) return

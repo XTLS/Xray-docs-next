@@ -3,7 +3,7 @@ import type {
   ErrorCode,
   GeoEntry,
   GeoKind,
-  IpSearchMode
+  SearchMode
 } from "./types.mts"
 import type { LoadProgress, PresetFile } from "./sources.mts"
 import { CATEGORY_PAGE_SIZE } from "./types.mts"
@@ -15,7 +15,7 @@ export type SourceDraft = {
   url: string
   file?: File
 }
-export type SearchErrorKey = "invalidIp"
+export type SearchErrorKey = "invalidIp" | "invalidDomain"
 export type LoadedSource = Readonly<{
   name: string
   kind: GeoKind
@@ -49,7 +49,7 @@ export const initialSession = () => ({
 export const initialQuery = () => ({
   content: "",
   activeContent: "",
-  ipMode: "ip" as IpSearchMode,
+  mode: "match" as SearchMode,
   error: undefined as SearchErrorKey | undefined,
   category: "",
   attribute: "",
