@@ -325,6 +325,7 @@ export function useViewer() {
       attributeKey.value = ""
       resetEntries()
       searching.value = true
+      categoryQuery.value = ""
       searchTimer = setTimeout(search, 250)
     },
     { flush: "sync" }

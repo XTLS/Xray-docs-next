@@ -286,7 +286,7 @@ test("category names filter locally while attributes only filter the selected ca
     )
   }))
 
-test("content search intersects the category filter, resets attributes and explicit links clear every filter", () =>
+test("content changes clear category and attribute filters while category changes preserve content search", () =>
   withViewer(async (viewer, worker) => {
     worker.reply({ type: "ready", categoryCount: 2, entryCount: 10 })
     const summaries: CategorySummary[] = ["A", "B"].map((code, id) => ({
@@ -301,9 +301,17 @@ test("content search intersects the category filter, resets attributes and expli
     viewer.categoryQuery.value = "b"
     viewer.setAttribute("cn")
     const stale = worker.last("entries")
+    const entriesBeforeSearch = worker.requests.filter(
+      (r) => r.type === "entries"
+    ).length
     viewer.contentQuery.value = "fresh"
+    assert.equal(viewer.categoryQuery.value, "")
     assert.equal(viewer.attributeKey.value, "")
     assert.equal(viewer.searching.value, true)
+    assert.equal(
+      worker.requests.filter((r) => r.type === "entries").length,
+      entriesBeforeSearch
+    )
     batch(worker, stale, 0, 1, 1)
     assert.equal(viewer.entries.value.length, 0)
     await new Promise((resolve) => setTimeout(resolve, 270))
@@ -314,14 +322,29 @@ test("content search intersects the category filter, resets attributes and expli
     )
     assert.deepEqual(
       viewer.categories.value.map((c) => c.code),
-      ["B"]
+      ["A", "B"]
     )
     assert.equal(viewer.entryTotal.value, 2)
-    viewer.categoryQuery.value = ""
     assert.equal(viewer.selected.value?.code, "B")
+    viewer.categoryQuery.value = "a"
+    assert.equal(viewer.contentQuery.value, "fresh")
+    assert.equal(viewer.selected.value?.code, "A")
+    viewer.categoryQuery.value = ""
+    assert.equal(viewer.contentQuery.value, "fresh")
+    assert.equal(viewer.selected.value?.code, "A")
     viewer.setAttribute("cn")
-    viewer.select(0)
+    viewer.select(1)
     assert.equal(viewer.attributeKey.value, "")
+    viewer.setAttribute("cn")
+    viewer.categoryQuery.value = "b"
+    viewer.contentQuery.value = ""
+    assert.equal(viewer.categoryQuery.value, "")
+    assert.equal(viewer.attributeKey.value, "")
+    await new Promise((resolve) => setTimeout(resolve, 270))
+    assert.equal(worker.last("search").contentQuery, "")
+    finishSearch(worker, summaries)
+    assert.equal(viewer.categories.value.length, 2)
+    assert.equal(viewer.entryTotal.value, 5)
     viewer.setAttribute("cn")
     viewer.categoryQuery.value = "a"
     viewer.focusTag("b")
