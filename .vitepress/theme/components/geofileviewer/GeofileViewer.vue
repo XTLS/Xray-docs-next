@@ -12,6 +12,7 @@ import ViewerCategoryList from "./ViewerCategoryList.vue"
 import ViewerEntryList from "./ViewerEntryList.vue"
 import SearchInput from "./SearchInput.vue"
 const props = defineProps<{ host?: ViewerHost }>()
+const emit = defineEmits<{ ready: [] }>()
 const host: ViewerHost = props.host ?? { mode: "page" }
 const embedded = host.mode === "embedded"
 const viewer = useViewer()
@@ -93,6 +94,7 @@ function setupLocation() {
   return target.invalidLink
 }
 const invalidLink = setupLocation()
+onMounted(() => emit("ready"))
 function closeDocsOnBlur(event: FocusEvent) {
   const details = event.currentTarget as HTMLDetailsElement
   if (!details.contains(event.relatedTarget as Node | null))
@@ -281,22 +283,30 @@ function closeDocsOnBlur(event: FocusEvent) {
         />
       </section>
     </template>
-    <section v-else class="geo-empty geo-panel" :aria-busy="loading">
-      <span class="geo-empty-icon" aria-hidden="true">{ }</span>
-      <h2>{{ loading ? progressLabel : t.emptyTitle }}</h2>
-      <p v-if="!loading">{{ t.emptyBody }}</p>
-    </section>
+    <p
+      v-else-if="view.workspace && !view.sourceOpen"
+      class="geo-workspace-status"
+      role="status"
+    >
+      {{ loading ? progressLabel : t.emptyBody }}
+    </p>
     <nav
       v-if="!view.workspace"
       class="geo-links"
       :aria-label="t.relatedDocs"
     >
-      <a :href="withBase(`${localePrefix}/config/routing.html`)">{{
-        t.routingDocs
-      }}</a>
-      <a :href="withBase(`${localePrefix}/config/geodata.html`)">{{
-        t.geodataDocs
-      }}</a>
+      <a
+        :href="withBase(`${localePrefix}/config/routing.html`)"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ t.routingDocs }}</a
+      >
+      <a
+        :href="withBase(`${localePrefix}/config/geodata.html`)"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ t.geodataDocs }}</a
+      >
       <a :href="sourceDocs" target="_blank" rel="noreferrer noopener">{{
         t.dataSourceDocs
       }}</a>

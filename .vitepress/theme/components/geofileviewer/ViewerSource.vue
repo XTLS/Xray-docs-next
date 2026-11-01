@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from "vue"
 import type { Messages } from "./messages.mts"
-import { presets, presetSource } from "./sources.mts"
+import { presets } from "./sources.mts"
 import type {
   SourceDraft,
   ViewerSession,
@@ -41,7 +41,6 @@ const url = computed({
   set: (value) => emit("sourceChange", { url: value })
 })
 const file = computed(() => props.draft.file)
-const presetUrls = presets.map((_, index) => presetSource(index).url)
 const tabs = computed(() => [
   ...(props.remoteAllowed
     ? [
@@ -133,17 +132,21 @@ watch(
           />
           <span class="geo-preset-content"
             ><strong>{{ name }}</strong
-            ><small>{{ t.presetDescriptions[index] }}</small
-            ><small class="geo-preset-source"
-              ><span>{{ t.presetSource }}: XTLS/Xray-rules-dat</span
-              ><a
-                :href="presetUrls[index]"
-                :title="presetUrls[index]"
-                target="_blank"
-                rel="noopener noreferrer"
-                @click.stop
-                >{{ presets[index].path }}.gz</a
-              ><span>{{ t.presetDelivery }}</span></small
+            ><small
+              class="geo-preset-description"
+              :title="t.presetDescriptions[index]"
+              >{{ t.presetDescriptions[index] }}</small
+            ><small
+              class="geo-preset-source"
+              :title="`${t.presetDelivery} ${presets[index].file}`"
+              ><span
+                class="vpi-simple-icons-github"
+                role="img"
+                aria-label="GitHub"
+              />
+              <span class="geo-preset-source-text">{{
+                `${t.presetDelivery} ${presets[index].file}`
+              }}</span></small
             ></span
           >
         </label>
@@ -208,42 +211,52 @@ watch(
       </div>
       <div class="geo-source-actions">
         <button
-          class="geo-button primary"
-          :disabled="!canLoad || loading"
-          @click="load()"
+          class="geo-button primary geo-load-button"
+          :disabled="!loading && !canLoad"
+          @click="loading ? stop() : load()"
         >
-          {{ t.load }}
+          <span>{{
+            loading ? t.cancelLoad : session.error ? t.retry : t.load
+          }}</span>
+          <span class="geo-load-measure" aria-hidden="true">{{
+            t.cancelLoad
+          }}</span>
         </button>
+        <div
+          class="geo-source-status"
+          :class="{ 'is-error': session.error }"
+          :role="session.error ? 'alert' : 'status'"
+          aria-atomic="true"
+        >
+          <span v-if="loading">
+            {{ progressLabel }}
+            <template v-if="session.progress !== undefined">
+              · {{ Math.round(session.progress * 100) }}%</template
+            >
+            <template v-if="session.downloadedBytes">
+              ·
+              {{
+                (session.downloadedBytes / 1048576).toLocaleString(
+                  locale,
+                  { maximumFractionDigits: 1 }
+                )
+              }}
+              MiB</template
+            >
+          </span>
+          <span v-else-if="session.error">{{
+            t.errors[session.error]
+          }}</span>
+        </div>
+        <progress
+          v-if="loading"
+          class="geo-source-progress"
+          :value="session.progress"
+          max="1"
+          :aria-label="progressLabel"
+        />
       </div>
     </template>
-    <div v-if="session.error" class="geo-notice error" role="alert">
-      {{ t.errors[session.error] }}
-      <button class="geo-button" :disabled="!canLoad" @click="load()">
-        {{ t.retry }}
-      </button>
-    </div>
-    <div v-if="loading" class="geo-notice geo-progress" role="status">
-      <span
-        >{{ progressLabel
-        }}<template v-if="session.progress !== undefined">
-          · {{ Math.round(session.progress * 100) }}%</template
-        ><template v-if="session.downloadedBytes">
-          ·
-          {{
-            (session.downloadedBytes / 1048576).toLocaleString(locale, {
-              maximumFractionDigits: 1
-            })
-          }}
-          MiB</template
-        ></span
-      >
-      <progress
-        :value="session.progress"
-        max="1"
-        :aria-label="progressLabel"
-      />
-      <button class="geo-button" @click="stop">{{ t.cancel }}</button>
-    </div>
   </component>
 </template>
 <style scoped src="./source.css"></style>

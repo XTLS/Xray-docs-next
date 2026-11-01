@@ -16,8 +16,10 @@ useViewerNavigation(async (url) => {
   modal.captureFocus()
   target.value = url.href
   await nextTick()
-  modal.show()
 }, modal.close)
+function showViewer() {
+  void nextTick(modal.show)
+}
 </script>
 
 <template>
@@ -63,6 +65,7 @@ useViewerNavigation(async (url) => {
             <Viewer
               :key="target"
               :host="{ mode: 'embedded', url: target }"
+              @ready="showViewer"
             />
             <template #fallback
               ><p class="geo-modal-loading" role="status">
@@ -85,10 +88,10 @@ useViewerNavigation(async (url) => {
   inset: auto;
   top: 50dvh;
   left: 50vw;
-  width: min(1248px, calc(100vw - 40px));
-  height: min(900px, calc(100dvh - 40px));
+  width: min(960px, calc(100vw - 40px));
+  height: auto;
   max-width: none;
-  max-height: none;
+  max-height: calc(100dvh - 40px);
   margin: 0;
   transform: translate(-50%, -50%);
   padding: 0;
@@ -106,6 +109,13 @@ useViewerNavigation(async (url) => {
 .geo-modal-shell {
   display: flex;
   flex-direction: column;
+  max-height: calc(100dvh - 42px);
+}
+.geo-modal:has(.geo-viewer.is-workspace) {
+  width: min(1248px, calc(100vw - 40px));
+  height: min(900px, calc(100dvh - 40px));
+}
+.geo-modal:has(.geo-viewer.is-workspace) .geo-modal-shell {
   height: 100%;
 }
 .geo-modal-header {
@@ -143,6 +153,7 @@ useViewerNavigation(async (url) => {
 .geo-modal-body {
   flex: 1;
   min-height: 0;
+  overflow: auto;
 }
 .geo-modal-loading {
   padding: 24px;
@@ -152,7 +163,14 @@ useViewerNavigation(async (url) => {
 @media (max-width: 767px) {
   .geo-modal {
     width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+  .geo-modal:has(.geo-viewer.is-workspace) {
+    width: calc(100vw - 16px);
     height: calc(100dvh - 16px);
+  }
+  .geo-modal-shell {
+    max-height: calc(100dvh - 18px);
   }
   .geo-modal-header {
     padding: 8px 12px;
