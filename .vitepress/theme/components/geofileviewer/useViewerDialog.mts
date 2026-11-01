@@ -6,7 +6,7 @@ export function useViewerDialog(
 ) {
   let active = false
   let opener: HTMLElement | undefined
-  let rootPadding: string | undefined
+  let rootGutter: string | undefined
   let pointer: number | undefined
   function captureFocus() {
     active = true
@@ -18,18 +18,20 @@ export function useViewerDialog(
   function show() {
     if (!active || !dialog.value || dialog.value.open) return
     const root = document.documentElement
-    const scrollbar = window.innerWidth - root.clientWidth
-    rootPadding = root.style.paddingRight
-    root.style.paddingRight = `${parseFloat(getComputedStyle(root).paddingRight) + scrollbar}px`
+    rootGutter = root.style.scrollbarGutter
+    // Keep the viewport width of fixed headers and sidebars as well as the
+    // document flow. Padding only compensates for the latter.
+    if (window.innerWidth > root.clientWidth)
+      root.style.scrollbarGutter = "stable"
     dialog.value.showModal()
   }
   function close() {
     if (!active) return
     active = false
     dialog.value?.close()
-    if (rootPadding !== undefined)
-      document.documentElement.style.paddingRight = rootPadding
-    rootPadding = undefined
+    if (rootGutter !== undefined)
+      document.documentElement.style.scrollbarGutter = rootGutter
+    rootGutter = undefined
     pointer = undefined
     const focus = opener
     opener = undefined
