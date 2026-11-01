@@ -147,7 +147,7 @@ watch(
           </div>
         </div>
       </li>
-      <li v-if="!query.invalidIp" class="geo-list-status" role="status">
+      <li v-if="!query.error" class="geo-list-status" role="status">
         <template v-if="query.searching">{{ t.searching }}</template>
         <template v-else-if="results.entriesLoading">{{
           t.reading

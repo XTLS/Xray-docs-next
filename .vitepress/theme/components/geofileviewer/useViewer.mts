@@ -163,17 +163,19 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
   }
 
   function validateSearch() {
-    query.invalidIp =
+    query.error =
       session.loaded?.kind === "geoip" &&
       query.ipMode === "ip" &&
       !!query.content.trim() &&
       !parseIpQuery(query.content)
-    if (query.invalidIp) {
+        ? "invalidIp"
+        : undefined
+    if (query.error) {
       query.searching = false
       rows.categories = []
       rows.missingTag = ""
     }
-    return !query.invalidIp
+    return !query.error
   }
 
   function searchNow() {
@@ -191,7 +193,7 @@ export function useViewer(options: { createWorker?: WorkerFactory } = {}) {
     client.invalidateSearch()
     query.attribute = ""
     query.category = ""
-    query.invalidIp = false
+    query.error = undefined
     resetEntries()
     query.searching = true
     searchTimer = setTimeout(searchNow, 250)

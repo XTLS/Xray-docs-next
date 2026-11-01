@@ -53,8 +53,13 @@
 }
 .geo-stats {
   flex-shrink: 0;
+  max-width: 50%;
   font-size: 13px;
   color: var(--vp-c-text-2);
+  overflow-wrap: anywhere;
+}
+.geo-stats.is-error {
+  color: var(--vp-c-danger-1);
 }
 .geo-search-modes {
   display: flex;
@@ -304,6 +309,9 @@
     align-items: stretch;
     flex-direction: column;
     gap: 8px;
+  }
+  .geo-stats {
+    max-width: none;
   }
   .geo-browser {
     grid-template-columns: minmax(0, 1fr);

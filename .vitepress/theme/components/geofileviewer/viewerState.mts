@@ -15,6 +15,7 @@ export type SourceDraft = {
   url: string
   file?: File
 }
+export type SearchErrorKey = "invalidIp"
 export type LoadedSource = Readonly<{
   name: string
   kind: GeoKind
@@ -49,7 +50,7 @@ export const initialQuery = () => ({
   content: "",
   activeContent: "",
   ipMode: "ip" as IpSearchMode,
-  invalidIp: false,
+  error: undefined as SearchErrorKey | undefined,
   category: "",
   attribute: "",
   searching: false

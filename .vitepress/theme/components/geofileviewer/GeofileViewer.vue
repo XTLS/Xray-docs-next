@@ -31,6 +31,13 @@ const searchLabel = computed(() =>
 )
 const loading = computed(() => session.status === "loading")
 const number = (value: number) => value.toLocaleString(lang.value)
+const searchStatus = computed(() =>
+  query.error
+    ? t.value[query.error]
+    : query.searching
+      ? t.value.searching
+      : `${number(results.value.categories.length)} ${t.value.categories}`
+)
 const localePrefix = computed(() =>
   /^(en|ru)(-|$)/i.test(lang.value)
     ? "/" + lang.value.split("-")[0].toLowerCase()
@@ -199,7 +206,8 @@ function closeDocsOnBlur(event: FocusEvent) {
           v-model="contentQuery"
           :placeholder="searchLabel"
           :clear-label="t.clearContentSearch"
-          :error="query.invalidIp ? t.invalidIp : undefined"
+          :invalid="!!query.error"
+          :described-by="query.error ? 'geo-search-status' : undefined"
         >
           <template v-if="session.loaded.kind === 'geoip'" #prefix>
             <div
@@ -224,11 +232,13 @@ function closeDocsOnBlur(event: FocusEvent) {
             </div>
           </template>
         </SearchInput>
-        <span v-if="!query.invalidIp" class="geo-stats" role="status">{{
-          query.searching
-            ? t.searching
-            : `${number(results.categories.length)} ${t.categories}`
-        }}</span>
+        <span
+          id="geo-search-status"
+          class="geo-stats"
+          :class="{ 'is-error': query.error }"
+          role="status"
+          >{{ searchStatus }}</span
+        >
       </div>
       <section
         class="geo-browser geo-panel"
