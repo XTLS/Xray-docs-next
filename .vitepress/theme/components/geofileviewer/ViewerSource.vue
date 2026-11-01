@@ -17,6 +17,7 @@ const props = defineProps<{
   t: Messages
   locale: string
   progressLabel: string
+  loadedSourceName: string
 }>()
 const emit = defineEmits<{
   sourceChange: [patch: Partial<SourceDraft>]
@@ -41,6 +42,13 @@ const url = computed({
   set: (value) => emit("sourceChange", { url: value })
 })
 const file = computed(() => props.draft.file)
+const currentName = computed(() =>
+  props.session.loaded
+    ? props.t.loadedSource + props.loadedSourceName
+    : loading.value
+      ? props.progressLabel
+      : props.t.noLoadedSource
+)
 const tabs = computed(() => [
   ...(props.remoteAllowed
     ? [
@@ -101,11 +109,12 @@ watch(
         {{ t.cancel }}
       </button>
     </div>
-    <p v-if="session.loaded" class="geo-summary">
-      {{ session.loaded.name }} ·
-      {{ session.loaded.kind === "geoip" ? "GeoIP" : "GeoSite" }} ·
-      {{ number(session.categoryCount) }} {{ t.categories }} ·
-      {{ number(session.entryCount) }} {{ t.entries }}
+    <p
+      v-if="view.workspace"
+      class="geo-summary geo-source-current"
+      :title="currentName"
+    >
+      {{ currentName }}
     </p>
     <template v-if="view.sourceOpen">
       <div class="geo-tabs" :aria-label="t.source">

@@ -3,6 +3,7 @@ import { computed, onMounted } from "vue"
 import { useData, withBase } from "vitepress"
 import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
+import { presets } from "./sources.mts"
 import { useViewerSharing } from "./useViewerSharing.mts"
 import { useViewerPageRoute } from "./useViewerPageRoute.mts"
 import { useViewerTarget } from "./useViewerTarget.mts"
@@ -71,11 +72,23 @@ const progressLabel = computed(
       index: t.value.processing
     })[session.phase]
 )
+const loadedSourceName = computed(() => {
+  const loaded = session.loaded
+  if (!loaded) return ""
+  const index = presets.findIndex(
+    (preset) => preset.file === loaded.preset
+  )
+  return index < 0
+    ? loaded.name
+    : `${t.value.preset} · ${t.value.presetNames[index]}`
+})
 const sourceSummary = computed(() =>
   session.loaded
     ? [
-        session.loaded.name,
-        session.loaded.kind === "geoip" ? "GeoIP" : "GeoSite",
+        loadedSourceName.value,
+        ...(session.loaded.preset
+          ? []
+          : [session.loaded.kind === "geoip" ? "GeoIP" : "GeoSite"]),
         number(session.categoryCount) + " " + t.value.categories,
         number(session.entryCount) + " " + t.value.entries
       ].join(" · ")
@@ -199,6 +212,7 @@ function closeDocsOnBlur(event: FocusEvent) {
       :t="t"
       :locale="lang"
       :progress-label="progressLabel"
+      :loaded-source-name="loadedSourceName"
       @source-change="actions.updateSource"
       @load="actions.loadSource()"
       @cancel="actions.cancelLoad"

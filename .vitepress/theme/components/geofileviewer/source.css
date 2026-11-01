@@ -179,6 +179,11 @@
     background-position: 50% 0;
   }
 }
+.geo-source .geo-source-current {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .geo-type {
   display: flex;
   flex-wrap: wrap;

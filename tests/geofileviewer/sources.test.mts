@@ -21,7 +21,7 @@ const remote: InputSource = {
   name: "test",
   kind: "geosite"
 }
-test("four official presets use the correct jsDelivr release paths and types", () => {
+test("four Xray datasets use the correct jsDelivr release paths and types", () => {
   assert.deepEqual(
     presets.map((p) => p.file),
     [
@@ -43,7 +43,7 @@ test("four official presets use the correct jsDelivr release paths and types", (
   }
 })
 
-test("official gzip loads from jsDelivr and falls back to raw for HTTP, network, stream and gzip failures", async () => {
+test("Xray gzip loads from jsDelivr and falls back to raw for HTTP, network, stream and gzip failures", async () => {
   for (let index = 0; index < presets.length; index++) {
     for (const failure of ["none", "http", "network", "stream", "gzip"]) {
       const requests: string[] = []
@@ -98,7 +98,7 @@ test("official gzip loads from jsDelivr and falls back to raw for HTTP, network,
   }
 })
 
-test("official fallback is attempted once, reports its final failure and never applies to custom URLs", async () => {
+test("Xray data fallback is attempted once, reports its final failure and never applies to custom URLs", async () => {
   for (const source of [
     presetSource(0),
     {
@@ -120,7 +120,7 @@ test("official fallback is attempted once, reports its final failure and never a
   }
 })
 
-test("cancellation during either official download never starts another attempt", async () => {
+test("cancellation during either Xray data download never starts another attempt", async () => {
   for (const cancelAt of [1, 2]) {
     const abort = new AbortController()
     let requests = 0
