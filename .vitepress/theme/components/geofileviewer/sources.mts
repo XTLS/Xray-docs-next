@@ -20,6 +20,12 @@ export type LoadProgress = {
   progress?: number
   bytes?: number
 }
+type ReadOptions = {
+  fetch?: typeof fetch
+  decompress?: typeof DecompressionStream | null
+}
+const rawBase =
+  "https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/"
 
 export function presetSource(index: number): InputSource {
   const preset = presets[index]
@@ -29,7 +35,7 @@ export function presetSource(index: number): InputSource {
     name: preset.file,
     kind: preset.kind,
     preset: preset.file,
-    url: `https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/${preset.path}.gz`
+    url: `https://cdn.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/${preset.path}.gz`
   }
 }
 
@@ -63,10 +69,36 @@ export async function readSource(
   source: InputSource,
   signal: AbortSignal,
   report: (progress: LoadProgress) => void,
-  options: {
-    fetch?: typeof fetch
-    decompress?: typeof DecompressionStream | null
-  } = {}
+  options: ReadOptions = {}
+): Promise<Uint8Array> {
+  if (source.mode !== "remote" || !source.preset)
+    return readSingleSource(source, signal, report, options)
+  const preset = presets.find((preset) => preset.file === source.preset)
+  if (!preset) throw new ViewerError("invalidUrl")
+  const decompress =
+    options.decompress === undefined
+      ? globalThis.DecompressionStream
+      : options.decompress
+  const raw = { ...source, url: rawBase + preset.path }
+  if (!decompress) return readSingleSource(raw, signal, report, options)
+  try {
+    return await readSingleSource(source, signal, report, options)
+  } catch {
+    if (signal.aborted) throw signal.reason
+    return readSingleSource(
+      { ...raw, url: raw.url + ".gz" },
+      signal,
+      report,
+      options
+    )
+  }
+}
+
+async function readSingleSource(
+  source: InputSource,
+  signal: AbortSignal,
+  report: (progress: LoadProgress) => void,
+  options: ReadOptions
 ): Promise<Uint8Array> {
   const decompress =
     options.decompress === undefined
@@ -82,8 +114,7 @@ export async function readSource(
       throw new ViewerError("readFailed")
     }
   } else {
-    let url = validateUrl(source.url)
-    if (source.preset && !decompress) url = url.replace(/\.gz$/, "")
+    const url = validateUrl(source.url)
     report({ phase: "download", bytes: 0 })
     try {
       const response = await (options.fetch ?? fetch)(url, {
