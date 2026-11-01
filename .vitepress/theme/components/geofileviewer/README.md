@@ -61,7 +61,7 @@ GeoIP、GeoSite 和两种宿主共用搜索 UI。`SearchInput` 只处理输入�
 ## 验证
 
 ```sh
-pnpm test
+pnpm run test:geofileviewer
 pnpm run docs:build
 ```
 
