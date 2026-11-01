@@ -1,6 +1,11 @@
-export function highlightParts(value: string, query: string) {
+export function highlightParts(
+  value: string,
+  query: string,
+  wholeValue = false
+) {
   const needle = query.trim().toLowerCase()
   if (!needle) return [{ text: value, match: false }]
+  if (wholeValue) return [{ text: value, match: true }]
   const lower = value.toLowerCase()
   const parts: { text: string; match: boolean }[] = []
   let start = 0

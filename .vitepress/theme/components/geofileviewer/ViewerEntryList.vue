@@ -123,7 +123,8 @@ watch(
             ><template
               v-for="(part, partIndex) in highlightParts(
                 entry.value,
-                query.activeContent
+                query.activeContent,
+                entry.type === 'IPv4' || entry.type === 'IPv6'
               )"
               :key="partIndex"
               ><mark v-if="part.match">{{ part.text }}</mark

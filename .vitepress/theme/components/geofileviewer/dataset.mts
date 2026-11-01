@@ -1,4 +1,5 @@
 import protobuf from "protobufjs/minimal.js"
+import { IpIndex, parseIpQuery } from "./ipSearch.mts"
 import {
   ENTRY_PAGE_SIZE,
   ViewerError,
@@ -15,6 +16,7 @@ type Category = {
   reverseMatch: boolean
   offsets: Uint32Array
   attributes: AttributeSummary[]
+  ipIndex?: IpIndex
 }
 export type SearchResult = {
   categories: CategorySummary[]
@@ -74,7 +76,7 @@ export function formatCIDR(ip: Uint8Array, prefix: number): string {
   )
   let bestStart = -1
   let bestLength = 1
-  for (let i = 0; i < 8;) {
+  for (let i = 0; i < 8; ) {
     if (parts[i] !== 0) {
       i++
       continue
@@ -116,54 +118,62 @@ function attribute(reader: Reader, end: number): Attribute {
   return { key, value }
 }
 
+function decodeCIDR(bytes: Uint8Array, start: number, end: number) {
+  const reader = protobuf.Reader.create(bytes)
+  reader.pos = start
+  let ip: Uint8Array | undefined
+  let prefix = 0
+  fields(reader, end, (field, wire, r) => {
+    if (field === 1 && wire === 2) {
+      ip = r.bytes()
+      return true
+    }
+    if (field === 2 && wire === 0) {
+      prefix = r.uint32()
+      return true
+    }
+    return false
+  })
+  if (!ip || ![4, 16].includes(ip.length) || prefix > ip.length * 8)
+    throw new ViewerError("invalidFile")
+  return { ip, prefix }
+}
+
 function decodeEntry(
   bytes: Uint8Array,
   start: number,
   end: number,
   kind: GeoKind
 ): GeoEntry {
+  if (kind === "geoip") {
+    const { ip, prefix } = decodeCIDR(bytes, start, end)
+    return {
+      type: ip.length === 16 ? "IPv6" : "IPv4",
+      value: formatCIDR(ip, prefix),
+      attributes: []
+    }
+  }
   const reader = protobuf.Reader.create(bytes)
   reader.pos = start
   let domainType = 0
   let value = ""
-  let ip: Uint8Array | undefined
-  let prefix = 0
   const attributes: Attribute[] = []
   fields(reader, end, (field, wire, r) => {
-    if (kind === "geosite") {
-      if (field === 1 && wire === 0) {
-        domainType = r.uint32()
-        return true
-      }
-      if (field === 2 && wire === 2) {
-        value = r.string()
-        return true
-      }
-      if (field === 3 && wire === 2) {
-        const [, attrEnd] = messageRange(r, end)
-        attributes.push(attribute(r, attrEnd))
-        return true
-      }
-    } else {
-      if (field === 1 && wire === 2) {
-        ip = r.bytes()
-        return true
-      }
-      if (field === 2 && wire === 0) {
-        prefix = r.uint32()
-        return true
-      }
+    if (field === 1 && wire === 0) {
+      domainType = r.uint32()
+      return true
+    }
+    if (field === 2 && wire === 2) {
+      value = r.string()
+      return true
+    }
+    if (field === 3 && wire === 2) {
+      const [, attrEnd] = messageRange(r, end)
+      attributes.push(attribute(r, attrEnd))
+      return true
     }
     return false
   })
-  if (kind === "geoip") {
-    if (!ip) throw new ViewerError("invalidFile")
-    return {
-      type: ip.length === 16 ? "IPv6" : "IPv4",
-      value: formatCIDR(ip, prefix),
-      attributes
-    }
-  }
   const types = ["keyword", "regexp", "domain", "full"] as const
   if (!value || !types[domainType]) throw new ViewerError("invalidFile")
   return { type: types[domainType], value, attributes }
@@ -206,13 +216,18 @@ export class Dataset {
   ): Promise<SearchResult | null> {
     const needle = contentQuery.trim().toLowerCase()
     const result: SearchResult = { categories: [], indexes: new Map() }
+    const ipQuery =
+      this.kind === "geoip" && needle ? parseIpQuery(needle) : undefined
+    if (this.kind === "geoip" && needle && !ipQuery)
+      return cancelled() ? null : result
     let lastYield = Date.now()
     for (let id = 0; id < this.categories.length; id++) {
       const category = this.categories[id]
       const count = category.offsets.length / 2
       let indexes: Uint32Array | null = null
       let attributes = category.attributes
-      if (needle) {
+      if (ipQuery) indexes = category.ipIndex!.search(ipQuery)
+      else if (needle) {
         const matching: number[] = []
         const counts = new Map<string, number>()
         for (let i = 0; i < count; i++) {
@@ -227,19 +242,20 @@ export class Dataset {
             lastYield = Date.now()
           }
         }
-        if (!matching.length) continue
         indexes = Uint32Array.from(matching)
         attributes = attributeSummaries(counts)
       }
-      result.indexes.set(id, indexes)
-      result.categories.push({
-        id,
-        code: category.code,
-        count,
-        matches: indexes?.length ?? count,
-        reverseMatch: category.reverseMatch,
-        attributes
-      })
+      if (indexes?.length !== 0) {
+        result.indexes.set(id, indexes)
+        result.categories.push({
+          id,
+          code: category.code,
+          count,
+          matches: indexes?.length ?? count,
+          reverseMatch: category.reverseMatch,
+          attributes
+        })
+      }
       if (Date.now() - lastYield > 16) {
         await new Promise((resolve) => setTimeout(resolve, 0))
         if (cancelled()) return null
@@ -352,6 +368,8 @@ export async function indexDataset(
       })
       if (!code.trim()) throw new ViewerError("invalidFile")
       const offsets = new Uint32Array(count * 2)
+      const ipIndex =
+        kind === "geoip" ? new IpIndex(bytes, count) : undefined
       const counts = new Map<string, number>()
       reader.pos = start
       let index = 0
@@ -359,10 +377,14 @@ export async function indexDataset(
         const entryTag = reader.uint32()
         if (entryTag === 18) {
           const [entryStart, entryEnd] = messageRange(reader, end)
-          countAttributes(
-            counts,
-            decodeEntry(bytes, entryStart, entryEnd, kind)
-          )
+          if (ipIndex) {
+            const { ip, prefix } = decodeCIDR(bytes, entryStart, entryEnd)
+            ipIndex.add(index / 2, ip, prefix)
+          } else
+            countAttributes(
+              counts,
+              decodeEntry(bytes, entryStart, entryEnd, kind)
+            )
           offsets[index++] = entryStart
           offsets[index++] = entryEnd
           reader.pos = entryEnd
@@ -374,13 +396,20 @@ export async function indexDataset(
         } else reader.skipType(entryTag & 7)
         if (reader.pos > end) throw new ViewerError("invalidFile")
       }
+      ipIndex?.finish()
       categories.push({
         code,
         reverseMatch,
         offsets,
-        attributes: attributeSummaries(counts)
+        attributes: attributeSummaries(counts),
+        ipIndex
       })
       entryCount += count
+      if (Date.now() - lastYield > 16) {
+        progress(reader.pos / bytes.length)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+        lastYield = Date.now()
+      }
     }
     if (!categories.length) throw new ViewerError("invalidFile")
     progress(1)

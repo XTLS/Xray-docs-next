@@ -35,20 +35,22 @@ export function site(
 }
 
 export function ip(code = "private", bytes = [127, 0, 0, 0], prefix = 8) {
-  return W.create()
-    .uint32(10)
-    .fork()
-    .uint32(10)
-    .string(code)
-    .uint32(18)
-    .fork()
-    .uint32(10)
-    .bytes(bytes)
-    .uint32(16)
-    .uint32(prefix)
-    .ldelim()
-    .uint32(24)
-    .bool(true)
-    .ldelim()
-    .finish()
+  return ipRanges(code, [{ bytes, prefix }])
+}
+
+export function ipRanges(
+  code: string,
+  ranges: { bytes: number[]; prefix: number }[],
+  reverseMatch = true
+) {
+  const w = W.create().uint32(10).fork().uint32(10).string(code)
+  for (const { bytes, prefix } of ranges)
+    w.uint32(18)
+      .fork()
+      .uint32(10)
+      .bytes(bytes)
+      .uint32(16)
+      .uint32(prefix)
+      .ldelim()
+  return w.uint32(24).bool(reverseMatch).ldelim().finish()
 }

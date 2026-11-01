@@ -22,6 +22,11 @@ const contentQuery = computed({
   get: () => query.content,
   set: actions.setContentQuery
 })
+const searchLabel = computed(() =>
+  session.loaded?.kind === "geoip"
+    ? t.value.ipSearch
+    : t.value.contentSearch
+)
 const loading = computed(() => session.status === "loading")
 const number = (value: number) => value.toLocaleString(lang.value)
 const localePrefix = computed(() =>
@@ -185,12 +190,12 @@ function closeDocsOnBlur(event: FocusEvent) {
     <template v-if="session.loaded">
       <div class="geo-toolbar">
         <label class="geo-sr-only" for="geo-search">{{
-          t.contentSearch
+          searchLabel
         }}</label>
         <SearchInput
           id="geo-search"
           v-model="contentQuery"
-          :placeholder="t.contentSearch"
+          :placeholder="searchLabel"
           :clear-label="t.clearContentSearch"
         />
         <span class="geo-stats" role="status">{{

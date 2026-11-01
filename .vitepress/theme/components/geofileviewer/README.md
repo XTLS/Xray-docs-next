@@ -16,6 +16,7 @@
 | `workerClient.mts`                               | Worker 工厂、生命周期、请求编号和过期响应校验         |
 | `viewer.worker.mts`                              | Worker 内来源读取、索引建立、查询和取消               |
 | `sources.mts` / `dataset.mts`                    | 网络与文件读取、gzip、DAT 解析和查询引擎              |
+| `ipSearch.mts`                                   | IP/CIDR 解析及按地址族、前缀长度分组的数值二分索引    |
 | `links.mts`                                      | URL 参数解析、分享链接构造、站内弹窗目标识别          |
 | `useViewerTarget.mts`                            | 将链接参数转换为控制器动作及无效链接提示              |
 | `useViewerPageRoute.mts`                         | 仅独立页面的路由读取和 URL 同步                       |
@@ -31,6 +32,8 @@
 - `results` 提供只读分类、当前条目及剩余批次信息。属性只影响右侧条目结果。
 - `view` 保存首页／工作区、来源面板及手机端显示状态。工作区独立于 `session.loaded`，换源、取消和错误不会自行退出工作区；`resetToHome` 才完整返回首页。
 - 每次数据加载拥有独立 Worker 会话；搜索和条目批次分别失效。Worker 内的异步取消与主线程的响应校验都保留。
+
+GeoIP 的单个 IP 查询返回包含该地址的 CIDR；CIDR 查询只返回地址和前缀长度都相同的条目。索引引用 DAT 中的地址字节，查询结果按原始文件顺序返回。GeoSite 仍按内容进行字面包含搜索。
 
 独立宿主使用 `{ mode: "page" }`；弹窗使用 `{ mode: "embedded", url }`。弹窗只应用初始化目标，不安装页面路由同步。两种宿主的分享链接都指向独立工具地址。
 

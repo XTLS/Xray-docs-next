@@ -88,13 +88,14 @@ test("IPv4, compressed IPv6 and reverse match metadata", async () => {
     "2001:db8::/32"
   )
   const data = await indexDataset(ip(), "geoip")
-  const result = (await data.search("127.0"))!
+  const result = (await data.search("127.0.0.1"))!
   assert.equal(result.categories[0].reverseMatch, true)
   assert.equal(
     (await data.entries(result, 0, 1))!.entries[0].value,
     "127.0.0.0/8"
   )
   assert.deepEqual(result.categories[0].attributes, [])
+  assert.equal((await data.search("127.0"))!.categories.length, 0)
   assert.equal((await data.search("private"))!.categories.length, 0)
 })
 test("attribute options and filtering cover the complete content result, beyond the first batch", async () => {
