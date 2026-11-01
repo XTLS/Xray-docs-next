@@ -208,6 +208,8 @@
   overflow: auto;
 }
 .geo-viewer.geo-viewer--embedded {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   max-width: none;
@@ -215,6 +217,16 @@
   padding: 16px;
   overflow: auto;
   overscroll-behavior: contain;
+}
+.geo-viewer--embedded:not(.is-workspace) > .geo-source,
+.geo-viewer--embedded > .geo-links {
+  flex-shrink: 0;
+}
+.geo-viewer--embedded:not(.is-workspace) > .geo-empty {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .geo-viewer.geo-viewer--embedded.is-workspace {
   margin: 0;
