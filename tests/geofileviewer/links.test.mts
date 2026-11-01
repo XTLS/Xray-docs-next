@@ -3,8 +3,83 @@ import assert from "node:assert/strict"
 import {
   categoryLink,
   remoteCategoryLink,
-  parsePermalink
+  parsePermalink,
+  viewerPopupTarget
 } from "../../.vitepress/theme/components/geofileviewer/links.mts"
+
+test("in-site viewer links resolve to popup targets with locale, base and query preserved", () => {
+  const target = viewerPopupTarget(
+    "../tools/geofileviewer.html?file=geosite.dat&tag=google",
+    "https://example.com/en/config/routing.html#domain"
+  )!
+  assert.equal(
+    target.href,
+    "https://example.com/en/tools/geofileviewer.html?file=geosite.dat&tag=google"
+  )
+  assert.equal(
+    viewerPopupTarget(
+      "/tools/geofileviewer.html",
+      "https://example.com/config/geodata.html"
+    )?.search,
+    ""
+  )
+  assert.equal(
+    viewerPopupTarget(
+      "/docs/ru/tools/geofileviewer",
+      "https://example.com/docs/ru/config/routing.html",
+      "/docs/"
+    )?.pathname,
+    "/docs/ru/tools/geofileviewer"
+  )
+  const query = new URLSearchParams({
+    url: "https://data.example/file.dat?version=2",
+    type: "geoip",
+    tag: "us"
+  })
+  assert.equal(
+    viewerPopupTarget(
+      "/tools/geofileviewer.html?" + query,
+      "https://example.com/"
+    )?.searchParams.get("url"),
+    "https://data.example/file.dat?version=2"
+  )
+})
+
+test("external links, other pages and navigation within the standalone viewer stay normal", () => {
+  for (const href of [
+    "https://other.example/tools/geofileviewer.html",
+    "/config/routing.html",
+    "/other/tools/geofileviewer.html",
+    "javascript:alert(1)",
+    "https://["
+  ])
+    assert.equal(
+      viewerPopupTarget(href, "https://example.com/config/geodata.html"),
+      undefined
+    )
+  assert.equal(
+    viewerPopupTarget(
+      "/tools/geofileviewer.html",
+      "https://example.com/tools/geofileviewer.html?file=geosite.dat"
+    ),
+    undefined
+  )
+  assert.equal(
+    viewerPopupTarget(
+      "/en/tools/geofileviewer.html?file=geoip-full.dat",
+      "https://example.com/ru/tools/geofileviewer.html"
+    ),
+    undefined
+  )
+  assert.equal(
+    viewerPopupTarget(
+      "/tools/geofileviewer.html",
+      "https://example.com/docs/config/routing.html",
+      "/docs/"
+    ),
+    undefined
+  )
+})
 
 test("file parameters select official presets; custom sources use the URL parameter", () => {
   assert.equal(parsePermalink("").invalid, false)

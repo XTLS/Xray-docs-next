@@ -7,7 +7,10 @@ import {
 } from "./links.mts"
 import type { useViewer } from "./useViewer.mts"
 
-export function usePermalink(viewer: ReturnType<typeof useViewer>) {
+export function usePermalink(
+  viewer: ReturnType<typeof useViewer>,
+  popupUrl?: string
+) {
   const router = useRouter()
   const mounted = ref(false)
   const invalidLink = ref(false)
@@ -19,10 +22,14 @@ export function usePermalink(viewer: ReturnType<typeof useViewer>) {
     const category = viewer.selected.value
     if (!mounted.value || !source || !category) return ""
     if (source.preset)
-      return categoryLink(location.href, source.preset, category.code)
+      return categoryLink(
+        popupUrl ?? location.href,
+        source.preset,
+        category.code
+      )
     if (source.url)
       return remoteCategoryLink(
-        location.href,
+        popupUrl ?? location.href,
         source.url,
         source.kind,
         category.code
@@ -31,12 +38,14 @@ export function usePermalink(viewer: ReturnType<typeof useViewer>) {
   })
 
   function replace(url: URL) {
+    if (popupUrl !== undefined) return
     if (url.search === router.route.query) return
     ownQueries.add(url.search)
     void router.go(url.href, { replace: true })
   }
 
   function clearSourceQuery() {
+    if (popupUrl !== undefined) return
     const url = new URL(location.href)
     url.searchParams.delete("file")
     url.searchParams.delete("tag")
@@ -77,12 +86,21 @@ export function usePermalink(viewer: ReturnType<typeof useViewer>) {
 
   onMounted(() => {
     mounted.value = true
-    apply(router.route.query)
+    apply(
+      popupUrl !== undefined
+        ? new URL(popupUrl).search
+        : router.route.query
+    )
   })
   watch(
     () => router.route.query,
     (search) => {
-      if (!mounted.value || ownQueries.delete(search)) return
+      if (
+        popupUrl !== undefined ||
+        !mounted.value ||
+        ownQueries.delete(search)
+      )
+        return
       apply(search)
     },
     { flush: "sync" }

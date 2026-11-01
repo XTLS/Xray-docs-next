@@ -8,6 +8,8 @@ import { usePermalink } from "./usePermalink.mts"
 import { useInfiniteScroll } from "./useInfiniteScroll.mts"
 import SearchInput from "./SearchInput.vue"
 
+const props = defineProps<{ popupUrl?: string }>()
+const embedded = computed(() => props.popupUrl !== undefined)
 const viewer = useViewer()
 const {
   source,
@@ -48,7 +50,10 @@ const {
   stop,
   select
 } = viewer
-const { permalink, invalidLink, copyStatus, copy } = usePermalink(viewer)
+const { permalink, invalidLink, copyStatus, copy } = usePermalink(
+  viewer,
+  props.popupUrl
+)
 const fileInput = ref<HTMLInputElement>()
 const dragging = ref(false)
 const categoryList = ref<HTMLElement>()
@@ -164,15 +169,22 @@ function drop(event: DragEvent) {
 </script>
 
 <template>
-  <main class="geo-viewer" :class="{ 'is-workspace': workspace }">
-    <header v-if="!workspace" class="geo-heading">
+  <component
+    :is="embedded ? 'section' : 'main'"
+    class="geo-viewer"
+    :class="{ 'is-workspace': workspace, 'is-embedded': embedded }"
+  >
+    <header v-if="!workspace && !embedded" class="geo-heading">
       <p class="geo-eyebrow">PROJECT X / TOOLS</p>
       <h1>{{ t.title }}</h1>
       <p>{{ t.description }}</p>
     </header>
-    <header v-else class="geo-workspace-bar geo-source geo-panel">
+    <header
+      v-else-if="workspace"
+      class="geo-workspace-bar geo-source geo-panel"
+    >
       <div class="geo-workspace-title">
-        <h1>{{ t.title }}</h1>
+        <h1 v-if="!embedded">{{ t.title }}</h1>
         <p class="geo-summary" :title="sourceSummary">
           {{ sourceSummary
           }}<template v-if="loading && progress !== undefined">
@@ -606,7 +618,7 @@ function drop(event: DragEvent) {
         t.dataSourceDocs
       }}</a>
     </nav>
-  </main>
+  </component>
 </template>
 
 <style scoped src="./viewer.css"></style>

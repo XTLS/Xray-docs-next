@@ -1,6 +1,29 @@
 import { presets, validateUrl, type PresetFile } from "./sources.mts"
 import type { GeoKind } from "./types.mts"
 
+export function viewerPopupTarget(
+  href: string,
+  current: string,
+  base = "/"
+) {
+  try {
+    const page = new URL(current)
+    const target = new URL(href, page)
+    const root = base.endsWith("/") ? base : `${base}/`
+    const isViewer = (path: string) =>
+      path.startsWith(root) &&
+      /^(?:(?:en|ru)\/)?tools\/geofileviewer(?:\.html)?$/.test(
+        path.slice(root.length)
+      )
+    if (
+      target.origin === page.origin &&
+      isViewer(target.pathname) &&
+      !isViewer(page.pathname)
+    )
+      return target
+  } catch {}
+}
+
 export function parsePermalink(search: string) {
   const params = new URLSearchParams(search)
   const empty = {

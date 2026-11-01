@@ -26,6 +26,7 @@ export const zh = {
   browse: "选择文件",
   load: "加载文件",
   cancel: "取消",
+  close: "关闭查看器",
   retry: "重试",
   emptyTitle: "从一个数据文件开始",
   emptyBody: "加载文件后，在左侧选择分类，在右侧查看条目。",
@@ -106,6 +107,7 @@ const en: Messages = {
   browse: "Choose file",
   load: "Load file",
   cancel: "Cancel",
+  close: "Close viewer",
   retry: "Retry",
   emptyTitle: "Start with a data file",
   emptyBody:
@@ -188,6 +190,7 @@ const ru: Messages = {
   browse: "Выбрать файл",
   load: "Загрузить файл",
   cancel: "Отмена",
+  close: "Закрыть просмотр",
   retry: "Повторить",
   emptyTitle: "Начните с файла данных",
   emptyBody:

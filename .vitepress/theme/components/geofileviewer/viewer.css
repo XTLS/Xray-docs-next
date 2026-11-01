@@ -592,6 +592,31 @@
 .geo-list-title {
   flex-shrink: 0;
 }
+.geo-viewer.is-embedded {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  min-height: 0;
+  padding: 16px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.geo-viewer.is-embedded.is-workspace {
+  position: static;
+  margin: 0;
+  overflow: hidden;
+}
+.is-embedded .geo-workspace-title .geo-summary {
+  margin: 0;
+}
+.is-embedded .geo-source-dialog {
+  position: fixed;
+  inset: auto;
+  top: 50dvh;
+  left: 50vw;
+  margin: 0;
+  transform: translate(-50%, -50%);
+}
 @media (max-width: 767px) {
   .geo-viewer {
     padding: 32px 20px 48px;
