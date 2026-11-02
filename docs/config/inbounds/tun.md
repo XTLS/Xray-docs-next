@@ -112,7 +112,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 无论阻止哪些流量，环回（不会离开本机）以及 Windows 在本地链路上所需的流量始终允许：DHCP、DHCPv6，以及 IPv6 邻居发现和多播侦听器发现。
 
-使用 `"all"`、`"allexceptlan"`、`"dns"`、`"windnsclient"`，或任何包含 TCP 或 UDP 53 端口的值将系统的 DNS 限制在 TUN 接口内时需要配置 `dns`，否则 Xray 会报错退出。此时 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
+使用 `"all"`、`"allexceptlan"`、`"dns"`、`"windnsclient"`，或任何包含 TCP 或 UDP 53 端口的值将系统的 DNS 限制在 TUN 接口内时需要配置 `dns`，否则 Xray 会报错退出。此时 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，或者是本地解析器使用的环回地址（例如 `127.0.0.1`），需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
 
 过滤器生效期间，Xray 自身的出站连接也不受 Windows 防火墙阻止规则的限制。
 

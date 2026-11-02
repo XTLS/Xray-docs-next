@@ -112,7 +112,7 @@ It needs `autoSystemRoutingTable`, otherwise Xray reports an error and does not 
 
 Whatever is blocked, loopback, which cannot leave the system, and what Windows itself needs on the local link stay allowed: DHCP, DHCPv6, and IPv6 neighbor and multicast listener discovery.
 
-Keeping the system's DNS inside the TUN interface, with `"all"`, `"allexceptlan"`, `"dns"`, `"windnsclient"`, or anything covering TCP or UDP port 53, needs `dns`, otherwise Xray reports an error and does not start. The servers in `dns` then have to be covered by `gateway` or `autoSystemRoutingTable`, and DNS servers that should be reached directly belong in Xray's own [DNS](../dns.md) settings.
+Keeping the system's DNS inside the TUN interface, with `"all"`, `"allexceptlan"`, `"dns"`, `"windnsclient"`, or anything covering TCP or UDP port 53, needs `dns`, otherwise Xray reports an error and does not start. The servers in `dns` then have to be covered by `gateway` or `autoSystemRoutingTable`, or be loopback addresses like `127.0.0.1` for a local resolver, and DNS servers that should be reached directly belong in Xray's own [DNS](../dns.md) settings.
 
 While the filters are in place, Xray's own outgoing connections also get past the block rules of Windows Firewall.
 
