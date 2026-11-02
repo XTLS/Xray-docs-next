@@ -24,6 +24,7 @@ export function useViewerDialog(
     if (window.innerWidth > root.clientWidth)
       root.style.scrollbarGutter = "stable"
     dialog.value.showModal()
+    dialog.value.focus({ preventScroll: true })
   }
   function close() {
     if (!active) return

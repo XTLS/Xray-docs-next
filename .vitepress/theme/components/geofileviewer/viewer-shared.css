@@ -50,6 +50,11 @@
   background: var(--vp-c-bg);
   color: var(--vp-c-text-1);
 }
+@media (max-width: 767px), (hover: none) and (pointer: coarse) {
+  .geo-viewer .geo-field input {
+    font-size: 16px;
+  }
+}
 .geo-viewer .geo-summary {
   margin-top: 10px;
   font-size: 13px;

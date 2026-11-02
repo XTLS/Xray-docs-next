@@ -54,6 +54,7 @@ function closeViewer() {
       ref="dialog"
       class="geo-modal"
       :aria-label="t.title"
+      autofocus
       @cancel.self.prevent="modal.close"
       @pointerdown="modal.pointerDown"
       @pointerup="modal.pointerUp"
@@ -68,7 +69,6 @@ function closeViewer() {
               class="geo-modal-control geo-modal-minimize"
               :aria-label="t.minimize"
               :title="t.minimize"
-              autofocus
               @click="modal.close"
             >
               <svg
@@ -153,6 +153,9 @@ function closeViewer() {
 .geo-modal::backdrop {
   background: rgb(0 0 0 / 60%);
   backdrop-filter: blur(2px);
+}
+.geo-modal:focus {
+  outline: none;
 }
 .geo-modal-shell {
   display: flex;

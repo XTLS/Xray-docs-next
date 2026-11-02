@@ -11,7 +11,11 @@ export function useViewerNavigation(
   async function beforeRouteChange(href: string) {
     if ((await previous?.(href)) === false) return false
     const url = viewerPopupTarget(href, location.href, withBase("/"))
-    if (!url) return
+    if (!url) {
+      // Same-page document links must also reveal the page under the popup.
+      close()
+      return
+    }
     await open(url)
     return false
   }

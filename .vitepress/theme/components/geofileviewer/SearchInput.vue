@@ -108,4 +108,9 @@ function clear() {
 .geo-search-field.is-invalid:focus-within {
   outline-color: var(--vp-c-danger-1);
 }
+@media (max-width: 767px), (hover: none) and (pointer: coarse) {
+  .geo-search {
+    font-size: 16px;
+  }
+}
 </style>

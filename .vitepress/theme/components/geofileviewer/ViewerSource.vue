@@ -94,6 +94,7 @@ watch(
     if (!(panel instanceof HTMLDialogElement)) return
     if (props.active && props.view.sourceOpen && !panel.open) {
       panel.showModal()
+      panel.focus({ preventScroll: true })
       panel.scrollTop = sourceScrollTop
     } else if ((!props.active || !props.view.sourceOpen) && panel.open) {
       panel.close()

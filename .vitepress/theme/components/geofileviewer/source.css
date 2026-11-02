@@ -223,6 +223,9 @@
   overscroll-behavior: contain;
   box-shadow: var(--vp-shadow-5);
 }
+.geo-source-dialog:focus {
+  outline: none;
+}
 .geo-source-dialog::backdrop {
   background: rgb(0 0 0 / 45%);
 }
@@ -239,7 +242,7 @@
     padding: 16px;
   }
   .geo-presets {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px;
   }
   .geo-preset {

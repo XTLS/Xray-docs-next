@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue"
+import { computed, onBeforeUnmount, onMounted, ref } from "vue"
 import { useData, withBase } from "vitepress"
 import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
@@ -63,6 +63,20 @@ const sourceDocs = computed(() =>
       ? "https://github.com/XTLS/Xray-rules-dat/blob/main/README_ru-RU.md"
       : "https://github.com/XTLS/Xray-rules-dat"
 )
+const relatedDocs = computed(() => [
+  {
+    href: withBase(`${localePrefix.value}/config/routing.html`),
+    label: t.value.routingDocs,
+    newTab: !embedded
+  },
+  {
+    href: withBase(`${localePrefix.value}/config/geodata.html`),
+    label: t.value.geodataDocs,
+    newTab: !embedded
+  },
+  { href: sourceDocs.value, label: t.value.dataSourceDocs, newTab: true }
+])
+const docsMenu = ref<HTMLDetailsElement>()
 const progressLabel = computed(
   () =>
     ({
@@ -107,11 +121,18 @@ const invalidLink = linkTarget
   ? linkTarget.invalidLink
   : useViewerPageRoute(viewer, permalink).invalidLink
 defineExpose({ openLink: (search: string) => linkTarget?.apply(search) })
-onMounted(() => emit("ready"))
-function closeDocsOnBlur(event: FocusEvent) {
-  const details = event.currentTarget as HTMLDetailsElement
-  if (!details.contains(event.relatedTarget as Node | null))
-    details.open = false
+onMounted(() => {
+  emit("ready")
+  document.addEventListener("pointerdown", closeDocsOutside)
+})
+onBeforeUnmount(() =>
+  document.removeEventListener("pointerdown", closeDocsOutside)
+)
+function closeDocs() {
+  if (docsMenu.value) docsMenu.value.open = false
+}
+function closeDocsOutside(event: PointerEvent) {
+  if (!docsMenu.value?.contains(event.target as Node)) closeDocs()
 }
 </script>
 <template>
@@ -139,11 +160,9 @@ function closeDocsOnBlur(event: FocusEvent) {
       </div>
       <div class="geo-workspace-actions">
         <details
+          ref="docsMenu"
           class="geo-docs"
-          @focusout="closeDocsOnBlur"
-          @keydown.esc.stop.prevent="
-            ($event.currentTarget as HTMLDetailsElement).open = false
-          "
+          @keydown.esc.stop.prevent="closeDocs"
         >
           <summary :aria-label="t.relatedDocs" :title="t.relatedDocs">
             <svg
@@ -162,22 +181,12 @@ function closeDocsOnBlur(event: FocusEvent) {
           </summary>
           <nav class="geo-links" :aria-label="t.relatedDocs">
             <a
-              :href="withBase(`${localePrefix}/config/routing.html`)"
-              target="_blank"
-              rel="noreferrer noopener"
-              >{{ t.routingDocs }}</a
-            >
-            <a
-              :href="withBase(`${localePrefix}/config/geodata.html`)"
-              target="_blank"
-              rel="noreferrer noopener"
-              >{{ t.geodataDocs }}</a
-            >
-            <a
-              :href="sourceDocs"
-              target="_blank"
-              rel="noreferrer noopener"
-              >{{ t.dataSourceDocs }}</a
+              v-for="link in relatedDocs"
+              :key="link.href"
+              :href="link.href"
+              :target="link.newTab ? '_blank' : undefined"
+              :rel="link.newTab ? 'noreferrer noopener' : undefined"
+              >{{ link.label }}</a
             >
           </nav>
         </details>
@@ -202,7 +211,7 @@ function closeDocsOnBlur(event: FocusEvent) {
       :session="session"
       :view="view"
       :embedded="embedded"
-      :active="props.active !== false"
+      :active="!embedded || props.active !== false"
       :can-load="canLoad"
       :remote-allowed="remoteAllowed"
       :t="t"
@@ -305,13 +314,14 @@ function closeDocsOnBlur(event: FocusEvent) {
       class="geo-links"
       :aria-label="t.relatedDocs"
     >
-      <a :href="withBase(`${localePrefix}/config/routing.html`)">{{
-        t.routingDocs
-      }}</a>
-      <a :href="withBase(`${localePrefix}/config/geodata.html`)">{{
-        t.geodataDocs
-      }}</a>
-      <a :href="sourceDocs">{{ t.dataSourceDocs }}</a>
+      <a
+        v-for="link in relatedDocs"
+        :key="link.href"
+        :href="link.href"
+        :target="link.newTab ? '_blank' : undefined"
+        :rel="link.newTab ? 'noreferrer noopener' : undefined"
+        >{{ link.label }}</a
+      >
     </nav>
   </component>
 </template>
