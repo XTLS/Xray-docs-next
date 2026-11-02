@@ -112,19 +112,19 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 该项配置只在 Windows 系统上有效，并且需要配置 `autoSystemRoutingTable`，否则 Xray 会报错退出；默认为空，即不添加过滤器。Xray 会按列表中的值添加 Windows 筛选平台（WFP）过滤器，使其他程序的流量只能经由 TUN 接口发出：
 
-- `"dns"`：等同于 `"udp/53"`、`"tcp/53"`、`"windnsclient"`、`"tcp/853"`（DNS over TLS）和 `"udp/853"`（DNS over QUIC）。Windows 会向所有网络接口的 DNS 服务器发送查询，并且无论路由如何都经由各自的接口发出，其他程序也会经由更具体的路由访问本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`），否则这些服务器仍会在 TUN 接口之外被查询。
+- `"dns"`：等同于 `"53"`、`"853"`（DNS over TLS 和 DNS over QUIC）和 `"windnsclient"`。Windows 会向所有网络接口的 DNS 服务器发送查询，并且无论路由如何都经由各自的接口发出，其他程序也会经由更具体的路由访问本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`），否则这些服务器仍会在 TUN 接口之外被查询。
 - `"windnsclient"`：Windows 的 DNS Client 服务（Dnscache），本地网络中的名称解析（LLMNR、mDNS）除外。在 Windows 11、Windows Server 2022 及更高版本上，它可以通过 DNS over HTTPS 或 DNS over TLS 向任意端口发送查询；更早的版本只查询 53 端口，因此该项在这些版本上不起作用。
-- `"tcp"`、`"udp"`：该协议的所有端口，或用 `/<端口>` 或 `/<起始>-<结束>`（1-65535）指定的部分端口，例如 `"tcp/853"` 或 `"udp/10-20"`。
+- `"tcp"`、`"udp"`：该协议的所有端口，或用 `/<端口>` 或 `/<起始>-<结束>`（1-65535）指定的部分端口，例如 `"tcp/853"` 或 `"udp/10-20"`。只写端口时同时表示 TCP 和 UDP，例如 `"53"` 或 `"10-20"`。
 - `"icmp"`：ICMP 和 ICMPv6，例如 `ping`。
 - `"misconfigtun"`：`autoSystemRoutingTable` 中没有路由的 IP 版本（IPv4 或 IPv6），其流量会绕过 TUN 接口。
 - `"all"`：双向的所有流量。此时除非把本地网络也路由到 TUN 接口，否则无法访问本地网络；其他程序的入站连接、其他 VPN，以及由主机上的程序提供 NAT 的虚拟机也会受到影响。
 - `"allexceptlan"`：与 `"all"` 相同，但允许与本地网络之间的双向流量，例如访问打印机或投屏到电视：私有、链路本地、多播和广播地址（`10.0.0.0/8`、`172.16.0.0/12`、`192.168.0.0/16`、`169.254.0.0/16`、`224.0.0.0/4`、`255.255.255.255`、`fc00::/7`、`fe80::/10`、`ff00::/8`），不包括全局 IPv6 地址。它包含 `"dns"`，其他值在本地网络中同样生效。同时配置 `"all"` 时以 `"all"` 为准。
 
-在任意值前加上 `"ipv4:"` 或 `"ipv6:"` 可以将其限制为该 IP 版本，例如 `"ipv4:udp/53"` 或 `"ipv6:all"`。注意 `"ipv4:allexceptlan"` 只包含 `"ipv4:dns"`，要同时阻止 IPv6 上的 DNS，还需加上 `"dns"`。
+在值前加上 CIDR 可以将其限制为这些地址，IPv6 的 CIDR 需要加方括号，例如 `"8.8.8.8/32:all"`、`"1.1.1.0/24:53"` 或 `"[::/0]:all"`（仅 IPv6）。该值所代表或包含的值也同样受此限制：例如 `"0.0.0.0/0:allexceptlan"` 不会阻止 IPv6 上的 DNS。
 
 环回、DHCP、DHCPv6 和 IPv6 邻居发现始终允许。过滤器生效期间，Xray 自身的出站连接也不受 Windows 防火墙阻止规则的限制。如果无法添加过滤器，Xray 不会启动；过滤器会在 Xray 退出时自动移除，即使 Xray 崩溃也是如此。
 
-使用 `"all"`、`"allexceptlan"`、`"dns"`、`"windnsclient"`，或任何包含 TCP 或 UDP 53 端口的值（即使只针对一个 IP 版本）将系统的 DNS 限制在 TUN 接口内时需要配置 `dns`，否则 Xray 会报错退出。此时 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，或者是环回地址（例如 `127.0.0.1`），需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
+使用 `"all"`、`"allexceptlan"`、`"dns"`、`"windnsclient"`，或任何包含 TCP 或 UDP 53 端口的值（即使只针对部分地址）将系统的 DNS 限制在 TUN 接口内时需要配置 `dns`，否则 Xray 会报错退出。此时 `dns` 中的服务器必须在 `gateway` 或 `autoSystemRoutingTable` 的范围内，或者是环回地址（例如 `127.0.0.1`），需要直连的 DNS 服务器应配置在 Xray 自身的 [DNS](../dns.md) 设置中。
 
 这些过滤器会在某些情况下造成问题：`"dns"` 会影响经由其他接口发出自身查询的本地 DNS 解析器、其他 VPN 的 DNS、在主机上解析域名的虚拟机 NAT，以及登录强制门户（captive portal）；`"misconfigtun"` 会影响没有路由通往 TUN 接口的 IP 版本（IPv4 或 IPv6）在本地网络中的通信。
 
