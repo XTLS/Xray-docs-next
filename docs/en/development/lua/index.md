@@ -14,8 +14,9 @@ Choose a guide for the functionality you need, start with the minimal example, a
 | ------------------------------------- | ----------------------- | ---------------------------------------------------------------------------------- |
 | [Routing Scripts](./guide/routing.md) | Customize routing rules | Outbound selection, load balancing, and IP-based routing after explicit resolution |
 | [DNS Scripts](./guide/dns.md)         | Customize DNS queries   | Upstream selection, query fallback, and result filtering                           |
+| [Noise Scripts](./guide/noise.md)     | Customize noise packets | Address-based differentiation, random lengths, and sending as multiple packets     |
 
-The current routing and DNS scripts both use pooled instances. When writing scripts, read about the [pooled lifecycle](./guide/lifecycle.md#pooled-lifecycle) to understand top-level initialization and state retention.
+The current routing, DNS, and noise scripts all use pooled instances. When writing scripts, read about the [pooled lifecycle](./guide/lifecycle.md#pooled-lifecycle) to understand top-level initialization and state retention.
 
 ## Reference
 
@@ -25,10 +26,11 @@ A Hook is a Lua function that the core calls at a specific point. The script ent
 
 The currently supported entry points and Hooks are listed below. See each Hook's reference page for parameters, return values, and failure behavior:
 
-| Script entry point | Hook                                       |
-| ------------------ | ------------------------------------------ |
-| `routing.script`   | [HandleRoute](./reference/hook-routing.md) |
-| `dns.script`       | [HandleDNSQuery](./reference/hook-dns.md)  |
+| Script entry point                                                                           | Hook                                       |
+| -------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| `routing.script`                                                                             | [HandleRoute](./reference/hook-routing.md) |
+| `dns.script`                                                                                 | [HandleDNSQuery](./reference/hook-dns.md)  |
+| `script` in a finalmask [noise camouflage layer](../../config/transports/finalmask.md#noise) | [HandleNoise](./reference/hook-noise.md)   |
 
 ### Data Types
 
@@ -38,9 +40,10 @@ In addition to Lua's built-in types, Xray Lua uses types such as `net.IP`, Go sl
 
 Browse the module APIs by functionality:
 
-| Module                                        | Purpose                              |
-| --------------------------------------------- | ------------------------------------ |
-| [xray.router](./reference/module-router.md)   | Policy routing                       |
-| [xray.dns](./reference/module-dns.md)         | Domain resolution                    |
-| [xray.geodata](./reference/module-geodata.md) | Domain and IP matching and filtering |
-| [xray.log](./reference/module-log.md)         | Log output                           |
+| Module                                              | Purpose                                |
+| --------------------------------------------------- | -------------------------------------- |
+| [xray.router](./reference/module-router.md)         | Policy routing                         |
+| [xray.dns](./reference/module-dns.md)               | Domain resolution                      |
+| [xray.geodata](./reference/module-geodata.md)       | Domain and IP matching and filtering   |
+| [xray.finalmask.noise](./reference/module-noise.md) | Generating the random data noise needs |
+| [xray.log](./reference/module-log.md)               | Log output                             |
