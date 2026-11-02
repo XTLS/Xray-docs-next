@@ -120,7 +120,7 @@ This option only takes effect on Windows, and needs `autoSystemRoutingTable`, ot
 - `"all"`: everything, in both directions. Access to the local network then breaks unless it is routed into the TUN interface as well, and so do incoming connections to other programs, other VPNs, and virtual machines whose NAT runs as a program on the host.
 - `"allexceptlan"`: like `"all"`, but traffic to and from the local network stays allowed, e.g. for printers or casting to a TV: private, link-local, multicast and broadcast addresses (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `169.254.0.0/16`, `224.0.0.0/4`, `255.255.255.255`, `fc00::/7`, `fe80::/10`, `ff00::/8`), not global IPv6 ones. It includes `"dns"`, and the other values apply there as well. `"all"` overrides it.
 
-`"ipv4:"` or `"ipv6:"` in front of any value limits it to that IP version, e.g. `"ipv4:udp/53"` or `"ipv6:all"`.
+`"ipv4:"` or `"ipv6:"` in front of any value limits it to that IP version, e.g. `"ipv4:udp/53"` or `"ipv6:all"`. `"ipv4:allexceptlan"`, for instance, includes `"ipv4:dns"` only; add `"dns"` to block DNS over IPv6 as well.
 
 Loopback, DHCP, DHCPv6 and IPv6 neighbor discovery always stay allowed. While the filters are in place, Xray's own outgoing connections also get past the block rules of Windows Firewall. If the filters cannot be added, Xray does not start; they are removed when Xray exits, even if it crashes.
 
