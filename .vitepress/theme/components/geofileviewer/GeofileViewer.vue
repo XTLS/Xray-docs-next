@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue"
 import { useData, withBase } from "vitepress"
+import { VPLink } from "vitepress/theme"
 import { useViewer } from "./useViewer.mts"
 import { getMessages } from "./messages.mts"
 import { presets } from "./sources.mts"
@@ -65,8 +66,17 @@ const sourceDocs = computed(() =>
 )
 const relatedDocs = computed(() => [
   {
-    href: withBase(`${localePrefix.value}/config/routing.html`),
-    label: t.value.routingDocs,
+    href: withBase(
+      `${localePrefix.value}/document/level-1/routing-lv1-part1.html#${t.value.domainRoutingAnchor}`
+    ),
+    label: t.value.domainRoutingDocs,
+    newTab: !embedded
+  },
+  {
+    href: withBase(
+      `${localePrefix.value}/document/level-1/routing-with-dns.html`
+    ),
+    label: t.value.dnsRoutingDocs,
     newTab: !embedded
   },
   {
@@ -74,7 +84,11 @@ const relatedDocs = computed(() => [
     label: t.value.geodataDocs,
     newTab: !embedded
   },
-  { href: sourceDocs.value, label: t.value.dataSourceDocs, newTab: true }
+  {
+    href: sourceDocs.value,
+    label: t.value.dataSourceDocs,
+    newTab: true
+  }
 ])
 const docsMenu = ref<HTMLDetailsElement>()
 const progressLabel = computed(
@@ -113,14 +127,18 @@ const sourceSummary = computed(() => {
     ? `${summary} · ${Math.round(session.progress * 100)}%`
     : summary
 })
-const { permalink, copyStatus, copy } = useViewerSharing(viewer, () =>
-  props.host?.mode === "embedded" ? props.host.url : location.href
+const { permalink, pageUrl, copyStatus, copy } = useViewerSharing(
+  viewer,
+  () => (props.host?.mode === "embedded" ? props.host.url : location.href)
 )
 const linkTarget = embedded ? useViewerTarget(viewer) : undefined
 const invalidLink = linkTarget
   ? linkTarget.invalidLink
   : useViewerPageRoute(viewer, permalink).invalidLink
-defineExpose({ openLink: (search: string) => linkTarget?.apply(search) })
+defineExpose({
+  openLink: (search: string) => linkTarget?.apply(search),
+  pageUrl
+})
 onMounted(() => {
   emit("ready")
   document.addEventListener("pointerdown", closeDocsOutside)
@@ -180,13 +198,13 @@ function closeDocsOutside(event: PointerEvent) {
             ><span class="geo-docs-label">{{ t.relatedDocs }}</span>
           </summary>
           <nav class="geo-links" :aria-label="t.relatedDocs">
-            <a
+            <VPLink
               v-for="link in relatedDocs"
               :key="link.href"
               :href="link.href"
               :target="link.newTab ? '_blank' : undefined"
               :rel="link.newTab ? 'noreferrer noopener' : undefined"
-              >{{ link.label }}</a
+              >{{ link.label }}</VPLink
             >
           </nav>
         </details>
@@ -314,13 +332,13 @@ function closeDocsOutside(event: PointerEvent) {
       class="geo-links"
       :aria-label="t.relatedDocs"
     >
-      <a
+      <VPLink
         v-for="link in relatedDocs"
         :key="link.href"
         :href="link.href"
         :target="link.newTab ? '_blank' : undefined"
         :rel="link.newTab ? 'noreferrer noopener' : undefined"
-        >{{ link.label }}</a
+        >{{ link.label }}</VPLink
       >
     </nav>
   </component>

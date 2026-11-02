@@ -9,7 +9,10 @@ const { lang } = useData()
 const t = computed(() => getMessages(lang.value))
 const target = ref<string>()
 const revision = ref(0)
-const viewer = ref<{ openLink(search: string): void }>()
+const viewer = ref<{
+  openLink(search: string): void
+  pageUrl: string
+}>()
 const visible = ref(false)
 const dialog = ref<HTMLDialogElement>()
 const modal = useViewerDialog(dialog, () => {
@@ -44,6 +47,12 @@ function closeViewer() {
   modal.close()
   target.value = undefined
   revision.value++
+}
+function maximizeViewer() {
+  const url = viewer.value?.pageUrl
+  if (!url) return
+  window.open(url, "_blank", "noopener,noreferrer")
+  closeViewer()
 }
 </script>
 
@@ -82,6 +91,25 @@ function closeViewer() {
                 aria-hidden="true"
               >
                 <path d="M6 12h12" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="geo-modal-control geo-modal-maximize"
+              :aria-label="t.maximize"
+              :title="t.maximize"
+              @click="maximizeViewer"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <rect x="5" y="5" width="14" height="14" rx="1" />
               </svg>
             </button>
             <button

@@ -11,20 +11,31 @@ export function useViewerSharing(
   onMounted(() => {
     mounted.value = true
   })
-  const permalink = computed(() => {
+  const sourceLink = computed(() => {
     const source = viewer.session.loaded
     const category = viewer.results.value.selected
-    if (!mounted.value || !source || !category) return ""
+    if (!mounted.value || !source) return ""
     if (source.preset)
-      return categoryLink(baseUrl(), source.preset, category.code)
+      return categoryLink(baseUrl(), source.preset, category?.code)
     return source.url
       ? remoteCategoryLink(
           baseUrl(),
           source.url,
           source.kind,
-          category.code
+          category?.code
         )
       : ""
+  })
+  const permalink = computed(() =>
+    viewer.results.value.selected ? sourceLink.value : ""
+  )
+  const pageUrl = computed(() => {
+    if (!mounted.value) return ""
+    if (sourceLink.value) return sourceLink.value
+    const url = new URL(baseUrl())
+    url.search = ""
+    url.hash = ""
+    return url.href
   })
   watch(
     [
@@ -45,5 +56,5 @@ export function useViewerSharing(
       copyStatus.value = "copyFailed"
     }
   }
-  return { permalink, copyStatus, copy }
+  return { permalink, pageUrl, copyStatus, copy }
 }
