@@ -102,18 +102,22 @@ This option only takes effect on Windows. The default is empty, i.e. no filters.
 
 It needs `autoSystemRoutingTable`, otherwise Xray reports an error and does not start. Xray adds Windows Filtering Platform (WFP) filters that keep the traffic of other programs from leaking outside the TUN interface, each chosen by a value in the list:
 
-- `"tcp/<port>"`, `"udp/<port>"`: connections to that TCP or UDP port can only go through the TUN interface or come from Xray itself, e.g. `"tcp/853"`.
+- `"tcp"`, `"udp"`: connections of that protocol can only go through the TUN interface or come from Xray itself, to all ports, or with `/<port>` or `/<low>-<high>` to some, e.g. `"tcp/853"` or `"udp/10-20"`. `"tcp/0"` stands for all ports, like `"tcp"`.
+- `"icmp"`: ICMP and ICMPv6, e.g. `ping`, can only go through the TUN interface or come from Xray itself.
 - `"windnsclient"`: the Windows DNS Client service (Dnscache) cannot connect outside the TUN interface at all, except for name resolution on the local network (LLMNR, mDNS). On Windows 11, Windows Server 2022 and later, it can send name queries over DNS over HTTPS or TLS, to any port. Earlier versions only query port 53, so there this does nothing.
 - `"dns"`: stands for `"udp/53"`, `"tcp/53"`, `"windnsclient"`, `"tcp/853"` (DNS over TLS) and `"udp/853"` (DNS over QUIC). Windows sends name queries to the DNS servers of all interfaces, each through its own interface whatever the routes say, and other programs reach a DNS server on the local network (e.g. `192.168.1.1` handed out by DHCP) through its more specific LAN route, so without this, such servers would still be queried outside the TUN.
-- `"misconfigtun"`: an IP version without routes in `autoSystemRoutingTable` (IPv4 or IPv6) is blocked in both directions, except for Xray itself, loopback, and what Windows needs on the local link (DHCP, IPv6 neighbor discovery). An address of that version in `gateway` is not needed for the TUN interface to carry it: without one, Windows assigns it a link-local address itself (IPv6 at once, IPv4 from `169.254.0.0/16` after a few seconds).
+- `"misconfigtun"`: an IP version without routes in `autoSystemRoutingTable` (IPv4 or IPv6) is blocked outside the TUN interface in both directions, except for Xray itself. An address of that version in `gateway` is not needed for the TUN interface to carry it: without one, Windows assigns it a link-local address itself (IPv6 at once, IPv4 from `169.254.0.0/16` after a few seconds).
+- `"all"`: everything outside the TUN interface, IPv4 and IPv6, in both directions, so that nothing but Xray leaves except through the TUN interface. Windows' own route to the local network is more specific than the TUN interface's, so access to the local network breaks unless it is routed into the TUN interface as well, and so do incoming connections to other programs, name resolution on the local network, other VPNs, and virtual machines whose NAT runs as a program on the host.
 
-Keeping the system's DNS inside the TUN interface, with `"dns"`, `"udp/53"`, `"tcp/53"` or `"windnsclient"`, needs `dns`, otherwise Xray reports an error and does not start. The servers in `dns` then have to be covered by `gateway` or `autoSystemRoutingTable`, and DNS servers that should be reached directly belong in Xray's own [DNS](../dns.md) settings.
+Whatever is blocked, loopback, which cannot leave the system, and what Windows itself needs on the local link stay allowed: DHCP, DHCPv6, and IPv6 neighbor and multicast listener discovery.
+
+Keeping the system's DNS inside the TUN interface, with `"all"`, `"dns"`, `"windnsclient"`, or anything covering TCP or UDP port 53, needs `dns`, otherwise Xray reports an error and does not start. The servers in `dns` then have to be covered by `gateway` or `autoSystemRoutingTable`, and DNS servers that should be reached directly belong in Xray's own [DNS](../dns.md) settings.
 
 While the filters are in place, Xray's own outgoing connections also get past the block rules of Windows Firewall.
 
 The filters are removed when Xray exits, even if it crashes. If they cannot be added, Xray does not start.
 
-It is empty by default, as the filters break some setups: with `"dns"`, a local DNS resolver used by other programs (e.g. on `127.0.0.1:53`), the DNS of another VPN, virtual machines whose NAT resolves names on the host, or signing in to a captive portal; with `"misconfigtun"`, IPv4 or IPv6 on the local network while no route of that version leads to the TUN interface. Without the filters, DNS may leak as described above. To keep an IP version out of the TUN interface on purpose while still blocking DNS leaks, use only `["dns"]`.
+It is empty by default, as the filters break some setups: with `"dns"`, a local DNS resolver that sends its own queries to port 53 or 853 through another interface, the DNS of another VPN, virtual machines whose NAT resolves names on the host, or signing in to a captive portal; with `"misconfigtun"`, IPv4 or IPv6 on the local network while no route of that version leads to the TUN interface; with `"all"`, what is listed above. Without the filters, DNS may leak as described above. To keep an IP version out of the TUN interface on purpose while still blocking DNS leaks, use only `["dns"]`.
 
 ## Usage Tips
 
