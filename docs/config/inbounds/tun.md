@@ -102,7 +102,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 该项需要配置 `autoSystemRoutingTable`，否则 Xray 会报错退出。Xray 会按列表中的值添加 Windows 筛选平台（WFP）过滤器，防止其他程序的流量从 TUN 接口之外泄漏：
 
-- `"tcp"`、`"udp"`：该协议的连接只能经由 TUN 接口或由 Xray 自身发出，适用于所有端口，或用 `/<端口>` 或 `/<起始>-<结束>` 指定部分端口，例如 `"tcp/853"` 或 `"udp/10-20"`。`"tcp/0"` 表示所有端口，与 `"tcp"` 相同。
+- `"tcp"`、`"udp"`：该协议的连接只能经由 TUN 接口或由 Xray 自身发出，适用于所有端口，或用 `/<端口>` 或 `/<起始>-<结束>` 指定部分端口，例如 `"tcp/853"` 或 `"udp/10-20"`。端口范围为 1-65535，且范围的起始端口不能大于结束端口。
 - `"icmp"`：ICMP 和 ICMPv6（例如 `ping`）只能经由 TUN 接口或由 Xray 自身发出。
 - `"windnsclient"`：Windows 的 DNS Client 服务（Dnscache）完全不能在 TUN 接口之外建立连接，本地网络中的名称解析（LLMNR、mDNS）除外。在 Windows 11、Windows Server 2022 及更高版本上，它可以通过 DNS over HTTPS 或 DNS over TLS 向任意端口发送查询；更早的版本只查询 53 端口，因此该项在这些版本上不起作用。
 - `"dns"`：等同于 `"udp/53"`、`"tcp/53"`、`"windnsclient"`、`"tcp/853"`（DNS over TLS）和 `"udp/853"`（DNS over QUIC）。Windows 会向所有网络接口的 DNS 服务器发送查询，并且无论路由如何都经由各自的接口发出，其他程序也会经由更具体的局域网路由访问本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`），否则这些服务器仍会在 TUN 之外被查询。
