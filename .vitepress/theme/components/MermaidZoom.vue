@@ -193,6 +193,7 @@ onBeforeUnmount(() => {
     <div
       v-show="open"
       class="mz-overlay"
+      :class="{ 'is-open': open }"
       aria-modal="true"
       role="dialog"
       @pointerdown="onBackdropPointerDown"
@@ -406,6 +407,11 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+:global(html:has(.mz-overlay.is-open)) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
 .mz-overlay {
   position: fixed;
   inset: 0;
