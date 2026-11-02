@@ -104,6 +104,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 - `"tcp"`、`"udp"`：该协议的连接只能经由 TUN 接口或由 Xray 自身发出，适用于所有端口，或用 `/<端口>` 或 `/<起始>-<结束>` 指定部分端口，例如 `"tcp/853"` 或 `"udp/10-20"`。端口范围为 1-65535，且范围的起始端口不能大于结束端口。
 - `"icmp"`：ICMP 和 ICMPv6（例如 `ping`）只能经由 TUN 接口或由 Xray 自身发出。
+- `"tcpv4"`、`"tcpv6"`、`"udpv4"`、`"udpv6"`、`"icmpv4"`、`"icmpv6"`：同上，但只针对 IPv4 或 IPv6，端口写法相同，例如 `"tcpv4/853"` 或 `"udpv6/10-20"`。`"icmpv4"` 即 ICMP，`"icmpv6"` 即 ICMPv6。
 - `"windnsclient"`：Windows 的 DNS Client 服务（Dnscache）完全不能在 TUN 接口之外建立连接，本地网络中的名称解析（LLMNR、mDNS）除外。在 Windows 11、Windows Server 2022 及更高版本上，它可以通过 DNS over HTTPS 或 DNS over TLS 向任意端口发送查询；更早的版本只查询 53 端口，因此该项在这些版本上不起作用。
 - `"dns"`：等同于 `"udp/53"`、`"tcp/53"`、`"windnsclient"`、`"tcp/853"`（DNS over TLS）和 `"udp/853"`（DNS over QUIC）。Windows 会向所有网络接口的 DNS 服务器发送查询，并且无论路由如何都经由各自的接口发出，其他程序也会经由更具体的局域网路由访问本地网络中的 DNS 服务器（例如 DHCP 分配的 `192.168.1.1`），否则这些服务器仍会在 TUN 之外被查询。
 - `"misconfigtun"`：如果 `autoSystemRoutingTable` 中没有某个 IP 版本（IPv4 或 IPv6）的路由，则在 TUN 接口之外双向阻止该版本，但 Xray 自身除外。TUN 接口承载某个 IP 版本不需要在 `gateway` 中配置该版本的地址：未配置时，Windows 会自动为其分配链路本地地址（IPv6 立即分配，IPv4 在几秒后从 `169.254.0.0/16` 中分配）。
