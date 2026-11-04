@@ -14,7 +14,8 @@ test("Xray dataset targets start loading automatically", () =>
 test("whitelisted URL targets wait for loading before selecting the shared category", async () => {
   for (const url of [
     "https://raw.githubusercontent.com/other/repo/main/geosite.dat",
-    "https://cdn.jsdelivr.net/gh/other/repo@main/geosite.dat"
+    "https://cdn.jsdelivr.net/gh/other/repo@main/geosite.dat",
+    "https://fastly.jsdelivr.net/gh/other/repo@main/geosite.dat"
   ])
     await withViewer(async (viewer) => {
       viewer.actions.openTarget({

@@ -26,6 +26,8 @@ type ReadOptions = {
 }
 const rawBase =
   "https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/"
+const fastlyBase =
+  "https://fastly.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/"
 
 export function presetSource(
   index: number
@@ -37,7 +39,7 @@ export function presetSource(
     name: preset.file,
     kind: preset.kind,
     preset: preset.file,
-    url: `https://cdn.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/${preset.path}.gz`
+    url: `${rawBase}${preset.path}.gz`
   }
 }
 
@@ -61,7 +63,10 @@ export function isAllowedShareUrl(value: string): boolean {
     const url = new URL(validateUrl(value))
     return (
       url.origin === "https://raw.githubusercontent.com" ||
-      (url.origin === "https://cdn.jsdelivr.net" &&
+      ([
+        "https://cdn.jsdelivr.net",
+        "https://fastly.jsdelivr.net"
+      ].includes(url.origin) &&
         url.pathname.startsWith("/gh/"))
     )
   } catch {
@@ -79,18 +84,19 @@ export async function readSource(
     return readSingleSource(source, signal, report, options)
   const preset = presets.find((preset) => preset.file === source.preset)
   if (!preset) throw new ViewerError("invalidUrl")
-  const decompress =
-    options.decompress === undefined
-      ? globalThis.DecompressionStream
-      : options.decompress
-  const raw = { ...source, url: rawBase + preset.path }
-  if (!decompress) return readSingleSource(raw, signal, report, options)
+  const { decompress = globalThis.DecompressionStream } = options
+  const file = preset.path + (decompress ? ".gz" : "")
   try {
-    return await readSingleSource(source, signal, report, options)
+    return await readSingleSource(
+      { ...source, url: rawBase + file },
+      signal,
+      report,
+      options
+    )
   } catch {
     if (signal.aborted) throw signal.reason
     return readSingleSource(
-      { ...raw, url: raw.url + ".gz" },
+      { ...source, url: fastlyBase + file },
       signal,
       report,
       options
@@ -104,10 +110,7 @@ async function readSingleSource(
   report: (progress: LoadProgress) => void,
   options: ReadOptions
 ): Promise<Uint8Array> {
-  const decompress =
-    options.decompress === undefined
-      ? globalThis.DecompressionStream
-      : options.decompress
+  const { decompress = globalThis.DecompressionStream } = options
   let bytes: Uint8Array<ArrayBuffer>
   signal.throwIfAborted()
   if (source.mode === "local") {

@@ -130,15 +130,16 @@ test("URL links preserve query strings, explicit type and category", () => {
     ).kind,
     "geoip"
   )
-  assert.equal(
-    parsePermalink(
-      "?url=" +
-        encodeURIComponent(
-          "https://cdn.jsdelivr.net/gh/owner/repo@main/regions.dat"
-        )
-    ).kind,
-    "geosite"
-  )
+  for (const host of ["cdn.jsdelivr.net", "fastly.jsdelivr.net"])
+    assert.equal(
+      parsePermalink(
+        "?url=" +
+          encodeURIComponent(
+            `https://${host}/gh/owner/repo@main/regions.dat`
+          )
+      ).kind,
+      "geosite"
+    )
   assert.equal(parsePermalink("?file=geosite.dat&" + params).url, source)
 })
 
@@ -157,7 +158,10 @@ test("malformed URL sources and unsupported types do not produce loadable links"
     "https://user:pass@raw.githubusercontent.com/owner/repo/main/data.dat",
     "https://cdn.jsdelivr.net/npm/data.dat",
     "https://cdn.jsdelivr.net/gh/../npm/data.dat",
-    "https://cdn.jsdelivr.net.evil.example/gh/data.dat"
+    "https://cdn.jsdelivr.net.evil.example/gh/data.dat",
+    "https://fastly.jsdelivr.net/npm/data.dat",
+    "https://fastly.jsdelivr.net/gh/../npm/data.dat",
+    "https://fastly.jsdelivr.net.evil.example/gh/data.dat"
   ]) {
     const parsed = parsePermalink(
       "?file=geosite.dat&url=" + encodeURIComponent(source) + "&tag=secret"
@@ -186,22 +190,23 @@ test("malformed URL sources and unsupported types do not produce loadable links"
 })
 
 test("URL category links retain locale paths and round trip nested URL parameters", () => {
-  const source =
-    "https://cdn.jsdelivr.net/gh/owner/repo@main/a.dat?version=2&token=a%2Bb#data"
-  const link = remoteCategoryLink(
-    "https://example.org/base/ru/tools/geofileviewer.html?file=geosite.dat#old",
-    source,
-    "geoip",
-    "US"
-  )
-  const url = new URL(link)
-  assert.equal(url.pathname, "/base/ru/tools/geofileviewer.html")
-  assert.equal(url.hash, "")
-  assert.equal(url.searchParams.has("file"), false)
-  assert.equal(url.searchParams.get("url"), source)
-  assert.equal(url.searchParams.get("type"), "geoip")
-  assert.equal(url.searchParams.get("tag"), "us")
-  assert.equal(parsePermalink(url.search).url, source)
+  for (const host of ["cdn.jsdelivr.net", "fastly.jsdelivr.net"]) {
+    const source = `https://${host}/gh/owner/repo@main/a.dat?version=2&token=a%2Bb#data`
+    const link = remoteCategoryLink(
+      "https://example.org/base/ru/tools/geofileviewer.html?file=geosite.dat#old",
+      source,
+      "geoip",
+      "US"
+    )
+    const url = new URL(link)
+    assert.equal(url.pathname, "/base/ru/tools/geofileviewer.html")
+    assert.equal(url.hash, "")
+    assert.equal(url.searchParams.has("file"), false)
+    assert.equal(url.searchParams.get("url"), source)
+    assert.equal(url.searchParams.get("type"), "geoip")
+    assert.equal(url.searchParams.get("tag"), "us")
+    assert.equal(parsePermalink(url.search).url, source)
+  }
 })
 test("category links retain locale/base paths and encode literal category names", () => {
   const link = categoryLink(

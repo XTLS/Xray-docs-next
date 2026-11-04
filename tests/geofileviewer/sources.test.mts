@@ -21,7 +21,7 @@ const remote: InputSource = {
   name: "test",
   kind: "geosite"
 }
-test("four Xray datasets use the correct jsDelivr release paths and types", () => {
+test("four Xray datasets use the correct GitHub raw release paths and types", () => {
   assert.deepEqual(
     presets.map((p) => p.file),
     [
@@ -38,62 +38,68 @@ test("four Xray datasets use the correct jsDelivr release paths and types", () =
     if (preset.mode !== "remote") throw Error()
     assert.equal(
       preset.url,
-      `https://cdn.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/${presets[index].path}.gz`
+      `https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/${presets[index].path}.gz`
     )
   }
 })
 
-test("Xray gzip loads from jsDelivr and falls back to raw for HTTP, network, stream and gzip failures", async () => {
-  for (let index = 0; index < presets.length; index++) {
-    for (const failure of ["none", "http", "network", "stream", "gzip"]) {
-      const requests: string[] = []
-      const progress: LoadProgress[] = []
-      const result = await readSource(
-        presetSource(index),
-        signal(),
-        (p) => progress.push(p),
-        {
-          fetch: async (url, init) => {
-            requests.push(String(url))
-            assert.equal(init?.credentials, "omit")
-            assert.equal(init?.referrerPolicy, "no-referrer")
-            if (requests.length === 1) {
-              if (failure === "http")
-                return new Response("unavailable", { status: 503 })
-              if (failure === "network")
-                throw new TypeError("Failed to fetch")
-              if (failure === "stream")
-                return new Response(
-                  new ReadableStream({
-                    start(controller) {
-                      controller.enqueue(Uint8Array.from([31, 139]))
-                    },
-                    pull(controller) {
-                      controller.error(new TypeError("Connection lost"))
-                    }
-                  })
-                )
-              if (failure === "gzip")
-                return new Response(Uint8Array.from([31, 139, 1]))
+test("Xray data chooses gzip by browser capability and falls back from raw to Fastly without changing format", async () => {
+  for (const compressed of [true, false]) {
+    for (let index = 0; index < presets.length; index++) {
+      const failures = ["none", "http", "network", "stream"]
+      if (compressed) failures.push("gzip")
+      for (const failure of failures) {
+        const requests: string[] = []
+        const progress: LoadProgress[] = []
+        const result = await readSource(
+          presetSource(index),
+          signal(),
+          (p) => progress.push(p),
+          {
+            decompress: compressed ? DecompressionStream : null,
+            fetch: async (url, init) => {
+              requests.push(String(url))
+              assert.equal(init?.credentials, "omit")
+              assert.equal(init?.referrerPolicy, "no-referrer")
+              if (requests.length === 1) {
+                if (failure === "http")
+                  return new Response("unavailable", { status: 503 })
+                if (failure === "network")
+                  throw new TypeError("Failed to fetch")
+                if (failure === "stream")
+                  return new Response(
+                    new ReadableStream({
+                      start(controller) {
+                        controller.enqueue(Uint8Array.from([31, 139]))
+                      },
+                      pull(controller) {
+                        controller.error(new TypeError("Connection lost"))
+                      }
+                    })
+                  )
+                if (failure === "gzip")
+                  return new Response(Uint8Array.from([31, 139, 1]))
+              }
+              return new Response(compressed ? gzipSync(bytes) : bytes)
             }
-            return new Response(gzipSync(bytes))
           }
-        }
-      )
-      assert.deepEqual(result, bytes)
-      assert.deepEqual(requests, [
-        `https://cdn.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/${presets[index].path}.gz`,
-        ...(failure === "none"
-          ? []
-          : [
-              `https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/${presets[index].path}.gz`
-            ])
-      ])
-      assert.equal(
-        progress.filter((p) => p.phase === "download" && p.bytes === 0)
-          .length,
-        requests.length
-      )
+        )
+        assert.deepEqual(result, bytes)
+        const file = presets[index].path + (compressed ? ".gz" : "")
+        assert.deepEqual(requests, [
+          `https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/${file}`,
+          ...(failure === "none"
+            ? []
+            : [
+                `https://fastly.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/${file}`
+              ])
+        ])
+        assert.equal(
+          progress.filter((p) => p.phase === "download" && p.bytes === 0)
+            .length,
+          requests.length
+        )
+      }
     }
   }
 })
@@ -104,6 +110,14 @@ test("Xray data fallback is attempted once, reports its final failure and never 
     {
       ...remote,
       url: "https://cdn.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/geosite/geosite.dat.gz"
+    },
+    {
+      ...remote,
+      url: "https://fastly.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/geosite/geosite.dat.gz"
+    },
+    {
+      ...remote,
+      url: "https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/geosite/geosite.dat.gz"
     }
   ]) {
     let requests = 0
@@ -121,23 +135,26 @@ test("Xray data fallback is attempted once, reports its final failure and never 
 })
 
 test("cancellation during either Xray data download never starts another attempt", async () => {
-  for (const cancelAt of [1, 2]) {
-    const abort = new AbortController()
-    let requests = 0
-    await assert.rejects(
-      readSource(presetSource(0), abort.signal, () => {}, {
-        fetch: async () => {
-          if (++requests === cancelAt) {
-            abort.abort()
-            throw abort.signal.reason
+  for (const decompress of [DecompressionStream, null]) {
+    for (const cancelAt of [1, 2]) {
+      const abort = new AbortController()
+      let requests = 0
+      await assert.rejects(
+        readSource(presetSource(0), abort.signal, () => {}, {
+          decompress,
+          fetch: async () => {
+            if (++requests === cancelAt) {
+              abort.abort()
+              throw abort.signal.reason
+            }
+            return new Response("unavailable", { status: 503 })
           }
-          return new Response("unavailable", { status: 503 })
-        }
-      }),
-      (error) =>
-        error instanceof DOMException && error.name === "AbortError"
-    )
-    assert.equal(requests, cancelAt)
+        }),
+        (error) =>
+          error instanceof DOMException && error.name === "AbortError"
+      )
+      assert.equal(requests, cancelAt)
+    }
   }
 })
 test("only credential-free HTTPS GitHub raw and jsDelivr GitHub URLs are allowed in share links", () => {
@@ -149,7 +166,10 @@ test("only credential-free HTTPS GitHub raw and jsDelivr GitHub URLs are allowed
     "https://RAW.GITHUBUSERCONTENT.COM:443/other/repo/main/data.dat",
     "https://cdn.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/geosite/geosite.dat.gz",
     "https://cdn.jsdelivr.net/gh/other/repo@main/data.dat?version=2",
-    "https://CDN.JSDELIVR.NET:443/gh/other/repo/data.dat"
+    "https://CDN.JSDELIVR.NET:443/gh/other/repo/data.dat",
+    "https://fastly.jsdelivr.net/gh/XTLS/Xray-rules-dat@release/geosite/geosite.dat.gz",
+    "https://fastly.jsdelivr.net/gh/other/repo@main/data.dat?version=2",
+    "https://FASTLY.JSDELIVR.NET:443/gh/other/repo/data.dat"
   ])
     assert.equal(isAllowedShareUrl(url), true, url)
   for (const url of [
@@ -176,7 +196,11 @@ test("only credential-free HTTPS GitHub raw and jsDelivr GitHub URLs are allowed
     "http://localhost/test.dat",
     "javascript:alert(1)",
     "not-a-url"
-  ])
+  ].flatMap((url) =>
+    url.includes("cdn.jsdelivr.net")
+      ? [url, url.replaceAll("cdn.jsdelivr.net", "fastly.jsdelivr.net")]
+      : [url]
+  ))
     assert.equal(isAllowedShareUrl(url), false, url)
 })
 
@@ -211,30 +235,29 @@ test("remote progress supports known and unknown content length", async () => {
     assert.equal(progress.at(-1)?.bytes, bytes.length)
   }
 })
-test("unsupported gzip falls back only for presets", async () => {
-  for (let index = 0; index < presets.length; index++) {
-    const requests: string[] = []
-    assert.deepEqual(
-      await readSource(presetSource(index), signal(), () => {}, {
+test("custom URLs and local gzip files require browser decompression without fallback", async () => {
+  for (const source of [
+    remote,
+    {
+      mode: "local",
+      file: new Blob([gzipSync(bytes)]),
+      kind: "geosite",
+      name: "test.gz"
+    } as const
+  ]) {
+    let requests = 0
+    await assert.rejects(
+      readSource(source, signal(), () => {}, {
         decompress: null,
-        fetch: async (url) => {
-          requests.push(String(url))
-          return new Response(bytes)
+        fetch: async () => {
+          requests++
+          return new Response(gzipSync(bytes))
         }
       }),
-      bytes
+      /gzipUnsupported/
     )
-    assert.deepEqual(requests, [
-      `https://raw.githubusercontent.com/XTLS/Xray-rules-dat/release/${presets[index].path}`
-    ])
+    assert.equal(requests, source.mode === "remote" ? 1 : 0)
   }
-  await assert.rejects(
-    readSource(remote, signal(), () => {}, {
-      decompress: null,
-      fetch: async () => new Response(gzipSync(bytes))
-    }),
-    /gzipUnsupported/
-  )
 })
 test("URL validation, HTTP errors, CORS/network failures and corrupt gzip", async () => {
   for (const url of [
