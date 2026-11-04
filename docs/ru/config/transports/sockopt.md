@@ -217,7 +217,7 @@ Xray проверяет, присутствуют ли в запросе заг�
 
 > `tcpMptcp`: true | false
 
-Значение по умолчанию — `false`. Если установить `true`, включается [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP). Параметр относится только к клиентской стороне, поскольку начиная с Go 1.24 прослушивание уже включает MPTCP по умолчанию. Требуется Linux kernel 5.6 или новее.
+Значение по умолчанию — `false`. Если установить `true`, включается [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP). В настоящее время поддерживается только в Linux, требуется Linux kernel 5.6 или новее.
 
 > `addressPortStrategy`: "none" | "SrvPortOnly" | "SrvAddressOnly" | "SrvPortAndAddress" | "TxtPortOnly" | "TxtAddressOnly" | "TxtPortAndAddress"
 

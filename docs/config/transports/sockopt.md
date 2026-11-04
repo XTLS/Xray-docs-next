@@ -221,8 +221,7 @@ TCP 拥塞控制算法。仅支持 Linux。
 
 > `tcpMptcp`: true | false
 
-默认值 `false`，填写 `true` 时，启用 [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP)，仅客户端参数，因为 golang 在 1.24+ 版本已默认在监听时启用 MPTCP.
-当前仅支持Linux，需要Linux Kernel 5.6及以上。
+默认值 `false`，填写 `true` 时，启用 [Multipath TCP](https://en.wikipedia.org/wiki/Multipath_TCP)。当前仅支持Linux，需要Linux Kernel 5.6及以上。
 
 > `addressPortStrategy`: "none" | "SrvPortOnly" | "SrvAddressOnly" | "SrvPortAndAddress" | "TxtPortOnly" | "TxtAddressOnly" | "TxtPortAndAddress"
 
