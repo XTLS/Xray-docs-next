@@ -147,7 +147,7 @@ First, various configurations can refer to the [official VLESS configuration exa
     {
       // 1_Log Settings
       "log": {
-        "loglevel": "warning", // Content from least to most: "none", "error", "warning", "info", "debug"
+        "logLevel": "warning", // Content from least to most: "none", "error", "warning", "info", "debug"
         "access": "/home/vpsadmin/xray_log/access.log", // Access record
         "error": "/home/vpsadmin/xray_log/error.log" // Error record
       },

@@ -115,7 +115,7 @@ Its disadvantage is probably that [hand-writing configuration files] is a bit tr
      "log": {
        // "access": "/home/local/xray_log/access.log",    // Access record
        // "error": "/home/local/xray_log/error.log",    // Error record
-       "loglevel": "warning" // Content from least to most: "none", "error", "warning", "info", "debug"
+       "logLevel": "warning" // Content from least to most: "none", "error", "warning", "info", "debug"
      },
 
      // 2_DNS Settings

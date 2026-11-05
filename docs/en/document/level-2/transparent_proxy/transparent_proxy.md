@@ -106,7 +106,7 @@ The configuration file should listen on port 12345 and enable tproxy:
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "inbounds": [
     {

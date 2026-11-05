@@ -45,7 +45,7 @@ log.Debug(...)
 
 **输出条件**
 
-日志以调用脚本的文件名为前缀，是否输出取决于 [`log.loglevel`](../../../config/log.md#logobject)。例如设置为 `warning` 时，`Debug` 和 `Info` 不输出，也不会调用参数的 `__tostring` 转换。
+日志以调用脚本的文件名为前缀，是否输出取决于 [`log.logLevel`](../../../config/log.md#logobject)。例如设置为 `warning` 时，`Debug` 和 `Info` 不输出，也不会调用参数的 `__tostring` 转换。
 
 四个函数均没有 `err` 返回值。将调用赋给变量时，该变量为 `nil`，不能据此判断日志是否成功输出。
 

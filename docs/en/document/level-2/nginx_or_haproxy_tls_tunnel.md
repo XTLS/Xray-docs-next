@@ -104,7 +104,7 @@ Enable auto-start on boot:
 ```json
 {
   "log": {
-    "loglevel": "none"
+    "logLevel": "none"
   },
   "inbounds": [
     {
@@ -140,7 +140,7 @@ Enable auto-start on boot:
 ```json
 {
   "log": {
-    "loglevel": "none"
+    "logLevel": "none"
   },
   "dns": {
     "servers": [

@@ -105,7 +105,7 @@ WantedBy=multi-user.target
 ```json
 {
   "log": {
-    "loglevel": "none"
+    "logLevel": "none"
   },
   "inbounds": [
     {
@@ -141,7 +141,7 @@ WantedBy=multi-user.target
 ```json
 {
   "log": {
-    "loglevel": "none"
+    "logLevel": "none"
   },
   "dns": {
     "servers": [

@@ -117,7 +117,7 @@
      "log": {
        // "access": "/home/local/xray_log/access.log",    // 访问记录
        // "error": "/home/local/xray_log/error.log",    // 错误记录
-       "loglevel": "warning" // 内容从少到多: "none", "error", "warning", "info", "debug"
+       "logLevel": "warning" // 内容从少到多: "none", "error", "warning", "info", "debug"
      },
 
      // 2_DNS设置

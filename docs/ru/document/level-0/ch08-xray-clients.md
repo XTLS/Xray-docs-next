@@ -116,7 +116,7 @@
       "log": {
         // "access": "/home/local/xray_log/access.log",    // Файл для записи логов доступа
         // "error": "/home/local/xray_log/error.log",    // Файл для записи логов ошибок
-        "loglevel": "warning" // Уровень детализации логов: "none", "error", "warning", "info", "debug" (от меньшего к большему)
+        "logLevel": "warning" // Уровень детализации логов: "none", "error", "warning", "info", "debug" (от меньшего к большему)
       },
 
       // 2_Настройки DNS

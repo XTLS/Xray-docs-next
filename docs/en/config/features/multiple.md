@@ -43,7 +43,7 @@ Assume there are the following three configuration files in the `confs` folder.
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "inbounds": [
     {
@@ -67,7 +67,7 @@ Assume there are the following three configuration files in the `confs` folder.
 ```json
 {
   "log": {
-    "loglevel": "debug"
+    "logLevel": "debug"
   },
   "inbounds": [
     {
@@ -104,7 +104,7 @@ The three configurations will be merged as follows:
 ```json
 {
   "log": {
-    "loglevel": "debug" // Top-level object overwrites the former
+    "logLevel": "debug" // Top-level object overwrites the former
   },
   "inbounds": [
     {

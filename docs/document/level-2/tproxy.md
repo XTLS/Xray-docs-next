@@ -17,7 +17,7 @@
 ```json
 {
   "log": {
-    "loglevel": "warning",
+    "logLevel": "warning",
     "error": "/var/log/xray/error.log",
     "access": "/var/log/xray/access.log"
   },

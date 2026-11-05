@@ -100,7 +100,7 @@ Linux использует `Netfilter` для управления сетью, �
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "inbounds": [
     {

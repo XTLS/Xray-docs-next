@@ -73,7 +73,7 @@ acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "inbounds": [
     {

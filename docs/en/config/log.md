@@ -13,7 +13,7 @@ Xray has two types of logs: access logs and error logs. You can configure the ou
   "log": {
     "access": "file_path",
     "error": "file_path",
-    "loglevel": "warning",
+    "logLevel": "warning",
     "dnsLog": false,
     "maskAddress": ""
   }
@@ -32,7 +32,7 @@ The file path for the error log. Its value must be a valid file path, such as `"
 
 - Special value `none`: disables the error log.
 
-> `loglevel`: "debug" | "info" | "warning" | "error" | "none"
+> `logLevel`: "debug" | "info" | "warning" | "error" | "none"
 
 The level of the error log, indicating the information that needs to be recorded.
 The default value is `"warning"`.

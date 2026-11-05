@@ -45,7 +45,7 @@ Accepts no arguments, `nil`, `""`, `{}`, and empty slices. Arguments are convert
 
 **Output Conditions**
 
-Logs are prefixed with the calling script's filename. Whether they are written depends on [`log.loglevel`](../../../config/log.md#logobject). For example, at `warning`, `Debug` and `Info` produce no output and do not invoke their arguments' `__tostring` conversions.
+Logs are prefixed with the calling script's filename. Whether they are written depends on [`log.logLevel`](../../../config/log.md#logobject). For example, at `warning`, `Debug` and `Info` produce no output and do not invoke their arguments' `__tostring` conversions.
 
 None of the four functions returns `err`. Assigning a call to a variable gives `nil`, which cannot be used to determine whether a log was successfully written.
 

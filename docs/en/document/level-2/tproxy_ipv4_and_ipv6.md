@@ -28,7 +28,7 @@ If the Xray program is not installed on the side router, you can manually downlo
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "inbounds": [
     {
@@ -195,7 +195,7 @@ If the Xray program is not installed on the side router, you can manually downlo
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "routing": {
     "domainStrategy": "IPIfNonMatch",

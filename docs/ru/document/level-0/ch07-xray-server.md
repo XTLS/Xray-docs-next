@@ -147,7 +147,7 @@ Xray основан на проекте с открытым исходным к�
     {
       // 1_Настройки логирования
       "log": {
-        "loglevel": "warning", // Уровень детализации логов: "none", "error", "warning", "info", "debug" (от меньшего к большему)
+        "logLevel": "warning", // Уровень детализации логов: "none", "error", "warning", "info", "debug" (от меньшего к большему)
         "access": "/home/vpsadmin/xray_log/access.log", // Файл для записи логов доступа
         "error": "/home/vpsadmin/xray_log/error.log" // Файл для записи логов ошибок
       },

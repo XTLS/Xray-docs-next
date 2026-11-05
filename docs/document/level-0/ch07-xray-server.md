@@ -154,7 +154,7 @@
     {
       // 1\_日志设置
       "log": {
-        "loglevel": "warning", // 内容从少到多: "none", "error", "warning", "info", "debug"
+        "logLevel": "warning", // 内容从少到多: "none", "error", "warning", "info", "debug"
         "access": "/home/vpsadmin/xray_log/access.log", // 访问记录
         "error": "/home/vpsadmin/xray_log/error.log" // 错误记录
       },

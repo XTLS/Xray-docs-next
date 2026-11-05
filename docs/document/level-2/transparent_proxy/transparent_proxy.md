@@ -106,7 +106,7 @@ Linux 使用`Netfilter`来管理网络，`Netfilter`模型如下：
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "inbounds": [
     {

@@ -43,7 +43,7 @@ $ xray run -confdir /etc/xray/confs
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "inbounds": [
     {
@@ -67,7 +67,7 @@ $ xray run -confdir /etc/xray/confs
 ```json
 {
   "log": {
-    "loglevel": "debug"
+    "logLevel": "debug"
   },
   "inbounds": [
     {
@@ -104,7 +104,7 @@ $ xray run -confdir /etc/xray/confs
 ```json
 {
   "log": {
-    "loglevel": "debug" // объект верхнего уровня перезаписывает предыдущий
+    "logLevel": "debug" // объект верхнего уровня перезаписывает предыдущий
   },
   "inbounds": [
     {

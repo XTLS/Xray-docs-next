@@ -13,7 +13,7 @@ LogObject 对应配置文件的 `log` 项。
   "log": {
     "access": "文件地址",
     "error": "文件地址",
-    "loglevel": "warning",
+    "logLevel": "warning",
     "dnsLog": false,
     "maskAddress": ""
   }
@@ -32,7 +32,7 @@ LogObject 对应配置文件的 `log` 项。
 
 - 特殊值`none`，即关闭 error log。
 
-> `loglevel`: "debug" | "info" | "warning" | "error" | "none"
+> `logLevel`: "debug" | "info" | "warning" | "error" | "none"
 
 error 日志的级别, 指示 error 日志需要记录的信息.
 默认值为 `"warning"`。

@@ -28,7 +28,7 @@
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "inbounds": [
     {
@@ -193,7 +193,7 @@
 ```json
 {
   "log": {
-    "loglevel": "warning"
+    "logLevel": "warning"
   },
   "routing": {
     "domainStrategy": "IPIfNonMatch",
