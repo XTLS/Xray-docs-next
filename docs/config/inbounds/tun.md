@@ -108,7 +108,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 
 > `autoSystemWfpBlockLeak`: [string]
 
-建议至少配置 `["dns"]` 以阻止 DNS 泄漏。
+建议至少配置 `["dns", "misconfigtun"]` 以阻止 DNS 泄漏以及没有路由的 IP 版本的流量。
 
 该项配置只在 Windows 系统上有效，并且需要配置 `autoSystemRoutingTable`，否则 Xray 会报错退出；默认为空，即不添加过滤器。Xray 会按列表中的值添加 Windows 筛选平台（WFP）过滤器，使其他程序的流量只能经由 TUN 接口发出：
 

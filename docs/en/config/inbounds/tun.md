@@ -108,7 +108,7 @@ On Linux, it needs systemd-resolved 240 or later to be running. On FreeBSD, `res
 
 > `autoSystemWfpBlockLeak`: [string]
 
-It is recommended to set at least `["dns"]`, to block DNS leaks.
+It is recommended to set at least `["dns", "misconfigtun"]`, to block DNS leaks and the traffic of an IP version without routes.
 
 This option only takes effect on Windows, and needs `autoSystemRoutingTable`, otherwise Xray reports an error and does not start. The default is empty, i.e. no filters. Xray adds Windows Filtering Platform (WFP) filters that let the traffic of other programs leave only through the TUN interface, each kind chosen by a value in the list:
 
