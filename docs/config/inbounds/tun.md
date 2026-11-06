@@ -58,7 +58,7 @@ Windows 系统中的网络接口名称描述，默认为 `Wintun`。该字符串
 
 未配置时，结果取决于系统：在 Linux 上，Xray 不会分配地址；在 Windows 上，系统会自动为 TUN 接口分配链路本地地址（IPv6 立即分配，IPv4 在几秒后从 `169.254.0.0/16` 中分配）；在 macOS 和 FreeBSD 上，使用 `169.254.10.1/30`。macOS 和 FreeBSD 只使用第一个 IPv4 前缀。
 
-在系统全局禁用了 IPv6 的 Windows 上，TUN 接口只有 IPv4，此时该项、`dns` 或 `autoSystemRoutingTable` 中的 IPv6 条目会使其无法启动。
+在所有接口都禁用了 IPv6 的 Windows 上（`DisabledComponents` 设置了 0x01 和 0x10，例如 0xFF），TUN 接口只有 IPv4，该项、`dns` 和 `autoSystemRoutingTable` 中的 IPv6 条目会被忽略。由于该设置在下次重启后才生效，被忽略的 IPv6 路由会向 `autoSystemWfpBlockLeak` 添加 `"[::/0]:misconfigtun"`，使 IPv6 在此之前也无法绕过 TUN 接口。其他情况下，无法设置的 IPv6 条目会使 TUN 接口无法启动。
 
 > `dns`: [string]
 
