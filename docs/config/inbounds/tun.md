@@ -58,7 +58,7 @@ Windows 系统中的网络接口名称描述，默认为 `Wintun`。该字符串
 
 未配置时，结果取决于系统：在 Linux 上，Xray 不会分配地址；在 Windows 上，系统会自动为 TUN 接口分配链路本地地址（IPv6 立即分配，IPv4 在几秒后从 `169.254.0.0/16` 中分配）；在 macOS 和 FreeBSD 上，使用 `169.254.10.1/30`。macOS 和 FreeBSD 只使用第一个 IPv4 前缀。
 
-在所有接口都禁用了 IPv6 的 Windows 上（`DisabledComponents` 设置了 0x01 和 0x10，例如 0xFF），TUN 接口只有 IPv4，该项、`dns` 和 `autoSystemRoutingTable` 中的 IPv6 条目会被忽略。由于该设置在下次重启后才生效，被忽略的 IPv6 路由会向 `autoSystemWfpBlockLeak` 添加 `"[::/0]:misconfigtun"`，使 IPv6 在此之前也无法绕过 TUN 接口。其他情况下，无法设置的 IPv6 条目会使 TUN 接口无法启动。
+在通过 `DisabledComponents` 关闭了 IPv6 的 Windows 上（设置了 0x10，例如 0xFF），设置该项、`dns` 和 `autoSystemRoutingTable` 中的 IPv6 条目时出现的错误，以及在 `dns` 没有 IPv6 服务器时清空 IPv6 DNS 服务器出现的错误，只会记录到日志。其他情况下，这些错误会使 TUN 接口无法启动。
 
 > `dns`: [string]
 
@@ -116,7 +116,7 @@ userLevel 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值.
 - `"windnsclient"`：Windows 的 DNS Client 服务（Dnscache），本地网络中的名称解析（LLMNR、mDNS）除外。在 Windows 11、Windows Server 2022 及更高版本上，它可以通过 DNS over HTTPS 或 DNS over TLS 向任意端口发送查询；更早的版本只查询 53 端口，因此该项在这些版本上不起作用。
 - `"tcp"`、`"udp"`：该协议的所有端口，或用 `/<端口>` 或 `/<起始>-<结束>`（1-65535）指定的部分端口，例如 `"tcp/853"` 或 `"udp/10-20"`。只写端口时同时表示 TCP 和 UDP，例如 `"53"` 或 `"10-20"`。
 - `"icmp"`：ICMP 和 ICMPv6，例如 `ping`。
-- `"misconfigtun"`：`autoSystemRoutingTable` 中没有路由的 IP 版本（IPv4 或 IPv6），其流量会绕过 TUN 接口。
+- `"misconfigtun"`：`autoSystemRoutingTable` 中没有路由的 IP 版本（IPv4 或 IPv6），其流量会绕过 TUN 接口。通过 `DisabledComponents` 关闭了 IPv6 时，无论路由如何，它都会覆盖 IPv6，因为此时 IPv6 的设置错误只会记录到日志，而且在应用该设置的重启之前 IPv6 仍然可用。
 - `"all"`：双向的所有流量。此时除非把本地网络也路由到 TUN 接口，否则无法访问本地网络；其他程序的入站连接、其他 VPN，以及由主机上的程序提供 NAT 的虚拟机也会受到影响。
 - `"allexceptlan"`：与 `"all"` 相同，但允许与本地网络之间的双向流量，例如访问打印机或投屏到电视：私有、链路本地、多播和广播地址（`10.0.0.0/8`、`172.16.0.0/12`、`192.168.0.0/16`、`169.254.0.0/16`、`224.0.0.0/4`、`255.255.255.255`、`fc00::/7`、`fe80::/10`、`ff00::/8`），不包括全局 IPv6 地址。它包含 `"dns"`，其他值在本地网络中同样生效。同时配置 `"all"` 时以 `"all"` 为准。
 

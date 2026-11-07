@@ -58,7 +58,7 @@ The list of address prefixes assigned to the TUN interface, usually one for IPv4
 
 If it is not set, the result depends on the system: on Linux, Xray assigns no address; on Windows, the system gives the TUN interface link-local addresses itself (IPv6 at once, IPv4 from `169.254.0.0/16` after a few seconds); on macOS and FreeBSD, `169.254.10.1/30` is used. macOS and FreeBSD only use the first IPv4 prefix.
 
-On Windows with IPv6 disabled on all interfaces (`DisabledComponents` with 0x01 and 0x10 set, such as 0xFF), the TUN interface only has IPv4, and IPv6 entries here, in `dns` and in `autoSystemRoutingTable` are ignored. As that setting takes effect at the next reboot only, ignored IPv6 routes add `"[::/0]:misconfigtun"` to `autoSystemWfpBlockLeak`, so that IPv6 cannot bypass the TUN interface until then. Otherwise, IPv6 entries that cannot be set up keep the TUN interface from starting.
+On Windows with IPv6 turned off by `DisabledComponents` (0x10 set, such as 0xFF), errors setting up the IPv6 entries here, in `dns` and in `autoSystemRoutingTable`, or clearing the IPv6 DNS servers when `dns` has none, are only logged. Otherwise, they keep the TUN interface from starting.
 
 > `dns`: [string]
 
@@ -116,7 +116,7 @@ This option only takes effect on Windows, and needs `autoSystemRoutingTable`, ot
 - `"windnsclient"`: the Windows DNS Client service (Dnscache), except for name resolution on the local network (LLMNR, mDNS). On Windows 11, Windows Server 2022 and later, it can send name queries over DNS over HTTPS or TLS, to any port; earlier versions only query port 53, so there this does nothing.
 - `"tcp"`, `"udp"`: that protocol, to all ports, or with `/<port>` or `/<low>-<high>` (1 to 65535) to some, e.g. `"tcp/853"` or `"udp/10-20"`. The ports alone stand for both, e.g. `"53"` or `"10-20"`.
 - `"icmp"`: ICMP and ICMPv6, e.g. `ping`.
-- `"misconfigtun"`: an IP version (IPv4 or IPv6) without routes in `autoSystemRoutingTable`, whose traffic would bypass the TUN interface.
+- `"misconfigtun"`: an IP version (IPv4 or IPv6) without routes in `autoSystemRoutingTable`, whose traffic would bypass the TUN interface. With IPv6 turned off by `DisabledComponents`, it covers IPv6 whatever the routes, as IPv6 setup errors are then only logged, and IPv6 still works until the reboot that applies that setting.
 - `"all"`: everything, in both directions. Access to the local network then breaks unless it is routed into the TUN interface as well, and so do incoming connections to other programs, other VPNs, and virtual machines whose NAT runs as a program on the host.
 - `"allexceptlan"`: like `"all"`, but traffic to and from the local network stays allowed, e.g. for printers or casting to a TV: private, link-local, multicast and broadcast addresses (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `169.254.0.0/16`, `224.0.0.0/4`, `255.255.255.255`, `fc00::/7`, `fe80::/10`, `ff00::/8`), not global IPv6 ones. It includes `"dns"`, and the other values apply there as well. `"all"` overrides it.
 
