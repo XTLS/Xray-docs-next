@@ -180,7 +180,9 @@ The client can also set this to any IP address. In that case Xray sends a Client
 
 > `fingerprint`: string
 
-Required. Same as [TLSObject](./tls.md#tlsobject). Note that `unsafe`, which disables uTLS for TLS, is not supported here because REALITY relies on that library to manipulate lower-level TLS parameters.
+Required. Same as [TLSObject](./tls.md#tlsobject).
+
+The fingerprint must support MLKEM; availability is guaranteed only for `chrome`, `firefox`, and `safari` fingerprints.
 
 > `shortId`: string
 

@@ -180,7 +180,9 @@ REALITY 只是修改了 TLS，客户端的实现只需要轻度修改完全随�
 
 > `fingerprint` : string
 
-必填，同 [TLSObject](./tls.md#tlsobject)。 注意：此处不支持使用 `unsafe` 禁用 utls, 因为 REALITY 协议实现使用了该库以操作底层 TLS 参数。
+必填，同 [TLSObject](./tls.md#tlsobject)。
+
+指纹需要支持 MLKEM，仅 `chrome` `firefox` `safari` 指纹的可用性受到保证。
 
 > `shortId` : string
 
