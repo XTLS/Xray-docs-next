@@ -182,6 +182,12 @@ The client can also set this to any IP address. In that case Xray sends a Client
 
 Required. Same as [TLSObject](./tls.md#tlsobject). Note that `unsafe`, which disables uTLS for TLS, is not supported here because REALITY relies on that library to manipulate lower-level TLS parameters.
 
+::: warning
+Since [v26.9.9](https://github.com/XTLS/Xray-core/releases/tag/v26.9.9), the REALITY server only accepts a Client Hello that carries an X25519MLKEM768 key share, placed before the X25519 key share if there is one. Any other Client Hello is treated as an ordinary visitor and forwarded to `target`: the client receives the real certificate of `target`, logs `REALITY: received real certificate (potential MITM or redirection)`, and the connection fails.
+
+In Xray v26.7.28 to v26.10.31 clients, `chrome`, `firefox` and `safari` send this key share. `ios`, `edge`, `qq` and the other presets do not, and `random` / `randomized` work only when the fingerprint chosen at startup sends it. Older clients may not send it even with these values (for example, `firefox` and `safari` in v25.12.8 do not), so update the client as well.
+:::
+
 > `shortId`: string
 
 One of the server-side `shortIds`.

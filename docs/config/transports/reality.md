@@ -182,6 +182,12 @@ REALITY 只是修改了 TLS，客户端的实现只需要轻度修改完全随�
 
 必填，同 [TLSObject](./tls.md#tlsobject)。 注意：此处不支持使用 `unsafe` 禁用 utls, 因为 REALITY 协议实现使用了该库以操作底层 TLS 参数。
 
+::: warning
+自 [v26.9.9](https://github.com/XTLS/Xray-core/releases/tag/v26.9.9) 起，REALITY 服务端只接受带有 X25519MLKEM768 key share 的 Client Hello, 如果同时带有 X25519 key share, X25519MLKEM768 必须排在它前面。其它 Client Hello 会被当作普通访问转发至 target: 客户端收到 target 的真实证书，日志中出现 `REALITY: received real certificate (potential MITM or redirection)`, 连接失败。
+
+在 Xray v26.7.28 至 v26.10.31 的客户端中，`chrome` `firefox` `safari` 会发送该 key share; `ios` `edge` `qq` 等其它预设不会发送，`random` / `randomized` 只有在启动时选中的指纹发送它时才可用。更旧的客户端即使使用这些值也可能不发送（例如 v25.12.8 的 `firefox` 和 `safari`）, 因此客户端也需要更新。
+:::
+
 > `shortId` : string
 
 服务端 shortIds 之一。
