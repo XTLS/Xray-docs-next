@@ -1,10 +1,10 @@
 # 透明代理通过 gid 规避 Xray 流量
 
-在现有的 iptables 透明代理白话文(**[新 V2Ray 白话文指南-透明代理](https://guide.v2fly.org/app/transparent_proxy.html)** 、 **[新 V2Ray 白话文指南-透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html)** 、 **[透明代理（TProxy）配置教程](./tproxy)**)教程中，对 Xray 流量的规避处理是打 mark 实现的。即对 Xray 出站流量打 mark，通过设置 iptables 规则对对应 mark 的流量直连，来规避 Xray 流量，防止回环。
+在现有的 iptables 透明代理白话文([新 V2Ray 白话文指南-透明代理](https://guide.v2fly.org/app/transparent_proxy.html) 、 [新 V2Ray 白话文指南-透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html) 、 [透明代理（TProxy）配置教程](./tproxy))教程中，对 Xray 流量的规避处理是打 mark 实现的。即对 Xray 出站流量打 mark，通过设置 iptables 规则对对应 mark 的流量直连，来规避 Xray 流量，防止回环。
 
 这么做有以下几个问题：
 
-1. **[莫名流量进入 PREROUTING 链](https://github.com/v2ray/v2ray-core/issues/2621)**
+1. [不严谨的配置导致流量进入 PREROUTING 链](https://github.com/v2ray/v2ray-core/issues/2621)
 
 2. 安卓系统有自己的 mark 机制，该方案在安卓上不可用
 
@@ -16,7 +16,7 @@ tproxy 流量只能被 root 权限用户(uid==0)或其他有 CAP_NET_ADMIN 权�
 
 iptables 规则可以通过 uid(用户 id)和 gid(用户组 id)分流。
 
-让 Xray 运行在一个 uid==0 但 gid!=0 的用户上，设置 iptables 规则不代理该 gid 的流量来规避 Xray 流量。
+让 Xray 运行在一个能接收 tproxy 流量且 gid!=0 的用户上，设置 iptables 规则不代理该 gid 的流量来规避 Xray 流量。
 
 ## 配置过程
 
@@ -30,11 +30,11 @@ iptables 规则可以通过 uid(用户 id)和 gid(用户组 id)分流。
 
 3. 有一个可以执行命令的终端，可以使用 adb shell，termux 等。
 
-**其它 Linux 系统**
+**Linux 系统**
 
 需要依赖 sudo，iptables 的 tproxy 模块和 extra 模块。
 
-一般系统都有自带，openwrt 运行：
+一般系统都有自带，精简发行版如 openwrt 可运行：
 
 ```bash
 opkg install sudo iptables-mod-tproxy iptables-mod-extra
@@ -46,9 +46,19 @@ opkg install sudo iptables-mod-tproxy iptables-mod-extra
 opkg install libopenssl ca-certificates
 ```
 
-### 2. 添加用户(安卓用户请忽略)
+### 2. 确认用户组
 
-安卓系统不支持/etc/passwd 文件来管理用户，请忽略，直接下一步。
+安卓用户请忽略
+
+#### 使用官方安装脚本安装 Xray 后，查询 `xray` 用户的 GID
+
+```bash
+id -g xray
+```
+
+下文规则中的 `23333` 为示例 GID，请替换为 Xray 实际运行组的 GID。
+
+#### 如果是其它方式安装 Xray 则须手动建立一个专用账户
 
 ```bash
 grep -qw xray_tproxy /etc/passwd || echo "xray_tproxy:x:0:23333:::" >> /etc/passwd
@@ -63,13 +73,15 @@ sudo -u xray_tproxy id
 
 显示的结果应该是 uid 为 0，gid 为 23333
 
+下文将会引导你将 Xray 以此用户身份运行
+
 ### 3. 配置运行 Xray，配置 iptables 规则
 
-在现有的 iptables 透明代理白话文(**[新 V2Ray 白话文指南-透明代理](https://guide.v2fly.org/app/transparent_proxy.html)** 、 **[新 V2Ray 白话文指南-透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html)** 、 **[透明代理（TProxy）配置教程](./tproxy)**)教程的基础上修改：
+在现有的 iptables 透明代理白话文([新 V2Ray 白话文指南-透明代理](https://guide.v2fly.org/app/transparent_proxy.html) 、 [新 V2Ray 白话文指南-透明代理(TPROXY)](https://guide.v2fly.org/app/tproxy.html) 、 [透明代理（TProxy）配置教程](./tproxy))教程的基础上修改：
 
-1. 修改 json 配置文件，删除 mark 相关内容
+1. 修改 json 配置文件，删除用于规避 Xray 自身流量的出站 `sockopt.mark` 设置。
 
-2. 修改 iptables 规则，删除 mark 相关内容，并在 OUTPUT 链应用规则处添加选项"-m owner ! --gid-owner 23333"。
+2. 修改 iptables 规则，删除对上述出站 mark 的匹配规则，并在 OUTPUT 链应用规则处添加选项 `-m owner ! --gid-owner 23333`。用于策略路由和 tproxy 的 mark 1 相关规则应保留。
 
 如：
 
@@ -83,11 +95,13 @@ iptables -t mangle -A OUTPUT -j XRAY_SELF
 iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF
 ```
 
-3. 修改运行 Xray 的方式，使其运行在 uid 为 0，gid 为 23333 的用户上，参考[这里](#_3-配置最大文件打开数-运行-xray-客户端)。
+3. 对于安卓或非官方脚本安装的 Xray 还需修改 Xray 运行的用户和组，使其运行在 uid 为 0，gid 为 23333 的用户上，详见下文。
+
+而 Xray 官方安装脚本已创建独立的 `xray` 用户和组，并配置好接收 tproxy 流量所需的 `CAP_NET_ADMIN` 权限，无需额外操作。
 
 ## 下面提供一个实现 tproxy 全局代理的完整配置过程
 
-### 1. 完成上面的 前期准备和 添加用户
+### 1. 完成上面的前期准备和确认用户组
 
 ### 2. 准备 Xray 配置文件
 
@@ -120,9 +134,7 @@ iptables -t mangle -A OUTPUT -m owner ! --gid-owner 23333 -j XRAY_SELF
 
 ### 3. 配置最大文件打开数&运行 Xray 客户端
 
-关于最大文件打开数问题见： **[too many open files 问题](https://guide.v2fly.org/app/tproxy.html#解决-too-many-open-files-问题)**
-
-目前 Xray 服务端使用官方脚本安装的已经自动配置了最大文件打开数，无需再修改。
+使用 Xray 官方安装脚本的用户无需调整最大文件打开数，但保存上述配置后仍需重启 Xray 服务，使配置生效。安卓用户或是其它方式安装 Xray 的用户需按下面的步骤配置并启动 Xray。
 
 **安卓系统**
 
@@ -131,7 +143,7 @@ ulimit -SHn 1000000
 setuidgid 0:23333 "运行Xray的命令"&
 ```
 
-**其它 Linux 系统**
+**其它非官方安装脚本的 Linux 系统**
 
 ```bash
 ulimit -SHn 1000000

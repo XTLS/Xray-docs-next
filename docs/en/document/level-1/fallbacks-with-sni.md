@@ -57,16 +57,29 @@ The permissions section is crucial; other sections can be arbitrary.
 After creation, you will get a mysterious string. Please keep it safe in a secure place where it won't be lost, as it will not be shown again. This string is the `CF_Token` used below.
 
 ::: tip Note
-The following operations need to be performed as the root user; using sudo may cause errors.
+The following commands assume Xray was installed using the official installation script, with the service running as `xray:xray`. We use a separate `acme` user to run `acme.sh`, obtain certificates, and renew them automatically.
 :::
+
+```bash
+sudo useradd -m -s /bin/bash acme # Create a dedicated user
+sudo install -d -m 750 -o acme -g xray /etc/ssl/xray # Create the certificate directory
+sudo touch /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo chown acme:xray /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo chmod 640 /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo -iu acme # Switch to the acme user
+```
+
+Obtain and install the certificate as the `acme` user:
 
 ```bash
 curl https://get.acme.sh | sh # Install acme.sh
 export CF_Token="sdfsdfsdfljlbjkljlkjsdfoiwje" # Set API Token variable
-acme.sh --issue -d example.com -d *.example.com --dns dns_cf # Apply for certificate using DNS-01 validation
-mkdir /etc/ssl/xray # Create directory for certificates
-acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --key-file /etc/ssl/xray/privkey.key --reloadcmd "chown nobody:nogroup -R /etc/ssl/xray && systemctl restart xray" # Install certificate to the specified directory and set the command to run after auto-renewal
+~/.acme.sh/acme.sh --issue -d example.com -d '*.example.com' --dns dns_cf # Apply for certificate using DNS-01 validation
+~/.acme.sh/acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --key-file /etc/ssl/xray/privkey.key # Install certificate to the specified directory
+exit # Return to the original user to continue
 ```
+
+The `acme` user writes the certificate and private key, while the `xray` group has read-only access. During automatic renewal, `acme.sh` preserves the ownership and permissions of the target files. Xray periodically reloads certificates by default.
 
 ## Xray Configuration
 

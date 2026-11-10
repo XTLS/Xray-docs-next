@@ -23,10 +23,9 @@
 首先，Xray 的官方载体，就是 [xray-core](https://github.com/XTLS/Xray-core) 开源项目（基于 `MPL 2.0`
 开源协议）生成的二进制程序。你把这个二进制放在服务器运行，它就是服务器端；你把它下载到本地电脑运行，它就是客户端。主要区别来源于【配置】。
 
-安装时，直接使用官方安装脚本就很简单直接。它提供了多种安装选项，有兴趣的可以去官方的[安装脚本仓库](https://github.com/XTLS/Xray-install)中看看脚本的说明，**本文使用的是【非 root
-用户】安装模式**。
+安装时，直接使用官方安装脚本就很简单直接。它提供了多种安装选项，有兴趣的可以去官方的[安装脚本仓库](https://github.com/XTLS/Xray-install)中看看脚本的说明。
 
-写本文时，安装脚本在使用非 root 账户时有一些小 bug，所以我决定正好把这几步分开操作，可以顺便说明一下 Linux 下的删除命令。
+这里继续使用前文创建的 `vpsadmin` 账户登录，通过 `sudo` 安装和管理服务。下面把下载、执行和删除安装脚本这几步分开操作，顺便说明一下 Linux 下的删除命令。
 
 1. 小小白白 Linux 基础命令：
 
@@ -66,10 +65,13 @@
 证书，但是按照 [`acme.sh`的官方说明](https://github.com/acmesh-official/acme.sh/wiki/%E8%AF%B4%E6%98%8E#3-copy%E5%AE%89%E8%A3%85-%E8%AF%81%E4%B9%A6)，申请后的证书不建议直接使用。正确的方法是使用 `--install-cert`
 命令安装给需要的程序。我们现在就来把证书安装给 `xray-core` 使用。
 
-1. 为了规避非 root 账户的各种潜在的权限困扰，我们在 vpsadmin 账户下建立一个证书文件夹
+动手之前，我们先来看看权限的问题。前面的安装脚本会自动创建独立的 `xray` 用户和组，并用它们运行 Xray 服务，所以我们也要让 `xray` 用户能够读取证书和私钥。
+
+1. `xray` 用户需要对证书路径上的各级父目录有访问（执行）权限。`/home` 通常已经满足要求，下面在 `vpsadmin` 账户下建立证书文件夹，并允许其他用户穿过该账户的家目录。
 
    ```shell
    mkdir ~/xray_cert
+   chmod o+x ~
    ```
 
 2. 使用`acme.sh`的`--install-cert`正确安装（拷贝）证书文件
@@ -80,10 +82,12 @@
                --key-file ~/xray_cert/xray.key
    ```
 
-3. `xray.key`文件默认对其他用户不可读，所以需要赋予其可读性权限
+3. 设置证书目录和文件的权限，允许 `xray` 组访问目录并读取证书和私钥。
 
    ```shell
-   chmod +r ~/xray_cert/xray.key
+   sudo chgrp xray ~/xray_cert ~/xray_cert/xray.crt ~/xray_cert/xray.key
+   chmod 750 ~/xray_cert
+   chmod 640 ~/xray_cert/xray.crt ~/xray_cert/xray.key
    ```
 
 4. 过程比较简单就不放动图了：
@@ -123,13 +127,15 @@
        ```
 
        ::: warning
-       这个位置不是`Xray`标准的日志文件位置，放在这里是避免权限问题对新人的操作带来困扰。当你熟悉之后，建议回归默认位置： `/var/log/xray/access.log`
+       这个位置不是 Xray 标准的日志文件位置，放在这里是为了让新人熟悉权限操作。当你熟悉之后，建议回归默认位置： `/var/log/xray/access.log`
        和 `/var/log/xray/error.log` 。
        :::
 
-    4. 因为 Xray 默认是 nobody 用户使用，所以我们需要让其他用户也有“写”的权限（`*.log` 就是所有文件后缀是`log`的文件，此时`CLI`界面的效率优势就逐渐出现了）
+    4. 将日志目录和文件交给 `xray` 用户读写（`*.log` 表示所有后缀为 `log` 的文件，此时 CLI 界面的效率优势就逐渐出现了）。
        ```shell
-       chmod a+w ~/xray_log/*.log
+       chmod 600 ~/xray_log/*.log
+       chmod 700 ~/xray_log
+       sudo chown xray:xray ~/xray_log ~/xray_log/*.log
        ```
 
 3.  使用`nano`创建`Xray`的配置文件

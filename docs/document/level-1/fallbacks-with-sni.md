@@ -57,16 +57,29 @@ SNI 的原理也很简单，它通过让客户端发送主机名作为 TLS 协�
 创建完毕后，你会得到一串神秘字符，请将其妥善保管到安全且不会丢失的地方，因为它不再会显示。这串字符就是即将用到的 `CF_Token`。
 
 ::: tip 注意
-以下操作需要在 root 用户下进行，使用 sudo 会出现错误。
+以下命令以 Xray 官方安装脚本为例，Xray 服务以 `xray:xray` 运行。我们使用独立的 `acme` 用户运行 `acme.sh`，申请证书并自动续签。
 :::
+
+```bash
+sudo useradd -m -s /bin/bash acme # 创建独立用户
+sudo install -d -m 750 -o acme -g xray /etc/ssl/xray # 新建证书存放目录
+sudo touch /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo chown acme:xray /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo chmod 640 /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo -iu acme # 切换到 acme 用户
+```
+
+在 `acme` 用户下申请并安装证书：
 
 ```bash
 curl https://get.acme.sh | sh # 安装 acme.sh
 export CF_Token="sdfsdfsdfljlbjkljlkjsdfoiwje" # 设定 API Token 变量
-acme.sh --issue -d example.com -d *.example.com --dns dns_cf # 使用 DNS-01 验证方式申请证书
-mkdir /etc/ssl/xray # 新建证书存放目录
-acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --key-file /etc/ssl/xray/privkey.key --reloadcmd "chown nobody:nogroup -R /etc/ssl/xray && systemctl restart xray" # 安装证书到指定目录并设定自动续签生效指令
+~/.acme.sh/acme.sh --issue -d example.com -d '*.example.com' --dns dns_cf # 使用 DNS-01 验证方式申请证书
+~/.acme.sh/acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --key-file /etc/ssl/xray/privkey.key # 安装证书到指定目录
+exit # 返回原用户，继续后续操作
 ```
+
+证书和私钥由 `acme` 用户写入，`xray` 组只读。`acme.sh` 自动续期时会保留目标文件的所有者和权限，Xray 默认会定期热重载证书。
 
 ## Xray 配置
 

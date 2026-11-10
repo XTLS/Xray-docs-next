@@ -57,16 +57,29 @@ SNI решает эту проблему, позволяя клиенту отп
 После создания вы получите строку символов - это и есть ваш API-токен (`CF_Token`). Сохраните его в надежном месте, так как он больше не будет отображаться.
 
 ::: tip Внимание
-Следующие действия необходимо выполнять от имени пользователя root. Использование sudo может привести к ошибкам.
+Следующие команды предполагают, что Xray установлен с помощью официального скрипта, а служба работает от имени `xray:xray`. Для запуска `acme.sh`, получения и автоматического продления сертификатов мы используем отдельного пользователя `acme`.
 :::
+
+```bash
+sudo useradd -m -s /bin/bash acme # Создание отдельного пользователя
+sudo install -d -m 750 -o acme -g xray /etc/ssl/xray # Создание каталога для хранения сертификатов
+sudo touch /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo chown acme:xray /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo chmod 640 /etc/ssl/xray/cert.pem /etc/ssl/xray/privkey.key
+sudo -iu acme # Переключение на пользователя acme
+```
+
+Запросим и установим сертификат от имени пользователя `acme`:
 
 ```bash
 curl https://get.acme.sh | sh # Установка acme.sh
 export CF_Token="sdfsdfsdfljlbjkljlkjsdfoiwje" # Установка переменной окружения с API-токеном
-acme.sh --issue -d example.com -d *.example.com --dns dns_cf # Запрос сертификата с проверкой DNS-01
-mkdir /etc/ssl/xray # Создание каталога для хранения сертификата
-acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --key-file /etc/ssl/xray/privkey.key --reloadcmd "chown nobody:nogroup -R /etc/ssl/xray && systemctl restart xray" # Установка сертификата в указанный каталог и настройка команды для автоматического перезапуска Xray после обновления сертификата
+~/.acme.sh/acme.sh --issue -d example.com -d '*.example.com' --dns dns_cf # Запрос сертификата с проверкой DNS-01
+~/.acme.sh/acme.sh --install-cert -d example.com --fullchain-file /etc/ssl/xray/cert.pem --key-file /etc/ssl/xray/privkey.key # Установка сертификата в указанный каталог
+exit # Возврат к исходному пользователю для продолжения
 ```
+
+Сертификат и закрытый ключ записываются пользователем `acme`, а группа `xray` имеет доступ только для чтения. При автоматическом продлении `acme.sh` сохраняет владельца и права доступа целевых файлов. Xray по умолчанию периодически перезагружает сертификаты без перезапуска службы.
 
 ## Конфигурация Xray
 
