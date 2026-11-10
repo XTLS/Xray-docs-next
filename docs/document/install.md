@@ -119,33 +119,18 @@ Xray 提供两种验证方式：
 | Asuswrt-Merlin           | [XRAYUI](https://github.com/DanielLavrushin/asuswrt-merlin-xrayui)                                                                                |
 | Windows                  | [v2rayA](https://github.com/v2rayA/v2rayA)                                                                                                        |
 | Windows                  | [v2rayN](https://github.com/2dust/v2rayN)                                                                                                         |
-| Windows                  | [Furious](https://github.com/LorenEteval/Furious)                                                                                                 |
-| Windows                  | [Invisible Man - Xray](https://github.com/InvisibleManVPN/InvisibleMan-XRayClient)                                                                |
-| Windows                  | [AnyPortal](https://github.com/AnyPortal/AnyPortal)                                                                                               |
 | Android                  | [v2rayNG](https://github.com/2dust/v2rayNG)                                                                                                       |
 | Android                  | [X-flutter](https://github.com/XTLS/X-flutter)                                                                                                    |
 | Android                  | [SaeedDev94/Xray](https://github.com/SaeedDev94/Xray)                                                                                             |
 | Android                  | [SimpleXray](https://github.com/lhear/SimpleXray)                                                                                                 |
-| Android                  | [AnyPortal](https://github.com/AnyPortal/AnyPortal)                                                                                               |
 | iOS / macOS arm64 / tvOS | [Happ](https://apps.apple.com/app/happ-proxy-utility/id6504287215) ([tvOS](https://apps.apple.com/us/app/happ-proxy-utility-for-tv/id6748297274)) |
-| iOS / macOS arm64 / tvOS | [FoXray](https://apps.apple.com/app/foxray/id6448898396)                                                                                          |
 | iOS / macOS arm64 / tvOS | [Streisand](https://apps.apple.com/app/streisand/id6450534064)                                                                                    |
 | macOS arm64 / x64        | [Happ](https://apps.apple.com/app/happ-proxy-utility/id6504287215)                                                                                |
 | macOS arm64 / x64        | [v2rayA](https://github.com/v2rayA/v2rayA)                                                                                                        |
 | macOS arm64 / x64        | [v2rayN](https://github.com/2dust/v2rayN)                                                                                                         |
 | macOS arm64 / x64        | [V2rayU](https://github.com/yanue/V2rayU)                                                                                                         |
 | macOS arm64 / x64        | [V2RayXS](https://github.com/tzmax/V2RayXS)                                                                                                       |
-| macOS arm64 / x64        | [Furious](https://github.com/LorenEteval/Furious)                                                                                                 |
 | macOS arm64 / x64        | [OneXray](https://github.com/OneXray/OneXray)                                                                                                     |
-| macOS arm64 / x64        | [GoXRay](https://github.com/goxray/desktop)                                                                                                       |
-| macOS arm64 / x64        | [AnyPortal](https://github.com/AnyPortal/AnyPortal)                                                                                               |
 | Linux                    | [v2rayA](https://github.com/v2rayA/v2rayA)                                                                                                        |
 | Linux                    | [v2rayN](https://github.com/2dust/v2rayN)                                                                                                         |
-| Linux                    | [Furious](https://github.com/LorenEteval/Furious)                                                                                                 |
 | Linux                    | [GorzRay](https://github.com/ketetefid/GorzRay)                                                                                                   |
-| Linux                    | [GoXRay](https://github.com/goxray/desktop)                                                                                                       |
-| Linux                    | [AnyPortal](https://github.com/AnyPortal/AnyPortal)                                                                                               |
-
-## UUID 生成器
-
-第三方的 UUID 生成器 [uuidgenerator.net](https://www.uuidgenerator.net)

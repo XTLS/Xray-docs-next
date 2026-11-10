@@ -58,14 +58,9 @@
   - 请从它的[GitHub 仓库 Release 页面](https://github.com/2dust/v2rayNG/releases)获取最新版
   - 请根据该客户端的说明进行设置
 
-- **Shadowrocket - 适用于 iOS, 基于苹果 M 芯片的 macOS**
-  - 你需要注册一个【非中国区】的 iCloud 账户
-  - 你需要通过 App Store 搜索并购买
-  - 请根据该客户端的说明进行设置
-
-- **Qv2ray - 跨平台图形界面，适用于 Linux, Windows, macOS**
-  - 请从它的[GitHub 仓库 Release 页面](https://github.com/Qv2ray/Qv2ray/releases)获取最新版（还可以从它的[GitHub 自动构建仓库](https://github.com/Qv2ray/Qv2ray/actions)寻找更新的版本）
-  - 请从它的[项目主页](https://qv2ray.net/)学习文档
+- **OneXray - 适用于 iOS 和 macOS 平台**
+  - 你需要注册一个【非中国区】的 Apple ID
+  - 请从它的[GitHub 仓库](https://github.com/YuanDevTeam/OneXray)获取下载方式及使用说明
   - 请根据该客户端的说明进行设置
 
 - **V2RayXS - 基于 V2RayX 开发的一款使用 xray-core 的 macOS 客户端**
@@ -83,7 +78,7 @@
 
 - 第一时间获得最新版而无需等待 APP 升级适配
 
-- 灵活自由的路由配置能力（当然 GUI 客户端中 Qv2ray 的高级路由编辑器非常强大，也可以完整实现 xray-core 的路由配置功能）
+- 灵活自由的路由配置能力
 
 - 节约系统资源 （GUI 界面一定会有资源消耗，消耗的多少则取决于客户端的实现）
 

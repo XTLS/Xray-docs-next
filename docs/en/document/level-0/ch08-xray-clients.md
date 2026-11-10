@@ -58,14 +58,9 @@ Many tools actually support both `xray-core` and `v2fly-core` simultaneously, bu
   - Please get the latest version from its [GitHub Repository Release Page](https://github.com/2dust/v2rayNG/releases)
   - Please configure according to the client's instructions
 
-- **Shadowrocket - Suitable for iOS, and macOS with Apple M chips**
-  - You need to register a [Non-Mainland China] iCloud account
-  - You need to search for and purchase it in the App Store
-  - Please configure according to the client's instructions
-
-- **Qv2ray - Cross-platform GUI, suitable for Linux, Windows, macOS**
-  - Please get the latest version from its [GitHub Repository Release Page](https://github.com/Qv2ray/Qv2ray/releases) (You can also find newer versions from its [GitHub Actions builds](https://github.com/Qv2ray/Qv2ray/actions))
-  - Please study the documentation from its [Project Homepage](https://qv2ray.net/)
+- **OneXray - Suitable for iOS and macOS**
+  - You need to register an Apple ID outside mainland China
+  - Please find download options and usage instructions in its [GitHub repository](https://github.com/YuanDevTeam/OneXray)
   - Please configure according to the client's instructions
 
 - **V2RayXS - A macOS client using xray-core, based on V2RayX**
@@ -82,7 +77,7 @@ Although you could stop at the previous step, if you are a student with strong c
 To answer this question, I added this bonus chapter. It's a bit beyond the syllabus and a bit troublesome, but I spent the ink on this because this method has its advantages:
 
 - Get the latest version immediately without waiting for APP updates and adaptations.
-- Flexible and free routing configuration capabilities (Of course, the advanced routing editor in the GUI client Qv2ray is also very powerful and can fully implement xray-core's routing configuration functions).
+- Flexible and free routing configuration capabilities.
 - Save system resources (GUI interfaces will inevitably consume resources; the amount depends on the client's implementation).
 
 Its disadvantage is probably that [hand-writing configuration files] is a bit troublesome. But actually, think about it, you have already successfully written it once on the server, so what is the difference now? Next, as usual, let's break down the steps:
