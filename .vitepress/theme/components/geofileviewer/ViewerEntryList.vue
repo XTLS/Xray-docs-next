@@ -97,8 +97,7 @@ watch(
       class="geo-field geo-copy-fallback"
       role="status"
     >
-      <label for="geo-copy">{{ t.copyFailed }}</label
-      ><input
+      <label for="geo-copy">{{ t.copyFailed }}</label><input
         id="geo-copy"
         readonly
         :value="sharing.permalink"
