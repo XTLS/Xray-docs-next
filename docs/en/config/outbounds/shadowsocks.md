@@ -4,7 +4,7 @@ The [Shadowsocks](https://en.wikipedia.org/wiki/Shadowsocks) protocol, compatibl
 
 Current compatibility is as follows:
 
-- Supports TCP and UDP packet forwarding, where UDP can be optionally disabled;
+- Supports TCP and UDP packet forwarding;
 - Recommended encryption methods:
   - 2022-blake3-aes-128-gcm
   - 2022-blake3-aes-256-gcm
