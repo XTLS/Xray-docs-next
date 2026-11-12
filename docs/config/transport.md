@@ -146,7 +146,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 | `wireguard`                                                           | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     | 不适用   |
 | `masque`                                                              | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     | 支持     |
 
-<small id="protocol-transport-note-1">[1] Socks 和 Shadowsocks 未启用 [XUDP](./outbound.md#muxobject) 时，UDP 流量会改走协议原生的 UDP 路径，从而绕过已配置的传输方式；TCP 流量不受此限制。</small><br>
+<small id="protocol-transport-note-1">[1] Socks 和 Shadowsocks 未启用 [XUDP](./outbound.md#muxobject) 时，UDP 流量会改走协议原生的 UDP 路径，从而绕过已配置的传输方式。</small><br>
 
 ### 传输方式与传输安全
 
@@ -167,7 +167,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 
 此表对应 `protocol + streamSettings.security`。
 
-|               | `none`                                                      | `tls`                                                       | `reality`                                                   | 协议层安全机制                                                            |
+|               | `none`                                                      | `tls`                                                       | `reality`                                                   | 协议自有安全机制                                                          |
 | ------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------- |
 | `http`        | 支持                                                        | 支持                                                        | 支持                                                        | 无                                                                        |
 | `socks`       | 支持                                                        | 受限 <sup><a href="#protocol-security-note-1">[1]</a></sup> | 受限 <sup><a href="#protocol-security-note-1">[1]</a></sup> | 无                                                                        |
@@ -176,10 +176,16 @@ FinalMask 配置，用于对流量进行最终的伪装。
 | `vless`       | 受限 <sup><a href="#protocol-security-note-3">[3]</a></sup> | 支持                                                        | 支持                                                        | 可选的 Encryption <sup><a href="#protocol-security-note-4">[4]</a></sup>  |
 | `trojan`      | 受限 <sup><a href="#protocol-security-note-3">[3]</a></sup> | 支持                                                        | 支持                                                        | 仅有身份认证                                                              |
 | `hysteria`    | 不支持                                                      | 必须                                                        | 不支持                                                      | 无（依赖 TLS）                                                            |
-| `wireguard`   | 不适用                                                      | 不适用                                                      | 不适用                                                      | 加密隧道 <sup><a href="#protocol-security-note-2">[2]</a></sup>           |
+| `wireguard`   | 不适用                                                      | 不适用                                                      | 不适用                                                      | 加密隧道                                                                  |
 | `masque`      | 不支持                                                      | 必须                                                        | 不支持                                                      | 仅有身份认证                                                              |
 
-<small id="protocol-security-note-1">[1] Socks 和 Shadowsocks 未启用 [XUDP](./outbound.md#muxobject) 时，UDP 流量会改走协议原生的 UDP 路径，从而绕过已配置的 TLS 或 REALITY；TCP 流量不受此限制。</small><br>
-<small id="protocol-security-note-2">[2] Shadowsocks 和 VMess 能保护载荷，但缺少 TLS 1.3 式的前向保密，流量外观也可被分类。WireGuard 的密码学足够强，但固定的 UDP 特征容易被识别和封锁。三者都不具备 TLS/REALITY 提供的正常 HTTPS 外观，因此不适合直接用于过墙。</small><br>
+<small id="protocol-security-note-1">[1] Socks 和 Shadowsocks 未启用 [XUDP](./outbound.md#muxobject) 时，UDP 流量会改走协议原生的 UDP 路径，从而绕过已配置的 TLS 或 REALITY。</small><br>
+<small id="protocol-security-note-2">[2] Shadowsocks 和 VMess 能保护载荷，但缺少 TLS 1.3 式的前向保密。</small><br>
 <small id="protocol-security-note-3">[3] 当 `streamSettings.security` 为 `none` 时，VLESS（未启用 Encryption）和 Trojan 仅允许连接私网地址。</small><br>
-<small id="protocol-security-note-4">[4] VLESS Encryption 是可选的，默认关闭（`encryption: "none"`）。启用后，即使 `streamSettings.security` 为 `none` 也可以连接公网地址；它能保护 VLESS 载荷，但不能提供 TLS/REALITY 的正常 HTTPS 外观，因此不适合直接用于过墙。</small>
+<small id="protocol-security-note-4">[4] VLESS Encryption 是可选的，默认关闭（`encryption: "none"`）。启用后，即使 `streamSettings.security` 为 `none` 也可以连接公网地址；它能保护 VLESS 载荷。</small>
+
+::: tip
+能在公网上安全通信，不代表能过墙。HTTPS 是公网上的主要流量，但使用 TLS 或 REALITY 并不意味着代理流量与普通 HTTPS 流量具有相同特征。比如代理流量特有的 TLS-in-TLS 特征，VLESS 协议可使用 Vision，其它协议可通过 [Mux](./outbound.md#muxobject) 或 [FinalMask](./transports/finalmask.md) 缓解。
+
+WireGuard 等协议的原生 UDP 报文也具有明显特征，可使用 [FinalMask](./transports/finalmask.md) 进行伪装。
+:::

@@ -145,7 +145,7 @@ This table corresponds to `protocol + streamSettings.method`.
 | `wireguard`                                                           | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        | N/A       |
 | `masque`                                                              | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        | Supported |
 
-<small id="protocol-transport-note-1">[1] When XUDP is not enabled for Socks or Shadowsocks, UDP traffic uses the protocol's native UDP path and bypasses the configured transport method; TCP traffic is not subject to this limitation. See [XUDP](./outbound.md#muxobject).</small><br>
+<small id="protocol-transport-note-1">[1] When XUDP is not enabled for Socks or Shadowsocks, UDP traffic uses the protocol's native UDP path and bypasses the configured transport method. See [XUDP](./outbound.md#muxobject).</small><br>
 
 ### Transport Methods and Transport Security
 
@@ -166,7 +166,7 @@ This table corresponds to `streamSettings.method + streamSettings.security`.
 
 This table corresponds to `protocol + streamSettings.security`.
 
-|               | `none`                                                         | `tls`                                                          | `reality`                                                      | Protocol-layer security                                                                                |
+|               | `none`                                                         | `tls`                                                          | `reality`                                                      | Protocol-native security                                                                               |
 | ------------- | -------------------------------------------------------------- | -------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | `http`        | Supported                                                      | Supported                                                      | Supported                                                      | None                                                                                                   |
 | `socks`       | Supported                                                      | Limited <sup><a href="#protocol-security-note-1">[1]</a></sup> | Limited <sup><a href="#protocol-security-note-1">[1]</a></sup> | None                                                                                                   |
@@ -175,10 +175,16 @@ This table corresponds to `protocol + streamSettings.security`.
 | `vless`       | Limited <sup><a href="#protocol-security-note-3">[3]</a></sup> | Supported                                                      | Supported                                                      | Optional Encryption <sup><a href="#protocol-security-note-4">[4]</a></sup>                             |
 | `trojan`      | Limited <sup><a href="#protocol-security-note-3">[3]</a></sup> | Supported                                                      | Supported                                                      | Authentication only                                                                                    |
 | `hysteria`    | Not supported                                                  | Required                                                       | Not supported                                                  | None (relies on TLS)                                                                                   |
-| `wireguard`   | N/A                                                            | N/A                                                            | N/A                                                            | Encrypted tunnel <sup><a href="#protocol-security-note-2">[2]</a></sup>                                |
+| `wireguard`   | N/A                                                            | N/A                                                            | N/A                                                            | Encrypted tunnel                                                                                       |
 | `masque`      | Not supported                                                  | Required                                                       | Not supported                                                  | Authentication only                                                                                    |
 
-<small id="protocol-security-note-1">[1] When XUDP is not enabled for Socks or Shadowsocks, UDP traffic uses the protocol's native UDP path and bypasses the configured TLS or REALITY; TCP traffic is not subject to this limitation. See [XUDP](./outbound.md#muxobject).</small><br>
-<small id="protocol-security-note-2">[2] Shadowsocks and VMess protect the payload, but lack TLS 1.3-style forward secrecy, and their traffic patterns can still be classified. WireGuard uses sufficiently strong cryptography, but its fixed UDP signature is easy to identify and block. None of the three provides the ordinary HTTPS appearance offered by TLS/REALITY, so they are unsuitable for direct censorship circumvention.</small><br>
+<small id="protocol-security-note-1">[1] When XUDP is not enabled for Socks or Shadowsocks, UDP traffic uses the protocol's native UDP path and bypasses the configured TLS or REALITY. See [XUDP](./outbound.md#muxobject).</small><br>
+<small id="protocol-security-note-2">[2] Shadowsocks and VMess protect the payload, but lack TLS 1.3-style forward secrecy.</small><br>
 <small id="protocol-security-note-3">[3] When `streamSettings.security` is `none`, VLESS (without Encryption enabled) and Trojan can connect only to private network addresses.</small><br>
-<small id="protocol-security-note-4">[4] VLESS Encryption is optional and disabled by default (`encryption: "none"`). When enabled, it allows connections to public network addresses even if `streamSettings.security` is `none`. It protects the VLESS payload but does not provide the ordinary HTTPS appearance of TLS/REALITY, so it is unsuitable for direct censorship circumvention.</small>
+<small id="protocol-security-note-4">[4] VLESS Encryption is optional and disabled by default (`encryption: "none"`). When enabled, it allows connections to public network addresses even if `streamSettings.security` is `none`. It protects the VLESS payload.</small>
+
+::: tip
+The ability to communicate securely over the public Internet does not imply the ability to circumvent censorship. HTTPS accounts for a major share of public Internet traffic, but using TLS or REALITY does not mean that proxy traffic has the same characteristics as ordinary HTTPS traffic. For example, to mitigate the TLS-in-TLS signature characteristic of proxy traffic, VLESS can use Vision, while other protocols can use [Mux](./outbound.md#muxobject) or [FinalMask](./transports/finalmask.md).
+
+Native UDP packets of protocols such as WireGuard also have distinctive characteristics and can be disguised using [FinalMask](./transports/finalmask.md).
+:::
