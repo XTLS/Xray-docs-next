@@ -4,17 +4,19 @@ Lua 实例的创建、Hook 调用、状态保留和销毁，由脚本入口采�
 
 ## 池化生命周期
 
-当前[路由脚本](./routing.md)的 [HandleRoute](../reference/hook-routing.md) 和 [DNS 脚本](./dns.md)的 [HandleDNSQuery](../reference/hook-dns.md) 使用池化实例。以下规则适用于这两个 Hook。
+当前[路由脚本](./routing.md)的 [HandleRoute](../reference/hook-routing.md)、[DNS 脚本](./dns.md)的 [HandleDNSQuery](../reference/hook-dns.md) 和[噪声脚本](./noise.md)的 [HandleNoise](../reference/hook-noise.md) 使用池化实例。以下规则适用于这三个 Hook。
 
 ### 实例池与初始化
 
-路由脚本和 DNS 脚本分别通过对应配置中的 `script` 绑定脚本，各自管理独立的 Lua 实例池。即使配置为同一个文件，也不会共享 Lua 实例内的状态。
+路由脚本、DNS 脚本和每个 noise 伪装分别通过对应配置中的 `script` 绑定脚本，各自管理独立的 Lua 实例池。即使配置为同一个文件，也不会共享 Lua 实例内的状态。
 
 Xray 启动时会读取并编译脚本一次，然后创建第一个实例，执行脚本顶层代码，检查必需的处理函数是否存在。文件读取、语法、顶层执行或处理函数检查失败时，Xray 启动失败。
 
+noise 伪装是例外：它的脚本在启动时只被读取和编译，实例在该伪装首次需要发送噪声时才创建。因此顶层执行或 `HandleNoise` 检查失败时 Xray 仍能启动，但那条连接会建立失败。
+
 ### Hook 调用与回收
 
-每次路由选择或 DNS 查询独占一个实例。有空闲实例时直接复用；并发调用需要更多实例时，使用已编译的脚本创建新实例，并重新执行顶层代码。
+每次路由选择、DNS 查询或噪声生成独占一个实例。有空闲实例时直接复用；并发调用需要更多实例时，使用已编译的脚本创建新实例，并重新执行顶层代码。
 
 处理函数正常执行完成后，实例可归还池中复用；未捕获的 Lua 异常或执行超时会使实例被销毁。处理函数通过返回值报告业务错误，或返回值校验失败，并不等同于 Lua 执行异常，实例仍可复用。多余的空闲实例会自动被销毁。
 
@@ -26,11 +28,11 @@ flowchart TD
     INIT --> POOL[("空闲实例池")]
 
     subgraph CALL["池化 Hook 调用：轻量复用路径"]
-        TAKE["取出并独占空闲实例"] --> RUN["执行 HandleRoute / HandleDNSQuery"]
+        TAKE["取出并独占空闲实例"] --> RUN["执行 HandleRoute / HandleDNSQuery / HandleNoise"]
         RUN -->|正常执行结束| PUT["归还实例，保留状态"]
     end
 
-    REQUEST["路由选择 / DNS 查询"] --> AVAILABLE{"池中有空闲实例？"}
+    REQUEST["路由选择 / DNS 查询 / 噪声生成"] --> AVAILABLE{"池中有空闲实例？"}
     POOL -.-> AVAILABLE
     AVAILABLE -->|有| TAKE
     PUT --> POOL
@@ -62,6 +64,6 @@ end
 
 ### 超时与脚本更新
 
-当前路由和 DNS 的每个实例初始化超时为 **120 秒**，每次处理函数调用的执行超时为 **6 秒**。调用超时从取得实例后开始计算；这些值目前没有独立的配置字段。调用 Xray API 时，实际取消行为还取决于 API 是否响应取消信号；单台 DNS 服务器还受其 `timeoutMs` 限制。
+每个实例的初始化超时为 **120 秒**。每次处理函数调用的执行超时：路由和 DNS 为 **6 秒**，噪声为 **1 秒**，因为噪声 Hook 在真实数据包发送前同步执行。调用超时从取得实例后开始计算；这些值目前没有独立的配置字段。调用 Xray API 时，实际取消行为还取决于 API 是否响应取消信号；单台 DNS 服务器还受其 `timeoutMs` 限制。
 
 Xray 不自动监视或重新编译主脚本。修改主脚本后，应重启 Xray 使其生效；之后创建的新实例也使用本次启动时编译的主脚本。
