@@ -180,9 +180,33 @@ REALITY 只是修改了 TLS，客户端的实现只需要轻度修改完全随�
 
 > `fingerprint` : string
 
-必填，同 [TLSObject](./tls.md#tlsobject)。
+指定单个指纹，用法同 [TLSObject](./tls.md#tlsobject)。如需加权选择，请改用下方的 `fingerprintWeights`，并省略此字段。
 
 指纹需要支持 MLKEM，仅 `chrome` `firefox` `safari` 指纹的可用性受到保证。
+
+> `fingerprintWeights`: object
+
+需要包含[公共选择器](https://github.com/XTLS/Xray-core/pull/7406)和 [REALITY 支持](https://github.com/XTLS/Xray-core/pull/7407)的构建版本。旧版本不支持此字段。
+
+仅供客户端使用，可代替 `fingerprint`；使用时请省略 `fingerprint`。权重校验、规范化、进程生命周期内共享选择结果以及不自动回退的规则，见 [TLSObject](./tls.md#tlsobject) 中的 `fingerprintWeights`。以下片段放在客户端 `realitySettings` 内：
+
+```json
+{
+  "fingerprintWeights": {
+    "firefox": 15,
+    "chrome": 70,
+    "safari": 15
+  }
+}
+```
+
+选中的名称由 RAW、XHTTP 和 gRPC 的现有 REALITY 客户端使用。重新连接不会改变指纹。包含 `target` 或其别名 `dest` 的服务端配置会拒绝此选项。
+
+**选择前会检查所有候选指纹**，即使其他配置已为该策略缓存了结果。ClientHello 必须能成功构建，支持 TLS 1.3，具有 32 字节的 session ID 和合适的 X25519 密钥。当前 REALITY 服务端还要求 `X25519MLKEM768` key share 出现在独立的 `X25519` key share 之前。不兼容的候选指纹即使权重很小也会被拒绝。
+
+上述实现所使用的 uTLS 中，`edge` 对应 Edge 85，不具备所需的混合 key share。因此，TLS 的 Firefox 9%、Chrome 70%、Edge 12%、Safari 9% 示例**不是有效的 REALITY 策略**。上面的 REALITY 示例改用 Chrome、Firefox 和 Safari。此限制与版本有关，升级可能改变别名对应的指纹。
+
+这些更严格的兼容性检查仅适用于新的加权模式，不改变现有单个 `fingerprint` 的行为。通过检查并不保证特定 target 或网络能够接受连接。
 
 > `shortId` : string
 

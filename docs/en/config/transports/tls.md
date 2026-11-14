@@ -155,6 +155,47 @@ By default, the most common `h2,http/1.1` is forced as ALPN. For WebSocket and H
 If ECH is enabled, the outer ALPN is always shown as `h2,http/1.1`. The inner ALPN is forced to `http/1.1` for WebSocket or HttpUpgrade transports to allow the handshake to complete; for other protocols the user-configured ALPN is honored.
 :::
 
+> `fingerprintWeights`: object
+
+Requires a build containing [the shared resolver](https://github.com/XTLS/Xray-core/pull/7406) and [TLS support](https://github.com/XTLS/Xray-core/pull/7408). Older builds do not support this field.
+
+An optional alternative to `fingerprint` for client connections. Specify allowed browser fingerprint names and positive integer weights. Example fragment inside `tlsSettings`:
+
+```json
+{
+  "fingerprintWeights": {
+    "firefox": 9,
+    "chrome": 70,
+    "edge": 12,
+    "safari": 9
+  }
+}
+```
+
+Xray selects **one fingerprint per distinct normalized policy per process**, when building the configuration, and uses it until the process exits. Reconnects, new HTTP clients, and rebuilding the same policy do not select again. Restarting permits a new selection, which may be the same as before.
+
+Weights are relative probabilities, not connection quotas. The example gives Chrome a 70% chance on each independent process launch; it does not assign Chrome to 70% of connections in one process. The sum need not be 100. Identical policies share a result across configurations, including TLS and REALITY where all candidates are compatible. Key order, name casing, and proportional scaling of all weights do not change policy identity.
+
+Only listed fingerprints can be selected. There is no automatic fallback or reselection after connection failures. An omitted policy preserves existing behavior. A nonempty `fingerprint` cannot be combined with `fingerprintWeights`.
+
+The policy must be nonempty. Names must be recognized and unique after case normalization. Weights must be positive integers, and their sum must fit in an unsigned 64-bit integer. Unknown names, zero/negative/fractional weights, overflow, and special modes such as `random`, the randomized variants, `unsafe`, and Go TLS are rejected.
+
+Browser aliases such as `chrome` follow the uTLS version bundled with Xray and may change after an update. Use a registered version name, for example `hellochrome_133`, to request that specific profile; `chrome-133` is not its registry name. An allowlist of names does not freeze the versions behind aliases.
+
+| Path                              | Support                                                |
+| --------------------------------- | ------------------------------------------------------ |
+| RAW, gRPC, WebSocket, HTTPUpgrade | uTLS client connections                                |
+| XHTTP, XDRIVE                     | TCP paths; H3/QUIC is rejected                         |
+| MASQUE                            | H2 only: ALPN must include `h2` and exclude `h3`       |
+| FinalMask XDNS `tlsConfig`        | HTTPS resolvers over TCP only                          |
+| mKCP, Hysteria, Realm             | Rejected: these paths do not apply these uTLS profiles |
+
+For XHTTP, XDRIVE, and XDNS, exactly `["h3"]` selects H3; MASQUE defaults to QUIC unless its H2 condition above is met. The checks follow those transport rules.
+
+Weighted WebSocket/XHTTP settings are rejected if Browser Dialer is configured or active during configuration building. If an embedding application enables it later through `Reload()`, the browser controls the handshake; a once-per-process warning explains that Xray fingerprint settings no longer apply.
+
+This option changes profile selection only. Existing ALPN/ECH handling remains in effect. It does not guarantee remote-server or DPI acceptance, reproduce all browser behavior, or make VPN traffic indistinguishable from browser traffic.
+
 > `pinnedPeerCertSha256`: string
 
 Used to specify the SHA-256 hash of the remote server certificate. It uses hexadecimal encoding and is case-insensitive, for example `e8e2d387fdbffeb38e9c9065cf30a97ee23c0e3d32ee6f78ffae40966befccc9`. Multiple hash values can be joined with `,`, and verification succeeds if any one of them matches.

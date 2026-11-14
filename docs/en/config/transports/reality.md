@@ -180,9 +180,33 @@ The client can also set this to any IP address. In that case Xray sends a Client
 
 > `fingerprint`: string
 
-Required. Same as [TLSObject](./tls.md#tlsobject).
+Selects a single fingerprint, as in [TLSObject](./tls.md#tlsobject). For weighted selection, use `fingerprintWeights` below instead and omit this field.
 
 The fingerprint must support MLKEM; availability is guaranteed only for `chrome`, `firefox`, and `safari` fingerprints.
+
+> `fingerprintWeights`: object
+
+Requires a build containing [the shared resolver](https://github.com/XTLS/Xray-core/pull/7406) and [REALITY support](https://github.com/XTLS/Xray-core/pull/7407). Older builds do not support this field.
+
+Client-only alternative to `fingerprint`. Omit `fingerprint` when using it. The weight validation, normalization, shared process-lifetime selection, and absence of fallback are described under `fingerprintWeights` in [TLSObject](./tls.md#tlsobject). Example fragment inside client `realitySettings`:
+
+```json
+{
+  "fingerprintWeights": {
+    "firefox": 15,
+    "chrome": 70,
+    "safari": 15
+  }
+}
+```
+
+The selected name is used by the existing REALITY client in RAW, XHTTP, and gRPC. Reconnecting does not select another profile. Server-side configurations containing `target` or its alias `dest` reject this option.
+
+**Every candidate is checked before selection**, even if another configuration has already cached a result for the policy. ClientHello construction must succeed, offer TLS 1.3 and a 32-byte session ID, and provide a suitable X25519 key. Compatibility with the current REALITY server also requires an `X25519MLKEM768` key share before a standalone `X25519` share. A low weight does not exempt an incompatible candidate.
+
+In the uTLS dependency used by the linked implementation, `edge` resolves to Edge 85 without that hybrid share. Therefore the TLS example with Firefox 9%, Chrome 70%, Edge 12%, and Safari 9% is **not a valid REALITY policy**. The example above uses Chrome, Firefox, and Safari instead. This is version-dependent; browser aliases may change with updates.
+
+These stricter compatibility checks apply to the new weighted mode; existing single-fingerprint behavior is unchanged. Passing validation does not guarantee that a particular target or network accepts the connection.
 
 > `shortId`: string
 

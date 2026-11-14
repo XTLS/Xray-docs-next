@@ -157,6 +157,47 @@ CipherSuites 用于配置受支持的密码套件列表, 每个套件名称之�
 如果 ECH 启用，则 outer 无论如何都会显示为 `h2,http/1.1`，而 inner 如果是 WebSocket 或 HttpUpgrade 则会强制置 `http/1.1` 以便完成握手，其他协议则会尊重用户配置的 ALPN。
 :::
 
+> `fingerprintWeights`: object
+
+需要包含[公共选择器](https://github.com/XTLS/Xray-core/pull/7406)和 [TLS 支持](https://github.com/XTLS/Xray-core/pull/7408)的构建版本。旧版本不支持此字段。
+
+客户端连接可使用此可选字段代替 `fingerprint`，显式指定允许的浏览器指纹及其正整数权重。以下片段放在 `tlsSettings` 内：
+
+```json
+{
+  "fingerprintWeights": {
+    "firefox": 9,
+    "chrome": 70,
+    "edge": 12,
+    "safari": 9
+  }
+}
+```
+
+Xray 在构建配置时，为**每个进程中的每种不同的规范化策略选择一次指纹**，并保持到进程退出。重新连接、创建新的 HTTP 客户端或重新构建相同策略都不会重新选择。重启进程后可以重新选择，但结果可能与之前相同。
+
+权重表示相对概率，不是连接配额。示例表示每次独立启动进程时有 70% 的概率选择 Chrome，并不表示同一进程中 70% 的连接使用 Chrome。权重总和不必为 100。相同策略在不同配置间共享结果；当所有候选指纹都兼容时，TLS 和 REALITY 也共享结果。键的顺序、名称大小写以及所有权重按相同比例缩放都不会改变策略身份。
+
+仅会选择列表中的指纹。连接失败不会触发自动回退或重新选择。不配置此字段时，原有行为不变。不能同时设置非空 `fingerprint` 和 `fingerprintWeights`。
+
+策略不能为空。指纹名称必须已被核心识别，且转换为小写后不能重复。权重必须为正整数，总和不能超过无符号 64 位整数范围。未知名称、零、负数、小数、总和溢出，以及 `random`、randomized 系列、`unsafe` 和 Go TLS 等特殊模式均会被拒绝。
+
+`chrome` 等别名取决于 Xray 使用的 uTLS 版本，升级后可能变化。要指定某个版本，应使用已注册的名称，例如 `hellochrome_133`，而不是 `chrome-133`。显式列出别名并不意味着固定了别名对应的版本。
+
+| 路径                              | 支持情况                            |
+| --------------------------------- | ----------------------------------- |
+| RAW、gRPC、WebSocket、HTTPUpgrade | 使用 uTLS 的客户端连接              |
+| XHTTP、XDRIVE                     | 支持 TCP 路径；拒绝 H3/QUIC         |
+| MASQUE                            | 仅 H2：ALPN 包含 `h2` 且不包含 `h3` |
+| FinalMask XDNS 的 `tlsConfig`     | 仅通过 TCP 连接的 HTTPS 解析器      |
+| mKCP、Hysteria、Realm             | 拒绝；这些路径不使用这些 uTLS 指纹  |
+
+XHTTP、XDRIVE 和 XDNS 仅在 ALPN 恰好为 `["h3"]` 时选择 H3。MASQUE 在不满足上述 H2 条件时默认使用 QUIC。配置检查遵循各传输的这些规则。
+
+如果构建配置时已配置或启用 Browser Dialer，WebSocket/XHTTP 的加权策略会被拒绝。如果嵌入 Xray 的应用随后通过 `Reload()` 启用它，握手将由浏览器控制；每个进程会输出一次警告，说明 Xray 的指纹设置不再生效。
+
+此选项仅改变指纹选择方式，现有 ALPN/ECH 处理不变。它不保证远端服务器或 DPI 接受连接，不会模拟浏览器的所有行为，也不保证 VPN 流量无法被区分。
+
 > `pinnedPeerCertSha256`: string
 
 用于指定远程服务器的证书 SHA256 散列值，使用 hex 且大小写不敏感。如 `e8e2d387fdbffeb38e9c9065cf30a97ee23c0e3d32ee6f78ffae40966befccc9`，可以使用 `,` 连接更多的散列值，匹配到任何一个即通过验证。
