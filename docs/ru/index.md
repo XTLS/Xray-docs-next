@@ -98,4 +98,8 @@ features:
 
 ### Динамика звезд на GitHub
 
-[![Stargazers over time](https://starchart.cc/XTLS/Xray-core.svg?variant=adaptive)](https://starchart.cc/XTLS/Xray-core)
+<script setup>
+import { useData } from "vitepress"
+const { isDark } = useData()
+</script>
+<img alt="Star History Chart" :src="'https://api.star-history.com/chart?repos=XTLS/Xray-core&type=date' + (isDark ? '&theme=dark' : '')" />
