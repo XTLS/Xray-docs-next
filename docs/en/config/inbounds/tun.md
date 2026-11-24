@@ -20,6 +20,7 @@ On Linux, this environment variable can optionally be used to pass in the TUN FD
       "settings": {
         "name": "utun10",
         "desc": "Wintun",
+        "guid": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         "mtu": 1500,
         "gateway": ["10.0.0.1/16", "fc00::1/64"],
         "dns": ["1.1.1.1", "8.8.8.8"],
@@ -47,6 +48,12 @@ On macOS, the name has to be `utunN`, and on FreeBSD `tunN`. On Windows, an exis
 The description of the network interface name on Windows. Default is `Wintun`. This string is concatenated with "Tunnel" to form "xxx Tunnel".
 
 On Windows, you can use `route print` to view the details.
+
+> `guid`: string
+
+The GUID of the Wintun adapter on Windows, as `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` in any letter case. It must not be another adapter's GUID. Default is derived from `name` with MD5.
+
+It only applies when Xray creates the adapter: an existing one with that name keeps its own GUID. An invalid value is an error on every system, though only Windows uses it.
 
 > `mtu`: number
 

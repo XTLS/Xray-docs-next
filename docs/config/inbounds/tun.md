@@ -20,6 +20,7 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
       "settings": {
         "name": "utun10",
         "desc": "Wintun",
+        "guid": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
         "mtu": 1500,
         "gateway": ["10.0.0.1/16", "fc00::1/64"],
         "dns": ["1.1.1.1", "8.8.8.8"],
@@ -47,6 +48,12 @@ Linux 可选使用该环境变量传入 TUN FD 以进行某些轻量化或非特
 Windows 系统中的网络接口名称描述，默认为 `Wintun`。该字符串会与 "Tunnel" 拼接成 "xxx Tunnel"
 
 在 Windows 中使用 `route print` 可查看具体信息
+
+> `guid`: string
+
+Windows 上 Wintun 适配器的 GUID，格式为 `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`，字母大小写均可，不能与其他适配器的 GUID 相同。默认由 `name` 经 MD5 计算得出。
+
+只在 Xray 创建适配器时生效：已有的同名适配器会保留其原有的 GUID。只有 Windows 使用该项，但在任何系统上，值无效都会报错。
 
 > `mtu`: number
 
