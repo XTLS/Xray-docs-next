@@ -72,9 +72,7 @@ VMess полагается на системное время. Убедитес�
 
 > `multiplex`: [Multiplex](../multiplex.md)
 
-Поле `multiplex` находится внутри `settings` исходящего подключения. На схеме оно выделено зелёным.
-
-![В settings добавлен multiplex с полем concurrency.](../multiplex-images/shared.svg)
+Поле `multiplex` находится внутри `settings` исходящего подключения.
 
 В примере `concurrency: 8` включает общий пул TCP и UDP. Чтобы включить Multiplex только для UDP, замените `concurrency` на `xudpConcurrency`. Чтобы выключить Multiplex, удалите объект `multiplex` из `settings`.
 

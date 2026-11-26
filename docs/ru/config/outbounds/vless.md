@@ -119,9 +119,7 @@ Splice - это функция, предоставляемая ядром Linux,
 
 > `multiplex`: [Multiplex](../multiplex.md)
 
-Поле `multiplex` находится внутри `settings` исходящего подключения. На схеме оно выделено зелёным.
-
-![В settings добавлен multiplex с полем concurrency.](../multiplex-images/shared.svg)
+Поле `multiplex` находится внутри `settings` исходящего подключения.
 
 В примере `concurrency: 8` позволяет передавать до восьми потоков одновременно через одно соединение с сервером.
 
