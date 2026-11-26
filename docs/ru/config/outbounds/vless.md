@@ -127,9 +127,7 @@ Splice - это функция, предоставляемая ядром Linux,
 
 **Vision.** Если у пользователя на сервере задан `flow: "xtls-rprx-vision"`, сервер пропускает через Multiplex только UDP. Чтобы TCP шёл через обычные соединения, укажите только `"multiplex": {"xudpConcurrency": 8}`.
 
-**XDrive без Reverse.** Укажите `"multiplex": {"concurrency": 128}` внутри `settings`. Положительное значение ниже `128` Xray поднимет до `128`. Без `concurrency` или со значением `0` Xray отклонит конфигурацию.
-
-Можно дополнительно включить отдельный пул UDP через `xudpConcurrency`. Для него используется указанное значение. `xudpProxyUDP443: "skip"` для XDrive без Reverse недоступен.
+**XDrive без Reverse.** Клиент автоматически включает общий пул с лимитом `128`, даже если поле `multiplex` отсутствует. Отдельный UDP-пул включается при положительном `xudpConcurrency`. В обоих пулах XDrive повышает положительные значения ниже `128` до `128`. Например, при `"multiplex": {"xudpConcurrency": 16}` общий и отдельный UDP-пул получат по `128`. Значение `xudpProxyUDP443: "skip"` в этом режиме недопустимо. [Примеры настройки XDrive](../multiplex.md#xdrive)
 
 [VLESS Reverse](/ru/document/level-2/vless_reverse.md) открывает собственное соединение Multiplex. Для самого Reverse общий пул включать необязательно.
 
