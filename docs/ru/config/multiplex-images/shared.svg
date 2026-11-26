@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="510" height="160" viewBox="0 0 510 160" role="img">
+  <title>Положение поля multiplex в settings</title>
+  <rect width="510" height="160" rx="6" fill="#17212b"/>
+  <text x="16" y="25" font-family="monospace" font-size="15" xml:space="preserve" fill="#e4eaf0">  "settings": {</text>
+  <rect x="2" y="32" width="506" height="24" fill="#164633"/>
+  <rect x="2" y="32" width="4" height="24" fill="#54e394"/>
+  <text x="16" y="49" font-family="monospace" font-size="15" xml:space="preserve" fill="#b6ffd0">    "multiplex": {</text>
+  <rect x="2" y="56" width="506" height="24" fill="#164633"/>
+  <rect x="2" y="56" width="4" height="24" fill="#54e394"/>
+  <text x="16" y="73" font-family="monospace" font-size="15" xml:space="preserve" fill="#b6ffd0">      "concurrency": 8</text>
+  <rect x="2" y="80" width="506" height="24" fill="#164633"/>
+  <rect x="2" y="80" width="4" height="24" fill="#54e394"/>
+  <text x="16" y="97" font-family="monospace" font-size="15" xml:space="preserve" fill="#b6ffd0">    },</text>
+  <text x="16" y="121" font-family="monospace" font-size="15" xml:space="preserve" fill="#e4eaf0">    "address": "proxy.example.com",</text>
+  <text x="16" y="145" font-family="monospace" font-size="15" xml:space="preserve" fill="#e4eaf0">    …</text>
+</svg>

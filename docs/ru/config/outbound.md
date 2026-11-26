@@ -52,7 +52,7 @@ Xray будет использовать случайный IP-адрес из �
 
 Конкретные настройки зависят от протокола.
 См. описание `OutboundConfigurationObject` для каждого протокола.
-Для VLESS и VMess здесь же настраиваются [Multiplex и XUDP](#muxobject).
+Для VLESS и VMess здесь же настраиваются [параметры Multiplex](#muxobject).
 
 > `tag`: string
 
@@ -80,6 +80,6 @@ Xray будет использовать случайный IP-адрес из �
 
 <span id="muxobject"></span>
 
-### Multiplex и XUDP
+### Multiplex
 
-Для исходящих VLESS и VMess настройка `multiplex` задаётся внутри `settings` на клиенте. Поле `concurrency` включает общий пул соединений, а `xudpConcurrency` — отдельный пул UDP. Справочник с примерами VLESS и VMess, переходом со старого `mux` и проверкой конфигурации см. в [руководстве по Multiplex и XUDP](./multiplex.md).
+Для исходящих VLESS и VMess настройка `multiplex` задаётся внутри `settings` на клиенте. Поле `concurrency` включает общий пул соединений, а `xudpConcurrency` — отдельный пул UDP. Справочник с примерами VLESS и VMess, переходом со старого `mux` и проверкой конфигурации см. в [руководстве по настройке Multiplex](./multiplex.md).
