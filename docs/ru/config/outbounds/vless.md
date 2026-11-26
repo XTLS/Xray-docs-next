@@ -8,7 +8,7 @@ VLESS - это легкий транспортный протокол без с�
 
 `OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md). Ниже пример исходящего VLESS с TLS и общим пулом Multiplex.
 
-```json
+```json {8-10}
 {
   "outbounds": [
     {
@@ -16,14 +16,14 @@ VLESS - это легкий транспортный протокол без с�
       "protocol": "vless",
       // [!field focus]
       "settings": {
+        "multiplex": {
+          "concurrency": 8
+        },
         "address": "example.com",
         "port": 443,
         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
         "encryption": "none",
-        "level": 0,
-        "multiplex": {
-          "concurrency": 8
-        }
+        "level": 0
       },
       "streamSettings": {
         "security": "tls"
@@ -118,6 +118,16 @@ Splice - это функция, предоставляемая ядром Linux,
 <span id="multiplex"></span>
 
 > `multiplex`: [Multiplex и XUDP](../multiplex.md)
+
+Добавьте выделенные строки в существующий `settings`.
+
+```diff
+   "settings": {
++    "multiplex": {
++      "concurrency": 8
++    },
+     "address": "example.com",
+```
 
 В примере `concurrency: 8` позволяет передавать до восьми потоков одновременно через одно соединение с сервером.
 

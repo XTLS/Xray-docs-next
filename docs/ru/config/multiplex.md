@@ -8,22 +8,33 @@ Multiplex позволяет нескольким запросам к разны
 
 ## Пример 1. VLESS с TLS, общий канал для TCP и UDP
 
-Ниже показан весь раздел `outbounds` для обычного VLESS без Vision. Подставьте адрес, порт и UUID своего сервера. Если у вас уже есть рабочее подключение, скопируйте в него только поле `multiplex`, сохранив свои параметры транспорта и защиты.
+Строки с зелёным `+` нужно добавить. Красный `−` обозначает удаление. Знаки в начале строк не входят в JSON. Ниже показано, куда добавить Multiplex для обычного VLESS без Vision. Подставьте адрес, порт и UUID своего сервера. Если у вас уже есть рабочее подключение, скопируйте в него только поле `multiplex`, сохранив свои параметры транспорта и защиты.
 
-```json
+```diff
+   "settings": {
++    "multiplex": {
++      "concurrency": 8
++    },
+     "address": "proxy.example.com",
+```
+
+<details>
+<summary>Полный пример JSON для копирования</summary>
+
+```json {7-9}
 {
   "outbounds": [
     {
       "tag": "proxy",
       "protocol": "vless",
       "settings": {
+        "multiplex": {
+          "concurrency": 8
+        },
         "address": "proxy.example.com",
         "port": 443,
         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-        "encryption": "none",
-        "multiplex": {
-          "concurrency": 8
-        }
+        "encryption": "none"
       },
       "streamSettings": {
         "security": "tls"
@@ -32,6 +43,8 @@ Multiplex позволяет нескольким запросам к разны
   ]
 }
 ```
+
+</details>
 
 TCP и UDP могут использовать одни и те же соединения с этим сервером. Число `8` ограничивает количество одновременно активных потоков **на одном соединении**. Если восемь мест уже заняты, для следующего потока клиент использует другое соединение. Порт `443` в `settings.port` — это порт самого сервера. Правило для UDP/443 ниже относится к порту назначения пользовательского трафика.
 
@@ -39,21 +52,33 @@ TCP и UDP могут использовать одни и те же соеди�
 
 Допустим, TCP должен работать обычным способом, а для UDP нужны отдельные соединения, каждое из которых сможет обслуживать до 16 потоков одновременно. В `settings` исходящего VMess укажите только `xudpConcurrency`. В этом примере `allow` также разрешает передавать через него UDP на порт 443.
 
-```json
+```diff
+   "settings": {
++    "multiplex": {
++      "xudpConcurrency": 16,
++      "xudpProxyUDP443": "allow"
++    },
+     "address": "proxy.example.com",
+```
+
+<details>
+<summary>Полный пример JSON для копирования</summary>
+
+```json {7-10}
 {
   "outbounds": [
     {
       "tag": "proxy",
       "protocol": "vmess",
       "settings": {
-        "address": "proxy.example.com",
-        "port": 443,
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-        "security": "auto",
         "multiplex": {
           "xudpConcurrency": 16,
           "xudpProxyUDP443": "allow"
-        }
+        },
+        "address": "proxy.example.com",
+        "port": 443,
+        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+        "security": "auto"
       },
       "streamSettings": {
         "security": "tls"
@@ -62,6 +87,8 @@ TCP и UDP могут использовать одни и те же соеди�
   ]
 }
 ```
+
+</details>
 
 Такой же объект `multiplex` можно использовать в VLESS. Например, если на сервере у пользователя включён Vision, именно этот режим оставляет TCP на обычном пути: сервер с Vision принимает через Multiplex только UDP.
 
