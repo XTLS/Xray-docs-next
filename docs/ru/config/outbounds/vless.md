@@ -6,7 +6,7 @@ VLESS - это легкий транспортный протокол без с�
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md).
+`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md). Ниже пример исходящего VLESS с TLS и общим пулом Multiplex.
 
 ```json
 {
@@ -20,9 +20,13 @@ VLESS - это легкий транспортный протокол без с�
         "port": 443,
         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
         "encryption": "none",
-        "flow": "xtls-rprx-vision",
         "level": 0,
-        "reverse": {}
+        "multiplex": {
+          "concurrency": 8
+        }
+      },
+      "streamSettings": {
+        "security": "tls"
       }
     }
   ]
@@ -110,6 +114,20 @@ Splice - это функция, предоставляемая ядром Linux,
 Уровень пользователя, для соединения будет использоваться [локальная политика](../policy.md#levelpolicyobject), соответствующая этому уровню пользователя.
 
 Значение level соответствует значению `level` в разделе [policy](../policy.md#policyobject). Если не указано, используется значение по умолчанию - 0.
+
+<span id="multiplex"></span>
+
+> `multiplex`: [Multiplex и XUDP](../outbound.md#muxobject)
+
+В примере `concurrency: 8` позволяет передавать до восьми потоков одновременно через одно соединение с сервером.
+
+**Vision.** Если у пользователя на сервере задан `flow: "xtls-rprx-vision"`, сервер пропускает через Multiplex только UDP. Чтобы TCP шёл через обычные соединения, укажите только `"multiplex": {"xudpConcurrency": 8}`.
+
+**XDrive без Reverse.** Укажите `"multiplex": {"concurrency": 128}` внутри `settings`. Положительное значение ниже `128` Xray поднимет до `128`. Без `concurrency` или со значением `0` Xray отклонит конфигурацию.
+
+Можно дополнительно включить отдельный пул UDP через `xudpConcurrency`. Для него используется указанное значение. `xudpProxyUDP443: "skip"` для XDrive без Reverse недоступен.
+
+[VLESS Reverse](/ru/document/level-2/vless_reverse.md) открывает собственное соединение Multiplex. Для самого Reverse общий пул включать необязательно.
 
 > `reverse`: struct
 
