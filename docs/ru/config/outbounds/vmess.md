@@ -10,28 +10,28 @@ VMess полагается на системное время. Убедитес�
 
 `OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md).
 
-```json {8-10}
-{
-  "outbounds": [
-    {
-      // ...
-      "protocol": "vmess",
-      // [!field focus]
-      "settings": {
-        "multiplex": {
-          "concurrency": 8
-        },
-        "address": "127.0.0.1",
-        "port": 37192,
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-        "security": "auto",
-        "level": 0,
-        "experiments": ""
-      }
-    }
-  ]
-}
-```
+> [!TIP]
+>
+> ```json {6-8}
+> {
+>   "outbounds": [
+>     {
+>       "protocol": "vmess",
+>       "settings": {
+>         "multiplex": {
+>           "concurrency": 8
+>         },
+>         "address": "127.0.0.1",
+>         "port": 37192,
+>         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+>         "security": "auto",
+>         "level": 0,
+>         "experiments": ""
+>       }
+>     }
+>   ]
+> }
+> ```
 
 > `address`: address
 

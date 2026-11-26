@@ -25,3 +25,13 @@
   filter: blur(0);
   opacity: 1;
 }
+
+:is(._ru_config_multiplex, ._ru_config_outbounds_vless, ._ru_config_outbounds_vmess)
+  .github-alert.tip .language-json {
+  --vp-code-line-highlight-color: var(--vp-code-line-diff-add-color);
+}
+
+:is(._ru_config_multiplex, ._ru_config_outbounds_vless, ._ru_config_outbounds_vmess)
+  .github-alert.caution .language-json {
+  --vp-code-line-highlight-color: var(--vp-code-line-diff-remove-color);
+}

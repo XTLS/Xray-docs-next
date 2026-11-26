@@ -8,30 +8,30 @@ VLESS - это легкий транспортный протокол без с�
 
 `OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md). Ниже пример исходящего VLESS с TLS и общим пулом Multiplex.
 
-```json {8-10}
-{
-  "outbounds": [
-    {
-      // ...
-      "protocol": "vless",
-      // [!field focus]
-      "settings": {
-        "multiplex": {
-          "concurrency": 8
-        },
-        "address": "example.com",
-        "port": 443,
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-        "encryption": "none",
-        "level": 0
-      },
-      "streamSettings": {
-        "security": "tls"
-      }
-    }
-  ]
-}
-```
+> [!TIP]
+>
+> ```json {6-8}
+> {
+>   "outbounds": [
+>     {
+>       "protocol": "vless",
+>       "settings": {
+>         "multiplex": {
+>           "concurrency": 8
+>         },
+>         "address": "example.com",
+>         "port": 443,
+>         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+>         "encryption": "none",
+>         "level": 0
+>       },
+>       "streamSettings": {
+>         "security": "tls"
+>       }
+>     }
+>   ]
+> }
+> ```
 
 ::: warning
 VLESS должен использоваться с внешним уровнем транспортной защиты; `streamSettings.security: "none"` допустимо только тогда, когда адрес другой стороны является private-адресом (например, частным IP-адресом или частным доменным именем) и сам канал находится в доверенной сети, либо при включенном `VLESS Encryption`.
