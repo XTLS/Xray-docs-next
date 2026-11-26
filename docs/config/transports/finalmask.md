@@ -385,15 +385,9 @@ Salamander 混淆。（来自 Hysteria2）
 
 ### xdns
 
-利用 DNS 查询来传输数据（类似 DNSTT）。它将执行标准的 DNS 查询来传输载荷，支持 TXT、A、AAAA 查询类型。
+利用 DNS 查询来传输数据（类似 DNSTT）。客户端将携带载荷的标准 DNS 查询发给 `resolvers` 中的解析器，由它们转给作为 `domains` 中域名的权威服务器的服务端，服务端以 TXT、CNAME、A 或 AAAA 记录应答。可以使用任何 DNS 解析器，支持 UDP、TCP 和 DoH，尽管效率可能十分不理想。
 
-由于技术限制，它给出的 MTU 非常小，无法使用 QUIC，建议搭配 mKCP 使用。推荐的 MTU 值：客户端 130，服务端若为 TXT（几乎传递原始字节信息） 则 900， AAAA 酌情修改为 1/2 以下，A 则为 1/8 以下（理论编码性能差距，实际取决于中间转发器能容忍回复中存在多少 AAAA/A 记录）。
-
-因为执行的查询是标准的，它可以透过任何 UDP DNS 服务器进行转发，尽管效率可能十分不理想。
-
-要使用这个功能，需要服务端监听 53 端口，然后代理协议将目标指向一个 DNS 服务器（如 8.8.8.8:53），并且你拥有 `domains` 中的域名，然后将其 NS 记录指向服务端。
-
-比如持有 example.com，那么设置 a.example.com A记录 指向 ip，设置 t.example.com NS记录 指向 a.example.com，最后使用的是 t.example.com。设置 A记录 的不能为 NS记录 的子域。
+要使用这个功能，需要持有一个域名，比如 example.com：设置 a.example.com A记录 指向服务端 IP，设置 t.example.com NS记录 指向 a.example.com，然后在两端的 `domains` 中使用 t.example.com，服务端监听 53 端口。设置 A记录 的不能为 NS记录 的子域。
 
 ```json
 {
@@ -406,22 +400,40 @@ Salamander 混淆。（来自 Hysteria2）
         "lenLimit": 255, // 0-255; default: 255
         "labelLimit": 63, // 0-63; default: 63
         "types": [1, 5, 16, 28], // 1:A 5:CNAME 16:TXT 28:AAAA; client default: 16, server default: all
-        "edns0": 1232 // 0,512-4096; default: 0
+        "edns0": 1232, // 0,512-4096; default: 0
+        "alphabet": "v9u8t0s1rqponmlkjihgfedcba765432" // 32 of a-z0-9; default: base32
       }
     ],
     "resolvers": [
       {
-        "addrs": ["udp://127.0.0.1:53"] // [protocol://]host[:port], no defaults
+        "addrs": ["udp://8.8.8.8:53", "tcp://1.1.1.1"] // [protocol://]host[:port], no defaults
+      },
+      {
+        "addrs": ["https://dns.google/dns-query"],
+        "worker": 32, // tcp, https; default: 32
+        "tlsConfig": { "serverName": "dns.google" }, // required for https
+        "quicConfig": {} // https with "alpn": ["h3"]
       }
-    ]
+    ],
+    "extraPoll": 0 // 0-3; default: 0
   }
 }
 ```
 
-仅可搭配 kcp，推荐设置 tti 200，仅服务端需要配置 mtu，参考 mtu，CNAME 计算比较复杂，一般在 AAAA 与 TXT 之间
+仅可搭配 mKCP（无法使用 QUIC），推荐设置 tti 200。仅服务端需要配置 mKCP 的 mtu，即一个应答能携带的数据量，因为客户端会把数据包拆分到多个查询中。它取决于 `edns0` 和记录类型，CNAME 在 AAAA 与 TXT 之间；应按客户端所用类型中最小的设置，放不进应答的数据包会被丢弃：
 
 - edns0 为 512 时，A 39 TXT 215 AAAA 117
 - edns0 为 1232 时，A 174 TXT 932 AAAA 492
+
+对于 A 和 AAAA，实际还取决于中间的解析器能容忍一个应答中存在多少条记录。
+
+每个查询随机使用客户端 `names` 和 `types` 中的一个。客户端默认的 TXT 每个应答携带的数据最多。
+
+- `lenLimit` 和 `labelLimit` 限制查询域名及其每一段（label）的长度，用于拒绝长域名的解析器。
+- `alphabet` 用 `a`-`z` 和 `0`-`9` 中的 32 个字符（各不相同，大小写均可）代替查询域名中的 base32（`a`-`z`、`2`-`7`），客户端与服务端必须相同。在看起来像 base32 的域名会被阻断的地方，应使用同时包含 `0`、`1`、`8`、`9`（base32 中没有的字符）的字母表，使域名很少再像 base32。
+- `resolvers`（客户端）：`udp://`（默认）和 `tcp://` 默认使用 53 端口；`https://` 为 DoH，使用不带 User-Agent 的 POST 请求。`worker` 对 `tcp://` 是连接数，对 `https://` 是同时进行的请求数。
+- `tlsConfig`（`https://` 必填）为 [TLSObject](./tls.md#tlsobject)：除非用 `fingerprint` 另行指定，Client Hello 为 Chrome 的；`serverName` 可以与 URL 的主机不同，HTTP Host 仍为 URL 的主机，可用于域前置等。`alpn` 仅为 `["h3"]` 时，DoH 使用 HTTP/3，由 `quicConfig`（[quicParams](#quicparams)，默认模仿 Chrome）配置；否则使用基于 TLS 的 HTTP/2。
+- `extraPoll`（客户端）：服务端只能在应答中发送数据，因此客户端会在每个查询之后额外发送这么多个空查询，可以提高下载速度，代价是查询更多。
 
 ### xicmp
 
