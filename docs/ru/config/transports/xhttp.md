@@ -8,4 +8,4 @@ VLESS Multiplex объединяет потоки приложений. XHTTP о
 
 Если в исходящем VLESS с XHTTP задано `settings.multiplex.concurrency` больше `0`, клиент при загрузке конфигурации пишет `ATTENTION: Using VLESS Multiplex over XHTTP XMUX` и продолжает запуск. Если задан только `xudpConcurrency`, такого предупреждения нет.
 
-XHTTP больше не ограничивает Multiplex только трафиком UDP. Для TCP через Multiplex по-прежнему действуют правила самого VLESS. См. [настройки Multiplex и XUDP](../outbound.md#muxobject) и [пояснение к изменению](https://github.com/XTLS/Xray-core/pull/6755#issuecomment-7160365746).
+XHTTP больше не ограничивает Multiplex только трафиком UDP. Для TCP через Multiplex по-прежнему действуют правила самого VLESS. См. [настройки Multiplex и XUDP](../multiplex.md) и [пояснение к изменению](https://github.com/XTLS/Xray-core/pull/6755#issuecomment-7160365746).

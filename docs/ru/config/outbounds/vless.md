@@ -117,7 +117,7 @@ Splice - это функция, предоставляемая ядром Linux,
 
 <span id="multiplex"></span>
 
-> `multiplex`: [Multiplex и XUDP](../outbound.md#muxobject)
+> `multiplex`: [Multiplex и XUDP](../multiplex.md)
 
 В примере `concurrency: 8` позволяет передавать до восьми потоков одновременно через одно соединение с сервером.
 

@@ -127,4 +127,4 @@ XUDP добавляет адрес UDP после Opt(D) в том же форм
 
 В Xray VLESS и VMess обозначают Multiplex командой Mux в заголовке запроса. `v1.mux.cool` — внутреннее имя такого соединения. Его можно увидеть в журнале Xray. В конфигурации указывайте адрес сервера VLESS или VMess.
 
-Настройки клиента описаны в разделе [Multiplex и XUDP](../../config/outbound.md#muxobject).
+Настройки клиента описаны в разделе [Multiplex и XUDP](../../config/multiplex.md).
