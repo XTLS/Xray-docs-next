@@ -41,13 +41,13 @@ end
 
 При включении скрипта маршрутизации `rules` и `domainStrategy` не действуют. Если скрипт не выбрал исходящее подключение или возникла ошибка, встроенные правила маршрутизации также не проверяются.
 
-Настройка `balancers` остаётся доступной. Скрипт выбирает исходящее подключение через [`router:PickOutbound`](../reference/module-router.md#router-pickoutbound):
+Настройка `balancers` остаётся доступной. Скрипт выбирает исходящее подключение через [`router.PickOutbound`](../reference/module-router.md#router-pickoutbound):
 
 ```lua
 local router = require("xray.router")
 
 function HandleRoute(ctx)
-    local outboundTag, err = router:PickOutbound("balance")
+    local outboundTag, err = router.PickOutbound("balance")
     return outboundTag, "lua-balance", err
 end
 ```

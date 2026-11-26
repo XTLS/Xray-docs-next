@@ -15,7 +15,7 @@ local router = require("xray.router")
 | 常量 | [`router.NetworkUDP`](#常量)                               | UDP                    |
 | 常量 | [`router.NetworkUNIX`](#常量)                              | UNIX                   |
 | 常量 | [`router.LocalOS`](#常量)                                  | 运行平台               |
-| 函数 | [`router:PickOutbound(balancerTag)`](#router-pickoutbound) | 通过负载均衡器选择出站 |
+| 函数 | [`router.PickOutbound(balancerTag)`](#router-pickoutbound) | 通过负载均衡器选择出站 |
 | 函数 | [`router.FindProcess(ctx)`](#router-findprocess)           | 查找本地连接对应的进程 |
 
 ## 常量
@@ -38,10 +38,10 @@ end
 
 ## 函数
 
-### router:PickOutbound
+### router.PickOutbound
 
 ```lua
-local outboundTag, err = router:PickOutbound(balancerTag)
+local outboundTag, err = router.PickOutbound(balancerTag)
 ```
 
 通过指定的负载均衡器选择出站。
@@ -70,7 +70,7 @@ local outboundTag, err = router:PickOutbound(balancerTag)
 下面使用 `tag` 为 `"proxy-pool"` 的负载均衡器，并按[路由 Hook 的返回值约定](./hook-routing.md#返回值)传递结果：
 
 ```lua
-local outboundTag, err = router:PickOutbound("proxy-pool")
+local outboundTag, err = router.PickOutbound("proxy-pool")
 return outboundTag, "lua-balance", err
 ```
 
