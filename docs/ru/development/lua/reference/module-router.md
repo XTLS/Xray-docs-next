@@ -15,7 +15,7 @@ local router = require("xray.router")
 | Константа | [`router.NetworkUDP`](#константы)                          | UDP                                              |
 | Константа | [`router.NetworkUNIX`](#константы)                         | UNIX                                             |
 | Константа | [`router.LocalOS`](#константы)                             | Платформа выполнения                             |
-| Функция   | [`router:PickOutbound(balancerTag)`](#router-pickoutbound) | Выбор исходящего подключения через балансировщик |
+| Функция   | [`router.PickOutbound(balancerTag)`](#router-pickoutbound) | Выбор исходящего подключения через балансировщик |
 | Функция   | [`router.FindProcess(ctx)`](#router-findprocess)           | Поиск процесса локального соединения             |
 
 ## Константы
@@ -38,10 +38,10 @@ end
 
 ## Функции
 
-### router:PickOutbound
+### router.PickOutbound
 
 ```lua
-local outboundTag, err = router:PickOutbound(balancerTag)
+local outboundTag, err = router.PickOutbound(balancerTag)
 ```
 
 Выбирает исходящее подключение через указанный балансировщик.
@@ -70,7 +70,7 @@ local outboundTag, err = router:PickOutbound(balancerTag)
 Ниже используется балансировщик с `tag` `"proxy-pool"`, а результат передаётся согласно [соглашению о возвращаемых значениях Hook маршрутизации](./hook-routing.md#возвращаемые-значения):
 
 ```lua
-local outboundTag, err = router:PickOutbound("proxy-pool")
+local outboundTag, err = router.PickOutbound("proxy-pool")
 return outboundTag, "lua-balance", err
 ```
 

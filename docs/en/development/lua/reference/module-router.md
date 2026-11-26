@@ -15,7 +15,7 @@ local router = require("xray.router")
 | Constant | [`router.NetworkUDP`](#constants)                          | UDP                                                 |
 | Constant | [`router.NetworkUNIX`](#constants)                         | UNIX                                                |
 | Constant | [`router.LocalOS`](#constants)                             | Runtime platform                                    |
-| Function | [`router:PickOutbound(balancerTag)`](#router-pickoutbound) | Select an outbound through a balancer               |
+| Function | [`router.PickOutbound(balancerTag)`](#router-pickoutbound) | Select an outbound through a balancer               |
 | Function | [`router.FindProcess(ctx)`](#router-findprocess)           | Find the process associated with a local connection |
 
 ## Constants
@@ -38,10 +38,10 @@ end
 
 ## Functions
 
-### router:PickOutbound
+### router.PickOutbound
 
 ```lua
-local outboundTag, err = router:PickOutbound(balancerTag)
+local outboundTag, err = router.PickOutbound(balancerTag)
 ```
 
 Selects an outbound through the specified balancer.
@@ -70,7 +70,7 @@ Check `err` before using the result. If the balancer does not exist, returns `ni
 The following uses the balancer with `tag` `"proxy-pool"` and passes on the result according to the [Routing Hook's return-value convention](./hook-routing.md#return-values):
 
 ```lua
-local outboundTag, err = router:PickOutbound("proxy-pool")
+local outboundTag, err = router.PickOutbound("proxy-pool")
 return outboundTag, "lua-balance", err
 ```
 

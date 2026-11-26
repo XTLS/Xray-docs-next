@@ -41,13 +41,13 @@ end
 
 启用路由脚本后，`rules` 和 `domainStrategy` 均不生效。脚本未选中出站或发生错误时，也不会继续匹配内置路由规则。
 
-`balancers` 仍可配置，脚本通过 [`router:PickOutbound`](../reference/module-router.md#router-pickoutbound) 选择其中的出站：
+`balancers` 仍可配置，脚本通过 [`router.PickOutbound`](../reference/module-router.md#router-pickoutbound) 选择其中的出站：
 
 ```lua
 local router = require("xray.router")
 
 function HandleRoute(ctx)
-    local outboundTag, err = router:PickOutbound("balance")
+    local outboundTag, err = router.PickOutbound("balance")
     return outboundTag, "lua-balance", err
 end
 ```

@@ -41,13 +41,13 @@ Merge the fragment above into a complete configuration. See [Script File Paths](
 
 When a routing script is enabled, neither `rules` nor `domainStrategy` takes effect. If the script does not select an outbound or encounters an error, the built-in routing rules are not evaluated either.
 
-You can still configure `balancers`. The script selects an outbound from a balancer through [`router:PickOutbound`](../reference/module-router.md#router-pickoutbound):
+You can still configure `balancers`. The script selects an outbound from a balancer through [`router.PickOutbound`](../reference/module-router.md#router-pickoutbound):
 
 ```lua
 local router = require("xray.router")
 
 function HandleRoute(ctx)
-    local outboundTag, err = router:PickOutbound("balance")
+    local outboundTag, err = router.PickOutbound("balance")
     return outboundTag, "lua-balance", err
 end
 ```
