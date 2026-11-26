@@ -119,14 +119,14 @@ Splice - это функция, предоставляемая ядром Linux,
 
 > `multiplex`: [Multiplex и XUDP](../multiplex.md)
 
-Добавьте выделенные строки в существующий `settings`.
+Добавьте поле `multiplex` внутрь существующего `settings`.
 
-```diff
-   "settings": {
-+    "multiplex": {
-+      "concurrency": 8
-+    },
-     "address": "example.com",
+```json {2-4}
+{
+  "multiplex": {
+    "concurrency": 8
+  }
+}
 ```
 
 В примере `concurrency: 8` позволяет передавать до восьми потоков одновременно через одно соединение с сервером.

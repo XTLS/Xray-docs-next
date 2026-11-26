@@ -72,14 +72,14 @@ VMess полагается на системное время. Убедитес�
 
 > `multiplex`: [Multiplex и XUDP](../multiplex.md)
 
-Добавьте выделенные строки в существующий `settings`.
+Добавьте поле `multiplex` внутрь существующего `settings`.
 
-```diff
-   "settings": {
-+    "multiplex": {
-+      "concurrency": 8
-+    },
-     "address": "127.0.0.1",
+```json {2-4}
+{
+  "multiplex": {
+    "concurrency": 8
+  }
+}
 ```
 
 В примере `concurrency: 8` включает общий пул TCP и UDP. Чтобы включить Multiplex только для UDP, замените `concurrency` на `xudpConcurrency`. Чтобы выключить Multiplex, удалите объект `multiplex` из `settings`.
