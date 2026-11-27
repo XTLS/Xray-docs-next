@@ -8,27 +8,23 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` 对应 [`OutboundObject`](../outbound.md) 中的 `settings` 项。
+`OutboundConfigurationObject` 定义 VMess 出站的 `settings` 字段。下面列出主要字段。
 
-```json
-{
-  "outbounds": [
-    {
-      // ...
-      "protocol": "vmess",
-      // [!field focus]
-      "settings": {
-        "address": "127.0.0.1",
-        "port": 37192,
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-        "security": "auto",
-        "level": 0,
-        "experiments": ""
-      }
-    }
-  ]
-}
-```
+> [!TIP]
+>
+> ```json {2-4}
+> {
+>   "multiplex": {
+>     "concurrency": 8
+>   },
+>   "address": "127.0.0.1",
+>   "port": 37192,
+>   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+>   "security": "auto",
+>   "level": 0,
+>   "experiments": ""
+> }
+> ```
 
 > `address`: address
 
@@ -66,6 +62,12 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 - `"auto"`：默认值，自动选择（运行框架为 AMD64、ARM64 或 s390x 时为 aes-128-gcm 加密方式，其他情况则为 Chacha20-Poly1305 加密方式）
 
 注意，auto 只是判断客户端的 AES 硬件加速支持状态，如果服务端没有 AES 硬件加速支持，仍然需要手动设置到 chacha20-poly1305, 这非常重要，因为 Chacha20-Poly1305 在支持 AES 加速的平台上比 AES-128-GCM 耗时多了约 48% 但是在不支持 AES 加速的平台上, AES-128-GCM 的耗时将比 Chacha20-Poly1305 高出 2000% 以上。
+
+<span id="multiplex"></span>
+
+> `multiplex`: [Multiplex](../multiplex.md)
+
+可选的 Multiplex 参数对象。完整路径为 `outbounds[].settings.multiplex`。连接限制与 UDP 规则参见 [Multiplex 字段](../multiplex.md#fields)。
 
 > `experiments`: string
 

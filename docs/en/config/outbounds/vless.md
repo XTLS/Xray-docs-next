@@ -6,28 +6,26 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
+`OutboundConfigurationObject` defines the `settings` fields of a VLESS outbound. The main fields are shown below. The descriptions of `flow`, `reverse` and `multiplex` specify when each setting applies.
 
-```json
-{
-  "outbounds": [
-    {
-      // ...
-      "protocol": "vless",
-      // [!field focus]
-      "settings": {
-        "address": "example.com",
-        "port": 443,
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-        "encryption": "none",
-        "flow": "xtls-rprx-vision",
-        "level": 0,
-        "reverse": {}
-      }
-    }
-  ]
-}
-```
+> [!TIP]
+>
+> ```json {11-13}
+> {
+>   "address": "example.com",
+>   "port": 443,
+>   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+>   "encryption": "none",
+>   "flow": "",
+>   "level": 0,
+>   "reverse": {
+>     "tag": "reverse-inbound"
+>   },
+>   "multiplex": {
+>     "concurrency": 8
+>   }
+> }
+> ```
 
 ::: warning
 VLESS must be used with an outer transport-security layer unless the peer is a private address (such as a private IP address or private domain name) and the link itself is trusted, or `VLESS Encryption` is enabled. In those cases, `streamSettings.security: "none"` is allowed.
@@ -83,8 +81,10 @@ Flow control mode, used to select the XTLS algorithm.
 Currently, the following flow control modes are available in the outbound protocol:
 
 - **No `flow` or empty string**: Use standard TLS proxy.
-- **`xtls-rprx-vision`**: Use XTLS, including inner handshake random padding. Will intercept UDP traffic targeting port 443 (QUIC) to force browsers to use standard HTTPS, increasing traffic that can be Spliced.
-- **`xtls-rprx-vision-udp443`**: Same as `xtls-rprx-vision`, but does not intercept UDP 443. Used when a program forces the use of QUIC and would fail to work if intercepted.
+- **`xtls-rprx-vision`** enables Vision. When UDP is carried outside a Multiplex pool, this mode rejects packets addressed to destination port 443 (QUIC).
+- **`xtls-rprx-vision-udp443`** enables Vision and permits UDP port 443 outside Multiplex pools.
+
+For a UDP request assigned to a Multiplex pool, the [`xudpProxyUDP443` rule](../multiplex.md#xudpproxyudp443) applies first. With `"allow"`, packets use the pool. With `"skip"`, the client sends them outside the pool according to the selected Vision mode.
 
 XTLS is available only in the following combinations:
 
@@ -108,6 +108,18 @@ When using Splice, the network speed display will lag and will only be counted a
 User level. The connection will use the [Local Policy](../policy.md#levelpolicyobject) corresponding to this user level.
 
 The value of `level` corresponds to the value of `level` in [policy](../policy.md#policyobject). If not specified, it defaults to 0.
+
+<span id="multiplex"></span>
+
+> `multiplex`: [Multiplex](../multiplex.md)
+
+Optional Multiplex configuration object. Its full path is `outbounds[].settings.multiplex`. Connection limits and UDP handling are described in the [field reference](../multiplex.md#multiplex-fields).
+
+**Vision.** For an account with `flow` set to `xtls-rprx-vision`, the server accepts only UDP through Multiplex. To carry TCP through Vision outside the pool, configure only the separate UDP pool. [Vision configuration](../multiplex.md#vision)
+
+For XDrive, see [Multiplex settings and stream limits](../multiplex.md#xdrive).
+
+[VLESS Reverse](/en/document/level-2/vless_reverse.md) opens its own Multiplex connection. Enabling the shared pool is optional for Reverse itself.
 
 > `reverse`: struct
 

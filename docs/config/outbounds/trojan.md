@@ -26,8 +26,10 @@
 ```
 
 ::: warning
-Trojan 必须配合传输安全如 [TLS](../transports/tls.md) 使用；只有当对端是 private 地址（如私有 IP、私有域名）且链路处于受信网络中时，才允许使用 `streamSettings.security: "none"`。公网环境中还要求启用 Mux；否则一旦内层载荷本身也是 TLS，就会形成 TiT，很容易被检测（[PoC](https://github.com/XTLS/Trojan-killer)）。
+Trojan 请配合 [TLS](../transports/tls.md) 等传输安全使用。只有对端为私有地址且链路处于受信网络时，才允许使用 `streamSettings.security: "none"`。
 :::
+
+Trojan 出站不使用 Multiplex 连接池。[Multiplex](../multiplex.md) 由 VLESS 和 VMess 出站支持。
 
 > `address`: address
 

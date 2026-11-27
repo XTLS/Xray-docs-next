@@ -4,6 +4,8 @@ VLESS is a stateless lightweight transport protocol that serves as a bridge betw
 
 ## Request & Response
 
+For TCP and UDP, the request header includes the destination port and address. For the `Mux` (`0x03`, Multiplex) and `Rvs` (`0x04`, Reverse) commands, the port, address type and address fields in the table below are omitted.
+
 | 1 Byte           | 16 Bytes        | 1 Byte          | M Bytes         | 1 Byte  | 2 Bytes | 1 Byte       | S Bytes | X Bytes      |
 | :--------------- | :-------------- | :-------------- | :-------------- | :------ | :------ | :----------- | :------ | :----------- |
 | Protocol Version | Equivalent UUID | Addons Length M | Addons ProtoBuf | Command | Port    | Address Type | Address | Request Data |

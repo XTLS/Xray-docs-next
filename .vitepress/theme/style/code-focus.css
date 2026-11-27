@@ -26,12 +26,20 @@
   opacity: 1;
 }
 
-:is(._ru_config_multiplex, ._ru_config_outbounds_vless, ._ru_config_outbounds_vmess)
+:is(
+  ._config_multiplex, ._config_outbounds_vless, ._config_outbounds_vmess,
+  ._en_config_multiplex, ._en_config_outbounds_vless, ._en_config_outbounds_vmess,
+  ._ru_config_multiplex, ._ru_config_outbounds_vless, ._ru_config_outbounds_vmess
+)
   .github-alert.tip .language-json {
   --vp-code-line-highlight-color: var(--vp-code-line-diff-add-color);
 }
 
-:is(._ru_config_multiplex, ._ru_config_outbounds_vless, ._ru_config_outbounds_vmess)
+:is(
+  ._config_multiplex, ._config_outbounds_vless, ._config_outbounds_vmess,
+  ._en_config_multiplex, ._en_config_outbounds_vless, ._en_config_outbounds_vmess,
+  ._ru_config_multiplex, ._ru_config_outbounds_vless, ._ru_config_outbounds_vmess
+)
   .github-alert.caution .language-json {
   --vp-code-line-highlight-color: var(--vp-code-line-diff-remove-color);
 }

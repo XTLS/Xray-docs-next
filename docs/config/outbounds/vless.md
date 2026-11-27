@@ -6,28 +6,26 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` 对应 [`OutboundObject`](../outbound.md) 中的 `settings` 项。
+`OutboundConfigurationObject` 定义 VLESS 出站的 `settings` 字段。下面列出主要字段。各字段中说明了 `flow`、`reverse` 和 `multiplex` 的适用条件。
 
-```json
-{
-  "outbounds": [
-    {
-      // ...
-      "protocol": "vless",
-      // [!field focus]
-      "settings": {
-        "address": "example.com",
-        "port": 443,
-        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
-        "encryption": "none",
-        "flow": "xtls-rprx-vision",
-        "level": 0,
-        "reverse": {}
-      }
-    }
-  ]
-}
-```
+> [!TIP]
+>
+> ```json {11-13}
+> {
+>   "address": "example.com",
+>   "port": 443,
+>   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+>   "encryption": "none",
+>   "flow": "",
+>   "level": 0,
+>   "reverse": {
+>     "tag": "reverse-inbound"
+>   },
+>   "multiplex": {
+>     "concurrency": 8
+>   }
+> }
+> ```
 
 ::: warning
 VLESS 必须配合传输安全层使用；只有当对端是 private 地址（如私有 IP、私有域名）且链路处于受信网络中，或者已启用 `VLESS Encryption` 时，才允许使用 `streamSettings.security: "none"`。
@@ -83,8 +81,10 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 目前出站协议中有以下流控模式可选：
 
 - 无 `flow` 或者 空字符： 使用普通 TLS 代理
-- `xtls-rprx-vision`：使用 XTLS，包含内层握手随机填充。会拦截目标为 443 端口的 UDP 流量（QUIC），促使浏览器使用普通 HTTPS 以增加可以被 Splice 的流量。
-- `xtls-rprx-vision-udp443`：同 `xtls-rprx-vision`, 但是不会拦截 UDP 443，用于有程序强制使用 QUIC，被拦截会导致其无法工作时。
+- `xtls-rprx-vision`：启用 Vision。在 Multiplex 连接池外传输 UDP 时，会拒绝目标端口为 443 的数据包（QUIC）。
+- `xtls-rprx-vision-udp443`：启用 Vision，并允许在 Multiplex 连接池外传输 UDP 443。
+
+对于通过 Multiplex 连接池发送的 UDP 请求，先应用 [`xudpProxyUDP443` 规则](../multiplex.md#xudpproxyudp443)。`"allow"` 使数据包通过连接池，`"skip"` 使客户端在连接池外按所选 Vision 模式处理。
 
 XTLS 仅在以下搭配下可用
 
@@ -108,6 +108,18 @@ Splice 是 Linux Kernel 提供的函数，系统内核直接转发 TCP，不再�
 用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
 level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
+
+<span id="multiplex"></span>
+
+> `multiplex`: [Multiplex](../multiplex.md)
+
+可选的 Multiplex 参数对象。完整路径为 `outbounds[].settings.multiplex`。连接限制与 UDP 规则参见 [Multiplex 字段](../multiplex.md#fields)。
+
+**Vision。** 用户的 `flow` 为 `xtls-rprx-vision` 时，服务器通过 Multiplex 仅接受 UDP。要使 TCP 通过 Vision 传输，请只配置独立 UDP 连接池。参见 [Vision 配置](../multiplex.md#vision)。
+
+XDrive 的规则参见 [Multiplex 设置与流数量限制](../multiplex.md#xdrive)。
+
+[VLESS Reverse](/document/level-2/vless_reverse.md) 建立自己的 Multiplex 连接，无需为 Reverse 本身启用公共连接池。
 
 > `reverse`: struct
 

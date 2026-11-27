@@ -34,6 +34,8 @@ VMess depends on system time. Please ensure that the system UTC time of the devi
 }
 ```
 
+A VMess inbound automatically recognizes Multiplex requests. Multiplex parameters are configured in the client's VMess outbound (`outbounds[].settings.multiplex`). [Inbound Multiplex behavior](../multiplex.md#inbound-connection)
+
 > `users`: \[ [UserObject](#userobject) \]
 
 An array representing a group of users accepted by the server.

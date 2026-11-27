@@ -42,6 +42,8 @@ Unlike [VMess](./vmess.md), VLESS does not depend on system time. The authentica
 VLESS must be used with an outer transport-security layer unless the peer is a private address (such as a private IP address or private domain name) and the link itself is trusted, or `VLESS Encryption` is enabled. In those cases, `streamSettings.security: "none"` is allowed.
 :::
 
+A VLESS inbound automatically recognizes Multiplex requests. Multiplex parameters are configured in the client's VLESS outbound (`outbounds[].settings.multiplex`). [Inbound Multiplex behavior](../multiplex.md#inbound-connection)
+
 > `users`: \[ [UserObject](#userobject) \]
 
 An array representing a group of users approved by the server.

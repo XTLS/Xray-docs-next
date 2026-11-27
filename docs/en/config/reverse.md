@@ -1,10 +1,10 @@
 # Legacy Reverse Proxy
 
 ::: danger
-The legacy reverse proxy has been deprecated. Please use the [VLESS reverse proxy](/en/document/level-2/vless_reverse.md).
+The old top-level JSON `reverse` block causes a configuration loading error. Configure [VLESS Reverse](/en/document/level-2/vless_reverse.md) in the VLESS settings. The previous format is documented below for older Xray versions.
 :::
 
-:::: details Legacy reverse proxy documentation (deprecated)
+:::: details Archived documentation for older versions
 A reverse proxy can forward traffic from the server side to the client side, effectively performing reverse traffic forwarding.
 
 ::: tip

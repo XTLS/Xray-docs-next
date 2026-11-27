@@ -29,7 +29,7 @@ The URL used to probe the connection status of the outbound proxy.
 
 The interval for initiating probes. The time format is number + unit, such as `"10s"`, `"2h45m"`. Supported time units are `ns`, `us`, `ms`, `s`, `m`, `h`, corresponding to nanoseconds, microseconds, milliseconds, seconds, minutes, and hours respectively.
 
-Note that since the request interval is fixed, periodic fixed requests might lead to behavioral fingerprinting. Using protocols with multiplexing or enabling `mux` can alleviate this issue.
+Probes run at the configured interval. With the shared [Multiplex](./multiplex.md) pool enabled, requests through the probed VLESS or VMess outbound can reuse an open connection.
 
 > `enableConcurrency`: true | false
 

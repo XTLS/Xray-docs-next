@@ -32,6 +32,7 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "FakeDNS", link: "/config/fakedns.md" },
         { text: "入站代理", link: "/config/inbound.md" },
         { text: "出站代理", link: "/config/outbound.md" },
+        { text: "Multiplex", link: "/config/multiplex.md" },
         { text: "传输配置", link: "/config/transport.md" },
         { text: "本地策略", link: "/config/policy.md" },
         { text: "路由", link: "/config/routing.md" },
