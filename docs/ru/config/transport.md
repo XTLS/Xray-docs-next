@@ -30,6 +30,7 @@
         "method": "raw",
         "rawSettings": {},
         "xhttpSettings": {},
+        "xdriveSettings": {},
         "kcpSettings": {},
         "grpcSettings": {},
         "wsSettings": {},
@@ -51,7 +52,7 @@
 
 ### Способы передачи
 
-> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
+> `method`: "raw" | "xhttp" | "xdrive" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
 
 Способ передачи, используемый потоком данных. Значение по умолчанию — `raw`.
 
@@ -62,6 +63,10 @@
 > `xhttpSettings`: [XHTTPObject](./transports/xhttp.md)
 
 Настройки XHTTP для потока данных. Действуют только когда `method` равно `xhttp`.
+
+> `xdriveSettings`: object
+
+Параметры транспорта XDrive для VLESS. Транспорт выбирается значением `"xdrive"` в поле `method`. Настройка пула описана в разделе [Multiplex поверх XDrive](./multiplex.md#xdrive).
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 

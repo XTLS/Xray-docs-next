@@ -8,7 +8,15 @@ Multiplex позволяет передавать несколько незав�
 
 Multiplex настраивается в исходящем подключении [VLESS](./outbounds/vless.md) или [VMess](./outbounds/vmess.md). Для остальных исходящих протоколов, включая SOCKS, HTTP, Shadowsocks и Trojan, эта настройка недоступна.
 
-Клиент открывает соединение с сервером через исходящее подключение. В JSON настройки этого подключения находятся по пути `outbounds[].settings.multiplex`. Внутри одного элемента `outbounds` тот же путь записывается как `settings.multiplex`.
+В одном элементе `outbounds` объекты `settings` и `streamSettings` находятся на одном уровне:
+
+- `settings.multiplex` задаёт параметры пулов Multiplex. Полный путь — `outbounds[].settings.multiplex`.
+- `streamSettings.method` выбирает транспорт для этого подключения. Например, `"raw"` выбирает RAW, `"xhttp"` — XHTTP, `"xdrive"` — XDrive. Полный путь — `outbounds[].streamSettings.method`.
+
+От выбора транспорта зависит, что произойдёт при пропуске `settings.multiplex`:
+
+- **RAW и XHTTP.** Пулы Multiplex для потоков приложений выключены. У XHTTP есть собственный механизм XMUX, который управляет повторным использованием HTTP-соединений. [Пример для XHTTP](#xhttp).
+- **XDrive.** У VLESS без Reverse общий пул включается автоматически. По умолчанию TCP и UDP делят лимит 128 одновременных потоков на соединение. [Примеры для XDrive](#xdrive).
 
 ### Входящее подключение
 
@@ -29,11 +37,11 @@ Multiplex настраивается в исходящем подключени�
 
 ## Полная запись `multiplex`
 
-Настройки Multiplex задаются тремя необязательными полями: `concurrency`, `xudpConcurrency` и `xudpProxyUDP443`. Ниже приведён пример полной записи объекта `multiplex` для исходящего подключения VLESS. Для VMess запись такая же.
+Объект `multiplex` содержит три необязательных поля: `concurrency`, `xudpConcurrency` и `xudpProxyUDP443`. В примере показаны все три поля для VLESS поверх RAW и их место в исходящем подключении. Для VMess объект записывается так же.
 
 > [!TIP]
 >
-> ```json {6-10}
+> ```json {6-10,12-14}
 > {
 >   "outbounds": [
 >     {
@@ -44,6 +52,9 @@ Multiplex настраивается в исходящем подключени�
 >           "xudpConcurrency": 16,
 >           "xudpProxyUDP443": "reject"
 >         }
+>       },
+>       "streamSettings": {
+>         "method": "raw"
 >       }
 >     }
 >   ]
@@ -199,11 +210,48 @@ TCP использует общий пул с лимитом 8 потоков н
 
 TCP передаётся через Vision без пула Multiplex. UDP, включая пакеты на порт 443, проходит через отдельный пул с лимитом 16 потоков на соединение.
 
+## Multiplex на разных транспортах
+
+### XHTTP
+
+Для VLESS поверх XHTTP поле `streamSettings.method` принимает значение `"xhttp"`. Параметры транспорта находятся в `streamSettings.xhttpSettings`, параметры пула VLESS — в `settings.multiplex`.
+
+Пример исходящего подключения с общим пулом на восемь потоков. У XHTTP указан путь `/proxy`; тот же путь задаётся на принимающей стороне.
+
+> [!TIP]
+>
+> ```json {4-6,9-12}
+> {
+>   "protocol": "vless",
+>   "settings": {
+>     "multiplex": {
+>       "concurrency": 8
+>     }
+>   },
+>   "streamSettings": {
+>     "method": "xhttp",
+>     "xhttpSettings": {
+>       "path": "/proxy"
+>     }
+>   }
+> }
+> ```
+
+В этом примере общий пул VLESS включён поверх транспортного XMUX. При загрузке клиент выводит предупреждение и продолжает запуск.
+
+```text
+ATTENTION: Using VLESS Multiplex over XHTTP XMUX
+```
+
+При включении только отдельного пула UDP это предупреждение не выводится. [Подробнее о XHTTP](./transports/xhttp.md#multiplex)
+
 ### XDrive
 
 Для VLESS поверх XDrive без Reverse общий пул включён автоматически. По умолчанию TCP и UDP используют соединения общего пула. На каждом из них одновременно могут работать до **128 потоков**. Объект `multiplex` для этого режима можно пропустить.
 
-Пример выбора XDrive с автоматическими настройками пула. В элементе `outbounds` указывается транспорт, а поле `settings.multiplex` пропускается. Здесь и далее показаны только поля, относящиеся к примеру.
+Для выбора XDrive укажите `"method": "xdrive"` в объекте `streamSettings` исходящего подключения VLESS. Собственные параметры транспорта задаются там же, в `streamSettings.xdriveSettings`. Параметры пула по-прежнему задаются в `settings.multiplex`.
+
+Пример выбора XDrive с автоматическими настройками пула. Ниже показан фрагмент исходящего подключения. Адрес сервера, данные пользователя и параметры шифрования VLESS в примере опущены.
 
 > [!TIP]
 >
@@ -306,34 +354,6 @@ TCP передаётся через Vision без пула Multiplex. UDP, вк�
 > ```
 
 Сервер VLESS поверх XDrive принимает команду `Rvs` (`0x04`) для обратного прокси и `Mux` (`0x03`) для подключения через пул. Настройка обеих сторон и маршрутизации описана в [руководстве по VLESS Reverse](/ru/document/level-2/vless_reverse.md).
-
-### XHTTP
-
-Пример общего пула VLESS поверх XHTTP. В одном исходящем подключении `settings.multiplex` задаёт параметры пула, а `streamSettings.method` выбирает транспорт.
-
-> [!TIP]
->
-> ```json {4-6}
-> {
->   "protocol": "vless",
->   "settings": {
->     "multiplex": {
->       "concurrency": 8
->     }
->   },
->   "streamSettings": {
->     "method": "xhttp"
->   }
-> }
-> ```
-
-В этом примере общий пул VLESS включён поверх транспортного XMUX. При загрузке клиент выводит предупреждение и продолжает запуск.
-
-```text
-ATTENTION: Using VLESS Multiplex over XHTTP XMUX
-```
-
-При включении только отдельного пула UDP это предупреждение не выводится. [Подробнее о XHTTP](./transports/xhttp.md#multiplex)
 
 ## Как обновить старую конфигурацию
 
