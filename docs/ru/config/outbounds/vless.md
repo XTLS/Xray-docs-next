@@ -6,7 +6,7 @@ VLESS - это легкий транспортный протокол без с�
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md). Ниже пример исходящего VLESS с TLS и общим пулом Multiplex.
+`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md). Ниже показано исходящее подключение VLESS с TLS и общим пулом Multiplex.
 
 > [!TIP]
 >
@@ -119,13 +119,13 @@ Splice - это функция, предоставляемая ядром Linux,
 
 > `multiplex`: [Multiplex](../multiplex.md)
 
-Поле `multiplex` находится внутри `settings` исходящего подключения.
+Путь к настройке Multiplex в исходящем подключении VLESS — `outbounds[].settings.multiplex`.
 
 В примере `concurrency: 8` позволяет передавать до восьми потоков одновременно через одно соединение с сервером.
 
 **Vision.** Если у пользователя на сервере задан `flow: "xtls-rprx-vision"`, сервер пропускает через Multiplex только UDP. Чтобы TCP шёл через обычные соединения, укажите только `"multiplex": {"xudpConcurrency": 8}`.
 
-**XDrive без Reverse** автоматически включает общий пул с лимитом `128`. Допустимые значения и настройки отдельного UDP-пула приведены в [разделе XDrive](../multiplex.md#xdrive).
+**XDrive без Reverse** автоматически включает общий пул с лимитом `128`. Допустимые значения и настройки отдельного пула UDP приведены в [разделе XDrive](../multiplex.md#xdrive).
 
 [VLESS Reverse](/ru/document/level-2/vless_reverse.md) открывает собственное соединение Multiplex. Для самого Reverse общий пул включать необязательно.
 
