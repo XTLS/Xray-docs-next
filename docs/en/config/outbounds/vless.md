@@ -83,8 +83,10 @@ Flow control mode, used to select the XTLS algorithm.
 Currently, the following flow control modes are available in the outbound protocol:
 
 - **No `flow` or empty string**: Use standard TLS proxy.
-- **`xtls-rprx-vision`**: Use XTLS, including inner handshake random padding. Will intercept UDP traffic targeting port 443 (QUIC) to force browsers to use standard HTTPS, increasing traffic that can be Spliced.
-- **`xtls-rprx-vision-udp443`**: Same as `xtls-rprx-vision`, but does not intercept UDP 443. Used when a program forces the use of QUIC and would fail to work if intercepted.
+- **`xtls-rprx-vision`** enables Vision. When UDP is carried outside a Multiplex pool, this mode rejects packets addressed to destination port 443 (QUIC).
+- **`xtls-rprx-vision-udp443`** enables Vision and permits UDP port 443 outside Multiplex pools.
+
+For a UDP request assigned to a Multiplex pool, the [`xudpProxyUDP443` rule](#multiplex) applies first. With `"allow"`, packets use the pool. With `"skip"`, the client sends them outside the pool according to the selected Vision mode.
 
 XTLS is available only in the following combinations:
 
@@ -133,3 +135,38 @@ The UUID used must be one that is also configured with `reverse` on the server s
 ::: tip
 Full tutorial: [VLESS Reverse Proxy Examples](../../document/level-2/vless_reverse.md)
 :::
+
+## Multiplex
+
+Multiplex carries several streams over one connection to the server. On the client, place the `multiplex` object **inside the outbound's `settings`**. Its full JSON path is `outbounds[].settings.multiplex`. The server recognizes Multiplex automatically.
+
+**Per-connection limits.** The `concurrency` and `xudpConcurrency` fields accept integers from `0` through `32767`. They limit the number of **concurrently active streams**. Xray separately tracks the total number of streams served over the connection's lifetime, including completed streams. The rules depend on the transport selected in `streamSettings.method`.
+
+- **RAW, XHTTP, gRPC, WebSocket, HTTPUpgrade, mKCP and Hysteria.** Values from `1` through `1024` set the concurrent-stream limit. Each connection serves a maximum of **1024 streams** over its lifetime, so values from `1025` through `32767` are accepted but cannot increase this limit. After the 1024th stream, new streams use another connection. An omitted field or a value of zero disables the corresponding pool.
+- **XDrive without Reverse.** The 1024-stream limit is removed. The shared pool is enabled automatically with a limit of **128 concurrent streams**, even when `multiplex` is omitted. For the separate UDP pool, zero or an omitted field still disables the pool. Values from `1` through `127` are raised to `128`, while values from `128` through `32767` apply as specified. A Multiplex connection serves up to **65,535 streams** over its lifetime, then new streams use another connection. [XDrive settings](../transport.md#xdrivesettings)
+
+**Fields of the `multiplex` object** can be specified individually or together.
+
+- `concurrency` sets the shared pool's limit. Specifying only this field lets TCP and UDP use the same connections.
+- `xudpConcurrency` sets the separate UDP pool's limit. When both pools are enabled, TCP uses the shared pool and UDP uses the separate pool.
+- `xudpProxyUDP443` controls packets addressed to UDP destination port 443 when sent through a pool. The default `"reject"` rejects the packets. `"allow"` permits transmission through the pool, and `"skip"` sends packets outside the pool according to the outbound protocol's rules. XDrive supports `"reject"` and `"allow"`. For `"allow"`, set a positive limit for at least one pool. [XUDP format](../../development/protocols/muxcool.md#new-sub-connection-new)
+
+All three fields are optional. An empty `multiplex` object and an omitted object have the same effect for the selected transport. With Vision, the server accepts only UDP through Multiplex. To carry TCP through Vision, specify only a positive `xudpConcurrency`.
+
+**Example.** In this VLESS over RAW outbound fragment, the shared pool carries TCP with a limit of 8 streams per connection. UDP uses a separate pool with a limit of 16. Packets addressed to UDP port 443 are rejected.
+
+> [!TIP]
+>
+> ```json {3-7}
+> {
+>   "settings": {
+>     "multiplex": {
+>       "concurrency": 8,
+>       "xudpConcurrency": 16,
+>       "xudpProxyUDP443": "reject"
+>     }
+>   }
+> }
+> ```
+
+The old `outbounds[].mux` field is ignored with a warning during configuration loading. To enable pools, set their limits in `settings.multiplex`.

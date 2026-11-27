@@ -24,7 +24,8 @@ However, the current Browser Dialer has the following drawbacks:
    - On Windows: `set XRAY_BROWSER_DIALER=127.0.0.1:8080`
    - On Linux: `XRAY_BROWSER_DIALER=127.0.0.1:8080 ./xray -c config.json`
 3. Ensure the browser connects directly (or configure the routing so that the server address is sent directly via `freedom`). Open the page `localhost:8080`. You can also use `F12` to check `Console` and `Network`.
-4. Browsers limit the number of outbound connections, so it is recommended to enable `Mux.Cool`.
+
+With Browser Dialer, configure [Multiplex](../outbounds/vless.md#multiplex) in the VLESS or VMess outbound (`outbounds[].settings.multiplex`).
 
 ## Internal Communication Mechanism
 

@@ -67,6 +67,10 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 注意，auto 只是判断客户端的 AES 硬件加速支持状态，如果服务端没有 AES 硬件加速支持，仍然需要手动设置到 chacha20-poly1305, 这非常重要，因为 Chacha20-Poly1305 在支持 AES 加速的平台上比 AES-128-GCM 耗时多了约 48% 但是在不支持 AES 加速的平台上, AES-128-GCM 的耗时将比 Chacha20-Poly1305 高出 2000% 以上。
 
+<span id="multiplex"></span>
+
+> `multiplex`: [Multiplex 设置](./vless.md#multiplex)
+
 > `experiments`: string
 
 启用的 VMess 协议实验性功能。（此处的功能为不稳定功能， 可能随时被移除）多个启用的实验之间可以用 | 字符分割，如 "AuthenticatedLength|NoTerminationSignal" 。

@@ -125,5 +125,6 @@ XUDP 在 Opt(D) 之后加 UDP 地址，格式同新建子连接，但没有 Glob
 
 Mux.Cool 协议与底层协议无关，理论上可以使用任何可靠的流式连接来传输 Mux.Cool 的协议数据。
 
-在目标导向的协议如 Shadowsocks 和 VMess 协议中，连接建立时必须包含一个指定的地址。
-为了保持兼容性，Mux.Cool 协议指定地址为“v1.mux.cool”。即当主连接的目标地址与之匹配时，则进行 Mux.Cool 方式的转发，否则按传统方式进行转发。（注：这是一个程序内的标记，VMess 和 VLESS 并不会在数据包中发送“v1.mux.cool”地址）
+VLESS 和 VMess 请求头中的 `Mux` 命令（`0x03`）表示 Multiplex 连接。`v1.mux.cool` 是该连接的内部名称，可以出现在 Xray 日志中。配置时应填写 VLESS 或 VMess 服务器的地址。
+
+出站设置参见 [Multiplex](../../config/outbounds/vless.md#multiplex)。

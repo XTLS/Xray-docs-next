@@ -67,6 +67,8 @@ Encryption method. The client will use the configured encryption method to send 
 
 Note: `"auto"` only determines the AES hardware acceleration support status of the _client_. If the _server_ does not support AES hardware acceleration, you still need to manually set it to `chacha20-poly1305`. This is very important because Chacha20-Poly1305 takes about 48% more time than AES-128-GCM on platforms supporting AES acceleration, but on platforms _without_ AES acceleration, AES-128-GCM takes over 2000% more time than Chacha20-Poly1305.
 
+> `multiplex`: [Multiplex settings](./vless.md#multiplex)
+
 > `experiments`: string
 
 Enabled VMess protocol experimental features. (Features here are unstable and may be removed at any time). Multiple enabled experiments can be separated by the `|` character, such as `"AuthenticatedLength|NoTerminationSignal"`.

@@ -96,6 +96,7 @@ Where:
 - **Command Cmd**:
   - 0x01: TCP data
   - 0x02: UDP data
+  - 0x03: `Mux`, followed by [Mux.Cool frames](./muxcool.md). For this command, the destination port, address type and address fields are omitted from the request header.
 - **Port**: Integer port number in Big Endian format.
 - **Address Type T**:
   - 0x01: IPv4

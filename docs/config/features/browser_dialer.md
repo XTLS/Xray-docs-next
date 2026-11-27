@@ -22,7 +22,7 @@
 1. 准备一份 WebSocket 或 XHTTP 配置，注意 address 必须填域名，若需要指定 IP，请配置 DNS 或系统 hosts
 2. 使用环境变量启动 Xray `XRAY_BROWSER_DIALER=127.0.0.1:8080`。Windows 上命令为 `set XRAY_BROWSER_DIALER=127.0.0.1:8080` Linux 上命令为 `XRAY_BROWSER_DIALER=127.0.0.1:8080 ./xray -c config.json`
 3. 确保浏览器直连（或者在路由中将服务端地址直接由 `freedom` 发出），打开页面 `localhost:8080`，还可以 `F12` 看 `Console` 和 `Network`
-4. 浏览器会限制发出的连接数，所以建议开启 `Mux.Cool`
+使用 Browser Dialer 时，[Multiplex](../outbounds/vless.md#multiplex) 在 VLESS 或 VMess 出站的 `outbounds[].settings.multiplex` 中配置。
 
 ## 内部通信机制
 

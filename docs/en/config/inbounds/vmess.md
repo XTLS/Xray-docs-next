@@ -34,6 +34,8 @@ VMess depends on system time. Please ensure that the system UTC time of the devi
 }
 ```
 
+A VMess inbound automatically recognizes Multiplex requests. [Client settings](../outbounds/vless.md#multiplex).
+
 > `users`: \[ [UserObject](#userobject) \]
 
 An array representing a group of users accepted by the server.

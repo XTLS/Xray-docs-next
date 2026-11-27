@@ -34,6 +34,8 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 }
 ```
 
+VMess 入站会自动识别 Multiplex 请求。参见[客户端设置](../outbounds/vless.md#multiplex)。
+
 > `users`: \[ [UserObject](#userobject) \]
 
 一个数组，代表一组服务端认可的用户.

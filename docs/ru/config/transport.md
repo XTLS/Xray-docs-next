@@ -51,7 +51,7 @@
 
 ### Способы передачи
 
-> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
+> `method`: "raw" | "xhttp" | "xdrive" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
 
 Способ передачи, используемый потоком данных. Значение по умолчанию — `raw`.
 
@@ -62,6 +62,16 @@
 > `xhttpSettings`: [XHTTPObject](./transports/xhttp.md)
 
 Настройки XHTTP для потока данных. Действуют только когда `method` равно `xhttp`.
+
+<span id="xdrivesettings"></span>
+
+> `xdriveSettings`: object
+
+Параметры транспорта XDrive. Для его выбора задайте значение `"xdrive"` в поле `method`. В `xdriveSettings` задаются параметры используемого хранилища.
+
+На исходящем подключении VLESS задайте `settings.encryption`, а на входящем — соответствующее `settings.decryption`. Входящее подключение слушает один порт. Поля `settings.flow` и `settings.users[].flow` оставляют пустыми или пропускают. На исходящем подключении `settings.testpre` пропускают или задают `0`.
+
+[Параметры пулов Multiplex для XDrive](./outbounds/vless.md#multiplex)
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
@@ -131,7 +141,7 @@ REALITY сейчас является одной из самых сильных 
 
 ### Входящие/исходящие протоколы и способы передачи
 
-Эта таблица соответствует сочетанию `protocol + streamSettings.method`.
+Эта таблица соответствует сочетанию `protocol + streamSettings.method`. XDrive доступен только с VLESS. Требования к подключению описаны в [описании xdriveSettings](#xdrivesettings).
 
 |                                                                       | `raw`          | `xhttp`        | `grpc`         | `websocket`    | `httpupgrade`  | `mkcp`         | `hysteria`     | `masque`       |
 | --------------------------------------------------------------------- | -------------- | -------------- | -------------- | -------------- | -------------- | -------------- | -------------- | -------------- |
@@ -145,11 +155,11 @@ REALITY сейчас является одной из самых сильных 
 | `wireguard`                                                           | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    |
 | `masque`                                                              | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    | Неприменимо    | Поддерживается |
 
-<small id="protocol-transport-note-1">[1] Если XUDP не включен для Socks или Shadowsocks, UDP-трафик использует собственный UDP-маршрут протокола и обходит настроенный способ передачи. См. [XUDP](./outbound.md#muxobject).</small><br>
+<small id="protocol-transport-note-1">[1] Исходящие подключения SOCKS и Shadowsocks передают UDP отдельными пакетами. Настройки потокового транспорта к этим пакетам не применяются. [Multiplex и XUDP](outbounds/vless.md#multiplex) доступны для исходящих подключений VLESS и VMess.</small><br>
 
 ### Способы передачи и безопасность транспорта
 
-Эта таблица соответствует сочетанию `streamSettings.method + streamSettings.security`.
+Эта таблица соответствует сочетанию `streamSettings.method + streamSettings.security`. Для XDrive доступны `"none"` и `"tls"`. VLESS Encryption при этом обязателен.
 
 |               | `none`            | `tls`          | `reality`         |
 | ------------- | ----------------- | -------------- | ----------------- |
@@ -178,13 +188,13 @@ REALITY сейчас является одной из самых сильных 
 | `wireguard`   | Неприменимо                                                        | Неприменимо                                                        | Неприменимо                                                        | Зашифрованный туннель                                                                                            |
 | `masque`      | Не поддерживается                                                  | Обязательно                                                        | Не поддерживается                                                  | Только аутентификация                                                                                            |
 
-<small id="protocol-security-note-1">[1] Если XUDP не включен для Socks или Shadowsocks, UDP-трафик использует собственный UDP-маршрут протокола и обходит настроенный TLS или REALITY. См. [XUDP](./outbound.md#muxobject).</small><br>
+<small id="protocol-security-note-1">[1] Настройки TLS и REALITY для потокового соединения SOCKS или Shadowsocks действуют только на трафик этого соединения. UDP-пакеты этих исходящих подключений передаются отдельно.</small><br>
 <small id="protocol-security-note-2">[2] Shadowsocks и VMess защищают полезную нагрузку, но не обеспечивают прямую секретность уровня TLS 1.3.</small><br>
 <small id="protocol-security-note-3">[3] Когда `streamSettings.security` имеет значение `none`, VLESS (без включенного Encryption) и Trojan могут подключаться только к адресам частной сети.</small><br>
 <small id="protocol-security-note-4">[4] VLESS Encryption является опциональным и по умолчанию отключен (`encryption: "none"`). После включения он позволяет подключаться к публичным сетевым адресам, даже если `streamSettings.security` имеет значение `none`. Он защищает полезную нагрузку VLESS.</small>
 
 ::: tip
-Возможность безопасно обмениваться данными в публичном Интернете не означает возможность обходить блокировки. HTTPS составляет значительную часть трафика публичного Интернета, но использование TLS или REALITY не означает, что прокси-трафик имеет те же характеристики, что и обычный HTTPS-трафик. Например, для смягчения характерных для прокси-трафика признаков TLS-in-TLS протокол VLESS может использовать Vision, а другие протоколы — [Mux](./outbound.md#muxobject) или [FinalMask](./transports/finalmask.md).
+Возможность безопасно обмениваться данными в публичном Интернете не означает возможность обходить блокировки. HTTPS составляет значительную часть трафика публичного Интернета, но использование TLS или REALITY не означает, что прокси-трафик имеет те же характеристики, что и обычный HTTPS-трафик. Для VLESS доступен режим Vision. Дополнительные настройки транспорта описаны в [FinalMask](./transports/finalmask.md).
 
 Собственные UDP-пакеты таких протоколов, как WireGuard, также имеют явные отличительные признаки; их можно замаскировать с помощью [FinalMask](./transports/finalmask.md).
 :::

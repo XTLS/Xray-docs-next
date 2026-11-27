@@ -26,8 +26,10 @@
 ```
 
 ::: warning
-Trojan must be used with transport security such as [TLS](../transports/tls.md); using `streamSettings.security: "none"` is only allowed when the peer is a private address (such as a private IP address or private domain name) and the link itself is trusted. In public environments, Mux is also required; otherwise, once the inner payload is itself TLS, it becomes TiT and can be easily detected ([PoC](https://github.com/XTLS/Trojan-killer)).
+Use transport security such as [TLS](../transports/tls.md) with Trojan. `streamSettings.security: "none"` is allowed only for a private address on a trusted network.
 :::
+
+Trojan outbounds carry traffic without Multiplex pools. [Multiplex](./vless.md#multiplex) is supported by VLESS and VMess outbounds.
 
 > `address`: address
 

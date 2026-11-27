@@ -51,7 +51,7 @@ For direct outbounds such as [Freedom](./outbounds/freedom.md), the peer is usua
 
 ### Transport Methods
 
-> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
+> `method`: "raw" | "xhttp" | "xdrive" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
 
 Transport method used by the data stream. The default value is `raw`.
 
@@ -62,6 +62,16 @@ RAW configuration for the data stream. Only valid when `method` is `raw`.
 > `xhttpSettings`: [XHTTPObject](./transports/xhttp.md)
 
 XHTTP configuration for the data stream. Only valid when `method` is `xhttp`.
+
+<span id="xdrivesettings"></span>
+
+> `xdriveSettings`: object
+
+XDrive transport parameters. Select this transport with `"xdrive"` in `method`. Configure the storage backend in `xdriveSettings`.
+
+Set `settings.encryption` in the VLESS outbound and the corresponding `settings.decryption` in the inbound. The inbound listens on one port. Leave `settings.flow` and `settings.users[].flow` empty or omit them. In the outbound, omit `settings.testpre` or set it to `0`.
+
+[Multiplex pool parameters for XDrive](./outbounds/vless.md#multiplex)
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
@@ -131,7 +141,7 @@ Both inbounds and outbounds can configure transport methods and transport securi
 
 ### Inbound/Outbound Protocols and Transport Methods
 
-This table corresponds to `protocol + streamSettings.method`.
+This table corresponds to `protocol + streamSettings.method`. XDrive is available only with VLESS. Connection requirements are described under [xdriveSettings](#xdrivesettings).
 
 |                                                                       | `raw`     | `xhttp`   | `grpc`    | `websocket` | `httpupgrade` | `mkcp`    | `hysteria` | `masque`  |
 | --------------------------------------------------------------------- | --------- | --------- | --------- | ----------- | ------------- | --------- | ---------- | --------- |
@@ -145,11 +155,11 @@ This table corresponds to `protocol + streamSettings.method`.
 | `wireguard`                                                           | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        | N/A       |
 | `masque`                                                              | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        | Supported |
 
-<small id="protocol-transport-note-1">[1] When XUDP is not enabled for Socks or Shadowsocks, UDP traffic uses the protocol's native UDP path and bypasses the configured transport method. See [XUDP](./outbound.md#muxobject).</small><br>
+<small id="protocol-transport-note-1">[1] SOCKS and Shadowsocks outbounds send UDP as separate packets. Stream transport settings do not apply to these packets. [Multiplex and XUDP](./outbounds/vless.md#multiplex) are available for VLESS and VMess outbounds.</small><br>
 
 ### Transport Methods and Transport Security
 
-This table corresponds to `streamSettings.method + streamSettings.security`.
+This table corresponds to `streamSettings.method + streamSettings.security`. XDrive supports `"none"` and `"tls"`. VLESS Encryption is required in both cases.
 
 |               | `none`        | `tls`     | `reality`     |
 | ------------- | ------------- | --------- | ------------- |
@@ -178,13 +188,13 @@ This table corresponds to `protocol + streamSettings.security`.
 | `wireguard`   | N/A                                                            | N/A                                                            | N/A                                                            | Encrypted tunnel                                                                                       |
 | `masque`      | Not supported                                                  | Required                                                       | Not supported                                                  | Authentication only                                                                                    |
 
-<small id="protocol-security-note-1">[1] When XUDP is not enabled for Socks or Shadowsocks, UDP traffic uses the protocol's native UDP path and bypasses the configured TLS or REALITY. See [XUDP](./outbound.md#muxobject).</small><br>
+<small id="protocol-security-note-1">[1] TLS and REALITY settings on a SOCKS or Shadowsocks stream connection apply only to traffic on that connection. UDP packets from these outbounds are sent separately.</small><br>
 <small id="protocol-security-note-2">[2] Shadowsocks and VMess protect the payload, but lack TLS 1.3-style forward secrecy.</small><br>
 <small id="protocol-security-note-3">[3] When `streamSettings.security` is `none`, VLESS (without Encryption enabled) and Trojan can connect only to private network addresses.</small><br>
 <small id="protocol-security-note-4">[4] VLESS Encryption is optional and disabled by default (`encryption: "none"`). When enabled, it allows connections to public network addresses even if `streamSettings.security` is `none`. It protects the VLESS payload.</small>
 
 ::: tip
-The ability to communicate securely over the public Internet does not imply the ability to circumvent censorship. HTTPS accounts for a major share of public Internet traffic, but using TLS or REALITY does not mean that proxy traffic has the same characteristics as ordinary HTTPS traffic. For example, to mitigate the TLS-in-TLS signature characteristic of proxy traffic, VLESS can use Vision, while other protocols can use [Mux](./outbound.md#muxobject) or [FinalMask](./transports/finalmask.md).
+The ability to communicate securely over the public Internet does not imply the ability to circumvent censorship. HTTPS accounts for a major share of public Internet traffic, but using TLS or REALITY does not mean that proxy traffic has the same characteristics as ordinary HTTPS traffic. Vision is available for VLESS. Additional transport settings are described in [FinalMask](./transports/finalmask.md).
 
 Native UDP packets of protocols such as WireGuard also have distinctive characteristics and can be disguised using [FinalMask](./transports/finalmask.md).
 :::

@@ -51,7 +51,7 @@
 
 ### 传输方式
 
-> `method`: "raw" | "xhttp" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
+> `method`: "raw" | "xhttp" | "xdrive" | "mkcp" | "grpc" | "websocket" | "httpupgrade" | "hysteria" | "masque"
 
 数据流所使用的传输方式类型，默认值为 `raw`。
 
@@ -62,6 +62,16 @@
 > `xhttpSettings`: [XHTTPObject](./transports/xhttp.md)
 
 数据流的 XHTTP 配置，仅当 `method` 为 `xhttp` 时有效。
+
+<span id="xdrivesettings"></span>
+
+> `xdriveSettings`: object
+
+XDrive 传输参数。将 `method` 设为 `"xdrive"` 可选择此传输方式，存储参数在 `xdriveSettings` 中配置。
+
+VLESS 出站需要设置 `settings.encryption`，入站需要设置对应的 `settings.decryption`。入站只监听一个端口。`settings.flow` 和 `settings.users[].flow` 应省略或留空，出站的 `settings.testpre` 应省略或设为 `0`。
+
+[XDrive 的 Multiplex 连接池参数](./outbounds/vless.md#multiplex)
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
@@ -132,7 +142,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 
 ### 出入站协议与传输方式
 
-此表对应 `protocol + streamSettings.method`。
+此表对应 `protocol + streamSettings.method`。XDrive 仅支持 VLESS，连接要求参见 [xdriveSettings](#xdrivesettings)。
 
 |                                                                       | `raw`  | `xhttp` | `grpc` | `websocket` | `httpupgrade` | `mkcp` | `hysteria` | `masque` |
 | --------------------------------------------------------------------- | ------ | ------- | ------ | ----------- | ------------- | ------ | ---------- | -------- |
@@ -146,11 +156,11 @@ FinalMask 配置，用于对流量进行最终的伪装。
 | `wireguard`                                                           | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     | 不适用   |
 | `masque`                                                              | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     | 支持     |
 
-<small id="protocol-transport-note-1">[1] Socks 和 Shadowsocks 未启用 [XUDP](./outbound.md#muxobject) 时，UDP 流量会改走协议原生的 UDP 路径，从而绕过已配置的传输方式。</small><br>
+<small id="protocol-transport-note-1">[1] SOCKS 和 Shadowsocks 出站单独发送 UDP 数据包，流式传输设置不作用于这些数据包。[Multiplex 和 XUDP](./outbounds/vless.md#multiplex) 由 VLESS 和 VMess 出站支持。</small><br>
 
 ### 传输方式与传输安全
 
-此表对应 `streamSettings.method + streamSettings.security`。
+此表对应 `streamSettings.method + streamSettings.security`。XDrive 支持 `"none"` 和 `"tls"`，两种情况下均需要启用 VLESS Encryption。
 
 |               | `none` | `tls` | `reality` |
 | ------------- | ------ | ----- | --------- |
@@ -179,13 +189,13 @@ FinalMask 配置，用于对流量进行最终的伪装。
 | `wireguard`   | 不适用                                                      | 不适用                                                      | 不适用                                                      | 加密隧道                                                                  |
 | `masque`      | 不支持                                                      | 必须                                                        | 不支持                                                      | 仅有身份认证                                                              |
 
-<small id="protocol-security-note-1">[1] Socks 和 Shadowsocks 未启用 [XUDP](./outbound.md#muxobject) 时，UDP 流量会改走协议原生的 UDP 路径，从而绕过已配置的 TLS 或 REALITY。</small><br>
+<small id="protocol-security-note-1">[1] SOCKS 和 Shadowsocks 流式连接的 TLS 和 REALITY 设置只作用于该连接内的流量，UDP 数据包由这些出站单独发送。</small><br>
 <small id="protocol-security-note-2">[2] Shadowsocks 和 VMess 能保护载荷，但缺少 TLS 1.3 式的前向保密。</small><br>
 <small id="protocol-security-note-3">[3] 当 `streamSettings.security` 为 `none` 时，VLESS（未启用 Encryption）和 Trojan 仅允许连接私网地址。</small><br>
 <small id="protocol-security-note-4">[4] VLESS Encryption 是可选的，默认关闭（`encryption: "none"`）。启用后，即使 `streamSettings.security` 为 `none` 也可以连接公网地址；它能保护 VLESS 载荷。</small>
 
 ::: tip
-能在公网上安全通信，不代表能过墙。HTTPS 是公网上的主要流量，但使用 TLS 或 REALITY 并不意味着代理流量与普通 HTTPS 流量具有相同特征。比如代理流量特有的 TLS-in-TLS 特征，VLESS 协议可使用 Vision，其它协议可通过 [Mux](./outbound.md#muxobject) 或 [FinalMask](./transports/finalmask.md) 缓解。
+能在公网上安全通信，不代表能过墙。HTTPS 是公网上的主要流量，但使用 TLS 或 REALITY 并不意味着代理流量与普通 HTTPS 流量具有相同特征。VLESS 支持 Vision 模式，其他传输设置参见 [FinalMask](./transports/finalmask.md)。
 
 WireGuard 等协议的原生 UDP 报文也具有明显特征，可使用 [FinalMask](./transports/finalmask.md) 进行伪装。
 :::

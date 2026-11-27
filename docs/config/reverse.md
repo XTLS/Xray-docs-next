@@ -1,10 +1,10 @@
 # 旧版反向代理
 
 ::: danger
-旧版反向代理已废弃，请改用 [VLESS 反向代理](/document/level-2/vless_reverse.md)
+JSON 顶层的旧版 `reverse` 配置块会导致加载失败。请在 VLESS 设置中配置 [VLESS 反向代理](/document/level-2/vless_reverse.md)。以下保留旧版 Xray 的配置说明。
 :::
 
-:::: details 旧版反向代理文档（已废弃）
+:::: details 旧版本归档文档
 反向代理可以把服务器端的流量向客户端转发，即逆向流量转发。
 
 ::: tip
