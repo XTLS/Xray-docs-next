@@ -302,6 +302,7 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
   // [!field focus]
   "settings": {
     "reset": "30-60",
+    "script": "",
     "noise": [
       {
         "rand": "1-8192",
@@ -338,6 +339,10 @@ FinalMask 在核心处理完包括 TLS/REALITY 在内的传输层加密后，对
 例如 `{"type": "exp", "packet": "<b 0d0a0d0a><t><r 24>"}` 会把 `\r\n\r\n`、时间戳和 24 个随机字节作为一个包发送。
 
 `delay`: 单位毫秒，发送噪声后延迟指定时间后再发下一个。
+
+`script`: Lua 脚本，由脚本生成噪声包，与 `noise` 冲突。脚本需要定义 `HandleNoise` 函数，见[噪声脚本](../../development/lua/guide/noise.md)。相比 `exp`，脚本可以写条件分支、循环，并在实例中保留状态。
+
+脚本是本地文件的路径，文件定位规则见[脚本文件路径](../../development/lua/environment.md#脚本文件路径)。写在配置里的内联脚本（`base64:`）目前在核心中被禁用。
 
 ### salamander
 
