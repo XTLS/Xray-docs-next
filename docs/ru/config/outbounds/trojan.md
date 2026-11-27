@@ -29,7 +29,7 @@
 Для Trojan используйте транспортную защиту, например [TLS](../transports/tls.md). Значение `streamSettings.security: "none"` допустимо только для частного адреса в доверенной сети.
 :::
 
-Исходящее подключение Trojan использует обычные соединения. [Multiplex](../multiplex.md) поддерживают исходящие подключения VLESS и VMess.
+Исходящее подключение Trojan передаёт трафик без пула Multiplex. [Multiplex](../multiplex.md) поддерживают исходящие подключения VLESS и VMess.
 
 > `address`: address
 

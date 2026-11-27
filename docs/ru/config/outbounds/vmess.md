@@ -74,7 +74,7 @@ VMess полагается на системное время. Убедитес�
 
 Путь к настройке Multiplex в исходящем подключении VMess — `outbounds[].settings.multiplex`.
 
-В примере `concurrency: 8` включает общий пул TCP и UDP. Чтобы включить Multiplex только для UDP, замените `concurrency` на `xudpConcurrency`. Чтобы выключить Multiplex, удалите объект `multiplex` из `settings`.
+В этом примере общий пул передаёт TCP и UDP с лимитом восемь потоков на соединение. [Примеры остальных режимов](../multiplex.md#короткие-варианты-записи).
 
 > `experiments`: string
 
