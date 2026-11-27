@@ -14,9 +14,7 @@ Multiplex позволяет передавать несколько незав�
 
 Входящее подключение [VLESS](./inbounds/vless.md) или [VMess](./inbounds/vmess.md) автоматически распознаёт Multiplex. Xray маршрутизирует каждый принятый поток.
 
-<span id="полная-запись-multiplex"></span>
-
-## Полная запись исходящего подключения с Multiplex
+## Полная запись Multiplex
 
 Объект `multiplex` записывается внутри `settings` исходящего подключения. Полный путь в JSON — `outbounds[].settings.multiplex`. Параметры Multiplex задаются тремя полями — `concurrency`, `xudpConcurrency` и `xudpProxyUDP443`.
 
