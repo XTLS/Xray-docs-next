@@ -18,7 +18,7 @@ Multiplex позволяет передавать несколько незав�
 
 ## Полная запись исходящего подключения с Multiplex
 
-В исходящем подключении VLESS или VMess объект `multiplex` записывается внутри `settings`. Полный путь в JSON — `outbounds[].settings.multiplex`. Параметры Multiplex задаются тремя полями — `concurrency`, `xudpConcurrency` и `xudpProxyUDP443`.
+Объект `multiplex` записывается внутри `settings` исходящего подключения. Полный путь в JSON — `outbounds[].settings.multiplex`. Параметры Multiplex задаются тремя полями — `concurrency`, `xudpConcurrency` и `xudpProxyUDP443`.
 
 Транспорт исходящего подключения задаётся отдельно, в `streamSettings`. Поведение Multiplex зависит от транспорта, выбранного в поле `streamSettings.method`. [Как транспорт влияет на Multiplex](#как-транспорт-влияет-на-multiplex)
 
