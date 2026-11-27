@@ -8,10 +8,10 @@ Multiplex позволяет передавать несколько незав�
 
 Multiplex настраивается в исходящем подключении [VLESS](./outbounds/vless.md) или [VMess](./outbounds/vmess.md). Для остальных исходящих протоколов, включая SOCKS, HTTP, Shadowsocks и Trojan, эта настройка недоступна.
 
-В одном элементе `outbounds` объекты `settings` и `streamSettings` находятся на одном уровне:
+Параметры протокола задаются в объекте `settings`. Способ передачи данных между клиентом и сервером задаётся в объекте `streamSettings` — это настройки транспорта. В JSON оба объекта записываются рядом, внутри одной записи массива `outbounds`.
 
-- `settings.multiplex` задаёт параметры пулов Multiplex. Полный путь — `outbounds[].settings.multiplex`.
-- `streamSettings.method` выбирает транспорт для этого подключения. Например, `"raw"` выбирает RAW, `"xhttp"` — XHTTP, `"xdrive"` — XDrive. Полный путь — `outbounds[].streamSettings.method`.
+- **Пул соединений** настраивается в `settings.multiplex`. Здесь задают, сколько потоков могут одновременно использовать одно соединение с сервером и как обрабатывать UDP-трафик. Полный путь — `outbounds[].settings.multiplex`.
+- **Транспорт** выбирают в `streamSettings.method`. Например, `"raw"` выбирает RAW, `"xhttp"` — XHTTP, `"xdrive"` — XDrive. Полный путь — `outbounds[].streamSettings.method`.
 
 От выбора транспорта зависит, что произойдёт при пропуске `settings.multiplex`:
 
