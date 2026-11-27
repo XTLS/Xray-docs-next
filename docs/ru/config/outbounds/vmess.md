@@ -8,23 +8,27 @@ VMess полагается на системное время. Убедитес�
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` задаёт поля `settings` исходящего подключения VMess. Структура основных полей показана ниже.
+`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md).
 
-> [!TIP]
->
-> ```json {2-4}
-> {
->   "multiplex": {
->     "concurrency": 8
->   },
->   "address": "127.0.0.1",
->   "port": 37192,
->   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
->   "security": "auto",
->   "level": 0,
->   "experiments": ""
-> }
-> ```
+```json
+{
+  "outbounds": [
+    {
+      // ...
+      "protocol": "vmess",
+      // [!field focus]
+      "settings": {
+        "address": "127.0.0.1",
+        "port": 37192,
+        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+        "security": "auto",
+        "level": 0,
+        "experiments": ""
+      }
+    }
+  ]
+}
+```
 
 > `address`: address
 
@@ -63,9 +67,7 @@ VMess полагается на системное время. Убедитес�
 
 Обратите внимание, что `auto` определяет поддержку аппаратного ускорения `AES` только на стороне клиента. Если сервер не поддерживает аппаратное ускорение `AES`, необходимо вручную установить `"chacha20-poly1305"`. Это очень важно, поскольку `Chacha20-Poly1305` на платформах с поддержкой ускорения `AES` работает примерно на 48% медленнее, чем `AES-128-GCM`, однако на платформах без аппаратного ускорения `AES`, `AES-128-GCM` будет работать более чем на 2000% медленнее, чем `Chacha20-Poly1305`.
 
-> `multiplex`: [Multiplex](../multiplex.md)
-
-Необязательный объект параметров Multiplex. Полный путь — `outbounds[].settings.multiplex`. Лимиты соединений и правила UDP описаны в [справочнике полей](../multiplex.md#поля-multiplex).
+> `multiplex`: [настройки Multiplex](./vless.md#multiplex)
 
 > `experiments`: string
 

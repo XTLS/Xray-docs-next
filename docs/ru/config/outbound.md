@@ -82,4 +82,4 @@ Xray будет использовать случайный IP-адрес из �
 
 ### Multiplex
 
-Для исходящего подключения VLESS или VMess путь к настройке Multiplex — `outbounds[].settings.multiplex`. Поле `concurrency` включает общий пул соединений, а `xudpConcurrency` — отдельный пул UDP. [Поля Multiplex, варианты настройки и переход с `mux`](./multiplex.md)
+Для исходящего подключения VLESS или VMess путь к настройке Multiplex — `outbounds[].settings.multiplex`. Поле `concurrency` включает общий пул соединений, а `xudpConcurrency` — отдельный пул UDP. [Поля Multiplex и пример конфигурации](outbounds/vless.md#multiplex)
