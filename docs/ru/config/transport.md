@@ -30,7 +30,6 @@
         "method": "raw",
         "rawSettings": {},
         "xhttpSettings": {},
-        "xdriveSettings": {},
         "kcpSettings": {},
         "grpcSettings": {},
         "wsSettings": {},
@@ -136,7 +135,7 @@ REALITY сейчас является одной из самых сильных 
 
 ### Входящие/исходящие протоколы и способы передачи
 
-Эта таблица соответствует сочетанию `protocol + streamSettings.method`.
+Эта таблица соответствует сочетанию `protocol + streamSettings.method`. XDrive доступен только с VLESS. Требования к подключению описаны в [разделе XDrive](./multiplex.md#xdrive).
 
 |                                                                       | `raw`          | `xhttp`        | `grpc`         | `websocket`    | `httpupgrade`  | `mkcp`         | `hysteria`     | `masque`       |
 | --------------------------------------------------------------------- | -------------- | -------------- | -------------- | -------------- | -------------- | -------------- | -------------- | -------------- |
@@ -154,7 +153,7 @@ REALITY сейчас является одной из самых сильных 
 
 ### Способы передачи и безопасность транспорта
 
-Эта таблица соответствует сочетанию `streamSettings.method + streamSettings.security`.
+Эта таблица соответствует сочетанию `streamSettings.method + streamSettings.security`. Для XDrive доступны `"none"` и `"tls"`. VLESS Encryption при этом обязателен.
 
 |               | `none`            | `tls`          | `reality`         |
 | ------------- | ----------------- | -------------- | ----------------- |

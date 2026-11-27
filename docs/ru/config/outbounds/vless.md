@@ -6,30 +6,24 @@ VLESS - это легкий транспортный протокол без с�
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md). Ниже показано исходящее подключение VLESS с TLS и общим пулом Multiplex.
+`OutboundConfigurationObject` задаёт поля `settings` исходящего подключения VLESS. Структура основных полей показана ниже, а условия применения `flow`, `reverse` и `multiplex` приведены в их описаниях.
 
 > [!TIP]
 >
-> ```json {6-8}
+> ```json {11-13}
 > {
->   "outbounds": [
->     {
->       "protocol": "vless",
->       "settings": {
->         "multiplex": {
->           "concurrency": 8
->         },
->         "address": "example.com",
->         "port": 443,
->         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
->         "encryption": "none",
->         "level": 0
->       },
->       "streamSettings": {
->         "security": "tls"
->       }
->     }
->   ]
+>   "address": "example.com",
+>   "port": 443,
+>   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+>   "encryption": "none",
+>   "flow": "",
+>   "level": 0,
+>   "reverse": {
+>     "tag": "reverse-inbound"
+>   },
+>   "multiplex": {
+>     "concurrency": 8
+>   }
 > }
 > ```
 
@@ -121,9 +115,7 @@ Splice - это функция, предоставляемая ядром Linux,
 
 > `multiplex`: [Multiplex](../multiplex.md)
 
-Путь к настройке Multiplex в исходящем подключении VLESS — `outbounds[].settings.multiplex`.
-
-В примере `concurrency: 8` позволяет передавать до восьми потоков одновременно через одно соединение с сервером.
+Необязательный объект параметров Multiplex. Полный путь — `outbounds[].settings.multiplex`. Лимиты соединений и правила UDP описаны в [справочнике полей](../multiplex.md#поля-multiplex).
 
 **Vision.** Для учётной записи с `flow` равным `xtls-rprx-vision` сервер принимает через Multiplex только UDP. Для передачи TCP через Vision вне пула укажите только параметры отдельного пула UDP. [Пример настройки Vision](../multiplex.md#vision).
 

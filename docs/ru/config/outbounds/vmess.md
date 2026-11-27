@@ -8,28 +8,21 @@ VMess полагается на системное время. Убедитес�
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` соответствует элементу `settings` в [`OutboundObject`](../outbound.md).
+`OutboundConfigurationObject` задаёт поля `settings` исходящего подключения VMess. Структура основных полей показана ниже.
 
 > [!TIP]
 >
-> ```json {6-8}
+> ```json {2-4}
 > {
->   "outbounds": [
->     {
->       "protocol": "vmess",
->       "settings": {
->         "multiplex": {
->           "concurrency": 8
->         },
->         "address": "127.0.0.1",
->         "port": 37192,
->         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
->         "security": "auto",
->         "level": 0,
->         "experiments": ""
->       }
->     }
->   ]
+>   "multiplex": {
+>     "concurrency": 8
+>   },
+>   "address": "127.0.0.1",
+>   "port": 37192,
+>   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+>   "security": "auto",
+>   "level": 0,
+>   "experiments": ""
 > }
 > ```
 
@@ -72,9 +65,7 @@ VMess полагается на системное время. Убедитес�
 
 > `multiplex`: [Multiplex](../multiplex.md)
 
-Путь к настройке Multiplex в исходящем подключении VMess — `outbounds[].settings.multiplex`.
-
-В этом примере общий пул передаёт TCP и UDP с лимитом восемь потоков на соединение. [Примеры остальных режимов](../multiplex.md#короткие-варианты-записи).
+Необязательный объект параметров Multiplex. Полный путь — `outbounds[].settings.multiplex`. Лимиты соединений и правила UDP описаны в [справочнике полей](../multiplex.md#поля-multiplex).
 
 > `experiments`: string
 
