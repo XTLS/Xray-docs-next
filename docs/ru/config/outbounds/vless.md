@@ -127,7 +127,7 @@ Splice - это функция, предоставляемая ядром Linux,
 
 **Vision.** Если у пользователя на сервере задан `flow: "xtls-rprx-vision"`, сервер пропускает через Multiplex только UDP. Чтобы TCP шёл через обычные соединения, укажите только `"multiplex": {"xudpConcurrency": 8}`.
 
-**XDrive без Reverse** автоматически включает общий пул с лимитом `128`. Допустимые значения и настройки отдельного пула UDP приведены в [разделе XDrive](../multiplex.md#xdrive).
+Для транспорта XDrive см. [настройки Multiplex и лимиты потоков](../multiplex.md#xdrive).
 
 [VLESS Reverse](/ru/document/level-2/vless_reverse.md) открывает собственное соединение Multiplex. Для самого Reverse общий пул включать необязательно.
 
