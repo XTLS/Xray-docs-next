@@ -229,10 +229,7 @@ ATTENTION: Using VLESS Multiplex over XHTTP XMUX
 
 XDrive поддерживает VLESS с шифрованием VLESS. Для исходящего подключения задайте `settings.encryption`, для входящего — соответствующее `settings.decryption`. Входящее подключение слушает один порт. [Шифрование на клиенте](./outbounds/vless.md#outboundconfigurationobject) · [Шифрование на сервере](./inbounds/vless.md)
 
-- `flow` — поле протокола VLESS, которое используется, например, для включения Vision. С XDrive оставьте его пустым или пропустите. На клиенте это `settings.flow`. На сервере это `settings.flow` и `settings.users[].flow`.
-- `testpre` задаёт число заранее открываемых соединений VLESS. Для XDrive пропустите `settings.testpre` или укажите `0`.
-
-В примерах XDrive оба поля пропущены, поэтому для `flow` действует пустая строка, а для `testpre` — `0`.
+XDrive использует VLESS без режима Vision.
 
 Транспорт выбирается значением `"xdrive"` в `streamSettings.method`. Настройки хранилища задаются в `streamSettings.xdriveSettings`, параметры пула — в `settings.multiplex`.
 
