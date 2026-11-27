@@ -63,15 +63,9 @@
 
 数据流的 XHTTP 配置，仅当 `method` 为 `xhttp` 时有效。
 
-<span id="xdrivesettings"></span>
-
 > `xdriveSettings`: object
 
-XDrive 传输参数。将 `method` 设为 `"xdrive"` 可选择此传输方式，存储参数在 `xdriveSettings` 中配置。
-
-VLESS 出站需要设置 `settings.encryption`，入站需要设置对应的 `settings.decryption`。入站只监听一个端口。`settings.flow` 和 `settings.users[].flow` 应省略或留空，出站的 `settings.testpre` 应省略或设为 `0`。
-
-[XDrive 的 Multiplex 连接池参数](./outbounds/vless.md#multiplex)
+数据流的 XDrive 配置，仅当 `method` 为 `xdrive` 时有效。
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 

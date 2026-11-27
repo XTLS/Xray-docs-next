@@ -22,7 +22,8 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
         "encryption": "none",
         "flow": "xtls-rprx-vision",
         "level": 0,
-        "reverse": {}
+        "reverse": {},
+        "multiplex": {}
       }
     }
   ]
@@ -83,10 +84,8 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 目前出站协议中有以下流控模式可选：
 
 - 无 `flow` 或者 空字符： 使用普通 TLS 代理
-- `xtls-rprx-vision`：启用 Vision。在 Multiplex 连接池外传输 UDP 时，会拒绝目标端口为 443 的数据包（QUIC）。
-- `xtls-rprx-vision-udp443`：启用 Vision，并允许在 Multiplex 连接池外传输 UDP 443。
-
-对于通过 Multiplex 连接池发送的 UDP 请求，先应用 [`xudpProxyUDP443` 规则](#multiplex)。`"allow"` 使数据包通过连接池，`"skip"` 使客户端在连接池外按所选 Vision 模式处理。
+- `xtls-rprx-vision`：使用 XTLS，包含内层握手随机填充。会拦截目标为 443 端口的 UDP 流量（QUIC），促使浏览器使用普通 HTTPS 以增加可以被 Splice 的流量。
+- `xtls-rprx-vision-udp443`：同 `xtls-rprx-vision`, 但是不会拦截 UDP 443，用于有程序强制使用 QUIC，被拦截会导致其无法工作时。
 
 XTLS 仅在以下搭配下可用
 
@@ -138,35 +137,18 @@ VLESS 极简反向代理配置，会保留公网端的真实源 IP 信息。
 
 ## Multiplex
 
-Multiplex 可在一条服务器连接上传输多个数据流。客户端的 `multiplex` 对象写在**出站的 `settings` 内**，完整路径为 `outbounds[].settings.multiplex`。服务器会自动识别 Multiplex。
+Multiplex 可在一条底层连接上多路复用以传输数个代理请求，仅客户端配置。服务器会自动识别客户端请求无需额外开启支持。
 
-**每条连接的限制。** `concurrency` 和 `xudpConcurrency` 接受 `0` 到 `32767` 的整数，用于限制**同时运行的流数量**。Xray 还会单独统计连接在整个生命周期内承载过的流总数，包括已结束的流。具体规则取决于 `streamSettings.method` 指定的传输方式。
+不要与传输层自带的多路复用混淆和一起使用，如在 gRPC 使用此功能会导致 Xray 将同一条 TCP 上的不同 gRPC 流视作不同的底层连接导致双重复用降低性能。
 
-- **RAW、XHTTP、gRPC、WebSocket、HTTPUpgrade、mKCP 和 Hysteria。** `1` 到 `1024` 使用指定的并发流限制。每条连接在整个生命周期内最多承载 **1024 个流**，因此 `1025` 到 `32767` 虽然可接受，也无法提高此上限。第 1024 个流之后，新流会使用其他连接。字段为零或省略时，关闭对应连接池。
-- **未使用 Reverse 的 XDrive。** 取消了 1024 个流的限制。公共连接池自动启用，默认每条连接最多 **128 个并发流**，即使省略 `multiplex` 也会启用。独立 UDP 连接池的字段为零或省略时仍表示关闭。`1` 到 `127` 提高到 `128`，`128` 到 `32767` 使用指定值。一条 Multiplex 连接在整个生命周期内最多承载 **65535 个流**，之后新流使用其他连接。参见 [XDrive 设置](../transport.md#xdrivesettings)。
+```json
+{
+  "multiplex": {
+    "concurrency": 8
+  }
+}
+```
 
-**`multiplex` 对象的字段**可以单独或组合设置。
+> `concurrency`: number
 
-- `concurrency` 指定公共连接池的限制。仅设置此字段即可使 TCP 和 UDP 共用连接。
-- `xudpConcurrency` 指定独立 UDP 连接池的限制。两个连接池均启用时，TCP 使用公共连接池，UDP 使用独立连接池。
-- `xudpProxyUDP443` 指定通过连接池传输时如何处理目标端口为 UDP 443 的数据包。默认值 `"reject"` 拒绝数据包，`"allow"` 允许通过连接池传输，`"skip"` 绕过连接池并按出站协议自身的规则传输。XDrive 支持 `"reject"` 和 `"allow"`，使用 `"allow"` 时需将至少一个连接池的限制设为正数。参见 [XUDP 格式](../../development/protocols/muxcool.md#新建子连接-new)。
-
-三个字段均可选。空的 `multiplex` 对象与省略该对象，对所选传输方式产生相同结果。使用 Vision 时，服务器通过 Multiplex 仅接受 UDP。要使 TCP 通过 Vision 传输，请只设置正数 `xudpConcurrency`。
-
-**示例。** 以下为使用 RAW 的 VLESS 出站片段。公共连接池承载 TCP，每条连接最多 8 个并发流；UDP 使用独立连接池，每条连接最多 16 个并发流。UDP 443 数据包被拒绝。
-
-> [!TIP]
->
-> ```json {3-7}
-> {
->   "settings": {
->     "multiplex": {
->       "concurrency": 8,
->       "xudpConcurrency": 16,
->       "xudpProxyUDP443": "reject"
->     }
->   }
-> }
-> ```
-
-旧的 `outbounds[].mux` 字段会被忽略，并在加载时输出警告。要启用连接池，请在 `settings.multiplex` 中设置限制。
+每条底层连接上允许并发的流数量上限，`0` 代表禁用 mux。当所有正在工作的 mux 连接都已达到并发上限时，新流会打开新的底层连接。

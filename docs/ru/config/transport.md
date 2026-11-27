@@ -63,15 +63,9 @@
 
 Настройки XHTTP для потока данных. Действуют только когда `method` равно `xhttp`.
 
-<span id="xdrivesettings"></span>
-
 > `xdriveSettings`: object
 
-Параметры транспорта XDrive. Для его выбора задайте значение `"xdrive"` в поле `method`. В `xdriveSettings` задаются параметры используемого хранилища.
-
-На исходящем подключении VLESS задайте `settings.encryption`, а на входящем — соответствующее `settings.decryption`. Входящее подключение слушает один порт. Поля `settings.flow` и `settings.users[].flow` оставляют пустыми или пропускают. На исходящем подключении `settings.testpre` пропускают или задают `0`.
-
-[Параметры пулов Multiplex для XDrive](./outbounds/vless.md#multiplex)
+Настройки XDrive для потока данных. Действуют только когда `method` равно `xdrive`.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 

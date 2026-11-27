@@ -25,8 +25,3 @@
   filter: blur(0);
   opacity: 1;
 }
-
-:is(._config_outbounds_vless, ._en_config_outbounds_vless, ._ru_config_outbounds_vless)
-  .github-alert.tip .language-json {
-  --vp-code-line-highlight-color: var(--vp-code-line-diff-add-color);
-}

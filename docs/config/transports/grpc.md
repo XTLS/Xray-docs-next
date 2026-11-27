@@ -3,7 +3,7 @@
 基于 gRPC 的传输方式。
 
 它基于 HTTP/2 协议，理论上可以通过其它支持 HTTP/2 的服务器（如 Nginx）进行中转。
-gRPC 使用 HTTP/2 的多路复用。VLESS 或 VMess 出站通过 gRPC 传输时，[Multiplex](../outbounds/vless.md#multiplex) 需要单独启用，默认关闭其连接池。
+gRPC 使用 HTTP/2 的多路复用。
 
 ::: danger
 **推荐换用 [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113)，其相较于 gRPC 的优势已在 STREAM-UP/ONE 小节中注明。**

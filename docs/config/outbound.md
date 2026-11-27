@@ -49,10 +49,6 @@
 > `settings`: OutboundConfigurationObject
 
 具体的配置内容，视协议不同而不同。详见每个协议中的 `OutboundConfigurationObject`。
-<span id="muxobject"></span>
-<span id="multiplex"></span>
-
-VLESS 和 VMess 出站请参见 [Multiplex 设置](./outbounds/vless.md#multiplex)。
 
 > `tag`: string
 

@@ -63,15 +63,9 @@ RAW configuration for the data stream. Only valid when `method` is `raw`.
 
 XHTTP configuration for the data stream. Only valid when `method` is `xhttp`.
 
-<span id="xdrivesettings"></span>
-
 > `xdriveSettings`: object
 
-XDrive transport parameters. Select this transport with `"xdrive"` in `method`. Configure the storage backend in `xdriveSettings`.
-
-Set `settings.encryption` in the VLESS outbound and the corresponding `settings.decryption` in the inbound. The inbound listens on one port. Leave `settings.flow` and `settings.users[].flow` empty or omit them. In the outbound, omit `settings.testpre` or set it to `0`.
-
-[Multiplex pool parameters for XDrive](./outbounds/vless.md#multiplex)
+XDrive configuration for the data stream. Only valid when `method` is `xdrive`.
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 

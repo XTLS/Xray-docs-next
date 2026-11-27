@@ -52,10 +52,6 @@ Xray будет использовать случайный IP-адрес из �
 
 Конкретные настройки зависят от протокола.
 См. описание `OutboundConfigurationObject` для каждого протокола.
-<span id="muxobject"></span>
-<span id="multiplex"></span>
-
-Для VLESS и VMess см. [настройки Multiplex](./outbounds/vless.md#multiplex).
 
 > `tag`: string
 

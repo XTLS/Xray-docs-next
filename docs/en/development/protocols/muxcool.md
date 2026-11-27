@@ -125,6 +125,5 @@ When keeping the connection:
 
 The Mux.Cool protocol is independent of the underlying protocol. Theoretically, any reliable stream connection can be used to transmit Mux.Cool protocol data.
 
-In VLESS and VMess, the `Mux` command (`0x03`) in the request header identifies a Multiplex connection. `v1.mux.cool` is an internal name for this connection and may appear in Xray logs. Configure the address of the VLESS or VMess server in your configuration.
-
-Outbound settings are described in [Multiplex](../../config/outbounds/vless.md#multiplex).
+In target-oriented protocols like Shadowsocks and VMess, a specified address must be included when the connection is established.
+To maintain compatibility, the Mux.Cool protocol specifies the address as "v1.mux.cool". That is, when the target address of the main connection matches this, Mux.Cool forwarding is performed; otherwise, forwarding is performed in the traditional way. (Note: This is an internal marker within the program; VMess and VLESS do not send the "v1.mux.cool" address in the data packet.)

@@ -49,10 +49,6 @@ The connection protocol name. For the list of optional protocols, see [Outbound 
 > `settings`: OutboundConfigurationObject
 
 Specific configuration content, which varies by protocol. See `OutboundConfigurationObject` in each protocol for details.
-<span id="muxobject"></span>
-<span id="multiplex"></span>
-
-For VLESS and VMess, see [Multiplex settings](./outbounds/vless.md#multiplex).
 
 > `tag`: string
 

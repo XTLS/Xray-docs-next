@@ -55,8 +55,6 @@ The Shadowsocks 2022 new protocol format improves performance and includes compl
 
 The network type that the server port **listens** on. The default value is `"tcp"`.
 
-To accept only UDP, set `"udp"`. To accept TCP and UDP, set `"tcp,udp"`.
-
 > `method`: string
 
 Encryption method. See above for options.
