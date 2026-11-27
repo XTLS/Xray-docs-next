@@ -317,7 +317,49 @@ ATTENTION: Using VLESS Multiplex over XHTTP XMUX
 
 Раньше отрицательное значение `xudpConcurrency` позволяло исключить UDP из общего пула. В новом формате отрицательное число вызывает ошибку загрузки. Ноль отключает только отдельный пул UDP: при включённом общем пуле UDP по-прежнему может использовать его.
 
-При добавлении исходящего подключения через API задавайте `multiplex` в конфигурации самого VLESS или VMess. Старое поле `SenderConfig.multiplex_settings` игнорируется. [Документация для старых сборок](https://github.com/XTLS/Xray-docs-next/blob/0caf7ea80eb491eb1d6d7fc8cc7c347f55198e22/docs/ru/config/outbound.md#muxobject)
+[Документация для старых сборок](https://github.com/XTLS/Xray-docs-next/blob/0caf7ea80eb491eb1d6d7fc8cc7c347f55198e22/docs/ru/config/outbound.md#muxobject)
+
+<span id="multiplex-api"></span>
+
+## Настройка через API
+
+Параметры Multiplex можно передать работающему Xray при добавлении исходящего подключения VLESS или VMess. Для этого используется метод `AddOutbound` службы [HandlerService](./api.md#handlerservice). Отдельной службы Multiplex и команды для изменения лимитов уже созданного пула в API нет.
+
+**Пример для командной строки.** На экземпляре Xray должен быть включён `HandlerService`. Содержимое файла `outbound.json` имеет тот же формат, что и раздел `outbounds` обычной конфигурации. В примере новое подключение получает тег `vless-mux` и общий пул с лимитом восемь потоков на соединение. Укажите адрес, порт и UUID своего сервера.
+
+> [!TIP]
+>
+> ```json {7-9}
+> {
+>   "outbounds": [
+>     {
+>       "tag": "vless-mux",
+>       "protocol": "vless",
+>       "settings": {
+>         "multiplex": {
+>           "concurrency": 8
+>         },
+>         "address": "proxy.example.com",
+>         "port": 443,
+>         "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+>         "encryption": "none"
+>       },
+>       "streamSettings": {
+>         "security": "tls"
+>       }
+>     }
+>   ]
+> }
+> ```
+
+Если API слушает `127.0.0.1:8080`, добавьте подключение и проверьте, что тег `vless-mux` появился в списке:
+
+```sh
+xray api ado --server=127.0.0.1:8080 outbound.json
+xray api lso --server=127.0.0.1:8080
+```
+
+**Для gRPC-клиентов.** В `AddOutboundRequest.outbound.proxy_settings` передаётся конфигурация протокола (`xray.proxy.vless.outbound.Config` или `xray.proxy.vmess.outbound.Config`). У обоих сообщений есть поле `multiplex` типа `xray.proxy.vless.Multiplex`. Старое поле `SenderConfig.multiplex_settings` зарезервировано и игнорируется.
 
 ## Как проверить работу пула
 
