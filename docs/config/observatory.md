@@ -29,7 +29,7 @@
 
 发起探测的间隔。时间格式为数字 + 单位，比如 `"10s"`, `"2h45m"`，支持的时间单位有 `ns`, `us`, `ms`, `s`, `m`, `h`， 分别对应纳秒、微秒、毫秒、秒、分、时。
 
-探测按指定间隔发起。启用公共 [Multiplex](./multiplex.md) 连接池时，经被探测的 VLESS 或 VMess 出站发送的请求可以重复使用已有连接。
+探测按指定间隔发起。启用公共 [Multiplex](./outbounds/vless.md#multiplex) 连接池时，经被探测的 VLESS 或 VMess 出站发送的请求可以重复使用已有连接。
 
 > `enableConcurrency`: true | false
 

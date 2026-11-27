@@ -29,7 +29,7 @@
 Use transport security such as [TLS](../transports/tls.md) with Trojan. `streamSettings.security: "none"` is allowed only for a private address on a trusted network.
 :::
 
-Trojan outbounds carry traffic without Multiplex pools. [Multiplex](../multiplex.md) is supported by VLESS and VMess outbounds.
+Trojan outbounds carry traffic without Multiplex pools. [Multiplex](./vless.md#multiplex) is supported by VLESS and VMess outbounds.
 
 > `address`: address
 

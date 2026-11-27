@@ -71,7 +71,7 @@ XDrive 传输参数。将 `method` 设为 `"xdrive"` 可选择此传输方式，
 
 VLESS 出站需要设置 `settings.encryption`，入站需要设置对应的 `settings.decryption`。入站只监听一个端口。`settings.flow` 和 `settings.users[].flow` 应省略或留空，出站的 `settings.testpre` 应省略或设为 `0`。
 
-[XDrive 连接池与本地存储配置](./multiplex.md#xdrive)
+[XDrive 的 Multiplex 连接池参数](./outbounds/vless.md#multiplex)
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
@@ -142,7 +142,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 
 ### 出入站协议与传输方式
 
-此表对应 `protocol + streamSettings.method`。XDrive 仅支持 VLESS，连接要求参见 [XDrive](./multiplex.md#xdrive)。
+此表对应 `protocol + streamSettings.method`。XDrive 仅支持 VLESS，连接要求参见 [xdriveSettings](#xdrivesettings)。
 
 |                                                                       | `raw`  | `xhttp` | `grpc` | `websocket` | `httpupgrade` | `mkcp` | `hysteria` | `masque` |
 | --------------------------------------------------------------------- | ------ | ------- | ------ | ----------- | ------------- | ------ | ---------- | -------- |
@@ -156,7 +156,7 @@ FinalMask 配置，用于对流量进行最终的伪装。
 | `wireguard`                                                           | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     | 不适用   |
 | `masque`                                                              | 不适用 | 不适用  | 不适用 | 不适用      | 不适用        | 不适用 | 不适用     | 支持     |
 
-<small id="protocol-transport-note-1">[1] SOCKS 和 Shadowsocks 出站单独发送 UDP 数据包，流式传输设置不作用于这些数据包。[Multiplex 和 XUDP](./multiplex.md) 由 VLESS 和 VMess 出站支持。</small><br>
+<small id="protocol-transport-note-1">[1] SOCKS 和 Shadowsocks 出站单独发送 UDP 数据包，流式传输设置不作用于这些数据包。[Multiplex 和 XUDP](./outbounds/vless.md#multiplex) 由 VLESS 和 VMess 出站支持。</small><br>
 
 ### 传输方式与传输安全
 

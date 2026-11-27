@@ -29,7 +29,7 @@
 Trojan 请配合 [TLS](../transports/tls.md) 等传输安全使用。只有对端为私有地址且链路处于受信网络时，才允许使用 `streamSettings.security: "none"`。
 :::
 
-Trojan 出站不使用 Multiplex 连接池。[Multiplex](../multiplex.md) 由 VLESS 和 VMess 出站支持。
+Trojan 出站不使用 Multiplex 连接池。[Multiplex](vless.md#multiplex) 由 VLESS 和 VMess 出站支持。
 
 > `address`: address
 

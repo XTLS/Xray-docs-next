@@ -3,7 +3,7 @@
 A transport protocol based on gRPC.
 
 It is based on the HTTP/2 protocol and, theoretically, can be relayed through other servers that support HTTP/2 (such as Nginx).
-gRPC uses HTTP/2 multiplexing. For VLESS or VMess outbounds over gRPC, [Multiplex](../multiplex.md) is enabled separately. Its pools are disabled by default.
+gRPC uses HTTP/2 multiplexing. For VLESS or VMess outbounds over gRPC, [Multiplex](../outbounds/vless.md#multiplex) is enabled separately. Its pools are disabled by default.
 
 ::: danger
 **It is recommended to switch to [XHTTP](https://github.com/XTLS/Xray-core/discussions/4113). Its advantages over gRPC are noted in the STREAM-UP/ONE section.**

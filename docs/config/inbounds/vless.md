@@ -42,7 +42,7 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 VLESS 必须配合传输安全层使用；只有当对端是 private 地址（如私有 IP、私有域名）且链路处于受信网络中，或者已启用 `VLESS Encryption` 时，才允许使用 `streamSettings.security: "none"`。
 :::
 
-VLESS 入站会自动识别 Multiplex 请求。连接池参数在客户端出站的 `outbounds[].settings.multiplex` 中配置。参见 [Multiplex 入站](../multiplex.md#inbound)。
+VLESS 入站会自动识别 Multiplex 请求。参见[客户端设置](../outbounds/vless.md#multiplex)。
 
 > `users`: \[ [UserObject](#userobject) \]
 

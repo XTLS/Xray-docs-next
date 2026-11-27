@@ -127,4 +127,4 @@ Mux.Cool 协议与底层协议无关，理论上可以使用任何可靠的流�
 
 VLESS 和 VMess 请求头中的 `Mux` 命令（`0x03`）表示 Multiplex 连接。`v1.mux.cool` 是该连接的内部名称，可以出现在 Xray 日志中。配置时应填写 VLESS 或 VMess 服务器的地址。
 
-出站设置参见 [Multiplex](../../config/multiplex.md)。
+出站设置参见 [Multiplex](../../config/outbounds/vless.md#multiplex)。

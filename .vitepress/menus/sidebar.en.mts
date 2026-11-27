@@ -35,7 +35,6 @@ export const sidebar: DefaultTheme.Config["sidebar"] = {
         { text: "FakeDNS", link: "/en/config/fakedns.md" },
         { text: "Inbounds", link: "/en/config/inbound.md" },
         { text: "Outbounds", link: "/en/config/outbound.md" },
-        { text: "Multiplex", link: "/en/config/multiplex.md" },
         {
           text: "Transport Configuration",
           link: "/en/config/transport.md"

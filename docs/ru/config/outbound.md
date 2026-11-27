@@ -52,7 +52,10 @@ Xray будет использовать случайный IP-адрес из �
 
 Конкретные настройки зависят от протокола.
 См. описание `OutboundConfigurationObject` для каждого протокола.
-Для VLESS и VMess здесь же настраиваются [параметры Multiplex](#multiplex).
+<span id="muxobject"></span>
+<span id="multiplex"></span>
+
+Для VLESS и VMess см. [настройки Multiplex](./outbounds/vless.md#multiplex).
 
 > `tag`: string
 
@@ -77,9 +80,3 @@ Xray будет использовать случайный IP-адрес из �
 
 Стратегию разрешения доменных имен для Freedom также следует задавать через `sockopt.domainStrategy`.
 :::
-
-<span id="muxobject"></span>
-
-### Multiplex
-
-Для исходящего подключения VLESS или VMess путь к настройке Multiplex — `outbounds[].settings.multiplex`. Поле `concurrency` включает общий пул соединений, а `xudpConcurrency` — отдельный пул UDP. [Поля Multiplex и пример конфигурации](outbounds/vless.md#multiplex)

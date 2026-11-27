@@ -104,7 +104,7 @@ API 服务监听的 IP 和端口。这是一个可选配置项。
 - 在一个入站代理中添加一个用户（仅支持 VMess、VLESS、Trojan、Shadowsocks）；
 - 在一个入站代理中删除一个用户（仅支持 VMess、VLESS、Trojan、Shadowsocks）；
 
-添加 VLESS 或 VMess 出站时，`AddOutbound` 方法可随协议配置接收 Multiplex 参数。参见 [CLI 用法与 gRPC 字段](./multiplex.md#multiplex-api)。
+添加 VLESS 或 VMess 出站时，`AddOutbound` 方法可随协议配置接收 Multiplex 参数。参见 [Multiplex 参数](./outbounds/vless.md#multiplex)。
 
 ### RoutingService
 

@@ -34,7 +34,7 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 }
 ```
 
-VMess 入站会自动识别 Multiplex 请求。连接池参数在客户端出站的 `outbounds[].settings.multiplex` 中配置。参见 [Multiplex 入站](../multiplex.md#inbound)。
+VMess 入站会自动识别 Multiplex 请求。参见[客户端设置](../outbounds/vless.md#multiplex)。
 
 > `users`: \[ [UserObject](#userobject) \]
 

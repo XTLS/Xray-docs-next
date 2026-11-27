@@ -49,7 +49,10 @@
 > `settings`: OutboundConfigurationObject
 
 具体的配置内容，视协议不同而不同。详见每个协议中的 `OutboundConfigurationObject`。
-VLESS 和 VMess 的 [Multiplex 参数](#multiplex) 也在此处配置。
+<span id="muxobject"></span>
+<span id="multiplex"></span>
+
+VLESS 和 VMess 出站请参见 [Multiplex 设置](./outbounds/vless.md#multiplex)。
 
 > `tag`: string
 
@@ -74,9 +77,3 @@ VLESS 和 VMess 的 [Multiplex 参数](#multiplex) 也在此处配置。
 
 Freedom 出站的域名解析策略也应配置 `sockopt.domainStrategy`。
 :::
-
-<span id="muxobject"></span>
-
-### Multiplex
-
-VLESS 或 VMess 出站的 Multiplex 配置路径为 `outbounds[].settings.multiplex`。`concurrency` 启用公共连接池，`xudpConcurrency` 启用独立 UDP 连接池。参见 [Multiplex 字段、配置方式与旧版 `mux` 迁移](./multiplex.md)。

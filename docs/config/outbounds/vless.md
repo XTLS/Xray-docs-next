@@ -6,26 +6,28 @@ VLESS 是一个无状态的轻量传输协议，它分为入站和出站两部�
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` 定义 VLESS 出站的 `settings` 字段。下面列出主要字段。各字段中说明了 `flow`、`reverse` 和 `multiplex` 的适用条件。
+`OutboundConfigurationObject` 对应 [`OutboundObject`](../outbound.md) 中的 `settings` 项。
 
-> [!TIP]
->
-> ```json {11-13}
-> {
->   "address": "example.com",
->   "port": 443,
->   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
->   "encryption": "none",
->   "flow": "",
->   "level": 0,
->   "reverse": {
->     "tag": "reverse-inbound"
->   },
->   "multiplex": {
->     "concurrency": 8
->   }
-> }
-> ```
+```json
+{
+  "outbounds": [
+    {
+      // ...
+      "protocol": "vless",
+      // [!field focus]
+      "settings": {
+        "address": "example.com",
+        "port": 443,
+        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+        "encryption": "none",
+        "flow": "xtls-rprx-vision",
+        "level": 0,
+        "reverse": {}
+      }
+    }
+  ]
+}
+```
 
 ::: warning
 VLESS 必须配合传输安全层使用；只有当对端是 private 地址（如私有 IP、私有域名）且链路处于受信网络中，或者已启用 `VLESS Encryption` 时，才允许使用 `streamSettings.security: "none"`。
@@ -84,7 +86,7 @@ VLESS 的用户 ID，可以是任意小于 30 字节的字符串, 也可以是�
 - `xtls-rprx-vision`：启用 Vision。在 Multiplex 连接池外传输 UDP 时，会拒绝目标端口为 443 的数据包（QUIC）。
 - `xtls-rprx-vision-udp443`：启用 Vision，并允许在 Multiplex 连接池外传输 UDP 443。
 
-对于通过 Multiplex 连接池发送的 UDP 请求，先应用 [`xudpProxyUDP443` 规则](../multiplex.md#xudpproxyudp443)。`"allow"` 使数据包通过连接池，`"skip"` 使客户端在连接池外按所选 Vision 模式处理。
+对于通过 Multiplex 连接池发送的 UDP 请求，先应用 [`xudpProxyUDP443` 规则](#multiplex)。`"allow"` 使数据包通过连接池，`"skip"` 使客户端在连接池外按所选 Vision 模式处理。
 
 XTLS 仅在以下搭配下可用
 
@@ -108,18 +110,6 @@ Splice 是 Linux Kernel 提供的函数，系统内核直接转发 TCP，不再�
 用户等级，连接会使用这个用户等级对应的 [本地策略](../policy.md#levelpolicyobject)。
 
 level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 如不指定, 默认为 0。
-
-<span id="multiplex"></span>
-
-> `multiplex`: [Multiplex](../multiplex.md)
-
-可选的 Multiplex 参数对象。完整路径为 `outbounds[].settings.multiplex`。连接限制与 UDP 规则参见 [Multiplex 字段](../multiplex.md#fields)。
-
-**Vision。** 用户的 `flow` 为 `xtls-rprx-vision` 时，服务器通过 Multiplex 仅接受 UDP。要使 TCP 通过 Vision 传输，请只配置独立 UDP 连接池。参见 [Vision 配置](../multiplex.md#vision)。
-
-XDrive 的规则参见 [Multiplex 设置与流数量限制](../multiplex.md#xdrive)。
-
-[VLESS Reverse](/document/level-2/vless_reverse.md) 建立自己的 Multiplex 连接，无需为 Reverse 本身启用公共连接池。
 
 > `reverse`: struct
 
@@ -145,3 +135,38 @@ VLESS 极简反向代理配置，会保留公网端的真实源 IP 信息。
 ::: tip
 完整教程：[VLESS 反向代理示例](../../document/level-2/vless_reverse.md)
 :::
+
+## Multiplex
+
+Multiplex 可在一条服务器连接上传输多个数据流。客户端的 `multiplex` 对象写在**出站的 `settings` 内**，完整路径为 `outbounds[].settings.multiplex`。服务器会自动识别 Multiplex。
+
+**每条连接的限制。** `concurrency` 和 `xudpConcurrency` 接受 `0` 到 `32767` 的整数，用于限制**同时运行的流数量**。Xray 还会单独统计连接在整个生命周期内承载过的流总数，包括已结束的流。具体规则取决于 `streamSettings.method` 指定的传输方式。
+
+- **RAW、XHTTP、gRPC、WebSocket、HTTPUpgrade、mKCP 和 Hysteria。** `1` 到 `1024` 使用指定的并发流限制。每条连接在整个生命周期内最多承载 **1024 个流**，因此 `1025` 到 `32767` 虽然可接受，也无法提高此上限。第 1024 个流之后，新流会使用其他连接。字段为零或省略时，关闭对应连接池。
+- **未使用 Reverse 的 XDrive。** 取消了 1024 个流的限制。公共连接池自动启用，默认每条连接最多 **128 个并发流**，即使省略 `multiplex` 也会启用。独立 UDP 连接池的字段为零或省略时仍表示关闭。`1` 到 `127` 提高到 `128`，`128` 到 `32767` 使用指定值。一条 Multiplex 连接在整个生命周期内最多承载 **65535 个流**，之后新流使用其他连接。参见 [XDrive 设置](../transport.md#xdrivesettings)。
+
+**`multiplex` 对象的字段**可以单独或组合设置。
+
+- `concurrency` 指定公共连接池的限制。仅设置此字段即可使 TCP 和 UDP 共用连接。
+- `xudpConcurrency` 指定独立 UDP 连接池的限制。两个连接池均启用时，TCP 使用公共连接池，UDP 使用独立连接池。
+- `xudpProxyUDP443` 指定通过连接池传输时如何处理目标端口为 UDP 443 的数据包。默认值 `"reject"` 拒绝数据包，`"allow"` 允许通过连接池传输，`"skip"` 绕过连接池并按出站协议自身的规则传输。XDrive 支持 `"reject"` 和 `"allow"`，使用 `"allow"` 时需将至少一个连接池的限制设为正数。参见 [XUDP 格式](../../development/protocols/muxcool.md#新建子连接-new)。
+
+三个字段均可选。空的 `multiplex` 对象与省略该对象，对所选传输方式产生相同结果。使用 Vision 时，服务器通过 Multiplex 仅接受 UDP。要使 TCP 通过 Vision 传输，请只设置正数 `xudpConcurrency`。
+
+**示例。** 以下为使用 RAW 的 VLESS 出站片段。公共连接池承载 TCP，每条连接最多 8 个并发流；UDP 使用独立连接池，每条连接最多 16 个并发流。UDP 443 数据包被拒绝。
+
+> [!TIP]
+>
+> ```json {3-7}
+> {
+>   "settings": {
+>     "multiplex": {
+>       "concurrency": 8,
+>       "xudpConcurrency": 16,
+>       "xudpProxyUDP443": "reject"
+>     }
+>   }
+> }
+> ```
+
+旧的 `outbounds[].mux` 字段会被忽略，并在加载时输出警告。要启用连接池，请在 `settings.multiplex` 中设置限制。

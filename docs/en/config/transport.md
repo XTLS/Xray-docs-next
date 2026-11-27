@@ -71,7 +71,7 @@ XDrive transport parameters. Select this transport with `"xdrive"` in `method`. 
 
 Set `settings.encryption` in the VLESS outbound and the corresponding `settings.decryption` in the inbound. The inbound listens on one port. Leave `settings.flow` and `settings.users[].flow` empty or omit them. In the outbound, omit `settings.testpre` or set it to `0`.
 
-[XDrive pools and local-storage configuration](./multiplex.md#xdrive)
+[Multiplex pool parameters for XDrive](./outbounds/vless.md#multiplex)
 
 > `kcpSettings`: [KcpObject](./transports/mkcp.md)
 
@@ -141,7 +141,7 @@ Both inbounds and outbounds can configure transport methods and transport securi
 
 ### Inbound/Outbound Protocols and Transport Methods
 
-This table corresponds to `protocol + streamSettings.method`. XDrive is available only with VLESS. Connection requirements are described in the [XDrive section](./multiplex.md#xdrive).
+This table corresponds to `protocol + streamSettings.method`. XDrive is available only with VLESS. Connection requirements are described under [xdriveSettings](#xdrivesettings).
 
 |                                                                       | `raw`     | `xhttp`   | `grpc`    | `websocket` | `httpupgrade` | `mkcp`    | `hysteria` | `masque`  |
 | --------------------------------------------------------------------- | --------- | --------- | --------- | ----------- | ------------- | --------- | ---------- | --------- |
@@ -155,7 +155,7 @@ This table corresponds to `protocol + streamSettings.method`. XDrive is availabl
 | `wireguard`                                                           | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        | N/A       |
 | `masque`                                                              | N/A       | N/A       | N/A       | N/A         | N/A           | N/A       | N/A        | Supported |
 
-<small id="protocol-transport-note-1">[1] SOCKS and Shadowsocks outbounds send UDP as separate packets. Stream transport settings do not apply to these packets. [Multiplex and XUDP](./multiplex.md) are available for VLESS and VMess outbounds.</small><br>
+<small id="protocol-transport-note-1">[1] SOCKS and Shadowsocks outbounds send UDP as separate packets. Stream transport settings do not apply to these packets. [Multiplex and XUDP](./outbounds/vless.md#multiplex) are available for VLESS and VMess outbounds.</small><br>
 
 ### Transport Methods and Transport Security
 

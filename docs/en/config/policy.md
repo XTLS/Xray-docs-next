@@ -94,7 +94,7 @@ When set to `true`, enables online user count statistics for all users of the cu
 
 > `bufferSize`: number
 
-The internal buffer size for each request, in KB. Note that multiple requests may be carried on the same connection via multiplexing (e.g., when using [Multiplex](./multiplex.md) or gRPC). This means that even if they share an underlying connection, their buffer pools are independent.
+The internal buffer size for each request, in KB. Note that multiple requests may be carried on the same connection via multiplexing (e.g., when using [Multiplex](./outbounds/vless.md#multiplex) or gRPC). This means that even if they share an underlying connection, their buffer pools are independent.
 
 When the internal buffer is larger than this value, the next write operation will only be performed after the internal buffer is sent out until it is less than or equal to this value.
 

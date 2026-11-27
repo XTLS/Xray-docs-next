@@ -34,7 +34,7 @@ VMess полагается на системное время. Убедитес�
 }
 ```
 
-Входящее подключение VMess автоматически распознаёт запросы Multiplex. Параметры Multiplex задаются в исходящем подключении VMess на клиенте (`outbounds[].settings.multiplex`). [Настройки Multiplex](../outbounds/vless.md#multiplex)
+Входящее подключение VMess автоматически распознаёт запросы Multiplex. [Настройка на стороне клиента](../outbounds/vless.md#multiplex).
 
 > `users`: \[ [UserObject](#userobject) \]
 

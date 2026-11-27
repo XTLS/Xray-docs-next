@@ -8,23 +8,27 @@ VMess 依赖于系统时间，请确保使用 Xray 的系统 UTC 时间误差在
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` 定义 VMess 出站的 `settings` 字段。下面列出主要字段。
+`OutboundConfigurationObject` 对应 [`OutboundObject`](../outbound.md) 中的 `settings` 项。
 
-> [!TIP]
->
-> ```json {2-4}
-> {
->   "multiplex": {
->     "concurrency": 8
->   },
->   "address": "127.0.0.1",
->   "port": 37192,
->   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
->   "security": "auto",
->   "level": 0,
->   "experiments": ""
-> }
-> ```
+```json
+{
+  "outbounds": [
+    {
+      // ...
+      "protocol": "vmess",
+      // [!field focus]
+      "settings": {
+        "address": "127.0.0.1",
+        "port": 37192,
+        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+        "security": "auto",
+        "level": 0,
+        "experiments": ""
+      }
+    }
+  ]
+}
+```
 
 > `address`: address
 
@@ -65,9 +69,7 @@ level 的值, 对应 [policy](../policy.md#policyobject) 中 `level` 的值。 �
 
 <span id="multiplex"></span>
 
-> `multiplex`: [Multiplex](../multiplex.md)
-
-可选的 Multiplex 参数对象。完整路径为 `outbounds[].settings.multiplex`。连接限制与 UDP 规则参见 [Multiplex 字段](../multiplex.md#fields)。
+> `multiplex`: [Multiplex 设置](./vless.md#multiplex)
 
 > `experiments`: string
 

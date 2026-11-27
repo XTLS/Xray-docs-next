@@ -104,7 +104,7 @@ APIs for modifying inbound and outbound proxies. Available functions are as foll
 - Add a user to an inbound (supports VMess, VLESS, Trojan, Shadowsocks only);
 - Remove a user from an inbound (supports VMess, VLESS, Trojan, Shadowsocks only);
 
-When adding a VLESS or VMess outbound, `AddOutbound` accepts Multiplex parameters together with the protocol settings. [CLI call and gRPC fields](./multiplex.md#multiplex-api)
+When adding a VLESS or VMess outbound, `AddOutbound` accepts Multiplex parameters together with the protocol settings. [Multiplex parameters](./outbounds/vless.md#multiplex)
 
 ### RoutingService
 

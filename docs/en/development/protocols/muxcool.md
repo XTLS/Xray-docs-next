@@ -127,4 +127,4 @@ The Mux.Cool protocol is independent of the underlying protocol. Theoretically, 
 
 In VLESS and VMess, the `Mux` command (`0x03`) in the request header identifies a Multiplex connection. `v1.mux.cool` is an internal name for this connection and may appear in Xray logs. Configure the address of the VLESS or VMess server in your configuration.
 
-Outbound settings are described in [Multiplex](../../config/multiplex.md).
+Outbound settings are described in [Multiplex](../../config/outbounds/vless.md#multiplex).

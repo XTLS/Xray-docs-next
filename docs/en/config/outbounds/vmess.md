@@ -8,23 +8,27 @@ VMess depends on system time. Please ensure that the UTC time of the system runn
 
 ## OutboundConfigurationObject
 
-`OutboundConfigurationObject` defines the `settings` fields of a VMess outbound. The main fields are shown below.
+`OutboundConfigurationObject` corresponds to the `settings` item in [`OutboundObject`](../outbound.md).
 
-> [!TIP]
->
-> ```json {2-4}
-> {
->   "multiplex": {
->     "concurrency": 8
->   },
->   "address": "127.0.0.1",
->   "port": 37192,
->   "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
->   "security": "auto",
->   "level": 0,
->   "experiments": ""
-> }
-> ```
+```json
+{
+  "outbounds": [
+    {
+      // ...
+      "protocol": "vmess",
+      // [!field focus]
+      "settings": {
+        "address": "127.0.0.1",
+        "port": 37192,
+        "id": "5783a3e7-e373-51cd-8642-c83782b807c5",
+        "security": "auto",
+        "level": 0,
+        "experiments": ""
+      }
+    }
+  ]
+}
+```
 
 > `address`: address
 
@@ -63,9 +67,7 @@ Encryption method. The client will use the configured encryption method to send 
 
 Note: `"auto"` only determines the AES hardware acceleration support status of the _client_. If the _server_ does not support AES hardware acceleration, you still need to manually set it to `chacha20-poly1305`. This is very important because Chacha20-Poly1305 takes about 48% more time than AES-128-GCM on platforms supporting AES acceleration, but on platforms _without_ AES acceleration, AES-128-GCM takes over 2000% more time than Chacha20-Poly1305.
 
-> `multiplex`: [Multiplex](../multiplex.md)
-
-Optional Multiplex configuration object. Its full path is `outbounds[].settings.multiplex`. Connection limits and UDP handling are described in the [field reference](../multiplex.md#multiplex-fields).
+> `multiplex`: [Multiplex settings](./vless.md#multiplex)
 
 > `experiments`: string
 
